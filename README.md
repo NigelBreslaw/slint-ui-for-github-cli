@@ -8,6 +8,8 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 - **pnpm** (see [pnpm.io](https://pnpm.io/installation))
 - **GitHub CLI** (`gh`) installed and authenticated (`gh auth login`)
 
+**OAuth scopes:** The app expects classic token scopes **`read:org`** and **`read:project`** (see [scopes.md](scopes.md) for why, how to refresh, and how to test locally).
+
 ## Setup
 
 From the project root:
@@ -62,4 +64,4 @@ On Windows (cmd), you can also use `set GH_DEBUG_JSON=1` before `pnpm start` if 
 
 Files are named from the API path, for example `debug-json/gh-api--user.json` for `gh api user`.
 
-When signed in, the app also dumps **project-related** data for debug: REST **Projects V2** (`projects-v2--…`), REST **Projects (classic)** kanban boards (`projects-classic--user--…`, `projects-classic--org--…`), output of **`gh project list`** for you and each org (`projects-gh-cli--user.json`, `projects-gh-cli--org--….json`), plus `projects-v2--orgs-membership.json` for org membership. V2 and `gh project list` usually need the **`project`** scope (`gh auth refresh -s project`). Classic org projects may require org permission to see private boards; failures appear as `*--error.json` for that call.
+When signed in, the app also dumps **project-related** data for debug: REST **Projects V2** (`projects-v2--…`), REST **Projects (classic)** kanban boards (`projects-classic--user--…`, `projects-classic--org--…`), output of **`gh project list`** for you and each org (`projects-gh-cli--user.json`, `projects-gh-cli--org--….json`), plus `projects-v2--orgs-membership.json` for org membership. V2 and `gh project list` need the **`read:project`** scope (see [scopes.md](scopes.md)). Classic org projects may require org permission to see private boards; failures appear as `*--error.json` for that call.

@@ -3,6 +3,7 @@ import { Button, HorizontalBox, Spinner, VerticalBox } from "std-widgets.slint";
 export enum Authed {
     loggedOut,
     loggedIn,
+    needsScopes,
     authorizing,
 }
 
@@ -13,8 +14,10 @@ export global AppState {
 export component MainWindow inherits Window {
     callback login-clicked;
     callback logout-clicked;
+    callback add-scopes-clicked;
 
     in property <string> gh-label: "";
+    in property <string> scope-message: "";
     in property <image> avatar;
 
     width: 400px;
@@ -48,9 +51,10 @@ export component MainWindow inherits Window {
             }
 
             Text {
-                text: gh-label;
+                text: AppState.auth == Authed.needsScopes ? scope-message : gh-label;
                 font-size: 18px;
                 horizontal-alignment: center;
+                wrap: word-wrap;
             }
 
             HorizontalBox {
@@ -66,8 +70,16 @@ export component MainWindow inherits Window {
                 }
 
                 Button {
+                    text: "Add missing scopes";
+                    visible: AppState.auth == Authed.needsScopes;
+                    clicked => {
+                        root.add-scopes-clicked();
+                    }
+                }
+
+                Button {
                     text: "Logout";
-                    visible: AppState.auth == Authed.loggedIn;
+                    visible: AppState.auth == Authed.loggedIn || AppState.auth == Authed.needsScopes;
                     clicked => {
                         root.logout-clicked();
                     }
@@ -95,7 +107,7 @@ export component MainWindow inherits Window {
                 height: 100%;
 
                 Text {
-                    text: "Carry on logging in via the terminal";
+                    text: "Finish in the terminal (browser or device flow)";
                     font-size: 16px;
                     horizontal-alignment: center;
                     wrap: word-wrap;

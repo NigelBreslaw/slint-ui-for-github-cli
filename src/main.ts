@@ -9,7 +9,14 @@ const execFileAsync = promisify(execFile);
 /** Large enough for paginated `gh api` project payloads. */
 const GH_EXEC_MAX_BUFFER = 50 * 1024 * 1024;
 import { openAppDb } from "./db/app-db.ts";
-import { ghAuthLogout, ghAuthStatus, spawnGhAuthLogin } from "./gh/auth.ts";
+import {
+  checkRequiredGitHubCliScopes,
+  ghAuthLogout,
+  ghAuthStatus,
+  requiredGhOAuthScopesCsv,
+  spawnGhAuthLogin,
+  spawnGhAuthRefreshScopes,
+} from "./gh/auth.ts";
 import {
   emptyTransparentAvatarImage,
   loadAvatarRgba,
@@ -232,7 +239,7 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
 }
 
 /** Slint-node maps enum variants to kebab-case strings on `AppState.auth` (not `ui.Authed.*` values). */
-type AuthedAuthState = "loggedOut" | "loggedIn" | "authorizing";
+type AuthedAuthState = "loggedOut" | "loggedIn" | "needsScopes" | "authorizing";
 
 type AppStateHandle = {
   auth: AuthedAuthState;
@@ -245,12 +252,15 @@ type MainWindowInstance = {
   AppState: AppStateHandle;
   login_clicked?: () => void;
   logout_clicked?: () => void;
+  add_scopes_clicked?: () => void;
   gh_label: string;
+  scope_message: string;
   avatar?: SlintRgbaImage;
 };
 
 type MainWindowOpts = {
   "gh-label"?: string;
+  "scope-message"?: string;
   avatar?: SlintRgbaImage;
 };
 
@@ -302,21 +312,41 @@ function applyAuthUi(window: MainWindowInstance): void {
   if (status === "no_gh") {
     window.AppState.auth = "loggedOut";
     window.gh_label = "gh not found (install GitHub CLI)";
+    window.scope_message = "";
     clearAvatar(window);
     return;
   }
   if (status === "not_authed") {
     window.AppState.auth = "loggedOut";
     window.gh_label = "Not signed in";
+    window.scope_message = "";
     clearAvatar(window);
     return;
   }
 
   window.AppState.auth = "loggedIn";
-  window.gh_label = "Loading…";
+  window.gh_label = "Checking…";
+  window.scope_message = "";
   clearAvatar(window);
-  void fetchAndApplyGitHubUser(window).catch((e) => {
-    console.error("[github-app] fetchAndApplyGitHubUser failed:", e);
+  void (async () => {
+    const scopeCheck = await checkRequiredGitHubCliScopes();
+    if (ghAuthStatus() !== "ok") {
+      applyAuthUi(window);
+      return;
+    }
+    if (!scopeCheck.ok) {
+      window.AppState.auth = "needsScopes";
+      window.scope_message = scopeCheck.message;
+      window.gh_label = "";
+      clearAvatar(window);
+      return;
+    }
+    window.gh_label = "Loading…";
+    await fetchAndApplyGitHubUser(window);
+  })().catch((e) => {
+    console.error("[github-app] scope check or user fetch failed:", e);
+    window.gh_label = "Something went wrong";
+    clearAvatar(window);
   });
 }
 
@@ -324,7 +354,7 @@ const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
   MainWindow: new (opts: MainWindowOpts) => MainWindowInstance;
 };
 
-const window = new ui.MainWindow({ "gh-label": "" });
+const window = new ui.MainWindow({ "gh-label": "", "scope-message": "" });
 
 window.login_clicked = () => {
   window.AppState.auth = "authorizing";
@@ -336,6 +366,13 @@ window.login_clicked = () => {
 window.logout_clicked = () => {
   ghAuthLogout();
   void applyAuthUi(window);
+};
+
+window.add_scopes_clicked = () => {
+  window.AppState.auth = "authorizing";
+  spawnGhAuthRefreshScopes(requiredGhOAuthScopesCsv(), () => {
+    void applyAuthUi(window);
+  });
 };
 
 applyAuthUi(window);
