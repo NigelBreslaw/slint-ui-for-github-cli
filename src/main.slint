@@ -75,6 +75,7 @@ export component MainWindow inherits Window {
                 text: "Add missing scopes";
                 visible: AppState.auth == Authed.needsScopes;
                 clicked => {
+                    auth_window.show();
                     root.add-scopes-clicked();
                 }
             }
