@@ -158,20 +158,34 @@ function parseOrgLogins(orgsPayload: unknown): string[] {
   return logins;
 }
 
+/** Lets Slint-node’s merged event loop run between synchronous `gh` subprocess calls. */
+function yieldToEventLoop(): Promise<void> {
+  return new Promise((resolve) => {
+    setImmediate(resolve);
+  });
+}
+
+let initialProjectsDebugPending: string | null = null;
+let slintEventLoopHasStarted = false;
+
 /**
  * When `GH_DEBUG_JSON=1`, dumps GitHub project data for debugging:
  * - REST **Projects V2** (`…/projectsV2`) — new table projects.
  * - REST **Projects (classic)** (`…/projects?state=all`) — org/user **kanban** boards.
  * - **`gh project list`** for the signed-in user and for each org — CLI view of projects.
  *
- * Empty lists skip files. `gh` / API failures still write `*--error.json` for that request.
+ * Yields between each `gh` invocation so the UI stays responsive. Empty lists skip files.
+ * `gh` / API failures still write `*--error.json` for that request.
  */
-function maybeDumpGitHubProjectsDebug(login: string): void {
+async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
   if (process.env.GH_DEBUG_JSON !== "1") {
     return;
   }
 
+  await yieldToEventLoop();
+
   const userV2Stem = `projects-v2--user--${login}`;
+  await yieldToEventLoop();
   const userV2Res = ghApiJson(
     [`users/${login}/projectsV2`, "--paginate"],
     projectListDebugOptions(userV2Stem),
@@ -181,6 +195,7 @@ function maybeDumpGitHubProjectsDebug(login: string): void {
   }
 
   const userClassicStem = `projects-classic--user--${login}`;
+  await yieldToEventLoop();
   const userClassicRes = ghApiJson(
     [`users/${login}/projects?state=all&per_page=100`, "--paginate"],
     projectListDebugOptions(userClassicStem),
@@ -189,9 +204,11 @@ function maybeDumpGitHubProjectsDebug(login: string): void {
     writeDebugJsonStem(`${userClassicStem}--error`, { error: userClassicRes.error });
   }
 
+  await yieldToEventLoop();
   ghProjectListForDebug("projects-gh-cli--user");
 
   const orgsStem = "projects-v2--orgs-membership";
+  await yieldToEventLoop();
   const orgsRes = ghApiJson(["user/orgs", "--paginate"], { debugStem: orgsStem });
   if (!orgsRes.ok) {
     writeDebugJsonStem(`${orgsStem}--error`, { error: orgsRes.error });
@@ -200,6 +217,7 @@ function maybeDumpGitHubProjectsDebug(login: string): void {
 
   for (const org of parseOrgLogins(orgsRes.value)) {
     const orgV2Stem = `projects-v2--org--${org}`;
+    await yieldToEventLoop();
     const orgV2 = ghApiJson(
       [`orgs/${org}/projectsV2`, "--paginate"],
       projectListDebugOptions(orgV2Stem),
@@ -209,6 +227,7 @@ function maybeDumpGitHubProjectsDebug(login: string): void {
     }
 
     const orgClassicStem = `projects-classic--org--${org}`;
+    await yieldToEventLoop();
     const orgClassic = ghApiJson(
       [`orgs/${org}/projects?state=all&per_page=100`, "--paginate"],
       projectListDebugOptions(orgClassicStem),
@@ -217,6 +236,7 @@ function maybeDumpGitHubProjectsDebug(login: string): void {
       writeDebugJsonStem(`${orgClassicStem}--error`, { error: orgClassic.error });
     }
 
+    await yieldToEventLoop();
     ghProjectListForDebug(`projects-gh-cli--org--${org}`, org);
   }
 }
@@ -230,6 +250,8 @@ type AppStateHandle = {
 
 type MainWindowInstance = {
   run(): Promise<void>;
+  show(): void;
+  hide(): void;
   AppState: AppStateHandle;
   login_clicked?: () => void;
   logout_clicked?: () => void;
@@ -246,7 +268,7 @@ function clearAvatar(window: MainWindowInstance): void {
   window.avatar = emptyTransparentAvatarImage;
 }
 
-async function applyAuthUi(window: MainWindowInstance): Promise<void> {
+function applyAuthUi(window: MainWindowInstance): void {
   const status = ghAuthStatus();
   if (status === "no_gh") {
     window.AppState.auth = "loggedOut";
@@ -275,14 +297,26 @@ async function applyAuthUi(window: MainWindowInstance): Promise<void> {
     return;
   }
   const user = parsed.user;
-  maybeDumpGitHubProjectsDebug(user.login);
-  const loaded = await loadAvatarRgba(user.avatar_url);
   window.gh_label = user.login;
-  if (loaded !== undefined) {
-    window.avatar = loaded;
-  } else {
-    clearAvatar(window);
+  clearAvatar(window);
+
+  if (process.env.GH_DEBUG_JSON === "1") {
+    if (!slintEventLoopHasStarted) {
+      initialProjectsDebugPending = user.login;
+    } else {
+      void maybeDumpGitHubProjectsDebugAsync(user.login).catch((e) => {
+        console.error("[debug-json] maybeDumpGitHubProjectsDebugAsync failed:", e);
+      });
+    }
   }
+
+  void loadAvatarRgba(user.avatar_url).then((loaded) => {
+    if (loaded !== undefined) {
+      window.avatar = loaded;
+    } else {
+      clearAvatar(window);
+    }
+  });
 }
 
 const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
@@ -303,5 +337,18 @@ window.logout_clicked = () => {
   void applyAuthUi(window);
 };
 
-await applyAuthUi(window);
-await window.run();
+applyAuthUi(window);
+window.show();
+await slint.runEventLoop({
+  runningCallback: () => {
+    slintEventLoopHasStarted = true;
+    const login = initialProjectsDebugPending;
+    initialProjectsDebugPending = null;
+    if (login !== null) {
+      void maybeDumpGitHubProjectsDebugAsync(login).catch((e) => {
+        console.error("[debug-json] maybeDumpGitHubProjectsDebugAsync failed:", e);
+      });
+    }
+  },
+});
+window.hide();
