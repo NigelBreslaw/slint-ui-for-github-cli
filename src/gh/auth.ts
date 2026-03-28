@@ -145,15 +145,8 @@ export function spawnGhAuthLogin(options: GhInteractiveOptions): void {
 }
 
 /**
- * Comma-separated list of scopes to request via `gh auth refresh --scopes` (idempotent add).
- */
-export function requiredGhOAuthScopesCsv(): string {
-  return REQUIRED_GH_OAUTH_SCOPES.join(",");
-}
-
-/**
  * Runs `gh auth status --json hosts` and checks token scopes against {@link REQUIRED_GH_OAUTH_SCOPES}.
- * Call only when {@link ghAuthStatus} is `"ok"`; on subprocess/JSON failure, returns `unknown` so the UI can offer refresh.
+ * Call only when {@link ghAuthStatus} is `"ok"`; on subprocess/JSON failure, returns `unknown` so the UI can treat the session as unusable until Login.
  */
 export async function checkRequiredGitHubCliScopes(): Promise<ScopeCheckResult> {
   try {
@@ -187,11 +180,4 @@ export async function checkRequiredGitHubCliScopes(): Promise<ScopeCheckResult> 
       message: "Could not verify scopes (run `gh auth status` in a terminal).",
     };
   }
-}
-
-/**
- * Runs interactive `gh auth refresh --scopes …` (stdin inherited; stdout/stderr teed and parsed for device flow).
- */
-export function spawnGhAuthRefreshScopes(scopesCsv: string, options: GhInteractiveOptions): void {
-  spawnGhWithStdinInheritedTeedOutput(["auth", "refresh", "--scopes", scopesCsv], options);
 }

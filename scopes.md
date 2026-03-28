@@ -12,9 +12,11 @@ This app calls the GitHub REST API and GitHub CLI with the credentials from **`g
 
 We do **not** require the `project` (write) scope unless the app later adds mutating project APIs.
 
-### Add scopes with the CLI
+### Authorize with the CLI
 
-The in-app **Login** button runs (scopes match `REQUIRED_GH_OAUTH_SCOPES` in code—`read:org` and `read:project` today):
+The app only treats you as signed in when `gh` is authenticated **and** the token has the required scopes. Otherwise it shows the same **logged out** state with an explanation; use **Login** in the app (or run the command below) to authorize with the right scopes.
+
+The in-app **Login** flow runs (scopes match `REQUIRED_GH_OAUTH_SCOPES` in code—`read:org` and `read:project` today):
 
 ```bash
 gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project
@@ -22,7 +24,9 @@ gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:pro
 
 That opens the browser quickly and avoids repeated HTTPS/SSH and SSH key prompts. **Tradeoff:** Git operations for GitHub are configured for **SSH** by this flow; if you prefer HTTPS for `git`, run `gh config set git_protocol https -h github.com` afterward or authenticate with different flags.
 
-When `gh` falls back to the **device code** flow, the app overlay shows the one-time code and an **Open GitHub** button; full `gh` output is still printed in the terminal (you may need to press Enter there when prompted).
+When `gh` falls back to the **device code** flow, the app overlay shows the one-time code and a button to copy the code and open the device page; full `gh` output is still printed in the terminal (you may need to press Enter there when prompted).
+
+You can also add scopes without a full login:
 
 ```bash
 gh auth refresh --scopes read:org,read:project
@@ -32,11 +36,11 @@ See [gh auth login](https://cli.github.com/manual/gh_auth_login) and [gh auth re
 
 ### Fine-grained personal access tokens
 
-If you authenticate `gh` with a **fine-grained** personal access token, `gh auth status` may not list classic OAuth scopes the same way. The app may show that scopes could not be verified; use **Add missing scopes** in the UI (or the command above) if features fail with `403`.
+If you authenticate `gh` with a **fine-grained** personal access token, `gh auth status` may not list classic OAuth scopes the same way. The app will show **logged out** with a message that scopes could not be verified; use **Login** in the app (or `gh auth refresh` / re-login) if features fail with `403`.
 
 ## Testing scopes locally
 
-To manually test the “missing scope” UI without a second account:
+To manually test the “missing scope” behavior without a second account:
 
 1. **Remove** `read:project` (not part of GitHub CLI’s minimum token set):
 
@@ -44,7 +48,7 @@ To manually test the “missing scope” UI without a second account:
    gh auth refresh --remove-scopes read:project
    ```
 
-2. Start the app; you should see the prompt to add missing scopes.
+2. Start the app; you should see **logged out** with a message about missing scopes and **Login**.
 
 3. **Restore** when done:
 
@@ -52,6 +56,6 @@ To manually test the “missing scope” UI without a second account:
    gh auth refresh --scopes read:project
    ```
 
-   Or use **Add missing scopes** in the app.
+   Or use **Login** in the app.
 
 **Note:** `repo`, `read:org`, and `gist` are CLI **minimum** scopes and cannot be removed with `--remove-scopes`. Testing a missing `read:org` case usually requires unit tests with fixture JSON or a specially scoped token, not `gh` alone.

@@ -13,9 +13,7 @@ import {
   checkRequiredGitHubCliScopes,
   ghAuthLogout,
   ghAuthStatus,
-  requiredGhOAuthScopesCsv,
   spawnGhAuthLogin,
-  spawnGhAuthRefreshScopes,
 } from "./gh/auth.ts";
 import {
   emptyTransparentAvatarImage,
@@ -241,7 +239,7 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
 }
 
 /** Slint-node maps enum variants to kebab-case strings on `AppState.auth` (not `ui.Authed.*` values). */
-type AuthedAuthState = "loggedOut" | "loggedIn" | "needsScopes" | "authorizing";
+type AuthedAuthState = "loggedOut" | "loggedIn" | "authorizing";
 
 type AppStateHandle = {
   auth: AuthedAuthState;
@@ -254,11 +252,9 @@ type MainWindowInstance = {
   AppState: AppStateHandle;
   login_clicked?: () => void;
   logout_clicked?: () => void;
-  add_scopes_clicked?: () => void;
   open_github_device_clicked?: () => void;
   close_auth_window: () => void;
   gh_label: string;
-  scope_message: string;
   auth_device_code: string;
   auth_device_url: string;
   avatar?: SlintRgbaImage;
@@ -266,7 +262,6 @@ type MainWindowInstance = {
 
 type MainWindowOpts = {
   "gh-label"?: string;
-  "scope-message"?: string;
   "auth-device-code"?: string;
   "auth-device-url"?: string;
   avatar?: SlintRgbaImage;
@@ -325,7 +320,6 @@ function applyAuthUi(window: MainWindowInstance): void {
   if (status === "no_gh") {
     window.AppState.auth = "loggedOut";
     window.gh_label = "gh not found (install GitHub CLI)";
-    window.scope_message = "";
     clearAuthDeviceFields(window);
     window.close_auth_window();
     clearAvatar(window);
@@ -334,7 +328,6 @@ function applyAuthUi(window: MainWindowInstance): void {
   if (status === "not_authed") {
     window.AppState.auth = "loggedOut";
     window.gh_label = "Not signed in";
-    window.scope_message = "";
     clearAuthDeviceFields(window);
     window.close_auth_window();
     clearAvatar(window);
@@ -343,7 +336,6 @@ function applyAuthUi(window: MainWindowInstance): void {
 
   window.AppState.auth = "loggedIn";
   window.gh_label = "Checking…";
-  window.scope_message = "";
   clearAuthDeviceFields(window);
   window.close_auth_window();
   clearAvatar(window);
@@ -354,9 +346,10 @@ function applyAuthUi(window: MainWindowInstance): void {
       return;
     }
     if (!scopeCheck.ok) {
-      window.AppState.auth = "needsScopes";
-      window.scope_message = scopeCheck.message;
-      window.gh_label = "";
+      window.AppState.auth = "loggedOut";
+      window.gh_label = `${scopeCheck.message} Click Login to authorize with the required scopes.`;
+      clearAuthDeviceFields(window);
+      window.close_auth_window();
       clearAvatar(window);
       return;
     }
@@ -375,7 +368,6 @@ const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
 
 const window = new ui.MainWindow({
   "gh-label": "",
-  "scope-message": "",
   "auth-device-code": "",
   "auth-device-url": "",
 });
@@ -404,21 +396,6 @@ window.login_clicked = () => {
 window.logout_clicked = () => {
   ghAuthLogout();
   void applyAuthUi(window);
-};
-
-window.add_scopes_clicked = () => {
-  clearAuthDeviceFields(window);
-  window.AppState.auth = "authorizing";
-  spawnGhAuthRefreshScopes(requiredGhOAuthScopesCsv(), {
-    onDeviceFlowInfo: (info) => {
-      window.auth_device_code = info.code;
-      window.auth_device_url = info.url;
-    },
-    onClose: () => {
-      clearAuthDeviceFields(window);
-      void applyAuthUi(window);
-    },
-  });
 };
 
 applyAuthUi(window);

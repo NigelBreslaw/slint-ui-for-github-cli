@@ -118,8 +118,7 @@ export function checkRequiredScopesAgainstGranted(
     return {
       ok: false,
       unknown: true,
-      message:
-        "Could not verify scopes (e.g. fine-grained token). Tap Add missing scopes to run gh auth refresh in the terminal.",
+      message: "Could not verify scopes (e.g. fine-grained token).",
     };
   }
   const grantedSet = new Set(granted);

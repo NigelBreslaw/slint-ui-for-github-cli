@@ -8,7 +8,7 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 - **pnpm** (see [pnpm.io](https://pnpm.io/installation))
 - **GitHub CLI** (`gh`) installed and authenticated (`gh auth login`)
 
-**OAuth scopes:** The app expects classic token scopes **`read:org`** and **`read:project`** (see [scopes.md](scopes.md) for why, how to refresh, and how to test locally).
+**OAuth scopes:** The app expects classic token scopes **`read:org`** and **`read:project`**. If `gh` is missing them (or scopes cannot be verified), the UI stays **logged out** with an explanation—use **Login** to authorize with the required scopes (see [scopes.md](scopes.md)).
 
 ## Setup
 
