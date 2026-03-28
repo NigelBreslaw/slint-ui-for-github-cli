@@ -16,12 +16,13 @@ From the project root:
 pnpm install
 ```
 
-The first install runs `slint-ui`’s install step so native binaries are available. If your package manager blocks install scripts, ensure `slint-ui` is allowed (this repo lists it under `pnpm.onlyBuiltDependencies` in `package.json`).
+The first install runs native install steps for **`slint-ui`** and **`sharp`**. If your package manager blocks install scripts, allow those packages (this repo lists them under `pnpm.onlyBuiltDependencies` in `package.json`).
 
 ## Dependencies (runtime)
 
 - **[slint-ui](https://www.npmjs.com/package/slint-ui)** — Slint UI for Node ([Slint-node docs](https://docs.slint.dev/latest/docs/node/)).
 - **[arktype](https://www.npmjs.com/package/arktype)** — Runtime validation of JSON returned by `gh api`. Schemas are maintained **per endpoint** against GitHub’s published **[OpenAPI description](https://docs.github.com/en/rest/about-the-rest-api/about-the-openapi-description-for-the-rest-api)** (see `src/schemas/`). For example, `gh api user` (`GET /user`) is checked in `src/schemas/gh-api-user.ts`.
+- **[sharp](https://www.npmjs.com/package/sharp)** — Decodes the profile image from `avatar_url` (PNG/JPEG/WebP, etc.) into RGBA for Slint’s `Image` element (`src/gh/avatar-image.ts`). If download or decode fails, the window still opens and only the label may be shown.
 
 ## Run
 

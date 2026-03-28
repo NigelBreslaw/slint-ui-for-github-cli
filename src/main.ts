@@ -2,6 +2,10 @@ import * as slint from "slint-ui";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import {
+  loadAvatarRgba,
+  type SlintRgbaImage,
+} from "./gh/avatar-image.ts";
 import { parseGhApiUserPayload } from "./schemas/gh-api-user.ts";
 
 /**
@@ -67,16 +71,27 @@ function ghApiJson(restArgs: string[]): GhJsonResult {
   }
 }
 
-function getGhLogin(): string {
+async function buildMainWindowProps(): Promise<{
+  "gh-label": string;
+  avatar?: SlintRgbaImage;
+}> {
   const result = ghApiJson(["user"]);
   if (!result.ok) {
-    return result.error;
+    return { "gh-label": result.error };
   }
   const parsed = parseGhApiUserPayload(result.value);
   if (!parsed.ok) {
-    return parsed.message;
+    return { "gh-label": parsed.message };
   }
-  return parsed.user.login;
+  const user = parsed.user;
+  const avatar =
+    (await loadAvatarRgba(user.avatar_url)) ?? transparentPixelImage();
+  return { "gh-label": user.login, avatar };
+}
+
+/** 1×1 transparent RGBA fallback when avatar download/decode fails. */
+function transparentPixelImage(): SlintRgbaImage {
+  return { width: 1, height: 1, data: Buffer.from([0, 0, 0, 0]) };
 }
 
 type MainWindowInstance = {
@@ -85,13 +100,14 @@ type MainWindowInstance = {
 
 type MainWindowOpts = {
   "gh-label"?: string;
+  avatar: SlintRgbaImage;
 };
 
 const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
   MainWindow: new (opts: MainWindowOpts) => MainWindowInstance;
 };
 
-const label = getGhLogin();
-const window = new ui.MainWindow({ "gh-label": label });
+const props = await buildMainWindowProps();
+const window = new ui.MainWindow(props);
 
 await window.run();

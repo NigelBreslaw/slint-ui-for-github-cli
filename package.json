@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "arktype": "2.2.0",
+    "sharp": "0.34.5",
     "slint-ui": "1.15.1"
   },
   "devDependencies": {
@@ -22,6 +23,7 @@
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "sharp",
       "slint-ui"
     ]
   }
