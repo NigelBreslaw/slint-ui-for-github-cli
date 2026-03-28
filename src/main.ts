@@ -17,16 +17,20 @@ openAppDb();
  * When `GH_DEBUG_JSON=1`, writes pretty-printed JSON under `debug-json/` (gitignored).
  * Do not enable while screen-sharing; API responses may include PII or account details.
  */
-function maybeWriteDebugJson(restArgs: string[], value: unknown): void {
+function writeDebugJsonStem(stem: string, value: unknown): void {
   if (process.env.GH_DEBUG_JSON !== "1") {
     return;
   }
   const dir = join(process.cwd(), "debug-json");
   mkdirSync(dir, { recursive: true });
-  const segments = restArgs.map((a) => a.replace(/[^a-zA-Z0-9._-]+/g, "_"));
-  const filename = `gh-api--${segments.join("--")}.json`;
-  const filePath = join(dir, filename);
+  const safe = stem.replace(/[^a-zA-Z0-9._-]+/g, "_");
+  const filePath = join(dir, `${safe}.json`);
   writeFileSync(filePath, JSON.stringify(value, null, 2), "utf8");
+}
+
+function maybeWriteDebugJsonFromRestArgs(restArgs: string[], value: unknown): void {
+  const segments = restArgs.map((a) => a.replace(/[^a-zA-Z0-9._-]+/g, "_"));
+  writeDebugJsonStem(`gh-api--${segments.join("--")}`, value);
 }
 
 function mapGhExecError(e: unknown): string {
@@ -47,7 +51,16 @@ type GhJsonOk = { ok: true; value: unknown };
 type GhJsonErr = { ok: false; error: string };
 type GhJsonResult = GhJsonOk | GhJsonErr;
 
-function ghApiJson(restArgs: string[]): GhJsonResult {
+type GhApiJsonOptions = {
+  /** When set, write debug JSON to this stem (no `.json`) instead of deriving from `restArgs`. */
+  debugStem?: string;
+  /** If stdout is empty after trim, use this value instead of failing (e.g. `[]` for list endpoints). */
+  emptyResponseAs?: unknown;
+  /** When true with `debugStem`, do not write a file if the payload is an empty array (e.g. no projects). */
+  omitDebugFileIfEmptyArray?: boolean;
+};
+
+function ghApiJson(restArgs: string[], options?: GhApiJsonOptions): GhJsonResult {
   try {
     const out = execFileSync("gh", ["api", ...restArgs], {
       encoding: "utf8",
@@ -55,19 +68,96 @@ function ghApiJson(restArgs: string[]): GhJsonResult {
       env: { ...process.env, GH_PAGER: "cat" },
     });
     const trimmed = out.trim();
-    if (trimmed.length === 0) {
-      return { ok: false, error: "gh: empty response (try gh auth login)" };
-    }
     let value: unknown;
-    try {
-      value = JSON.parse(trimmed);
-    } catch {
-      return { ok: false, error: "gh: response was not valid JSON" };
+    if (trimmed.length === 0) {
+      if (options?.emptyResponseAs !== undefined) {
+        value = options.emptyResponseAs;
+      } else {
+        return { ok: false, error: "gh: empty response (try gh auth login)" };
+      }
+    } else {
+      try {
+        value = JSON.parse(trimmed);
+      } catch {
+        return { ok: false, error: "gh: response was not valid JSON" };
+      }
     }
-    maybeWriteDebugJson(restArgs, value);
+    if (options?.debugStem !== undefined) {
+      const omit =
+        options.omitDebugFileIfEmptyArray === true && Array.isArray(value) && value.length === 0;
+      if (!omit) {
+        writeDebugJsonStem(options.debugStem, value);
+      }
+    } else {
+      maybeWriteDebugJsonFromRestArgs(restArgs, value);
+    }
     return { ok: true, value };
   } catch (e) {
     return { ok: false, error: mapGhExecError(e) };
+  }
+}
+
+/** Options for Projects V2 list calls: empty stdout / `[]` means “no projects” — no debug file in that case. */
+function projectsV2ListDebugOptions(stem: string): GhApiJsonOptions {
+  return {
+    debugStem: stem,
+    emptyResponseAs: [],
+    omitDebugFileIfEmptyArray: true,
+  };
+}
+
+function parseOrgLogins(orgsPayload: unknown): string[] {
+  if (!Array.isArray(orgsPayload)) {
+    return [];
+  }
+  const logins: string[] = [];
+  for (const row of orgsPayload) {
+    if (
+      row !== null &&
+      typeof row === "object" &&
+      "login" in row &&
+      typeof (row as { login: unknown }).login === "string"
+    ) {
+      logins.push((row as { login: string }).login);
+    }
+  }
+  return logins;
+}
+
+/**
+ * When `GH_DEBUG_JSON=1`, dumps Projects (V2) for the user and each org membership.
+ * Empty project lists write no file (not an error). Real `gh` failures still write `*--error.json`.
+ */
+function maybeDumpProjectsV2Debug(login: string): void {
+  if (process.env.GH_DEBUG_JSON !== "1") {
+    return;
+  }
+
+  const userStem = `projects-v2--user--${login}`;
+  const userRes = ghApiJson(
+    [`users/${login}/projectsV2`, "--paginate"],
+    projectsV2ListDebugOptions(userStem),
+  );
+  if (!userRes.ok) {
+    writeDebugJsonStem(`${userStem}--error`, { error: userRes.error });
+  }
+
+  const orgsStem = "projects-v2--orgs-membership";
+  const orgsRes = ghApiJson(["user/orgs", "--paginate"], { debugStem: orgsStem });
+  if (!orgsRes.ok) {
+    writeDebugJsonStem(`${orgsStem}--error`, { error: orgsRes.error });
+    return;
+  }
+
+  for (const org of parseOrgLogins(orgsRes.value)) {
+    const orgStem = `projects-v2--org--${org}`;
+    const pr = ghApiJson(
+      [`orgs/${org}/projectsV2`, "--paginate"],
+      projectsV2ListDebugOptions(orgStem),
+    );
+    if (!pr.ok) {
+      writeDebugJsonStem(`${orgStem}--error`, { error: pr.error });
+    }
   }
 }
 
@@ -125,6 +215,7 @@ async function applyAuthUi(window: MainWindowInstance): Promise<void> {
     return;
   }
   const user = parsed.user;
+  maybeDumpProjectsV2Debug(user.login);
   const loaded = await loadAvatarRgba(user.avatar_url);
   window.gh_label = user.login;
   if (loaded !== undefined) {

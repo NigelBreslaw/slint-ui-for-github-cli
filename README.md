@@ -61,3 +61,5 @@ GH_DEBUG_JSON=1 pnpm start
 On Windows (cmd), you can also use `set GH_DEBUG_JSON=1` before `pnpm start` if you prefer.
 
 Files are named from the API path, for example `debug-json/gh-api--user.json` for `gh api user`.
+
+When signed in, the app also requests **GitHub Projects (V2)** for your user and for each org you belong to, writing files such as `debug-json/projects-v2--user--YOURLOGIN.json` and `debug-json/projects-v2--org--ORGNAME.json` (plus `projects-v2--orgs-membership.json` for the org list). That needs the **`project`** OAuth scope; if those requests fail with 403, run `gh auth refresh -s project` and sign in again.
