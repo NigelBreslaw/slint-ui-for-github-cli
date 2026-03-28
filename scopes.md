@@ -14,11 +14,13 @@ We do **not** require the `project` (write) scope unless the app later adds muta
 
 ### Add scopes with the CLI
 
+The in-app **Login** button runs `gh auth login --scopes read:org,read:project` so the OAuth flow requests org and project read access up front, not only the default minimum.
+
 ```bash
 gh auth refresh --scopes read:org,read:project
 ```
 
-See [gh auth refresh](https://cli.github.com/manual/gh_auth_refresh).
+See [gh auth login](https://cli.github.com/manual/gh_auth_login) and [gh auth refresh](https://cli.github.com/manual/gh_auth_refresh).
 
 ### Fine-grained personal access tokens
 

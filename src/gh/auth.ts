@@ -38,10 +38,13 @@ export function ghAuthLogout(): void {
 
 /**
  * Runs interactive `gh auth login` with inherited stdio (use from a terminal).
+ * Requests {@link REQUIRED_GH_OAUTH_SCOPES} via `--scopes` so new sessions get
+ * `read:org` and `read:project`, not only the CLI minimum defaults.
  * Invokes `onClose` when the child exits (including spawn failure).
  */
 export function spawnGhAuthLogin(onClose: (code: number | null) => void): void {
-  const child = spawn("gh", ["auth", "login"], {
+  const scopeCsv = REQUIRED_GH_OAUTH_SCOPES.join(",");
+  const child = spawn("gh", ["auth", "login", "--scopes", scopeCsv], {
     stdio: "inherit",
     detached: false,
   });
