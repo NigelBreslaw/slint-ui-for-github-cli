@@ -1,5 +1,23 @@
 import * as slint from "slint-ui";
 import { execFileSync } from "node:child_process";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+/**
+ * When `GH_DEBUG_JSON=1`, writes pretty-printed JSON under `debug-json/` (gitignored).
+ * Do not enable while screen-sharing; API responses may include PII or account details.
+ */
+function maybeWriteDebugJson(restArgs: string[], value: unknown): void {
+  if (process.env.GH_DEBUG_JSON !== "1") {
+    return;
+  }
+  const dir = join(process.cwd(), "debug-json");
+  mkdirSync(dir, { recursive: true });
+  const segments = restArgs.map((a) => a.replace(/[^a-zA-Z0-9._-]+/g, "_"));
+  const filename = `gh-api--${segments.join("--")}.json`;
+  const filePath = join(dir, filename);
+  writeFileSync(filePath, JSON.stringify(value, null, 2), "utf8");
+}
 
 function mapGhExecError(e: unknown): string {
   if (
@@ -41,6 +59,7 @@ function ghApiJson(restArgs: string[]): GhJsonResult {
     } catch {
       return { ok: false, error: "gh: response was not valid JSON" };
     }
+    maybeWriteDebugJson(restArgs, value);
     return { ok: true, value };
   } catch (e) {
     return { ok: false, error: mapGhExecError(e) };
