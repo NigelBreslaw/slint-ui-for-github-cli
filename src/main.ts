@@ -256,14 +256,18 @@ type MainWindowInstance = {
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
   open_cli_install_page: () => void;
-  gh_label: string;
+  user_login: string;
+  user_name: string;
+  status_message: string;
   auth_device_code: string;
   auth_device_url: string;
   avatar?: SlintRgbaImage;
 };
 
 type MainWindowOpts = {
-  "gh-label"?: string;
+  status_message?: string;
+  user_login?: string;
+  user_name?: string;
   "auth-device-code"?: string;
   "auth-device-url"?: string;
   avatar?: SlintRgbaImage;
@@ -284,18 +288,18 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
     return;
   }
   if (!result.ok) {
-    window.gh_label = result.error;
+    window.status_message = result.error;
     clearAvatar(window);
     return;
   }
   const parsed = parseGhApiUserPayload(result.value);
   if (!parsed.ok) {
-    window.gh_label = parsed.message;
+    window.status_message = parsed.message;
     clearAvatar(window);
     return;
   }
   const user = parsed.user;
-  window.gh_label = user.login;
+  window.status_message = user.login;
   clearAvatar(window);
 
   if (process.env.GH_DEBUG_JSON === "1") {
@@ -321,7 +325,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   const status = ghAuthStatus();
   if (status === "no_gh") {
     window.AppState.auth = "noGhCliInstalled";
-    window.gh_label = "gh not found (install GitHub CLI)";
+    window.status_message = "gh not found (install GitHub CLI)";
     window.show_no_gh_cli_installed();
     clearAuthDeviceFields(window);
     window.close_auth_window();
@@ -330,7 +334,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   }
   if (status === "not_authed") {
     window.AppState.auth = "loggedOut";
-    window.gh_label = "Not signed in";
+    window.status_message = "Not signed in";
     clearAuthDeviceFields(window);
     window.close_auth_window();
     clearAvatar(window);
@@ -338,7 +342,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   }
 
   window.AppState.auth = "loggedIn";
-  window.gh_label = "Checking…";
+  window.status_message = "Checking…";
   clearAuthDeviceFields(window);
   window.close_auth_window();
   clearAvatar(window);
@@ -350,17 +354,17 @@ function applyAuthUi(window: MainWindowInstance): void {
     }
     if (!scopeCheck.ok) {
       window.AppState.auth = "loggedOut";
-      window.gh_label = `${scopeCheck.message} Click Login to authorize with the required scopes.`;
+      window.status_message = `${scopeCheck.message} Click Login to authorize with the required scopes.`;
       clearAuthDeviceFields(window);
       window.close_auth_window();
       clearAvatar(window);
       return;
     }
-    window.gh_label = "Loading…";
+    window.status_message = "Loading…";
     await fetchAndApplyGitHubUser(window);
   })().catch((e) => {
     console.error("[github-app] scope check or user fetch failed:", e);
-    window.gh_label = "Something went wrong";
+    window.status_message = "Something went wrong";
     clearAvatar(window);
   });
 }
@@ -370,7 +374,9 @@ const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
 };
 
 const window = new ui.MainWindow({
-  "gh-label": "",
+  status_message: "",
+  user_login: "",
+  user_name: "",
   "auth-device-code": "",
   "auth-device-url": "",
 });

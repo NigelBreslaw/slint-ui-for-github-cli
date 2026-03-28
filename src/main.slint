@@ -32,7 +32,9 @@ export component MainWindow inherits Window {
         no_gh_cli_installed_window.show();
     }
 
-    in property <string> gh-label: "";
+    in property <string> status_message: "";
+    in property <string> user_login: "";
+    in property <string> user_name: "";
     in property <string> auth-device-code: "";
     in property <string> auth-device-url: "";
     in property <image> avatar;
@@ -55,7 +57,7 @@ export component MainWindow inherits Window {
             height: 100%;
 
             Text {
-                text: gh-label;
+                text: status_message;
                 font-size: 18px;
                 horizontal-alignment: center;
                 wrap: word-wrap;
