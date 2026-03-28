@@ -97,13 +97,47 @@ function ghApiJson(restArgs: string[], options?: GhApiJsonOptions): GhJsonResult
   }
 }
 
-/** Options for Projects V2 list calls: empty stdout / `[]` means “no projects” — no debug file in that case. */
-function projectsV2ListDebugOptions(stem: string): GhApiJsonOptions {
+/** Options for project list calls: empty stdout / `[]` means nothing to dump — skip file. */
+function projectListDebugOptions(stem: string): GhApiJsonOptions {
   return {
     debugStem: stem,
     emptyResponseAs: [],
     omitDebugFileIfEmptyArray: true,
   };
+}
+
+/**
+ * `gh project list` (Projects V2 / unified CLI view). Org kanban boards are often visible here
+ * even when REST `orgs/.../projectsV2` is empty or 404 for your token.
+ */
+function ghProjectListForDebug(debugStem: string, owner?: string): void {
+  if (process.env.GH_DEBUG_JSON !== "1") {
+    return;
+  }
+  const args = ["project", "list", "--format", "json", "--closed", "-L", "200"];
+  if (owner !== undefined) {
+    args.push("--owner", owner);
+  }
+  try {
+    const out = execFileSync("gh", args, {
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"],
+      env: { ...process.env, GH_PAGER: "cat" },
+    });
+    const trimmed = out.trim();
+    let value: unknown;
+    if (trimmed.length === 0) {
+      value = [];
+    } else {
+      value = JSON.parse(trimmed) as unknown;
+    }
+    if (Array.isArray(value) && value.length === 0) {
+      return;
+    }
+    writeDebugJsonStem(debugStem, value);
+  } catch (e) {
+    writeDebugJsonStem(`${debugStem}--error`, { error: mapGhExecError(e) });
+  }
 }
 
 function parseOrgLogins(orgsPayload: unknown): string[] {
@@ -125,22 +159,37 @@ function parseOrgLogins(orgsPayload: unknown): string[] {
 }
 
 /**
- * When `GH_DEBUG_JSON=1`, dumps Projects (V2) for the user and each org membership.
- * Empty project lists write no file (not an error). Real `gh` failures still write `*--error.json`.
+ * When `GH_DEBUG_JSON=1`, dumps GitHub project data for debugging:
+ * - REST **Projects V2** (`…/projectsV2`) — new table projects.
+ * - REST **Projects (classic)** (`…/projects?state=all`) — org/user **kanban** boards.
+ * - **`gh project list`** for the signed-in user and for each org — CLI view of projects.
+ *
+ * Empty lists skip files. `gh` / API failures still write `*--error.json` for that request.
  */
-function maybeDumpProjectsV2Debug(login: string): void {
+function maybeDumpGitHubProjectsDebug(login: string): void {
   if (process.env.GH_DEBUG_JSON !== "1") {
     return;
   }
 
-  const userStem = `projects-v2--user--${login}`;
-  const userRes = ghApiJson(
+  const userV2Stem = `projects-v2--user--${login}`;
+  const userV2Res = ghApiJson(
     [`users/${login}/projectsV2`, "--paginate"],
-    projectsV2ListDebugOptions(userStem),
+    projectListDebugOptions(userV2Stem),
   );
-  if (!userRes.ok) {
-    writeDebugJsonStem(`${userStem}--error`, { error: userRes.error });
+  if (!userV2Res.ok) {
+    writeDebugJsonStem(`${userV2Stem}--error`, { error: userV2Res.error });
   }
+
+  const userClassicStem = `projects-classic--user--${login}`;
+  const userClassicRes = ghApiJson(
+    [`users/${login}/projects?state=all&per_page=100`, "--paginate"],
+    projectListDebugOptions(userClassicStem),
+  );
+  if (!userClassicRes.ok) {
+    writeDebugJsonStem(`${userClassicStem}--error`, { error: userClassicRes.error });
+  }
+
+  ghProjectListForDebug("projects-gh-cli--user");
 
   const orgsStem = "projects-v2--orgs-membership";
   const orgsRes = ghApiJson(["user/orgs", "--paginate"], { debugStem: orgsStem });
@@ -150,14 +199,25 @@ function maybeDumpProjectsV2Debug(login: string): void {
   }
 
   for (const org of parseOrgLogins(orgsRes.value)) {
-    const orgStem = `projects-v2--org--${org}`;
-    const pr = ghApiJson(
+    const orgV2Stem = `projects-v2--org--${org}`;
+    const orgV2 = ghApiJson(
       [`orgs/${org}/projectsV2`, "--paginate"],
-      projectsV2ListDebugOptions(orgStem),
+      projectListDebugOptions(orgV2Stem),
     );
-    if (!pr.ok) {
-      writeDebugJsonStem(`${orgStem}--error`, { error: pr.error });
+    if (!orgV2.ok) {
+      writeDebugJsonStem(`${orgV2Stem}--error`, { error: orgV2.error });
     }
+
+    const orgClassicStem = `projects-classic--org--${org}`;
+    const orgClassic = ghApiJson(
+      [`orgs/${org}/projects?state=all&per_page=100`, "--paginate"],
+      projectListDebugOptions(orgClassicStem),
+    );
+    if (!orgClassic.ok) {
+      writeDebugJsonStem(`${orgClassicStem}--error`, { error: orgClassic.error });
+    }
+
+    ghProjectListForDebug(`projects-gh-cli--org--${org}`, org);
   }
 }
 
@@ -215,7 +275,7 @@ async function applyAuthUi(window: MainWindowInstance): Promise<void> {
     return;
   }
   const user = parsed.user;
-  maybeDumpProjectsV2Debug(user.login);
+  maybeDumpGitHubProjectsDebug(user.login);
   const loaded = await loadAvatarRgba(user.avatar_url);
   window.gh_label = user.login;
   if (loaded !== undefined) {
