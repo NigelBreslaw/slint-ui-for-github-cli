@@ -9,6 +9,102 @@ import {
 
 const execFileAsync = promisify(execFile);
 
+/** Default device-authorization page for github.com when the URL is not parsed from `gh` output. */
+const DEFAULT_GITHUB_DEVICE_LOGIN_URL = "https://github.com/login/device";
+
+type GhDeviceFlowInfo = {
+  code: string;
+  url: string;
+};
+
+type GhInteractiveOptions = {
+  onClose: (code: number | null) => void;
+  onDeviceFlowInfo?: (info: GhDeviceFlowInfo) => void;
+};
+
+const DEVICE_CODE_RE = /one-time code:\s*([A-Z0-9]{4}-[A-Z0-9]{4})/i;
+const DEVICE_URL_RE = /(https:\/\/[^\s]+\/login\/device)/;
+
+function tryParseDeviceFlow(buffer: string): GhDeviceFlowInfo | null {
+  const codeMatch = DEVICE_CODE_RE.exec(buffer);
+  if (codeMatch === null) {
+    return null;
+  }
+  const code = codeMatch[1];
+  const urlMatch = DEVICE_URL_RE.exec(buffer);
+  const url = urlMatch !== null ? urlMatch[1] : DEFAULT_GITHUB_DEVICE_LOGIN_URL;
+  return { code, url };
+}
+
+function spawnGhWithStdinInheritedTeedOutput(
+  args: string[],
+  { onClose, onDeviceFlowInfo }: GhInteractiveOptions,
+): void {
+  let deviceInfoSent = false;
+  let aggregate = "";
+
+  const tryEmitDeviceInfo = (): void => {
+    if (deviceInfoSent || onDeviceFlowInfo === undefined) {
+      return;
+    }
+    const parsed = tryParseDeviceFlow(aggregate);
+    if (parsed !== null) {
+      deviceInfoSent = true;
+      onDeviceFlowInfo(parsed);
+    }
+  };
+
+  const wireStream = (
+    stream: NodeJS.ReadableStream | null,
+    toTerminal: (chunk: string) => void,
+  ): void => {
+    if (stream === null) {
+      return;
+    }
+    stream.setEncoding("utf8");
+    stream.on("data", (chunk: string) => {
+      toTerminal(chunk);
+      aggregate += chunk;
+      tryEmitDeviceInfo();
+    });
+  };
+
+  let child;
+  try {
+    child = spawn("gh", args, {
+      stdio: ["inherit", "pipe", "pipe"],
+      detached: false,
+    });
+  } catch (e) {
+    console.error("gh spawn failed", e);
+    onClose(null);
+    return;
+  }
+
+  const out = child.stdout;
+  const err = child.stderr;
+  if (out === null || err === null) {
+    console.error("gh spawn missing piped stdio");
+    onClose(null);
+    return;
+  }
+
+  wireStream(out, (c) => {
+    process.stdout.write(c);
+  });
+  wireStream(err, (c) => {
+    process.stderr.write(c);
+  });
+
+  child.on("close", (code) => {
+    onClose(code);
+  });
+  child.on("error", (err) => {
+    console.error("gh process error", err);
+    onClose(null);
+  });
+}
+
 /** Result of `gh auth status`: CLI missing, not logged in, or authenticated. */
 type GhAuthStatus = "no_gh" | "not_authed" | "ok";
 
@@ -37,28 +133,15 @@ export function ghAuthLogout(): void {
 }
 
 /**
- * Runs interactive `gh auth login` with inherited stdio (use from a terminal).
- * Uses `--web` for browser OAuth, `--git-protocol ssh` and `--skip-ssh-key` to skip
- * HTTPS/SSH and SSH key prompts, and `--scopes` from {@link REQUIRED_GH_OAUTH_SCOPES}.
- * Invokes `onClose` when the child exits (including spawn failure).
+ * Runs interactive `gh auth login` (stdin inherited; stdout/stderr teed to the terminal and parsed for device flow).
+ * Uses `--web`, `--git-protocol ssh`, `--skip-ssh-key`, and `--scopes` from {@link REQUIRED_GH_OAUTH_SCOPES}.
  */
-export function spawnGhAuthLogin(onClose: (code: number | null) => void): void {
+export function spawnGhAuthLogin(options: GhInteractiveOptions): void {
   const scopeCsv = REQUIRED_GH_OAUTH_SCOPES.join(",");
-  const child = spawn(
-    "gh",
+  spawnGhWithStdinInheritedTeedOutput(
     ["auth", "login", "--web", "--git-protocol", "ssh", "--skip-ssh-key", "--scopes", scopeCsv],
-    {
-      stdio: "inherit",
-      detached: false,
-    },
+    options,
   );
-  child.on("close", (code) => {
-    onClose(code);
-  });
-  child.on("error", (err) => {
-    console.error("gh auth login failed to start", err);
-    onClose(null);
-  });
 }
 
 /**
@@ -107,22 +190,8 @@ export async function checkRequiredGitHubCliScopes(): Promise<ScopeCheckResult> 
 }
 
 /**
- * Runs interactive `gh auth refresh --scopes …` with inherited stdio.
- * Invokes `onClose` when the child exits (including spawn failure).
+ * Runs interactive `gh auth refresh --scopes …` (stdin inherited; stdout/stderr teed and parsed for device flow).
  */
-export function spawnGhAuthRefreshScopes(
-  scopesCsv: string,
-  onClose: (code: number | null) => void,
-): void {
-  const child = spawn("gh", ["auth", "refresh", "--scopes", scopesCsv], {
-    stdio: "inherit",
-    detached: false,
-  });
-  child.on("close", (code) => {
-    onClose(code);
-  });
-  child.on("error", (err) => {
-    console.error("gh auth refresh failed to start", err);
-    onClose(null);
-  });
+export function spawnGhAuthRefreshScopes(scopesCsv: string, options: GhInteractiveOptions): void {
+  spawnGhWithStdinInheritedTeedOutput(["auth", "refresh", "--scopes", scopesCsv], options);
 }

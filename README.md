@@ -36,6 +36,8 @@ This runs `node src/main.ts` (TypeScript is executed directly via Node’s built
 
 **Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project` (scopes match [`REQUIRED_GH_OAUTH_SCOPES`](src/gh/required-scopes.ts)) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run **`pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
 
+If `gh` uses the **device code** flow, the overlay shows the one-time code and an **Open GitHub** button (same output is still mirrored in the terminal); you may still need to press Enter there when `gh` asks.
+
 ### Typecheck
 
 ```bash

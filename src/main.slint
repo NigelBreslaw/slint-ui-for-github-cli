@@ -16,6 +16,7 @@ export component MainWindow inherits Window {
     callback logout-clicked;
     callback add-scopes-clicked;
     callback close-auth-window;
+    callback open-github-device-clicked;
 
     close-auth-window => {
         auth_window.close();
@@ -23,6 +24,8 @@ export component MainWindow inherits Window {
 
     in property <string> gh-label: "";
     in property <string> scope-message: "";
+    in property <string> auth-device-code: "";
+    in property <string> auth-device-url: "";
     in property <image> avatar;
 
     width: 400px;
@@ -117,6 +120,36 @@ export component MainWindow inherits Window {
                     font-size: 16px;
                     horizontal-alignment: center;
                     wrap: word-wrap;
+                }
+
+                Text {
+                    visible: root.auth-device-code != "";
+                    text: "Your code: ";
+                    font-size: 18px;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                }
+                TextInput {
+                    visible: root.auth-device-code != "";
+                    text: root.auth-device-code;
+                    font-size: 22px;
+                    font-weight: 700;
+                    horizontal-alignment: center;
+                    wrap: word-wrap;
+                    read-only: true;
+                    changed has-focus => {
+                        if (self.has-focus) {
+                            self.select-all();
+                        }
+                    }
+                }
+
+                Button {
+                    visible: root.auth-device-code != "";
+                    text: "Open GitHub";
+                    clicked => {
+                        root.open-github-device-clicked();
+                    }
                 }
 
                 Spinner {

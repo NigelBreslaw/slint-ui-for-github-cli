@@ -23,6 +23,7 @@ import {
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";
 import { parseGhApiUserPayload } from "./schemas/gh-api-user.ts";
+import { openUrlInBrowser } from "./open-url.ts";
 
 openAppDb();
 
@@ -253,20 +254,30 @@ type MainWindowInstance = {
   login_clicked?: () => void;
   logout_clicked?: () => void;
   add_scopes_clicked?: () => void;
+  open_github_device_clicked?: () => void;
   close_auth_window: () => void;
   gh_label: string;
   scope_message: string;
+  auth_device_code: string;
+  auth_device_url: string;
   avatar?: SlintRgbaImage;
 };
 
 type MainWindowOpts = {
   "gh-label"?: string;
   "scope-message"?: string;
+  "auth-device-code"?: string;
+  "auth-device-url"?: string;
   avatar?: SlintRgbaImage;
 };
 
 function clearAvatar(window: MainWindowInstance): void {
   window.avatar = emptyTransparentAvatarImage;
+}
+
+function clearAuthDeviceFields(window: MainWindowInstance): void {
+  window.auth_device_code = "";
+  window.auth_device_url = "";
 }
 
 async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void> {
@@ -314,6 +325,8 @@ function applyAuthUi(window: MainWindowInstance): void {
     window.AppState.auth = "loggedOut";
     window.gh_label = "gh not found (install GitHub CLI)";
     window.scope_message = "";
+    clearAuthDeviceFields(window);
+    window.close_auth_window();
     clearAvatar(window);
     return;
   }
@@ -321,6 +334,8 @@ function applyAuthUi(window: MainWindowInstance): void {
     window.AppState.auth = "loggedOut";
     window.gh_label = "Not signed in";
     window.scope_message = "";
+    clearAuthDeviceFields(window);
+    window.close_auth_window();
     clearAvatar(window);
     return;
   }
@@ -328,6 +343,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   window.AppState.auth = "loggedIn";
   window.gh_label = "Checking…";
   window.scope_message = "";
+  clearAuthDeviceFields(window);
   window.close_auth_window();
   clearAvatar(window);
   void (async () => {
@@ -356,12 +372,29 @@ const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
   MainWindow: new (opts: MainWindowOpts) => MainWindowInstance;
 };
 
-const window = new ui.MainWindow({ "gh-label": "", "scope-message": "" });
+const window = new ui.MainWindow({
+  "gh-label": "",
+  "scope-message": "",
+  "auth-device-code": "",
+  "auth-device-url": "",
+});
+
+window.open_github_device_clicked = () => {
+  openUrlInBrowser(window.auth_device_url);
+};
 
 window.login_clicked = () => {
+  clearAuthDeviceFields(window);
   window.AppState.auth = "authorizing";
-  spawnGhAuthLogin(() => {
-    void applyAuthUi(window);
+  spawnGhAuthLogin({
+    onDeviceFlowInfo: (info) => {
+      window.auth_device_code = info.code;
+      window.auth_device_url = info.url;
+    },
+    onClose: () => {
+      clearAuthDeviceFields(window);
+      void applyAuthUi(window);
+    },
   });
 };
 
@@ -371,9 +404,17 @@ window.logout_clicked = () => {
 };
 
 window.add_scopes_clicked = () => {
+  clearAuthDeviceFields(window);
   window.AppState.auth = "authorizing";
-  spawnGhAuthRefreshScopes(requiredGhOAuthScopesCsv(), () => {
-    void applyAuthUi(window);
+  spawnGhAuthRefreshScopes(requiredGhOAuthScopesCsv(), {
+    onDeviceFlowInfo: (info) => {
+      window.auth_device_code = info.code;
+      window.auth_device_url = info.url;
+    },
+    onClose: () => {
+      clearAuthDeviceFields(window);
+      void applyAuthUi(window);
+    },
   });
 };
 

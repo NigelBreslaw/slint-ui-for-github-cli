@@ -22,6 +22,8 @@ gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:pro
 
 That opens the browser quickly and avoids repeated HTTPS/SSH and SSH key prompts. **Tradeoff:** Git operations for GitHub are configured for **SSH** by this flow; if you prefer HTTPS for `git`, run `gh config set git_protocol https -h github.com` afterward or authenticate with different flags.
 
+When `gh` falls back to the **device code** flow, the app overlay shows the one-time code and an **Open GitHub** button; full `gh` output is still printed in the terminal (you may need to press Enter there when prompted).
+
 ```bash
 gh auth refresh --scopes read:org,read:project
 ```
