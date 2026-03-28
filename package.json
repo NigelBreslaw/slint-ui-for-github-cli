@@ -7,7 +7,7 @@
     "node": ">=24"
   },
   "scripts": {
-    "autofix": "pnpm dedupe && pnpm lint:fix && pnpm format && pnpm knip",
+    "autofix": "pnpm dedupe --prefer-offline && pnpm lint:fix && pnpm format && pnpm knip && pnpm typecheck",
     "start": "node src/main.ts",
     "dev:debug": "cross-env GH_DEBUG_JSON=1 node src/main.ts",
     "typecheck": "tsc --noEmit",
@@ -15,8 +15,7 @@
     "lint:fix": "oxlint --fix src",
     "format": "oxfmt --write src",
     "format:check": "oxfmt --check src",
-    "knip": "knip",
-    "check": "pnpm typecheck && pnpm lint && pnpm format:check && pnpm knip"
+    "knip": "knip"
   },
   "dependencies": {
     "arktype": "2.2.0",

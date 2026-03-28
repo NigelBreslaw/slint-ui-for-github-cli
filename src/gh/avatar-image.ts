@@ -20,6 +20,17 @@ export const emptyTransparentAvatarImage: SlintRgbaImage = {
 };
 
 const FETCH_TIMEOUT_MS = 15_000;
+/** Avatars larger than this (on either axis) are resized before cache write. */
+const AVATAR_CACHE_SIZE = 128;
+
+function debugAvatar(message: string, url: string, startedAt: number): void {
+  if (process.env.GH_DEBUG_AVATAR !== "1") {
+    return;
+  }
+  const preview = url.length > 120 ? `${url.slice(0, 117)}...` : url;
+  const ms = (performance.now() - startedAt).toFixed(1);
+  console.error(`[avatar] ${message} (${ms}ms) ${preview}`);
+}
 
 async function bufferToRgba(input: Buffer): Promise<SlintRgbaImage | undefined> {
   const { data, info } = await sharp(input)
@@ -34,6 +45,27 @@ async function bufferToRgba(input: Buffer): Promise<SlintRgbaImage | undefined> 
     height: info.height,
     data,
   };
+}
+
+/**
+ * If the image exceeds {@link AVATAR_CACHE_SIZE} on width or height, resize to
+ * AVATAR_CACHE_SIZE×AVATAR_CACHE_SIZE (cover) and re-encode as PNG for cache + decode.
+ */
+async function downscaleAvatarForCacheIfNeeded(
+  bytes: Buffer,
+  contentType: string | null,
+): Promise<{ bytes: Buffer; contentType: string | null }> {
+  const meta = await sharp(bytes).metadata();
+  const w = meta.width;
+  const h = meta.height;
+  if (w <= AVATAR_CACHE_SIZE && h <= AVATAR_CACHE_SIZE) {
+    return { bytes, contentType };
+  }
+  const resized = await sharp(bytes)
+    .resize(AVATAR_CACHE_SIZE, AVATAR_CACHE_SIZE, { fit: "cover" })
+    .jpeg()
+    .toBuffer();
+  return { bytes: resized, contentType: "image/jpeg" };
 }
 
 async function fetchAvatarBytes(
@@ -68,33 +100,52 @@ export async function loadAvatarRgba(url: string): Promise<SlintRgbaImage | unde
     return undefined;
   }
 
+  const startedAt = performance.now();
+
   const cached = readCachedAvatarFile(url);
   if (cached !== undefined) {
     try {
       const decoded = await bufferToRgba(cached);
       if (decoded !== undefined) {
+        debugAvatar("source=filesystem (cache hit), image ready", url, startedAt);
         return decoded;
       }
     } catch {
       /* corrupt cache */
     }
+    debugAvatar("source=filesystem invalid, clearing cache", url, startedAt);
     removeCachedAvatarFile(url);
   }
 
   const downloaded = await fetchAvatarBytes(url);
   if (downloaded === undefined) {
+    debugAvatar("source=network (fetch failed), no image", url, startedAt);
     return undefined;
   }
 
+  let toStore = downloaded;
   try {
-    writeCachedAvatarFile(url, downloaded.bytes, downloaded.contentType);
+    toStore = await downscaleAvatarForCacheIfNeeded(downloaded.bytes, downloaded.contentType);
+  } catch {
+    /* if resize/metadata fails, fall back to original bytes */
+  }
+
+  try {
+    writeCachedAvatarFile(url, toStore.bytes, toStore.contentType);
   } catch {
     /* still try to decode if disk write fails */
   }
 
   try {
-    return await bufferToRgba(downloaded.bytes);
+    const decoded = await bufferToRgba(toStore.bytes);
+    if (decoded !== undefined) {
+      debugAvatar("source=network (downloaded), image ready", url, startedAt);
+    } else {
+      debugAvatar("source=network (decode failed after download), no image", url, startedAt);
+    }
+    return decoded;
   } catch {
+    debugAvatar("source=network (decode error after download), no image", url, startedAt);
     return undefined;
   }
 }
