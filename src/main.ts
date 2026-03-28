@@ -2,11 +2,7 @@ import * as slint from "slint-ui";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import {
-  ghAuthLogout,
-  ghAuthStatus,
-  spawnGhAuthLogin,
-} from "./gh/auth.ts";
+import { ghAuthLogout, ghAuthStatus, spawnGhAuthLogin } from "./gh/auth.ts";
 import {
   emptyTransparentAvatarImage,
   loadAvatarRgba,
@@ -31,12 +27,7 @@ function maybeWriteDebugJson(restArgs: string[], value: unknown): void {
 }
 
 function mapGhExecError(e: unknown): string {
-  if (
-    e !== null &&
-    typeof e === "object" &&
-    "code" in e &&
-    e.code === "ENOENT"
-  ) {
+  if (e !== null && typeof e === "object" && "code" in e && e.code === "ENOENT") {
     return "gh not found (install GitHub CLI)";
   }
   if (e !== null && typeof e === "object" && "stderr" in e) {

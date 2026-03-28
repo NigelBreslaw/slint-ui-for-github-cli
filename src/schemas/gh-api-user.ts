@@ -25,7 +25,7 @@ export const ghApiUserSchema = type({
   repos_url: "string",
   events_url: "string",
   received_events_url: "string",
-  "type": type.unit("User"),
+  type: type.unit("User"),
   user_view_type: "string",
   site_admin: "boolean",
   name: nullableString,
@@ -49,9 +49,7 @@ export type GhApiUser = typeof ghApiUserSchema.infer;
 
 export function parseGhApiUserPayload(
   value: unknown,
-):
-  | { ok: true; user: GhApiUser }
-  | { ok: false; message: string } {
+): { ok: true; user: GhApiUser } | { ok: false; message: string } {
   const result = ghApiUserSchema(value);
   if (result instanceof type.errors) {
     const detail = result.summary.trim();

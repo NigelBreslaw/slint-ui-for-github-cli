@@ -20,9 +20,7 @@ const FETCH_TIMEOUT_MS = 15_000;
  * Downloads an image URL and decodes to RGBA for Slint.
  * Returns `undefined` on network, timeout, or decode errors.
  */
-export async function loadAvatarRgba(
-  url: string,
-): Promise<SlintRgbaImage | undefined> {
+export async function loadAvatarRgba(url: string): Promise<SlintRgbaImage | undefined> {
   if (url.length === 0) {
     return undefined;
   }

@@ -7,9 +7,15 @@
     "node": ">=24"
   },
   "scripts": {
+    "autofix": "pnpm dedupe && pnpm lint:fix && pnpm format",
     "start": "node src/main.ts",
     "dev:debug": "cross-env GH_DEBUG_JSON=1 node src/main.ts",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint --fix src",
+    "format": "oxfmt --write src",
+    "format:check": "oxfmt --check src",
+    "check": "pnpm typecheck && pnpm lint && pnpm format:check"
   },
   "dependencies": {
     "arktype": "2.2.0",
@@ -19,6 +25,8 @@
   "devDependencies": {
     "@types/node": "25.5.0",
     "cross-env": "10.1.0",
+    "oxfmt": "0.42.0",
+    "oxlint": "1.57.0",
     "typescript": "6.0.2"
   },
   "pnpm": {

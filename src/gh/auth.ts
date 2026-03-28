@@ -12,12 +12,7 @@ export function ghAuthStatus(): GhAuthStatus {
     execFileSync("gh", ["auth", "status"], { stdio: "ignore" });
     return "ok";
   } catch (e: unknown) {
-    if (
-      e !== null &&
-      typeof e === "object" &&
-      "code" in e &&
-      e.code === "ENOENT"
-    ) {
+    if (e !== null && typeof e === "object" && "code" in e && e.code === "ENOENT") {
       return "no_gh";
     }
     return "not_authed";
