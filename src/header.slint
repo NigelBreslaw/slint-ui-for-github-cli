@@ -61,47 +61,77 @@ component Menu {
     }
 
     content := Rectangle {
-        x: 16px;
-        y: 16px;
-        width: parent.width - (2 * self.x);
-        height: parent.height - (2 * self.y);
 
-        HorizontalLayout {
-            spacing: 8px;
-            width: parent.width;
-
-            Text {
-                text: AppState.user_status_emoji;
-                visible: AppState.user_status_emoji != "";
-                font-size: 18px;
-                vertical-alignment: center;
-            }
-
-            avatar := Avatar { }
+        Rectangle {
+            y: 16px;
+            x: 16px;
+            width: parent.width - (2 * self.x);
+            height: 100px - self.y;
 
             VerticalLayout {
-                y: 3px;
+                spacing: 8px;
+                width: parent.width;
+                HorizontalLayout {
+                    spacing: 8px;
+                    width: self.preferred-width;
+
+                    avatar := Avatar { }
+
+                    VerticalLayout {
+                        y: 3px;
+                        height: self.preferred-height;
+                        spacing: 4px;
+                        Text {
+                            width: 120px;
+                            text: AppState.user_login;
+                            visible: AppState.user_login != "";
+                            font-size: 14px;
+                            font-weight: 550;
+                            color: #f0f6fc;
+                            overflow: elide;
+                        }
+
+                        Text {
+                            width: 120px;
+                            text: AppState.user_name;
+                            visible: AppState.user_name != "";
+                            font-size: 14px;
+                            color: #9198a1;
+                            font-weight: 400;
+                            overflow: elide;
+                            letter-spacing: 0.15px;
+                        }
+                    }
+                }
+            }
+
+            HorizontalLayout {
+                x: 0px;
+                y: parent.height - self.height - 14px;
+                spacing: 8px;
+                width: self.preferred-width;
                 height: self.preferred-height;
-                spacing: 4px;
+
                 Text {
-                    width: 120px;
-                    text: AppState.user_login;
-                    visible: AppState.user_login != "";
+                    text: AppState.user_status_emoji;
+                    visible: AppState.user_status_emoji != "";
                     font-size: 14px;
-                    font-weight: 550;
-                    color: #f0f6fc;
-                    overflow: elide;
                 }
 
                 Text {
-                    width: 120px;
-                    text: AppState.user_name;
-                    visible: AppState.user_name != "";
+                    text: AppState.user_status_message;
+                    visible: AppState.user_status_message != "";
                     font-size: 14px;
-                    color: #9198a1;
+                    color: #f0f6fc;
                     font-weight: 400;
-                    overflow: elide;
                 }
+            }
+
+            Rectangle {
+                y: parent.height - self.height;
+                width: content.width - 16px;
+                height: 1px;
+                background: #2b3139;
             }
         }
     }
