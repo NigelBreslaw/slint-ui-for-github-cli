@@ -12,12 +12,20 @@ export component MainWindow inherits Window {
         alignment: center;
         spacing: 12px;
 
-        Image {
-            source: avatar;
+        Rectangle {
             width: 64px;
             height: 64px;
-            image-fit: cover;
-            accessible-label: "GitHub avatar";
+            border-radius: self.width / 2;
+            border-width: 1px;
+            border-color: white;
+            clip: true;
+            Image {
+                source: avatar;
+                width: 64px;
+                height: 64px;
+                image-fit: cover;
+                accessible-label: "GitHub avatar";
+            }
         }
 
         Text {

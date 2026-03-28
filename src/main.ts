@@ -84,14 +84,11 @@ async function buildMainWindowProps(): Promise<{
     return { "gh-label": parsed.message };
   }
   const user = parsed.user;
-  const avatar =
-    (await loadAvatarRgba(user.avatar_url)) ?? transparentPixelImage();
-  return { "gh-label": user.login, avatar };
-}
-
-/** 1×1 transparent RGBA fallback when avatar download/decode fails. */
-function transparentPixelImage(): SlintRgbaImage {
-  return { width: 1, height: 1, data: Buffer.from([0, 0, 0, 0]) };
+  const loaded = await loadAvatarRgba(user.avatar_url);
+  return {
+    "gh-label": user.login,
+    ...(loaded !== undefined ? { avatar: loaded } : {}),
+  };
 }
 
 type MainWindowInstance = {
@@ -100,7 +97,7 @@ type MainWindowInstance = {
 
 type MainWindowOpts = {
   "gh-label"?: string;
-  avatar: SlintRgbaImage;
+  avatar?: SlintRgbaImage;
 };
 
 const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
