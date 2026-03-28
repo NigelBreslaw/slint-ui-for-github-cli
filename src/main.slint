@@ -15,6 +15,11 @@ export component MainWindow inherits Window {
     callback login-clicked;
     callback logout-clicked;
     callback add-scopes-clicked;
+    callback close-auth-window;
+
+    close-auth-window => {
+        auth_window.close();
+    }
 
     in property <string> gh-label: "";
     in property <string> scope-message: "";
@@ -24,76 +29,76 @@ export component MainWindow inherits Window {
     height: 280px;
     title: "GitHub CLI";
 
-    Rectangle {
+    VerticalBox {
+        alignment: center;
+        spacing: 12px;
         width: 100%;
         height: 100%;
 
-        VerticalBox {
-            alignment: center;
-            spacing: 12px;
-            width: 100%;
-            height: 100%;
-
-            Rectangle {
+        Rectangle {
+            width: 64px;
+            height: 64px;
+            border-radius: self.width / 2;
+            border-width: 1px;
+            border-color: white;
+            clip: true;
+            Image {
+                source: avatar;
                 width: 64px;
                 height: 64px;
-                border-radius: self.width / 2;
-                border-width: 1px;
-                border-color: white;
-                clip: true;
-                Image {
-                    source: avatar;
-                    width: 64px;
-                    height: 64px;
-                    image-fit: cover;
-                    accessible-label: "GitHub avatar";
-                }
-            }
-
-            Text {
-                text: AppState.auth == Authed.needsScopes ? scope-message : gh-label;
-                font-size: 18px;
-                horizontal-alignment: center;
-                wrap: word-wrap;
-            }
-
-            HorizontalBox {
-                alignment: center;
-                spacing: 8px;
-
-                Button {
-                    text: "Login";
-                    visible: AppState.auth == Authed.loggedOut;
-                    clicked => {
-                        root.login-clicked();
-                    }
-                }
-
-                Button {
-                    text: "Add missing scopes";
-                    visible: AppState.auth == Authed.needsScopes;
-                    clicked => {
-                        root.add-scopes-clicked();
-                    }
-                }
-
-                Button {
-                    text: "Logout";
-                    visible: AppState.auth == Authed.loggedIn || AppState.auth == Authed.needsScopes;
-                    clicked => {
-                        root.logout-clicked();
-                    }
-                }
+                image-fit: cover;
+                accessible-label: "GitHub avatar";
             }
         }
 
+        Text {
+            text: AppState.auth == Authed.needsScopes ? scope-message : gh-label;
+            font-size: 18px;
+            horizontal-alignment: center;
+            wrap: word-wrap;
+        }
+
+        HorizontalBox {
+            alignment: center;
+            spacing: 8px;
+
+            Button {
+                text: "Login";
+                visible: AppState.auth == Authed.loggedOut;
+                clicked => {
+                    auth_window.show();
+                    root.login-clicked();
+                }
+            }
+
+            Button {
+                text: "Add missing scopes";
+                visible: AppState.auth == Authed.needsScopes;
+                clicked => {
+                    root.add-scopes-clicked();
+                }
+            }
+
+            Button {
+                text: "Logout";
+                visible: AppState.auth == Authed.loggedIn || AppState.auth == Authed.needsScopes;
+                clicked => {
+                    root.logout-clicked();
+                }
+            }
+        }
+    }
+
+    auth_window := PopupWindow {
+        width: root.width;
+        height: root.height;
+        x: 0;
+        y: 0;
+
+        close-policy: no-auto-close;
+
         Rectangle {
-            visible: AppState.auth == Authed.authorizing;
-            width: 100%;
-            height: 100%;
-            x: 0;
-            y: 0;
-            background: #00000099;
+            background: black.with-alpha(0.9);
 
             TouchArea {
                 width: 100%;

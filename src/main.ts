@@ -253,6 +253,7 @@ type MainWindowInstance = {
   login_clicked?: () => void;
   logout_clicked?: () => void;
   add_scopes_clicked?: () => void;
+  close_auth_window: () => void;
   gh_label: string;
   scope_message: string;
   avatar?: SlintRgbaImage;
@@ -327,6 +328,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   window.AppState.auth = "loggedIn";
   window.gh_label = "Checking…";
   window.scope_message = "";
+  window.close_auth_window();
   clearAvatar(window);
   void (async () => {
     const scopeCheck = await checkRequiredGitHubCliScopes();
