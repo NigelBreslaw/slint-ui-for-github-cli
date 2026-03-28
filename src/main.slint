@@ -2,6 +2,9 @@ import { Button, HorizontalBox, Spinner, VerticalBox, Palette, StyleMetrics } fr
 import { Authed, AppState } from "app-state.slint";
 import { Header } from "header.slint";
 
+// Export so backend can access the enums and global state.
+export { Authed, AppState }
+
 export component MainWindow inherits Window {
     callback login-clicked;
     callback logout-clicked;

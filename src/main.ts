@@ -300,7 +300,6 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
   const user = parsed.user;
   window.AppState.user_login = user.login;
   window.AppState.user_name = user.name ?? "";
-  window.status_message = user.login;
   window.AppState.avatar = emptyTransparentAvatarImage;
 
   if (process.env.GH_DEBUG_JSON === "1") {
