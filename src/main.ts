@@ -1,7 +1,13 @@
 import * as slint from "slint-ui";
-import { execFileSync } from "node:child_process";
+import { execFile } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { promisify } from "node:util";
+
+const execFileAsync = promisify(execFile);
+
+/** Large enough for paginated `gh api` project payloads. */
+const GH_EXEC_MAX_BUFFER = 50 * 1024 * 1024;
 import { openAppDb } from "./db/app-db.ts";
 import { ghAuthLogout, ghAuthStatus, spawnGhAuthLogin } from "./gh/auth.ts";
 import {
@@ -60,14 +66,14 @@ type GhApiJsonOptions = {
   omitDebugFileIfEmptyArray?: boolean;
 };
 
-function ghApiJson(restArgs: string[], options?: GhApiJsonOptions): GhJsonResult {
+async function ghApiJson(restArgs: string[], options?: GhApiJsonOptions): Promise<GhJsonResult> {
   try {
-    const out = execFileSync("gh", ["api", ...restArgs], {
+    const { stdout } = await execFileAsync("gh", ["api", ...restArgs], {
       encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
       env: { ...process.env, GH_PAGER: "cat" },
+      maxBuffer: GH_EXEC_MAX_BUFFER,
     });
-    const trimmed = out.trim();
+    const trimmed = (stdout as string).trim();
     let value: unknown;
     if (trimmed.length === 0) {
       if (options?.emptyResponseAs !== undefined) {
@@ -110,7 +116,7 @@ function projectListDebugOptions(stem: string): GhApiJsonOptions {
  * `gh project list` (Projects V2 / unified CLI view). Org kanban boards are often visible here
  * even when REST `orgs/.../projectsV2` is empty or 404 for your token.
  */
-function ghProjectListForDebug(debugStem: string, owner?: string): void {
+async function ghProjectListForDebugAsync(debugStem: string, owner?: string): Promise<void> {
   if (process.env.GH_DEBUG_JSON !== "1") {
     return;
   }
@@ -119,12 +125,12 @@ function ghProjectListForDebug(debugStem: string, owner?: string): void {
     args.push("--owner", owner);
   }
   try {
-    const out = execFileSync("gh", args, {
+    const { stdout } = await execFileAsync("gh", args, {
       encoding: "utf8",
-      stdio: ["ignore", "pipe", "pipe"],
       env: { ...process.env, GH_PAGER: "cat" },
+      maxBuffer: GH_EXEC_MAX_BUFFER,
     });
-    const trimmed = out.trim();
+    const trimmed = (stdout as string).trim();
     let value: unknown;
     if (trimmed.length === 0) {
       value = [];
@@ -158,13 +164,6 @@ function parseOrgLogins(orgsPayload: unknown): string[] {
   return logins;
 }
 
-/** Lets Slint-node’s merged event loop run between synchronous `gh` subprocess calls. */
-function yieldToEventLoop(): Promise<void> {
-  return new Promise((resolve) => {
-    setImmediate(resolve);
-  });
-}
-
 let initialProjectsDebugPending: string | null = null;
 let slintEventLoopHasStarted = false;
 
@@ -174,7 +173,7 @@ let slintEventLoopHasStarted = false;
  * - REST **Projects (classic)** (`…/projects?state=all`) — org/user **kanban** boards.
  * - **`gh project list`** for the signed-in user and for each org — CLI view of projects.
  *
- * Yields between each `gh` invocation so the UI stays responsive. Empty lists skip files.
+ * Uses async `gh` so the event loop can run during subprocess I/O. Empty lists skip files.
  * `gh` / API failures still write `*--error.json` for that request.
  */
 async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
@@ -182,11 +181,8 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
     return;
   }
 
-  await yieldToEventLoop();
-
   const userV2Stem = `projects-v2--user--${login}`;
-  await yieldToEventLoop();
-  const userV2Res = ghApiJson(
+  const userV2Res = await ghApiJson(
     [`users/${login}/projectsV2`, "--paginate"],
     projectListDebugOptions(userV2Stem),
   );
@@ -195,8 +191,7 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
   }
 
   const userClassicStem = `projects-classic--user--${login}`;
-  await yieldToEventLoop();
-  const userClassicRes = ghApiJson(
+  const userClassicRes = await ghApiJson(
     [`users/${login}/projects?state=all&per_page=100`, "--paginate"],
     projectListDebugOptions(userClassicStem),
   );
@@ -204,12 +199,10 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
     writeDebugJsonStem(`${userClassicStem}--error`, { error: userClassicRes.error });
   }
 
-  await yieldToEventLoop();
-  ghProjectListForDebug("projects-gh-cli--user");
+  await ghProjectListForDebugAsync("projects-gh-cli--user");
 
   const orgsStem = "projects-v2--orgs-membership";
-  await yieldToEventLoop();
-  const orgsRes = ghApiJson(["user/orgs", "--paginate"], { debugStem: orgsStem });
+  const orgsRes = await ghApiJson(["user/orgs", "--paginate"], { debugStem: orgsStem });
   if (!orgsRes.ok) {
     writeDebugJsonStem(`${orgsStem}--error`, { error: orgsRes.error });
     return;
@@ -217,8 +210,7 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
 
   for (const org of parseOrgLogins(orgsRes.value)) {
     const orgV2Stem = `projects-v2--org--${org}`;
-    await yieldToEventLoop();
-    const orgV2 = ghApiJson(
+    const orgV2 = await ghApiJson(
       [`orgs/${org}/projectsV2`, "--paginate"],
       projectListDebugOptions(orgV2Stem),
     );
@@ -227,8 +219,7 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
     }
 
     const orgClassicStem = `projects-classic--org--${org}`;
-    await yieldToEventLoop();
-    const orgClassic = ghApiJson(
+    const orgClassic = await ghApiJson(
       [`orgs/${org}/projects?state=all&per_page=100`, "--paginate"],
       projectListDebugOptions(orgClassicStem),
     );
@@ -236,8 +227,7 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
       writeDebugJsonStem(`${orgClassicStem}--error`, { error: orgClassic.error });
     }
 
-    await yieldToEventLoop();
-    ghProjectListForDebug(`projects-gh-cli--org--${org}`, org);
+    await ghProjectListForDebugAsync(`projects-gh-cli--org--${org}`, org);
   }
 }
 
@@ -268,23 +258,11 @@ function clearAvatar(window: MainWindowInstance): void {
   window.avatar = emptyTransparentAvatarImage;
 }
 
-function applyAuthUi(window: MainWindowInstance): void {
-  const status = ghAuthStatus();
-  if (status === "no_gh") {
-    window.AppState.auth = "loggedOut";
-    window.gh_label = "gh not found (install GitHub CLI)";
-    clearAvatar(window);
+async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void> {
+  const result = await ghApiJson(["user"]);
+  if (ghAuthStatus() !== "ok") {
     return;
   }
-  if (status === "not_authed") {
-    window.AppState.auth = "loggedOut";
-    window.gh_label = "Not signed in";
-    clearAvatar(window);
-    return;
-  }
-
-  window.AppState.auth = "loggedIn";
-  const result = ghApiJson(["user"]);
   if (!result.ok) {
     window.gh_label = result.error;
     clearAvatar(window);
@@ -316,6 +294,29 @@ function applyAuthUi(window: MainWindowInstance): void {
     } else {
       clearAvatar(window);
     }
+  });
+}
+
+function applyAuthUi(window: MainWindowInstance): void {
+  const status = ghAuthStatus();
+  if (status === "no_gh") {
+    window.AppState.auth = "loggedOut";
+    window.gh_label = "gh not found (install GitHub CLI)";
+    clearAvatar(window);
+    return;
+  }
+  if (status === "not_authed") {
+    window.AppState.auth = "loggedOut";
+    window.gh_label = "Not signed in";
+    clearAvatar(window);
+    return;
+  }
+
+  window.AppState.auth = "loggedIn";
+  window.gh_label = "Loading…";
+  clearAvatar(window);
+  void fetchAndApplyGitHubUser(window).catch((e) => {
+    console.error("[github-app] fetchAndApplyGitHubUser failed:", e);
   });
 }
 
