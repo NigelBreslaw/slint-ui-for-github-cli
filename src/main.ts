@@ -68,8 +68,11 @@ function ghApiJson(restArgs: string[]): GhJsonResult {
   }
 }
 
+/** Slint-node maps enum variants to kebab-case strings on `AppState.auth` (not `ui.Authed.*` values). */
+type AuthedAuthState = "loggedOut" | "loggedIn" | "authorizing";
+
 type AppStateHandle = {
-  is_logged_in: boolean;
+  auth: AuthedAuthState;
 };
 
 type MainWindowInstance = {
@@ -93,19 +96,19 @@ function clearAvatar(window: MainWindowInstance): void {
 async function applyAuthUi(window: MainWindowInstance): Promise<void> {
   const status = ghAuthStatus();
   if (status === "no_gh") {
-    window.AppState.is_logged_in = false;
+    window.AppState.auth = "loggedOut";
     window.gh_label = "gh not found (install GitHub CLI)";
     clearAvatar(window);
     return;
   }
   if (status === "not_authed") {
-    window.AppState.is_logged_in = false;
+    window.AppState.auth = "loggedOut";
     window.gh_label = "Not signed in";
     clearAvatar(window);
     return;
   }
 
-  window.AppState.is_logged_in = true;
+  window.AppState.auth = "loggedIn";
   const result = ghApiJson(["user"]);
   if (!result.ok) {
     window.gh_label = result.error;
@@ -135,6 +138,7 @@ const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
 const window = new ui.MainWindow({ "gh-label": "" });
 
 window.login_clicked = () => {
+  window.AppState.auth = "authorizing";
   spawnGhAuthLogin(() => {
     void applyAuthUi(window);
   });
