@@ -1,0 +1,106 @@
+lockfileVersion: '9.0'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
+importers:
+
+  .:
+    dependencies:
+      slint-ui:
+        specifier: 1.15.1
+        version: 1.15.1
+    devDependencies:
+      '@types/node':
+        specifier: 25.5.0
+        version: 25.5.0
+      typescript:
+        specifier: 6.0.2
+        version: 6.0.2
+
+packages:
+
+  '@napi-rs/cli@2.18.4':
+    resolution: {integrity: sha512-SgJeA4df9DE2iAEpr3M2H0OKl/yjtg1BnRI5/JyowS71tUWhrfSu2LT0V3vlHET+g1hBVlrO60PmEXwUEKp8Mg==}
+    engines: {node: '>= 10'}
+    hasBin: true
+
+  '@slint-ui/slint-ui-binary-darwin-arm64@1.15.1':
+    resolution: {integrity: sha512-gU2JdZjMmqleI45tJKDPouTaVKz5F/uukosbOh7rvhJamN3swt6HvB/Nshls92ed+nt9QhFhss8/NJGltmUqEQ==}
+    cpu: [arm64]
+    os: [darwin]
+
+  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.15.1':
+    resolution: {integrity: sha512-Ebibri6zHEoJeuOLCgX6IwfuFAUmzSYnh0GGOdpiNzk4NlhSo0zA3hiDzI3P78cV/8GEVDbjqT67NwXbJHRt2g==}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.15.1':
+    resolution: {integrity: sha512-PJRr+SAird01MUKG0mfk25wUbIocJxoB0bza2SIFiZBcZikWLucwWkWDMoDD72vdD2A9L0lQL9fdJjH8Tkw2gw==}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
+  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.15.1':
+    resolution: {integrity: sha512-L+aGYwS+Bj3aaj2J4IA38+0W08gdb+dVINkPaqbdgv+XSoonpPas5tFpFtbGsKhGDtj3iTK44qvcT8YwIg2ejA==}
+    cpu: [arm64]
+    os: [win32]
+
+  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.15.1':
+    resolution: {integrity: sha512-SxVgBnPSk4xvg8HWiH+G1HnaU1cmDsNtOyfkzPbtrmdvMeArzLA2biD1zIqC/oY2xHfRNZEbt7efXJuNR0R2qg==}
+    cpu: [x64]
+    os: [win32]
+
+  '@types/node@25.5.0':
+    resolution: {integrity: sha512-jp2P3tQMSxWugkCUKLRPVUpGaL5MVFwF8RDuSRztfwgN1wmqJeMSbKlnEtQqU8UrhTmzEmZdu2I6v2dpp7XIxw==}
+
+  slint-ui@1.15.1:
+    resolution: {integrity: sha512-QwQrUFa3rJuQrZJSGrjJYXvM6ogm/hOd+MxLr+S2Wwyh9YIjXZAmwv0PeSklysqbkVfrXK3zH9fsqUlMoqU7Rg==}
+    engines: {node: '>= 10'}
+
+  typescript@6.0.2:
+    resolution: {integrity: sha512-bGdAIrZ0wiGDo5l8c++HWtbaNCWTS4UTv7RaTH/ThVIgjkveJt83m74bBHMJkuCbslY8ixgLBVZJIOiQlQTjfQ==}
+    engines: {node: '>=14.17'}
+    hasBin: true
+
+  undici-types@7.18.2:
+    resolution: {integrity: sha512-AsuCzffGHJybSaRrmr5eHr81mwJU3kjw6M+uprWvCXiNeN9SOGwQ3Jn8jb8m3Z6izVgknn1R0FTCEAP2QrLY/w==}
+
+snapshots:
+
+  '@napi-rs/cli@2.18.4': {}
+
+  '@slint-ui/slint-ui-binary-darwin-arm64@1.15.1':
+    optional: true
+
+  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.15.1':
+    optional: true
+
+  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.15.1':
+    optional: true
+
+  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.15.1':
+    optional: true
+
+  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.15.1':
+    optional: true
+
+  '@types/node@25.5.0':
+    dependencies:
+      undici-types: 7.18.2
+
+  slint-ui@1.15.1:
+    dependencies:
+      '@napi-rs/cli': 2.18.4
+    optionalDependencies:
+      '@slint-ui/slint-ui-binary-darwin-arm64': 1.15.1
+      '@slint-ui/slint-ui-binary-linux-arm64-gnu': 1.15.1
+      '@slint-ui/slint-ui-binary-linux-x64-gnu': 1.15.1
+      '@slint-ui/slint-ui-binary-win32-arm64-msvc': 1.15.1
+      '@slint-ui/slint-ui-binary-win32-x64-msvc': 1.15.1
+
+  typescript@6.0.2: {}
+
+  undici-types@7.18.2: {}

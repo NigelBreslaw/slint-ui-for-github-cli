@@ -1,0 +1,19 @@
+import { VerticalBox } from "std-widgets.slint";
+
+export component MainWindow inherits Window {
+    in property <string> gh-label: "";
+
+    width: 400px;
+    height: 200px;
+    title: "GitHub CLI";
+
+    VerticalBox {
+        alignment: center;
+
+        Text {
+            text: gh-label;
+            font-size: 18px;
+            horizontal-alignment: center;
+        }
+    }
+}

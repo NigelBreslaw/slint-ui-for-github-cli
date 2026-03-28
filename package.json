@@ -1,0 +1,23 @@
+{
+  "name": "github-app",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node src/main.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "slint-ui": "1.15.1"
+  },
+  "devDependencies": {
+    "@types/node": "25.5.0",
+    "typescript": "6.0.2"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["slint-ui"]
+  }
+}
