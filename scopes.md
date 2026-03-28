@@ -14,7 +14,13 @@ We do **not** require the `project` (write) scope unless the app later adds muta
 
 ### Add scopes with the CLI
 
-The in-app **Login** button runs `gh auth login --scopes read:org,read:project` so the OAuth flow requests org and project read access up front, not only the default minimum.
+The in-app **Login** button runs (scopes match `REQUIRED_GH_OAUTH_SCOPES` in code—`read:org` and `read:project` today):
+
+```bash
+gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project
+```
+
+That opens the browser quickly and avoids repeated HTTPS/SSH and SSH key prompts. **Tradeoff:** Git operations for GitHub are configured for **SSH** by this flow; if you prefer HTTPS for `git`, run `gh config set git_protocol https -h github.com` afterward or authenticate with different flags.
 
 ```bash
 gh auth refresh --scopes read:org,read:project

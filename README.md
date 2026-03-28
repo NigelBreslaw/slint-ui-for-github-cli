@@ -34,7 +34,7 @@ pnpm start
 
 This runs `node src/main.ts` (TypeScript is executed directly via Node’s built-in type stripping).
 
-**Login from a terminal:** The app can start **Login** (`gh auth login --scopes read:org,read:project`) with inherited stdio so the interactive browser or device flow works. Run **`pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or run `gh auth login` yourself before opening the app. Purely GUI launches without a usable stdin/stdout may need a different approach later.
+**Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project` (scopes match [`REQUIRED_GH_OAUTH_SCOPES`](src/gh/required-scopes.ts)) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run **`pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
 
 ### Typecheck
 
