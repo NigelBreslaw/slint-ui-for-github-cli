@@ -66,26 +66,35 @@ component Menu {
         width: parent.width - (2 * self.x);
         height: parent.height - (2 * self.y);
 
-        VerticalLayout {
+        HorizontalLayout {
             spacing: 8px;
             width: parent.width;
 
-            avatar := Avatar {}
+            avatar := Avatar { }
 
-            Text {
-                text: AppState.user_login;
-                visible: AppState.user_login != "";
-                font-size: 14px;
-                color: white;
-                wrap: word-wrap;
-            }
+            VerticalLayout {
+                y: 3px;
+                height: self.preferred-height;
+                spacing: 4px;
+                Text {
+                    width: 120px;
+                    text: AppState.user_login;
+                    visible: AppState.user_login != "";
+                    font-size: 14px;
+                    font-weight: 550;
+                    color: #f0f6fc;
+                    overflow: elide;
+                }
 
-            Text {
-                text: AppState.user_name;
-                visible: AppState.user_name != "";
-                font-size: 13px;
-                color: #8d96a0;
-                wrap: word-wrap;
+                Text {
+                    width: 120px;
+                    text: AppState.user_name;
+                    visible: AppState.user_name != "";
+                    font-size: 14px;
+                    color: #9198a1;
+                    font-weight: 400;
+                    overflow: elide;
+                }
             }
         }
     }
