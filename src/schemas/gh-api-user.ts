@@ -8,7 +8,7 @@ import { type } from "arktype";
 const nullableString = "string | null";
 const nullableBoolean = "boolean | null";
 
-export const ghApiUserSchema = type({
+const ghApiUserSchema = type({
   login: "string",
   id: "number.integer",
   node_id: "string",
@@ -45,7 +45,7 @@ export const ghApiUserSchema = type({
   updated_at: "string",
 });
 
-export type GhApiUser = typeof ghApiUserSchema.infer;
+type GhApiUser = typeof ghApiUserSchema.infer;
 
 export function parseGhApiUserPayload(
   value: unknown,

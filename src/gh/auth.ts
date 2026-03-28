@@ -1,7 +1,7 @@
 import { execFileSync, spawn } from "node:child_process";
 
 /** Result of `gh auth status`: CLI missing, not logged in, or authenticated. */
-export type GhAuthStatus = "no_gh" | "not_authed" | "ok";
+type GhAuthStatus = "no_gh" | "not_authed" | "ok";
 
 /**
  * Uses exit code of `gh auth status` (plain, not `--json`).
