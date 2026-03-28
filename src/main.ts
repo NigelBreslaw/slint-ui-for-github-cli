@@ -239,7 +239,7 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
 }
 
 /** Slint-node maps enum variants to kebab-case strings on `AppState.auth` (not `ui.Authed.*` values). */
-type AuthedAuthState = "loggedOut" | "loggedIn" | "authorizing";
+type AuthedAuthState = "loggedOut" | "noGhCliInstalled" | "loggedIn" | "authorizing";
 
 type AppStateHandle = {
   auth: AuthedAuthState;
@@ -254,6 +254,8 @@ type MainWindowInstance = {
   logout_clicked?: () => void;
   open_github_device_clicked?: () => void;
   close_auth_window: () => void;
+  show_no_gh_cli_installed: () => void;
+  open_cli_install_page: () => void;
   gh_label: string;
   auth_device_code: string;
   auth_device_url: string;
@@ -318,8 +320,9 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
 function applyAuthUi(window: MainWindowInstance): void {
   const status = ghAuthStatus();
   if (status === "no_gh") {
-    window.AppState.auth = "loggedOut";
+    window.AppState.auth = "noGhCliInstalled";
     window.gh_label = "gh not found (install GitHub CLI)";
+    window.show_no_gh_cli_installed();
     clearAuthDeviceFields(window);
     window.close_auth_window();
     clearAvatar(window);
@@ -379,6 +382,9 @@ window.open_github_device_clicked = () => {
 };
 
 window.login_clicked = () => {
+  if (ghAuthStatus() === "no_gh") {
+    return;
+  }
   clearAuthDeviceFields(window);
   window.AppState.auth = "authorizing";
   spawnGhAuthLogin({
@@ -396,6 +402,10 @@ window.login_clicked = () => {
 window.logout_clicked = () => {
   ghAuthLogout();
   void applyAuthUi(window);
+};
+
+window.open_cli_install_page = () => {
+  openUrlInBrowser("https://cli.github.com/");
 };
 
 applyAuthUi(window);

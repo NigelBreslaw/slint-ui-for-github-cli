@@ -6,7 +6,7 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 
 - **Node.js** 24 or newer
 - **pnpm** (see [pnpm.io](https://pnpm.io/installation))
-- **GitHub CLI** (`gh`) installed and authenticated (`gh auth login`)
+- **GitHub CLI** (`gh`) on your **`PATH`** (Windows, macOS, and Linux use the same command name; the app does not ship `gh`). If it is missing, the UI shows a **no CLI installed** state with no **Login** button until you install it from [cli.github.com](https://cli.github.com/). After install, authenticate with `gh auth login` or the in-app **Login** flow.
 
 **OAuth scopes:** The app expects classic token scopes **`read:org`** and **`read:project`**. If `gh` is missing them (or scopes cannot be verified), the UI stays **logged out** with an explanation—use **Login** to authorize with the required scopes (see [scopes.md](scopes.md)).
 

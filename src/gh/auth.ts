@@ -111,6 +111,9 @@ type GhAuthStatus = "no_gh" | "not_authed" | "ok";
 /**
  * Uses exit code of `gh auth status` (plain, not `--json`).
  * See https://cli.github.com/manual/gh_auth_status
+ *
+ * **`no_gh`:** the `gh` executable was not found (`ENOENT`)—typically not on `PATH`.
+ * Same probe on macOS, Linux, and Windows (Node resolves `gh` / `gh.exe` via `PATH`).
  */
 export function ghAuthStatus(): GhAuthStatus {
   try {
