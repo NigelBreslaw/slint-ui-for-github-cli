@@ -23,6 +23,7 @@ import {
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";
 import { parseGhApiUserPayload } from "./schemas/gh-api-user.ts";
+import { copyTextToClipboard } from "./clipboard-write.ts";
 import { openUrlInBrowser } from "./open-url.ts";
 
 openAppDb();
@@ -380,7 +381,9 @@ const window = new ui.MainWindow({
 });
 
 window.open_github_device_clicked = () => {
-  openUrlInBrowser(window.auth_device_url);
+  void copyTextToClipboard(window.auth_device_code).finally(() => {
+    openUrlInBrowser(window.auth_device_url);
+  });
 };
 
 window.login_clicked = () => {

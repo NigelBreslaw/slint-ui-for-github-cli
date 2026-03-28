@@ -146,7 +146,7 @@ export component MainWindow inherits Window {
 
                 Button {
                     visible: root.auth-device-code != "";
-                    text: "Open GitHub";
+                    text: "Copy code to clipboard and open web login";
                     clicked => {
                         root.open-github-device-clicked();
                     }
