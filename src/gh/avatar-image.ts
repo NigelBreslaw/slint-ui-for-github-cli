@@ -7,6 +7,13 @@ export type SlintRgbaImage = {
   data: Buffer;
 };
 
+/** 1×1 transparent RGBA. Slint-node rejects `undefined` for `image` bindings; use this to clear. */
+export const emptyTransparentAvatarImage: SlintRgbaImage = {
+  width: 1,
+  height: 1,
+  data: Buffer.from([0, 0, 0, 0]),
+};
+
 const FETCH_TIMEOUT_MS = 15_000;
 
 /**

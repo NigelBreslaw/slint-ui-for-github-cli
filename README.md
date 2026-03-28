@@ -32,6 +32,8 @@ pnpm start
 
 This runs `node src/main.ts` (TypeScript is executed directly via Node’s built-in type stripping).
 
+**Login from a terminal:** The app can start **Login** (`gh auth login`) with inherited stdio so the interactive browser or device flow works. Run **`pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or run `gh auth login` yourself before opening the app. Purely GUI launches without a usable stdin/stdout may need a different approach later.
+
 ### Typecheck
 
 ```bash

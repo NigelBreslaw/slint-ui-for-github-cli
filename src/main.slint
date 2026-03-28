@@ -1,14 +1,21 @@
-import { VerticalBox } from "std-widgets.slint";
+import { Button } from "std-widgets.slint";
+
+export global AppState {
+    in-out property <bool> is-logged-in: false;
+}
 
 export component MainWindow inherits Window {
+    callback login-clicked;
+    callback logout-clicked;
+
     in property <string> gh-label: "";
     in property <image> avatar;
 
     width: 400px;
-    height: 240px;
+    height: 280px;
     title: "GitHub CLI";
 
-    VerticalBox {
+    VerticalLayout {
         alignment: center;
         spacing: 12px;
 
@@ -32,6 +39,27 @@ export component MainWindow inherits Window {
             text: gh-label;
             font-size: 18px;
             horizontal-alignment: center;
+        }
+
+        HorizontalLayout {
+            alignment: center;
+            spacing: 8px;
+
+            Button {
+                text: "Login";
+                visible: !AppState.is-logged-in;
+                clicked => {
+                    root.login-clicked();
+                }
+            }
+
+            Button {
+                text: "Logout";
+                visible: AppState.is-logged-in;
+                clicked => {
+                    root.logout-clicked();
+                }
+            }
         }
     }
 }

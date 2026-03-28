@@ -3,6 +3,12 @@ import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import {
+  ghAuthLogout,
+  ghAuthStatus,
+  spawnGhAuthLogin,
+} from "./gh/auth.ts";
+import {
+  emptyTransparentAvatarImage,
   loadAvatarRgba,
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";
@@ -71,28 +77,17 @@ function ghApiJson(restArgs: string[]): GhJsonResult {
   }
 }
 
-async function buildMainWindowProps(): Promise<{
-  "gh-label": string;
-  avatar?: SlintRgbaImage;
-}> {
-  const result = ghApiJson(["user"]);
-  if (!result.ok) {
-    return { "gh-label": result.error };
-  }
-  const parsed = parseGhApiUserPayload(result.value);
-  if (!parsed.ok) {
-    return { "gh-label": parsed.message };
-  }
-  const user = parsed.user;
-  const loaded = await loadAvatarRgba(user.avatar_url);
-  return {
-    "gh-label": user.login,
-    ...(loaded !== undefined ? { avatar: loaded } : {}),
-  };
-}
+type AppStateHandle = {
+  is_logged_in: boolean;
+};
 
 type MainWindowInstance = {
   run(): Promise<void>;
+  AppState: AppStateHandle;
+  login_clicked?: () => void;
+  logout_clicked?: () => void;
+  gh_label: string;
+  avatar?: SlintRgbaImage;
 };
 
 type MainWindowOpts = {
@@ -100,11 +95,64 @@ type MainWindowOpts = {
   avatar?: SlintRgbaImage;
 };
 
+function clearAvatar(window: MainWindowInstance): void {
+  window.avatar = emptyTransparentAvatarImage;
+}
+
+async function applyAuthUi(window: MainWindowInstance): Promise<void> {
+  const status = ghAuthStatus();
+  if (status === "no_gh") {
+    window.AppState.is_logged_in = false;
+    window.gh_label = "gh not found (install GitHub CLI)";
+    clearAvatar(window);
+    return;
+  }
+  if (status === "not_authed") {
+    window.AppState.is_logged_in = false;
+    window.gh_label = "Not signed in";
+    clearAvatar(window);
+    return;
+  }
+
+  window.AppState.is_logged_in = true;
+  const result = ghApiJson(["user"]);
+  if (!result.ok) {
+    window.gh_label = result.error;
+    clearAvatar(window);
+    return;
+  }
+  const parsed = parseGhApiUserPayload(result.value);
+  if (!parsed.ok) {
+    window.gh_label = parsed.message;
+    clearAvatar(window);
+    return;
+  }
+  const user = parsed.user;
+  const loaded = await loadAvatarRgba(user.avatar_url);
+  window.gh_label = user.login;
+  if (loaded !== undefined) {
+    window.avatar = loaded;
+  } else {
+    clearAvatar(window);
+  }
+}
+
 const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
   MainWindow: new (opts: MainWindowOpts) => MainWindowInstance;
 };
 
-const props = await buildMainWindowProps();
-const window = new ui.MainWindow(props);
+const window = new ui.MainWindow({ "gh-label": "" });
 
+window.login_clicked = () => {
+  spawnGhAuthLogin(() => {
+    void applyAuthUi(window);
+  });
+};
+
+window.logout_clicked = () => {
+  ghAuthLogout();
+  void applyAuthUi(window);
+};
+
+await applyAuthUi(window);
 await window.run();
