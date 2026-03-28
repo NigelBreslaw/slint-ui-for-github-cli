@@ -23,8 +23,8 @@ The first install runs native install steps for **`slint-ui`** and **`sharp`**. 
 ## Dependencies (runtime)
 
 - **[slint-ui](https://www.npmjs.com/package/slint-ui)** — Slint UI for Node ([Slint-node docs](https://docs.slint.dev/latest/docs/node/)).
-- **[arktype](https://www.npmjs.com/package/arktype)** — Runtime validation of JSON returned by `gh api`. Schemas are maintained **per endpoint** against GitHub’s published **[OpenAPI description](https://docs.github.com/en/rest/about-the-rest-api/about-the-openapi-description-for-the-rest-api)** (see `src/schemas/`). For example, `gh api user` (`GET /user`) is checked in `src/schemas/gh-api-user.ts`.
-- **[sharp](https://www.npmjs.com/package/sharp)** — Decodes the profile image from `avatar_url` (PNG/JPEG/WebP, etc.) into RGBA for Slint’s `Image` element (`src/gh/avatar-image.ts`). If download or decode fails, the window still opens and only the label may be shown.
+- **[arktype](https://www.npmjs.com/package/arktype)** — Runtime validation of JSON returned by `gh api` (REST) and `gh api graphql` (see `src/schemas/`). The signed-in user profile comes from a **minimal GraphQL `viewer`** query, validated in `src/schemas/gh-graphql-viewer-minimal.ts`.
+- **[sharp](https://www.npmjs.com/package/sharp)** — Decodes the profile image from `avatarUrl` (PNG/JPEG/WebP, etc.) into RGBA for Slint’s `Image` element (`src/gh/avatar-image.ts`). If download or decode fails, the window still opens and only the label may be shown.
 
 ## Run
 
@@ -64,6 +64,6 @@ GH_DEBUG_JSON=1 pnpm start
 
 On Windows (cmd), you can also use `set GH_DEBUG_JSON=1` before `pnpm start` if you prefer.
 
-Files are named from the API path, for example `debug-json/gh-api--user.json` for `gh api user`.
+Files are named from the API path or query purpose, for example `debug-json/gh-graphql--viewer-status.json` for the wide GraphQL `viewer` debug dump, or `gh-api--user--orgs--….json` for REST calls.
 
 When signed in, the app also dumps **project-related** data for debug: REST **Projects V2** (`projects-v2--…`), REST **Projects (classic)** kanban boards (`projects-classic--user--…`, `projects-classic--org--…`), output of **`gh project list`** for you and each org (`projects-gh-cli--user.json`, `projects-gh-cli--org--….json`), plus `projects-v2--orgs-membership.json` for org membership. V2 and `gh project list` need the **`read:project`** scope (see [scopes.md](scopes.md)). Classic org projects may require org permission to see private boards; failures appear as `*--error.json` for that call.

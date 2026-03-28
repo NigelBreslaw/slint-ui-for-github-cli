@@ -6,7 +6,7 @@ This app calls the GitHub REST API and GitHub CLI with the credentials from **`g
 
 | Capability | Scope | Notes |
 | ---------- | ----- | ----- |
-| `gh api user`, profile / avatar | Default `gh auth login` token | Usually includes `repo` and related defaults. Baseline GitHub CLI auth. |
+| GraphQL `viewer` (profile / avatar / status), `gh api graphql` | Default `gh auth login` token | Same baseline token as REST; no extra scope vs typical `gh` sign-in. |
 | `gh api user/orgs` | `read:org` | [List organizations for the authenticated user](https://docs.github.com/en/rest/orgs/members). |
 | Projects V2 REST (`…/projectsV2`), `gh project list` | `read:project` | Read access to projects. |
 

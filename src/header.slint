@@ -70,6 +70,13 @@ component Menu {
             spacing: 8px;
             width: parent.width;
 
+            Text {
+                text: AppState.user_status_emoji;
+                visible: AppState.user_status_emoji != "";
+                font-size: 18px;
+                vertical-alignment: center;
+            }
+
             avatar := Avatar { }
 
             VerticalLayout {

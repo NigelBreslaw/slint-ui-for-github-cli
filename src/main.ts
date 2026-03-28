@@ -3,11 +3,6 @@ import { execFile } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { promisify } from "node:util";
-
-const execFileAsync = promisify(execFile);
-
-/** Large enough for paginated `gh api` project payloads. */
-const GH_EXEC_MAX_BUFFER = 50 * 1024 * 1024;
 import { openAppDb } from "./db/app-db.ts";
 import {
   checkRequiredGitHubCliScopes,
@@ -20,11 +15,117 @@ import {
   loadAvatarRgba,
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";
-import { parseGhApiUserPayload } from "./schemas/gh-api-user.ts";
+import { statusEmojiFromGraphqlHtml } from "./gh/status-emoji-from-graphql.ts";
+import { parseGhGraphqlViewerMinimalResponse } from "./schemas/gh-graphql-viewer-minimal.ts";
 import { copyTextToClipboard } from "./utils/clipboard-write.ts";
 import { openUrlInBrowser } from "./utils/open-url.ts";
 
+const execFileAsync = promisify(execFile);
+
+/** Large enough for paginated `gh api` project payloads. */
+const GH_EXEC_MAX_BUFFER = 50 * 1024 * 1024;
+
+/** Minimal `viewer` fields for normal app load (replaces REST `GET /user`). */
+const VIEWER_APP_GRAPHQL_QUERY = `
+query ViewerApp {
+  viewer {
+    login
+    name
+    url
+    avatarUrl
+    status {
+      message
+      emojiHTML
+    }
+  }
+}
+`
+  .replace(/\s+/g, " ")
+  .trim();
+
+/**
+ * Broad `viewer { ... }` snapshot for `debug-json/gh-graphql--viewer-status.json` when
+ * `GH_DEBUG_JSON=1` (trim this query once you know what you need).
+ * `email` is omitted: GraphQL fails the entire query without `read:user` / `user:email` scope.
+ */
+const VIEWER_DEBUG_GRAPHQL_QUERY = `
+query ViewerDebugDump {
+  viewer {
+    avatarUrl
+    bio
+    bioHTML
+    company
+    companyHTML
+    createdAt
+    databaseId
+    id
+    isBountyHunter
+    isCampusExpert
+    isDeveloperProgramMember
+    isEmployee
+    isGitHubStar
+    isHireable
+    isSiteAdmin
+    isViewer
+    location
+    login
+    name
+    pronouns
+    resourcePath
+    twitterUsername
+    updatedAt
+    url
+    websiteUrl
+    status {
+      createdAt
+      emojiHTML
+      expiresAt
+      id
+      indicatesLimitedAvailability
+      message
+      updatedAt
+    }
+    followers(first: 1) { totalCount }
+    following(first: 1) { totalCount }
+    gists(first: 1) { totalCount }
+    issueComments(first: 1) { totalCount }
+    issues(first: 1) { totalCount }
+    organizations(first: 1) { totalCount }
+    pullRequests(first: 1) { totalCount }
+    repositories(first: 1) { totalCount }
+    repositoriesContributedTo(first: 1) { totalCount }
+    starredRepositories(first: 1) { totalCount }
+    sponsorshipsAsMaintainer(first: 1) { totalCount }
+    sponsorshipsAsSponsor(first: 1) { totalCount }
+    watching(first: 1) { totalCount }
+  }
+}
+`
+  .replace(/\s+/g, " ")
+  .trim();
+
 openAppDb();
+
+async function ghApiGraphql(query: string): Promise<GhJsonResult> {
+  try {
+    const { stdout } = await execFileAsync("gh", ["api", "graphql", "-f", `query=${query}`], {
+      encoding: "utf8",
+      env: { ...process.env, GH_PAGER: "cat" },
+      maxBuffer: GH_EXEC_MAX_BUFFER,
+    });
+    const trimmed = (stdout as string).trim();
+    if (trimmed.length === 0) {
+      return { ok: false, error: "gh: empty graphql response" };
+    }
+    try {
+      return { ok: true, value: JSON.parse(trimmed) as unknown };
+    } catch {
+      return { ok: false, error: "gh: graphql response was not valid JSON" };
+    }
+  } catch (e) {
+    return { ok: false, error: mapGhExecError(e) };
+  }
+}
 
 /**
  * When `GH_DEBUG_JSON=1`, writes pretty-printed JSON under `debug-json/` (gitignored).
@@ -123,6 +224,35 @@ function projectListDebugOptions(stem: string): GhApiJsonOptions {
  * `gh project list` (Projects V2 / unified CLI view). Org kanban boards are often visible here
  * even when REST `orgs/.../projectsV2` is empty or 404 for your token.
  */
+/** Wide GraphQL `viewer` dump to `debug-json/` when `GH_DEBUG_JSON=1`. */
+async function debugUserData(): Promise<void> {
+  if (process.env.GH_DEBUG_JSON !== "1") {
+    return;
+  }
+  try {
+    const { stdout } = await execFileAsync(
+      "gh",
+      ["api", "graphql", "-f", `query=${VIEWER_DEBUG_GRAPHQL_QUERY}`],
+      {
+        encoding: "utf8",
+        env: { ...process.env, GH_PAGER: "cat" },
+        maxBuffer: GH_EXEC_MAX_BUFFER,
+      },
+    );
+    const trimmed = (stdout as string).trim();
+    try {
+      writeDebugJsonStem("gh-graphql--viewer-status", JSON.parse(trimmed) as unknown);
+    } catch {
+      writeDebugJsonStem("gh-graphql--viewer-status", {
+        error: "gh graphql stdout was not valid JSON",
+        stdout_preview: trimmed.slice(0, 500),
+      });
+    }
+  } catch (e) {
+    writeDebugJsonStem("gh-graphql--viewer-status", { error: mapGhExecError(e) });
+  }
+}
+
 async function ghProjectListForDebugAsync(debugStem: string, owner?: string): Promise<void> {
   if (process.env.GH_DEBUG_JSON !== "1") {
     return;
@@ -245,6 +375,9 @@ type AppStateHandle = {
   auth: AuthedAuthState;
   user_login: string;
   user_name: string;
+  user_profile_url: string;
+  user_status_message: string;
+  user_status_emoji: string;
   avatar?: SlintRgbaImage;
 };
 
@@ -274,6 +407,9 @@ function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.avatar = emptyTransparentAvatarImage;
   window.AppState.user_login = "";
   window.AppState.user_name = "";
+  window.AppState.user_profile_url = "";
+  window.AppState.user_status_message = "";
+  window.AppState.user_status_emoji = "";
 }
 
 function clearAuthDeviceFields(window: MainWindowInstance): void {
@@ -282,7 +418,7 @@ function clearAuthDeviceFields(window: MainWindowInstance): void {
 }
 
 async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void> {
-  const result = await ghApiJson(["user"]);
+  const result = await ghApiGraphql(VIEWER_APP_GRAPHQL_QUERY);
   if (ghAuthStatus() !== "ok") {
     return;
   }
@@ -291,28 +427,35 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
     clearUserIdentity(window);
     return;
   }
-  const parsed = parseGhApiUserPayload(result.value);
+  const parsed = parseGhGraphqlViewerMinimalResponse(result.value);
   if (!parsed.ok) {
     window.status_message = parsed.message;
     clearUserIdentity(window);
     return;
   }
-  const user = parsed.user;
-  window.AppState.user_login = user.login;
-  window.AppState.user_name = user.name ?? "";
+  const viewer = parsed.viewer;
+  window.AppState.user_login = viewer.login;
+  window.AppState.user_name = viewer.name ?? "";
+  window.AppState.user_profile_url = viewer.url;
+  const st = viewer.status;
+  window.AppState.user_status_message = st?.message ?? "";
+  window.AppState.user_status_emoji = statusEmojiFromGraphqlHtml(st?.emojiHTML ?? null);
   window.AppState.avatar = emptyTransparentAvatarImage;
 
   if (process.env.GH_DEBUG_JSON === "1") {
+    void debugUserData().catch((e) => {
+      console.error("[debug-json] debugUserData failed:", e);
+    });
     if (!slintEventLoopHasStarted) {
-      initialProjectsDebugPending = user.login;
+      initialProjectsDebugPending = viewer.login;
     } else {
-      void maybeDumpGitHubProjectsDebugAsync(user.login).catch((e) => {
+      void maybeDumpGitHubProjectsDebugAsync(viewer.login).catch((e) => {
         console.error("[debug-json] maybeDumpGitHubProjectsDebugAsync failed:", e);
       });
     }
   }
 
-  void loadAvatarRgba(user.avatar_url).then((loaded) => {
+  void loadAvatarRgba(viewer.avatarUrl).then((loaded) => {
     if (loaded !== undefined) {
       window.AppState.avatar = loaded;
     } else {
