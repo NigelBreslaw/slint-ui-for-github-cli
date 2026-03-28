@@ -1,16 +1,6 @@
 import { Button, HorizontalBox, Spinner, VerticalBox, Palette, StyleMetrics } from "std-widgets.slint";
+import { Authed, AppState } from "app-state.slint";
 import { Header } from "header.slint";
-
-export enum Authed {
-    loggedOut,
-    noGhCliInstalled,
-    loggedIn,
-    authorizing,
-}
-
-export global AppState {
-    in-out property <Authed> auth: loggedOut;
-}
 
 export component MainWindow inherits Window {
     callback login-clicked;
@@ -33,11 +23,8 @@ export component MainWindow inherits Window {
     }
 
     in property <string> status_message: "";
-    in property <string> user_login: "";
-    in property <string> user_name: "";
     in property <string> auth-device-code: "";
     in property <string> auth-device-url: "";
-    in property <image> avatar;
 
     min-width: 400px;
     min-height: 280px;
@@ -88,7 +75,6 @@ export component MainWindow inherits Window {
     }
     Header {
         y: 0;
-        avatar: root.avatar;
     }
 
     no_gh_cli_installed_window := PopupWindow {

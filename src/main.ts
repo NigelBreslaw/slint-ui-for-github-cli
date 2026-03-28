@@ -243,6 +243,9 @@ type AuthedAuthState = "loggedOut" | "noGhCliInstalled" | "loggedIn" | "authoriz
 
 type AppStateHandle = {
   auth: AuthedAuthState;
+  user_login: string;
+  user_name: string;
+  avatar?: SlintRgbaImage;
 };
 
 type MainWindowInstance = {
@@ -256,25 +259,21 @@ type MainWindowInstance = {
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
   open_cli_install_page: () => void;
-  user_login: string;
-  user_name: string;
   status_message: string;
   auth_device_code: string;
   auth_device_url: string;
-  avatar?: SlintRgbaImage;
 };
 
 type MainWindowOpts = {
   status_message?: string;
-  user_login?: string;
-  user_name?: string;
   "auth-device-code"?: string;
   "auth-device-url"?: string;
-  avatar?: SlintRgbaImage;
 };
 
-function clearAvatar(window: MainWindowInstance): void {
-  window.avatar = emptyTransparentAvatarImage;
+function clearUserIdentity(window: MainWindowInstance): void {
+  window.AppState.avatar = emptyTransparentAvatarImage;
+  window.AppState.user_login = "";
+  window.AppState.user_name = "";
 }
 
 function clearAuthDeviceFields(window: MainWindowInstance): void {
@@ -289,18 +288,20 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
   }
   if (!result.ok) {
     window.status_message = result.error;
-    clearAvatar(window);
+    clearUserIdentity(window);
     return;
   }
   const parsed = parseGhApiUserPayload(result.value);
   if (!parsed.ok) {
     window.status_message = parsed.message;
-    clearAvatar(window);
+    clearUserIdentity(window);
     return;
   }
   const user = parsed.user;
+  window.AppState.user_login = user.login;
+  window.AppState.user_name = user.name ?? "";
   window.status_message = user.login;
-  clearAvatar(window);
+  window.AppState.avatar = emptyTransparentAvatarImage;
 
   if (process.env.GH_DEBUG_JSON === "1") {
     if (!slintEventLoopHasStarted) {
@@ -314,9 +315,9 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
 
   void loadAvatarRgba(user.avatar_url).then((loaded) => {
     if (loaded !== undefined) {
-      window.avatar = loaded;
+      window.AppState.avatar = loaded;
     } else {
-      clearAvatar(window);
+      window.AppState.avatar = emptyTransparentAvatarImage;
     }
   });
 }
@@ -329,7 +330,7 @@ function applyAuthUi(window: MainWindowInstance): void {
     window.show_no_gh_cli_installed();
     clearAuthDeviceFields(window);
     window.close_auth_window();
-    clearAvatar(window);
+    clearUserIdentity(window);
     return;
   }
   if (status === "not_authed") {
@@ -337,7 +338,7 @@ function applyAuthUi(window: MainWindowInstance): void {
     window.status_message = "Not signed in";
     clearAuthDeviceFields(window);
     window.close_auth_window();
-    clearAvatar(window);
+    clearUserIdentity(window);
     return;
   }
 
@@ -345,7 +346,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   window.status_message = "Checking…";
   clearAuthDeviceFields(window);
   window.close_auth_window();
-  clearAvatar(window);
+  clearUserIdentity(window);
   void (async () => {
     const scopeCheck = await checkRequiredGitHubCliScopes();
     if (ghAuthStatus() !== "ok") {
@@ -357,7 +358,7 @@ function applyAuthUi(window: MainWindowInstance): void {
       window.status_message = `${scopeCheck.message} Click Login to authorize with the required scopes.`;
       clearAuthDeviceFields(window);
       window.close_auth_window();
-      clearAvatar(window);
+      clearUserIdentity(window);
       return;
     }
     window.status_message = "Loading…";
@@ -365,7 +366,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   })().catch((e) => {
     console.error("[github-app] scope check or user fetch failed:", e);
     window.status_message = "Something went wrong";
-    clearAvatar(window);
+    clearUserIdentity(window);
   });
 }
 
@@ -375,8 +376,6 @@ const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
 
 const window = new ui.MainWindow({
   status_message: "",
-  user_login: "",
-  user_name: "",
   "auth-device-code": "",
   "auth-device-url": "",
 });

@@ -1,0 +1,13 @@
+export enum Authed {
+    loggedOut,
+    noGhCliInstalled,
+    loggedIn,
+    authorizing,
+}
+
+export global AppState {
+    in-out property <Authed> auth: loggedOut;
+    in-out property <string> user_login: "";
+    in-out property <string> user_name: "";
+    in-out property <image> avatar;
+}
