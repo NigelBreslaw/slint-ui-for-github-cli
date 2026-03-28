@@ -2,6 +2,7 @@ import * as slint from "slint-ui";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { parseGhApiUserPayload } from "./schemas/gh-api-user.ts";
 
 /**
  * When `GH_DEBUG_JSON=1`, writes pretty-printed JSON under `debug-json/` (gitignored).
@@ -66,31 +67,16 @@ function ghApiJson(restArgs: string[]): GhJsonResult {
   }
 }
 
-function readLoginFromUserPayload(value: unknown): string | null {
-  if (typeof value !== "object" || value === null) {
-    return null;
-  }
-  if (!("login" in value)) {
-    return null;
-  }
-  const rec = value as Record<string, unknown>;
-  const login = rec.login;
-  if (typeof login !== "string" || login.length === 0) {
-    return null;
-  }
-  return login;
-}
-
 function getGhLogin(): string {
   const result = ghApiJson(["user"]);
   if (!result.ok) {
     return result.error;
   }
-  const login = readLoginFromUserPayload(result.value);
-  if (login === null) {
-    return "gh: unexpected response (missing login)";
+  const parsed = parseGhApiUserPayload(result.value);
+  if (!parsed.ok) {
+    return parsed.message;
   }
-  return login;
+  return parsed.user.login;
 }
 
 type MainWindowInstance = {

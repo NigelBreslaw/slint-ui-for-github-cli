@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "arktype": "2.2.0",
     "slint-ui": "1.15.1"
   },
   "devDependencies": {
