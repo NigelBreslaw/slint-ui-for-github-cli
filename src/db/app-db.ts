@@ -1,7 +1,7 @@
 import Database from "better-sqlite3";
 import { mkdirSync } from "node:fs";
 import { join } from "node:path";
-import { appDataRoot } from "../paths/app-data-root.ts";
+import { appDataRoot } from "../utils/app-data-root.ts";
 
 const SCHEMA_META_KEY = "__github_app/schema_version";
 

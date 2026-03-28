@@ -1,7 +1,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readdirSync, readFileSync, unlinkSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { appDataRoot } from "../paths/app-data-root.ts";
+import { appDataRoot } from "../utils/app-data-root.ts";
 
 function avatarCacheDir(): string {
   return join(appDataRoot(), "avatars");
