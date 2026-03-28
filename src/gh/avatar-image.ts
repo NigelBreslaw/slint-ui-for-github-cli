@@ -1,4 +1,9 @@
 import sharp from "sharp";
+import {
+  readCachedAvatarFile,
+  removeCachedAvatarFile,
+  writeCachedAvatarFile,
+} from "./avatar-cache-fs.ts";
 
 /** RGBA pixel buffer for Slint-node `image` properties (`width * height * 4` bytes). */
 export type SlintRgbaImage = {
@@ -16,37 +21,79 @@ export const emptyTransparentAvatarImage: SlintRgbaImage = {
 
 const FETCH_TIMEOUT_MS = 15_000;
 
+async function bufferToRgba(input: Buffer): Promise<SlintRgbaImage | undefined> {
+  const { data, info } = await sharp(input)
+    .ensureAlpha()
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  if (info.channels !== 4) {
+    return undefined;
+  }
+  return {
+    width: info.width,
+    height: info.height,
+    data,
+  };
+}
+
+async function fetchAvatarBytes(
+  url: string,
+): Promise<{ bytes: Buffer; contentType: string | null } | undefined> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => {
+    controller.abort();
+  }, FETCH_TIMEOUT_MS);
+  try {
+    const res = await fetch(url, { signal: controller.signal });
+    if (!res.ok) {
+      return undefined;
+    }
+    const contentType = res.headers.get("content-type");
+    return {
+      bytes: Buffer.from(await res.arrayBuffer()),
+      contentType,
+    };
+  } catch {
+    return undefined;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 /**
- * Downloads an image URL and decodes to RGBA for Slint.
- * Returns `undefined` on network, timeout, or decode errors.
+ * Loads avatar image: filesystem cache (under `./.data/avatars`), else network, then decodes to RGBA for Slint.
  */
 export async function loadAvatarRgba(url: string): Promise<SlintRgbaImage | undefined> {
   if (url.length === 0) {
     return undefined;
   }
+
+  const cached = readCachedAvatarFile(url);
+  if (cached !== undefined) {
+    try {
+      const decoded = await bufferToRgba(cached);
+      if (decoded !== undefined) {
+        return decoded;
+      }
+    } catch {
+      /* corrupt cache */
+    }
+    removeCachedAvatarFile(url);
+  }
+
+  const downloaded = await fetchAvatarBytes(url);
+  if (downloaded === undefined) {
+    return undefined;
+  }
+
   try {
-    const controller = new AbortController();
-    const timeout = setTimeout(() => {
-      controller.abort();
-    }, FETCH_TIMEOUT_MS);
-    const res = await fetch(url, { signal: controller.signal });
-    clearTimeout(timeout);
-    if (!res.ok) {
-      return undefined;
-    }
-    const input = Buffer.from(await res.arrayBuffer());
-    const { data, info } = await sharp(input)
-      .ensureAlpha()
-      .raw()
-      .toBuffer({ resolveWithObject: true });
-    if (info.channels !== 4) {
-      return undefined;
-    }
-    return {
-      width: info.width,
-      height: info.height,
-      data,
-    };
+    writeCachedAvatarFile(url, downloaded.bytes, downloaded.contentType);
+  } catch {
+    /* still try to decode if disk write fails */
+  }
+
+  try {
+    return await bufferToRgba(downloaded.bytes);
   } catch {
     return undefined;
   }

@@ -2,6 +2,7 @@ import * as slint from "slint-ui";
 import { execFileSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { openAppDb } from "./db/app-db.ts";
 import { ghAuthLogout, ghAuthStatus, spawnGhAuthLogin } from "./gh/auth.ts";
 import {
   emptyTransparentAvatarImage,
@@ -9,6 +10,8 @@ import {
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";
 import { parseGhApiUserPayload } from "./schemas/gh-api-user.ts";
+
+openAppDb();
 
 /**
  * When `GH_DEBUG_JSON=1`, writes pretty-printed JSON under `debug-json/` (gitignored).
