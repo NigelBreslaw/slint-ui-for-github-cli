@@ -23,8 +23,8 @@ import {
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";
 import { parseGhApiUserPayload } from "./schemas/gh-api-user.ts";
-import { copyTextToClipboard } from "./clipboard-write.ts";
-import { openUrlInBrowser } from "./open-url.ts";
+import { copyTextToClipboard } from "./utils/clipboard-write.ts";
+import { openUrlInBrowser } from "./utils/open-url.ts";
 
 openAppDb();
 
