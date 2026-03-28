@@ -1,0 +1,109 @@
+global HeaderStyle {
+    out property <length> border-radius: 12px;
+    out property <color> header-background: #020408;
+}
+
+component Avatar {
+
+    in-out property source <=> avatar.source;
+
+    width: 34px;
+    height: self.width;
+
+    Rectangle {
+        width: parent.width - 2px;
+        height: self.width;
+        border-radius: self.width / 2;
+        clip: true;
+        avatar := Image {
+            width: parent.width;
+            height: self.width;
+        }
+    }
+
+    Rectangle {
+        border-width: 1px;
+        border-color: #28292d;
+        border-radius: self.width / 2;
+    }
+
+    @children
+}
+
+component Menu {
+
+    in-out property <image> avatar-source <=> avatar.source;
+
+    width: 256px;
+    height: 400px;
+
+    Rectangle {
+        border-radius: HeaderStyle.border-radius;
+        drop-shadow-offset-y: 6px;
+        drop-shadow-blur: 18px;
+        drop-shadow-color: #01040966;
+    }
+
+    Rectangle {
+        border-radius: HeaderStyle.border-radius;
+        drop-shadow-offset-y: 6px;
+        drop-shadow-blur: 12px;
+        drop-shadow-color: #01040966;
+    }
+
+    Rectangle {
+        border-radius: HeaderStyle.border-radius;
+        border-width: 1px;
+        border-color: #3e444d;
+        background: HeaderStyle.header-background;
+    }
+
+    content := Rectangle {
+        x: 16px;
+        y: 16px;
+        width: parent.width - (2 * self.x);
+        height: parent.height - (2 * self.y);
+
+        avatar := Avatar {
+            x: 0;
+            y: 0;
+        }
+    }
+}
+
+export component Header {
+    width: 100%;
+    height: 100px;
+
+    in property <image> avatar;
+    property <bool> menu-visible: false;
+
+    Rectangle {
+        background: HeaderStyle.header-background;
+    }
+
+    Rectangle {
+        y: parent.height - self.height;
+        width: 100%;
+        height: 1px;
+        background: #3e444d;
+    }
+
+    avatar-container := Avatar {
+        x: parent.width - self.width - 14px;
+        y: 15px;
+        source: root.avatar;
+        TouchArea {
+            clicked => {
+                root.menu-visible = !root.menu-visible;
+            }
+        }
+    }
+
+    menu := Menu {
+        x: parent.width - self.width - 14px;
+        y: avatar-container.y + avatar-container.height + 2px;
+        avatar-source: root.avatar;
+        visible: root.menu-visible;
+    }
+}
