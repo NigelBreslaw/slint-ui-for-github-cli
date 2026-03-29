@@ -23,7 +23,7 @@ export component MainWindow inherits Window {
     callback close-auth-window;
     callback show_auth_window;
     callback open-github-device-clicked;
-    callback show-no-gh-cli-installed;
+    callback show_no_gh_cli_installed;
     callback open_cli_install_page;
 
     init => {
@@ -38,7 +38,7 @@ export component MainWindow inherits Window {
         auth_window.show();
     }
 
-    show-no-gh-cli-installed => {
+    show_no_gh_cli_installed => {
         no_gh_cli_installed_window.show();
     }
 

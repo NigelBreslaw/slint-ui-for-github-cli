@@ -290,6 +290,8 @@ function parseOrgLogins(orgsPayload: unknown): string[] {
 
 let initialProjectsDebugPending: string | null = null;
 let slintEventLoopHasStarted = false;
+/** Set when `gh` is missing before `runEventLoop` is ready; shown from `runningCallback`. */
+let pendingShowNoGhOverlay = false;
 
 /** Bumped on each `applyAuthUi` run so stale async work does not touch UI or session KV. */
 let authOperationEpoch = 0;
@@ -787,6 +789,7 @@ async function fetchAndApplyGitHubUser(
 
 function applyAuthUi(window: MainWindowInstance): void {
   uiPerfResetSession();
+  pendingShowNoGhOverlay = false;
   const op = beginAuthOperation();
 
   window.AppState.auth = "loggedIn";
@@ -826,7 +829,11 @@ function applyAuthUi(window: MainWindowInstance): void {
     if (!scopeCheck.ok && scopeCheck.noGh === true) {
       window.AppState.auth = "noGhCliInstalled";
       window.status_message = "gh not found (install GitHub CLI)";
-      window.show_no_gh_cli_installed();
+      if (slintEventLoopHasStarted) {
+        window.show_no_gh_cli_installed();
+      } else {
+        pendingShowNoGhOverlay = true;
+      }
       clearAuthDeviceFields(window);
       window.close_auth_window();
       clearUserIdentity(window);
@@ -914,11 +921,15 @@ window.open_cli_install_page = () => {
   openUrlInBrowser("https://cli.github.com/");
 };
 
-applyAuthUi(window);
 window.show();
+applyAuthUi(window);
 await slint.runEventLoop({
   runningCallback: () => {
     slintEventLoopHasStarted = true;
+    if (pendingShowNoGhOverlay) {
+      pendingShowNoGhOverlay = false;
+      window.show_no_gh_cli_installed();
+    }
     const login = initialProjectsDebugPending;
     initialProjectsDebugPending = null;
     if (login !== null && shouldRunSlintUiProjectDebugDumps()) {
