@@ -11,7 +11,6 @@
     "start": "pnpm dev",
     "gen-build-info": "node scripts/write-build-info.ts",
     "dev": "node scripts/write-build-info.ts && node src/main.ts",
-    "dev:shutdown-debug": "node scripts/write-build-info.ts && cross-env GH_DEBUG_SHUTDOWN=1 node src/main.ts",
     "dev:debug": "node scripts/write-build-info.ts && cross-env GH_DEBUG_JSON=1 GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1 node src/main.ts",
     "dev:debug:projects": "node scripts/write-build-info.ts && cross-env GH_DEBUG_JSON=1 node src/main.ts",
     "typecheck": "tsc --noEmit",

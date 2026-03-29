@@ -4,7 +4,7 @@ import { execFile } from "node:child_process";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
-import { openAppDb } from "./db/app-db.ts";
+import { closeAppDb, openAppDb } from "./db/app-db.ts";
 import { checkRequiredGitHubCliScopes, ghAuthLogout, spawnGhAuthLogin } from "./gh/auth.ts";
 import {
   maybeDumpAssignedOpenWorkDebugAsync,
@@ -563,31 +563,6 @@ function teardownSettingsDebugPanel(window: MainWindowInstance): void {
   resetSettingsDebugPanelState(window);
 }
 
-function shutdownInvestigationEnabled(): boolean {
-  return process.env.GH_DEBUG_SHUTDOWN === "1";
-}
-
-function logShutdownInvestigation(phase: string): void {
-  if (!shutdownInvestigationEnabled()) {
-    return;
-  }
-  const activeResources = process.getActiveResourcesInfo();
-  console.error(`[GH_DEBUG_SHUTDOWN] ${phase}`, { activeResources });
-}
-
-function registerShutdownInvestigationHooks(): void {
-  if (!shutdownInvestigationEnabled()) {
-    return;
-  }
-  console.error(
-    "[GH_DEBUG_SHUTDOWN] enabled: milestones after runEventLoop + beforeExit; see docs/mac-window-close-investigation.md",
-  );
-  process.on("beforeExit", (code) => {
-    console.error("[GH_DEBUG_SHUTDOWN] beforeExit", { code });
-    logShutdownInvestigation("beforeExit snapshot");
-  });
-}
-
 function tickSettingsCountdown(window: MainWindowInstance): void {
   if (settingsRateLimitDeadlineMs === null) {
     window.SettingsState.settings_debug_countdown = "—";
@@ -935,7 +910,6 @@ window.open_cli_install_page = () => {
   openUrlInBrowser("https://cli.github.com/");
 };
 
-registerShutdownInvestigationHooks();
 applyAuthUi(window);
 window.show();
 await slint.runEventLoop({
@@ -950,6 +924,9 @@ await slint.runEventLoop({
     }
   },
 });
-logShutdownInvestigation("after runEventLoop resolved");
+teardownSettingsDebugPanel(window);
 window.hide();
-logShutdownInvestigation("after window.hide()");
+closeAppDb();
+// Slint's Node bridge uses a repeating timer (~16 ms) merged with Node's loop; a TTY also
+// keeps stdin/stdout/stderr referenced, so the process would not exit on its own after the UI closes.
+process.exit(0);

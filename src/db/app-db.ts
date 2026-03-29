@@ -17,6 +17,17 @@ function ensureDb(): Database.Database {
 /**
  * Opens the app SQLite database and runs migrations. Safe to call once at startup.
  */
+/**
+ * Closes the DB if it was opened. Idempotent; safe to call at process shutdown.
+ */
+export function closeAppDb(): void {
+  if (db === undefined) {
+    return;
+  }
+  db.close();
+  db = undefined;
+}
+
 export function openAppDb(): Database.Database {
   if (db !== undefined) {
     return db;
