@@ -325,6 +325,42 @@ async function maybeDumpGitHubProjectsDebugAsync(
 
 const SLINT_UI_ORG = "slint-ui";
 
+/**
+ * When `GH_DEBUG_JSON=1` and `GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1` (e.g. `pnpm dev:debug`), write the
+ * org project list JSON from the same fetch used for the Settings UI—no extra GraphQL. Does not run
+ * assigned-open search or per-project item dumps.
+ */
+function maybeDumpSlintUiProjectListJsonFromUiFetch(): void {
+  if (process.env.GH_DEBUG_JSON !== "1") {
+    return;
+  }
+  if (process.env.GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS !== "1") {
+    return;
+  }
+  const fetched = getLastSlintUiOrgProjectsFetch();
+  const orgStem = `projects-v2--org--${SLINT_UI_ORG}`;
+  const listStem = `assigned-open--projects-list--${SLINT_UI_ORG}`;
+  if (fetched === null) {
+    return;
+  }
+  if (!fetched.ok) {
+    writeDebugJsonStem(`${orgStem}--error`, { error: fetched.error });
+    writeDebugJsonStem(`${listStem}--error`, { error: fetched.error });
+    return;
+  }
+  const value = fetched.value;
+  if (value.length > 0) {
+    writeDebugJsonStem(orgStem, value);
+  }
+  const nodes = value as ProjectV2NodeSnapshot[];
+  writeDebugJsonStem(listStem, {
+    organization: SLINT_UI_ORG,
+    source: "graphql.organization.projectsV2",
+    totalProjectCount: nodes.length,
+    projects: nodes,
+  });
+}
+
 /** One `organization.projectsV2` pagination for `slint-ui`; feeds org dump + assigned-open list. */
 async function runDebugJsonSlintUiDumpsAsync(
   login: string,
@@ -450,6 +486,7 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
   window.AppState.avatar = emptyTransparentAvatarImage;
 
   await refreshSlintUiOrgProjectsForWindow(window);
+  maybeDumpSlintUiProjectListJsonFromUiFetch();
 
   if (process.env.GH_DEBUG_JSON === "1") {
     void debugUserData().catch((e) => {
