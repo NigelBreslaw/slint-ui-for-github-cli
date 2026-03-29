@@ -157,6 +157,8 @@ When `**GH_DEBUG_JSON=1**`, each successful `gh api …` response is pretty-prin
 
 **Do not** enable this while screen-sharing; responses can include account details or other sensitive data.
 
+**Time reporting:** When you pick a project in the **Time reporting** view, the app always writes `debug-json/time-reporting--project-v2--<sanitized-node-id>.json` with the raw GraphQL `node(id: …) { … on ProjectV2 { … } }` response (or `…--error.json` if the request fails). That write does **not** depend on `GH_DEBUG_JSON`. With **`GH_DEBUG_JSON=1`** (e.g. `pnpm dev:debug`), the same file is **written again after sign-in** if you already have a stored time reporting project—so you see it without re-opening the picker. If you have never chosen a project, open **Time reporting** and pick one once (or run a normal `pnpm start`, pick, then use `pnpm dev:debug`).
+
 Run with the helper script (works on Windows, macOS, and Linux via [cross-env](https://github.com/kentcdodds/cross-env)):
 
 ```bash

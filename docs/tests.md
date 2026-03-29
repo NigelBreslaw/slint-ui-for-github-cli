@@ -92,6 +92,16 @@ Exercises [`parseTimeReportingSelectedProjectJson`](../src/time-reporting/time-r
 | returns null when title or url is not a string | Required display fields |
 | accepts a valid v1 payload | Round-trip with `JSON.stringify` |
 
+### `src/time-reporting/sanitize-time-reporting-debug-stem.test.ts`
+
+Exercises [`sanitizeTimeReportingDebugStem`](../src/time-reporting/sanitize-time-reporting-debug-stem.ts) (filename-safe segment for Time reporting `debug-json` stems).
+
+| Case | Intent |
+| --- | --- |
+| passes through alphanumeric node ids | No change when already safe |
+| replaces slashes and spaces with underscores | Disallowed characters normalized |
+| is stable for the same input | Idempotent |
+
 ### `src/session/viewer-session-cache.test.ts`
 
 Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (persisted viewer snapshot for fast startup; no SQLite in tests—JSON only).

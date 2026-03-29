@@ -27,6 +27,7 @@ import {
   runDebugJsonSlintUiDumpsAsync,
   shouldRunSlintUiProjectDebugDumps,
 } from "../debug/github-app-debug-dumps.ts";
+import { maybeDumpTimeReportingProjectFromKvWhenDebugJsonEnv } from "../time-reporting/dump-time-reporting-project-debug.ts";
 
 let initialProjectsDebugPending: string | null = null;
 let slintEventLoopHasStarted = false;
@@ -122,6 +123,7 @@ async function fetchAndApplyGitHubUser(
     void maybeDumpNotificationsThreadsDebugAsync().catch((e) => {
       console.error("[debug-json] maybeDumpNotificationsThreadsDebugAsync failed:", e);
     });
+    maybeDumpTimeReportingProjectFromKvWhenDebugJsonEnv();
     if (shouldRunSlintUiProjectDebugDumps()) {
       if (!slintEventLoopHasStarted) {
         initialProjectsDebugPending = viewer.login;

@@ -4,6 +4,7 @@ import {
   findSlintUiOpenProjectRowByNodeId,
 } from "../gh/slint-ui-org-projects-ui.ts";
 import { refreshSlintUiOrgProjectsForWindow } from "../ui/app-window-bridge.ts";
+import { dumpTimeReportingProjectNodeToDebugJson } from "./dump-time-reporting-project-debug.ts";
 import {
   readTimeReportingSelectedProjectKv,
   TIME_REPORTING_SELECTED_PROJECT_SCHEMA_VERSION,
@@ -37,10 +38,7 @@ function openOptionalPicker(window: MainWindowInstance): void {
   window.TimeReportingState.picker_open = true;
 }
 
-/**
- * Wire `TimeReportingState` callbacks. View enter: re-read KV, refresh org projects, open picker if
- * nothing stored. GraphQL project dump is a separate step (plan §4).
- */
+/** Wire `TimeReportingState` callbacks. On project pick, persists KV and writes unconditional `debug-json`. */
 export function wireTimeReportingUi(window: MainWindowInstance): void {
   window.TimeReportingState.time_reporting_view_init = () => {
     void (async () => {
@@ -91,6 +89,7 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
       window.TimeReportingState.has_selected_project = true;
       window.TimeReportingState.selected_project_label = row.title;
       closeTimeReportingPicker(window);
+      await dumpTimeReportingProjectNodeToDebugJson(row.id);
     })();
   };
 }
