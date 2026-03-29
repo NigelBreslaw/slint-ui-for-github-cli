@@ -419,6 +419,8 @@ async function runDebugJsonSlintUiDumpsAsync(
 /** Slint-node maps enum variants to kebab-case strings on `AppState.auth` (not `ui.Authed.*` values). */
 type AuthedAuthState = "loggedOut" | "noGhCliInstalled" | "loggedIn" | "authorizing";
 
+type AppStateView = "none" | "dashboard" | "settings";
+
 type AppStateHandle = {
   auth: AuthedAuthState;
   user_login: string;
@@ -427,8 +429,7 @@ type AppStateHandle = {
   user_status_message: string;
   user_status_emoji: string;
   avatar?: SlintRgbaImage;
-  show_settings: boolean;
-  show_dashboard: boolean;
+  view: AppStateView;
   review_requests_data_ready: boolean;
   review_requests_total: number;
   review_requests_load_status: string;
@@ -439,6 +440,8 @@ type AppStateHandle = {
   project_search_changed: (query: string) => void;
   sign_out: () => void;
   open_project_url: (url: string) => void;
+  dashboard_init: () => void;
+  settings_init: () => void;
 };
 
 type MainWindowInstance = {
@@ -451,7 +454,6 @@ type MainWindowInstance = {
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
   open_cli_install_page: () => void;
-  dashboard_opened?: () => void;
   status_message: string;
   auth_device_code: string;
   auth_device_url: string;
@@ -470,8 +472,7 @@ function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.user_profile_url = "";
   window.AppState.user_status_message = "";
   window.AppState.user_status_emoji = "";
-  window.AppState.show_settings = false;
-  window.AppState.show_dashboard = false;
+  window.AppState.view = "none";
   window.AppState.review_requests_data_ready = false;
   window.AppState.review_requests_total = 0;
   window.AppState.review_requests_load_status = "";
@@ -633,8 +634,12 @@ window.AppState.open_project_url = (url: string) => {
   openUrlInBrowser(url);
 };
 
-window.dashboard_opened = () => {
+window.AppState.dashboard_init = () => {
   void refreshDashboardReviewRequests(window);
+};
+
+window.AppState.settings_init = () => {
+  void refreshSlintUiOrgProjectsForWindow(window);
 };
 
 window.open_github_device_clicked = () => {

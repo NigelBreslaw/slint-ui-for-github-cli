@@ -37,8 +37,10 @@ export global AppState {
     in-out property <string> review-requests-load-status: "";
     in property <[ReviewRequestRow]> review-requests-model;
 
-    out property <View> view: none;
+    in-out property <View> view: none;
     callback set-view(View);
+    callback dashboard-init;
+    callback settings-init;
 
     set-view(view) => {
         if view == self.view {
