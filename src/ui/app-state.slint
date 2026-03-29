@@ -60,7 +60,8 @@ export global AppState {
     in-out property <string> projects-search: "";
     in-out property <string> projects-load-status: "";
     in property <[ProjectRow]> projects-filtered-model;
-    callback project-search-changed(string);
+    callback project_search_changed(string);
+    callback sign_in;
     callback sign-out;
-    callback open-project-url(string);
+    callback open_project_url(string);
 }

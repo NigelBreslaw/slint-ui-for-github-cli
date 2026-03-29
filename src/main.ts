@@ -472,6 +472,7 @@ type AppStateHandle = {
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
   project_search_changed: (query: string) => void;
   sign_out: () => void;
+  sign_in: () => void;
   open_project_url: (url: string) => void;
   dashboard_init: () => void;
 };
@@ -496,6 +497,7 @@ type MainWindowInstance = {
   SettingsState: SettingsStateHandle;
   login_clicked?: () => void;
   open_github_device_clicked?: () => void;
+  show_auth_window: () => void;
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
   open_cli_install_page: () => void;
@@ -885,9 +887,10 @@ window.open_github_device_clicked = () => {
   });
 };
 
-window.login_clicked = () => {
+window.AppState.sign_in = () => {
   clearAuthDeviceFields(window);
   window.AppState.auth = "authorizing";
+  window.show_auth_window();
   spawnGhAuthLogin({
     onDeviceFlowInfo: (info) => {
       window.auth_device_code = info.code;
@@ -907,6 +910,7 @@ window.AppState.sign_out = () => {
 };
 
 window.open_cli_install_page = () => {
+  console.log("open_cli_install_page");
   openUrlInBrowser("https://cli.github.com/");
 };
 

@@ -1,4 +1,5 @@
-import { AppState } from "app-state.slint";
+import { AppState, Authed } from "app-state.slint";
+import { Button } from "components/button.slint";
 
 global HeaderStyle {
     out property <length> border-radius: 12px;
@@ -244,10 +245,21 @@ export component Header {
             background: #3e444d;
         }
 
+        sign-in := Button {
+            x: parent.width - self.width - self.y;
+            y: (parent.height - self.height) / 2;
+            visible: AppState.auth == Authed.loggedOut;
+            label: "Sign in";
+            clicked => {
+                AppState.sign_in();
+            }
+        }
+
         avatar-container := Avatar {
             x: parent.width - self.width - self.y;
             y: (parent.height - self.height) / 2;
             source: AppState.avatar;
+            visible: AppState.auth == Authed.loggedIn;
             TouchArea {
                 clicked => {
                     HeaderState.menu-visible = true;

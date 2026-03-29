@@ -1,8 +1,5 @@
 import {
-    Button,
-    HorizontalBox,
     Spinner,
-    VerticalBox,
     Palette,
     StyleMetrics,
 } from "std-widgets.slint";
@@ -17,16 +14,17 @@ import { SettingsState } from "settings-state.slint";
 import { Header } from "header.slint";
 import { Settings } from "settings.slint";
 import { Dashboard } from "dashboard.slint";
+import { Button } from "components/button.slint";
 
 // Export so backend can access the enums and global state.
 export { Authed, AppState, ProjectRow, ReviewRequestRow, SettingsState }
 
 export component MainWindow inherits Window {
-    callback login-clicked;
     callback close-auth-window;
+    callback show_auth_window;
     callback open-github-device-clicked;
     callback show-no-gh-cli-installed;
-    callback open-cli-install-page;
+    callback open_cli_install_page;
 
     init => {
         Palette.color-scheme = ColorScheme.dark;
@@ -34,6 +32,10 @@ export component MainWindow inherits Window {
 
     close-auth-window => {
         auth_window.close();
+    }
+
+    show_auth_window => {
+        auth_window.show();
     }
 
     show-no-gh-cli-installed => {
@@ -49,12 +51,12 @@ export component MainWindow inherits Window {
     title: "GitHub CLI";
     background: #0d1116;
 
-    HorizontalBox {
+    HorizontalLayout {
         alignment: center;
         width: 100%;
         height: 100%;
 
-        VerticalBox {
+        VerticalLayout {
             alignment: center;
             spacing: 12px;
             width: 100%;
@@ -66,20 +68,6 @@ export component MainWindow inherits Window {
                 horizontal-alignment: center;
                 wrap: word-wrap;
             }
-
-            HorizontalBox {
-                alignment: center;
-                spacing: 8px;
-
-                Button {
-                    text: "Login";
-                    visible: AppState.auth == Authed.loggedOut;
-                    clicked => {
-                        auth_window.show();
-                        root.login-clicked();
-                    }
-                }
-            }
         }
     }
 
@@ -89,6 +77,7 @@ export component MainWindow inherits Window {
         width: 24px + (16px * 2);
         height: root.height - self.y;
         background: #020408;
+        visible: AppState.auth == Authed.loggedIn;
 
         Rectangle {
             x: parent.width - self.width;
@@ -150,7 +139,7 @@ export component MainWindow inherits Window {
             y: 0;
             width: root.width;
             height: root.height;
-            background: black.with-alpha(0.9);
+            background: black;
         }
 
         VerticalLayout {
@@ -167,11 +156,9 @@ export component MainWindow inherits Window {
             }
 
             Button {
-                width: self.preferred-width;
-                height: self.preferred-height;
-                text: "Open CLI install page";
+                label: "Open CLI install page";
                 clicked => {
-                    root.open-cli-install-page();
+                    root.open_cli_install_page();
                 }
             }
         }
@@ -188,6 +175,10 @@ export component MainWindow inherits Window {
         close-policy: no-auto-close;
 
         Rectangle {
+            x: 0;
+            y: 0;
+            width: root.width;
+            height: root.height;
             background: black.with-alpha(0.9);
 
             TouchArea {
@@ -195,10 +186,10 @@ export component MainWindow inherits Window {
                 height: 100%;
             }
 
-            VerticalBox {
+            vl := VerticalLayout {
                 alignment: center;
                 spacing: 16px;
-                width: 100%;
+                width: self.preferred-width;
                 height: 100%;
 
                 Text {
@@ -233,7 +224,7 @@ export component MainWindow inherits Window {
 
                 Button {
                     visible: root.auth-device-code != "";
-                    text: "Copy code to clipboard and open web login";
+                    label: "Copy code to clipboard and open web login";
                     clicked => {
                         root.open-github-device-clicked();
                     }
