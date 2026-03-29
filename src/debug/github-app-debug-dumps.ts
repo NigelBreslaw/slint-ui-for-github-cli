@@ -11,6 +11,7 @@ import { getLastSlintUiOrgProjectsFetch } from "../gh/slint-ui-org-projects-ui.t
 import { writeDebugJsonStem } from "../gh/write-debug-json.ts";
 import type { ProjectV2NodeSnapshot } from "../schemas/gh-graphql-projectsv2-page.ts";
 import { VIEWER_DEBUG_GRAPHQL_QUERY } from "../gh/viewer-queries.ts";
+import { parseOrgLogins } from "./parse-org-logins.ts";
 
 const SLINT_UI_ORG = "slint-ui";
 
@@ -44,24 +45,6 @@ export async function debugUserData(): Promise<void> {
   } else {
     writeDebugJsonStem("gh-graphql--viewer-status", { error: res.error });
   }
-}
-
-function parseOrgLogins(orgsPayload: unknown): string[] {
-  if (!Array.isArray(orgsPayload)) {
-    return [];
-  }
-  const logins: string[] = [];
-  for (const row of orgsPayload) {
-    if (
-      row !== null &&
-      typeof row === "object" &&
-      "login" in row &&
-      typeof (row as { login: unknown }).login === "string"
-    ) {
-      logins.push((row as { login: string }).login);
-    }
-  }
-  return logins;
 }
 
 /** When set with `GH_DEBUG_JSON=1` (e.g. `pnpm dev:debug`), skips org/assigned project JSON dumps to save GraphQL quota. */

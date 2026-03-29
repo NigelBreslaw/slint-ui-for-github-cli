@@ -68,6 +68,17 @@ Exercises [`statusEmojiFromGraphqlHtml`](../src/gh/status-emoji-from-graphql.ts)
 | strips nested tags | Multiple tags |
 | returns empty when only tags remain after strip | No visible glyph left |
 
+### `src/debug/parse-org-logins.test.ts`
+
+Exercises [`parseOrgLogins`](../src/debug/parse-org-logins.ts) (REST `user/orgs` paginated list → org slugs for debug dumps).
+
+| Case | Intent |
+| --- | --- |
+| returns empty array for non-array payload | `null`, objects, strings ignored |
+| returns empty array for empty array | No orgs |
+| collects string login fields in order | Happy path; extra fields allowed |
+| skips rows without a string login | Null rows, missing `login`, numeric `login`; empty string login kept |
+
 ### `src/session/viewer-session-cache.test.ts`
 
 Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (persisted viewer snapshot for fast startup; no SQLite in tests—JSON only).

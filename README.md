@@ -46,6 +46,19 @@ After sign-in, the app loads **open** GitHub Projects (**not** `closed`) for the
 pnpm typecheck
 ```
 
+### TypeScript layout
+
+| Area | Role |
+| --- | --- |
+| [`src/main.ts`](src/main.ts) | Entry: open DB, `loadFile` / `MainWindow`, Slint callbacks, event loop, shutdown |
+| [`src/slint-interface.ts`](src/slint-interface.ts) | Types for `MainWindow`, `AppState`, `SettingsState` (keep in sync with `.slint`) |
+| [`src/auth/auth-ui-flow.ts`](src/auth/auth-ui-flow.ts) | Sign-in scope check, viewer fetch, session cache, `runEventLoop` startup hooks |
+| [`src/ui/app-window-bridge.ts`](src/ui/app-window-bridge.ts) | Mutates `AppState` / window fields (dashboard, projects, identity) |
+| [`src/ui/settings-debug-panel.ts`](src/ui/settings-debug-panel.ts) | Settings debug table + GraphQL rate-limit polling |
+| [`src/gh/gh-app-client.ts`](src/gh/gh-app-client.ts) | `gh api` / `gh api graphql` JSON helpers |
+| [`src/gh/viewer-queries.ts`](src/gh/viewer-queries.ts) | GraphQL query strings for viewer load + debug dump |
+| [`src/debug/github-app-debug-dumps.ts`](src/debug/github-app-debug-dumps.ts) | `GH_DEBUG_JSON=1` file output orchestration |
+
 ## Debug mode (JSON dumps)
 
 When **`GH_DEBUG_JSON=1`**, each successful `gh api …` response is pretty-printed to the **`debug-json/`** directory (gitignored). Useful for inspecting API payloads while building the UI.
