@@ -2,7 +2,6 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   parseViewerSessionJson,
-  serializeViewerSession,
   VIEWER_SESSION_KV_KEY,
   VIEWER_SESSION_SCHEMA_VERSION,
   type ViewerSessionV1,
@@ -30,7 +29,7 @@ describe("viewer session KV", () => {
 
 describe("parseViewerSessionJson", () => {
   it("accepts a valid v1 session", () => {
-    const raw = serializeViewerSession(validSession);
+    const raw = JSON.stringify(validSession);
     const parsed = parseViewerSessionJson(raw);
     assert.deepEqual(parsed, validSession);
   });

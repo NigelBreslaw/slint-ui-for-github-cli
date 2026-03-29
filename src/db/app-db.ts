@@ -41,7 +41,6 @@ export function openAppDb(): Database.Database {
   return db;
 }
 
-/** @lintignore Reserved for upcoming app settings; imported once `openAppDb()` has run. */
 export function kvGet(key: string): string | undefined {
   const row = ensureDb().prepare("SELECT value FROM kv WHERE key = ?").get(key) as
     | { value: string }
@@ -49,7 +48,6 @@ export function kvGet(key: string): string | undefined {
   return row?.value;
 }
 
-/** @lintignore Reserved for upcoming app settings; imported once `openAppDb()` has run. */
 export function kvSet(key: string, value: string): void {
   ensureDb().prepare("INSERT OR REPLACE INTO kv (key, value) VALUES (?, ?)").run(key, value);
 }

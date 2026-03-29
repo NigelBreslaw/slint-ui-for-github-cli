@@ -74,7 +74,7 @@ export function parseViewerSessionJson(raw: string): ViewerSessionV1 | null {
   }
 }
 
-export function serializeViewerSession(session: ViewerSessionV1): string {
+function serializeViewerSession(session: ViewerSessionV1): string {
   return JSON.stringify(session);
 }
 

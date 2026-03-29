@@ -26,7 +26,6 @@ import type { ProjectV2NodeSnapshot } from "./schemas/gh-graphql-projectsv2-page
 import { writeDebugJsonStem } from "./gh/write-debug-json.ts";
 import {
   emptyTransparentAvatarImage,
-  isPlaceholderAvatarImage,
   loadAvatarRgba,
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";

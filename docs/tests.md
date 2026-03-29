@@ -75,7 +75,7 @@ Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (pe
 | Case | Intent |
 | --- | --- |
 | uses a stable KV key | `VIEWER_SESSION_KV_KEY` matches `viewer_session_v1` |
-| accepts a valid v1 session | Round-trip with `serializeViewerSession` |
+| accepts a valid v1 session | Round-trip: `JSON.stringify` then `parseViewerSessionJson` |
 | returns null for wrong schema version | Unknown `schemaVersion` |
 | returns null when authenticated is not true | `authenticated: false` rejected |
 | returns null for invalid JSON | Parse error |
