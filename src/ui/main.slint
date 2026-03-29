@@ -78,7 +78,7 @@ export component MainWindow inherits Window {
 
     side-bar := Rectangle {
         x: 0;
-        y: header.height;
+        y: header.header-height;
         width: 24px + (16px * 2);
         height: root.height - self.y;
         background: #020408;
@@ -95,10 +95,10 @@ export component MainWindow inherits Window {
             y: 16px;
             width: 24px;
             height: 24px;
-            colorize: #f0f6fc;
+            colorize: #8b949e;
             source: @image-url("../assets/24px/inbox.svg");
 
-            TouchArea {
+            ta := TouchArea {
                 clicked => {
                     AppState.set-view(View.dashboard);
                 }
@@ -110,7 +110,7 @@ export component MainWindow inherits Window {
             y: parent.height - self.height - 16px;
             width: 24px;
             height: 24px;
-            colorize: #f0f6fc;
+            colorize: #8b949e;
             source: @image-url("../assets/24px/gear.svg");
 
             TouchArea {
@@ -121,15 +121,13 @@ export component MainWindow inherits Window {
         }
     }
 
-    header := Header {
-        y: 0;
-    }
+    header := Header { }
 
     content := Rectangle {
         x: side-bar.width;
-        y: header.height;
-        width: root.width - side-bar.width;
-        height: root.height - header.height;
+        y: header.header-height;
+        width: root.width - self.x;
+        height: root.height - self.y;
 
         if AppState.view == View.dashboard: Dashboard { }
 
