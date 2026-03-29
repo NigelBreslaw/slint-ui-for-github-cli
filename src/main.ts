@@ -39,6 +39,14 @@ import { fetchGraphqlRateLimit } from "./gh/graphql-rate-limit.ts";
 import { GIT_COMMIT_COUNT } from "./generated/build-info.ts";
 import { formatCountdownMs } from "./utils/format-countdown.ts";
 import { formatRateLimitResetLocal } from "./utils/format-reset-at-local.ts";
+import {
+  clearViewerSessionCache,
+  readViewerSessionCache,
+  viewerSessionFromMinimalViewer,
+  writeViewerSessionCache,
+  type ViewerSessionV1,
+} from "./session/viewer-session-cache.ts";
+import { uiPerfMarkT1Text, uiPerfMarkT2Avatar, uiPerfResetSession } from "./ui-perf.ts";
 
 const execFileAsync = promisify(execFile);
 
@@ -282,6 +290,18 @@ function parseOrgLogins(orgsPayload: unknown): string[] {
 
 let initialProjectsDebugPending: string | null = null;
 let slintEventLoopHasStarted = false;
+
+/** Bumped on each `applyAuthUi` run so stale async work does not touch UI or session KV. */
+let authOperationEpoch = 0;
+
+function beginAuthOperation(): number {
+  authOperationEpoch += 1;
+  return authOperationEpoch;
+}
+
+function isAuthEpochCurrent(op: number): boolean {
+  return op === authOperationEpoch;
+}
 
 /** When set with `GH_DEBUG_JSON=1` (e.g. `pnpm dev:debug`), skips org/assigned project JSON dumps to save GraphQL quota. */
 function shouldRunSlintUiProjectDebugDumps(): boolean {
@@ -603,7 +623,30 @@ async function loadSettingsDebugPanel(window: MainWindowInstance): Promise<void>
   window.SettingsState.settings_debug_error = errors.join(" · ");
 }
 
+function resetListsWithoutClearingProfile(window: MainWindowInstance): void {
+  window.AppState.view = "none";
+  window.AppState.review_requests_data_ready = false;
+  window.AppState.review_requests_total = 0;
+  window.AppState.review_requests_load_status = "";
+  window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
+  clearSlintUiOrgProjectsCache();
+  window.AppState.projects_search = "";
+  window.AppState.projects_load_status = "";
+  window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
+  teardownSettingsDebugPanel(window);
+}
+
+function applyCachedViewerToAppState(window: MainWindowInstance, cached: ViewerSessionV1): void {
+  const v = cached.viewer;
+  window.AppState.user_login = v.login;
+  window.AppState.user_name = v.name ?? "";
+  window.AppState.user_profile_url = v.url;
+  window.AppState.user_status_message = v.statusMessage;
+  window.AppState.user_status_emoji = v.statusEmoji;
+}
+
 function clearUserIdentity(window: MainWindowInstance): void {
+  clearViewerSessionCache();
   window.AppState.avatar = emptyTransparentAvatarImage;
   window.AppState.user_login = "";
   window.AppState.user_name = "";
@@ -664,14 +707,24 @@ async function refreshSlintUiOrgProjectsForWindow(window: MainWindowInstance): P
   );
 }
 
-async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void> {
+async function fetchAndApplyGitHubUser(
+  window: MainWindowInstance,
+  options: { op: number },
+): Promise<void> {
+  const { op } = options;
   const result = await ghApiGraphql(VIEWER_APP_GRAPHQL_QUERY);
+  if (!isAuthEpochCurrent(op)) {
+    return;
+  }
   if (!result.ok) {
     window.status_message = result.error;
     clearUserIdentity(window);
     return;
   }
   const parsed = parseGhGraphqlViewerMinimalResponse(result.value);
+  if (!isAuthEpochCurrent(op)) {
+    return;
+  }
   if (!parsed.ok) {
     window.status_message = parsed.message;
     clearUserIdentity(window);
@@ -684,10 +737,16 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
   window.AppState.user_profile_url = viewer.url;
   const st = viewer.status;
   window.AppState.user_status_message = st?.message ?? "";
-  window.AppState.user_status_emoji = statusEmojiFromGraphqlHtml(st?.emojiHTML ?? null);
+  const emojiPlain = statusEmojiFromGraphqlHtml(st?.emojiHTML ?? null);
+  window.AppState.user_status_emoji = emojiPlain;
+  uiPerfMarkT1Text("network");
+  writeViewerSessionCache(viewerSessionFromMinimalViewer(viewer, emojiPlain));
   window.AppState.avatar = emptyTransparentAvatarImage;
 
   await refreshSlintUiOrgProjectsForWindow(window);
+  if (!isAuthEpochCurrent(op)) {
+    return;
+  }
   maybeDumpSlintUiProjectListJsonFromUiFetch();
 
   if (process.env.GH_DEBUG_JSON === "1") {
@@ -711,8 +770,12 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
   }
 
   void loadAvatarRgba(viewer.avatarUrl).then((loaded) => {
+    if (!isAuthEpochCurrent(op)) {
+      return;
+    }
     if (loaded !== undefined) {
       window.AppState.avatar = loaded;
+      uiPerfMarkT2Avatar("network", loaded);
     } else {
       window.AppState.avatar = emptyTransparentAvatarImage;
     }
@@ -720,13 +783,40 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
 }
 
 function applyAuthUi(window: MainWindowInstance): void {
+  uiPerfResetSession();
+  const op = beginAuthOperation();
+
   window.AppState.auth = "loggedIn";
   window.status_message = "Checking…";
   clearAuthDeviceFields(window);
   window.close_auth_window();
-  clearUserIdentity(window);
+
+  const cached = readViewerSessionCache();
+  const hadCachedSession = cached !== null;
+  if (cached !== null) {
+    resetListsWithoutClearingProfile(window);
+    applyCachedViewerToAppState(window, cached);
+    uiPerfMarkT1Text("cache");
+    window.status_message = "";
+    window.AppState.avatar = emptyTransparentAvatarImage;
+    void loadAvatarRgba(cached.viewer.avatarUrl).then((loaded) => {
+      if (!isAuthEpochCurrent(op)) {
+        return;
+      }
+      if (loaded !== undefined) {
+        window.AppState.avatar = loaded;
+        uiPerfMarkT2Avatar("cache", loaded);
+      }
+    });
+  } else {
+    clearUserIdentity(window);
+  }
+
   void (async () => {
     const scopeCheck = await checkRequiredGitHubCliScopes();
+    if (!isAuthEpochCurrent(op)) {
+      return;
+    }
     if (!scopeCheck.ok && scopeCheck.noGh === true) {
       window.AppState.auth = "noGhCliInstalled";
       window.status_message = "gh not found (install GitHub CLI)";
@@ -744,8 +834,8 @@ function applyAuthUi(window: MainWindowInstance): void {
       clearUserIdentity(window);
       return;
     }
-    window.status_message = "Loading…";
-    await fetchAndApplyGitHubUser(window);
+    window.status_message = hadCachedSession ? "" : "Loading…";
+    await fetchAndApplyGitHubUser(window, { op });
   })().catch((e) => {
     console.error("[github-app] scope check or user fetch failed:", e);
     window.status_message = "Something went wrong";
@@ -808,6 +898,7 @@ window.login_clicked = () => {
 
 window.AppState.sign_out = () => {
   ghAuthLogout();
+  clearViewerSessionCache();
   void applyAuthUi(window);
 };
 

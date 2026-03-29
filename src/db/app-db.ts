@@ -53,3 +53,7 @@ export function kvGet(key: string): string | undefined {
 export function kvSet(key: string, value: string): void {
   ensureDb().prepare("INSERT OR REPLACE INTO kv (key, value) VALUES (?, ?)").run(key, value);
 }
+
+export function kvDelete(key: string): void {
+  ensureDb().prepare("DELETE FROM kv WHERE key = ?").run(key);
+}

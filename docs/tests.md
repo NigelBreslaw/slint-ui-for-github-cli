@@ -68,6 +68,20 @@ Exercises [`statusEmojiFromGraphqlHtml`](../src/gh/status-emoji-from-graphql.ts)
 | strips nested tags | Multiple tags |
 | returns empty when only tags remain after strip | No visible glyph left |
 
+### `src/session/viewer-session-cache.test.ts`
+
+Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (persisted viewer snapshot for fast startup; no SQLite in tests—JSON only).
+
+| Case | Intent |
+| --- | --- |
+| uses a stable KV key | `VIEWER_SESSION_KV_KEY` matches `viewer_session_v1` |
+| accepts a valid v1 session | Round-trip with `serializeViewerSession` |
+| returns null for wrong schema version | Unknown `schemaVersion` |
+| returns null when authenticated is not true | `authenticated: false` rejected |
+| returns null for invalid JSON | Parse error |
+| returns null when login is missing | Empty `login` string |
+| returns null when name has wrong type | Type guard on `name` |
+
 ### `src/schemas/gh-graphql-rate-limit.test.ts`
 
 Exercises [`parseGhGraphqlRateLimitResponse`](../src/schemas/gh-graphql-rate-limit.ts) against JSON fixtures in [`src/test/fixtures/graphql/`](../src/test/fixtures/graphql/).
@@ -121,3 +135,8 @@ Static payloads live under `src/test/fixtures/graphql/`:
 
 - **Knip** treats `src/**/*.test.ts` as entry files (see [`knip.json`](../knip.json)) so test files are not reported as unused.
 - **Oxlint / oxfmt** run on `src/` (including `*.test.ts`) via `pnpm lint` and `pnpm format`.
+
+## Related docs
+
+- [UI performance logging (`GH_APP_UI_PERF`)](./perf.md)
+- [Viewer session cache (startup hydrate)](./session-cache.md)
