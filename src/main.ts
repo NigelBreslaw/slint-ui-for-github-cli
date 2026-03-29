@@ -563,6 +563,31 @@ function teardownSettingsDebugPanel(window: MainWindowInstance): void {
   resetSettingsDebugPanelState(window);
 }
 
+function shutdownInvestigationEnabled(): boolean {
+  return process.env.GH_DEBUG_SHUTDOWN === "1";
+}
+
+function logShutdownInvestigation(phase: string): void {
+  if (!shutdownInvestigationEnabled()) {
+    return;
+  }
+  const activeResources = process.getActiveResourcesInfo();
+  console.error(`[GH_DEBUG_SHUTDOWN] ${phase}`, { activeResources });
+}
+
+function registerShutdownInvestigationHooks(): void {
+  if (!shutdownInvestigationEnabled()) {
+    return;
+  }
+  console.error(
+    "[GH_DEBUG_SHUTDOWN] enabled: milestones after runEventLoop + beforeExit; see docs/mac-window-close-investigation.md",
+  );
+  process.on("beforeExit", (code) => {
+    console.error("[GH_DEBUG_SHUTDOWN] beforeExit", { code });
+    logShutdownInvestigation("beforeExit snapshot");
+  });
+}
+
 function tickSettingsCountdown(window: MainWindowInstance): void {
   if (settingsRateLimitDeadlineMs === null) {
     window.SettingsState.settings_debug_countdown = "—";
@@ -910,6 +935,7 @@ window.open_cli_install_page = () => {
   openUrlInBrowser("https://cli.github.com/");
 };
 
+registerShutdownInvestigationHooks();
 applyAuthUi(window);
 window.show();
 await slint.runEventLoop({
@@ -924,4 +950,6 @@ await slint.runEventLoop({
     }
   },
 });
+logShutdownInvestigation("after runEventLoop resolved");
 window.hide();
+logShutdownInvestigation("after window.hide()");
