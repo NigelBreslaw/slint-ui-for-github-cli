@@ -1,0 +1,14 @@
+{
+  "data": {
+    "viewer": {
+      "login": "octocat",
+      "name": "The Octocat",
+      "url": "https://github.com/octocat",
+      "avatarUrl": "https://github.com/images/error/octocat_happy.gif",
+      "status": {
+        "message": "Working from home",
+        "emojiHTML": "<div>🏠</div>"
+      }
+    }
+  }
+}

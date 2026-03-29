@@ -1,0 +1,11 @@
+{
+  "data": {
+    "viewer": {
+      "login": "octocat",
+      "name": null,
+      "url": "https://github.com/octocat",
+      "avatarUrl": "https://github.com/images/error/octocat_happy.gif",
+      "status": null
+    }
+  }
+}
