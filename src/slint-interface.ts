@@ -1,5 +1,6 @@
 /**
- * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`) wired from
+ * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`,
+ * `TimeReportingState`) wired from
  * [`ui/main.slint`](./ui/main.slint) / [`ui/app-state.slint`](./ui/app-state.slint). Keep string
  * unions aligned with Slint enums (slint-node uses kebab-case for `AppState.auth`).
  */
@@ -18,7 +19,7 @@ export type SlintReviewRequestRow = {
 export type AuthedAuthState = "loggedOut" | "noGhCliInstalled" | "loggedIn" | "authorizing";
 
 /** Maps to `View` in `app-state.slint`. */
-export type AppStateView = "none" | "dashboard" | "settings";
+export type AppStateView = "none" | "dashboard" | "settings" | "timeReporting";
 
 export type AppStateHandle = {
   auth: AuthedAuthState;
@@ -55,12 +56,23 @@ export type SettingsStateHandle = {
   settings_debug_error: string;
 };
 
+export type TimeReportingStateHandle = {
+  time_reporting_project_chosen: (id: string) => void;
+  time_reporting_picker_cancel: () => void;
+  time_reporting_open_change_project: () => void;
+  picker_allow_cancel: boolean;
+  picker_open: boolean;
+  has_selected_project: boolean;
+  selected_project_label: string;
+};
+
 export type MainWindowInstance = {
   run(): Promise<void>;
   show(): void;
   hide(): void;
   AppState: AppStateHandle;
   SettingsState: SettingsStateHandle;
+  TimeReportingState: TimeReportingStateHandle;
   login_clicked?: () => void;
   open_github_device_clicked?: () => void;
   show_auth_window: () => void;

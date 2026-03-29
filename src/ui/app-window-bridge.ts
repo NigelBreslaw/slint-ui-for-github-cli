@@ -8,7 +8,17 @@ import {
 import { emptyTransparentAvatarImage } from "../gh/avatar-image.ts";
 import { fetchAllReviewRequestsSearch } from "../gh/graphql-review-requests.ts";
 import type { MainWindowInstance, SlintReviewRequestRow } from "../slint-interface.ts";
+import { clearTimeReportingSelectedProjectKv } from "../time-reporting/time-reporting-selected-project-kv.ts";
 import { clearViewerSessionCache } from "../session/viewer-session-cache.ts";
+
+/** Clears persisted Time reporting project selection and Slint globals. Call on sign-out and when `gh` scopes block login. */
+export function clearTimeReportingSelection(window: MainWindowInstance): void {
+  clearTimeReportingSelectedProjectKv();
+  window.TimeReportingState.picker_allow_cancel = false;
+  window.TimeReportingState.picker_open = false;
+  window.TimeReportingState.has_selected_project = false;
+  window.TimeReportingState.selected_project_label = "";
+}
 import type { ViewerSessionV1 } from "../session/viewer-session-cache.ts";
 import { teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
 

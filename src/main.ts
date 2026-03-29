@@ -7,7 +7,12 @@ import { copyTextToClipboard } from "./utils/clipboard-write.ts";
 import { openUrlInBrowser } from "./utils/open-url.ts";
 import { clearViewerSessionCache } from "./session/viewer-session-cache.ts";
 import type { MainWindowModule, SlintReviewRequestRow } from "./slint-interface.ts";
-import { clearAuthDeviceFields, refreshDashboardReviewRequests } from "./ui/app-window-bridge.ts";
+import { readTimeReportingSelectedProjectKv } from "./time-reporting/time-reporting-selected-project-kv.ts";
+import {
+  clearAuthDeviceFields,
+  clearTimeReportingSelection,
+  refreshDashboardReviewRequests,
+} from "./ui/app-window-bridge.ts";
 import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./ui/settings-debug-panel.ts";
 
 openAppDb();
@@ -22,6 +27,12 @@ const window = new ui.MainWindow({
 
 window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
 window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
+
+const timeReportingStored = readTimeReportingSelectedProjectKv();
+if (timeReportingStored !== null) {
+  window.TimeReportingState.has_selected_project = true;
+  window.TimeReportingState.selected_project_label = timeReportingStored.title;
+}
 window.AppState.project_search_changed = (query: string) => {
   window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
 };
@@ -41,6 +52,10 @@ window.SettingsState.settings_init = () => {
 window.SettingsState.settings_exited = () => {
   teardownSettingsDebugPanel(window);
 };
+
+window.TimeReportingState.time_reporting_project_chosen = (_id: string) => {};
+window.TimeReportingState.time_reporting_picker_cancel = () => {};
+window.TimeReportingState.time_reporting_open_change_project = () => {};
 
 window.open_github_device_clicked = () => {
   void copyTextToClipboard(window.auth_device_code).finally(() => {
@@ -67,6 +82,7 @@ window.AppState.sign_in = () => {
 window.AppState.sign_out = () => {
   ghAuthLogout();
   clearViewerSessionCache();
+  clearTimeReportingSelection(window);
   void applyAuthUi(window);
 };
 

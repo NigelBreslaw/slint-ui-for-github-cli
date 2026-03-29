@@ -11,6 +11,7 @@ import {
     View,
 } from "app-state.slint";
 import { SettingsState } from "settings-state.slint";
+import { TimeReportingState } from "time-reporting-state.slint";
 import { Header } from "components/header.slint";
 import { Settings } from "settings.slint";
 import { Dashboard } from "dashboard.slint";
@@ -18,7 +19,7 @@ import { Button } from "components/button.slint";
 import { SideBar } from "components/sideBar.slint";
 
 // Export so backend can access the enums and global state.
-export { Authed, AppState, ProjectRow, ReviewRequestRow, SettingsState }
+export { Authed, AppState, ProjectRow, ReviewRequestRow, SettingsState, TimeReportingState }
 
 export component MainWindow inherits Window {
     callback close-auth-window;

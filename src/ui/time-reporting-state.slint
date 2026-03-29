@@ -1,0 +1,10 @@
+export global TimeReportingState {
+    callback time-reporting-project-chosen(string);
+    callback time-reporting-picker-cancel;
+    callback time-reporting-open-change-project;
+
+    in-out property <bool> picker-allow-cancel: false;
+    in-out property <bool> picker-open: false;
+    in-out property <bool> has-selected-project: false;
+    in-out property <string> selected-project-label: "";
+}

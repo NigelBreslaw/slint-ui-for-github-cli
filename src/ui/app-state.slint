@@ -1,6 +1,7 @@
 import { SettingsState } from "settings-state.slint";
 
 export struct ProjectRow {
+    id: string,
     title: string,
     number: int,
     url: string,
@@ -22,7 +23,8 @@ export enum Authed {
 export enum View {
     none,
     dashboard,
-    settings
+    settings,
+    timeReporting,
 }
 
 export global AppState {

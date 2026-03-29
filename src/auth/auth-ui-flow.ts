@@ -14,6 +14,7 @@ import { uiPerfMarkT1Text, uiPerfMarkT2Avatar, uiPerfResetSession } from "../ui-
 import {
   applyCachedViewerToAppState,
   clearAuthDeviceFields,
+  clearTimeReportingSelection,
   clearUserIdentity,
   refreshSlintUiOrgProjectsForWindow,
   resetListsWithoutClearingProfile,
@@ -185,6 +186,7 @@ export function applyAuthUi(window: MainWindowInstance): void {
       clearAuthDeviceFields(window);
       window.close_auth_window();
       clearUserIdentity(window);
+      clearTimeReportingSelection(window);
       return;
     }
     if (!scopeCheck.ok) {
@@ -193,6 +195,7 @@ export function applyAuthUi(window: MainWindowInstance): void {
       clearAuthDeviceFields(window);
       window.close_auth_window();
       clearUserIdentity(window);
+      clearTimeReportingSelection(window);
       return;
     }
     window.status_message = hadCachedSession ? "" : "Loading…";

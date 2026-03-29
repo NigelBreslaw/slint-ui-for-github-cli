@@ -6,6 +6,7 @@ const SLINT_UI_ORG = "slint-ui";
 
 /** Row shape must match `ProjectRow` in `app-state.slint`. */
 export type SlintProjectRow = {
+  id: string;
   title: string;
   number: number;
   url: string;
@@ -33,7 +34,7 @@ function mapOpenBoardsToRows(nodes: readonly ProjectV2NodeSnapshot[]): SlintProj
     if (n.closed) {
       continue;
     }
-    rows.push({ title: n.title, number: n.number, url: n.url });
+    rows.push({ id: n.id, title: n.title, number: n.number, url: n.url });
   }
   return rows;
 }
@@ -46,7 +47,10 @@ function filterProjectRows(rows: readonly SlintProjectRow[], query: string): Sli
   return rows.filter((r) => {
     const numStr = String(r.number);
     return (
-      r.title.toLowerCase().includes(q) || numStr.includes(q) || r.url.toLowerCase().includes(q)
+      r.title.toLowerCase().includes(q) ||
+      numStr.includes(q) ||
+      r.url.toLowerCase().includes(q) ||
+      r.id.toLowerCase().includes(q)
     );
   });
 }

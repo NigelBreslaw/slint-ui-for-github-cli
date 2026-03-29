@@ -79,6 +79,19 @@ Exercises [`parseOrgLogins`](../src/debug/parse-org-logins.ts) (REST `user/orgs`
 | collects string login fields in order | Happy path; extra fields allowed |
 | skips rows without a string login | Null rows, missing `login`, numeric `login`; empty string login kept |
 
+### `src/time-reporting/parse-time-reporting-selected-project.test.ts`
+
+Exercises [`parseTimeReportingSelectedProjectJson`](../src/time-reporting/time-reporting-selected-project-kv.ts) (KV JSON for the chosen GitHub ProjectV2 used by Time reporting; no SQLite in tests).
+
+| Case | Intent |
+| --- | --- |
+| returns null for invalid JSON | Parse error |
+| returns null for wrong schema version | Unknown `schemaVersion` |
+| returns null when nodeId is missing, empty, or not a string | Required GraphQL node id |
+| returns null when number is not a finite number | Type guard on `number` |
+| returns null when title or url is not a string | Required display fields |
+| accepts a valid v1 payload | Round-trip with `JSON.stringify` |
+
 ### `src/session/viewer-session-cache.test.ts`
 
 Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (persisted viewer snapshot for fast startup; no SQLite in tests—JSON only).
