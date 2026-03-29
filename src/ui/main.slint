@@ -20,7 +20,6 @@ export component MainWindow inherits Window {
     callback open-github-device-clicked;
     callback show-no-gh-cli-installed;
     callback open-cli-install-page;
-    callback open-project-url(string);
     callback dashboard-opened;
 
     init => {
@@ -138,17 +137,9 @@ export component MainWindow inherits Window {
         y: 0;
     }
 
-    if AppState.show-dashboard: Dashboard {
-        open-pr-url(url) => {
-            root.open-project-url(url);
-        }
-    }
+    if AppState.show-dashboard: Dashboard { }
 
-    if AppState.show-settings: Settings {
-        open-project-url(url) => {
-            root.open-project-url(url);
-        }
-    }
+    if AppState.show-settings: Settings { }
 
     no_gh_cli_installed_window := PopupWindow {
         width: root.width;

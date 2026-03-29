@@ -438,6 +438,7 @@ type AppStateHandle = {
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
   project_search_changed: (query: string) => void;
   sign_out: () => void;
+  open_project_url: (url: string) => void;
 };
 
 type MainWindowInstance = {
@@ -450,7 +451,6 @@ type MainWindowInstance = {
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
   open_cli_install_page: () => void;
-  open_project_url: (url: string) => void;
   dashboard_opened?: () => void;
   status_message: string;
   auth_device_code: string;
@@ -629,7 +629,7 @@ window.AppState.project_search_changed = (query: string) => {
   window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
 };
 
-window.open_project_url = (url: string) => {
+window.AppState.open_project_url = (url: string) => {
   openUrlInBrowser(url);
 };
 
