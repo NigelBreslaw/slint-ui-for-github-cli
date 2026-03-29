@@ -5,6 +5,8 @@ export type ScopeCheckOk = { ok: true };
 
 export type ScopeCheckNeedsAttention = {
   ok: false;
+  /** `gh` executable not on `PATH` (`ENOENT`). */
+  noGh?: boolean;
   /** When true, we could not read a reliable scope list (e.g. fine-grained PAT). */
   unknown: boolean;
   /** User-facing explanation. */
@@ -67,10 +69,9 @@ function asHostEntry(v: unknown): HostEntry | null {
 }
 
 /**
- * Reads granted scopes from `gh auth status --json hosts` payload.
- * Returns `null` if the payload has no usable scope list for github.com.
+ * Picks the active `github.com` host entry with `state === "success"`, same rules as `gh`’s JSON shape.
  */
-export function grantedScopesFromAuthStatusHostsJson(json: unknown): string[] | null {
+function chooseGitHubComSuccessHost(json: unknown): HostEntry | null {
   if (!isRecord(json)) {
     return null;
   }
@@ -103,14 +104,46 @@ export function grantedScopesFromAuthStatusHostsJson(json: unknown): string[] | 
       }
     }
   }
-  if (chosen === null) {
-    return null;
-  }
-
-  return parseScopesCsv(chosen.scopes);
+  return chosen;
 }
 
-export function checkRequiredScopesAgainstGranted(
+/**
+ * Interprets `gh auth status --json hosts` payload: not signed in vs unreadable scopes vs granted list.
+ */
+export function checkScopesFromAuthStatusHostsJson(
+  json: unknown,
+  required: readonly string[] = REQUIRED_GH_OAUTH_SCOPES,
+): ScopeCheckResult {
+  if (!isRecord(json)) {
+    return {
+      ok: false,
+      unknown: true,
+      message: "Could not verify scopes (unexpected `gh auth status` output).",
+    };
+  }
+
+  const chosen = chooseGitHubComSuccessHost(json);
+  if (chosen === null) {
+    return {
+      ok: false,
+      unknown: false,
+      message: "Not signed in",
+    };
+  }
+
+  const granted = parseScopesCsv(chosen.scopes);
+  if (granted === null) {
+    return {
+      ok: false,
+      unknown: true,
+      message: "Could not verify scopes (e.g. fine-grained token).",
+    };
+  }
+
+  return checkRequiredScopesAgainstGranted(granted, required);
+}
+
+function checkRequiredScopesAgainstGranted(
   granted: string[] | null,
   required: readonly string[] = REQUIRED_GH_OAUTH_SCOPES,
 ): ScopeCheckResult {

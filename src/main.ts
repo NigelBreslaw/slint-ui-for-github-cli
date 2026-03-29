@@ -7,7 +7,7 @@ import { openAppDb } from "./db/app-db.ts";
 import {
   checkRequiredGitHubCliScopes,
   ghAuthLogout,
-  ghAuthStatus,
+  isGhOnPath,
   spawnGhAuthLogin,
 } from "./gh/auth.ts";
 import {
@@ -419,9 +419,6 @@ function clearAuthDeviceFields(window: MainWindowInstance): void {
 
 async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void> {
   const result = await ghApiGraphql(VIEWER_APP_GRAPHQL_QUERY);
-  if (ghAuthStatus() !== "ok") {
-    return;
-  }
   if (!result.ok) {
     window.status_message = result.error;
     clearUserIdentity(window);
@@ -466,25 +463,6 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
 }
 
 function applyAuthUi(window: MainWindowInstance): void {
-  const status = ghAuthStatus();
-  if (status === "no_gh") {
-    window.AppState.auth = "noGhCliInstalled";
-    window.status_message = "gh not found (install GitHub CLI)";
-    window.show_no_gh_cli_installed();
-    clearAuthDeviceFields(window);
-    window.close_auth_window();
-    clearUserIdentity(window);
-    return;
-  }
-  if (status === "not_authed") {
-    window.AppState.auth = "loggedOut";
-    window.status_message = "Not signed in";
-    clearAuthDeviceFields(window);
-    window.close_auth_window();
-    clearUserIdentity(window);
-    return;
-  }
-
   window.AppState.auth = "loggedIn";
   window.status_message = "Checking…";
   clearAuthDeviceFields(window);
@@ -492,8 +470,13 @@ function applyAuthUi(window: MainWindowInstance): void {
   clearUserIdentity(window);
   void (async () => {
     const scopeCheck = await checkRequiredGitHubCliScopes();
-    if (ghAuthStatus() !== "ok") {
-      applyAuthUi(window);
+    if (!scopeCheck.ok && scopeCheck.noGh === true) {
+      window.AppState.auth = "noGhCliInstalled";
+      window.status_message = "gh not found (install GitHub CLI)";
+      window.show_no_gh_cli_installed();
+      clearAuthDeviceFields(window);
+      window.close_auth_window();
+      clearUserIdentity(window);
       return;
     }
     if (!scopeCheck.ok) {
@@ -530,7 +513,7 @@ window.open_github_device_clicked = () => {
 };
 
 window.login_clicked = () => {
-  if (ghAuthStatus() === "no_gh") {
+  if (!isGhOnPath()) {
     return;
   }
   clearAuthDeviceFields(window);

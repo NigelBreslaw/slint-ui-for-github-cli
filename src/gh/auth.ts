@@ -3,8 +3,7 @@ import { promisify } from "node:util";
 import {
   type ScopeCheckResult,
   REQUIRED_GH_OAUTH_SCOPES,
-  checkRequiredScopesAgainstGranted,
-  grantedScopesFromAuthStatusHostsJson,
+  checkScopesFromAuthStatusHostsJson,
 } from "./required-scopes.ts";
 
 const execFileAsync = promisify(execFile);
@@ -105,25 +104,19 @@ function spawnGhWithStdinInheritedTeedOutput(
   });
 }
 
-/** Result of `gh auth status`: CLI missing, not logged in, or authenticated. */
-type GhAuthStatus = "no_gh" | "not_authed" | "ok";
-
 /**
- * Uses exit code of `gh auth status` (plain, not `--json`).
- * See https://cli.github.com/manual/gh_auth_status
- *
- * **`no_gh`:** the `gh` executable was not found (`ENOENT`)—typically not on `PATH`.
- * Same probe on macOS, Linux, and Windows (Node resolves `gh` / `gh.exe` via `PATH`).
+ * Returns whether `gh` is on `PATH` (does not check auth).
+ * Uses `ENOENT` from `gh version` — same semantics as a missing CLI for `gh auth status`.
  */
-export function ghAuthStatus(): GhAuthStatus {
+export function isGhOnPath(): boolean {
   try {
-    execFileSync("gh", ["auth", "status"], { stdio: "ignore" });
-    return "ok";
+    execFileSync("gh", ["version"], { stdio: "ignore" });
+    return true;
   } catch (e: unknown) {
     if (e !== null && typeof e === "object" && "code" in e && e.code === "ENOENT") {
-      return "no_gh";
+      return false;
     }
-    return "not_authed";
+    return true;
   }
 }
 
@@ -148,8 +141,8 @@ export function spawnGhAuthLogin(options: GhInteractiveOptions): void {
 }
 
 /**
- * Runs `gh auth status --json hosts` and checks token scopes against {@link REQUIRED_GH_OAUTH_SCOPES}.
- * Call only when {@link ghAuthStatus} is `"ok"`; on subprocess/JSON failure, returns `unknown` so the UI can treat the session as unusable until Login.
+ * Runs `gh auth status --json hosts` once and checks token scopes against {@link REQUIRED_GH_OAUTH_SCOPES}.
+ * On `ENOENT`, returns {@link ScopeCheckResult} with `noGh: true` for install-CLI UI.
  */
 export async function checkRequiredGitHubCliScopes(): Promise<ScopeCheckResult> {
   try {
@@ -167,12 +160,12 @@ export async function checkRequiredGitHubCliScopes(): Promise<ScopeCheckResult> 
         message: "Could not verify scopes (unexpected `gh auth status` output).",
       };
     }
-    const granted = grantedScopesFromAuthStatusHostsJson(json);
-    return checkRequiredScopesAgainstGranted(granted, REQUIRED_GH_OAUTH_SCOPES);
+    return checkScopesFromAuthStatusHostsJson(json, REQUIRED_GH_OAUTH_SCOPES);
   } catch (e: unknown) {
     if (e !== null && typeof e === "object" && "code" in e && e.code === "ENOENT") {
       return {
         ok: false,
+        noGh: true,
         unknown: true,
         message: "Could not verify scopes (`gh` not found).",
       };
