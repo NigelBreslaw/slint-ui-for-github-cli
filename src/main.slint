@@ -14,7 +14,6 @@ export { Authed, AppState }
 
 export component MainWindow inherits Window {
     callback login-clicked;
-    callback logout-clicked;
     callback close-auth-window;
     callback open-github-device-clicked;
     callback show-no-gh-cli-installed;
@@ -69,14 +68,6 @@ export component MainWindow inherits Window {
                     clicked => {
                         auth_window.show();
                         root.login-clicked();
-                    }
-                }
-
-                Button {
-                    text: "Logout";
-                    visible: AppState.auth == Authed.loggedIn;
-                    clicked => {
-                        root.logout-clicked();
                     }
                 }
             }

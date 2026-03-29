@@ -2,7 +2,14 @@ import { AppState } from "app-state.slint";
 
 global HeaderStyle {
     out property <length> border-radius: 12px;
+    out property <length> menu-width: 256px;
+
     out property <color> header-background: #020408;
+    out property <color> menu-item-text-color: #f0f6fc;
+}
+
+global HeaderState {
+    in-out property <bool> menu-visible: false;
 }
 
 component Avatar {
@@ -32,12 +39,77 @@ component Avatar {
     @children
 }
 
+component MenuItem {
+
+    in-out property icon-source <=> icon.source;
+    in-out property label-text <=> label.text;
+    callback clicked;
+
+    width: HeaderStyle.menu-width;
+    height: content.preferred-height;
+
+    ta := TouchArea {
+        clicked => {
+            HeaderState.menu-visible = false;
+            root.clicked();
+        }
+    }
+
+    content := HorizontalLayout {
+        x: 0;
+        width: self.preferred-width;
+        height: 16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        Rectangle {
+            width: 20px;
+            height: 16px;
+            Rectangle {
+                x: 0;
+                width: 16px;
+                height: self.width;
+                icon := Image {
+                    width: 100%;
+                    height: 100%;
+                    colorize: HeaderStyle.menu-item-text-color;
+                }
+            }
+        }
+
+        label := Text {
+            y: -self.font-metrics.descent - 1px;
+            font-size: 14px;
+            font-weight: 400;
+            color: HeaderStyle.menu-item-text-color;
+        }
+    }
+}
+
+component MenuSeparator inherits VerticalLayout {
+    height: self.preferred-height;
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+    Rectangle {
+        height: 8px;
+    }
+
+    Rectangle {
+        height: 1px;
+        background: #2b3139;
+    }
+
+    Rectangle {
+        height: 8px;
+    }
+}
+
 component Menu {
 
     in-out property <image> avatar-source <=> avatar.source;
 
-    width: 256px;
-    height: 400px;
+    width: HeaderStyle.menu-width;
+    height: content.preferred-height;
 
     Rectangle {
         border-radius: HeaderStyle.border-radius;
@@ -60,13 +132,17 @@ component Menu {
         background: HeaderStyle.header-background;
     }
 
-    content := Rectangle {
-
+    content := VerticalLayout {
+        y: 0;
+        height: self.preferred-height;
         Rectangle {
-            y: 16px;
+            height: 16px;
+        }
+
+        header-content := Rectangle {
             x: 16px;
             width: parent.width - (2 * self.x);
-            height: 100px - self.y;
+            height: 100px - 16px;
 
             VerticalLayout {
                 spacing: 8px;
@@ -87,7 +163,7 @@ component Menu {
                             visible: AppState.user_login != "";
                             font-size: 14px;
                             font-weight: 550;
-                            color: #f0f6fc;
+                            color: HeaderStyle.menu-item-text-color;
                             overflow: elide;
                         }
 
@@ -122,17 +198,24 @@ component Menu {
                     text: AppState.user_status_message;
                     visible: AppState.user_status_message != "";
                     font-size: 14px;
-                    color: #f0f6fc;
+                    color: HeaderStyle.menu-item-text-color;
                     font-weight: 400;
                 }
             }
+        }
 
-            Rectangle {
-                y: parent.height - self.height;
-                width: content.width - 16px;
-                height: 1px;
-                background: #2b3139;
+        MenuSeparator { }
+
+        MenuItem {
+            icon-source: @image-url("./assets/sign-out.svg");
+            label-text: "Sign out";
+            clicked => {
+                AppState.sign-out();
             }
+        }
+
+        Rectangle {
+            height: 16px;
         }
     }
 }
@@ -140,8 +223,6 @@ component Menu {
 export component Header {
     width: 100%;
     height: 100px;
-
-    property <bool> menu-visible: false;
 
     Rectangle {
         background: HeaderStyle.header-background;
@@ -160,7 +241,7 @@ export component Header {
         source: AppState.avatar;
         TouchArea {
             clicked => {
-                root.menu-visible = !root.menu-visible;
+                HeaderState.menu-visible = !HeaderState.menu-visible;
             }
         }
     }
@@ -169,6 +250,6 @@ export component Header {
         x: parent.width - self.width - 14px;
         y: avatar-container.y + avatar-container.height + 2px;
         avatar-source: AppState.avatar;
-        visible: root.menu-visible;
+        visible: HeaderState.menu-visible;
     }
 }

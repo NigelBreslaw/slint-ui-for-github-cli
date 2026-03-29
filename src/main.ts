@@ -379,6 +379,7 @@ type AppStateHandle = {
   user_status_message: string;
   user_status_emoji: string;
   avatar?: SlintRgbaImage;
+  sign_out: () => void;
 };
 
 type MainWindowInstance = {
@@ -387,7 +388,6 @@ type MainWindowInstance = {
   hide(): void;
   AppState: AppStateHandle;
   login_clicked?: () => void;
-  logout_clicked?: () => void;
   open_github_device_clicked?: () => void;
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
@@ -434,6 +434,7 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
     return;
   }
   const viewer = parsed.viewer;
+  window.status_message = "";
   window.AppState.user_login = viewer.login;
   window.AppState.user_name = viewer.name ?? "";
   window.AppState.user_profile_url = viewer.url;
@@ -546,7 +547,7 @@ window.login_clicked = () => {
   });
 };
 
-window.logout_clicked = () => {
+window.AppState.sign_out = () => {
   ghAuthLogout();
   void applyAuthUi(window);
 };
