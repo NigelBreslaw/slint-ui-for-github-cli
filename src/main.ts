@@ -491,7 +491,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   });
 }
 
-const ui = slint.loadFile(new URL("./main.slint", import.meta.url)) as {
+const ui = slint.loadFile(new URL("./ui/main.slint", import.meta.url)) as {
   MainWindow: new (opts: MainWindowOpts) => MainWindowInstance;
 };
 
