@@ -38,6 +38,8 @@ This runs `node src/main.ts` (TypeScript is executed directly via Node’s built
 
 If `gh` uses the **device code** flow, the overlay shows the one-time code and an **Open GitHub** button that copies the code to the clipboard and opens the device page in your browser (same output is still mirrored in the terminal); you may still need to press Enter there when `gh` asks.
 
+After sign-in, the app loads **open** GitHub Projects (**not** `closed`) for the **`slint-ui`** org once (GraphQL `organization.projectsV2`) for the **Settings** panel. Open **Settings** with the gear control (lower-left); use the search field to filter by title, project number, or URL. A row tap opens the project in the browser.
+
 ### Typecheck
 
 ```bash
@@ -56,15 +58,27 @@ Run with the helper script (works on Windows, macOS, and Linux via [cross-env](h
 pnpm dev:debug
 ```
 
-Equivalent without the script:
+`pnpm dev:debug` sets **`GH_DEBUG_JSON=1`** (wide `viewer` JSON dump) and **`GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1`**, which **skips** the heavy **`slint-ui`** org/assigned project API dumps (`projects-v2--org--slint-ui…`, `assigned-open--…`) so you stay within GraphQL rate limits while still getting viewer debug files.
+
+To run with **full** project-related dumps as before, use:
 
 ```bash
-GH_DEBUG_JSON=1 pnpm start
+pnpm dev:debug:projects
 ```
 
-On Windows (cmd), you can also use `set GH_DEBUG_JSON=1` before `pnpm start` if you prefer.
+(or any `GH_DEBUG_JSON=1` run **without** `GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1`).
+
+Same as `pnpm dev:debug` without the helper script:
+
+```bash
+GH_DEBUG_JSON=1 GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1 pnpm start
+```
+
+On Windows (cmd), set both variables before `pnpm start` if you prefer.
 
 Files are named from the API path or query purpose, for example `debug-json/gh-graphql--viewer-status.json` for the wide GraphQL `viewer` debug dump, or `gh-api--user--orgs--….json` for REST calls.
+
+The following **project-related** debug files run only when **`GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS` is not set** (e.g. `pnpm dev:debug:projects` or `GH_DEBUG_JSON=1` without the skip flag). With `pnpm dev:debug`, you still get the viewer dump but not these.
 
 When signed in, the app also dumps **project-related** data for debug: `projects-v2--orgs-membership.json` for org membership (REST), then GraphQL **`projectsV2`** for the **`slint-ui`** org only (`projects-v2--org--slint-ui…`). That org list is fetched **once** per run and reused for **`assigned-open--projects-list--slint-ui.json`** (same `projectsV2` payload shape). The payload is a list of `ProjectV2` fields. It does **not** write user-scoped project files (`projects-v2--user--…`) in that mode. The debug helper without an org filter also dumps **your** user projects (GraphQL) and **all** of your orgs (for local experimentation). **`read:project`** is required (see [scopes.md](scopes.md)). Failures appear as `*--error.json` for that call.
 

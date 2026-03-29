@@ -6,12 +6,12 @@ import {
     Palette,
     StyleMetrics,
 } from "std-widgets.slint";
-import { Authed, AppState } from "app-state.slint";
+import { Authed, AppState, ProjectRow } from "app-state.slint";
 import { Header } from "header.slint";
 import { Settings } from "settings.slint";
 
 // Export so backend can access the enums and global state.
-export { Authed, AppState }
+export { Authed, AppState, ProjectRow }
 
 export component MainWindow inherits Window {
     callback login-clicked;
@@ -19,6 +19,7 @@ export component MainWindow inherits Window {
     callback open-github-device-clicked;
     callback show-no-gh-cli-installed;
     callback open-cli-install-page;
+    callback open-project-url(string);
 
     init => {
         Palette.color-scheme = ColorScheme.dark;
@@ -75,9 +76,6 @@ export component MainWindow inherits Window {
         }
     }
 
-    if AppState.show-settings: Settings {}
-
-
     Rectangle {
         x: 0;
         width: 24px + (16px * 2);
@@ -109,6 +107,12 @@ export component MainWindow inherits Window {
 
     Header {
         y: 0;
+    }
+
+    if AppState.show-settings: Settings {
+        open-project-url(url) => {
+            root.open-project-url(url);
+        }
     }
 
     no_gh_cli_installed_window := PopupWindow {

@@ -4,14 +4,21 @@ import { promisify } from "node:util";
 import { openAppDb } from "./db/app-db.ts";
 import { checkRequiredGitHubCliScopes, ghAuthLogout, spawnGhAuthLogin } from "./gh/auth.ts";
 import {
+  maybeDumpAssignedOpenWorkDebugAsync,
+  type SlintUiProjectsV2ForAssignedDebug,
+} from "./gh/debug-assigned-open-slint-ui.ts";
+import {
+  buildFilteredProjectsModel,
+  clearSlintUiOrgProjectsCache,
+  getLastSlintUiOrgProjectsFetch,
+  refreshSlintUiOrgProjectsCache,
+  type SlintProjectRow,
+} from "./gh/slint-ui-org-projects-ui.ts";
+import {
   fetchAllProjectsV2ForOrgGraphql,
   fetchAllProjectsV2ForUserGraphql,
 } from "./gh/graphql-projects-v2.ts";
 import { mapGhExecError } from "./gh/map-gh-exec-error.ts";
-import {
-  maybeDumpAssignedOpenWorkDebugAsync,
-  type SlintUiProjectsV2ForAssignedDebug,
-} from "./gh/debug-assigned-open-slint-ui.ts";
 import type { ProjectV2NodeSnapshot } from "./schemas/gh-graphql-projectsv2-page.ts";
 import { writeDebugJsonStem } from "./gh/write-debug-json.ts";
 import {
@@ -236,6 +243,13 @@ function parseOrgLogins(orgsPayload: unknown): string[] {
 let initialProjectsDebugPending: string | null = null;
 let slintEventLoopHasStarted = false;
 
+/** When set with `GH_DEBUG_JSON=1` (e.g. `pnpm dev:debug`), skips org/assigned project JSON dumps to save GraphQL quota. */
+function shouldRunSlintUiProjectDebugDumps(): boolean {
+  return (
+    process.env.GH_DEBUG_JSON === "1" && process.env.GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS !== "1"
+  );
+}
+
 type DumpGitHubProjectsDebugOptions = {
   /**
    * When set, limits per-org dumps to these orgs (intersected with `user/orgs`) and **skips** user-scoped
@@ -312,21 +326,28 @@ async function maybeDumpGitHubProjectsDebugAsync(
 const SLINT_UI_ORG = "slint-ui";
 
 /** One `organization.projectsV2` pagination for `slint-ui`; feeds org dump + assigned-open list. */
-async function runDebugJsonSlintUiDumpsAsync(login: string): Promise<void> {
-  if (process.env.GH_DEBUG_JSON !== "1") {
+async function runDebugJsonSlintUiDumpsAsync(
+  login: string,
+  precached?: { ok: true; value: unknown[] } | { ok: false; error: string } | null,
+): Promise<void> {
+  if (!shouldRunSlintUiProjectDebugDumps()) {
     return;
   }
-  const slintRes = await fetchAllProjectsV2ForOrgGraphql(SLINT_UI_ORG);
-  const precached = new Map<string, { ok: true; value: unknown[] } | { ok: false; error: string }>([
-    [SLINT_UI_ORG, slintRes],
-  ]);
+  const slintRes =
+    precached !== undefined && precached !== null
+      ? precached
+      : await fetchAllProjectsV2ForOrgGraphql(SLINT_UI_ORG);
+  const precachedOrgMap = new Map<
+    string,
+    { ok: true; value: unknown[] } | { ok: false; error: string }
+  >([[SLINT_UI_ORG, slintRes]]);
   const assignedInput: SlintUiProjectsV2ForAssignedDebug = slintRes.ok
     ? { ok: true, nodes: slintRes.value as ProjectV2NodeSnapshot[] }
     : { ok: false, error: slintRes.error };
   await Promise.all([
     maybeDumpGitHubProjectsDebugAsync(login, {
       orgs: [SLINT_UI_ORG],
-      precachedOrgProjectsV2: precached,
+      precachedOrgProjectsV2: precachedOrgMap,
     }),
     maybeDumpAssignedOpenWorkDebugAsync(assignedInput),
   ]);
@@ -343,6 +364,10 @@ type AppStateHandle = {
   user_status_message: string;
   user_status_emoji: string;
   avatar?: SlintRgbaImage;
+  projects_search: string;
+  projects_load_status: string;
+  projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
+  project_search_changed: (query: string) => void;
   sign_out: () => void;
 };
 
@@ -356,6 +381,7 @@ type MainWindowInstance = {
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
   open_cli_install_page: () => void;
+  open_project_url: (url: string) => void;
   status_message: string;
   auth_device_code: string;
   auth_device_url: string;
@@ -374,11 +400,30 @@ function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.user_profile_url = "";
   window.AppState.user_status_message = "";
   window.AppState.user_status_emoji = "";
+  clearSlintUiOrgProjectsCache();
+  window.AppState.projects_search = "";
+  window.AppState.projects_load_status = "";
+  window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
 }
 
 function clearAuthDeviceFields(window: MainWindowInstance): void {
   window.auth_device_code = "";
   window.auth_device_url = "";
+}
+
+async function refreshSlintUiOrgProjectsForWindow(window: MainWindowInstance): Promise<void> {
+  window.AppState.projects_load_status = "Loading projects…";
+  window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
+  const res = await refreshSlintUiOrgProjectsCache();
+  if (!res.ok) {
+    window.AppState.projects_load_status = res.error;
+    window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
+    return;
+  }
+  window.AppState.projects_load_status = "";
+  window.AppState.projects_filtered_model = buildFilteredProjectsModel(
+    window.AppState.projects_search,
+  );
 }
 
 async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void> {
@@ -404,16 +449,22 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
   window.AppState.user_status_emoji = statusEmojiFromGraphqlHtml(st?.emojiHTML ?? null);
   window.AppState.avatar = emptyTransparentAvatarImage;
 
+  await refreshSlintUiOrgProjectsForWindow(window);
+
   if (process.env.GH_DEBUG_JSON === "1") {
     void debugUserData().catch((e) => {
       console.error("[debug-json] debugUserData failed:", e);
     });
-    if (!slintEventLoopHasStarted) {
-      initialProjectsDebugPending = viewer.login;
-    } else {
-      void runDebugJsonSlintUiDumpsAsync(viewer.login).catch((e) => {
-        console.error("[debug-json] runDebugJsonSlintUiDumpsAsync failed:", e);
-      });
+    if (shouldRunSlintUiProjectDebugDumps()) {
+      if (!slintEventLoopHasStarted) {
+        initialProjectsDebugPending = viewer.login;
+      } else {
+        void runDebugJsonSlintUiDumpsAsync(viewer.login, getLastSlintUiOrgProjectsFetch()).catch(
+          (e) => {
+            console.error("[debug-json] runDebugJsonSlintUiDumpsAsync failed:", e);
+          },
+        );
+      }
     }
   }
 
@@ -470,6 +521,15 @@ const window = new ui.MainWindow({
   "auth-device-url": "",
 });
 
+window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
+window.AppState.project_search_changed = (query: string) => {
+  window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
+};
+
+window.open_project_url = (url: string) => {
+  openUrlInBrowser(url);
+};
+
 window.open_github_device_clicked = () => {
   void copyTextToClipboard(window.auth_device_code).finally(() => {
     openUrlInBrowser(window.auth_device_url);
@@ -507,8 +567,8 @@ await slint.runEventLoop({
     slintEventLoopHasStarted = true;
     const login = initialProjectsDebugPending;
     initialProjectsDebugPending = null;
-    if (login !== null) {
-      void runDebugJsonSlintUiDumpsAsync(login).catch((e) => {
+    if (login !== null && shouldRunSlintUiProjectDebugDumps()) {
+      void runDebugJsonSlintUiDumpsAsync(login, getLastSlintUiOrgProjectsFetch()).catch((e) => {
         console.error("[debug-json] runDebugJsonSlintUiDumpsAsync failed:", e);
       });
     }
