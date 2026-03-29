@@ -38,6 +38,7 @@ import { getGhCliVersionLine } from "./gh/gh-cli-version.ts";
 import { fetchGraphqlRateLimit } from "./gh/graphql-rate-limit.ts";
 import { GIT_COMMIT_COUNT } from "./generated/build-info.ts";
 import { formatCountdownMs } from "./utils/format-countdown.ts";
+import { formatRateLimitResetLocal } from "./utils/format-reset-at-local.ts";
 
 const execFileAsync = promisify(execFile);
 
@@ -576,12 +577,13 @@ async function loadSettingsDebugPanel(window: MainWindowInstance): Promise<void>
     const { limit, remaining, resetAt } = rl.rateLimit;
     const used = limit - remaining;
     window.SettingsState.settings_debug_rate_limit = `${used} / ${limit} used (${remaining} left)`;
-    window.SettingsState.settings_debug_reset_at = resetAt;
     const t = Date.parse(resetAt);
     if (!Number.isFinite(t)) {
       errors.push("Invalid rateLimit.resetAt from API");
+      window.SettingsState.settings_debug_reset_at = resetAt;
       window.SettingsState.settings_debug_countdown = "—";
     } else {
+      window.SettingsState.settings_debug_reset_at = formatRateLimitResetLocal(resetAt);
       settingsRateLimitDeadlineMs = t;
       tickSettingsCountdown(window);
       settingsCountdownHandle = setInterval(() => {
