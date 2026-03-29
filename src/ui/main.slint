@@ -8,6 +8,7 @@ import {
 } from "std-widgets.slint";
 import { Authed, AppState } from "app-state.slint";
 import { Header } from "header.slint";
+import { Settings } from "settings.slint";
 
 // Export so backend can access the enums and global state.
 export { Authed, AppState }
@@ -69,6 +70,38 @@ export component MainWindow inherits Window {
                         auth_window.show();
                         root.login-clicked();
                     }
+                }
+            }
+        }
+    }
+
+    if AppState.show-settings: Settings {}
+
+
+    Rectangle {
+        x: 0;
+        width: 24px + (16px * 2);
+        height: 100%;
+        background: #020408;
+
+        Rectangle {
+            x: parent.width - self.width;
+            width: 1px;
+            height: 100%;
+            background: #3e444d;
+        }
+
+        Image {
+            x: 16px;
+            y: parent.height - self.height - 16px;
+            width: 24px;
+            height: 24px;
+            colorize: #f0f6fc;
+            source: @image-url("../assets/gear.svg");
+
+            TouchArea {
+                clicked => {
+                    AppState.show-settings = !AppState.show-settings;
                 }
             }
         }
