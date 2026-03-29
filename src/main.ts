@@ -299,29 +299,43 @@ function parseOrgLogins(orgsPayload: unknown): string[] {
 let initialProjectsDebugPending: string | null = null;
 let slintEventLoopHasStarted = false;
 
+type DumpGitHubProjectsDebugOptions = {
+  /**
+   * When set, limits per-org dumps to these orgs (intersected with `user/orgs`) and **skips** user-scoped
+   * Projects V2 + `gh project list` (no `projects-v2--user--…` / `projects-gh-cli--user.json`).
+   * When omitted, user-level dumps run and every org from `user/orgs` is dumped.
+   */
+  orgs?: readonly string[];
+};
+
 /**
  * When `GH_DEBUG_JSON=1`, dumps GitHub project data for debugging:
- * - REST **Projects V2** (`…/projectsV2`) — new table projects.
- * - **`gh project list`** for the signed-in user and for each org — CLI view of projects.
+ * - REST **Projects V2** (`…/projectsV2`) — user and/or org new-table projects (user only when no `options.orgs`).
+ * - **`gh project list`** for the user (same condition) and for each selected org.
  *
  * Uses async `gh` so the event loop can run during subprocess I/O. Empty lists skip files.
  * `gh` / API failures still write `*--error.json` for that request.
  */
-async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
+async function maybeDumpGitHubProjectsDebugAsync(
+  login: string,
+  options?: DumpGitHubProjectsDebugOptions,
+): Promise<void> {
   if (process.env.GH_DEBUG_JSON !== "1") {
     return;
   }
 
-  const userV2Stem = `projects-v2--user--${login}`;
-  const userV2Res = await ghApiJson(
-    [`users/${login}/projectsV2`, "--paginate"],
-    projectListDebugOptions(userV2Stem),
-  );
-  if (!userV2Res.ok) {
-    writeDebugJsonStem(`${userV2Stem}--error`, { error: userV2Res.error });
-  }
+  if (options?.orgs === undefined) {
+    const userV2Stem = `projects-v2--user--${login}`;
+    const userV2Res = await ghApiJson(
+      [`users/${login}/projectsV2`, "--paginate"],
+      projectListDebugOptions(userV2Stem),
+    );
+    if (!userV2Res.ok) {
+      writeDebugJsonStem(`${userV2Stem}--error`, { error: userV2Res.error });
+    }
 
-  await ghProjectListForDebugAsync("projects-gh-cli--user");
+    await ghProjectListForDebugAsync("projects-gh-cli--user");
+  }
 
   const orgsStem = "projects-v2--orgs-membership";
   const orgsRes = await ghApiJson(["user/orgs", "--paginate"], { debugStem: orgsStem });
@@ -330,7 +344,11 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
     return;
   }
 
-  for (const org of parseOrgLogins(orgsRes.value)) {
+  const allOrgs = parseOrgLogins(orgsRes.value);
+  const orgsToDump =
+    options?.orgs === undefined ? allOrgs : options.orgs.filter((o) => allOrgs.includes(o));
+
+  for (const org of orgsToDump) {
     const orgV2Stem = `projects-v2--org--${org}`;
     const orgV2 = await ghApiJson(
       [`orgs/${org}/projectsV2`, "--paginate"],
@@ -423,7 +441,7 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
     if (!slintEventLoopHasStarted) {
       initialProjectsDebugPending = viewer.login;
     } else {
-      void maybeDumpGitHubProjectsDebugAsync(viewer.login).catch((e) => {
+      void maybeDumpGitHubProjectsDebugAsync(viewer.login, { orgs: ["slint-ui"] }).catch((e) => {
         console.error("[debug-json] maybeDumpGitHubProjectsDebugAsync failed:", e);
       });
     }
@@ -520,7 +538,7 @@ await slint.runEventLoop({
     const login = initialProjectsDebugPending;
     initialProjectsDebugPending = null;
     if (login !== null) {
-      void maybeDumpGitHubProjectsDebugAsync(login).catch((e) => {
+      void maybeDumpGitHubProjectsDebugAsync(login, { orgs: ["slint-ui"] }).catch((e) => {
         console.error("[debug-json] maybeDumpGitHubProjectsDebugAsync failed:", e);
       });
     }
