@@ -567,14 +567,70 @@ function teardownSettingsDebugPanel(window: MainWindowInstance): void {
   resetSettingsDebugPanelState(window);
 }
 
+function applySettingsDebugRateLimitFetchResult(
+  window: MainWindowInstance,
+  rl: Awaited<ReturnType<typeof fetchGraphqlRateLimit>>,
+  errors: string[],
+  epoch: number,
+): void {
+  if (rl.ok) {
+    const { limit, remaining, resetAt } = rl.rateLimit;
+    const used = limit - remaining;
+    window.SettingsState.settings_debug_rate_limit = `${used} / ${limit} used (${remaining} left)`;
+    const t = Date.parse(resetAt);
+    if (!Number.isFinite(t)) {
+      errors.push("Invalid rateLimit.resetAt from API");
+      window.SettingsState.settings_debug_reset_at = resetAt;
+      window.SettingsState.settings_debug_countdown = "—";
+      settingsRateLimitDeadlineMs = null;
+    } else {
+      window.SettingsState.settings_debug_reset_at = formatRateLimitResetLocal(resetAt);
+      settingsRateLimitDeadlineMs = t;
+      tickSettingsCountdown(window);
+      settingsCountdownHandle = setInterval(() => {
+        if (epoch !== settingsDebugEpoch) {
+          return;
+        }
+        tickSettingsCountdown(window);
+      }, 1000);
+    }
+  } else {
+    window.SettingsState.settings_debug_rate_limit = "—";
+    window.SettingsState.settings_debug_reset_at = "—";
+    window.SettingsState.settings_debug_countdown = "—";
+    settingsRateLimitDeadlineMs = null;
+    errors.push(rl.error);
+  }
+}
+
 function tickSettingsCountdown(window: MainWindowInstance): void {
   if (settingsRateLimitDeadlineMs === null) {
     window.SettingsState.settings_debug_countdown = "—";
     return;
   }
-  window.SettingsState.settings_debug_countdown = formatCountdownMs(
-    settingsRateLimitDeadlineMs - Date.now(),
-  );
+  const remainingMs = settingsRateLimitDeadlineMs - Date.now();
+  if (remainingMs <= 0) {
+    void refreshSettingsRateLimitAfterReset(window);
+    return;
+  }
+  window.SettingsState.settings_debug_countdown = formatCountdownMs(remainingMs);
+}
+
+async function refreshSettingsRateLimitAfterReset(window: MainWindowInstance): Promise<void> {
+  const epoch = settingsDebugEpoch;
+  stopSettingsDebugCountdown();
+  window.SettingsState.settings_debug_countdown = "…";
+  const rl = await fetchGraphqlRateLimit();
+  if (epoch !== settingsDebugEpoch) {
+    return;
+  }
+  const errors: string[] = [];
+  applySettingsDebugRateLimitFetchResult(window, rl, errors, epoch);
+  if (errors.length > 0) {
+    const cur = window.SettingsState.settings_debug_error;
+    const extra = errors.join(" · ");
+    window.SettingsState.settings_debug_error = cur === "" ? extra : `${cur} · ${extra}`;
+  }
 }
 
 async function loadSettingsDebugPanel(window: MainWindowInstance): Promise<void> {
@@ -597,32 +653,7 @@ async function loadSettingsDebugPanel(window: MainWindowInstance): Promise<void>
     errors.push(ghVer.error);
   }
 
-  if (rl.ok) {
-    const { limit, remaining, resetAt } = rl.rateLimit;
-    const used = limit - remaining;
-    window.SettingsState.settings_debug_rate_limit = `${used} / ${limit} used (${remaining} left)`;
-    const t = Date.parse(resetAt);
-    if (!Number.isFinite(t)) {
-      errors.push("Invalid rateLimit.resetAt from API");
-      window.SettingsState.settings_debug_reset_at = resetAt;
-      window.SettingsState.settings_debug_countdown = "—";
-    } else {
-      window.SettingsState.settings_debug_reset_at = formatRateLimitResetLocal(resetAt);
-      settingsRateLimitDeadlineMs = t;
-      tickSettingsCountdown(window);
-      settingsCountdownHandle = setInterval(() => {
-        if (epoch !== settingsDebugEpoch) {
-          return;
-        }
-        tickSettingsCountdown(window);
-      }, 1000);
-    }
-  } else {
-    window.SettingsState.settings_debug_rate_limit = "—";
-    window.SettingsState.settings_debug_reset_at = "—";
-    window.SettingsState.settings_debug_countdown = "—";
-    errors.push(rl.error);
-  }
+  applySettingsDebugRateLimitFetchResult(window, rl, errors, epoch);
 
   window.SettingsState.settings_debug_error = errors.join(" · ");
 }
