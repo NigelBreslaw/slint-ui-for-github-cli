@@ -302,7 +302,6 @@ let slintEventLoopHasStarted = false;
 /**
  * When `GH_DEBUG_JSON=1`, dumps GitHub project data for debugging:
  * - REST **Projects V2** (`…/projectsV2`) — new table projects.
- * - REST **Projects (classic)** (`…/projects?state=all`) — org/user **kanban** boards.
  * - **`gh project list`** for the signed-in user and for each org — CLI view of projects.
  *
  * Uses async `gh` so the event loop can run during subprocess I/O. Empty lists skip files.
@@ -322,15 +321,6 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
     writeDebugJsonStem(`${userV2Stem}--error`, { error: userV2Res.error });
   }
 
-  const userClassicStem = `projects-classic--user--${login}`;
-  const userClassicRes = await ghApiJson(
-    [`users/${login}/projects?state=all&per_page=100`, "--paginate"],
-    projectListDebugOptions(userClassicStem),
-  );
-  if (!userClassicRes.ok) {
-    writeDebugJsonStem(`${userClassicStem}--error`, { error: userClassicRes.error });
-  }
-
   await ghProjectListForDebugAsync("projects-gh-cli--user");
 
   const orgsStem = "projects-v2--orgs-membership";
@@ -348,15 +338,6 @@ async function maybeDumpGitHubProjectsDebugAsync(login: string): Promise<void> {
     );
     if (!orgV2.ok) {
       writeDebugJsonStem(`${orgV2Stem}--error`, { error: orgV2.error });
-    }
-
-    const orgClassicStem = `projects-classic--org--${org}`;
-    const orgClassic = await ghApiJson(
-      [`orgs/${org}/projects?state=all&per_page=100`, "--paginate"],
-      projectListDebugOptions(orgClassicStem),
-    );
-    if (!orgClassic.ok) {
-      writeDebugJsonStem(`${orgClassicStem}--error`, { error: orgClassic.error });
     }
 
     await ghProjectListForDebugAsync(`projects-gh-cli--org--${org}`, org);
