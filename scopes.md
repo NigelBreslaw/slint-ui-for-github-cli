@@ -9,6 +9,7 @@ This app calls the GitHub REST API and GitHub CLI with the credentials from **`g
 | GraphQL `viewer` (profile / avatar / status), `gh api graphql` | Default `gh auth login` token | Same baseline token as REST; no extra scope vs typical `gh` sign-in. |
 | `gh api user/orgs` | `read:org` | [List organizations for the authenticated user](https://docs.github.com/en/rest/orgs/members). |
 | GraphQL `projectsV2` (org/user) | `read:project` | Read access to projects. |
+| REST `GET /notifications` (e.g. debug dump `notifications--threads.json` when `GH_DEBUG_JSON=1`) | `notifications` | [List notifications](https://docs.github.com/en/rest/activity/notifications#list-notifications-for-the-authenticated-user). Scope checks also accept **`repo`**, which GitHub documents as sufficient for this API. |
 
 We do **not** require the `project` (write) scope unless the app later adds mutating project APIs.
 
@@ -16,10 +17,10 @@ We do **not** require the `project` (write) scope unless the app later adds muta
 
 The app only treats you as signed in when `gh` is authenticated **and** the token has the required scopes. Otherwise it shows the same **logged out** state with an explanation; use **Login** in the app (or run the command below) to authorize with the right scopes.
 
-The in-app **Login** flow runs (scopes match `REQUIRED_GH_OAUTH_SCOPES` in code—`read:org` and `read:project` today):
+The in-app **Login** flow runs (scopes match `REQUIRED_GH_OAUTH_SCOPES` in code—`read:org`, `read:project`, and `notifications` today):
 
 ```bash
-gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project
+gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project,notifications
 ```
 
 That opens the browser quickly and avoids repeated HTTPS/SSH and SSH key prompts. **Tradeoff:** Git operations for GitHub are configured for **SSH** by this flow; if you prefer HTTPS for `git`, run `gh config set git_protocol https -h github.com` afterward or authenticate with different flags.
@@ -29,7 +30,7 @@ When `gh` falls back to the **device code** flow, the app overlay shows the one-
 You can also add scopes without a full login:
 
 ```bash
-gh auth refresh --scopes read:org,read:project
+gh auth refresh --scopes read:org,read:project,notifications
 ```
 
 See [gh auth login](https://cli.github.com/manual/gh_auth_login) and [gh auth refresh](https://cli.github.com/manual/gh_auth_refresh).
@@ -53,7 +54,7 @@ To manually test the “missing scope” behavior without a second account:
 3. **Restore** when done:
 
    ```bash
-   gh auth refresh --scopes read:project
+   gh auth refresh --scopes read:org,read:project,notifications
    ```
 
    Or use **Login** in the app.

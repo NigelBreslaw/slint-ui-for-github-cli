@@ -1,5 +1,5 @@
 /** Classic OAuth scopes this app expects on the active `github.com` token. */
-export const REQUIRED_GH_OAUTH_SCOPES = ["read:org", "read:project"] as const;
+export const REQUIRED_GH_OAUTH_SCOPES = ["read:org", "read:project", "notifications"] as const;
 
 export type ScopeCheckOk = { ok: true };
 
@@ -143,6 +143,14 @@ export function checkScopesFromAuthStatusHostsJson(
   return checkRequiredScopesAgainstGranted(granted, required);
 }
 
+/** GitHub documents `repo` as sufficient for the notifications REST API when `notifications` is absent from the scope string. */
+function isClassicScopeSatisfied(grantedSet: Set<string>, scope: string): boolean {
+  if (grantedSet.has(scope)) {
+    return true;
+  }
+  return scope === "notifications" && grantedSet.has("repo");
+}
+
 function checkRequiredScopesAgainstGranted(
   granted: string[] | null,
   required: readonly string[] = REQUIRED_GH_OAUTH_SCOPES,
@@ -155,7 +163,7 @@ function checkRequiredScopesAgainstGranted(
     };
   }
   const grantedSet = new Set(granted);
-  const missing = required.filter((s) => !grantedSet.has(s));
+  const missing = required.filter((s) => !isClassicScopeSatisfied(grantedSet, s));
   if (missing.length === 0) {
     return { ok: true };
   }

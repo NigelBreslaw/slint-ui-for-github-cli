@@ -8,7 +8,7 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 - **pnpm** (see [pnpm.io](https://pnpm.io/installation))
 - **GitHub CLI** (`gh`) on your **`PATH`** (Windows, macOS, and Linux use the same command name; the app does not ship `gh`). If it is missing, the UI shows a **no CLI installed** state with no **Login** button until you install it from [cli.github.com](https://cli.github.com/). After install, authenticate with `gh auth login` or the in-app **Login** flow.
 
-**OAuth scopes:** The app expects classic token scopes **`read:org`** and **`read:project`**. If `gh` is missing them (or scopes cannot be verified), the UI stays **logged out** with an explanation—use **Login** to authorize with the required scopes (see [scopes.md](scopes.md)).
+**OAuth scopes:** The app expects classic token scopes **`read:org`**, **`read:project`**, and **`notifications`** (see [scopes.md](scopes.md): **`repo`** alone also satisfies the notifications requirement in scope checks). If `gh` is missing them (or scopes cannot be verified), the UI stays **logged out** with an explanation—use **Login** to authorize with the required scopes.
 
 ## Setup
 
@@ -34,7 +34,7 @@ pnpm start
 
 This runs `node src/main.ts` (TypeScript is executed directly via Node’s built-in type stripping).
 
-**Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project` (scopes match [`REQUIRED_GH_OAUTH_SCOPES`](src/gh/required-scopes.ts)) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run **`pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
+**Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project,notifications` (scopes match [`REQUIRED_GH_OAUTH_SCOPES`](src/gh/required-scopes.ts)) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run **`pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
 
 If `gh` uses the **device code** flow, the overlay shows the one-time code and an **Open GitHub** button that copies the code to the clipboard and opens the device page in your browser (same output is still mirrored in the terminal); you may still need to press Enter there when `gh` asks.
 
@@ -58,7 +58,7 @@ Run with the helper script (works on Windows, macOS, and Linux via [cross-env](h
 pnpm dev:debug
 ```
 
-`pnpm dev:debug` sets **`GH_DEBUG_JSON=1`** (wide `viewer` JSON dump) and **`GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1`**, which **skips** the heaviest **`slint-ui`** work: **`assigned-open--search--…`**, **`assigned-open--project-items--…`**, and the extra REST org-membership pass used only for full debug. It still writes **`projects-v2--org--slint-ui.json`** (when non-empty) and **`assigned-open--projects-list--slint-ui.json`** from the **same single** org `projectsV2` fetch that powers Settings—no second pagination.
+`pnpm dev:debug` sets **`GH_DEBUG_JSON=1`** (wide `viewer` JSON dump) and **`GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1`**, which **skips** the heaviest **`slint-ui`** work: **`assigned-open--search--…`**, **`assigned-open--project-items--…`**, and the extra REST org-membership pass used only for full debug. It still writes **`projects-v2--org--slint-ui.json`** (when non-empty) and **`assigned-open--projects-list--slint-ui.json`** from the **same single** org `projectsV2` fetch that powers Settings—no second pagination. It also writes **`notifications--threads.json`** (REST **`GET /notifications`**, `per_page=50`, `all=true`, paginated) when signed in with the required scopes; API failures still land in **`notifications--threads--error.json`**.
 
 To run with **full** project-related dumps as before, use:
 

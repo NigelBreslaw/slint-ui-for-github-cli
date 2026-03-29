@@ -193,6 +193,25 @@ async function ghApiJson(restArgs: string[], options?: GhApiJsonOptions): Promis
   }
 }
 
+/**
+ * REST `GET /notifications` (paginated) → `debug-json/notifications--threads.json` when `GH_DEBUG_JSON=1`.
+ * `gh api` uses POST when `-f` is present unless `--method GET` is set (POST `/notifications` is 404).
+ * Requires classic scope **`notifications`** (or **`repo`**) on the token; otherwise expect `*--error.json`.
+ */
+async function maybeDumpNotificationsThreadsDebugAsync(): Promise<void> {
+  if (process.env.GH_DEBUG_JSON !== "1") {
+    return;
+  }
+  const stem = "notifications--threads";
+  const res = await ghApiJson(
+    ["--method", "GET", "notifications", "-f", "per_page=50", "-f", "all=true", "--paginate"],
+    { debugStem: stem },
+  );
+  if (!res.ok) {
+    writeDebugJsonStem(`${stem}--error`, { error: res.error });
+  }
+}
+
 /** Wide GraphQL `viewer` dump to `debug-json/` when `GH_DEBUG_JSON=1`. */
 async function debugUserData(): Promise<void> {
   if (process.env.GH_DEBUG_JSON !== "1") {
@@ -491,6 +510,9 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
   if (process.env.GH_DEBUG_JSON === "1") {
     void debugUserData().catch((e) => {
       console.error("[debug-json] debugUserData failed:", e);
+    });
+    void maybeDumpNotificationsThreadsDebugAsync().catch((e) => {
+      console.error("[debug-json] maybeDumpNotificationsThreadsDebugAsync failed:", e);
     });
     if (shouldRunSlintUiProjectDebugDumps()) {
       if (!slintEventLoopHasStarted) {
