@@ -11,10 +11,11 @@ import {
     View,
 } from "app-state.slint";
 import { SettingsState } from "settings-state.slint";
-import { Header } from "header.slint";
+import { Header } from "components/header.slint";
 import { Settings } from "settings.slint";
 import { Dashboard } from "dashboard.slint";
 import { Button } from "components/button.slint";
+import { SideBar } from "components/sideBar.slint";
 
 // Export so backend can access the enums and global state.
 export { Authed, AppState, ProjectRow, ReviewRequestRow, SettingsState }
@@ -71,50 +72,11 @@ export component MainWindow inherits Window {
         }
     }
 
-    side-bar := Rectangle {
+    side-bar := SideBar {
         x: 0;
         y: header.header-height;
-        width: 24px + (16px * 2);
         height: root.height - self.y;
-        background: #020408;
         visible: AppState.auth == Authed.loggedIn;
-
-        Rectangle {
-            x: parent.width - self.width;
-            width: 1px;
-            height: 100%;
-            background: #3e444d;
-        }
-
-        Image {
-            x: 16px;
-            y: 16px;
-            width: 24px;
-            height: 24px;
-            colorize: #8b949e;
-            source: @image-url("../assets/24px/inbox.svg");
-
-            ta := TouchArea {
-                clicked => {
-                    AppState.set-view(View.dashboard);
-                }
-            }
-        }
-
-        Image {
-            x: 16px;
-            y: parent.height - self.height - 16px;
-            width: 24px;
-            height: 24px;
-            colorize: #8b949e;
-            source: @image-url("../assets/24px/gear.svg");
-
-            TouchArea {
-                clicked => {
-                    AppState.set-view(View.settings);
-                }
-            }
-        }
     }
 
     content := Rectangle {

@@ -1,0 +1,47 @@
+import { AppState, Authed, View } from "../app-state.slint";
+
+export component SideBar {
+    width: 24px + (16px * 2);
+    height: 100%;
+    Rectangle {
+        height: root.height;
+        background: #020408;
+
+        Rectangle {
+            x: parent.width - self.width;
+            width: 1px;
+            height: 100%;
+            background: #3e444d;
+        }
+
+        Image {
+            x: 16px;
+            y: 16px;
+            width: 24px;
+            height: 24px;
+            colorize: #8b949e;
+            source: @image-url("../../assets/24px/inbox.svg");
+
+            ta := TouchArea {
+                clicked => {
+                    AppState.set-view(View.dashboard);
+                }
+            }
+        }
+
+        Image {
+            x: 16px;
+            y: parent.height - self.height - 16px;
+            width: 24px;
+            height: 24px;
+            colorize: #8b949e;
+            source: @image-url("../../assets/24px/gear.svg");
+
+            TouchArea {
+                clicked => {
+                    AppState.set-view(View.settings);
+                }
+            }
+        }
+    }
+}

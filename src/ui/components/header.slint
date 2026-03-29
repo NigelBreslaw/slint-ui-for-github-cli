@@ -1,5 +1,5 @@
-import { AppState, Authed } from "app-state.slint";
-import { Button } from "components/button.slint";
+import { AppState, Authed } from "../app-state.slint";
+import { Button } from "button.slint";
 
 global HeaderStyle {
     out property <length> border-radius: 12px;
@@ -211,7 +211,7 @@ component Menu {
         MenuSeparator { }
 
         MenuItem {
-            icon-source: @image-url("../assets/16px/sign-out.svg");
+            icon-source: @image-url("../../assets/16px/sign-out.svg");
             label-text: "Sign out";
             clicked => {
                 AppState.sign-out();
