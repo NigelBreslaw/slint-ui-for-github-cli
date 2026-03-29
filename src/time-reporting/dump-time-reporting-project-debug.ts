@@ -1,4 +1,5 @@
 import { fetchProjectV2NodeGraphql } from "../gh/graphql-project-v2-node.ts";
+import { parseProjectV2NodeFromGraphqlResponse } from "../schemas/gh-graphql-project-v2-node-response.ts";
 import { readTimeReportingSelectedProjectKv } from "./time-reporting-selected-project-kv.ts";
 import { sanitizeTimeReportingDebugStem } from "./sanitize-time-reporting-debug-stem.ts";
 import { writeTimeReportingDebugJson } from "./write-time-reporting-debug-json.ts";
@@ -12,6 +13,13 @@ export async function dumpTimeReportingProjectNodeToDebugJson(nodeId: string): P
   try {
     const res = await fetchProjectV2NodeGraphql(nodeId);
     if (res.ok) {
+      const parsed = parseProjectV2NodeFromGraphqlResponse(res.value);
+      if (!parsed.ok) {
+        console.warn(
+          "[time-reporting] GraphQL body did not match ProjectV2 shape:",
+          parsed.message,
+        );
+      }
       writeTimeReportingDebugJson(stemBase, res.value);
     } else {
       writeTimeReportingDebugJson(`${stemBase}--error`, { error: res.error });

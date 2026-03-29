@@ -3,7 +3,8 @@
  */
 import { type } from "arktype";
 
-const projectV2NodeSchema = type({
+/** Shared shape for a single `ProjectV2` node from GraphQL (list pages or `node(id: …)`). */
+export const projectV2NodeSchema = type({
   id: "string",
   number: "number",
   title: "string",

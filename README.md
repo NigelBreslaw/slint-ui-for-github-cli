@@ -50,14 +50,26 @@ pnpm typecheck
 | Area                                                                         | Role                                                                             |
 | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `[src/main.ts](src/main.ts)`                                                 | Entry: open DB, `loadFile` / `MainWindow`, Slint callbacks, event loop, shutdown |
-| `[src/slint-interface.ts](src/slint-interface.ts)`                           | Types for `MainWindow`, `AppState`, `SettingsState` (keep in sync with `.slint`) |
+| `[src/slint-interface.ts](src/slint-interface.ts)`                           | Types for `MainWindow`, `AppState`, `SettingsState`, `TimeReportingState` (keep in sync with `.slint`) |
 | `[src/auth/auth-ui-flow.ts](src/auth/auth-ui-flow.ts)`                       | Sign-in scope check, viewer fetch, session cache, `runEventLoop` startup hooks   |
 | `[src/ui/app-window-bridge.ts](src/ui/app-window-bridge.ts)`                 | Mutates `AppState` / window fields (dashboard, projects, identity)               |
 | `[src/ui/settings-debug-panel.ts](src/ui/settings-debug-panel.ts)`           | Settings debug table + GraphQL rate-limit polling                                |
 | `[src/gh/gh-app-client.ts](src/gh/gh-app-client.ts)`                         | `gh api` / `gh api graphql` JSON helpers                                         |
 | `[src/gh/viewer-queries.ts](src/gh/viewer-queries.ts)`                       | GraphQL query strings for viewer load + debug dump                               |
 | `[src/debug/github-app-debug-dumps.ts](src/debug/github-app-debug-dumps.ts)` | `GH_DEBUG_JSON=1` file output orchestration                                      |
+| `[src/time-reporting/time-reporting-ui.ts](src/time-reporting/time-reporting-ui.ts)` | `TimeReportingState` callbacks: view enter/exit, project picker, KV + debug dump |
+| `[src/time-reporting/time-reporting-selected-project-kv.ts](src/time-reporting/time-reporting-selected-project-kv.ts)` | SQLite KV `time_reporting/selected_project_v1` (chosen ProjectV2) |
+| `[src/time-reporting/dump-time-reporting-project-debug.ts](src/time-reporting/dump-time-reporting-project-debug.ts)` | Unconditional `debug-json/time-reporting--project-v2--…` writes |
+| `[src/gh/graphql-project-v2-node.ts](src/gh/graphql-project-v2-node.ts)` | GraphQL `node(id: …) { … on ProjectV2 { … } }` via `gh` |
+| `[src/schemas/gh-graphql-project-v2-node-response.ts](src/schemas/gh-graphql-project-v2-node-response.ts)` | Parse / validate that response shape (see tests) |
 
+### Time reporting
+
+The **Time reporting** view (clock icon in the sidebar) lets you choose an **open** GitHub Project V2 from the **`slint-ui`** org—the same list used for search/filter elsewhere. Picker state and callbacks live on the Slint global **`TimeReportingState`** ([`src/ui/time-reporting-state.slint`](src/ui/time-reporting-state.slint)), mirrored in TypeScript as [`TimeReportingStateHandle`](src/slint-interface.ts). The selected board is stored in the app SQLite database under the KV key **`time_reporting/selected_project_v1`** (schema in [`time-reporting-selected-project-kv.ts`](src/time-reporting/time-reporting-selected-project-kv.ts)).
+
+Each time you confirm a project, the app writes the raw GraphQL response to **`debug-json/time-reporting--project-v2--<sanitized-node-id>.json`** (or `…--error.json` on failure). That write does **not** require `GH_DEBUG_JSON`. With **`GH_DEBUG_JSON=1`** (e.g. [`pnpm dev:debug`](package.json)), the same file is refreshed **after sign-in** if a project is already stored, alongside the other debug dumps—see [Debug mode](#debug-mode-json-dumps) below.
+
+**Future work:** build real time-entry / logging UI on top of the stored `nodeId` and the dumped JSON (fields are validated in tests via [`parseProjectV2NodeFromGraphqlResponse`](src/schemas/gh-graphql-project-v2-node-response.ts)).
 
 Keep the following diagrams aligned with `[src/main.ts](src/main.ts)` and `[src/auth/auth-ui-flow.ts](src/auth/auth-ui-flow.ts)` when refactoring.
 

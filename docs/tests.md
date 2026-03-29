@@ -102,6 +102,20 @@ Exercises [`sanitizeTimeReportingDebugStem`](../src/time-reporting/sanitize-time
 | replaces slashes and spaces with underscores | Disallowed characters normalized |
 | is stable for the same input | Idempotent |
 
+### `src/schemas/gh-graphql-project-v2-node-response.test.ts`
+
+Exercises [`parseProjectV2NodeFromGraphqlResponse`](../src/schemas/gh-graphql-project-v2-node-response.ts) (GraphQL `data.node` for a single `ProjectV2`; inline fixtures only—no `gh`).
+
+| Case | Intent |
+| --- | --- |
+| accepts a minimal valid ProjectV2 node payload | Happy path; `items.totalCount` present |
+| surfaces top-level GraphQL errors | `errors[0].message` when `data` is incomplete |
+| rejects when data.node is null | Missing board |
+| rejects when data has no node field | Wrong `data` shape |
+| rejects non-object root | `null` / non-object payload |
+| rejects wrong __typename when present | Non-`ProjectV2` union member |
+| accepts ProjectV2 when __typename is ProjectV2 | Explicit typename allowed |
+
 ### `src/session/viewer-session-cache.test.ts`
 
 Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (persisted viewer snapshot for fast startup; no SQLite in tests—JSON only).
@@ -163,6 +177,8 @@ Static payloads live under `src/test/fixtures/graphql/`:
 | `viewer-viewer-null.json` | `data.viewer` null |
 | `viewer-missing-login.json` | Viewer object missing `login` |
 
+Time reporting `node(id: …)` tests use **inline** objects in [`gh-graphql-project-v2-node-response.test.ts`](../src/schemas/gh-graphql-project-v2-node-response.test.ts) (not separate fixture files).
+
 ---
 
 ## Tooling notes
@@ -174,3 +190,4 @@ Static payloads live under `src/test/fixtures/graphql/`:
 
 - [UI performance logging (`GH_APP_UI_PERF`)](./perf.md)
 - [Viewer session cache (startup hydrate)](./session-cache.md)
+- [README — Time reporting](../README.md#time-reporting) (KV key, `TimeReportingState`, `debug-json`)
