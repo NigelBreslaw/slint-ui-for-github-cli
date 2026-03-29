@@ -6,6 +6,11 @@ import { promisify } from "node:util";
 import { openAppDb } from "./db/app-db.ts";
 import { checkRequiredGitHubCliScopes, ghAuthLogout, spawnGhAuthLogin } from "./gh/auth.ts";
 import {
+  fetchAllProjectsV2ForOrgGraphql,
+  fetchAllProjectsV2ForUserGraphql,
+} from "./gh/graphql-projects-v2.ts";
+import { mapGhExecError } from "./gh/map-gh-exec-error.ts";
+import {
   emptyTransparentAvatarImage,
   loadAvatarRgba,
   type SlintRgbaImage,
@@ -142,20 +147,6 @@ function maybeWriteDebugJsonFromRestArgs(restArgs: string[], value: unknown): vo
   writeDebugJsonStem(`gh-api--${segments.join("--")}`, value);
 }
 
-function mapGhExecError(e: unknown): string {
-  if (e !== null && typeof e === "object" && "code" in e && e.code === "ENOENT") {
-    return "gh not found (install GitHub CLI)";
-  }
-  if (e !== null && typeof e === "object" && "stderr" in e) {
-    const stderr = (e as { stderr?: Buffer }).stderr;
-    const msg = stderr ? stderr.toString("utf8").trim() : "";
-    if (msg.length > 0) {
-      return `gh: ${msg}`;
-    }
-  }
-  return e instanceof Error ? e.message : String(e);
-}
-
 type GhJsonOk = { ok: true; value: unknown };
 type GhJsonErr = { ok: false; error: string };
 type GhJsonResult = GhJsonOk | GhJsonErr;
@@ -206,19 +197,6 @@ async function ghApiJson(restArgs: string[], options?: GhApiJsonOptions): Promis
   }
 }
 
-/** Options for project list calls: empty stdout / `[]` means nothing to dump — skip file. */
-function projectListDebugOptions(stem: string): GhApiJsonOptions {
-  return {
-    debugStem: stem,
-    emptyResponseAs: [],
-    omitDebugFileIfEmptyArray: true,
-  };
-}
-
-/**
- * `gh project list` (Projects V2 / unified CLI view). Org kanban boards are often visible here
- * even when REST `orgs/.../projectsV2` is empty or 404 for your token.
- */
 /** Wide GraphQL `viewer` dump to `debug-json/` when `GH_DEBUG_JSON=1`. */
 async function debugUserData(): Promise<void> {
   if (process.env.GH_DEBUG_JSON !== "1") {
@@ -248,36 +226,6 @@ async function debugUserData(): Promise<void> {
   }
 }
 
-async function ghProjectListForDebugAsync(debugStem: string, owner?: string): Promise<void> {
-  if (process.env.GH_DEBUG_JSON !== "1") {
-    return;
-  }
-  const args = ["project", "list", "--format", "json", "--closed", "-L", "200"];
-  if (owner !== undefined) {
-    args.push("--owner", owner);
-  }
-  try {
-    const { stdout } = await execFileAsync("gh", args, {
-      encoding: "utf8",
-      env: { ...process.env, GH_PAGER: "cat" },
-      maxBuffer: GH_EXEC_MAX_BUFFER,
-    });
-    const trimmed = (stdout as string).trim();
-    let value: unknown;
-    if (trimmed.length === 0) {
-      value = [];
-    } else {
-      value = JSON.parse(trimmed) as unknown;
-    }
-    if (Array.isArray(value) && value.length === 0) {
-      return;
-    }
-    writeDebugJsonStem(debugStem, value);
-  } catch (e) {
-    writeDebugJsonStem(`${debugStem}--error`, { error: mapGhExecError(e) });
-  }
-}
-
 function parseOrgLogins(orgsPayload: unknown): string[] {
   if (!Array.isArray(orgsPayload)) {
     return [];
@@ -302,16 +250,15 @@ let slintEventLoopHasStarted = false;
 type DumpGitHubProjectsDebugOptions = {
   /**
    * When set, limits per-org dumps to these orgs (intersected with `user/orgs`) and **skips** user-scoped
-   * Projects V2 + `gh project list` (no `projects-v2--user--…` / `projects-gh-cli--user.json`).
+   * GraphQL `projectsV2` (no `projects-v2--user--…`).
    * When omitted, user-level dumps run and every org from `user/orgs` is dumped.
    */
   orgs?: readonly string[];
 };
 
 /**
- * When `GH_DEBUG_JSON=1`, dumps GitHub project data for debugging:
- * - REST **Projects V2** (`…/projectsV2`) — user and/or org new-table projects (user only when no `options.orgs`).
- * - **`gh project list`** for the user (same condition) and for each selected org.
+ * When `GH_DEBUG_JSON=1`, dumps GitHub project data for debugging via GraphQL **`projectsV2`**
+ * (user and/or org; user only when no `options.orgs`).
  *
  * Uses async `gh` so the event loop can run during subprocess I/O. Empty lists skip files.
  * `gh` / API failures still write `*--error.json` for that request.
@@ -326,15 +273,12 @@ async function maybeDumpGitHubProjectsDebugAsync(
 
   if (options?.orgs === undefined) {
     const userV2Stem = `projects-v2--user--${login}`;
-    const userV2Res = await ghApiJson(
-      [`users/${login}/projectsV2`, "--paginate"],
-      projectListDebugOptions(userV2Stem),
-    );
+    const userV2Res = await fetchAllProjectsV2ForUserGraphql(login);
     if (!userV2Res.ok) {
       writeDebugJsonStem(`${userV2Stem}--error`, { error: userV2Res.error });
+    } else if (userV2Res.value.length > 0) {
+      writeDebugJsonStem(userV2Stem, userV2Res.value);
     }
-
-    await ghProjectListForDebugAsync("projects-gh-cli--user");
   }
 
   const orgsStem = "projects-v2--orgs-membership";
@@ -350,15 +294,12 @@ async function maybeDumpGitHubProjectsDebugAsync(
 
   for (const org of orgsToDump) {
     const orgV2Stem = `projects-v2--org--${org}`;
-    const orgV2 = await ghApiJson(
-      [`orgs/${org}/projectsV2`, "--paginate"],
-      projectListDebugOptions(orgV2Stem),
-    );
+    const orgV2 = await fetchAllProjectsV2ForOrgGraphql(org);
     if (!orgV2.ok) {
       writeDebugJsonStem(`${orgV2Stem}--error`, { error: orgV2.error });
+    } else if (orgV2.value.length > 0) {
+      writeDebugJsonStem(orgV2Stem, orgV2.value);
     }
-
-    await ghProjectListForDebugAsync(`projects-gh-cli--org--${org}`, org);
   }
 }
 

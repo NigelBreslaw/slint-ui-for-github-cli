@@ -8,7 +8,7 @@ This app calls the GitHub REST API and GitHub CLI with the credentials from **`g
 | ---------- | ----- | ----- |
 | GraphQL `viewer` (profile / avatar / status), `gh api graphql` | Default `gh auth login` token | Same baseline token as REST; no extra scope vs typical `gh` sign-in. |
 | `gh api user/orgs` | `read:org` | [List organizations for the authenticated user](https://docs.github.com/en/rest/orgs/members). |
-| Projects V2 REST (`…/projectsV2`), `gh project list` | `read:project` | Read access to projects. |
+| GraphQL `projectsV2` (org/user) | `read:project` | Read access to projects. |
 
 We do **not** require the `project` (write) scope unless the app later adds mutating project APIs.
 
