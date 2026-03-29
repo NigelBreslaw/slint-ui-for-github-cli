@@ -6,12 +6,13 @@ import {
     Palette,
     StyleMetrics,
 } from "std-widgets.slint";
-import { Authed, AppState, ProjectRow } from "app-state.slint";
+import { Authed, AppState, ProjectRow, ReviewRequestRow } from "app-state.slint";
 import { Header } from "header.slint";
 import { Settings } from "settings.slint";
+import { Dashboard } from "dashboard.slint";
 
 // Export so backend can access the enums and global state.
-export { Authed, AppState, ProjectRow }
+export { Authed, AppState, ProjectRow, ReviewRequestRow }
 
 export component MainWindow inherits Window {
     callback login-clicked;
@@ -20,6 +21,7 @@ export component MainWindow inherits Window {
     callback show-no-gh-cli-installed;
     callback open-cli-install-page;
     callback open-project-url(string);
+    callback dashboard-opened;
 
     init => {
         Palette.color-scheme = ColorScheme.dark;
@@ -78,8 +80,9 @@ export component MainWindow inherits Window {
 
     Rectangle {
         x: 0;
+        y: header.height;
         width: 24px + (16px * 2);
-        height: 100%;
+        height: root.height - self.y;
         background: #020408;
 
         Rectangle {
@@ -87,6 +90,27 @@ export component MainWindow inherits Window {
             width: 1px;
             height: 100%;
             background: #3e444d;
+        }
+
+        Image {
+            x: 16px;
+            y: 16px;
+            width: 24px;
+            height: 24px;
+            colorize: #f0f6fc;
+            source: @image-url("../assets/24px/inbox.svg");
+
+            TouchArea {
+                clicked => {
+                    if (AppState.show-dashboard) {
+                        AppState.show-dashboard = false;
+                    } else {
+                        AppState.show-dashboard = true;
+                        AppState.show-settings = false;
+                        root.dashboard-opened();
+                    }
+                }
+            }
         }
 
         Image {
@@ -99,14 +123,25 @@ export component MainWindow inherits Window {
 
             TouchArea {
                 clicked => {
-                    AppState.show-settings = !AppState.show-settings;
+                    if (AppState.show-settings) {
+                        AppState.show-settings = false;
+                    } else {
+                        AppState.show-settings = true;
+                        AppState.show-dashboard = false;
+                    }
                 }
             }
         }
     }
 
-    Header {
+    header := Header {
         y: 0;
+    }
+
+    if AppState.show-dashboard: Dashboard {
+        open-pr-url(url) => {
+            root.open-project-url(url);
+        }
     }
 
     if AppState.show-settings: Settings {

@@ -30,8 +30,16 @@ import { statusEmojiFromGraphqlHtml } from "./gh/status-emoji-from-graphql.ts";
 import { parseGhGraphqlViewerMinimalResponse } from "./schemas/gh-graphql-viewer-minimal.ts";
 import { copyTextToClipboard } from "./utils/clipboard-write.ts";
 import { openUrlInBrowser } from "./utils/open-url.ts";
+import { fetchAllReviewRequestsSearch } from "./gh/graphql-review-requests.ts";
 
 const execFileAsync = promisify(execFile);
+
+/** Row shape must match `ReviewRequestRow` in `app-state.slint`. */
+type SlintReviewRequestRow = {
+  title: string;
+  url: string;
+  repo_label: string;
+};
 
 /** Large enough for paginated `gh api` project payloads. */
 const GH_EXEC_MAX_BUFFER = 50 * 1024 * 1024;
@@ -419,6 +427,12 @@ type AppStateHandle = {
   user_status_message: string;
   user_status_emoji: string;
   avatar?: SlintRgbaImage;
+  show_settings: boolean;
+  show_dashboard: boolean;
+  review_requests_data_ready: boolean;
+  review_requests_total: number;
+  review_requests_load_status: string;
+  review_requests_model: slint.ArrayModel<SlintReviewRequestRow>;
   projects_search: string;
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
@@ -437,6 +451,7 @@ type MainWindowInstance = {
   show_no_gh_cli_installed: () => void;
   open_cli_install_page: () => void;
   open_project_url: (url: string) => void;
+  dashboard_opened?: () => void;
   status_message: string;
   auth_device_code: string;
   auth_device_url: string;
@@ -455,10 +470,38 @@ function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.user_profile_url = "";
   window.AppState.user_status_message = "";
   window.AppState.user_status_emoji = "";
+  window.AppState.show_settings = false;
+  window.AppState.show_dashboard = false;
+  window.AppState.review_requests_data_ready = false;
+  window.AppState.review_requests_total = 0;
+  window.AppState.review_requests_load_status = "";
+  window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
   clearSlintUiOrgProjectsCache();
   window.AppState.projects_search = "";
   window.AppState.projects_load_status = "";
   window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
+}
+
+async function refreshDashboardReviewRequests(window: MainWindowInstance): Promise<void> {
+  window.AppState.review_requests_data_ready = false;
+  window.AppState.review_requests_load_status = "Loading review requests…";
+  window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
+  window.AppState.review_requests_total = 0;
+  const res = await fetchAllReviewRequestsSearch();
+  if (!res.ok) {
+    window.AppState.review_requests_load_status = res.error;
+    return;
+  }
+  window.AppState.review_requests_total = res.issueCount;
+  window.AppState.review_requests_load_status = "";
+  window.AppState.review_requests_data_ready = true;
+  window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>(
+    res.rows.map((r) => ({
+      title: r.title,
+      url: r.url,
+      repo_label: r.repo_label,
+    })),
+  );
 }
 
 function clearAuthDeviceFields(window: MainWindowInstance): void {
@@ -581,12 +624,17 @@ const window = new ui.MainWindow({
 });
 
 window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
+window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
 window.AppState.project_search_changed = (query: string) => {
   window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
 };
 
 window.open_project_url = (url: string) => {
   openUrlInBrowser(url);
+};
+
+window.dashboard_opened = () => {
+  void refreshDashboardReviewRequests(window);
 };
 
 window.open_github_device_clicked = () => {

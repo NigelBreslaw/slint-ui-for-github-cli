@@ -4,6 +4,12 @@ export struct ProjectRow {
     url: string,
 }
 
+export struct ReviewRequestRow {
+    title: string,
+    url: string,
+    repo_label: string,
+}
+
 export enum Authed {
     loggedOut,
     noGhCliInstalled,
@@ -20,6 +26,12 @@ export global AppState {
     in-out property <string> user_status_emoji: "";
     in-out property <image> avatar;
     in-out property <bool> show-settings: false;
+    in-out property <bool> show-dashboard: false;
+
+    in-out property <bool> review-requests-data-ready: false;
+    in-out property <int> review-requests-total: 0;
+    in-out property <string> review-requests-load-status: "";
+    in property <[ReviewRequestRow]> review-requests-model;
 
     in-out property <string> projects-search: "";
     in-out property <string> projects-load-status: "";
