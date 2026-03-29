@@ -6,7 +6,7 @@ import {
     Palette,
     StyleMetrics,
 } from "std-widgets.slint";
-import { Authed, AppState, ProjectRow, ReviewRequestRow } from "app-state.slint";
+import { Authed, AppState, ProjectRow, ReviewRequestRow, View } from "app-state.slint";
 import { Header } from "header.slint";
 import { Settings } from "settings.slint";
 import { Dashboard } from "dashboard.slint";
@@ -77,7 +77,7 @@ export component MainWindow inherits Window {
         }
     }
 
-    Rectangle {
+    side-bar := Rectangle {
         x: 0;
         y: header.height;
         width: 24px + (16px * 2);
@@ -101,13 +101,7 @@ export component MainWindow inherits Window {
 
             TouchArea {
                 clicked => {
-                    if (AppState.show-dashboard) {
-                        AppState.show-dashboard = false;
-                    } else {
-                        AppState.show-dashboard = true;
-                        AppState.show-settings = false;
-                        root.dashboard-opened();
-                    }
+                    AppState.set-view(View.dashboard);
                 }
             }
         }
@@ -122,12 +116,7 @@ export component MainWindow inherits Window {
 
             TouchArea {
                 clicked => {
-                    if (AppState.show-settings) {
-                        AppState.show-settings = false;
-                    } else {
-                        AppState.show-settings = true;
-                        AppState.show-dashboard = false;
-                    }
+                    AppState.set-view(View.settings);
                 }
             }
         }
@@ -137,9 +126,17 @@ export component MainWindow inherits Window {
         y: 0;
     }
 
-    if AppState.show-dashboard: Dashboard { }
+    content := Rectangle {
+        x: side-bar.width;
+        y: header.height;
+        width: root.width - side-bar.width;
+        height: root.height - header.height;
 
-    if AppState.show-settings: Settings { }
+        if AppState.view == View.dashboard: Dashboard { }
+
+        if AppState.view == View.settings: Settings { }
+    }
+
 
     no_gh_cli_installed_window := PopupWindow {
         width: root.width;

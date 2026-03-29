@@ -17,6 +17,12 @@ export enum Authed {
     authorizing,
 }
 
+export enum View {
+    none,
+    dashboard,
+    settings
+}
+
 export global AppState {
     in-out property <Authed> auth: loggedOut;
     in-out property <string> user_login: "";
@@ -25,13 +31,22 @@ export global AppState {
     in-out property <string> user_status_message: "";
     in-out property <string> user_status_emoji: "";
     in-out property <image> avatar;
-    in-out property <bool> show-settings: false;
-    in-out property <bool> show-dashboard: false;
 
     in-out property <bool> review-requests-data-ready: false;
     in-out property <int> review-requests-total: 0;
     in-out property <string> review-requests-load-status: "";
     in property <[ReviewRequestRow]> review-requests-model;
+
+    out property <View> view: none;
+    callback set-view(View);
+
+    set-view(view) => {
+        if view == self.view {
+            self.view = View.none;
+        } else {
+            self.view = view;
+        }
+    }
 
     in-out property <string> projects-search: "";
     in-out property <string> projects-load-status: "";
