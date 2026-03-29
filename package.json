@@ -9,9 +9,10 @@
   "scripts": {
     "autofix": "pnpm dedupe --prefer-offline && pnpm lint:fix && pnpm format && pnpm knip && pnpm typecheck",
     "start": "pnpm dev",
-    "dev": "node src/main.ts",
-    "dev:debug": "cross-env GH_DEBUG_JSON=1 GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1 node src/main.ts",
-    "dev:debug:projects": "cross-env GH_DEBUG_JSON=1 node src/main.ts",
+    "gen-build-info": "node scripts/write-build-info.ts",
+    "dev": "node scripts/write-build-info.ts && node src/main.ts",
+    "dev:debug": "node scripts/write-build-info.ts && cross-env GH_DEBUG_JSON=1 GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1 node src/main.ts",
+    "dev:debug:projects": "node scripts/write-build-info.ts && cross-env GH_DEBUG_JSON=1 node src/main.ts",
     "typecheck": "tsc --noEmit",
     "lint": "oxlint src",
     "lint:fix": "oxlint --fix src",

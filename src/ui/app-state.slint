@@ -1,3 +1,5 @@
+import { SettingsState } from "settings-state.slint";
+
 export struct ProjectRow {
     title: string,
     number: int,
@@ -40,13 +42,18 @@ export global AppState {
     in-out property <View> view: none;
     callback set-view(View);
     callback dashboard-init;
-    callback settings-init;
 
-    set-view(view) => {
-        if view == self.view {
+    set-view(v) => {
+        if v == self.view {
+            if self.view == View.settings {
+                SettingsState.settings-exited();
+            }
             self.view = View.none;
         } else {
-            self.view = view;
+            if self.view == View.settings {
+                SettingsState.settings-exited();
+            }
+            self.view = v;
         }
     }
 

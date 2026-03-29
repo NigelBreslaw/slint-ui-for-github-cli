@@ -1,5 +1,8 @@
 import * as slint from "slint-ui";
+import { readFileSync } from "node:fs";
 import { execFile } from "node:child_process";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { promisify } from "node:util";
 import { openAppDb } from "./db/app-db.ts";
 import { checkRequiredGitHubCliScopes, ghAuthLogout, spawnGhAuthLogin } from "./gh/auth.ts";
@@ -31,8 +34,17 @@ import { parseGhGraphqlViewerMinimalResponse } from "./schemas/gh-graphql-viewer
 import { copyTextToClipboard } from "./utils/clipboard-write.ts";
 import { openUrlInBrowser } from "./utils/open-url.ts";
 import { fetchAllReviewRequestsSearch } from "./gh/graphql-review-requests.ts";
+import { getGhCliVersionLine } from "./gh/gh-cli-version.ts";
+import { fetchGraphqlRateLimit } from "./gh/graphql-rate-limit.ts";
+import { GIT_COMMIT_COUNT } from "./generated/build-info.ts";
+import { formatCountdownMs } from "./utils/format-countdown.ts";
 
 const execFileAsync = promisify(execFile);
+
+let settingsRateLimitDeadlineMs: number | null = null;
+let settingsCountdownHandle: ReturnType<typeof setInterval> | null = null;
+/** Bumped on panel teardown and each new load so stale async work cannot touch UI or timers. */
+let settingsDebugEpoch = 0;
 
 /** Row shape must match `ReviewRequestRow` in `app-state.slint`. */
 type SlintReviewRequestRow = {
@@ -441,7 +453,18 @@ type AppStateHandle = {
   sign_out: () => void;
   open_project_url: (url: string) => void;
   dashboard_init: () => void;
+};
+
+type SettingsStateHandle = {
   settings_init: () => void;
+  settings_exited: () => void;
+  settings_debug_gh_version: string;
+  settings_debug_rate_limit: string;
+  settings_debug_reset_at: string;
+  settings_debug_countdown: string;
+  settings_debug_app_version: string;
+  settings_debug_commit_label: string;
+  settings_debug_error: string;
 };
 
 type MainWindowInstance = {
@@ -449,6 +472,7 @@ type MainWindowInstance = {
   show(): void;
   hide(): void;
   AppState: AppStateHandle;
+  SettingsState: SettingsStateHandle;
   login_clicked?: () => void;
   open_github_device_clicked?: () => void;
   close_auth_window: () => void;
@@ -464,6 +488,118 @@ type MainWindowOpts = {
   "auth-device-code"?: string;
   "auth-device-url"?: string;
 };
+
+function readPackageVersion(): string {
+  try {
+    const pkgPath = join(dirname(fileURLToPath(import.meta.url)), "..", "package.json");
+    const raw = readFileSync(pkgPath, "utf8");
+    const j = JSON.parse(raw) as { version?: string };
+    return j.version ?? "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+}
+
+function buildCommitLabel(count: number): string {
+  if (count <= 0) {
+    return "— (run dev script to refresh)";
+  }
+  if (count < 1000) {
+    return `v0.${String(count)}`;
+  }
+  return `v${String(count)}`;
+}
+
+function clearSettingsDebugStrings(window: MainWindowInstance): void {
+  window.SettingsState.settings_debug_gh_version = "";
+  window.SettingsState.settings_debug_rate_limit = "";
+  window.SettingsState.settings_debug_reset_at = "";
+  window.SettingsState.settings_debug_countdown = "";
+  window.SettingsState.settings_debug_app_version = "";
+  window.SettingsState.settings_debug_commit_label = "";
+  window.SettingsState.settings_debug_error = "";
+}
+
+function stopSettingsDebugCountdown(): void {
+  if (settingsCountdownHandle !== null) {
+    clearInterval(settingsCountdownHandle);
+    settingsCountdownHandle = null;
+  }
+}
+
+function invalidateInFlightSettingsDebugLoads(): void {
+  settingsDebugEpoch++;
+}
+
+function resetSettingsDebugPanelState(window: MainWindowInstance): void {
+  stopSettingsDebugCountdown();
+  settingsRateLimitDeadlineMs = null;
+  clearSettingsDebugStrings(window);
+}
+
+function teardownSettingsDebugPanel(window: MainWindowInstance): void {
+  invalidateInFlightSettingsDebugLoads();
+  resetSettingsDebugPanelState(window);
+}
+
+function tickSettingsCountdown(window: MainWindowInstance): void {
+  if (settingsRateLimitDeadlineMs === null) {
+    window.SettingsState.settings_debug_countdown = "—";
+    return;
+  }
+  window.SettingsState.settings_debug_countdown = formatCountdownMs(
+    settingsRateLimitDeadlineMs - Date.now(),
+  );
+}
+
+async function loadSettingsDebugPanel(window: MainWindowInstance): Promise<void> {
+  invalidateInFlightSettingsDebugLoads();
+  const epoch = settingsDebugEpoch;
+  resetSettingsDebugPanelState(window);
+  window.SettingsState.settings_debug_app_version = `v${readPackageVersion()}`;
+  window.SettingsState.settings_debug_commit_label = buildCommitLabel(GIT_COMMIT_COUNT);
+
+  const errors: string[] = [];
+  const [ghVer, rl] = await Promise.all([getGhCliVersionLine(), fetchGraphqlRateLimit()]);
+  if (epoch !== settingsDebugEpoch) {
+    return;
+  }
+
+  if (ghVer.ok) {
+    window.SettingsState.settings_debug_gh_version = ghVer.line;
+  } else {
+    window.SettingsState.settings_debug_gh_version = "—";
+    errors.push(ghVer.error);
+  }
+
+  if (rl.ok) {
+    const { limit, remaining, resetAt } = rl.rateLimit;
+    const used = limit - remaining;
+    window.SettingsState.settings_debug_rate_limit = `${used} / ${limit} used (${remaining} left)`;
+    window.SettingsState.settings_debug_reset_at = resetAt;
+    const t = Date.parse(resetAt);
+    if (!Number.isFinite(t)) {
+      errors.push("Invalid rateLimit.resetAt from API");
+      window.SettingsState.settings_debug_countdown = "—";
+    } else {
+      settingsRateLimitDeadlineMs = t;
+      tickSettingsCountdown(window);
+      settingsCountdownHandle = setInterval(() => {
+        if (epoch !== settingsDebugEpoch) {
+          return;
+        }
+        tickSettingsCountdown(window);
+      }, 1000);
+    }
+  } else {
+    window.SettingsState.settings_debug_rate_limit = "—";
+    window.SettingsState.settings_debug_reset_at = "—";
+    window.SettingsState.settings_debug_countdown = "—";
+    errors.push(rl.error);
+  }
+
+  window.SettingsState.settings_debug_error = errors.join(" · ");
+}
 
 function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.avatar = emptyTransparentAvatarImage;
@@ -481,6 +617,7 @@ function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.projects_search = "";
   window.AppState.projects_load_status = "";
   window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
+  teardownSettingsDebugPanel(window);
 }
 
 async function refreshDashboardReviewRequests(window: MainWindowInstance): Promise<void> {
@@ -638,8 +775,12 @@ window.AppState.dashboard_init = () => {
   void refreshDashboardReviewRequests(window);
 };
 
-window.AppState.settings_init = () => {
-  void refreshSlintUiOrgProjectsForWindow(window);
+window.SettingsState.settings_init = () => {
+  void loadSettingsDebugPanel(window);
+};
+
+window.SettingsState.settings_exited = () => {
+  teardownSettingsDebugPanel(window);
 };
 
 window.open_github_device_clicked = () => {

@@ -6,13 +6,20 @@ import {
     Palette,
     StyleMetrics,
 } from "std-widgets.slint";
-import { Authed, AppState, ProjectRow, ReviewRequestRow, View } from "app-state.slint";
+import {
+    Authed,
+    AppState,
+    ProjectRow,
+    ReviewRequestRow,
+    View,
+} from "app-state.slint";
+import { SettingsState } from "settings-state.slint";
 import { Header } from "header.slint";
 import { Settings } from "settings.slint";
 import { Dashboard } from "dashboard.slint";
 
 // Export so backend can access the enums and global state.
-export { Authed, AppState, ProjectRow, ReviewRequestRow }
+export { Authed, AppState, ProjectRow, ReviewRequestRow, SettingsState }
 
 export component MainWindow inherits Window {
     callback login-clicked;
@@ -121,8 +128,6 @@ export component MainWindow inherits Window {
         }
     }
 
-    header := Header { }
-
     content := Rectangle {
         x: side-bar.width;
         y: header.header-height;
@@ -134,6 +139,7 @@ export component MainWindow inherits Window {
         if AppState.view == View.settings: Settings { }
     }
 
+    header := Header { }
 
     no_gh_cli_installed_window := PopupWindow {
         width: root.width;

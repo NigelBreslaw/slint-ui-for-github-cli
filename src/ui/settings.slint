@@ -1,22 +1,75 @@
-import { ListView, VerticalBox } from "std-widgets.slint";
-import { AppState } from "app-state.slint";
+import { VerticalBox } from "std-widgets.slint";
+import { SettingsState } from "settings-state.slint";
+
+component TableRow {
+
+    in property <string> label-text;
+    in property <string> value-text;
+    in property <bool> header-row: false;
+
+    min-height: 40px;
+    width: 100%;
+
+    HorizontalLayout {
+        spacing: 0;
+        width: 100%;
+
+        Rectangle {
+            width: 160px;
+            min-height: 40px;
+            background: header-row ? #21262d : #0d1117;
+            border-width: 1px;
+            border-color: #30363d;
+
+            Text {
+                x: 12px;
+                y: 10px;
+                width: parent.width - 24px;
+                text: label-text;
+                font-size: header-row ? 12px : 13px;
+                font-weight: header-row ? 600 : 400;
+                color: #f0f6fc;
+                wrap: word-wrap;
+            }
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            min-height: 40px;
+            background: header-row ? #21262d : #161b22;
+            border-width: 1px;
+            border-color: #30363d;
+
+            Text {
+                x: 12px;
+                y: 10px;
+                width: parent.width - 24px;
+                text: value-text;
+                font-size: header-row ? 12px : 13px;
+                font-weight: header-row ? 600 : 400;
+                color: header-row ? #f0f6fc : #c9d1d9;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
 
 export component Settings {
     width: 100%;
     height: 100%;
 
     init => {
-        AppState.settings-init();
+        SettingsState.settings-init();
     }
 
     Rectangle {
         width: 100%;
         height: 100%;
-        background: #020408;
+        background: #0d1117;
 
         VerticalBox {
             padding: 16px;
-            spacing: 12px;
+            spacing: 0;
             width: 100%;
             height: 100%;
 
@@ -28,52 +81,59 @@ export component Settings {
             }
 
             Text {
-                text: "Search projects";
+                text: "Debug (GitHub-style)";
                 font-size: 12px;
                 color: #8b949e;
+                padding-bottom: 12px;
             }
 
-            TextInput {
-                text <=> AppState.projects-search;
-                edited => {
-                    AppState.project-search-changed(self.text);
-                }
-            }
-
-            if AppState.projects-load-status != "": Text {
-                text: AppState.projects-load-status;
-                color: #8b949e;
-                wrap: word-wrap;
-            }
-
-            ListView {
+            VerticalBox {
+                spacing: 0;
                 width: 100%;
-                for row[index] in AppState.projects-filtered-model: Rectangle {
-                    height: 56px;
-                    background: mod(index, 2) == 0 ? #0d1116 : #161b22;
 
-                    TouchArea {
-                        clicked => {
-                            AppState.open-project-url(row.url);
-                        }
-
-                        VerticalBox {
-                            padding: 8px;
-                            spacing: 4px;
-                            Text {
-                                text: row.title;
-                                color: #f0f6fc;
-                                overflow: elide;
-                            }
-
-                            Text {
-                                text: "#" + row.number;
-                                font-size: 12px;
-                                color: #8b949e;
-                            }
-                        }
-                    }
+                TableRow {
+                    label-text: "Field";
+                    value-text: "Value";
+                    header-row: true;
                 }
+
+                TableRow {
+                    label-text: "App (package.json)";
+                    value-text: SettingsState.settings-debug-app-version;
+                }
+
+                TableRow {
+                    label-text: "Repo commits (HEAD)";
+                    value-text: SettingsState.settings-debug-commit-label;
+                }
+
+                TableRow {
+                    label-text: "GitHub CLI";
+                    value-text: SettingsState.settings-debug-gh-version;
+                }
+
+                TableRow {
+                    label-text: "GraphQL rate limit";
+                    value-text: SettingsState.settings-debug-rate-limit;
+                }
+
+                TableRow {
+                    label-text: "Rate limit resets (UTC)";
+                    value-text: SettingsState.settings-debug-reset-at;
+                }
+
+                TableRow {
+                    label-text: "Time until reset";
+                    value-text: SettingsState.settings-debug-countdown;
+                }
+            }
+
+            if SettingsState.settings-debug-error != "": Text {
+                padding-top: 12px;
+                text: SettingsState.settings-debug-error;
+                color: #f85149;
+                font-size: 13px;
+                wrap: word-wrap;
             }
         }
     }
