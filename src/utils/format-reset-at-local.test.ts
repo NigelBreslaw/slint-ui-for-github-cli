@@ -20,14 +20,10 @@ describe("formatRateLimitResetLocal", () => {
   it("matches Date#toLocaleString with the same formatting options (stable under TZ=UTC)", () => {
     const iso = "2020-06-15T12:00:00.000Z";
     const expected = new Date(iso).toLocaleString(undefined, {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-      hour: "numeric",
+      hour: "2-digit",
       minute: "2-digit",
       second: "2-digit",
-      timeZoneName: "short",
+      hour12: false,
     });
     assert.equal(formatRateLimitResetLocal(iso), expected);
   });

@@ -8,13 +8,9 @@ export function formatRateLimitResetLocal(isoUtc: string): string {
     return isoUtc;
   }
   return new Date(ms).toLocaleString(undefined, {
-    weekday: "short",
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
+    hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    timeZoneName: "short",
+    hour12: false,
   });
 }
