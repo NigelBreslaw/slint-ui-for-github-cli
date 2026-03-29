@@ -77,3 +77,19 @@ export function buildFilteredProjectsModel(query: string): ArrayModel<SlintProje
   const base = nodesCache === null ? [] : mapOpenBoardsToRows(nodesCache);
   return new ArrayModel(filterProjectRows(base, query));
 }
+
+/** Open org boards only; returns null if cache is empty or id is unknown. */
+export function findSlintUiOpenProjectRowByNodeId(nodeId: string): SlintProjectRow | null {
+  if (nodesCache === null) {
+    return null;
+  }
+  for (const n of nodesCache) {
+    if (n.closed) {
+      continue;
+    }
+    if (n.id === nodeId) {
+      return { id: n.id, title: n.title, number: n.number, url: n.url };
+    }
+  }
+  return null;
+}

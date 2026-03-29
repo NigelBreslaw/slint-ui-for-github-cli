@@ -1,7 +1,7 @@
 /**
  * Persisted GitHub ProjectV2 choice for the Time reporting feature (SQLite KV).
  */
-import { kvDelete, kvGet } from "../db/app-db.ts";
+import { kvDelete, kvGet, kvSet } from "../db/app-db.ts";
 
 const TIME_REPORTING_SELECTED_PROJECT_KV_KEY = "time_reporting/selected_project_v1";
 
@@ -49,6 +49,16 @@ export function parseTimeReportingSelectedProjectJson(
   } catch {
     return null;
   }
+}
+
+function serialize(selected: TimeReportingSelectedProjectV1): string {
+  return JSON.stringify(selected);
+}
+
+export function writeTimeReportingSelectedProjectKv(
+  selected: TimeReportingSelectedProjectV1,
+): void {
+  kvSet(TIME_REPORTING_SELECTED_PROJECT_KV_KEY, serialize(selected));
 }
 
 export function readTimeReportingSelectedProjectKv(): TimeReportingSelectedProjectV1 | null {

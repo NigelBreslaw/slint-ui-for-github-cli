@@ -57,6 +57,8 @@ export type SettingsStateHandle = {
 };
 
 export type TimeReportingStateHandle = {
+  time_reporting_view_init: () => void;
+  time_reporting_view_exited: () => void;
   time_reporting_project_chosen: (id: string) => void;
   time_reporting_picker_cancel: () => void;
   time_reporting_open_change_project: () => void;

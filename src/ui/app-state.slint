@@ -1,4 +1,5 @@
 import { SettingsState } from "settings-state.slint";
+import { TimeReportingState } from "time-reporting-state.slint";
 
 export struct ProjectRow {
     id: string,
@@ -50,10 +51,16 @@ export global AppState {
             if self.view == View.settings {
                 SettingsState.settings-exited();
             }
+            if self.view == View.timeReporting {
+                TimeReportingState.time-reporting-view-exited();
+            }
             self.view = View.none;
         } else {
             if self.view == View.settings {
                 SettingsState.settings-exited();
+            }
+            if self.view == View.timeReporting {
+                TimeReportingState.time-reporting-view-exited();
             }
             self.view = v;
         }

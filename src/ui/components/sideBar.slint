@@ -31,6 +31,21 @@ export component SideBar {
 
         Image {
             x: 16px;
+            y: 56px;
+            width: 24px;
+            height: 24px;
+            colorize: #8b949e;
+            source: @image-url("../../assets/24px/clock.svg");
+
+            TouchArea {
+                clicked => {
+                    AppState.set-view(View.timeReporting);
+                }
+            }
+        }
+
+        Image {
+            x: 16px;
             y: parent.height - self.height - 16px;
             width: 24px;
             height: 24px;

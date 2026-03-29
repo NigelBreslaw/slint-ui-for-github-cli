@@ -8,6 +8,7 @@ import { openUrlInBrowser } from "./utils/open-url.ts";
 import { clearViewerSessionCache } from "./session/viewer-session-cache.ts";
 import type { MainWindowModule, SlintReviewRequestRow } from "./slint-interface.ts";
 import { readTimeReportingSelectedProjectKv } from "./time-reporting/time-reporting-selected-project-kv.ts";
+import { wireTimeReportingUi } from "./time-reporting/time-reporting-ui.ts";
 import {
   clearAuthDeviceFields,
   clearTimeReportingSelection,
@@ -53,9 +54,7 @@ window.SettingsState.settings_exited = () => {
   teardownSettingsDebugPanel(window);
 };
 
-window.TimeReportingState.time_reporting_project_chosen = (_id: string) => {};
-window.TimeReportingState.time_reporting_picker_cancel = () => {};
-window.TimeReportingState.time_reporting_open_change_project = () => {};
+wireTimeReportingUi(window);
 
 window.open_github_device_clicked = () => {
   void copyTextToClipboard(window.auth_device_code).finally(() => {

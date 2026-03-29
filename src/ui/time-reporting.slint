@@ -1,0 +1,193 @@
+import { ListView, VerticalBox } from "std-widgets.slint";
+import { AppState } from "app-state.slint";
+import { TimeReportingState } from "time-reporting-state.slint";
+import { Button } from "components/button.slint";
+
+export component TimeReporting {
+    width: 100%;
+    height: 100%;
+
+    init => {
+        TimeReportingState.time-reporting-view-init();
+    }
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: #0d1117;
+
+        VerticalBox {
+            padding: 16px;
+            spacing: 12px;
+            width: 100%;
+            height: 100%;
+
+            Text {
+                text: "Time reporting";
+                font-size: 14px;
+                font-weight: 600;
+                color: #c9d1d9;
+            }
+
+            if TimeReportingState.has-selected-project: VerticalBox {
+                spacing: 8px;
+                Text {
+                    text: TimeReportingState.selected-project-label;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #f0f6fc;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Logging UI will go here.";
+                    font-size: 14px;
+                    color: #8b949e;
+                    wrap: word-wrap;
+                }
+            }
+
+            if !TimeReportingState.has-selected-project: Text {
+                text: "Choose a GitHub Project (classic board) for time entries. Open the dialog when prompted.";
+                font-size: 14px;
+                color: #8b949e;
+                wrap: word-wrap;
+            }
+
+            if AppState.projects-load-status != "": Text {
+                text: AppState.projects-load-status;
+                color: #8b949e;
+                wrap: word-wrap;
+            }
+        }
+
+        if TimeReportingState.picker-open: Rectangle {
+            width: parent.width;
+            height: parent.height;
+            y: 0;
+            x: 0;
+
+            Rectangle {
+                width: parent.width;
+                height: parent.height;
+                background: #010409aa;
+
+                TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    clicked => {
+                        if TimeReportingState.picker-allow-cancel {
+                            TimeReportingState.time-reporting-picker-cancel();
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                width: parent.width;
+                height: parent.height;
+                alignment: center;
+
+                Rectangle {
+                    width: 440px;
+                    background: #161b22;
+                    border-radius: 12px;
+                    border-width: 1px;
+                    border-color: #30363d;
+
+                    VerticalBox {
+                        padding: 20px;
+                        spacing: 16px;
+                        width: parent.width - 40px;
+
+                        Text {
+                            text: "Select time keeping project";
+                            font-size: 18px;
+                            font-weight: 600;
+                            color: #f0f6fc;
+                            wrap: word-wrap;
+                        }
+
+                        Text {
+                            text: "Search by title, number, or URL";
+                            font-size: 12px;
+                            color: #8b949e;
+                            wrap: word-wrap;
+                        }
+
+                        TextInput {
+                            width: 100%;
+                            text: AppState.projects-search;
+                            font-size: 14px;
+                            color: #f0f6fc;
+                            edited => {
+                                AppState.projects-search = self.text;
+                                AppState.project_search_changed(self.text);
+                            }
+                        }
+
+                        Rectangle {
+                            height: 220px;
+                            width: 100%;
+                            background: #0d1117;
+                            border-radius: 8px;
+                            border-width: 1px;
+                            border-color: #30363d;
+
+                            ListView {
+                                width: parent.width - 2px;
+                                height: parent.height - 2px;
+                                x: 1px;
+                                y: 1px;
+                                for row[index] in AppState.projects-filtered-model: Rectangle {
+                                    height: 52px;
+                                    background: mod(index, 2) == 0 ? #0d1117 : #161b22;
+
+                                    TouchArea {
+                                        clicked => {
+                                            TimeReportingState.time-reporting-project-chosen(row.id);
+                                        }
+
+                                        VerticalBox {
+                                            padding: 8px;
+                                            spacing: 2px;
+                                            Text {
+                                                text: row.title;
+                                                color: #f0f6fc;
+                                                overflow: elide;
+                                                font-size: 14px;
+                                            }
+
+                                            Text {
+                                                text: "#" + row.number + " · slint-ui";
+                                                font-size: 12px;
+                                                color: #8b949e;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Rectangle {
+                                horizontal-stretch: 1;
+                                height: 1px;
+                            }
+
+                            Button {
+                                visible: TimeReportingState.picker-allow-cancel;
+                                label: "Cancel";
+                                clicked => {
+                                    TimeReportingState.time-reporting-picker-cancel();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,4 +1,5 @@
 import { AppState, Authed, View } from "../app-state.slint";
+import { TimeReportingState } from "../time-reporting-state.slint";
 import { Button } from "button.slint";
 
 global HeaderStyle {
@@ -246,15 +247,27 @@ export component Header {
             background: #3e444d;
         }
 
-        Text {
+        HorizontalLayout {
             x: root.title-left-inset;
             y: (parent.height - self.height) / 2;
-            text: AppState.view == View.dashboard ? "Dashboard" : "Settings";
-            visible: AppState.auth == Authed.loggedIn && (AppState.view == View.dashboard || AppState.view == View.settings);
-            font-size: 20px;
-            font-weight: 700;
-            color: #f0f6fc;
-            overflow: elide;
+            spacing: 16px;
+            visible: AppState.auth == Authed.loggedIn && (AppState.view == View.dashboard || AppState.view == View.settings || AppState.view == View.timeReporting);
+
+            Text {
+                text: AppState.view == View.dashboard ? "Dashboard" : AppState.view == View.settings ? "Settings" : "Time reporting";
+                font-size: 20px;
+                font-weight: 700;
+                color: #f0f6fc;
+                overflow: elide;
+            }
+
+            Button {
+                visible: AppState.view == View.timeReporting && TimeReportingState.has-selected-project;
+                label: "Change project";
+                clicked => {
+                    TimeReportingState.time-reporting-open-change-project();
+                }
+            }
         }
 
         sign-in := Button {
