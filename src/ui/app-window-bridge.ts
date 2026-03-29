@@ -9,9 +9,14 @@ import { emptyTransparentAvatarImage } from "../gh/avatar-image.ts";
 import { fetchAllReviewRequestsSearch } from "../gh/graphql-review-requests.ts";
 import type { MainWindowInstance, SlintReviewRequestRow } from "../slint-interface.ts";
 import { clearTimeReportingSelectedProjectKv } from "../time-reporting/time-reporting-selected-project-kv.ts";
-import { clearViewerSessionCache } from "../session/viewer-session-cache.ts";
+import { clearViewerSessionCache, type ViewerSessionV1 } from "../session/viewer-session-cache.ts";
+import { teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
 
-/** Clears persisted Time reporting project selection and Slint globals. Call on sign-out and when `gh` scopes block login. */
+/**
+ * Clears persisted Time reporting project selection and Slint globals. Call on sign-out and when
+ * `gh` is missing or scopes block login. Not called from `clearUserIdentity` (that also runs when
+ * there is no viewer session cache yet at startup—see `applyAuthUi`).
+ */
 export function clearTimeReportingSelection(window: MainWindowInstance): void {
   clearTimeReportingSelectedProjectKv();
   window.TimeReportingState.picker_allow_cancel = false;
@@ -19,9 +24,8 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
   window.TimeReportingState.has_selected_project = false;
   window.TimeReportingState.selected_project_label = "";
 }
-import type { ViewerSessionV1 } from "../session/viewer-session-cache.ts";
-import { teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
 
+/** Resets in-memory lists and org project cache; does not clear Time reporting KV (same GitHub user). */
 export function resetListsWithoutClearingProfile(window: MainWindowInstance): void {
   window.AppState.view = "none";
   window.AppState.review_requests_data_ready = false;

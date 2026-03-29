@@ -7,8 +7,10 @@ import { copyTextToClipboard } from "./utils/clipboard-write.ts";
 import { openUrlInBrowser } from "./utils/open-url.ts";
 import { clearViewerSessionCache } from "./session/viewer-session-cache.ts";
 import type { MainWindowModule, SlintReviewRequestRow } from "./slint-interface.ts";
-import { readTimeReportingSelectedProjectKv } from "./time-reporting/time-reporting-selected-project-kv.ts";
-import { wireTimeReportingUi } from "./time-reporting/time-reporting-ui.ts";
+import {
+  hydrateTimeReportingFromKv,
+  wireTimeReportingUi,
+} from "./time-reporting/time-reporting-ui.ts";
 import {
   clearAuthDeviceFields,
   clearTimeReportingSelection,
@@ -29,11 +31,7 @@ const window = new ui.MainWindow({
 window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
 window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
 
-const timeReportingStored = readTimeReportingSelectedProjectKv();
-if (timeReportingStored !== null) {
-  window.TimeReportingState.has_selected_project = true;
-  window.TimeReportingState.selected_project_label = timeReportingStored.title;
-}
+hydrateTimeReportingFromKv(window);
 window.AppState.project_search_changed = (query: string) => {
   window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
 };
