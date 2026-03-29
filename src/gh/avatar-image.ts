@@ -19,6 +19,15 @@ export const emptyTransparentAvatarImage: SlintRgbaImage = {
   data: Buffer.from([0, 0, 0, 0]),
 };
 
+/** True for the 1×1 transparent placeholder used when no avatar is shown. */
+export function isPlaceholderAvatarImage(img: SlintRgbaImage): boolean {
+  return (
+    img.width === emptyTransparentAvatarImage.width &&
+    img.height === emptyTransparentAvatarImage.height &&
+    img.data.equals(emptyTransparentAvatarImage.data)
+  );
+}
+
 const FETCH_TIMEOUT_MS = 15_000;
 /** Avatars larger than this (on either axis) are resized before cache write. */
 const AVATAR_CACHE_SIZE = 128;

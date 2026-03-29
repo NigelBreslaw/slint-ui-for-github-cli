@@ -26,6 +26,7 @@ import type { ProjectV2NodeSnapshot } from "./schemas/gh-graphql-projectsv2-page
 import { writeDebugJsonStem } from "./gh/write-debug-json.ts";
 import {
   emptyTransparentAvatarImage,
+  isPlaceholderAvatarImage,
   loadAvatarRgba,
   type SlintRgbaImage,
 } from "./gh/avatar-image.ts";
@@ -741,7 +742,20 @@ async function fetchAndApplyGitHubUser(
   window.AppState.user_status_emoji = emojiPlain;
   uiPerfMarkT1Text("network");
   writeViewerSessionCache(viewerSessionFromMinimalViewer(viewer, emojiPlain));
-  window.AppState.avatar = emptyTransparentAvatarImage;
+  // Do not set emptyTransparentAvatarImage here: it would blank the avatar for the whole
+  // `refreshSlintUiOrgProjectsForWindow` await (and any debug work). Keep the prior image
+  // (e.g. from cache hydrate) until `loadAvatarRgba` replaces it.
+  void loadAvatarRgba(viewer.avatarUrl).then((loaded) => {
+    if (!isAuthEpochCurrent(op)) {
+      return;
+    }
+    if (loaded !== undefined) {
+      window.AppState.avatar = loaded;
+      uiPerfMarkT2Avatar("network", loaded);
+    } else {
+      window.AppState.avatar = emptyTransparentAvatarImage;
+    }
+  });
 
   await refreshSlintUiOrgProjectsForWindow(window);
   if (!isAuthEpochCurrent(op)) {
@@ -768,18 +782,6 @@ async function fetchAndApplyGitHubUser(
       }
     }
   }
-
-  void loadAvatarRgba(viewer.avatarUrl).then((loaded) => {
-    if (!isAuthEpochCurrent(op)) {
-      return;
-    }
-    if (loaded !== undefined) {
-      window.AppState.avatar = loaded;
-      uiPerfMarkT2Avatar("network", loaded);
-    } else {
-      window.AppState.avatar = emptyTransparentAvatarImage;
-    }
-  });
 }
 
 function applyAuthUi(window: MainWindowInstance): void {
@@ -798,7 +800,8 @@ function applyAuthUi(window: MainWindowInstance): void {
     applyCachedViewerToAppState(window, cached);
     uiPerfMarkT1Text("cache");
     window.status_message = "";
-    window.AppState.avatar = emptyTransparentAvatarImage;
+    // Avoid forcing emptyTransparent here: keep whatever the window had until decode finishes
+    // (same idea as `fetchAndApplyGitHubUser` — no intentional blank before async load).
     void loadAvatarRgba(cached.viewer.avatarUrl).then((loaded) => {
       if (!isAuthEpochCurrent(op)) {
         return;
@@ -806,6 +809,8 @@ function applyAuthUi(window: MainWindowInstance): void {
       if (loaded !== undefined) {
         window.AppState.avatar = loaded;
         uiPerfMarkT2Avatar("cache", loaded);
+      } else {
+        window.AppState.avatar = emptyTransparentAvatarImage;
       }
     });
   } else {

@@ -3,7 +3,7 @@
  * Milestones are relative to T0 at the start of each auth UI attempt (`applyAuthUi`).
  */
 import type { SlintRgbaImage } from "./gh/avatar-image.ts";
-import { emptyTransparentAvatarImage } from "./gh/avatar-image.ts";
+import { isPlaceholderAvatarImage } from "./gh/avatar-image.ts";
 
 function isUiPerfEnabled(): boolean {
   return process.env.GH_APP_UI_PERF === "1";
@@ -55,11 +55,7 @@ export function uiPerfMarkT2Avatar(source: "cache" | "network", image: SlintRgba
   if (!isUiPerfEnabled() || t0Ms === 0 || t2Done) {
     return;
   }
-  if (
-    image.width === emptyTransparentAvatarImage.width &&
-    image.height === emptyTransparentAvatarImage.height &&
-    image.data.equals(emptyTransparentAvatarImage.data)
-  ) {
+  if (isPlaceholderAvatarImage(image)) {
     return;
   }
   const ms = performance.now() - t0Ms;
