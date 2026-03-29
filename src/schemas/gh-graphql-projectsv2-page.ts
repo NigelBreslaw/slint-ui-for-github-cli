@@ -13,9 +13,11 @@ const projectV2NodeSchema = type({
   createdAt: "string",
   updatedAt: "string",
   public: "boolean",
+  /** All items on the board (not filtered to open or assignee). Used to skip `gh project item-list` when zero. */
+  items: type({ totalCount: "number" }),
 });
 
-type ProjectV2NodeSnapshot = typeof projectV2NodeSchema.infer;
+export type ProjectV2NodeSnapshot = typeof projectV2NodeSchema.infer;
 
 const pageInfoSchema = type({
   hasNextPage: "boolean",

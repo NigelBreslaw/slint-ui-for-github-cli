@@ -1,7 +1,5 @@
 import * as slint from "slint-ui";
 import { execFile } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
 import { promisify } from "node:util";
 import { openAppDb } from "./db/app-db.ts";
 import { checkRequiredGitHubCliScopes, ghAuthLogout, spawnGhAuthLogin } from "./gh/auth.ts";
@@ -10,6 +8,12 @@ import {
   fetchAllProjectsV2ForUserGraphql,
 } from "./gh/graphql-projects-v2.ts";
 import { mapGhExecError } from "./gh/map-gh-exec-error.ts";
+import {
+  maybeDumpAssignedOpenWorkDebugAsync,
+  type SlintUiProjectsV2ForAssignedDebug,
+} from "./gh/debug-assigned-open-slint-ui.ts";
+import type { ProjectV2NodeSnapshot } from "./schemas/gh-graphql-projectsv2-page.ts";
+import { writeDebugJsonStem } from "./gh/write-debug-json.ts";
 import {
   emptyTransparentAvatarImage,
   loadAvatarRgba,
@@ -127,21 +131,6 @@ async function ghApiGraphql(query: string): Promise<GhJsonResult> {
   }
 }
 
-/**
- * When `GH_DEBUG_JSON=1`, writes pretty-printed JSON under `debug-json/` (gitignored).
- * Do not enable while screen-sharing; API responses may include PII or account details.
- */
-function writeDebugJsonStem(stem: string, value: unknown): void {
-  if (process.env.GH_DEBUG_JSON !== "1") {
-    return;
-  }
-  const dir = join(process.cwd(), "debug-json");
-  mkdirSync(dir, { recursive: true });
-  const safe = stem.replace(/[^a-zA-Z0-9._-]+/g, "_");
-  const filePath = join(dir, `${safe}.json`);
-  writeFileSync(filePath, JSON.stringify(value, null, 2), "utf8");
-}
-
 function maybeWriteDebugJsonFromRestArgs(restArgs: string[], value: unknown): void {
   const segments = restArgs.map((a) => a.replace(/[^a-zA-Z0-9._-]+/g, "_"));
   writeDebugJsonStem(`gh-api--${segments.join("--")}`, value);
@@ -254,6 +243,14 @@ type DumpGitHubProjectsDebugOptions = {
    * When omitted, user-level dumps run and every org from `user/orgs` is dumped.
    */
   orgs?: readonly string[];
+  /**
+   * When present, uses this result instead of calling `fetchAllProjectsV2ForOrgGraphql` for that org
+   * (shared with assigned-open debug in the same run).
+   */
+  precachedOrgProjectsV2?: ReadonlyMap<
+    string,
+    { ok: true; value: unknown[] } | { ok: false; error: string }
+  >;
 };
 
 /**
@@ -294,6 +291,15 @@ async function maybeDumpGitHubProjectsDebugAsync(
 
   for (const org of orgsToDump) {
     const orgV2Stem = `projects-v2--org--${org}`;
+    const cached = options?.precachedOrgProjectsV2?.get(org);
+    if (cached !== undefined) {
+      if (!cached.ok) {
+        writeDebugJsonStem(`${orgV2Stem}--error`, { error: cached.error });
+      } else if (cached.value.length > 0) {
+        writeDebugJsonStem(orgV2Stem, cached.value);
+      }
+      continue;
+    }
     const orgV2 = await fetchAllProjectsV2ForOrgGraphql(org);
     if (!orgV2.ok) {
       writeDebugJsonStem(`${orgV2Stem}--error`, { error: orgV2.error });
@@ -301,6 +307,29 @@ async function maybeDumpGitHubProjectsDebugAsync(
       writeDebugJsonStem(orgV2Stem, orgV2.value);
     }
   }
+}
+
+const SLINT_UI_ORG = "slint-ui";
+
+/** One `organization.projectsV2` pagination for `slint-ui`; feeds org dump + assigned-open list. */
+async function runDebugJsonSlintUiDumpsAsync(login: string): Promise<void> {
+  if (process.env.GH_DEBUG_JSON !== "1") {
+    return;
+  }
+  const slintRes = await fetchAllProjectsV2ForOrgGraphql(SLINT_UI_ORG);
+  const precached = new Map<string, { ok: true; value: unknown[] } | { ok: false; error: string }>([
+    [SLINT_UI_ORG, slintRes],
+  ]);
+  const assignedInput: SlintUiProjectsV2ForAssignedDebug = slintRes.ok
+    ? { ok: true, nodes: slintRes.value as ProjectV2NodeSnapshot[] }
+    : { ok: false, error: slintRes.error };
+  await Promise.all([
+    maybeDumpGitHubProjectsDebugAsync(login, {
+      orgs: [SLINT_UI_ORG],
+      precachedOrgProjectsV2: precached,
+    }),
+    maybeDumpAssignedOpenWorkDebugAsync(assignedInput),
+  ]);
 }
 
 /** Slint-node maps enum variants to kebab-case strings on `AppState.auth` (not `ui.Authed.*` values). */
@@ -382,8 +411,8 @@ async function fetchAndApplyGitHubUser(window: MainWindowInstance): Promise<void
     if (!slintEventLoopHasStarted) {
       initialProjectsDebugPending = viewer.login;
     } else {
-      void maybeDumpGitHubProjectsDebugAsync(viewer.login, { orgs: ["slint-ui"] }).catch((e) => {
-        console.error("[debug-json] maybeDumpGitHubProjectsDebugAsync failed:", e);
+      void runDebugJsonSlintUiDumpsAsync(viewer.login).catch((e) => {
+        console.error("[debug-json] runDebugJsonSlintUiDumpsAsync failed:", e);
       });
     }
   }
@@ -479,8 +508,8 @@ await slint.runEventLoop({
     const login = initialProjectsDebugPending;
     initialProjectsDebugPending = null;
     if (login !== null) {
-      void maybeDumpGitHubProjectsDebugAsync(login, { orgs: ["slint-ui"] }).catch((e) => {
-        console.error("[debug-json] maybeDumpGitHubProjectsDebugAsync failed:", e);
+      void runDebugJsonSlintUiDumpsAsync(login).catch((e) => {
+        console.error("[debug-json] runDebugJsonSlintUiDumpsAsync failed:", e);
       });
     }
   },
