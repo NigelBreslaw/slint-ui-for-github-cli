@@ -24,11 +24,7 @@ import {
 import { mapGhExecError } from "./gh/map-gh-exec-error.ts";
 import type { ProjectV2NodeSnapshot } from "./schemas/gh-graphql-projectsv2-page.ts";
 import { writeDebugJsonStem } from "./gh/write-debug-json.ts";
-import {
-  emptyTransparentAvatarImage,
-  loadAvatarRgba,
-  type SlintRgbaImage,
-} from "./gh/avatar-image.ts";
+import { emptyTransparentAvatarImage, loadAvatarRgba } from "./gh/avatar-image.ts";
 import { statusEmojiFromGraphqlHtml } from "./gh/status-emoji-from-graphql.ts";
 import { parseGhGraphqlViewerMinimalResponse } from "./schemas/gh-graphql-viewer-minimal.ts";
 import { copyTextToClipboard } from "./utils/clipboard-write.ts";
@@ -47,6 +43,11 @@ import {
   type ViewerSessionV1,
 } from "./session/viewer-session-cache.ts";
 import { uiPerfMarkT1Text, uiPerfMarkT2Avatar, uiPerfResetSession } from "./ui-perf.ts";
+import type {
+  MainWindowInstance,
+  MainWindowModule,
+  SlintReviewRequestRow,
+} from "./slint-interface.ts";
 
 const execFileAsync = promisify(execFile);
 
@@ -54,13 +55,6 @@ let settingsRateLimitDeadlineMs: number | null = null;
 let settingsCountdownHandle: ReturnType<typeof setInterval> | null = null;
 /** Bumped on panel teardown and each new load so stale async work cannot touch UI or timers. */
 let settingsDebugEpoch = 0;
-
-/** Row shape must match `ReviewRequestRow` in `app-state.slint`. */
-type SlintReviewRequestRow = {
-  title: string;
-  url: string;
-  repo_label: string;
-};
 
 /** Large enough for paginated `gh api` project payloads. */
 const GH_EXEC_MAX_BUFFER = 50 * 1024 * 1024;
@@ -451,69 +445,6 @@ async function runDebugJsonSlintUiDumpsAsync(
   ]);
 }
 
-/** Slint-node maps enum variants to kebab-case strings on `AppState.auth` (not `ui.Authed.*` values). */
-type AuthedAuthState = "loggedOut" | "noGhCliInstalled" | "loggedIn" | "authorizing";
-
-type AppStateView = "none" | "dashboard" | "settings";
-
-type AppStateHandle = {
-  auth: AuthedAuthState;
-  user_login: string;
-  user_name: string;
-  user_profile_url: string;
-  user_status_message: string;
-  user_status_emoji: string;
-  avatar?: SlintRgbaImage;
-  view: AppStateView;
-  review_requests_data_ready: boolean;
-  review_requests_total: number;
-  review_requests_load_status: string;
-  review_requests_model: slint.ArrayModel<SlintReviewRequestRow>;
-  projects_search: string;
-  projects_load_status: string;
-  projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
-  project_search_changed: (query: string) => void;
-  sign_out: () => void;
-  sign_in: () => void;
-  open_project_url: (url: string) => void;
-  dashboard_init: () => void;
-};
-
-type SettingsStateHandle = {
-  settings_init: () => void;
-  settings_exited: () => void;
-  settings_debug_gh_version: string;
-  settings_debug_rate_limit: string;
-  settings_debug_reset_at: string;
-  settings_debug_countdown: string;
-  settings_debug_app_version: string;
-  settings_debug_commit_label: string;
-  settings_debug_error: string;
-};
-
-type MainWindowInstance = {
-  run(): Promise<void>;
-  show(): void;
-  hide(): void;
-  AppState: AppStateHandle;
-  SettingsState: SettingsStateHandle;
-  login_clicked?: () => void;
-  open_github_device_clicked?: () => void;
-  show_auth_window: () => void;
-  close_auth_window: () => void;
-  show_no_gh_cli_installed: () => void;
-  open_cli_install_page: () => void;
-  status_message: string;
-  auth_device_code: string;
-  auth_device_url: string;
-};
-
-type MainWindowOpts = {
-  status_message?: string;
-  "auth-device-code"?: string;
-  "auth-device-url"?: string;
-};
-
 function readPackageVersion(): string {
   try {
     const pkgPath = join(dirname(fileURLToPath(import.meta.url)), "..", "package.json");
@@ -887,9 +818,7 @@ function applyAuthUi(window: MainWindowInstance): void {
   });
 }
 
-const ui = slint.loadFile(new URL("./ui/main.slint", import.meta.url)) as {
-  MainWindow: new (opts: MainWindowOpts) => MainWindowInstance;
-};
+const ui = slint.loadFile(new URL("./ui/main.slint", import.meta.url)) as MainWindowModule;
 
 const window = new ui.MainWindow({
   status_message: "",
