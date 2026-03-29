@@ -104,22 +104,6 @@ function spawnGhWithStdinInheritedTeedOutput(
   });
 }
 
-/**
- * Returns whether `gh` is on `PATH` (does not check auth).
- * Uses `ENOENT` from `gh version` — same semantics as a missing CLI for `gh auth status`.
- */
-export function isGhOnPath(): boolean {
-  try {
-    execFileSync("gh", ["version"], { stdio: "ignore" });
-    return true;
-  } catch (e: unknown) {
-    if (e !== null && typeof e === "object" && "code" in e && e.code === "ENOENT") {
-      return false;
-    }
-    return true;
-  }
-}
-
 export function ghAuthLogout(): void {
   try {
     execFileSync("gh", ["auth", "logout"], { stdio: "inherit" });

@@ -4,12 +4,7 @@ import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { promisify } from "node:util";
 import { openAppDb } from "./db/app-db.ts";
-import {
-  checkRequiredGitHubCliScopes,
-  ghAuthLogout,
-  isGhOnPath,
-  spawnGhAuthLogin,
-} from "./gh/auth.ts";
+import { checkRequiredGitHubCliScopes, ghAuthLogout, spawnGhAuthLogin } from "./gh/auth.ts";
 import {
   emptyTransparentAvatarImage,
   loadAvatarRgba,
@@ -513,9 +508,6 @@ window.open_github_device_clicked = () => {
 };
 
 window.login_clicked = () => {
-  if (!isGhOnPath()) {
-    return;
-  }
   clearAuthDeviceFields(window);
   window.AppState.auth = "authorizing";
   spawnGhAuthLogin({
