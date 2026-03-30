@@ -4,6 +4,7 @@ import {
   validateSecurityAlertsRepoFullName,
   writeSecurityAlertsRepositoryKv,
 } from "../settings/security-alerts-repo-kv.ts";
+import { onSecurityAlertsRepositorySaved } from "./app-window-bridge.ts";
 
 export function hydrateSecurityAlertsRepo(window: MainWindowInstance): void {
   window.SettingsState.security_alerts_repo_input = readSecurityAlertsRepositoryKv();
@@ -19,6 +20,7 @@ export function applySecurityAlertsRepoEdited(window: MainWindowInstance, text: 
   window.SettingsState.security_alerts_repo_error = "";
   writeSecurityAlertsRepositoryKv(v.value);
   window.SettingsState.security_alerts_repo_input = v.value;
+  onSecurityAlertsRepositorySaved(window);
 }
 
 export function clearSecurityAlertsRepoUi(window: MainWindowInstance): void {

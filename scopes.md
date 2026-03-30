@@ -12,8 +12,17 @@ The app requires **GitHub CLI 2.89.0 or newer** (see [`MIN_GH_CLI_VERSION`](src/
 | `gh api user/orgs` | `read:org` | [List organizations for the authenticated user](https://docs.github.com/en/rest/orgs/members). |
 | GraphQL `projectsV2` (org/user) | `read:project` | Read access to projects. |
 | REST `GET /notifications` (e.g. debug dump `notifications--threads.json` when `GH_DEBUG_JSON=1`) | `notifications` | [List notifications](https://docs.github.com/en/rest/activity/notifications#list-notifications-for-the-authenticated-user). Scope checks also accept **`repo`**, which GitHub documents as sufficient for this API. |
+| REST `GET /repos/{owner}/{repo}/dependabot/alerts` (Dashboard **Security alerts** tab) | **`repo`** or **`security_events`** | [List Dependabot alerts for a repository](https://docs.github.com/en/rest/dependabot/alerts#list-dependabot-alerts-for-a-repository). Not part of the app’s **required** login scopes: the tab shows an error if the token cannot access alerts. Many `gh` installs already have **`repo`** as a baseline scope. |
 
 We do **not** require the `project` (write) scope unless the app later adds mutating project APIs.
+
+To widen the token for Dependabot only, you can run:
+
+```bash
+gh auth refresh --scopes read:org,read:project,notifications,security_events
+```
+
+(or include `repo` instead of `security_events` if you prefer GitHub’s broader classic scope).
 
 ### Authorize with the CLI
 

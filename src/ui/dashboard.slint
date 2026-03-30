@@ -1,5 +1,5 @@
 import { ListView } from "std-widgets.slint";
-import { AppState } from "app-state.slint";
+import { AppState, DashboardTab } from "app-state.slint";
 
 export component Dashboard {
     width: 100%;
@@ -20,72 +20,196 @@ export component Dashboard {
             width: 100%;
             height: 100%;
 
-            Text {
-                text: "Review requests";
-                font-size: 14px;
-                font-weight: 600;
-                color: #c9d1d9;
-            }
+            HorizontalLayout {
+                spacing: 4px;
+                width: self.preferred-width;
 
-            Rectangle {
-                height: 47px;
-                background: #26211A;
-                border-radius: 6px;
-                border-width: 1px;
-                border-color: #5F4921;
-
-                visible: AppState.review-requests-total > 0;
-
-                HorizontalLayout {
-                    x: 0;
-                    padding: 14px;
-                    spacing: 14px;
-                    width: self.preferred-width;
-                    Image {
-                        source: @image-url("../assets/16px/alert.svg");
-                        colorize: #CA9C3E;
+                TouchArea {
+                    clicked => {
+                        AppState.dashboard-active-tab = DashboardTab.itemsToReview;
+                        AppState.dashboard-tab-changed(DashboardTab.itemsToReview);
                     }
 
-                    Text {
-                        text: AppState.review-requests-total + " pull requests are waiting on your review.";
-                        font-size: 14px;
-                        font-weight: 400;
-                        color: #f0f6fc;
-                        vertical-alignment: center;
+                    Rectangle {
+                        min-width: 132px;
+                        min-height: 36px;
+                        border-radius: 6px;
+                        border-width: 1px;
+                        border-color: #30363d;
+                        background: AppState.dashboard-active-tab == DashboardTab.itemsToReview ? #21262d : #0d1117;
+
+                        Text {
+                            x: 12px;
+                            y: 0;
+                            width: parent.width - 24px;
+                            height: parent.height;
+                            text: "Items to review";
+                            font-size: 13px;
+                            font-weight: 600;
+                            color: #f0f6fc;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+
+                TouchArea {
+                    clicked => {
+                        AppState.dashboard-active-tab = DashboardTab.securityAlerts;
+                        AppState.dashboard-tab-changed(DashboardTab.securityAlerts);
+                    }
+
+                    Rectangle {
+                        min-width: 132px;
+                        min-height: 36px;
+                        border-radius: 6px;
+                        border-width: 1px;
+                        border-color: #30363d;
+                        background: AppState.dashboard-active-tab == DashboardTab.securityAlerts ? #21262d : #0d1117;
+
+                        Text {
+                            x: 12px;
+                            y: 0;
+                            width: parent.width - 24px;
+                            height: parent.height;
+                            text: "Security alerts";
+                            font-size: 13px;
+                            font-weight: 600;
+                            color: #f0f6fc;
+                            vertical-alignment: center;
+                        }
                     }
                 }
             }
 
-            if AppState.review-requests-load-status != "": Text {
-                text: AppState.review-requests-load-status;
-                color: #8b949e;
-                wrap: word-wrap;
-            }
-
-            ListView {
+            if AppState.dashboard-active-tab == DashboardTab.itemsToReview: VerticalLayout {
+                spacing: 12px;
                 width: 100%;
-                for row[index] in AppState.review-requests-model: Rectangle {
-                    height: 56px;
-                    background: mod(index, 2) == 0 ? #0d1116 : #161b22;
+                height: 100%;
 
-                    TouchArea {
-                        clicked => {
-                            AppState.open_project_url(row.url);
+                Text {
+                    text: "Review requests";
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #c9d1d9;
+                }
+
+                Rectangle {
+                    height: 47px;
+                    background: #26211A;
+                    border-radius: 6px;
+                    border-width: 1px;
+                    border-color: #5F4921;
+
+                    visible: AppState.review-requests-total > 0;
+
+                    HorizontalLayout {
+                        x: 0;
+                        padding: 14px;
+                        spacing: 14px;
+                        width: self.preferred-width;
+                        Image {
+                            source: @image-url("../assets/16px/alert.svg");
+                            colorize: #CA9C3E;
                         }
 
-                        VerticalLayout {
-                            padding: 8px;
-                            spacing: 4px;
-                            Text {
-                                text: row.title;
-                                color: #f0f6fc;
-                                overflow: elide;
+                        Text {
+                            text: AppState.review-requests-total + " pull requests are waiting on your review.";
+                            font-size: 14px;
+                            font-weight: 400;
+                            color: #f0f6fc;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+
+                if AppState.review-requests-load-status != "": Text {
+                    text: AppState.review-requests-load-status;
+                    color: #8b949e;
+                    wrap: word-wrap;
+                }
+
+                ListView {
+                    width: 100%;
+                    for row[index] in AppState.review-requests-model: Rectangle {
+                        height: 56px;
+                        background: mod(index, 2) == 0 ? #0d1116 : #161b22;
+
+                        TouchArea {
+                            clicked => {
+                                AppState.open_project_url(row.url);
                             }
 
-                            Text {
-                                text: row.repo_label;
-                                font-size: 12px;
-                                color: #8b949e;
+                            VerticalLayout {
+                                padding: 8px;
+                                spacing: 4px;
+                                Text {
+                                    text: row.title;
+                                    color: #f0f6fc;
+                                    overflow: elide;
+                                }
+
+                                Text {
+                                    text: row.repo_label;
+                                    font-size: 12px;
+                                    color: #8b949e;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if AppState.dashboard-active-tab == DashboardTab.securityAlerts: VerticalLayout {
+                spacing: 12px;
+                width: 100%;
+                height: 100%;
+
+                Text {
+                    text: "Dependabot alerts";
+                    font-size: 14px;
+                    font-weight: 600;
+                    color: #c9d1d9;
+                }
+
+                if AppState.security-alerts-load-status != "": Text {
+                    text: AppState.security-alerts-load-status;
+                    color: #8b949e;
+                    wrap: word-wrap;
+                }
+
+                if AppState.security-alerts-data-ready && AppState.security-alerts-total == 0 && AppState.security-alerts-load-status == "": Text {
+                    text: "No Dependabot alerts returned for this repository.";
+                    color: #8b949e;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+
+                ListView {
+                    width: 100%;
+                    for row[index] in AppState.security-alerts-model: Rectangle {
+                        height: 56px;
+                        background: mod(index, 2) == 0 ? #0d1116 : #161b22;
+
+                        TouchArea {
+                            clicked => {
+                                AppState.open_project_url(row.url);
+                            }
+
+                            VerticalLayout {
+                                padding: 8px;
+                                spacing: 4px;
+                                Text {
+                                    text: row.title;
+                                    color: #f0f6fc;
+                                    overflow: elide;
+                                }
+
+                                Text {
+                                    text: row.subtitle;
+                                    font-size: 12px;
+                                    color: #8b949e;
+                                    overflow: elide;
+                                }
                             }
                         }
                     }

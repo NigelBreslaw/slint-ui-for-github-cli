@@ -15,6 +15,16 @@ export type SlintReviewRequestRow = {
   repo_label: string;
 };
 
+/** Row shape must match `SecurityAlertRow` in `app-state.slint`. */
+export type SlintSecurityAlertRow = {
+  title: string;
+  subtitle: string;
+  url: string;
+};
+
+/** Maps to `DashboardTab` in `app-state.slint`. */
+export type DashboardTabWire = "itemsToReview" | "securityAlerts";
+
 /** Maps to `Authed` in `app-state.slint` (kebab-case on the wire). */
 export type AuthedAuthState =
   | "loggedOut"
@@ -39,6 +49,12 @@ export type AppStateHandle = {
   review_requests_total: number;
   review_requests_load_status: string;
   review_requests_model: slint.ArrayModel<SlintReviewRequestRow>;
+  dashboard_active_tab: DashboardTabWire;
+  security_alerts_data_ready: boolean;
+  security_alerts_total: number;
+  security_alerts_load_status: string;
+  security_alerts_model: slint.ArrayModel<SlintSecurityAlertRow>;
+  dashboard_tab_changed: (tab: DashboardTabWire) => void;
   projects_search: string;
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;

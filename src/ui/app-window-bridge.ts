@@ -6,16 +6,99 @@ import {
   type SlintProjectRow,
 } from "../gh/slint-ui-org-projects-ui.ts";
 import { emptyTransparentAvatarImage } from "../gh/avatar-image.ts";
+import { fetchDependabotAlertsForRepo } from "../gh/dependabot-alerts.ts";
 import { fetchAllReviewRequestsSearch } from "../gh/graphql-review-requests.ts";
 import type {
   MainWindowInstance,
   SlintReviewRequestRow,
+  SlintSecurityAlertRow,
   SlintTimeReportingWeekRow,
 } from "../slint-interface.ts";
+import { readSecurityAlertsRepositoryOwnerRepo } from "../settings/security-alerts-repo-kv.ts";
 import { resetTimeReportingItemsState } from "../time-reporting/time-reporting-items-cache.ts";
 import { clearTimeReportingSelectedProjectKv } from "../time-reporting/time-reporting-selected-project-kv.ts";
 import { clearViewerSessionCache, type ViewerSessionV1 } from "../session/viewer-session-cache.ts";
 import { teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
+
+let securityAlertsFetchGeneration = 0;
+
+function formatDependabotAlertsUserError(message: string): string {
+  const m = message.toLowerCase();
+  if (m.includes("not found") || m.includes("404")) {
+    return "Could not load Dependabot alerts (Not Found). Check the repository in Settings → Security alerts repository, that Dependabot is enabled, and that your token includes the repo or security_events scope (see scopes.md).";
+  }
+  if (m.includes("403") || m.includes("forbidden")) {
+    return "Access denied for Dependabot alerts. Run gh auth refresh --scopes security_events or use a token with the repo scope. See scopes.md.";
+  }
+  return message;
+}
+
+/** Resets the Security alerts tab and clears its list (e.g. sign-out or scope reset). */
+function resetDashboardSecurityAlertsUi(window: MainWindowInstance): void {
+  securityAlertsFetchGeneration++;
+  window.AppState.dashboard_active_tab = "itemsToReview";
+  window.AppState.security_alerts_data_ready = false;
+  window.AppState.security_alerts_total = 0;
+  window.AppState.security_alerts_load_status = "";
+  window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>([]);
+}
+
+/**
+ * Call after a successful save of the security alerts repository setting so the dashboard refetches if needed.
+ */
+export function onSecurityAlertsRepositorySaved(window: MainWindowInstance): void {
+  securityAlertsFetchGeneration++;
+  window.AppState.security_alerts_data_ready = false;
+  window.AppState.security_alerts_total = 0;
+  window.AppState.security_alerts_load_status = "";
+  window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>([]);
+  if (window.AppState.dashboard_active_tab === "securityAlerts") {
+    void refreshDashboardSecurityAlerts(window);
+  }
+}
+
+export async function refreshDashboardSecurityAlerts(window: MainWindowInstance): Promise<void> {
+  const gen = ++securityAlertsFetchGeneration;
+  const parts = readSecurityAlertsRepositoryOwnerRepo();
+  if (parts === null) {
+    if (gen !== securityAlertsFetchGeneration) {
+      return;
+    }
+    window.AppState.security_alerts_data_ready = true;
+    window.AppState.security_alerts_total = 0;
+    window.AppState.security_alerts_load_status =
+      "Set a repository under Settings → Security alerts repository.";
+    window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>([]);
+    return;
+  }
+
+  window.AppState.security_alerts_data_ready = false;
+  window.AppState.security_alerts_load_status = "Loading security alerts…";
+  window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>([]);
+  window.AppState.security_alerts_total = 0;
+
+  const res = await fetchDependabotAlertsForRepo(parts.owner, parts.repo);
+  if (gen !== securityAlertsFetchGeneration) {
+    return;
+  }
+
+  if (!res.ok) {
+    window.AppState.security_alerts_load_status = formatDependabotAlertsUserError(res.error);
+    window.AppState.security_alerts_data_ready = false;
+    return;
+  }
+
+  window.AppState.security_alerts_total = res.rows.length;
+  window.AppState.security_alerts_load_status = "";
+  window.AppState.security_alerts_data_ready = true;
+  window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>(
+    res.rows.map((r) => ({
+      title: r.summary,
+      subtitle: `${r.severity} · ${r.ecosystem}/${r.packageName} · #${r.number} (${r.state})`,
+      url: r.htmlUrl,
+    })),
+  );
+}
 
 /**
  * Clears persisted Time reporting project selection and Slint globals. Call on sign-out and when
@@ -51,6 +134,7 @@ export function resetListsWithoutClearingProfile(window: MainWindowInstance): vo
   window.AppState.review_requests_total = 0;
   window.AppState.review_requests_load_status = "";
   window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
+  resetDashboardSecurityAlertsUi(window);
   clearSlintUiOrgProjectsCache();
   window.AppState.projects_search = "";
   window.AppState.projects_load_status = "";
@@ -83,6 +167,7 @@ export function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.review_requests_total = 0;
   window.AppState.review_requests_load_status = "";
   window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
+  resetDashboardSecurityAlertsUi(window);
   clearSlintUiOrgProjectsCache();
   window.AppState.projects_search = "";
   window.AppState.projects_load_status = "";

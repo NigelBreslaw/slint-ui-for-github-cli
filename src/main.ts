@@ -9,6 +9,7 @@ import { clearViewerSessionCache } from "./session/viewer-session-cache.ts";
 import type {
   MainWindowModule,
   SlintReviewRequestRow,
+  SlintSecurityAlertRow,
   SlintTimeReportingWeekRow,
 } from "./slint-interface.ts";
 import {
@@ -19,6 +20,7 @@ import {
   clearAuthDeviceFields,
   clearTimeReportingSelection,
   refreshDashboardReviewRequests,
+  refreshDashboardSecurityAlerts,
 } from "./ui/app-window-bridge.ts";
 import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./ui/settings-debug-panel.ts";
 import { applySecurityAlertsRepoEdited } from "./ui/settings-security-alerts-repo.ts";
@@ -36,6 +38,7 @@ const window = new ui.MainWindow({
 
 window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
 window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
+window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>([]);
 window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
 
 hydrateTimeReportingFromKv(window);
@@ -49,6 +52,12 @@ window.AppState.open_project_url = (url: string) => {
 
 window.AppState.dashboard_init = () => {
   void refreshDashboardReviewRequests(window);
+};
+
+window.AppState.dashboard_tab_changed = (tab) => {
+  if (tab === "securityAlerts") {
+    void refreshDashboardSecurityAlerts(window);
+  }
 };
 
 window.SettingsState.security_alerts_repo_edited = (text: string) => {

@@ -14,6 +14,17 @@ export struct ReviewRequestRow {
     repo_label: string,
 }
 
+export struct SecurityAlertRow {
+    title: string,
+    subtitle: string,
+    url: string,
+}
+
+export enum DashboardTab {
+    itemsToReview,
+    securityAlerts,
+}
+
 export enum Authed {
     loggedOut,
     noGhCliInstalled,
@@ -42,6 +53,13 @@ export global AppState {
     in-out property <int> review-requests-total: 0;
     in-out property <string> review-requests-load-status: "";
     in property <[ReviewRequestRow]> review-requests-model;
+
+    in-out property <DashboardTab> dashboard-active-tab: itemsToReview;
+    in-out property <bool> security-alerts-data-ready: false;
+    in-out property <int> security-alerts-total: 0;
+    in-out property <string> security-alerts-load-status: "";
+    in property <[SecurityAlertRow]> security-alerts-model;
+    callback dashboard-tab-changed(DashboardTab);
 
     in-out property <View> view: none;
     callback set-view(View);

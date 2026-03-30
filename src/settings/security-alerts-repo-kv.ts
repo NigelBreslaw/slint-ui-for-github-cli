@@ -1,5 +1,5 @@
 /**
- * Persisted `owner/repo` for the Security alerts dashboard (SQLite KV). PR 2 — not yet read by the dashboard fetcher.
+ * Persisted `owner/repo` for the Dashboard Security alerts tab (SQLite KV).
  */
 import { kvDelete, kvGet, kvSet } from "../db/app-db.ts";
 
@@ -36,6 +36,24 @@ export function readSecurityAlertsRepositoryKv(): string {
     return "";
   }
   return raw.trim();
+}
+
+/** Owner and repo from persisted KV, or null if unset or malformed. */
+export function readSecurityAlertsRepositoryOwnerRepo(): { owner: string; repo: string } | null {
+  const full = readSecurityAlertsRepositoryKv();
+  if (full.length === 0) {
+    return null;
+  }
+  const idx = full.indexOf("/");
+  if (idx <= 0 || idx >= full.length - 1) {
+    return null;
+  }
+  const owner = full.slice(0, idx).trim();
+  const repo = full.slice(idx + 1).trim();
+  if (owner.length === 0 || repo.length === 0 || repo.includes("/")) {
+    return null;
+  }
+  return { owner, repo };
 }
 
 export function writeSecurityAlertsRepositoryKv(fullName: string): void {
