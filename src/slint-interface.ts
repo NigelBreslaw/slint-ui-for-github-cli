@@ -52,6 +52,9 @@ export type AppStateHandle = {
 export type SettingsStateHandle = {
   settings_init: () => void;
   settings_exited: () => void;
+  security_alerts_repo_input: string;
+  security_alerts_repo_error: string;
+  security_alerts_repo_edited: (text: string) => void;
   settings_debug_gh_version: string;
   settings_debug_rate_limit: string;
   settings_debug_reset_at: string;

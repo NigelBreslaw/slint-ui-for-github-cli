@@ -21,6 +21,7 @@ import {
   refreshDashboardReviewRequests,
 } from "./ui/app-window-bridge.ts";
 import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./ui/settings-debug-panel.ts";
+import { applySecurityAlertsRepoEdited } from "./ui/settings-security-alerts-repo.ts";
 
 openAppDb();
 
@@ -48,6 +49,10 @@ window.AppState.open_project_url = (url: string) => {
 
 window.AppState.dashboard_init = () => {
   void refreshDashboardReviewRequests(window);
+};
+
+window.SettingsState.security_alerts_repo_edited = (text: string) => {
+  applySecurityAlertsRepoEdited(window, text);
 };
 
 window.SettingsState.settings_init = () => {

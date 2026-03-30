@@ -5,6 +5,10 @@ import type { MainWindowInstance } from "../slint-interface.ts";
 import { buildCommitLabel, readPackageVersion } from "../utils/package-meta.ts";
 import { formatCountdownMs } from "../utils/format-countdown.ts";
 import { formatRateLimitResetLocal } from "../utils/format-reset-at-local.ts";
+import {
+  clearSecurityAlertsRepoUi,
+  hydrateSecurityAlertsRepo,
+} from "./settings-security-alerts-repo.ts";
 
 let settingsRateLimitDeadlineMs: number | null = null;
 let settingsCountdownHandle: ReturnType<typeof setInterval> | null = null;
@@ -12,6 +16,7 @@ let settingsCountdownHandle: ReturnType<typeof setInterval> | null = null;
 let settingsDebugEpoch = 0;
 
 function clearSettingsDebugStrings(window: MainWindowInstance): void {
+  clearSecurityAlertsRepoUi(window);
   window.SettingsState.settings_debug_gh_version = "";
   window.SettingsState.settings_debug_rate_limit = "";
   window.SettingsState.settings_debug_reset_at = "";
@@ -113,6 +118,7 @@ export async function loadSettingsDebugPanel(window: MainWindowInstance): Promis
   invalidateInFlightSettingsDebugLoads();
   const epoch = settingsDebugEpoch;
   resetSettingsDebugPanelState(window);
+  hydrateSecurityAlertsRepo(window);
   window.SettingsState.settings_debug_app_version = `v${readPackageVersion()}`;
   window.SettingsState.settings_debug_commit_label = buildCommitLabel(GIT_COMMIT_COUNT);
 

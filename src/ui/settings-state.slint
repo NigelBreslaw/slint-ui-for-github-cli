@@ -2,6 +2,10 @@ export global SettingsState {
     callback settings-init;
     callback settings-exited;
 
+    in-out property <string> security-alerts-repo-input: "";
+    in-out property <string> security-alerts-repo-error: "";
+    callback security-alerts-repo-edited(string);
+
     in-out property <string> settings-debug-gh-version: "";
     in-out property <string> settings-debug-rate-limit: "";
     in-out property <string> settings-debug-reset-at: "";
