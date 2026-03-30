@@ -1,0 +1,36 @@
+[
+  {
+    "number": 1,
+    "state": "open",
+    "dependency": {
+      "package": {
+        "ecosystem": "npm",
+        "name": "a"
+      }
+    },
+    "security_advisory": {
+      "summary": "First"
+    },
+    "security_vulnerability": {
+      "severity": "low"
+    },
+    "html_url": "https://github.com/o/r/security/dependabot/1"
+  },
+  {
+    "number": 2,
+    "state": "fixed",
+    "dependency": {
+      "package": {
+        "ecosystem": "pip",
+        "name": "requests"
+      }
+    },
+    "security_advisory": {
+      "summary": "Second issue"
+    },
+    "security_vulnerability": {
+      "severity": "critical"
+    },
+    "html_url": "https://github.com/o/r/security/dependabot/2"
+  }
+]

@@ -1,0 +1,19 @@
+[
+  {
+    "number": 42,
+    "state": "open",
+    "dependency": {
+      "package": {
+        "ecosystem": "npm",
+        "name": "lodash"
+      }
+    },
+    "security_advisory": {
+      "summary": "Prototype pollution in lodash"
+    },
+    "security_vulnerability": {
+      "severity": "high"
+    },
+    "html_url": "https://github.com/octocat/hello-world/security/dependabot/42"
+  }
+]

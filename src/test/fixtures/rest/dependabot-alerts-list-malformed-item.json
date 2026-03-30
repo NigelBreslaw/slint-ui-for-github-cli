@@ -1,0 +1,36 @@
+[
+  {
+    "number": 1,
+    "state": "open",
+    "dependency": {
+      "package": {
+        "ecosystem": "npm",
+        "name": "ok"
+      }
+    },
+    "security_advisory": {
+      "summary": "Valid first row"
+    },
+    "security_vulnerability": {
+      "severity": "medium"
+    },
+    "html_url": "https://github.com/o/r/security/dependabot/1"
+  },
+  {
+    "number": "not-a-number",
+    "state": "open",
+    "dependency": {
+      "package": {
+        "ecosystem": "npm",
+        "name": "bad"
+      }
+    },
+    "security_advisory": {
+      "summary": "Bad number field"
+    },
+    "security_vulnerability": {
+      "severity": "low"
+    },
+    "html_url": "https://github.com/o/r/security/dependabot/2"
+  }
+]
