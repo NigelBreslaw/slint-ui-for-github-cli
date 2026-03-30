@@ -2,7 +2,7 @@
  * ISO 8601 week date helpers (UTC). Used for time-reporting week navigation and column dates.
  */
 
-export type IsoWeek = { isoYear: number; isoWeek: number };
+export type IsoWeek = { readonly isoYear: number; readonly isoWeek: number };
 
 /** `YYYY-Www` e.g. `2026-W01` (week padded to two digits). */
 export function formatIsoWeekLabel(isoYear: number, isoWeek: number): string {

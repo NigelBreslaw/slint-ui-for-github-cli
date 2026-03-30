@@ -1,3 +1,4 @@
+import { fetchAllProjectV2ItemsGraphql } from "../gh/graphql-project-v2-items-all.ts";
 import { fetchProjectV2NodeGraphql } from "../gh/graphql-project-v2-node.ts";
 import { parseProjectV2NodeFromGraphqlResponse } from "../schemas/gh-graphql-project-v2-node-response.ts";
 import { readTimeReportingSelectedProjectKv } from "./time-reporting-selected-project-kv.ts";
@@ -21,11 +22,49 @@ export async function dumpTimeReportingProjectNodeToDebugJson(nodeId: string): P
         );
       }
       writeTimeReportingDebugJson(stemBase, res.value);
+      await dumpTimeReportingProjectItemsToDebugJson(nodeId);
     } else {
       writeTimeReportingDebugJson(`${stemBase}--error`, { error: res.error });
     }
   } catch (e) {
     console.error("[time-reporting] debug dump failed:", e);
+    try {
+      writeTimeReportingDebugJson(`${stemBase}--error`, {
+        error: e instanceof Error ? e.message : String(e),
+      });
+    } catch {
+      /* ignore disk errors after primary failure */
+    }
+  }
+}
+
+async function dumpTimeReportingProjectItemsToDebugJson(nodeId: string): Promise<void> {
+  const stemBase = `time-reporting--project-v2-items--${sanitizeTimeReportingDebugStem(nodeId)}`;
+  try {
+    const res = await fetchAllProjectV2ItemsGraphql(nodeId);
+    if (res.ok) {
+      const itemsFetched = res.items.length;
+      if (itemsFetched !== res.itemsTotalCount) {
+        console.warn(
+          "[time-reporting] project items count mismatch: itemsFetched=",
+          itemsFetched,
+          "itemsTotalCount=",
+          res.itemsTotalCount,
+        );
+      }
+      writeTimeReportingDebugJson(stemBase, {
+        source: "graphql-project-v2-items-all",
+        projectNodeId: nodeId,
+        projectNumber: res.projectNumber,
+        itemsTotalCount: res.itemsTotalCount,
+        itemsFetched,
+        items: res.items,
+      });
+    } else {
+      writeTimeReportingDebugJson(`${stemBase}--error`, { error: res.error });
+    }
+  } catch (e) {
+    console.error("[time-reporting] items debug dump failed:", e);
     try {
       writeTimeReportingDebugJson(`${stemBase}--error`, {
         error: e instanceof Error ? e.message : String(e),

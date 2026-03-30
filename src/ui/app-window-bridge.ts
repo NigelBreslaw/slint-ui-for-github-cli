@@ -12,6 +12,7 @@ import type {
   SlintReviewRequestRow,
   SlintTimeReportingWeekRow,
 } from "../slint-interface.ts";
+import { resetTimeReportingItemsState } from "../time-reporting/time-reporting-items-cache.ts";
 import { clearTimeReportingSelectedProjectKv } from "../time-reporting/time-reporting-selected-project-kv.ts";
 import { clearViewerSessionCache, type ViewerSessionV1 } from "../session/viewer-session-cache.ts";
 import { teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
@@ -30,6 +31,7 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
   window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
   window.TimeReportingState.week_label = "";
   window.TimeReportingState.items_load_status = "";
+  resetTimeReportingItemsState();
 }
 
 /** Resets in-memory lists and org project cache; does not clear Time reporting KV (same GitHub user). */

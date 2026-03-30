@@ -18,7 +18,8 @@ type TimeReportingWeekRowTs = {
   total: string;
 };
 
-type TimeReportingCellContribution = {
+/** One line (or synthetic entry) contributing minutes to a grid cell. */
+export type TimeReportingCellContribution = {
   minutes: number;
   rawLine?: string;
 };
