@@ -24,6 +24,7 @@ export global TimeReportingState {
     /** `day_index`: 0..4 = Mo..Fr, 5 = Total column. */
     callback time-reporting-time-cell-clicked(int, int);
     callback time-reporting-open-row-url(string);
+    callback time-reporting-detail-close;
 
     in-out property <bool> picker-allow-cancel: false;
     in-out property <bool> picker-open: false;
@@ -33,4 +34,10 @@ export global TimeReportingState {
     in property <[TimeReportingWeekRow]> week-rows-model;
     in-out property <string> items-load-status: "";
     in-out property <string> week-label: "";
+    /** Mon–Fri date range subtitle for the selected ISO week (e.g. `2026-03-23 – 2026-03-27`). */
+    in-out property <string> week-range-subtitle: "";
+    in-out property <string> week-grid-hint: "";
+    in-out property <bool> detail-open: false;
+    in-out property <string> detail-title: "";
+    in-out property <string> detail-body: "";
 }

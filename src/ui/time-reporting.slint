@@ -52,12 +52,24 @@ export component TimeReporting {
                         }
                     }
 
-                    Text {
-                        text: TimeReportingState.week-label;
-                        font-size: 15px;
-                        font-weight: 600;
-                        color: #f0f6fc;
-                        vertical-alignment: center;
+                    VerticalLayout {
+                        spacing: 2px;
+                        alignment: center;
+
+                        Text {
+                            text: TimeReportingState.week-label;
+                            font-size: 15px;
+                            font-weight: 600;
+                            color: #f0f6fc;
+                            horizontal-alignment: center;
+                        }
+
+                        if TimeReportingState.week-range-subtitle != "": Text {
+                            text: TimeReportingState.week-range-subtitle;
+                            font-size: 12px;
+                            color: #8b949e;
+                            horizontal-alignment: center;
+                        }
                     }
 
                     Button {
@@ -176,7 +188,20 @@ export component TimeReporting {
                             background: #30363d;
                         }
 
-                        ListView {
+                        if TimeReportingState.week-grid-hint != "": VerticalLayout {
+                            padding: 16px;
+                            alignment: center;
+
+                            Text {
+                                text: TimeReportingState.week-grid-hint;
+                                color: #8b949e;
+                                font-size: 13px;
+                                wrap: word-wrap;
+                                horizontal-alignment: center;
+                            }
+                        }
+
+                        if TimeReportingState.week-grid-hint == "": ListView {
                             width: 100%;
                             for week_row[row_ix] in TimeReportingState.week-rows-model: Rectangle {
                                 height: 36px;
@@ -433,6 +458,85 @@ export component TimeReporting {
                                 label: "Cancel";
                                 clicked => {
                                     TimeReportingState.time-reporting-picker-cancel();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if TimeReportingState.detail-open: Rectangle {
+            width: parent.width;
+            height: parent.height;
+            y: 0;
+            x: 0;
+
+            Rectangle {
+                width: parent.width;
+                height: parent.height;
+                background: #010409aa;
+
+                TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    clicked => {
+                        TimeReportingState.time-reporting-detail-close();
+                    }
+                }
+            }
+
+            VerticalLayout {
+                width: parent.width;
+                height: parent.height;
+                alignment: center;
+
+                Rectangle {
+                    width: min(parent.width - 48px, 520px);
+                    background: #161b22;
+                    border-radius: 12px;
+                    border-width: 1px;
+                    border-color: #30363d;
+
+                    VerticalBox {
+                        padding: 20px;
+                        spacing: 12px;
+                        width: parent.width - 40px;
+
+                        Text {
+                            text: TimeReportingState.detail-title;
+                            font-size: 17px;
+                            font-weight: 600;
+                            color: #f0f6fc;
+                            wrap: word-wrap;
+                        }
+
+                        Rectangle {
+                            height: 1px;
+                            background: #30363d;
+                        }
+
+                        Flickable {
+                            width: 100%;
+                            height: 240px;
+                            viewport-width: parent.width;
+                            viewport-height: detail-body-text.preferred-height;
+
+                            detail-body-text := Text {
+                                width: 100%;
+                                text: TimeReportingState.detail-body;
+                                color: #c9d1d9;
+                                font-size: 13px;
+                                wrap: word-wrap;
+                            }
+                        }
+
+                        HorizontalLayout {
+                            alignment: end;
+                            Button {
+                                label: "Close";
+                                clicked => {
+                                    TimeReportingState.time-reporting-detail-close();
                                 }
                             }
                         }

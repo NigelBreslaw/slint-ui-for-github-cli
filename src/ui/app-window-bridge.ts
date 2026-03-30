@@ -30,7 +30,12 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
   window.TimeReportingState.selected_project_label = "";
   window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
   window.TimeReportingState.week_label = "";
+  window.TimeReportingState.week_range_subtitle = "";
+  window.TimeReportingState.week_grid_hint = "";
   window.TimeReportingState.items_load_status = "";
+  window.TimeReportingState.detail_open = false;
+  window.TimeReportingState.detail_title = "";
+  window.TimeReportingState.detail_body = "";
   resetTimeReportingItemsState();
 }
 

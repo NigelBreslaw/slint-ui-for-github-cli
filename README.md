@@ -59,17 +59,27 @@ pnpm typecheck
 | `[src/debug/github-app-debug-dumps.ts](src/debug/github-app-debug-dumps.ts)` | `GH_DEBUG_JSON=1` file output orchestration                                      |
 | `[src/time-reporting/time-reporting-ui.ts](src/time-reporting/time-reporting-ui.ts)` | `TimeReportingState` callbacks: view enter/exit, project picker, KV + debug dump |
 | `[src/time-reporting/time-reporting-selected-project-kv.ts](src/time-reporting/time-reporting-selected-project-kv.ts)` | SQLite KV `time_reporting/selected_project_v1` (chosen ProjectV2) |
-| `[src/time-reporting/dump-time-reporting-project-debug.ts](src/time-reporting/dump-time-reporting-project-debug.ts)` | Unconditional `debug-json/time-reporting--project-v2--…` writes |
+| `[src/time-reporting/dump-time-reporting-project-debug.ts](src/time-reporting/dump-time-reporting-project-debug.ts)` | Unconditional `debug-json/time-reporting--project-v2--…` and `time-reporting--project-v2-items--…` writes |
 | `[src/gh/graphql-project-v2-node.ts](src/gh/graphql-project-v2-node.ts)` | GraphQL `node(id: …) { … on ProjectV2 { … } }` via `gh` |
+| `[src/gh/graphql-project-v2-items-all.ts](src/gh/graphql-project-v2-items-all.ts)` | Paginated `ProjectV2.items` + per-item `fieldValues` (custom columns: numbers, status, text, dates) for debug dumps |
 | `[src/schemas/gh-graphql-project-v2-node-response.ts](src/schemas/gh-graphql-project-v2-node-response.ts)` | Parse / validate that response shape (see tests) |
 
 ### Time reporting
 
 The **Time reporting** view (clock icon in the sidebar) lets you choose an **open** GitHub Project V2 from the **`slint-ui`** org—the same list used for search/filter elsewhere. Picker state and callbacks live on the Slint global **`TimeReportingState`** ([`src/ui/time-reporting-state.slint`](src/ui/time-reporting-state.slint)), mirrored in TypeScript as [`TimeReportingStateHandle`](src/slint-interface.ts). The selected board is stored in the app SQLite database under the KV key **`time_reporting/selected_project_v1`** (schema in [`time-reporting-selected-project-kv.ts`](src/time-reporting/time-reporting-selected-project-kv.ts)).
 
-Each time you confirm a project, the app writes the raw GraphQL response to **`debug-json/time-reporting--project-v2--<sanitized-node-id>.json`** (or `…--error.json` on failure). That write does **not** require `GH_DEBUG_JSON`. With **`GH_DEBUG_JSON=1`** (e.g. [`pnpm dev:debug`](package.json)), the same file is refreshed **after sign-in** if a project is already stored, alongside the other debug dumps—see [Debug mode](#debug-mode-json-dumps) below.
+Each time you confirm a project, the app writes the raw GraphQL response to **`debug-json/time-reporting--project-v2--<sanitized-node-id>.json`** (or `…--error.json` on failure), then **`debug-json/time-reporting--project-v2-items--<sanitized-node-id>.json`** with every board card from paginated `ProjectV2.items`, including each item’s **`fieldValues`** (Project V2 custom fields such as numeric “Time Spent”, Status, text, dates—same shape as typical time-tracking GraphQL scripts). Payload metadata: `source`, `projectNodeId`, counts, and `items` as raw nodes (or `…--error.json` if that fetch fails). Those writes do **not** require `GH_DEBUG_JSON`. With **`GH_DEBUG_JSON=1`** (e.g. [`pnpm dev:debug`](package.json)), the same files are refreshed **after sign-in** if a project is already stored, alongside the other debug dumps—see [Debug mode](#debug-mode-json-dumps) below.
 
-**Future work:** build real time-entry / logging UI on top of the stored `nodeId` and the dumped JSON (fields are validated in tests via [`parseProjectV2NodeFromGraphqlResponse`](src/schemas/gh-graphql-project-v2-node-response.ts)).
+**Week grid:** After items load, the UI shows a table with **Mo–Fr** and **Total**. The header shows the selected **ISO week** as **`YYYY-Www`** (e.g. `2026-W13`) plus the UTC Monday–Friday date range. **Previous week**, **Next week**, and **This week** change the selection **without** calling GraphQL again; rows are rebuilt from the **in-memory cache** of the last successful fetch. **Refresh** re-runs the paginated items query and rebuilds for the current week. The app allows navigating to future ISO weeks; they simply have no matching **Time Log** lines until you add them.
+
+**Custom fields (match your board names or adjust constants in code):**
+
+- **`Time Spent(h)`** — GitHub’s Project V2 **number** field; one value per card. The app converts hours to **integer minutes** with **`Math.round(hours * 60)`** (sub-minute precision is dropped) and shows that as the **Total** column. Constants: [`TIME_SPENT_FIELD_NAME`](src/time-reporting/project-v2-item-hours.ts).
+- **`Time Log`** — optional **text** field with **one entry per line**: leading date **`YYYY-MM-DD`**, then whitespace or **`:`**, then a duration (`1.5h`, `90m`, `1h 30m`, or a bare hours decimal). Lines are parsed, filtered to the **selected week’s** Monday–Friday (UTC), summed per weekday for the grid, and stored for drill-down. Constants: [`TIME_LOG_FIELD_NAME`](src/time-reporting/parse-time-log.ts). If the field is missing or empty, weekday cells show an em dash.
+
+**Cell drill-down:** Tap a **weekday** or **Total** cell to open a modal with the parent **Issue / Pull request / Draft** title, URL when present, and either the **Time Log** lines that contributed that day or an explanation that **Total** comes from **`Time Spent(h)`** and is not allocated by day.
+
+**Contributors:** changes under `src/time-reporting/` and related UI should leave **`pnpm autofix`** and **`pnpm test`** clean (no errors or warnings). Project node shape remains validated in tests via [`parseProjectV2NodeFromGraphqlResponse`](src/schemas/gh-graphql-project-v2-node-response.ts).
 
 Keep the following diagrams aligned with `[src/main.ts](src/main.ts)` and `[src/auth/auth-ui-flow.ts](src/auth/auth-ui-flow.ts)` when refactoring.
 
@@ -169,7 +179,7 @@ When `**GH_DEBUG_JSON=1**`, each successful `gh api …` response is pretty-prin
 
 **Do not** enable this while screen-sharing; responses can include account details or other sensitive data.
 
-**Time reporting:** When you pick a project in the **Time reporting** view, the app always writes `debug-json/time-reporting--project-v2--<sanitized-node-id>.json` with the raw GraphQL `node(id: …) { … on ProjectV2 { … } }` response (or `…--error.json` if the request fails). That write does **not** depend on `GH_DEBUG_JSON`. With **`GH_DEBUG_JSON=1`** (e.g. `pnpm dev:debug`), the same file is **written again after sign-in** if you already have a stored time reporting project—so you see it without re-opening the picker. If you have never chosen a project, open **Time reporting** and pick one once (or run a normal `pnpm start`, pick, then use `pnpm dev:debug`).
+**Time reporting:** When you pick a project in the **Time reporting** view, the app always writes `debug-json/time-reporting--project-v2--<sanitized-node-id>.json` with the raw GraphQL `node(id: …) { … on ProjectV2 { … } }` response (or `…--error.json` if the request fails), then `debug-json/time-reporting--project-v2-items--<sanitized-node-id>.json` with all `ProjectV2.items` pages aggregated (or `…--error.json` for the items fetch). Those writes do **not** depend on `GH_DEBUG_JSON`. With **`GH_DEBUG_JSON=1`** (e.g. `pnpm dev:debug`), the same files are **written again after sign-in** if you already have a stored time reporting project—so you see them without re-opening the picker. If you have never chosen a project, open **Time reporting** and pick one once (or run a normal `pnpm start`, pick, then use `pnpm dev:debug`).
 
 Run with the helper script (works on Windows, macOS, and Linux via [cross-env](https://github.com/kentcdodds/cross-env)):
 

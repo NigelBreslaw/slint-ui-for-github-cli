@@ -5,12 +5,23 @@ let cachedItems: unknown[] | null = null;
 let cachedProjectNodeId: string | null = null;
 let selectedWeek: IsoWeek = currentIsoWeekUtc();
 let cellDetailsByKey = new Map<string, TimeReportingCellContribution[]>();
+/** Parallel to `week_rows_model` row order (ProjectV2 item ids). */
+let lastWeekRowItemIds: string[] = [];
 
 export function resetTimeReportingItemsState(): void {
   cachedItems = null;
   cachedProjectNodeId = null;
   selectedWeek = currentIsoWeekUtc();
   cellDetailsByKey = new Map();
+  lastWeekRowItemIds = [];
+}
+
+export function setTimeReportingWeekRowOrder(itemIds: string[]): void {
+  lastWeekRowItemIds = itemIds;
+}
+
+export function getTimeReportingWeekRowOrder(): readonly string[] {
+  return lastWeekRowItemIds;
 }
 
 export function getTimeReportingSelectedWeek(): IsoWeek {

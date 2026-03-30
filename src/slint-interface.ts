@@ -81,6 +81,7 @@ export type TimeReportingStateHandle = {
   time_reporting_refresh: () => void;
   time_reporting_time_cell_clicked: (row_index: number, day_index: number) => void;
   time_reporting_open_row_url: (url: string) => void;
+  time_reporting_detail_close: () => void;
   picker_allow_cancel: boolean;
   picker_open: boolean;
   has_selected_project: boolean;
@@ -88,6 +89,11 @@ export type TimeReportingStateHandle = {
   week_rows_model: slint.ArrayModel<SlintTimeReportingWeekRow>;
   items_load_status: string;
   week_label: string;
+  week_range_subtitle: string;
+  week_grid_hint: string;
+  detail_open: boolean;
+  detail_title: string;
+  detail_body: string;
 };
 
 export type MainWindowInstance = {
