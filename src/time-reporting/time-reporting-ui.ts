@@ -40,6 +40,12 @@ function openOptionalPicker(window: MainWindowInstance): void {
 
 /** Wire `TimeReportingState` callbacks. On project pick, persists KV and writes unconditional `debug-json`. */
 export function wireTimeReportingUi(window: MainWindowInstance): void {
+  window.TimeReportingState.time_reporting_week_prev = () => {};
+  window.TimeReportingState.time_reporting_week_next = () => {};
+  window.TimeReportingState.time_reporting_week_this = () => {};
+  window.TimeReportingState.time_reporting_refresh = () => {};
+  window.TimeReportingState.time_reporting_time_cell_clicked = () => {};
+
   window.TimeReportingState.time_reporting_view_init = () => {
     void (async () => {
       hydrateTimeReportingFromKv(window);

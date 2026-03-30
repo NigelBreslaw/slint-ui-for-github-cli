@@ -30,7 +30,9 @@ export component TimeReporting {
             }
 
             if TimeReportingState.has-selected-project: VerticalBox {
-                spacing: 8px;
+                spacing: 10px;
+                vertical-stretch: 1;
+
                 Text {
                     text: TimeReportingState.selected-project-label;
                     font-size: 16px;
@@ -39,11 +41,260 @@ export component TimeReporting {
                     wrap: word-wrap;
                 }
 
-                Text {
-                    text: "Logging UI will go here.";
-                    font-size: 14px;
+                HorizontalLayout {
+                    spacing: 8px;
+                    alignment: center;
+
+                    Button {
+                        label: "← Prev";
+                        clicked => {
+                            TimeReportingState.time-reporting-week-prev();
+                        }
+                    }
+
+                    Text {
+                        text: TimeReportingState.week-label;
+                        font-size: 15px;
+                        font-weight: 600;
+                        color: #f0f6fc;
+                        vertical-alignment: center;
+                    }
+
+                    Button {
+                        label: "Next →";
+                        clicked => {
+                            TimeReportingState.time-reporting-week-next();
+                        }
+                    }
+
+                    Button {
+                        label: "This week";
+                        clicked => {
+                            TimeReportingState.time-reporting-week-this();
+                        }
+                    }
+
+                    Button {
+                        label: "Refresh";
+                        clicked => {
+                            TimeReportingState.time-reporting-refresh();
+                        }
+                    }
+                }
+
+                if TimeReportingState.items-load-status != "": Text {
+                    text: TimeReportingState.items-load-status;
                     color: #8b949e;
                     wrap: word-wrap;
+                    font-size: 13px;
+                }
+
+                Rectangle {
+                    vertical-stretch: 1;
+                    width: 100%;
+                    min-height: 120px;
+                    background: #0d1117;
+                    border-radius: 8px;
+                    border-width: 1px;
+                    border-color: #30363d;
+
+                    VerticalBox {
+                        padding: 8px;
+                        spacing: 0;
+                        width: parent.width - 16px;
+                        height: parent.height - 16px;
+
+                        HorizontalLayout {
+                            spacing: 4px;
+                            height: 28px;
+
+                            Text {
+                                horizontal-stretch: 1;
+                                text: "Task";
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #8b949e;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: "Mo";
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #8b949e;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: "Tu";
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #8b949e;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: "We";
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #8b949e;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: "Th";
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #8b949e;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: "Fr";
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #8b949e;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 52px;
+                                text: "Total";
+                                font-size: 11px;
+                                font-weight: 600;
+                                color: #8b949e;
+                                horizontal-alignment: right;
+                            }
+                        }
+
+                        Rectangle {
+                            height: 1px;
+                            background: #30363d;
+                        }
+
+                        ListView {
+                            width: 100%;
+                            for week_row[row_ix] in TimeReportingState.week-rows-model: Rectangle {
+                                height: 36px;
+                                background: mod(row_ix, 2) == 0 ? #0d1117 : #161b22;
+
+                                HorizontalLayout {
+                                    spacing: 4px;
+                                    width: 100%;
+                                    height: 100%;
+
+                                title_ta := TouchArea {
+                                    horizontal-stretch: 1;
+                                    clicked => {
+                                        TimeReportingState.time-reporting-open-row-url(week_row.url);
+                                    }
+
+                                    Text {
+                                        text: week_row.title;
+                                        color: title_ta.has-hover ? #58a6ff : #f0f6fc;
+                                        overflow: elide;
+                                        font-size: 13px;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                mo_ta := TouchArea {
+                                    width: 44px;
+                                    clicked => {
+                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 0);
+                                    }
+
+                                    Text {
+                                        text: week_row.mon;
+                                        color: #c9d1d9;
+                                        font-size: 13px;
+                                        horizontal-alignment: right;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                tu_ta := TouchArea {
+                                    width: 44px;
+                                    clicked => {
+                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 1);
+                                    }
+
+                                    Text {
+                                        text: week_row.tue;
+                                        color: #c9d1d9;
+                                        font-size: 13px;
+                                        horizontal-alignment: right;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                we_ta := TouchArea {
+                                    width: 44px;
+                                    clicked => {
+                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 2);
+                                    }
+
+                                    Text {
+                                        text: week_row.wed;
+                                        color: #c9d1d9;
+                                        font-size: 13px;
+                                        horizontal-alignment: right;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                th_ta := TouchArea {
+                                    width: 44px;
+                                    clicked => {
+                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 3);
+                                    }
+
+                                    Text {
+                                        text: week_row.thu;
+                                        color: #c9d1d9;
+                                        font-size: 13px;
+                                        horizontal-alignment: right;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                fr_ta := TouchArea {
+                                    width: 44px;
+                                    clicked => {
+                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 4);
+                                    }
+
+                                    Text {
+                                        text: week_row.fri;
+                                        color: #c9d1d9;
+                                        font-size: 13px;
+                                        horizontal-alignment: right;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                tot_ta := TouchArea {
+                                    width: 52px;
+                                    clicked => {
+                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 5);
+                                    }
+
+                                    Text {
+                                        text: week_row.total;
+                                        color: #c9d1d9;
+                                        font-size: 13px;
+                                        horizontal-alignment: right;
+                                        vertical-alignment: center;
+                                    }
+                                }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 

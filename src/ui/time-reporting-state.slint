@@ -1,3 +1,15 @@
+export struct TimeReportingWeekRow {
+    item-id: string,
+    title: string,
+    url: string,
+    mon: string,
+    tue: string,
+    wed: string,
+    thu: string,
+    fri: string,
+    total: string,
+}
+
 export global TimeReportingState {
     callback time-reporting-view-init;
     callback time-reporting-view-exited;
@@ -5,8 +17,20 @@ export global TimeReportingState {
     callback time-reporting-picker-cancel;
     callback time-reporting-open-change-project;
 
+    callback time-reporting-week-prev;
+    callback time-reporting-week-next;
+    callback time-reporting-week-this;
+    callback time-reporting-refresh;
+    /** `day_index`: 0..4 = Mo..Fr, 5 = Total column. */
+    callback time-reporting-time-cell-clicked(int, int);
+    callback time-reporting-open-row-url(string);
+
     in-out property <bool> picker-allow-cancel: false;
     in-out property <bool> picker-open: false;
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";
+
+    in property <[TimeReportingWeekRow]> week-rows-model;
+    in-out property <string> items-load-status: "";
+    in-out property <string> week-label: "";
 }

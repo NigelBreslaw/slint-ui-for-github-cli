@@ -6,7 +6,11 @@ import { buildFilteredProjectsModel, type SlintProjectRow } from "./gh/slint-ui-
 import { copyTextToClipboard } from "./utils/clipboard-write.ts";
 import { openUrlInBrowser } from "./utils/open-url.ts";
 import { clearViewerSessionCache } from "./session/viewer-session-cache.ts";
-import type { MainWindowModule, SlintReviewRequestRow } from "./slint-interface.ts";
+import type {
+  MainWindowModule,
+  SlintReviewRequestRow,
+  SlintTimeReportingWeekRow,
+} from "./slint-interface.ts";
 import {
   hydrateTimeReportingFromKv,
   wireTimeReportingUi,
@@ -30,6 +34,7 @@ const window = new ui.MainWindow({
 
 window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
 window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
+window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
 
 hydrateTimeReportingFromKv(window);
 window.AppState.project_search_changed = (query: string) => {
@@ -53,6 +58,12 @@ window.SettingsState.settings_exited = () => {
 };
 
 wireTimeReportingUi(window);
+
+window.TimeReportingState.time_reporting_open_row_url = (url: string) => {
+  if (url.length > 0) {
+    openUrlInBrowser(url);
+  }
+};
 
 window.open_github_device_clicked = () => {
   void copyTextToClipboard(window.auth_device_code).finally(() => {

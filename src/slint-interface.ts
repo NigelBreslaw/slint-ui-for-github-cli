@@ -56,16 +56,38 @@ export type SettingsStateHandle = {
   settings_debug_error: string;
 };
 
+/** Matches `TimeReportingWeekRow` in `time-reporting-state.slint` (Slint `item-id` → `item_id`). */
+export type SlintTimeReportingWeekRow = {
+  item_id: string;
+  title: string;
+  url: string;
+  mon: string;
+  tue: string;
+  wed: string;
+  thu: string;
+  fri: string;
+  total: string;
+};
+
 export type TimeReportingStateHandle = {
   time_reporting_view_init: () => void;
   time_reporting_view_exited: () => void;
   time_reporting_project_chosen: (id: string) => void;
   time_reporting_picker_cancel: () => void;
   time_reporting_open_change_project: () => void;
+  time_reporting_week_prev: () => void;
+  time_reporting_week_next: () => void;
+  time_reporting_week_this: () => void;
+  time_reporting_refresh: () => void;
+  time_reporting_time_cell_clicked: (row_index: number, day_index: number) => void;
+  time_reporting_open_row_url: (url: string) => void;
   picker_allow_cancel: boolean;
   picker_open: boolean;
   has_selected_project: boolean;
   selected_project_label: string;
+  week_rows_model: slint.ArrayModel<SlintTimeReportingWeekRow>;
+  items_load_status: string;
+  week_label: string;
 };
 
 export type MainWindowInstance = {
