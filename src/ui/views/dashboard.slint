@@ -1,5 +1,5 @@
 import { ListView } from "std-widgets.slint";
-import { AppState, DashboardTab } from "app-state.slint";
+import { AppState, DashboardTab } from "../data-bridges/app-state.slint";
 
 export component Dashboard {
     width: 100%;
@@ -108,7 +108,7 @@ export component Dashboard {
                         spacing: 14px;
                         width: self.preferred-width;
                         Image {
-                            source: @image-url("../assets/16px/alert.svg");
+                            source: @image-url("../../assets/16px/alert.svg");
                             colorize: #CA9C3E;
                         }
 
