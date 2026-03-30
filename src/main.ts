@@ -30,6 +30,7 @@ const window = new ui.MainWindow({
   status_message: "",
   "auth-device-code": "",
   "auth-device-url": "",
+  "gh-cli-version-block-detail": "",
 });
 
 window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);

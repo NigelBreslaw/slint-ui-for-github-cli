@@ -1,4 +1,5 @@
 import { checkRequiredGitHubCliScopes } from "../gh/auth.ts";
+import { checkGhCliVersionGate, formatMinGhCliVersion } from "../gh/gh-cli-version.ts";
 import { emptyTransparentAvatarImage, loadAvatarRgba } from "../gh/avatar-image.ts";
 import { ghApiGraphql } from "../gh/gh-app-client.ts";
 import { getLastSlintUiOrgProjectsFetch } from "../gh/slint-ui-org-projects-ui.ts";
@@ -33,6 +34,8 @@ let initialProjectsDebugPending: string | null = null;
 let slintEventLoopHasStarted = false;
 /** Set when `gh` is missing before `runEventLoop` is ready; shown from `runningCallback`. */
 let pendingShowNoGhOverlay = false;
+/** Same pattern for `gh` below minimum version. */
+let pendingShowGhVersionTooOldOverlay = false;
 
 /** Bumped on each `applyAuthUi` run so stale async work does not touch UI or session KV. */
 let authOperationEpoch = 0;
@@ -51,6 +54,10 @@ export function slintRunningCallback(window: MainWindowInstance): void {
   if (pendingShowNoGhOverlay) {
     pendingShowNoGhOverlay = false;
     window.show_no_gh_cli_installed();
+  }
+  if (pendingShowGhVersionTooOldOverlay) {
+    pendingShowGhVersionTooOldOverlay = false;
+    window.show_gh_cli_version_too_old();
   }
   const login = initialProjectsDebugPending;
   initialProjectsDebugPending = null;
@@ -141,8 +148,10 @@ async function fetchAndApplyGitHubUser(
 export function applyAuthUi(window: MainWindowInstance): void {
   uiPerfResetSession();
   pendingShowNoGhOverlay = false;
+  pendingShowGhVersionTooOldOverlay = false;
   const op = beginAuthOperation();
 
+  window.gh_cli_version_block_detail = "";
   window.AppState.auth = "loggedIn";
   window.status_message = "Checking…";
   clearAuthDeviceFields(window);
@@ -173,6 +182,38 @@ export function applyAuthUi(window: MainWindowInstance): void {
   }
 
   void (async () => {
+    const versionGate = await checkGhCliVersionGate();
+    if (!isAuthEpochCurrent(op)) {
+      return;
+    }
+    if (
+      versionGate.kind === "too_old" ||
+      versionGate.kind === "unparseable" ||
+      versionGate.kind === "exec_failed"
+    ) {
+      window.AppState.auth = "ghCliVersionTooOld";
+      const minV = formatMinGhCliVersion();
+      window.status_message = `GitHub CLI must be updated to at least version ${minV}.`;
+      if (versionGate.kind === "too_old") {
+        const { major, minor, patch } = versionGate.parsed;
+        window.gh_cli_version_block_detail = `Current version: ${major}.${minor}.${patch}`;
+      } else if (versionGate.kind === "unparseable") {
+        window.gh_cli_version_block_detail = `Could not parse version from: ${versionGate.line}`;
+      } else {
+        window.gh_cli_version_block_detail = versionGate.error;
+      }
+      if (slintEventLoopHasStarted) {
+        window.show_gh_cli_version_too_old();
+      } else {
+        pendingShowGhVersionTooOldOverlay = true;
+      }
+      clearAuthDeviceFields(window);
+      window.close_auth_window();
+      clearUserIdentity(window);
+      clearTimeReportingSelection(window);
+      return;
+    }
+
     const scopeCheck = await checkRequiredGitHubCliScopes();
     if (!isAuthEpochCurrent(op)) {
       return;

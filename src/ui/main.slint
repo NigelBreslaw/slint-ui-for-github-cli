@@ -27,7 +27,10 @@ export component MainWindow inherits Window {
     callback show_auth_window;
     callback open-github-device-clicked;
     callback show_no_gh_cli_installed;
+    callback show_gh_cli_version_too_old;
     callback open_cli_install_page;
+
+    in property <string> gh-cli-version-block-detail: "";
 
     init => {
         Palette.color-scheme = ColorScheme.dark;
@@ -43,6 +46,10 @@ export component MainWindow inherits Window {
 
     show_no_gh_cli_installed => {
         no_gh_cli_installed_window.show();
+    }
+
+    show_gh_cli_version_too_old => {
+        gh_cli_version_too_old_window.show();
     }
 
     in property <string> status_message: "";
@@ -125,6 +132,51 @@ export component MainWindow inherits Window {
 
             ButtonBlack {
                 label: "Open CLI install page";
+                clicked => {
+                    root.open_cli_install_page();
+                }
+            }
+        }
+
+        close-policy: no-auto-close;
+    }
+
+    gh_cli_version_too_old_window := PopupWindow {
+        width: root.width;
+        height: root.height;
+
+        Rectangle {
+            x: 0;
+            y: 0;
+            width: root.width;
+            height: root.height;
+            background: black;
+        }
+
+        VerticalLayout {
+            x: (root.width - self.preferred-width) / 2;
+            y: (root.height - self.preferred-height) / 2;
+            width: self.preferred-width;
+            height: self.preferred-height;
+            spacing: 16px;
+            Text {
+                text: "GitHub CLI must be updated to at least version 2.89.0";
+                font-size: 18px;
+                horizontal-alignment: center;
+                wrap: word-wrap;
+            }
+
+            Text {
+                visible: root.gh-cli-version-block-detail != "";
+                text: root.gh-cli-version-block-detail;
+                font-size: 14px;
+                horizontal-alignment: center;
+                color: #8b949e;
+                wrap: word-wrap;
+            }
+
+            ButtonBlack {
+                label: "Open GitHub CLI install page";
                 clicked => {
                     root.open_cli_install_page();
                 }

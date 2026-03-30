@@ -16,7 +16,12 @@ export type SlintReviewRequestRow = {
 };
 
 /** Maps to `Authed` in `app-state.slint` (kebab-case on the wire). */
-export type AuthedAuthState = "loggedOut" | "noGhCliInstalled" | "loggedIn" | "authorizing";
+export type AuthedAuthState =
+  | "loggedOut"
+  | "noGhCliInstalled"
+  | "ghCliVersionTooOld"
+  | "loggedIn"
+  | "authorizing";
 
 /** Maps to `View` in `app-state.slint`. */
 export type AppStateView = "none" | "dashboard" | "settings" | "timeReporting";
@@ -114,7 +119,9 @@ export type MainWindowInstance = {
   show_auth_window: () => void;
   close_auth_window: () => void;
   show_no_gh_cli_installed: () => void;
+  show_gh_cli_version_too_old: () => void;
   open_cli_install_page: () => void;
+  gh_cli_version_block_detail: string;
   status_message: string;
   auth_device_code: string;
   auth_device_url: string;
@@ -124,6 +131,7 @@ export type MainWindowOpts = {
   status_message?: string;
   "auth-device-code"?: string;
   "auth-device-url"?: string;
+  "gh-cli-version-block-detail"?: string;
 };
 
 /** Result shape of `slint.loadFile(…/main.slint)` for the exported `MainWindow` component. */
