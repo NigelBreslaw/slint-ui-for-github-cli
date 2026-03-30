@@ -21,7 +21,6 @@ function clearSettingsDebugStrings(window: MainWindowInstance): void {
   window.SettingsState.settings_debug_rate_limit = "";
   window.SettingsState.settings_debug_reset_at = "";
   window.SettingsState.settings_debug_countdown = "";
-  window.SettingsState.settings_debug_app_version = "";
   window.SettingsState.settings_debug_commit_label = "";
   window.SettingsState.settings_debug_error = "";
 }
@@ -119,7 +118,6 @@ export async function loadSettingsDebugPanel(window: MainWindowInstance): Promis
   const epoch = settingsDebugEpoch;
   resetSettingsDebugPanelState(window);
   hydrateSecurityAlertsRepo(window);
-  window.SettingsState.settings_debug_app_version = `v${readPackageVersion()}`;
   window.SettingsState.settings_debug_commit_label = buildCommitLabel(GIT_COMMIT_COUNT);
 
   const errors: string[] = [];

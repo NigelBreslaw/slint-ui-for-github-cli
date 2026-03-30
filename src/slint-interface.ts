@@ -86,7 +86,6 @@ export type SettingsStateHandle = {
   settings_debug_rate_limit: string;
   settings_debug_reset_at: string;
   settings_debug_countdown: string;
-  settings_debug_app_version: string;
   settings_debug_commit_label: string;
   settings_debug_error: string;
 };
