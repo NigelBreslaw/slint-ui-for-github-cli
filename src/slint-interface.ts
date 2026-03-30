@@ -65,9 +65,19 @@ export type AppStateHandle = {
   dashboard_init: () => void;
 };
 
+/** Row shape must match `SelectOption` in `primer-select.slint`. */
+export type SlintSelectOption = {
+  value: string;
+  label: string;
+};
+
 export type SettingsStateHandle = {
   settings_init: () => void;
   settings_exited: () => void;
+  primer_demo_select_options: slint.ArrayModel<SlintSelectOption>;
+  primer_demo_selected_value: string;
+  primer_demo_selected_label: string;
+  primer_demo_select_changed: (value: string) => void;
   security_alerts_repo_input: string;
   security_alerts_repo_error: string;
   security_alerts_repo_edited: (text: string) => void;

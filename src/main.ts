@@ -10,6 +10,7 @@ import type {
   MainWindowModule,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
+  SlintSelectOption,
   SlintTimeReportingWeekRow,
 } from "./slint-interface.ts";
 import {
@@ -40,6 +41,14 @@ window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>(
 window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
 window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>([]);
 window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
+
+window.SettingsState.primer_demo_select_options = new slint.ArrayModel<SlintSelectOption>([
+  { value: "github.com", label: "github.com" },
+  { value: "enterprise", label: "GitHub Enterprise Server" },
+]);
+window.SettingsState.primer_demo_selected_value = "github.com";
+window.SettingsState.primer_demo_selected_label = "github.com";
+window.SettingsState.primer_demo_select_changed = () => {};
 
 hydrateTimeReportingFromKv(window);
 window.AppState.project_search_changed = (query: string) => {
