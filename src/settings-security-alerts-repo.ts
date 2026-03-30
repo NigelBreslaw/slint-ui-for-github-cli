@@ -3,7 +3,7 @@ import {
   readSecurityAlertsRepositoryKv,
   validateSecurityAlertsRepoFullName,
   writeSecurityAlertsRepositoryKv,
-} from "./settings/security-alerts-repo-kv.ts";
+} from "./backend/settings/security-alerts-repo-kv.ts";
 import { onSecurityAlertsRepositorySaved } from "./slint-window-bridge.ts";
 
 export function hydrateSecurityAlertsRepo(window: MainWindowInstance): void {

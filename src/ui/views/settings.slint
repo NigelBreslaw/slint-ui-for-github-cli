@@ -1,4 +1,4 @@
-import { SettingsState } from "../data-bridges/settings-state.slint";
+import { SettingsState } from "../../data-bridges/settings-state.slint";
 import { PrimerSelect, ValidationStatus } from "../components/primer-select.slint";
 
 component TableRow {
@@ -172,7 +172,6 @@ export component Settings {
             }
 
             if SettingsState.settings-debug-error != "": Text {
-                padding-top: 12px;
                 text: SettingsState.settings-debug-error;
                 color: #f85149;
                 font-size: 13px;

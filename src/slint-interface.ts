@@ -5,8 +5,8 @@
  * unions aligned with Slint enums (slint-node uses kebab-case for `AppState.auth`).
  */
 import * as slint from "slint-ui";
-import type { SlintRgbaImage } from "./gh/avatar-image.ts";
-import type { SlintProjectRow } from "./gh/slint-ui-org-projects-ui.ts";
+import type { SlintRgbaImage } from "./backend/gh/avatar-image.ts";
+import type { SlintProjectRow } from "./backend/gh/slint-ui-org-projects-ui.ts";
 
 /** Row shape must match `ReviewRequestRow` in `app-state.slint`. */
 export type SlintReviewRequestRow = {

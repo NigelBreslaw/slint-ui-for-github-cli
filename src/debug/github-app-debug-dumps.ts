@@ -1,16 +1,16 @@
 import {
   maybeDumpAssignedOpenWorkDebugAsync,
   type SlintUiProjectsV2ForAssignedDebug,
-} from "../gh/debug-assigned-open-slint-ui.ts";
+} from "../backend/gh/debug-assigned-open-slint-ui.ts";
 import {
   fetchAllProjectsV2ForOrgGraphql,
   fetchAllProjectsV2ForUserGraphql,
-} from "../gh/graphql-projects-v2.ts";
-import { ghApiGraphql, ghApiJson } from "../gh/gh-app-client.ts";
-import { getLastSlintUiOrgProjectsFetch } from "../gh/slint-ui-org-projects-ui.ts";
-import { writeDebugJsonStem } from "../gh/write-debug-json.ts";
-import type { ProjectV2NodeSnapshot } from "../schemas/gh-graphql-projectsv2-page.ts";
-import { VIEWER_DEBUG_GRAPHQL_QUERY } from "../gh/viewer-queries.ts";
+} from "../backend/gh/graphql-projects-v2.ts";
+import { ghApiGraphql, ghApiJson } from "../backend/gh/gh-app-client.ts";
+import { getLastSlintUiOrgProjectsFetch } from "../backend/gh/slint-ui-org-projects-ui.ts";
+import { writeDebugJsonStem } from "../backend/gh/write-debug-json.ts";
+import type { ProjectV2NodeSnapshot } from "../backend/schemas/gh-graphql-projectsv2-page.ts";
+import { VIEWER_DEBUG_GRAPHQL_QUERY } from "../backend/gh/viewer-queries.ts";
 import { parseOrgLogins } from "./parse-org-logins.ts";
 
 const SLINT_UI_ORG = "slint-ui";

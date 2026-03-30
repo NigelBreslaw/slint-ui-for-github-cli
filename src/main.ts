@@ -1,11 +1,11 @@
 import * as slint from "slint-ui";
-import { applyAuthUi, slintRunningCallback } from "./auth/auth-ui-flow.ts";
-import { closeAppDb, openAppDb } from "./db/app-db.ts";
-import { ghAuthLogout, spawnGhAuthLogin } from "./gh/auth.ts";
-import { buildFilteredProjectsModel, type SlintProjectRow } from "./gh/slint-ui-org-projects-ui.ts";
-import { copyTextToClipboard } from "./utils/clipboard-write.ts";
-import { openUrlInBrowser } from "./utils/open-url.ts";
-import { clearViewerSessionCache } from "./session/viewer-session-cache.ts";
+import { applyAuthUi, slintRunningCallback } from "./backend/auth/auth-ui-flow.ts";
+import { closeAppDb, openAppDb } from "./backend/db/app-db.ts";
+import { ghAuthLogout, spawnGhAuthLogin } from "./backend/gh/auth.ts";
+import { buildFilteredProjectsModel, type SlintProjectRow } from "./backend/gh/slint-ui-org-projects-ui.ts";
+import { copyTextToClipboard } from "./backend/utils/clipboard-write.ts";
+import { openUrlInBrowser } from "./backend/utils/open-url.ts";
+import { clearViewerSessionCache } from "./backend/session/viewer-session-cache.ts";
 import type {
   MainWindowModule,
   SlintReviewRequestRow,
@@ -16,7 +16,7 @@ import type {
 import {
   hydrateTimeReportingFromKv,
   wireTimeReportingUi,
-} from "./time-reporting/time-reporting-ui.ts";
+} from "./backend/time-reporting/time-reporting-ui.ts";
 import {
   clearAuthDeviceFields,
   clearTimeReportingSelection,
