@@ -63,6 +63,9 @@ export global AppState {
                 TimeReportingState.time-reporting-view-exited();
             }
             self.view = v;
+            if v == View.settings {
+                SettingsState.settings-init();
+            }
         }
     }
 
