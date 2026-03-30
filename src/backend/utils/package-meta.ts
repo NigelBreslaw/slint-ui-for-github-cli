@@ -1,4 +1,3 @@
-
 export function buildCommitLabel(count: number): string {
   if (count <= 0) {
     return "— (run dev script to refresh)";
