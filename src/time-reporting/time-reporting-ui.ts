@@ -15,8 +15,6 @@ import {
   formatIsoWeekLabel,
   weekdayDatesMondayToFriday,
 } from "./iso-week.ts";
-import { TIME_LOG_FIELD_NAME } from "./parse-time-log.ts";
-import { TIME_SPENT_FIELD_NAME } from "./project-v2-item-hours.ts";
 import {
   getTimeReportingCachedItems,
   getTimeReportingCachedProjectNodeId,
@@ -95,11 +93,7 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   }
   const week = getTimeReportingSelectedWeek();
   const weekDates = weekdayDatesMondayToFriday(week.isoYear, week.isoWeek);
-  const { rows, cellDetailsByKey } = buildTimeReportingWeekRows(items, {
-    timeSpentFieldName: TIME_SPENT_FIELD_NAME,
-    timeLogFieldName: TIME_LOG_FIELD_NAME,
-    targetWeek: week,
-  });
+  const { rows, cellDetailsByKey } = buildTimeReportingWeekRows(items, { targetWeek: week });
   setTimeReportingCachedItems(nodeId, items, cellDetailsByKey);
   setTimeReportingWeekRowOrder(rows.map((r) => r.item_id));
   window.TimeReportingState.week_label = formatIsoWeekLabel(week.isoYear, week.isoWeek);
@@ -110,7 +104,7 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
     window.TimeReportingState.week_grid_hint =
       items.length === 0
         ? "No items on this board."
-        : "No time logged for this week (Time Log field, Mon–Fri of the selected ISO week).";
+        : "No items merged or closed in this week with BOT-Total Time Spent(h) > 0.";
   } else {
     window.TimeReportingState.week_grid_hint = "";
   }

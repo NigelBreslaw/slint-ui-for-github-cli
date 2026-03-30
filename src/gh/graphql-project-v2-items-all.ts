@@ -2,7 +2,7 @@
  * Paginated `ProjectV2.items` via `gh api graphql` (all cards, no client-side filter).
  * Item `content` matches [`graphql-project-items-batch.ts`](./graphql-project-items-batch.ts) except **`body` is omitted** to keep dumps small.
  * Includes `fieldValues` (number, single-select, text, date) so board custom fields such as
- * “Time Spent(h)” and Status appear in dumps—same idea as `fieldValues` in external time scripts.
+ * “BOT-Total Time Spent(h)” appear in dumps. Issue/PullRequest `content` includes `closedAt` / `mergedAt` for time reporting.
  */
 import { ghGraphqlWithVars } from "./gh-graphql.ts";
 
@@ -33,6 +33,7 @@ query ProjectV2ItemsPage($id: ID!, $first: Int!, $after: String) {
               title
               url
               state
+              closedAt
               assignees(first: 20) {
                 nodes {
                   login
@@ -47,6 +48,8 @@ query ProjectV2ItemsPage($id: ID!, $first: Int!, $after: String) {
               title
               url
               state
+              mergedAt
+              closedAt
               assignees(first: 20) {
                 nodes {
                   login

@@ -1,6 +1,14 @@
-import { extractProjectV2TextField, itemContentTitleUrl } from "./project-v2-item-hours.ts";
-import { type IsoWeek, weekdayDatesMondayToFriday } from "./iso-week.ts";
-import { parseTimeLogLines } from "./parse-time-log.ts";
+import {
+  BOT_TOTAL_TIME_SPENT_FIELD_NAME,
+  extractProjectV2NumberFieldHours,
+  itemContentTitleUrl,
+  projectHoursToMinutes,
+} from "./project-v2-item-hours.ts";
+import { isoWeekAndYearFromUtcDate, type IsoWeek, weekdayDatesMondayToFriday } from "./iso-week.ts";
+import {
+  assignmentYmdForWeekdayColumn,
+  referenceCloseOrMergeInstantIso,
+} from "./time-reporting-item-reference.ts";
 
 /** One grid row; `item_id` is the ProjectV2 item id (`PVTI_…`). */
 type TimeReportingWeekRowTs = {
@@ -22,13 +30,9 @@ export type TimeReportingCellContribution = {
 };
 
 type BuildTimeReportingWeekRowsOptions = {
-  timeSpentFieldName: string;
-  /** Selected week (Mo–Fr columns and log filtering). */
   targetWeek: IsoWeek;
-  /**
-   * Text field name for dated lines (`parseTimeLogLines`). When missing or empty, weekday cells stay `—`.
-   */
-  timeLogFieldName?: string;
+  /** Defaults to [`BOT_TOTAL_TIME_SPENT_FIELD_NAME`](./project-v2-item-hours.ts). */
+  botTotalFieldName?: string;
 };
 
 function formatMinutesAsHoursLabel(minutes: number): string {
@@ -50,10 +54,13 @@ export function cellDetailKey(itemId: string, ymd: string): string {
   return `${itemId}|${ymd}`;
 }
 
+function weeksEqual(a: IsoWeek, b: IsoWeek): boolean {
+  return a.isoYear === b.isoYear && a.isoWeek === b.isoWeek;
+}
+
 /**
- * Builds week grid rows and a provenance map (`cellDetailsByKey`).
- * Only includes items with **at least one minute** from the Time Log on Mon–Fri of `targetWeek`.
- * The **Total** column is the sum of those weekday minutes (not the board `Time Spent(h)` field).
+ * Builds week grid rows from **BOT-Total Time Spent(h)** and merge/close instant on `content`.
+ * A row appears only when the reference instant falls in `targetWeek` (UTC ISO week) and BOT minutes &gt; 0.
  */
 export function buildTimeReportingWeekRows(
   items: unknown[],
@@ -63,7 +70,7 @@ export function buildTimeReportingWeekRows(
   cellDetailsByKey: Map<string, TimeReportingCellContribution[]>;
 } {
   const { targetWeek } = options;
-  const timeLogName = options.timeLogFieldName?.trim() ?? "";
+  const botField = options.botTotalFieldName ?? BOT_TOTAL_TIME_SPENT_FIELD_NAME;
   const weekDates = weekdayDatesMondayToFriday(targetWeek.isoYear, targetWeek.isoWeek);
   const dateToCol = new Map<string, number>(weekDates.map((d, i) => [d, i]));
   const weekDateSet = new Set(weekDates);
@@ -76,7 +83,8 @@ export function buildTimeReportingWeekRows(
     if (item === null || typeof item !== "object") {
       continue;
     }
-    const id = (item as Record<string, unknown>).id;
+    const rec = item as Record<string, unknown>;
+    const id = rec.id;
     if (typeof id !== "string" || id.length === 0) {
       continue;
     }
@@ -84,40 +92,47 @@ export function buildTimeReportingWeekRows(
     if (meta === null) {
       continue;
     }
-    const dayMinutes = [0, 0, 0, 0, 0];
-    const pendingContribs: { ymd: string; minutes: number; rawLine: string }[] = [];
-    if (timeLogName.length > 0) {
-      const logText = extractProjectV2TextField(item, timeLogName);
-      if (logText !== null && logText.length > 0) {
-        for (const e of parseTimeLogLines(logText)) {
-          if (!weekDateSet.has(e.date)) {
-            continue;
-          }
-          const col = dateToCol.get(e.date);
-          if (col === undefined || col > 4) {
-            continue;
-          }
-          dayMinutes[col] += e.minutes;
-          pendingContribs.push({ ymd: e.date, minutes: e.minutes, rawLine: e.rawLine });
-        }
-      }
+    const content = rec.content;
+    const instantIso = referenceCloseOrMergeInstantIso(content);
+    if (instantIso === null) {
+      continue;
     }
-
-    const weekMinutesSum =
-      dayMinutes[0] + dayMinutes[1] + dayMinutes[2] + dayMinutes[3] + dayMinutes[4];
-    if (weekMinutesSum === 0) {
+    const refDate = new Date(instantIso);
+    if (Number.isNaN(refDate.getTime())) {
+      continue;
+    }
+    const itemWeek = isoWeekAndYearFromUtcDate(refDate);
+    if (!weeksEqual(itemWeek, targetWeek)) {
+      continue;
+    }
+    const hours = extractProjectV2NumberFieldHours(item, botField);
+    if (hours === null || !Number.isFinite(hours) || hours <= 0) {
+      continue;
+    }
+    const minutes = projectHoursToMinutes(hours);
+    if (minutes <= 0) {
+      continue;
+    }
+    const assignYmd = assignmentYmdForWeekdayColumn(instantIso);
+    if (assignYmd === null || !weekDateSet.has(assignYmd)) {
+      continue;
+    }
+    const col = dateToCol.get(assignYmd);
+    if (col === undefined || col > 4) {
       continue;
     }
 
-    for (const p of pendingContribs) {
-      const key = cellDetailKey(id, p.ymd);
-      const arr = cellDetailsByKey.get(key) ?? [];
-      arr.push({ minutes: p.minutes, rawLine: p.rawLine });
-      cellDetailsByKey.set(key, arr);
-    }
+    const dayMinutes = [0, 0, 0, 0, 0];
+    dayMinutes[col] = minutes;
+
+    const key = cellDetailKey(id, assignYmd);
+    const rawLine = `BOT-Total Time Spent(h): ${hours}h\nMerged/closed: ${instantIso}`;
+    const arr = cellDetailsByKey.get(key) ?? [];
+    arr.push({ minutes, rawLine });
+    cellDetailsByKey.set(key, arr);
 
     const dayLabels = dayMinutes.map((m) => (m > 0 ? formatMinutesAsHoursLabel(m) : placeholder));
-    const total = formatMinutesAsHoursLabel(weekMinutesSum);
+    const total = formatMinutesAsHoursLabel(minutes);
 
     rows.push({
       item_id: id,

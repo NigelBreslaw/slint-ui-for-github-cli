@@ -250,6 +250,8 @@ export component Header {
         HorizontalLayout {
             x: root.title-left-inset;
             y: (parent.height - self.height) / 2;
+            height: self.preferred-height;
+            width: self.preferred-width;
             spacing: 16px;
             visible: AppState.auth == Authed.loggedIn && (AppState.view == View.dashboard || AppState.view == View.settings || AppState.view == View.timeReporting);
 
@@ -261,12 +263,15 @@ export component Header {
                 overflow: elide;
             }
 
-            Button {
-                visible: AppState.view == View.timeReporting && TimeReportingState.has-selected-project;
-                label: "Change project";
-                clicked => {
-                    TimeReportingState.time-reporting-open-change-project();
-                }
+        }
+
+        Button {
+            x: (parent.width - self.width) / 2;
+            y: (parent.height - self.height) / 2;
+            visible: AppState.view == View.timeReporting && TimeReportingState.has-selected-project;
+            label: "Change project";
+            clicked => {
+                TimeReportingState.time-reporting-open-change-project();
             }
         }
 

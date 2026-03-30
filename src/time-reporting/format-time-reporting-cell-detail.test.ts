@@ -12,9 +12,17 @@ describe("formatTimeReportingCellDetail", () => {
   };
   const weekDates = ["2026-03-23", "2026-03-24", "2026-03-25", "2026-03-26", "2026-03-27"];
 
-  it("lists log contributions for a weekday", () => {
+  it("lists BOT contributions for a weekday", () => {
     const detailsMap = new Map([
-      ["PVTI_x|2026-03-23", [{ minutes: 30, rawLine: "2026-03-23 0.5h" }]],
+      [
+        "PVTI_x|2026-03-23",
+        [
+          {
+            minutes: 30,
+            rawLine: "BOT-Total Time Spent(h): 0.5h\nMerged/closed: 2026-03-23T10:00:00Z",
+          },
+        ],
+      ],
     ]);
     const r = formatTimeReportingCellDetail({
       item,
@@ -26,10 +34,10 @@ describe("formatTimeReportingCellDetail", () => {
     assert.equal(r.title, "Time — Monday 2026-03-23");
     assert.ok(r.body.includes("Pull request: Fix thing"));
     assert.ok(r.body.includes("30m"));
-    assert.ok(r.body.includes("2026-03-23 0.5h"));
+    assert.ok(r.body.includes("BOT-Total Time Spent(h)"));
   });
 
-  it("shows empty weekday message when there are no log lines", () => {
+  it("shows empty weekday message when there is no BOT entry", () => {
     const r = formatTimeReportingCellDetail({
       item,
       itemId: "PVTI_x",
@@ -37,13 +45,29 @@ describe("formatTimeReportingCellDetail", () => {
       weekDates,
       detailsMap: new Map(),
     });
-    assert.ok(r.body.includes("No time recorded for this day"));
+    assert.ok(r.body.includes("No BOT-Total Time Spent(h) attributed"));
   });
 
-  it("aggregates Total from Time Log across Mon–Fri", () => {
+  it("aggregates Total from BOT across Mon–Fri", () => {
     const detailsMap = new Map([
-      ["PVTI_x|2026-03-23", [{ minutes: 30, rawLine: "2026-03-23 0.5h" }]],
-      ["PVTI_x|2026-03-24", [{ minutes: 60, rawLine: "2026-03-24 1h" }]],
+      [
+        "PVTI_x|2026-03-23",
+        [
+          {
+            minutes: 30,
+            rawLine: "BOT-Total Time Spent(h): 0.5h\nMerged/closed: 2026-03-23T10:00:00Z",
+          },
+        ],
+      ],
+      [
+        "PVTI_x|2026-03-24",
+        [
+          {
+            minutes: 60,
+            rawLine: "BOT-Total Time Spent(h): 1h\nMerged/closed: 2026-03-24T10:00:00Z",
+          },
+        ],
+      ],
     ]);
     const r = formatTimeReportingCellDetail({
       item,
@@ -53,12 +77,12 @@ describe("formatTimeReportingCellDetail", () => {
       detailsMap,
     });
     assert.equal(r.title, "Time — Total");
-    assert.ok(r.body.includes("Week total from Time Log"));
+    assert.ok(r.body.includes("Week total (BOT-Total Time Spent(h))"));
     assert.ok(r.body.includes("1h 30m"));
     assert.ok(r.body.includes("90 minutes"));
   });
 
-  it("explains Total when no log lines in the week", () => {
+  it("explains Total when no BOT data in the week", () => {
     const r = formatTimeReportingCellDetail({
       item,
       itemId: "PVTI_x",
@@ -67,6 +91,6 @@ describe("formatTimeReportingCellDetail", () => {
       detailsMap: new Map(),
     });
     assert.equal(r.title, "Time — Total");
-    assert.ok(r.body.includes("No Time Log lines"));
+    assert.ok(r.body.includes("No BOT-Total Time Spent(h)"));
   });
 });

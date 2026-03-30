@@ -45,9 +45,14 @@ function pad2(n: number): string {
   return n < 10 ? `0${n}` : String(n);
 }
 
+/** `YYYY-MM-DD` UTC for the given UTC calendar instant. */
+export function utcDateYmdFromDate(d: Date): string {
+  return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+}
+
 /** `YYYY-MM-DD` UTC for the given UTC date. */
 function formatUtcDateYmd(d: Date): string {
-  return `${d.getUTCFullYear()}-${pad2(d.getUTCMonth() + 1)}-${pad2(d.getUTCDate())}`;
+  return utcDateYmdFromDate(d);
 }
 
 /** Monday–Friday `YYYY-MM-DD` (UTC) for the given ISO week. */

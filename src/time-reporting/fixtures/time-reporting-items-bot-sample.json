@@ -1,0 +1,69 @@
+{
+  "items": [
+    {
+      "id": "PVTI_sample_a",
+      "type": "PULL_REQUEST",
+      "isArchived": false,
+      "content": {
+        "__typename": "PullRequest",
+        "number": 1,
+        "title": "Fixture PR in week",
+        "url": "https://github.com/o/r/pull/1",
+        "state": "MERGED",
+        "mergedAt": "2026-03-25T16:00:00Z"
+      },
+      "fieldValues": {
+        "nodes": [
+          {
+            "__typename": "ProjectV2ItemFieldNumberValue",
+            "number": 0.5,
+            "field": { "name": "BOT-Total Time Spent(h)" }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PVTI_sample_b",
+      "type": "PULL_REQUEST",
+      "isArchived": false,
+      "content": {
+        "__typename": "PullRequest",
+        "number": 2,
+        "title": "Fixture PR other week",
+        "url": "https://github.com/o/r/pull/2",
+        "state": "MERGED",
+        "mergedAt": "2026-04-02T12:00:00Z"
+      },
+      "fieldValues": {
+        "nodes": [
+          {
+            "__typename": "ProjectV2ItemFieldNumberValue",
+            "number": 8,
+            "field": { "name": "BOT-Total Time Spent(h)" }
+          }
+        ]
+      }
+    },
+    {
+      "id": "PVTI_sample_open",
+      "type": "PULL_REQUEST",
+      "isArchived": false,
+      "content": {
+        "__typename": "PullRequest",
+        "number": 3,
+        "title": "Open PR",
+        "url": "https://github.com/o/r/pull/3",
+        "state": "OPEN"
+      },
+      "fieldValues": {
+        "nodes": [
+          {
+            "__typename": "ProjectV2ItemFieldNumberValue",
+            "number": 2,
+            "field": { "name": "BOT-Total Time Spent(h)" }
+          }
+        ]
+      }
+    }
+  ]
+}

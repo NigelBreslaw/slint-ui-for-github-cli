@@ -84,12 +84,12 @@ export function formatTimeReportingCellDetail(args: TimeReportingCellDetailArgs)
     if (sum === 0) {
       return {
         title,
-        body: `${header}\n\nNo Time Log lines for this card in the selected week.`,
+        body: `${header}\n\nNo BOT-Total Time Spent(h) for this card in the selected week.`,
       };
     }
     return {
       title,
-      body: `${header}\n\nWeek total from Time Log: ${formatMinutesLabel(sum)} (${sum} minutes).\n${bulletLines.join("\n")}`,
+      body: `${header}\n\nWeek total (BOT-Total Time Spent(h)): ${formatMinutesLabel(sum)} (${sum} minutes).\n${bulletLines.join("\n")}`,
     };
   }
 
@@ -109,12 +109,12 @@ export function formatTimeReportingCellDetail(args: TimeReportingCellDetailArgs)
     });
     return {
       title: modalTitle,
-      body: `${header}\n\nTime log lines for this day:\n${lines.join("\n")}`,
+      body: `${header}\n\nBOT-Total Time Spent(h) for this day:\n${lines.join("\n")}`,
     };
   }
 
   return {
     title: modalTitle,
-    body: `${header}\n\nNo time recorded for this day in the Time Log for the selected week.`,
+    body: `${header}\n\nNo BOT-Total Time Spent(h) attributed to this weekday in the selected week.`,
   };
 }

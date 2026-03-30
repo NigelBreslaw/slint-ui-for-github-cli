@@ -5,6 +5,7 @@ import {
   currentIsoWeekUtc,
   formatIsoWeekLabel,
   isoWeekAndYearFromUtcDate,
+  utcDateYmdFromDate,
   utcMondayOfIsoWeek,
   weekdayDatesMondayToFriday,
 } from "./iso-week.ts";
@@ -36,6 +37,12 @@ describe("utcMondayOfIsoWeek", () => {
   it("2024-W01 starts Monday 2024-01-01 UTC", () => {
     const mon = utcMondayOfIsoWeek(2024, 1);
     assert.equal(mon.toISOString(), "2024-01-01T00:00:00.000Z");
+  });
+});
+
+describe("utcDateYmdFromDate", () => {
+  it("formats UTC calendar date as YYYY-MM-DD", () => {
+    assert.equal(utcDateYmdFromDate(utc(2026, 3, 25)), "2026-03-25");
   });
 });
 

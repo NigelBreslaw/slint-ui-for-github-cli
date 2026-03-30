@@ -5,6 +5,9 @@
 /** Board custom field for per-session hours (GitHub stores a float in hours). */
 export const TIME_SPENT_FIELD_NAME = "Time Spent(h)";
 
+/** Bot-populated total hours used for time-reporting rows (merge/close week). */
+export const BOT_TOTAL_TIME_SPENT_FIELD_NAME = "BOT-Total Time Spent(h)";
+
 /**
  * Converts GitHub’s hours float to integer minutes (`Math.round(hours * 60)`).
  * Sub-minute precision is intentionally discarded.

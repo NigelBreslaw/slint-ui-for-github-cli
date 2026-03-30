@@ -1,6 +1,16 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { parseDurationToMinutes, parseTimeLogLines } from "./parse-time-log.ts";
+import {
+  parseDurationToMinutes,
+  parseTimeLogLines,
+  TIME_LOG_FIELD_NAME,
+} from "./parse-time-log.ts";
+
+describe("TIME_LOG_FIELD_NAME", () => {
+  it("is the GitHub Projects text field label (kept for docs and external scripts)", () => {
+    assert.equal(TIME_LOG_FIELD_NAME, "Time Log");
+  });
+});
 
 describe("parseDurationToMinutes", () => {
   it("parses decimal hours", () => {
