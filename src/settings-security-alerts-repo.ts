@@ -1,10 +1,10 @@
-import type { MainWindowInstance } from "../slint-interface.ts";
+import type { MainWindowInstance } from "./slint-interface.ts";
 import {
   readSecurityAlertsRepositoryKv,
   validateSecurityAlertsRepoFullName,
   writeSecurityAlertsRepositoryKv,
-} from "../settings/security-alerts-repo-kv.ts";
-import { onSecurityAlertsRepositorySaved } from "./app-window-bridge.ts";
+} from "./settings/security-alerts-repo-kv.ts";
+import { onSecurityAlertsRepositorySaved } from "./slint-window-bridge.ts";
 
 export function hydrateSecurityAlertsRepo(window: MainWindowInstance): void {
   window.SettingsState.security_alerts_repo_input = readSecurityAlertsRepositoryKv();

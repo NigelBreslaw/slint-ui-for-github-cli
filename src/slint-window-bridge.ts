@@ -4,20 +4,20 @@ import {
   clearSlintUiOrgProjectsCache,
   refreshSlintUiOrgProjectsCache,
   type SlintProjectRow,
-} from "../gh/slint-ui-org-projects-ui.ts";
-import { emptyTransparentAvatarImage } from "../gh/avatar-image.ts";
-import { fetchDependabotAlertsForRepo } from "../gh/dependabot-alerts.ts";
-import { fetchAllReviewRequestsSearch } from "../gh/graphql-review-requests.ts";
+} from "./gh/slint-ui-org-projects-ui.ts";
+import { emptyTransparentAvatarImage } from "./gh/avatar-image.ts";
+import { fetchDependabotAlertsForRepo } from "./gh/dependabot-alerts.ts";
+import { fetchAllReviewRequestsSearch } from "./gh/graphql-review-requests.ts";
 import type {
   MainWindowInstance,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
   SlintTimeReportingWeekRow,
-} from "../slint-interface.ts";
-import { readSecurityAlertsRepositoryOwnerRepo } from "../settings/security-alerts-repo-kv.ts";
-import { resetTimeReportingItemsState } from "../time-reporting/time-reporting-items-cache.ts";
-import { clearTimeReportingSelectedProjectKv } from "../time-reporting/time-reporting-selected-project-kv.ts";
-import { clearViewerSessionCache, type ViewerSessionV1 } from "../session/viewer-session-cache.ts";
+} from "./slint-interface.ts";
+import { readSecurityAlertsRepositoryOwnerRepo } from "./settings/security-alerts-repo-kv.ts";
+import { resetTimeReportingItemsState } from "./time-reporting/time-reporting-items-cache.ts";
+import { clearTimeReportingSelectedProjectKv } from "./time-reporting/time-reporting-selected-project-kv.ts";
+import { clearViewerSessionCache, type ViewerSessionV1 } from "./session/viewer-session-cache.ts";
 import { teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
 
 let securityAlertsFetchGeneration = 0;

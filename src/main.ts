@@ -22,9 +22,9 @@ import {
   clearTimeReportingSelection,
   refreshDashboardReviewRequests,
   refreshDashboardSecurityAlerts,
-} from "./ui/app-window-bridge.ts";
-import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./ui/settings-debug-panel.ts";
-import { applySecurityAlertsRepoEdited } from "./ui/settings-security-alerts-repo.ts";
+} from "./slint-window-bridge.ts";
+import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
+import { applySecurityAlertsRepoEdited } from "./settings-security-alerts-repo.ts";
 
 openAppDb();
 

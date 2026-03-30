@@ -38,20 +38,6 @@ export component PrimerSelect {
     private property <int> highlighted-index: -1;
     private property <bool> menu-open: false;
 
-    forward-focus: root-focus;
-    accessible-role: combobox;
-    accessible-enabled: !disabled;
-    accessible-expandable: menu-open;
-    accessible-value: selected-label != "" ? selected-label : placeholder;
-    accessible-label: label-text;
-    accessible-action-expand => {
-        if !disabled && options.length > 0 {
-            root.highlighted-index = root.selected-index >= 0 ? root.selected-index : 0;
-            root.menu-open = true;
-            menu.show();
-        }
-    }
-
     horizontal-stretch: block ? 1 : 0;
     min-width: 200px;
 
@@ -69,14 +55,14 @@ export component PrimerSelect {
     private property <color> text-success: #3fb950;
 
     private property <color> trigger-border-color:
-        validation-status == ValidationStatus.error ? border-error :
-        validation-status == ValidationStatus.success ? border-success : border-default;
+        validation-status == ValidationStatus.error ? border-error : validation-status == ValidationStatus.success ? border-success : border-default;
 
     private property <length> menu-list-viewport-height: max(min(options.length * trigger-height, max-visible-rows * trigger-height), options.length == 0 ? trigger-height : 0px);
 
     private property <length> popup-panel-height: trigger-height + 1px + menu-list-viewport-height;
 
     function apply-pick-at(ix: int) {
+
         if ix < 0 || ix >= options.length {
             return;
         }
@@ -87,8 +73,19 @@ export component PrimerSelect {
         root.selected-label = options[ix].label;
         root.selected-index = ix;
         root.menu-open = false;
-        menu.close();
         root.selected-changed(options[ix].value);
+
+        // menu.close();
+        test.start();
+    }
+
+    test := Timer {
+        interval: 20ms;
+        running: false;
+        triggered => {
+            self.stop();
+            menu.close();
+        }
     }
 
     function step-highlight(delta: int) {
@@ -235,13 +232,13 @@ export component PrimerSelect {
                         y: parent.height + 4px;
                         width: parent.width;
 
-                        sync-timer := Timer {
-                            interval: 32ms;
-                            running: true;
-                            triggered => {
-                                root.menu-open = parent.visible;
-                            }
-                        }
+                        // sync-timer := Timer {
+                        //     interval: 32ms;
+                        //     running: true;
+                        //     triggered => {
+                        //         root.menu-open = parent.visible;
+                        //     }
+                        // }
 
                         Rectangle {
                             width: 100%;
@@ -261,74 +258,54 @@ export component PrimerSelect {
                                     spacing: 0;
                                     width: 100%;
 
-                                Rectangle {
-                                    height: root.trigger-height;
-                                    background: fill-hover;
+                                    Rectangle {
+                                        height: root.trigger-height;
+                                        background: fill-hover;
 
-                                    TouchArea {
-                                        clicked => {
-                                            root.menu-open = false;
-                                            menu.close();
+                                        TouchArea {
+                                            clicked => {
+                                            // root.menu-open = false;
+                                            // menu.close();
                                         }
 
-                                        HorizontalLayout {
-                                            padding-left: 10px;
-                                            padding-right: 8px;
-                                            spacing: 8px;
-                                            width: 100%;
-                                            height: 100%;
+                                            HorizontalLayout {
+                                                padding-left: 10px;
+                                                padding-right: 8px;
+                                                spacing: 8px;
+                                                width: 100%;
+                                                height: 100%;
 
-                                            Text {
-                                                horizontal-stretch: 1;
-                                                vertical-alignment: center;
-                                                text: selected-label != "" ? selected-label : placeholder;
-                                                font-size: root.trigger-font;
-                                                color: selected-label != "" ? text-primary : text-muted;
-                                                overflow: elide;
-                                            }
+                                                Text {
+                                                    horizontal-stretch: 1;
+                                                    vertical-alignment: center;
+                                                    text: selected-label != "" ? selected-label : placeholder;
+                                                    font-size: root.trigger-font;
+                                                    color: selected-label != "" ? text-primary : text-muted;
+                                                    overflow: elide;
+                                                }
 
-                                            Image {
-                                                width: 16px;
-                                                height: 16px;
-                                                vertical-alignment: center;
-                                                source: @image-url("../../assets/16px/chevron-up.svg");
-                                                colorize: text-muted;
+                                                Image {
+                                                    width: 16px;
+                                                    height: 16px;
+                                                    vertical-alignment: center;
+                                                    source: @image-url("../../assets/16px/chevron-up.svg");
+                                                    colorize: text-muted;
+                                                }
                                             }
                                         }
                                     }
+
+                                    Rectangle {
+                                        height: 1px;
+                                        background: border-default;
+                                    }
                                 }
 
-                                Rectangle {
-                                    height: 1px;
-                                    background: border-default;
-                                }
-
-                                }
-
-                                menu-keys := FocusScope {
+                                menu-keys := Rectangle {
                                     horizontal-stretch: 1;
                                     height: root.menu-list-viewport-height;
 
-                                    key-pressed(event) => {
-                                        if event.text == Key.DownArrow {
-                                            root.step-highlight(1);
-                                            return accept;
-                                        }
-                                        if event.text == Key.UpArrow {
-                                            root.step-highlight(-1);
-                                            return accept;
-                                        }
-                                        if event.text == Key.Return {
-                                            root.apply-pick-at(root.highlighted-index);
-                                            return accept;
-                                        }
-                                        if event.text == Key.Escape {
-                                            root.menu-open = false;
-                                            menu.close();
-                                            return accept;
-                                        }
-                                        reject
-                                    }
+                                    
 
                                     if options.length > 0: PrimerSelectMenu {
                                         width: 100%;
@@ -385,9 +362,7 @@ export component PrimerSelect {
                 width: 16px;
                 height: 16px;
                 vertical-alignment: top;
-                source: validation-status == ValidationStatus.error ?
-                    @image-url("../../assets/16px/alert.svg") :
-                    @image-url("../../assets/16px/check-circle.svg");
+                source: validation-status == ValidationStatus.error ? @image-url("../../assets/16px/alert.svg") : @image-url("../../assets/16px/check-circle.svg");
                 colorize: validation-status == ValidationStatus.error ? text-error : text-success;
             }
 

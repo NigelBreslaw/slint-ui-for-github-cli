@@ -2,8 +2,8 @@
  * Opt-in UI timing logs when `GH_APP_UI_PERF=1`.
  * Milestones are relative to T0 at the start of each auth UI attempt (`applyAuthUi`).
  */
-import type { SlintRgbaImage } from "./gh/avatar-image.ts";
-import { isPlaceholderAvatarImage } from "./gh/avatar-image.ts";
+import type { SlintRgbaImage } from "../gh/avatar-image.ts";
+import { isPlaceholderAvatarImage } from "../gh/avatar-image.ts";
 
 function isUiPerfEnabled(): boolean {
   return process.env.GH_APP_UI_PERF === "1";

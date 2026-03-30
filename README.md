@@ -52,8 +52,9 @@ pnpm typecheck
 | `[src/main.ts](src/main.ts)`                                                 | Entry: open DB, `loadFile` / `MainWindow`, Slint callbacks, event loop, shutdown |
 | `[src/slint-interface.ts](src/slint-interface.ts)`                           | Types for `MainWindow`, `AppState`, `SettingsState`, `TimeReportingState` (keep in sync with `.slint`) |
 | `[src/auth/auth-ui-flow.ts](src/auth/auth-ui-flow.ts)`                       | Sign-in scope check, viewer fetch, session cache, `runEventLoop` startup hooks   |
-| `[src/ui/app-window-bridge.ts](src/ui/app-window-bridge.ts)`                 | Mutates `AppState` / window fields (dashboard, projects, identity)               |
-| `[src/ui/settings-debug-panel.ts](src/ui/settings-debug-panel.ts)`           | Settings debug table + GraphQL rate-limit polling                                |
+| `[src/slint-window-bridge.ts](src/slint-window-bridge.ts)`                   | Mutates `AppState` / window fields (dashboard, projects, identity)               |
+| `[src/settings-debug-panel.ts](src/settings-debug-panel.ts)`                 | Settings debug table + GraphQL rate-limit polling                                |
+| `[src/settings-security-alerts-repo.ts](src/settings-security-alerts-repo.ts)` | Security alerts repo field: validate, KV, notify `slint-window-bridge` to refetch |
 | `[src/gh/gh-app-client.ts](src/gh/gh-app-client.ts)`                         | `gh api` / `gh api graphql` JSON helpers                                         |
 | `[src/gh/viewer-queries.ts](src/gh/viewer-queries.ts)`                       | GraphQL query strings for viewer load + debug dump                               |
 | `[src/debug/github-app-debug-dumps.ts](src/debug/github-app-debug-dumps.ts)` | `GH_DEBUG_JSON=1` file output orchestration                                      |
@@ -98,7 +99,7 @@ flowchart TB
   subgraph authFlow [auth-ui-flow]
     authNode[applyAuthUi fetchAndApplyGitHubUser slintRunningCallback]
   end
-  subgraph uiBridge [app-window-bridge]
+  subgraph uiBridge [slint-window-bridge]
     bridgeNode[identity dashboard org projects]
   end
   subgraph ghLayer [GitHub CLI]
