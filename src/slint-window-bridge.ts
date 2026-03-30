@@ -17,7 +17,10 @@ import type {
 import { readSecurityAlertsRepositoryOwnerRepo } from "./backend/settings/security-alerts-repo-kv.ts";
 import { resetTimeReportingItemsState } from "./backend/time-reporting/time-reporting-items-cache.ts";
 import { clearTimeReportingSelectedProjectKv } from "./backend/time-reporting/time-reporting-selected-project-kv.ts";
-import { clearViewerSessionCache, type ViewerSessionV1 } from "./backend/session/viewer-session-cache.ts";
+import {
+  clearViewerSessionCache,
+  type ViewerSessionV1,
+} from "./backend/session/viewer-session-cache.ts";
 import { teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
 
 let securityAlertsFetchGeneration = 0;

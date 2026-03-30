@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
 import { fileURLToPath } from "node:url";
 
-const pkgRoot = join(dirname(fileURLToPath(import.meta.url)), "../..");
+const pkgRoot = join(dirname(fileURLToPath(import.meta.url)), "../../..");
 
 describe("debug-json time-reporting items (optional)", () => {
   it("includes mergedAt or closedAt on a PullRequest when dump is fresh", (t) => {

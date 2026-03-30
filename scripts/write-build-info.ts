@@ -5,7 +5,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outDir = join(root, "src", "generated");
+const outDir = join(root, "generated");
 const outFile = join(outDir, "build-info.ts");
 
 let count = 0;
