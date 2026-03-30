@@ -43,8 +43,9 @@ window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertR
 window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
 
 window.SettingsState.primer_demo_select_options = new slint.ArrayModel<SlintSelectOption>([
-  { value: "github.com", label: "github.com" },
-  { value: "enterprise", label: "GitHub Enterprise Server" },
+  { value: "github.com", label: "github.com", enabled: true },
+  { value: "enterprise", label: "GitHub Enterprise Server", enabled: true },
+  { value: "disabled-demo", label: "Disabled (demo)", enabled: false },
 ]);
 window.SettingsState.primer_demo_selected_value = "github.com";
 window.SettingsState.primer_demo_selected_label = "github.com";

@@ -65,10 +65,11 @@ export type AppStateHandle = {
   dashboard_init: () => void;
 };
 
-/** Row shape must match `SelectOption` in `primer-select.slint`. */
+/** Row shape must match `SelectOption` in `primer-select-common.slint`. */
 export type SlintSelectOption = {
   value: string;
   label: string;
+  enabled: boolean;
 };
 
 export type SettingsStateHandle = {
