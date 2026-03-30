@@ -1,6 +1,6 @@
 import { AppState, Authed, View } from "../app-state.slint";
 import { TimeReportingState } from "../time-reporting-state.slint";
-import { Button } from "button.slint";
+import { ButtonBlack } from "buttons.slint";
 
 global HeaderStyle {
     out property <length> border-radius: 12px;
@@ -265,7 +265,7 @@ export component Header {
 
         }
 
-        Button {
+        ButtonBlack {
             x: (parent.width - self.width) / 2;
             y: (parent.height - self.height) / 2;
             visible: AppState.view == View.timeReporting && TimeReportingState.has-selected-project;
@@ -275,7 +275,7 @@ export component Header {
             }
         }
 
-        sign-in := Button {
+        sign-in := ButtonBlack {
             x: parent.width - self.width - self.y;
             y: (parent.height - self.height) / 2;
             visible: AppState.auth == Authed.loggedOut;

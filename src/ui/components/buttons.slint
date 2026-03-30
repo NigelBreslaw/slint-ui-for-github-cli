@@ -1,0 +1,68 @@
+export component ButtonBlack {
+    height: 32px;
+    width: label.preferred-width + (2 * 16px);
+
+    in property label <=> label.text;
+    callback clicked <=> ta.clicked;
+
+    Rectangle {
+        width: parent.width;
+        height: parent.height;
+        background: ta.has-hover ? #262c36 : #202830;
+        border-radius: 6px;
+        border-width: 1px;
+        border-color: #3e444d;
+
+        label := Text {
+            color: #f0f6fd;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+
+    ta := TouchArea { }
+}
+
+export component ButtonGreen {
+    height: 32px;
+    width: label.preferred-width + (2 * 16px);
+
+    in property label <=> label.text;
+    callback clicked <=> ta.clicked;
+
+    Rectangle {
+        width: parent.width;
+        height: parent.height;
+        border-radius: 6px;
+        drop-shadow-offset-x: 0px;
+        drop-shadow-offset-y: 1px;
+        drop-shadow-blur: 3px;
+        drop-shadow-color: #01040999;
+    }
+    Rectangle {
+        width: parent.width;
+        height: parent.height;
+        border-radius: 6px;
+        drop-shadow-offset-x: 0px;
+        drop-shadow-offset-y: 1px;
+        drop-shadow-blur: 1px;
+        drop-shadow-color: #01040999;
+    }
+
+    Rectangle {
+        width: parent.width;
+        height: parent.height;
+        background: ta.pressed ? #2e9a40 : ta.has-hover ? #2b8f3c : #248536;
+        border-radius: 6px;
+        border-width: 1px;
+        border-color: #3e444d;
+
+        label := Text {
+            color: #f0f6fd;
+            font-size: 14px;
+            font-weight: 600;
+        }
+    }
+
+    ta := TouchArea { }
+}

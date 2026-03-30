@@ -1,7 +1,7 @@
 import { ListView, VerticalBox } from "std-widgets.slint";
 import { AppState } from "app-state.slint";
 import { TimeReportingState } from "time-reporting-state.slint";
-import { Button } from "components/button.slint";
+import { ButtonBlack } from "components/buttons.slint";
 
 export component TimeReporting {
     width: 100%;
@@ -45,7 +45,7 @@ export component TimeReporting {
                     spacing: 8px;
                     alignment: center;
 
-                    Button {
+                    ButtonBlack {
                         label: "← Prev";
                         clicked => {
                             TimeReportingState.time-reporting-week-prev();
@@ -72,21 +72,21 @@ export component TimeReporting {
                         }
                     }
 
-                    Button {
+                    ButtonBlack {
                         label: "Next →";
                         clicked => {
                             TimeReportingState.time-reporting-week-next();
                         }
                     }
 
-                    Button {
+                    ButtonBlack {
                         label: "This week";
                         clicked => {
                             TimeReportingState.time-reporting-week-this();
                         }
                     }
 
-                    Button {
+                    ButtonBlack {
                         label: "Refresh";
                         clicked => {
                             TimeReportingState.time-reporting-refresh();
@@ -536,7 +536,7 @@ export component TimeReporting {
                                 height: 1px;
                             }
 
-                            Button {
+                            ButtonBlack {
                                 visible: TimeReportingState.picker-allow-cancel;
                                 label: "Cancel";
                                 clicked => {
@@ -616,7 +616,7 @@ export component TimeReporting {
 
                         HorizontalLayout {
                             alignment: end;
-                            Button {
+                            ButtonBlack {
                                 label: "Close";
                                 clicked => {
                                     TimeReportingState.time-reporting-detail-close();
