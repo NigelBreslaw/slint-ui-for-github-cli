@@ -1,9 +1,4 @@
-import {
-  extractProjectV2NumberFieldHours,
-  extractProjectV2TextField,
-  itemContentTitleUrl,
-  projectHoursToMinutes,
-} from "./project-v2-item-hours.ts";
+import { extractProjectV2TextField, itemContentTitleUrl } from "./project-v2-item-hours.ts";
 import { type IsoWeek, weekdayDatesMondayToFriday } from "./iso-week.ts";
 import { parseTimeLogLines } from "./parse-time-log.ts";
 
@@ -57,8 +52,8 @@ export function cellDetailKey(itemId: string, ymd: string): string {
 
 /**
  * Builds week grid rows and a provenance map (`cellDetailsByKey`).
- * Weekday cells use the optional text log for the selected ISO week; otherwise `"—"`.
- * Rows include every item with a titled `content` (even when total and days are empty).
+ * Only includes items with **at least one minute** from the Time Log on Mon–Fri of `targetWeek`.
+ * The **Total** column is the sum of those weekday minutes (not the board `Time Spent(h)` field).
  */
 export function buildTimeReportingWeekRows(
   items: unknown[],
@@ -67,7 +62,7 @@ export function buildTimeReportingWeekRows(
   rows: TimeReportingWeekRowTs[];
   cellDetailsByKey: Map<string, TimeReportingCellContribution[]>;
 } {
-  const { timeSpentFieldName, targetWeek } = options;
+  const { targetWeek } = options;
   const timeLogName = options.timeLogFieldName?.trim() ?? "";
   const weekDates = weekdayDatesMondayToFriday(targetWeek.isoYear, targetWeek.isoWeek);
   const dateToCol = new Map<string, number>(weekDates.map((d, i) => [d, i]));
@@ -89,11 +84,8 @@ export function buildTimeReportingWeekRows(
     if (meta === null) {
       continue;
     }
-    const hours = extractProjectV2NumberFieldHours(item, timeSpentFieldName);
-    const total =
-      hours === null ? placeholder : formatMinutesAsHoursLabel(projectHoursToMinutes(hours));
-
     const dayMinutes = [0, 0, 0, 0, 0];
+    const pendingContribs: { ymd: string; minutes: number; rawLine: string }[] = [];
     if (timeLogName.length > 0) {
       const logText = extractProjectV2TextField(item, timeLogName);
       if (logText !== null && logText.length > 0) {
@@ -106,15 +98,26 @@ export function buildTimeReportingWeekRows(
             continue;
           }
           dayMinutes[col] += e.minutes;
-          const key = cellDetailKey(id, e.date);
-          const arr = cellDetailsByKey.get(key) ?? [];
-          arr.push({ minutes: e.minutes, rawLine: e.rawLine });
-          cellDetailsByKey.set(key, arr);
+          pendingContribs.push({ ymd: e.date, minutes: e.minutes, rawLine: e.rawLine });
         }
       }
     }
 
+    const weekMinutesSum =
+      dayMinutes[0] + dayMinutes[1] + dayMinutes[2] + dayMinutes[3] + dayMinutes[4];
+    if (weekMinutesSum === 0) {
+      continue;
+    }
+
+    for (const p of pendingContribs) {
+      const key = cellDetailKey(id, p.ymd);
+      const arr = cellDetailsByKey.get(key) ?? [];
+      arr.push({ minutes: p.minutes, rawLine: p.rawLine });
+      cellDetailsByKey.set(key, arr);
+    }
+
     const dayLabels = dayMinutes.map((m) => (m > 0 ? formatMinutesAsHoursLabel(m) : placeholder));
+    const total = formatMinutesAsHoursLabel(weekMinutesSum);
 
     rows.push({
       item_id: id,

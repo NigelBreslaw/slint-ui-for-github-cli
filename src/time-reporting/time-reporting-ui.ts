@@ -1,3 +1,4 @@
+import * as slint from "slint-ui";
 import type { MainWindowInstance, SlintTimeReportingWeekRow } from "../slint-interface.ts";
 import {
   buildFilteredProjectsModel,
@@ -15,11 +16,7 @@ import {
   weekdayDatesMondayToFriday,
 } from "./iso-week.ts";
 import { TIME_LOG_FIELD_NAME } from "./parse-time-log.ts";
-import {
-  extractProjectV2NumberFieldHours,
-  projectHoursToMinutes,
-  TIME_SPENT_FIELD_NAME,
-} from "./project-v2-item-hours.ts";
+import { TIME_SPENT_FIELD_NAME } from "./project-v2-item-hours.ts";
 import {
   getTimeReportingCachedItems,
   getTimeReportingCachedProjectNodeId,
@@ -35,7 +32,30 @@ import {
   TIME_REPORTING_SELECTED_PROJECT_SCHEMA_VERSION,
   writeTimeReportingSelectedProjectKv,
 } from "./time-reporting-selected-project-kv.ts";
-import { replaceArrayModelContents } from "../utils/replace-array-model.ts";
+/** Week navigation / grid refresh traces. Disable: `TIME_REPORTING_DEBUG_WEEK_NAV=false pnpm start`. */
+const weekNavLog =
+  typeof process !== "undefined" && process.env.TIME_REPORTING_DEBUG_WEEK_NAV !== "false";
+
+/** `YYYY-MM-DD` → `MM-DD` for compact column headers. */
+function ymdToMmDd(ymd: string): string {
+  return ymd.length >= 10 ? ymd.slice(5, 10) : "";
+}
+
+function clearWeekGridColumnHeaders(window: MainWindowInstance): void {
+  window.TimeReportingState.week_hdr_mo = "";
+  window.TimeReportingState.week_hdr_tu = "";
+  window.TimeReportingState.week_hdr_we = "";
+  window.TimeReportingState.week_hdr_th = "";
+  window.TimeReportingState.week_hdr_fr = "";
+}
+
+function setWeekGridColumnHeaders(window: MainWindowInstance, weekDates: string[]): void {
+  window.TimeReportingState.week_hdr_mo = ymdToMmDd(weekDates[0] ?? "");
+  window.TimeReportingState.week_hdr_tu = ymdToMmDd(weekDates[1] ?? "");
+  window.TimeReportingState.week_hdr_we = ymdToMmDd(weekDates[2] ?? "");
+  window.TimeReportingState.week_hdr_th = ymdToMmDd(weekDates[3] ?? "");
+  window.TimeReportingState.week_hdr_fr = ymdToMmDd(weekDates[4] ?? "");
+}
 
 function closeTimeReportingPicker(window: MainWindowInstance): void {
   window.TimeReportingState.picker_open = false;
@@ -59,10 +79,17 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   const items = getTimeReportingCachedItems();
   const nodeId = getTimeReportingCachedProjectNodeId();
   if (items === null || nodeId === null) {
+    if (weekNavLog) {
+      console.log("[time-reporting:week] applyWeekRowsToWindow early exit (no cache)", {
+        itemsNull: items === null,
+        nodeIdNull: nodeId === null,
+      });
+    }
     setTimeReportingWeekRowOrder([]);
-    replaceArrayModelContents(window.TimeReportingState.week_rows_model, []);
+    window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
     window.TimeReportingState.week_label = "";
     window.TimeReportingState.week_range_subtitle = "";
+    clearWeekGridColumnHeaders(window);
     window.TimeReportingState.week_grid_hint = "";
     return;
   }
@@ -78,29 +105,54 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   window.TimeReportingState.week_label = formatIsoWeekLabel(week.isoYear, week.isoWeek);
   window.TimeReportingState.week_range_subtitle =
     weekDates.length >= 5 ? `${weekDates[0]} – ${weekDates[4]}` : "";
+  setWeekGridColumnHeaders(window, weekDates);
   if (rows.length === 0 && window.TimeReportingState.items_load_status === "") {
     window.TimeReportingState.week_grid_hint =
       items.length === 0
         ? "No items on this board."
-        : "No issues, pull requests, or draft issues with a title to show.";
+        : "No time logged for this week (Time Log field, Mon–Fri of the selected ISO week).";
   } else {
     window.TimeReportingState.week_grid_hint = "";
   }
-  replaceArrayModelContents(
-    window.TimeReportingState.week_rows_model,
-    rows.map(
-      (r): SlintTimeReportingWeekRow => ({
-        item_id: r.item_id,
-        title: r.title,
-        url: r.url,
-        mon: r.mon,
-        tue: r.tue,
-        wed: r.wed,
-        thu: r.thu,
-        fri: r.fri,
-        total: r.total,
-      }),
-    ),
+  const weekKey = formatIsoWeekLabel(week.isoYear, week.isoWeek);
+  const slintRows = rows.map(
+    (r): SlintTimeReportingWeekRow => ({
+      item_id: r.item_id,
+      grid_week_key: weekKey,
+      title: r.title,
+      url: r.url,
+      mon: r.mon,
+      tue: r.tue,
+      wed: r.wed,
+      thu: r.thu,
+      fri: r.fri,
+      total: r.total,
+    }),
+  );
+  if (weekNavLog) {
+    const first = rows[0];
+    console.log("[time-reporting:week] applyWeekRowsToWindow", {
+      targetWeek: { isoYear: week.isoYear, isoWeek: week.isoWeek },
+      weekDates,
+      itemsCount: items.length,
+      builtRowCount: rows.length,
+      cellDetailKeys: cellDetailsByKey.size,
+      weekLabelAssigned: formatIsoWeekLabel(week.isoYear, week.isoWeek),
+      firstRow: first
+        ? {
+            title: first.title,
+            mon: first.mon,
+            tue: first.tue,
+            wed: first.wed,
+            thu: first.thu,
+            fri: first.fri,
+            total: first.total,
+          }
+        : null,
+    });
+  }
+  window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>(
+    slintRows,
   );
 }
 
@@ -110,9 +162,10 @@ async function loadProjectItemsIntoUi(window: MainWindowInstance, nodeId: string
   const res = await fetchAllProjectV2ItemsGraphql(nodeId);
   if (!res.ok) {
     window.TimeReportingState.items_load_status = res.error;
-    replaceArrayModelContents(window.TimeReportingState.week_rows_model, []);
+    window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
     window.TimeReportingState.week_label = "";
     window.TimeReportingState.week_range_subtitle = "";
+    clearWeekGridColumnHeaders(window);
     window.TimeReportingState.week_grid_hint = "";
     setTimeReportingWeekRowOrder([]);
     return;
@@ -150,20 +203,35 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
   window.TimeReportingState.time_reporting_week_prev = () => {
     closeTimeReportingDetail(window);
     const w = getTimeReportingSelectedWeek();
-    setTimeReportingSelectedWeek(addIsoWeeks(w.isoYear, w.isoWeek, -1));
+    const next = addIsoWeeks(w.isoYear, w.isoWeek, -1);
+    if (weekNavLog) {
+      console.log("[time-reporting:week] Prev clicked", { from: w, to: next });
+    }
+    setTimeReportingSelectedWeek(next);
     applyWeekRowsToWindow(window);
   };
 
   window.TimeReportingState.time_reporting_week_next = () => {
     closeTimeReportingDetail(window);
     const w = getTimeReportingSelectedWeek();
-    setTimeReportingSelectedWeek(addIsoWeeks(w.isoYear, w.isoWeek, 1));
+    const next = addIsoWeeks(w.isoYear, w.isoWeek, 1);
+    if (weekNavLog) {
+      console.log("[time-reporting:week] Next clicked", { from: w, to: next });
+    }
+    setTimeReportingSelectedWeek(next);
     applyWeekRowsToWindow(window);
   };
 
   window.TimeReportingState.time_reporting_week_this = () => {
     closeTimeReportingDetail(window);
-    setTimeReportingSelectedWeek(currentIsoWeekUtc());
+    const now = currentIsoWeekUtc();
+    if (weekNavLog) {
+      console.log("[time-reporting:week] This week clicked", {
+        was: getTimeReportingSelectedWeek(),
+        now,
+      });
+    }
+    setTimeReportingSelectedWeek(now);
     applyWeekRowsToWindow(window);
   };
 
@@ -194,15 +262,12 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
       return;
     }
     const weekDates = weekdayDatesMondayToFriday(w.isoYear, w.isoWeek);
-    const hours = extractProjectV2NumberFieldHours(item, TIME_SPENT_FIELD_NAME);
-    const totalFieldMinutes = hours === null ? null : projectHoursToMinutes(hours);
     const { title, body } = formatTimeReportingCellDetail({
       item,
       itemId,
       dayIndex,
       weekDates,
       detailsMap: getTimeReportingCellDetailsByKey(),
-      totalFieldMinutes,
     });
     window.TimeReportingState.detail_title = title;
     window.TimeReportingState.detail_body = body;

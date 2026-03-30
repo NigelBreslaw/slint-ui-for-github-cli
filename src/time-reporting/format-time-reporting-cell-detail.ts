@@ -2,7 +2,6 @@ import {
   cellDetailKey,
   type TimeReportingCellContribution,
 } from "./build-time-reporting-week-rows.ts";
-import { TIME_SPENT_FIELD_NAME } from "./project-v2-item-hours.ts";
 
 const WEEKDAY_TITLES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"] as const;
 
@@ -51,7 +50,6 @@ type TimeReportingCellDetailArgs = {
   /** Monday–Friday `YYYY-MM-DD` for the selected ISO week. */
   weekDates: string[];
   detailsMap: Map<string, TimeReportingCellContribution[]>;
-  totalFieldMinutes: number | null;
 };
 
 /**
@@ -61,7 +59,7 @@ export function formatTimeReportingCellDetail(args: TimeReportingCellDetailArgs)
   title: string;
   body: string;
 } {
-  const { item, itemId, dayIndex, weekDates, detailsMap, totalFieldMinutes } = args;
+  const { item, itemId, dayIndex, weekDates, detailsMap } = args;
   const meta = contentMeta(item);
   const headerLines = [`${meta.label}: ${meta.title}`];
   if (meta.url.length > 0) {
@@ -71,16 +69,27 @@ export function formatTimeReportingCellDetail(args: TimeReportingCellDetailArgs)
 
   if (dayIndex === 5) {
     const title = "Time — Total";
-    if (totalFieldMinutes === null) {
+    let sum = 0;
+    const bulletLines: string[] = [];
+    for (const ymd of weekDates) {
+      const contribs = detailsMap.get(cellDetailKey(itemId, ymd)) ?? [];
+      for (const c of contribs) {
+        sum += c.minutes;
+        const dur = formatMinutesLabel(c.minutes);
+        const snippet =
+          c.rawLine !== undefined && c.rawLine.length > 0 ? c.rawLine : "(no line text)";
+        bulletLines.push(`• ${dur} — ${ymd}: ${snippet}`);
+      }
+    }
+    if (sum === 0) {
       return {
         title,
-        body: `${header}\n\nNo "${TIME_SPENT_FIELD_NAME}" value on this card.\nThe total column is not broken down by calendar day.`,
+        body: `${header}\n\nNo Time Log lines for this card in the selected week.`,
       };
     }
-    const lbl = formatMinutesLabel(totalFieldMinutes);
     return {
       title,
-      body: `${header}\n\nTotal from board field "${TIME_SPENT_FIELD_NAME}": ${lbl} (${totalFieldMinutes} minutes).\nThis value is not allocated to specific weekdays in the grid.`,
+      body: `${header}\n\nWeek total from Time Log: ${formatMinutesLabel(sum)} (${sum} minutes).\n${bulletLines.join("\n")}`,
     };
   }
 

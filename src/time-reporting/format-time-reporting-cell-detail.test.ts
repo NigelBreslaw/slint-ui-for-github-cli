@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { formatTimeReportingCellDetail } from "./format-time-reporting-cell-detail.ts";
-import { TIME_SPENT_FIELD_NAME } from "./project-v2-item-hours.ts";
 
 describe("formatTimeReportingCellDetail", () => {
   const item = {
@@ -23,7 +22,6 @@ describe("formatTimeReportingCellDetail", () => {
       dayIndex: 0,
       weekDates,
       detailsMap,
-      totalFieldMinutes: 120,
     });
     assert.equal(r.title, "Time — Monday 2026-03-23");
     assert.ok(r.body.includes("Pull request: Fix thing"));
@@ -38,23 +36,37 @@ describe("formatTimeReportingCellDetail", () => {
       dayIndex: 1,
       weekDates,
       detailsMap: new Map(),
-      totalFieldMinutes: null,
     });
     assert.ok(r.body.includes("No time recorded for this day"));
   });
 
-  it("explains Total from number field", () => {
+  it("aggregates Total from Time Log across Mon–Fri", () => {
+    const detailsMap = new Map([
+      ["PVTI_x|2026-03-23", [{ minutes: 30, rawLine: "2026-03-23 0.5h" }]],
+      ["PVTI_x|2026-03-24", [{ minutes: 60, rawLine: "2026-03-24 1h" }]],
+    ]);
+    const r = formatTimeReportingCellDetail({
+      item,
+      itemId: "PVTI_x",
+      dayIndex: 5,
+      weekDates,
+      detailsMap,
+    });
+    assert.equal(r.title, "Time — Total");
+    assert.ok(r.body.includes("Week total from Time Log"));
+    assert.ok(r.body.includes("1h 30m"));
+    assert.ok(r.body.includes("90 minutes"));
+  });
+
+  it("explains Total when no log lines in the week", () => {
     const r = formatTimeReportingCellDetail({
       item,
       itemId: "PVTI_x",
       dayIndex: 5,
       weekDates,
       detailsMap: new Map(),
-      totalFieldMinutes: 90,
     });
     assert.equal(r.title, "Time — Total");
-    assert.ok(r.body.includes(TIME_SPENT_FIELD_NAME));
-    assert.ok(r.body.includes("1h 30m"));
-    assert.ok(r.body.includes("not allocated"));
+    assert.ok(r.body.includes("No Time Log lines"));
   });
 });

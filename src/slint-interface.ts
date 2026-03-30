@@ -59,6 +59,7 @@ export type SettingsStateHandle = {
 /** Matches `TimeReportingWeekRow` in `time-reporting-state.slint` (Slint `item-id` → `item_id`). */
 export type SlintTimeReportingWeekRow = {
   item_id: string;
+  grid_week_key: string;
   title: string;
   url: string;
   mon: string;
@@ -90,6 +91,11 @@ export type TimeReportingStateHandle = {
   items_load_status: string;
   week_label: string;
   week_range_subtitle: string;
+  week_hdr_mo: string;
+  week_hdr_tu: string;
+  week_hdr_we: string;
+  week_hdr_th: string;
+  week_hdr_fr: string;
   week_grid_hint: string;
   detail_open: boolean;
   detail_title: string;

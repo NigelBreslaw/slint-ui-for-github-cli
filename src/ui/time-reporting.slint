@@ -183,6 +183,66 @@ export component TimeReporting {
                             }
                         }
 
+                        HorizontalLayout {
+                            spacing: 4px;
+                            height: 20px;
+
+                            Text {
+                                horizontal-stretch: 1;
+                                text: "";
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: TimeReportingState.week-hdr-mo;
+                                font-size: 10px;
+                                font-weight: 500;
+                                color: #6e7681;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: TimeReportingState.week-hdr-tu;
+                                font-size: 10px;
+                                font-weight: 500;
+                                color: #6e7681;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: TimeReportingState.week-hdr-we;
+                                font-size: 10px;
+                                font-weight: 500;
+                                color: #6e7681;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: TimeReportingState.week-hdr-th;
+                                font-size: 10px;
+                                font-weight: 500;
+                                color: #6e7681;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 44px;
+                                text: TimeReportingState.week-hdr-fr;
+                                font-size: 10px;
+                                font-weight: 500;
+                                color: #6e7681;
+                                horizontal-alignment: right;
+                            }
+
+                            Text {
+                                width: 52px;
+                                text: "";
+                            }
+                        }
+
                         Rectangle {
                             height: 1px;
                             background: #30363d;
@@ -206,6 +266,16 @@ export component TimeReporting {
                             for week_row[row_ix] in TimeReportingState.week-rows-model: Rectangle {
                                 height: 36px;
                                 background: mod(row_ix, 2) == 0 ? #0d1117 : #161b22;
+
+                                Text {
+                                    width: 1px;
+                                    height: 1px;
+                                    x: 0;
+                                    y: 0;
+                                    font-size: 1px;
+                                    color: #f0f6fc00;
+                                    text: week_row.grid-week-key;
+                                }
 
                                 HorizontalLayout {
                                     spacing: 4px;
@@ -391,14 +461,27 @@ export component TimeReporting {
                             wrap: word-wrap;
                         }
 
-                        TextInput {
+                        Rectangle {
                             width: 100%;
-                            text: AppState.projects-search;
-                            font-size: 14px;
-                            color: #f0f6fc;
-                            edited => {
-                                AppState.projects-search = self.text;
-                                AppState.project_search_changed(self.text);
+                            height: 40px;
+                            background: #0d1117;
+                            border-radius: 6px;
+                            border-width: 1px;
+                            border-color: #30363d;
+                            clip: true;
+
+                            TextInput {
+                                x: 10px;
+                                y: 0;
+                                width: parent.width - 20px;
+                                height: parent.height;
+                                text: AppState.projects-search;
+                                font-size: 14px;
+                                color: #f0f6fc;
+                                edited => {
+                                    AppState.projects-search = self.text;
+                                    AppState.project_search_changed(self.text);
+                                }
                             }
                         }
 

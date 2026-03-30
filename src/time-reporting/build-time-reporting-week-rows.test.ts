@@ -13,7 +13,7 @@ describe("cellDetailKey", () => {
 describe("buildTimeReportingWeekRows", () => {
   const targetWeek = { isoYear: 2026, isoWeek: 13 };
 
-  it("produces day placeholders and total from Time Spent", () => {
+  it("omits items that only have board Time Spent with no Time Log in the week", () => {
     const items = [
       {
         id: "PVTI_a",
@@ -29,23 +29,25 @@ describe("buildTimeReportingWeekRows", () => {
               number: 1.5,
               field: { name: TIME_SPENT_FIELD_NAME },
             },
+            {
+              __typename: "ProjectV2ItemFieldTextValue",
+              text: "2026-03-01 1h\n",
+              field: { name: TIME_LOG_FIELD_NAME },
+            },
           ],
         },
       },
     ];
     const { rows, cellDetailsByKey } = buildTimeReportingWeekRows(items, {
       timeSpentFieldName: TIME_SPENT_FIELD_NAME,
+      timeLogFieldName: TIME_LOG_FIELD_NAME,
       targetWeek,
     });
-    assert.equal(rows.length, 1);
-    assert.equal(rows[0].item_id, "PVTI_a");
-    assert.equal(rows[0].title, "PR one");
-    assert.equal(rows[0].mon, "—");
-    assert.equal(rows[0].total, "1h 30m");
+    assert.equal(rows.length, 0);
     assert.equal(cellDetailsByKey.size, 0);
   });
 
-  it("uses em dash total when time field missing", () => {
+  it("omits titled items with no time log minutes in the target week", () => {
     const items = [
       {
         id: "PVTI_b",
@@ -55,9 +57,10 @@ describe("buildTimeReportingWeekRows", () => {
     ];
     const { rows } = buildTimeReportingWeekRows(items, {
       timeSpentFieldName: TIME_SPENT_FIELD_NAME,
+      timeLogFieldName: TIME_LOG_FIELD_NAME,
       targetWeek,
     });
-    assert.equal(rows[0].total, "—");
+    assert.equal(rows.length, 0);
   });
 
   it("skips items without content title", () => {
@@ -68,7 +71,7 @@ describe("buildTimeReportingWeekRows", () => {
     assert.equal(rows.length, 0);
   });
 
-  it("fills weekday cells from Time Log for the target ISO week", () => {
+  it("fills weekday cells from Time Log for the target ISO week; total is week log sum", () => {
     const log = "2026-03-23 0.5h\n2026-03-24 30m\n2026-03-25 15m\n2026-03-25 15m\n2026-03-01 8h\n";
     const items = [
       {
@@ -104,7 +107,7 @@ describe("buildTimeReportingWeekRows", () => {
     assert.equal(rows[0].wed, "30m");
     assert.equal(rows[0].thu, "—");
     assert.equal(rows[0].fri, "—");
-    assert.equal(rows[0].total, "2h");
+    assert.equal(rows[0].total, "1h 30m");
     const kMon = cellDetailKey("PVTI_log", "2026-03-23");
     const kWed = cellDetailKey("PVTI_log", "2026-03-25");
     assert.equal(cellDetailsByKey.get(kMon)?.length, 1);
@@ -115,7 +118,7 @@ describe("buildTimeReportingWeekRows", () => {
     );
   });
 
-  it("leaves weekdays as em dash when time log field name not passed", () => {
+  it("omits all rows when time log field name is not passed (log text is ignored)", () => {
     const items = [
       {
         id: "PVTI_n",
@@ -135,7 +138,47 @@ describe("buildTimeReportingWeekRows", () => {
       timeSpentFieldName: TIME_SPENT_FIELD_NAME,
       targetWeek,
     });
-    assert.equal(rows[0].mon, "—");
+    assert.equal(rows.length, 0);
     assert.equal(cellDetailsByKey.size, 0);
+  });
+
+  it("includes only items with minutes in the week when multiple cards exist", () => {
+    const items = [
+      {
+        id: "PVTI_only_board",
+        content: { __typename: "Issue", title: "A", url: "https://a" },
+        fieldValues: {
+          nodes: [
+            {
+              __typename: "ProjectV2ItemFieldNumberValue",
+              number: 5,
+              field: { name: TIME_SPENT_FIELD_NAME },
+            },
+          ],
+        },
+      },
+      {
+        id: "PVTI_logged",
+        content: { __typename: "Issue", title: "B", url: "https://b" },
+        fieldValues: {
+          nodes: [
+            {
+              __typename: "ProjectV2ItemFieldTextValue",
+              text: "2026-03-23 1h\n",
+              field: { name: TIME_LOG_FIELD_NAME },
+            },
+          ],
+        },
+      },
+    ];
+    const { rows } = buildTimeReportingWeekRows(items, {
+      timeSpentFieldName: TIME_SPENT_FIELD_NAME,
+      timeLogFieldName: TIME_LOG_FIELD_NAME,
+      targetWeek,
+    });
+    assert.equal(rows.length, 1);
+    assert.equal(rows[0].item_id, "PVTI_logged");
+    assert.equal(rows[0].mon, "1h");
+    assert.equal(rows[0].total, "1h");
   });
 });
