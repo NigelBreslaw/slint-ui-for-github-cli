@@ -1,4 +1,4 @@
-import { ListView, VerticalBox } from "std-widgets.slint";
+import { ListView } from "std-widgets.slint";
 import { AppState } from "app-state.slint";
 
 export component Dashboard {
@@ -14,7 +14,7 @@ export component Dashboard {
         height: 100%;
         background: #020408;
 
-        VerticalBox {
+        VerticalLayout {
             padding: 16px;
             spacing: 12px;
             width: 100%;
@@ -73,7 +73,7 @@ export component Dashboard {
                             AppState.open_project_url(row.url);
                         }
 
-                        VerticalBox {
+                        VerticalLayout {
                             padding: 8px;
                             spacing: 4px;
                             Text {

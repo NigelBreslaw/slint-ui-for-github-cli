@@ -1,4 +1,4 @@
-import { ListView, VerticalBox } from "std-widgets.slint";
+import { ListView } from "std-widgets.slint";
 import { AppState } from "app-state.slint";
 import { TimeReportingState } from "time-reporting-state.slint";
 import { ButtonBlack } from "components/buttons.slint";
@@ -16,20 +16,13 @@ export component TimeReporting {
         height: 100%;
         background: #0d1117;
 
-        VerticalBox {
+        VerticalLayout {
             padding: 16px;
             spacing: 12px;
             width: 100%;
             height: 100%;
 
-            Text {
-                text: "Time reporting";
-                font-size: 14px;
-                font-weight: 600;
-                color: #c9d1d9;
-            }
-
-            if TimeReportingState.has-selected-project: VerticalBox {
+            if TimeReportingState.has-selected-project: VerticalLayout {
                 spacing: 10px;
                 vertical-stretch: 1;
 
@@ -42,11 +35,13 @@ export component TimeReporting {
                 }
 
                 HorizontalLayout {
+                    x: 0;
+                    width: self.preferred-width;
                     spacing: 8px;
                     alignment: center;
 
                     ButtonBlack {
-                        label: "← Prev";
+                        label: "←";
                         clicked => {
                             TimeReportingState.time-reporting-week-prev();
                         }
@@ -73,7 +68,7 @@ export component TimeReporting {
                     }
 
                     ButtonBlack {
-                        label: "Next →";
+                        label: "→";
                         clicked => {
                             TimeReportingState.time-reporting-week-next();
                         }
@@ -110,7 +105,7 @@ export component TimeReporting {
                     border-width: 1px;
                     border-color: #30363d;
 
-                    VerticalBox {
+                    VerticalLayout {
                         padding: 8px;
                         spacing: 0;
                         width: parent.width - 16px;
@@ -282,110 +277,110 @@ export component TimeReporting {
                                     width: 100%;
                                     height: 100%;
 
-                                title_ta := TouchArea {
-                                    horizontal-stretch: 1;
-                                    clicked => {
-                                        TimeReportingState.time-reporting-open-row-url(week_row.url);
+                                    title_ta := TouchArea {
+                                        horizontal-stretch: 1;
+                                        clicked => {
+                                            TimeReportingState.time-reporting-open-row-url(week_row.url);
+                                        }
+
+                                        Text {
+                                            text: week_row.title;
+                                            color: title_ta.has-hover ? #58a6ff : #f0f6fc;
+                                            overflow: elide;
+                                            font-size: 13px;
+                                            vertical-alignment: center;
+                                        }
                                     }
 
-                                    Text {
-                                        text: week_row.title;
-                                        color: title_ta.has-hover ? #58a6ff : #f0f6fc;
-                                        overflow: elide;
-                                        font-size: 13px;
-                                        vertical-alignment: center;
-                                    }
-                                }
+                                    mo_ta := TouchArea {
+                                        width: 44px;
+                                        clicked => {
+                                            TimeReportingState.time-reporting-time-cell-clicked(row_ix, 0);
+                                        }
 
-                                mo_ta := TouchArea {
-                                    width: 44px;
-                                    clicked => {
-                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 0);
-                                    }
-
-                                    Text {
-                                        text: week_row.mon;
-                                        color: #c9d1d9;
-                                        font-size: 13px;
-                                        horizontal-alignment: right;
-                                        vertical-alignment: center;
-                                    }
-                                }
-
-                                tu_ta := TouchArea {
-                                    width: 44px;
-                                    clicked => {
-                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 1);
+                                        Text {
+                                            text: week_row.mon;
+                                            color: #c9d1d9;
+                                            font-size: 13px;
+                                            horizontal-alignment: right;
+                                            vertical-alignment: center;
+                                        }
                                     }
 
-                                    Text {
-                                        text: week_row.tue;
-                                        color: #c9d1d9;
-                                        font-size: 13px;
-                                        horizontal-alignment: right;
-                                        vertical-alignment: center;
-                                    }
-                                }
+                                    tu_ta := TouchArea {
+                                        width: 44px;
+                                        clicked => {
+                                            TimeReportingState.time-reporting-time-cell-clicked(row_ix, 1);
+                                        }
 
-                                we_ta := TouchArea {
-                                    width: 44px;
-                                    clicked => {
-                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 2);
-                                    }
-
-                                    Text {
-                                        text: week_row.wed;
-                                        color: #c9d1d9;
-                                        font-size: 13px;
-                                        horizontal-alignment: right;
-                                        vertical-alignment: center;
-                                    }
-                                }
-
-                                th_ta := TouchArea {
-                                    width: 44px;
-                                    clicked => {
-                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 3);
+                                        Text {
+                                            text: week_row.tue;
+                                            color: #c9d1d9;
+                                            font-size: 13px;
+                                            horizontal-alignment: right;
+                                            vertical-alignment: center;
+                                        }
                                     }
 
-                                    Text {
-                                        text: week_row.thu;
-                                        color: #c9d1d9;
-                                        font-size: 13px;
-                                        horizontal-alignment: right;
-                                        vertical-alignment: center;
-                                    }
-                                }
+                                    we_ta := TouchArea {
+                                        width: 44px;
+                                        clicked => {
+                                            TimeReportingState.time-reporting-time-cell-clicked(row_ix, 2);
+                                        }
 
-                                fr_ta := TouchArea {
-                                    width: 44px;
-                                    clicked => {
-                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 4);
-                                    }
-
-                                    Text {
-                                        text: week_row.fri;
-                                        color: #c9d1d9;
-                                        font-size: 13px;
-                                        horizontal-alignment: right;
-                                        vertical-alignment: center;
-                                    }
-                                }
-
-                                tot_ta := TouchArea {
-                                    width: 52px;
-                                    clicked => {
-                                        TimeReportingState.time-reporting-time-cell-clicked(row_ix, 5);
+                                        Text {
+                                            text: week_row.wed;
+                                            color: #c9d1d9;
+                                            font-size: 13px;
+                                            horizontal-alignment: right;
+                                            vertical-alignment: center;
+                                        }
                                     }
 
-                                    Text {
-                                        text: week_row.total;
-                                        color: #c9d1d9;
-                                        font-size: 13px;
-                                        horizontal-alignment: right;
-                                        vertical-alignment: center;
+                                    th_ta := TouchArea {
+                                        width: 44px;
+                                        clicked => {
+                                            TimeReportingState.time-reporting-time-cell-clicked(row_ix, 3);
+                                        }
+
+                                        Text {
+                                            text: week_row.thu;
+                                            color: #c9d1d9;
+                                            font-size: 13px;
+                                            horizontal-alignment: right;
+                                            vertical-alignment: center;
+                                        }
                                     }
-                                }
+
+                                    fr_ta := TouchArea {
+                                        width: 44px;
+                                        clicked => {
+                                            TimeReportingState.time-reporting-time-cell-clicked(row_ix, 4);
+                                        }
+
+                                        Text {
+                                            text: week_row.fri;
+                                            color: #c9d1d9;
+                                            font-size: 13px;
+                                            horizontal-alignment: right;
+                                            vertical-alignment: center;
+                                        }
+                                    }
+
+                                    tot_ta := TouchArea {
+                                        width: 52px;
+                                        clicked => {
+                                            TimeReportingState.time-reporting-time-cell-clicked(row_ix, 5);
+                                        }
+
+                                        Text {
+                                            text: week_row.total;
+                                            color: #c9d1d9;
+                                            font-size: 13px;
+                                            horizontal-alignment: right;
+                                            vertical-alignment: center;
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -441,7 +436,7 @@ export component TimeReporting {
                     border-width: 1px;
                     border-color: #30363d;
 
-                    VerticalBox {
+                    VerticalLayout {
                         padding: 20px;
                         spacing: 16px;
                         width: parent.width - 40px;
@@ -507,7 +502,7 @@ export component TimeReporting {
                                             TimeReportingState.time-reporting-project-chosen(row.id);
                                         }
 
-                                        VerticalBox {
+                                        VerticalLayout {
                                             padding: 8px;
                                             spacing: 2px;
                                             Text {
@@ -581,7 +576,7 @@ export component TimeReporting {
                     border-width: 1px;
                     border-color: #30363d;
 
-                    VerticalBox {
+                    VerticalLayout {
                         padding: 20px;
                         spacing: 12px;
                         width: parent.width - 40px;
