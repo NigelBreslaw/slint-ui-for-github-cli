@@ -1,5 +1,4 @@
 import type { MainWindowInstance, SlintTimeReportingWeekRow } from "../slint-interface.ts";
-import * as slint from "slint-ui";
 import {
   buildFilteredProjectsModel,
   findSlintUiOpenProjectRowByNodeId,
@@ -36,6 +35,7 @@ import {
   TIME_REPORTING_SELECTED_PROJECT_SCHEMA_VERSION,
   writeTimeReportingSelectedProjectKv,
 } from "./time-reporting-selected-project-kv.ts";
+import { replaceArrayModelContents } from "../utils/replace-array-model.ts";
 
 function closeTimeReportingPicker(window: MainWindowInstance): void {
   window.TimeReportingState.picker_open = false;
@@ -60,7 +60,7 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   const nodeId = getTimeReportingCachedProjectNodeId();
   if (items === null || nodeId === null) {
     setTimeReportingWeekRowOrder([]);
-    window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
+    replaceArrayModelContents(window.TimeReportingState.week_rows_model, []);
     window.TimeReportingState.week_label = "";
     window.TimeReportingState.week_range_subtitle = "";
     window.TimeReportingState.week_grid_hint = "";
@@ -86,7 +86,8 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   } else {
     window.TimeReportingState.week_grid_hint = "";
   }
-  window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>(
+  replaceArrayModelContents(
+    window.TimeReportingState.week_rows_model,
     rows.map(
       (r): SlintTimeReportingWeekRow => ({
         item_id: r.item_id,
@@ -109,7 +110,7 @@ async function loadProjectItemsIntoUi(window: MainWindowInstance, nodeId: string
   const res = await fetchAllProjectV2ItemsGraphql(nodeId);
   if (!res.ok) {
     window.TimeReportingState.items_load_status = res.error;
-    window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
+    replaceArrayModelContents(window.TimeReportingState.week_rows_model, []);
     window.TimeReportingState.week_label = "";
     window.TimeReportingState.week_range_subtitle = "";
     window.TimeReportingState.week_grid_hint = "";
