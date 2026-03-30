@@ -32,4 +32,3 @@ export const GIT_COMMIT_COUNT = ${String(count)} as const;
 `,
   "utf8",
 );
-console.log(`Wrote ${outFile} (GIT_COMMIT_COUNT=${String(count)})`);
