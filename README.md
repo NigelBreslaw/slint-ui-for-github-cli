@@ -4,8 +4,8 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 
 ## Prerequisites
 
-- **Node.js** 24 or newer
-- **pnpm** (see [pnpm.io](https://pnpm.io/installation))
+- **pnpm** (see [pnpm.io](https://pnpm.io/installation)). You need pnpm on your `PATH` first; it reads this repo’s [`.npmrc`](.npmrc).
+- **Node.js** 24 or newer. This project sets **`use-node-version`** in [`.npmrc`](.npmrc) so **pnpm downloads and uses that Node version** when you run `pnpm install` or `pnpm run …` if you don’t already have it (see [pnpm `use-node-version`](https://pnpm.io/npmrc#use-node-version)). Run scripts via **`pnpm`** (e.g. `pnpm dev`) so that Node is used. Invoking **`node` directly** on the host may still use whatever Node is on your `PATH`, not pnpm’s copy.
 - **GitHub CLI** (`gh`) **2.89.0 or newer** on your `**PATH`** (Windows, macOS, and Linux use the same command name; the app does not ship `gh`). If it is missing, the UI shows a **no CLI installed** state with no **Login** button until you install it from [cli.github.com](https://cli.github.com/). If `gh` is older than 2.89.0, the UI shows a blocking message with a link to the install page. After install, authenticate with `gh auth login` or the in-app **Login** flow. The minimum version is enforced in code ([`MIN_GH_CLI_VERSION`](src/gh/gh-cli-version.ts)).
 
 **OAuth scopes:** The app expects classic token scopes `**read:org`**, `**read:project**`, and `**notifications**` (see [scopes.md](scopes.md): `**repo**` alone also satisfies the notifications requirement in scope checks). If `gh` is missing them (or scopes cannot be verified), the UI stays **logged out** with an explanation—use **Login** to authorize with the required scopes.
@@ -18,7 +18,7 @@ From the project root:
 pnpm install
 ```
 
-The first install runs native install steps for `**slint-ui**` and `**sharp**`. If your package manager blocks install scripts, allow those packages (this repo lists them under `pnpm.onlyBuiltDependencies` in `package.json`).
+The first `pnpm install` may download the Node version from [`.npmrc`](.npmrc) (`use-node-version`) into pnpm’s cache, then install dependencies. The first install also runs native install steps for `**slint-ui**` and `**sharp**`. If your package manager blocks install scripts, allow those packages (this repo lists them under `pnpm.onlyBuiltDependencies` in `package.json`).
 
 ## Dependencies (runtime)
 
