@@ -30,9 +30,6 @@ import {
   TIME_REPORTING_SELECTED_PROJECT_SCHEMA_VERSION,
   writeTimeReportingSelectedProjectKv,
 } from "./time-reporting-selected-project-kv.ts";
-/** Week navigation / grid refresh traces. Disable: `TIME_REPORTING_DEBUG_WEEK_NAV=false pnpm start`. */
-const weekNavLog =
-  typeof process !== "undefined" && process.env.TIME_REPORTING_DEBUG_WEEK_NAV !== "false";
 
 /** `YYYY-MM-DD` → `MM-DD` for compact column headers. */
 function ymdToMmDd(ymd: string): string {
@@ -77,12 +74,6 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   const items = getTimeReportingCachedItems();
   const nodeId = getTimeReportingCachedProjectNodeId();
   if (items === null || nodeId === null) {
-    if (weekNavLog) {
-      console.log("[time-reporting:week] applyWeekRowsToWindow early exit (no cache)", {
-        itemsNull: items === null,
-        nodeIdNull: nodeId === null,
-      });
-    }
     setTimeReportingWeekRowOrder([]);
     window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
     window.TimeReportingState.week_label = "";
@@ -123,28 +114,6 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
       total: r.total,
     }),
   );
-  if (weekNavLog) {
-    const first = rows[0];
-    console.log("[time-reporting:week] applyWeekRowsToWindow", {
-      targetWeek: { isoYear: week.isoYear, isoWeek: week.isoWeek },
-      weekDates,
-      itemsCount: items.length,
-      builtRowCount: rows.length,
-      cellDetailKeys: cellDetailsByKey.size,
-      weekLabelAssigned: formatIsoWeekLabel(week.isoYear, week.isoWeek),
-      firstRow: first
-        ? {
-            title: first.title,
-            mon: first.mon,
-            tue: first.tue,
-            wed: first.wed,
-            thu: first.thu,
-            fri: first.fri,
-            total: first.total,
-          }
-        : null,
-    });
-  }
   window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>(
     slintRows,
   );
@@ -198,9 +167,6 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
     closeTimeReportingDetail(window);
     const w = getTimeReportingSelectedWeek();
     const next = addIsoWeeks(w.isoYear, w.isoWeek, -1);
-    if (weekNavLog) {
-      console.log("[time-reporting:week] Prev clicked", { from: w, to: next });
-    }
     setTimeReportingSelectedWeek(next);
     applyWeekRowsToWindow(window);
   };
@@ -209,9 +175,6 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
     closeTimeReportingDetail(window);
     const w = getTimeReportingSelectedWeek();
     const next = addIsoWeeks(w.isoYear, w.isoWeek, 1);
-    if (weekNavLog) {
-      console.log("[time-reporting:week] Next clicked", { from: w, to: next });
-    }
     setTimeReportingSelectedWeek(next);
     applyWeekRowsToWindow(window);
   };
@@ -219,12 +182,6 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
   window.TimeReportingState.time_reporting_week_this = () => {
     closeTimeReportingDetail(window);
     const now = currentIsoWeekUtc();
-    if (weekNavLog) {
-      console.log("[time-reporting:week] This week clicked", {
-        was: getTimeReportingSelectedWeek(),
-        now,
-      });
-    }
     setTimeReportingSelectedWeek(now);
     applyWeekRowsToWindow(window);
   };
