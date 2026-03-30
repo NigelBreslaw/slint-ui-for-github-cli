@@ -58,6 +58,40 @@ export function extractProjectV2NumberFieldHours(item: unknown, fieldName: strin
 }
 
 /**
+ * Reads a `ProjectV2ItemFieldTextValue` by custom field name from `fieldValues.nodes`.
+ */
+export function extractProjectV2TextField(item: unknown, fieldName: string): string | null {
+  if (item === null || typeof item !== "object") {
+    return null;
+  }
+  const fv = (item as Record<string, unknown>).fieldValues;
+  if (fv === null || typeof fv !== "object") {
+    return null;
+  }
+  const nodes = (fv as Record<string, unknown>).nodes;
+  if (!Array.isArray(nodes)) {
+    return null;
+  }
+  for (const n of nodes) {
+    if (n === null || typeof n !== "object") {
+      continue;
+    }
+    const rec = n as Record<string, unknown>;
+    if (rec.__typename !== "ProjectV2ItemFieldTextValue") {
+      continue;
+    }
+    if (fieldNameFromNode(rec) !== fieldName) {
+      continue;
+    }
+    const text = rec.text;
+    if (typeof text === "string") {
+      return text;
+    }
+  }
+  return null;
+}
+
+/**
  * Title and URL from Issue, PullRequest, or DraftIssue `content` (no `body` required).
  */
 export function itemContentTitleUrl(item: unknown): { title: string; url: string } | null {

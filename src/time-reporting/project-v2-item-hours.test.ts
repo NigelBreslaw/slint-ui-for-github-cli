@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   extractProjectV2NumberFieldHours,
+  extractProjectV2TextField,
   itemContentTitleUrl,
   projectHoursToMinutes,
   TIME_SPENT_FIELD_NAME,
@@ -72,6 +73,41 @@ describe("extractProjectV2NumberFieldHours", () => {
       },
     };
     assert.equal(extractProjectV2NumberFieldHours(item, TIME_SPENT_FIELD_NAME), null);
+  });
+});
+
+describe("extractProjectV2TextField", () => {
+  const itemWithLog = {
+    fieldValues: {
+      nodes: [
+        {
+          __typename: "ProjectV2ItemFieldTextValue",
+          text: "2026-01-01 1h",
+          field: { name: "Time Log" },
+        },
+      ],
+    },
+  };
+
+  it("returns text when field matches", () => {
+    assert.equal(extractProjectV2TextField(itemWithLog, "Time Log"), "2026-01-01 1h");
+  });
+  it("returns null when field missing", () => {
+    assert.equal(extractProjectV2TextField(itemWithLog, "Other"), null);
+  });
+  it("ignores number typename", () => {
+    const item = {
+      fieldValues: {
+        nodes: [
+          {
+            __typename: "ProjectV2ItemFieldNumberValue",
+            text: "x",
+            field: { name: "Time Log" },
+          },
+        ],
+      },
+    };
+    assert.equal(extractProjectV2TextField(item, "Time Log"), null);
   });
 });
 

@@ -10,6 +10,7 @@ import { dumpTimeReportingProjectNodeToDebugJson } from "./dump-time-reporting-p
 import { buildTimeReportingWeekRows } from "./build-time-reporting-week-rows.ts";
 import { addIsoWeeks, currentIsoWeekUtc, formatIsoWeekLabel } from "./iso-week.ts";
 import { TIME_SPENT_FIELD_NAME } from "./project-v2-item-hours.ts";
+import { TIME_LOG_FIELD_NAME } from "./parse-time-log.ts";
 import {
   getTimeReportingCachedItems,
   getTimeReportingCachedProjectNodeId,
@@ -39,6 +40,7 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   const week = getTimeReportingSelectedWeek();
   const { rows, cellDetailsByKey } = buildTimeReportingWeekRows(items, {
     timeSpentFieldName: TIME_SPENT_FIELD_NAME,
+    timeLogFieldName: TIME_LOG_FIELD_NAME,
     targetWeek: week,
   });
   setTimeReportingCachedItems(nodeId, items, cellDetailsByKey);

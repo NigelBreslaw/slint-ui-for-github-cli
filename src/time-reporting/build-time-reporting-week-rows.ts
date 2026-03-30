@@ -1,9 +1,11 @@
 import {
   extractProjectV2NumberFieldHours,
+  extractProjectV2TextField,
   itemContentTitleUrl,
   projectHoursToMinutes,
 } from "./project-v2-item-hours.ts";
-import type { IsoWeek } from "./iso-week.ts";
+import { type IsoWeek, weekdayDatesMondayToFriday } from "./iso-week.ts";
+import { parseTimeLogLines } from "./parse-time-log.ts";
 
 /** One grid row; `item_id` is the ProjectV2 item id (`PVTI_…`). */
 type TimeReportingWeekRowTs = {
@@ -26,8 +28,12 @@ export type TimeReportingCellContribution = {
 
 type BuildTimeReportingWeekRowsOptions = {
   timeSpentFieldName: string;
-  /** Selected week (drives PR5 day columns; stub uses placeholders until then). */
+  /** Selected week (Mo–Fr columns and log filtering). */
   targetWeek: IsoWeek;
+  /**
+   * Text field name for dated lines (`parseTimeLogLines`). When missing or empty, weekday cells stay `—`.
+   */
+  timeLogFieldName?: string;
 };
 
 function formatMinutesAsHoursLabel(minutes: number): string {
@@ -50,8 +56,9 @@ export function cellDetailKey(itemId: string, ymd: string): string {
 }
 
 /**
- * Builds week grid rows and an empty-or-filled provenance map (`cellDetailsByKey`).
- * Weekday display cells are `"—"` until text-log parsing (PR5) runs inside this pipeline.
+ * Builds week grid rows and a provenance map (`cellDetailsByKey`).
+ * Weekday cells use the optional text log for the selected ISO week; otherwise `"—"`.
+ * Rows include every item with a titled `content` (even when total and days are empty).
  */
 export function buildTimeReportingWeekRows(
   items: unknown[],
@@ -60,7 +67,12 @@ export function buildTimeReportingWeekRows(
   rows: TimeReportingWeekRowTs[];
   cellDetailsByKey: Map<string, TimeReportingCellContribution[]>;
 } {
-  const { timeSpentFieldName } = options;
+  const { timeSpentFieldName, targetWeek } = options;
+  const timeLogName = options.timeLogFieldName?.trim() ?? "";
+  const weekDates = weekdayDatesMondayToFriday(targetWeek.isoYear, targetWeek.isoWeek);
+  const dateToCol = new Map<string, number>(weekDates.map((d, i) => [d, i]));
+  const weekDateSet = new Set(weekDates);
+
   const cellDetailsByKey = new Map<string, TimeReportingCellContribution[]>();
   const rows: TimeReportingWeekRowTs[] = [];
   const placeholder = "—";
@@ -81,15 +93,38 @@ export function buildTimeReportingWeekRows(
     const total =
       hours === null ? placeholder : formatMinutesAsHoursLabel(projectHoursToMinutes(hours));
 
+    const dayMinutes = [0, 0, 0, 0, 0];
+    if (timeLogName.length > 0) {
+      const logText = extractProjectV2TextField(item, timeLogName);
+      if (logText !== null && logText.length > 0) {
+        for (const e of parseTimeLogLines(logText)) {
+          if (!weekDateSet.has(e.date)) {
+            continue;
+          }
+          const col = dateToCol.get(e.date);
+          if (col === undefined || col > 4) {
+            continue;
+          }
+          dayMinutes[col] += e.minutes;
+          const key = cellDetailKey(id, e.date);
+          const arr = cellDetailsByKey.get(key) ?? [];
+          arr.push({ minutes: e.minutes, rawLine: e.rawLine });
+          cellDetailsByKey.set(key, arr);
+        }
+      }
+    }
+
+    const dayLabels = dayMinutes.map((m) => (m > 0 ? formatMinutesAsHoursLabel(m) : placeholder));
+
     rows.push({
       item_id: id,
       title: meta.title,
       url: meta.url,
-      mon: placeholder,
-      tue: placeholder,
-      wed: placeholder,
-      thu: placeholder,
-      fri: placeholder,
+      mon: dayLabels[0] ?? placeholder,
+      tue: dayLabels[1] ?? placeholder,
+      wed: dayLabels[2] ?? placeholder,
+      thu: dayLabels[3] ?? placeholder,
+      fri: dayLabels[4] ?? placeholder,
       total,
     });
   }
