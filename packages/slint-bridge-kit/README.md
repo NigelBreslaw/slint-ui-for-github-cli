@@ -47,6 +47,8 @@ You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. Th
 | `KeysMatching<T, V>` | type | Keys of `T` whose values are assignable to `V`. |
 | `FunctionKeysOf<T>` | type | Keys of `T` whose values are functions. |
 | `ExhaustiveCallbacks<T, K>` | type | `Required<Pick<T, K>>` — use with `satisfies` for exhaustive callback objects. |
+| `slintEnumLiterals(values)` | function | Returns `values` unchanged; narrows inference for a `as const` string tuple (Slint enum cases on the wire). |
+| `SlintEnumUnion<T>` | type | `T[number]` for `T extends readonly string[]` — derive a string union from the tuple returned by `slintEnumLiterals`. |
 | `SLINT_BRIDGE_KIT_VERSION` | constant | String equal to this package’s `version` in `package.json`. |
 
 ---
@@ -56,7 +58,31 @@ You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. Th
 Public exports are available from the package root in one import:
 
 ```typescript
-import { assignProperties, wireFunctions, type ExhaustiveCallbacks } from "slint-bridge-kit";
+import {
+  assignProperties,
+  slintEnumLiterals,
+  wireFunctions,
+  type ExhaustiveCallbacks,
+  type SlintEnumUnion,
+} from "slint-bridge-kit";
+```
+
+---
+
+## Slint enum literals (string unions)
+
+Keep Slint-facing string enums in **one** `as const` list, export the union for TypeScript, and reuse the same array at runtime (e.g. `includes` checks):
+
+```typescript
+import { slintEnumLiterals, type SlintEnumUnion } from "slint-bridge-kit";
+
+export const AUTH_STATES = slintEnumLiterals([
+  "logged-out",
+  "logged-in",
+  "authorizing",
+] as const);
+
+export type AuthState = SlintEnumUnion<typeof AUTH_STATES>;
 ```
 
 ---

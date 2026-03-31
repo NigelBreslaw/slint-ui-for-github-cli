@@ -2,6 +2,11 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.2.0 — 2026-03-28
+
+- `slintEnumLiterals` — identity helper for `as const` string tuples (single source of truth for Slint-style enum strings).
+- Type-only: `SlintEnumUnion<T>` — `T[number]` for `readonly string[]` tuples from `slintEnumLiterals`.
+
 ## 0.1.0 — 2026-03-28
 
 First numbered release of the public API:
