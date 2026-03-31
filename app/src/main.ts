@@ -88,7 +88,7 @@ const appStateCallbacks = {
   },
   sign_in: () => {
     clearAuthDeviceFields(window);
-    window.AppState.auth = "authorizing";
+    assignProperties(window.AppState, { auth: "authorizing" });
     window.show_auth_window();
     spawnGhAuthLogin({
       onDeviceFlowInfo: (info) => {
