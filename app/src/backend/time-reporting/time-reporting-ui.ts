@@ -4,14 +4,14 @@ import type {
   MainWindowInstance,
   SlintTimeReportingWeekRow,
   TimeReportingStateHandle,
-} from "../../slint-interface.ts";
+} from "../../bridges/node/slint-interface.ts";
 import {
   buildFilteredProjectsModel,
   findSlintUiOpenProjectRowByNodeId,
 } from "../gh/slint-ui-org-projects-ui.ts";
 import { fetchAllProjectV2ItemsGraphql } from "../gh/graphql-project-v2-items-all.ts";
 import { openUrlInBrowser } from "../utils/open-url.ts";
-import { refreshSlintUiOrgProjectsForWindow } from "../../slint-window-bridge.ts";
+import { refreshSlintUiOrgProjectsForWindow } from "../../bridges/node/slint-window-bridge.ts";
 import { dumpTimeReportingProjectNodeToDebugJson } from "./dump-time-reporting-project-debug.ts";
 import { buildTimeReportingWeekRows } from "./build-time-reporting-week-rows.ts";
 import { formatTimeReportingCellDetail } from "./format-time-reporting-cell-detail.ts";

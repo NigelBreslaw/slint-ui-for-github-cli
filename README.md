@@ -6,7 +6,7 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 
 - **pnpm** (see [pnpm.io](https://pnpm.io/installation)). You need pnpm on your `PATH` first; it reads this repo’s [`.npmrc`](.npmrc).
 - **Node.js** 24 or newer. This project sets **`use-node-version`** in [`.npmrc`](.npmrc) so **pnpm downloads and uses that Node version** when you run `pnpm install` or `pnpm run …` if you don’t already have it (see [pnpm `use-node-version`](https://pnpm.io/npmrc#use-node-version)). Run scripts via **`pnpm`** (e.g. `pnpm dev`) so that Node is used. Invoking **`node` directly** on the host may still use whatever Node is on your `PATH`, not pnpm’s copy.
-- **GitHub CLI** (`gh`) **2.89.0 or newer** on your `**PATH`** (Windows, macOS, and Linux use the same command name; the app does not ship `gh`). If it is missing, the UI shows a **no CLI installed** state with no **Login** button until you install it from [cli.github.com](https://cli.github.com/). If `gh` is older than 2.89.0, the UI shows a blocking message with a link to the install page. After install, authenticate with `gh auth login` or the in-app **Login** flow. The minimum version is enforced in code ([`MIN_GH_CLI_VERSION`](app/src/gh/gh-cli-version.ts)).
+- **GitHub CLI** (`gh`) **2.89.0 or newer** on your `**PATH`** (Windows, macOS, and Linux use the same command name; the app does not ship `gh`). If it is missing, the UI shows a **no CLI installed** state with no **Login** button until you install it from [cli.github.com](https://cli.github.com/). If `gh` is older than 2.89.0, the UI shows a blocking message with a link to the install page. After install, authenticate with `gh auth login` or the in-app **Login** flow. The minimum version is enforced in code ([`MIN_GH_CLI_VERSION`](app/src/backend/gh/gh-cli-version.ts)).
 
 **OAuth scopes:** The app expects classic token scopes `**read:org`**, `**read:project**`, and `**notifications**` (see [scopes.md](scopes.md): `**repo**` alone also satisfies the notifications requirement in scope checks). If `gh` is missing them (or scopes cannot be verified), the UI stays **logged out** with an explanation—use **Login** to authorize with the required scopes. The Dashboard **Security alerts** tab (Dependabot) is optional and needs **`repo`** or **`security_events`** on the token; it is not required for signing in (see [scopes.md](scopes.md)).
 
@@ -25,8 +25,8 @@ The first `pnpm install` may download the Node version from [`.npmrc`](.npmrc) (
 ## Dependencies (runtime)
 
 - **[slint-ui](https://www.npmjs.com/package/slint-ui)** — Slint UI for Node ([Slint-node docs](https://docs.slint.dev/latest/docs/node/)).
-- **[arktype](https://www.npmjs.com/package/arktype)** — Runtime validation of JSON returned by `gh api` (REST) and `gh api graphql` (see `app/src/schemas/`). The signed-in user profile comes from a **minimal GraphQL `viewer`** query, validated in `app/src/schemas/gh-graphql-viewer-minimal.ts`.
-- **[sharp](https://www.npmjs.com/package/sharp)** — Decodes the profile image from `avatarUrl` (PNG/JPEG/WebP, etc.) into RGBA for Slint’s `Image` element (`app/src/gh/avatar-image.ts`). If download or decode fails, the window still opens and only the label may be shown.
+- **[arktype](https://www.npmjs.com/package/arktype)** — Runtime validation of JSON returned by `gh api` (REST) and `gh api graphql` (see `app/src/backend/schemas/`). The signed-in user profile comes from a **minimal GraphQL `viewer`** query, validated in `app/src/backend/schemas/gh-graphql-viewer-minimal.ts`.
+- **[sharp](https://www.npmjs.com/package/sharp)** — Decodes the profile image from `avatarUrl` (PNG/JPEG/WebP, etc.) into RGBA for Slint’s `Image` element (`app/src/backend/gh/avatar-image.ts`). If download or decode fails, the window still opens and only the label may be shown.
 
 ## Run
 
@@ -36,7 +36,7 @@ pnpm start
 
 This runs the **`github-app`** workspace script from [`app/package.json`](app/package.json): `write-build-info` then `node src/main.ts` with **cwd `app/`** (TypeScript is executed directly via Node’s built-in type stripping). You can also run `cd app && pnpm dev`.
 
-**Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project,notifications` (scopes match `[REQUIRED_GH_OAUTH_SCOPES](app/src/gh/required-scopes.ts)`) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run `**pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
+**Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project,notifications` (scopes match `[REQUIRED_GH_OAUTH_SCOPES](app/src/backend/gh/required-scopes.ts)`) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run `**pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
 
 If `gh` uses the **device code** flow, the overlay shows the one-time code and an **Open GitHub** button that copies the code to the clipboard and opens the device page in your browser (same output is still mirrored in the terminal).
 
@@ -52,42 +52,43 @@ pnpm typecheck
 | Area                                                                         | Role                                                                             |
 | ---------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
 | `[app/src/main.ts](app/src/main.ts)`                                                 | Entry: open DB, `loadFile` / `MainWindow`, Slint callbacks, event loop, shutdown |
-| `[app/src/slint-interface.ts](app/src/slint-interface.ts)`                           | Types for `MainWindow`, `AppState`, `SettingsState`, `TimeReportingState` (keep in sync with `.slint`) |
-| `[app/src/auth/auth-ui-flow.ts](app/src/auth/auth-ui-flow.ts)`                       | Sign-in scope check, viewer fetch, session cache, `runEventLoop` startup hooks   |
-| `[app/src/slint-window-bridge.ts](app/src/slint-window-bridge.ts)`                   | Mutates `AppState` / window fields (dashboard, projects, identity)               |
-| `[app/src/settings-debug-panel.ts](app/src/settings-debug-panel.ts)`                 | Settings debug table + GraphQL rate-limit polling                                |
-| `[app/src/settings-security-alerts-repo.ts](app/src/settings-security-alerts-repo.ts)` | Security alerts repo field: validate, KV, notify `slint-window-bridge` to refetch |
-| `[app/src/gh/gh-app-client.ts](app/src/gh/gh-app-client.ts)`                         | `gh api` / `gh api graphql` JSON helpers                                         |
-| `[app/src/gh/viewer-queries.ts](app/src/gh/viewer-queries.ts)`                       | GraphQL query strings for viewer load + debug dump                               |
+| `[app/src/bridges/slint/](app/src/bridges/slint/)` (e.g. `app-state.slint`)          | Slint **global** definitions (`AppState`, `SettingsState`, `TimeReportingState`) consumed by `ui/` |
+| `[app/src/bridges/node/slint-interface.ts](app/src/bridges/node/slint-interface.ts)`                           | Types for `MainWindow`, `AppState`, `SettingsState`, `TimeReportingState` (keep in sync with `bridges/slint`) |
+| `[app/src/backend/auth/auth-ui-flow.ts](app/src/backend/auth/auth-ui-flow.ts)`                       | Sign-in scope check, viewer fetch, session cache, `runEventLoop` startup hooks   |
+| `[app/src/bridges/node/slint-window-bridge.ts](app/src/bridges/node/slint-window-bridge.ts)`                   | Mutates `AppState` / window fields (dashboard, projects, identity)               |
+| `[app/src/backend/settings/settings-debug-panel.ts](app/src/backend/settings/settings-debug-panel.ts)`                 | Settings debug table + GraphQL rate-limit polling                                |
+| `[app/src/backend/settings/settings-security-alerts-repo.ts](app/src/backend/settings/settings-security-alerts-repo.ts)` | Security alerts repo field: validate, KV, notify `slint-window-bridge` to refetch |
+| `[app/src/backend/gh/gh-app-client.ts](app/src/backend/gh/gh-app-client.ts)`                         | `gh api` / `gh api graphql` JSON helpers                                         |
+| `[app/src/backend/gh/viewer-queries.ts](app/src/backend/gh/viewer-queries.ts)`                       | GraphQL query strings for viewer load + debug dump                               |
 | `[app/src/debug/github-app-debug-dumps.ts](app/src/debug/github-app-debug-dumps.ts)` | `GH_DEBUG_JSON=1` file output orchestration                                      |
-| `[app/src/time-reporting/time-reporting-ui.ts](app/src/time-reporting/time-reporting-ui.ts)` | `TimeReportingState` callbacks: view enter/exit, project picker, KV + debug dump |
-| `[app/src/time-reporting/time-reporting-selected-project-kv.ts](app/src/time-reporting/time-reporting-selected-project-kv.ts)` | SQLite KV `time_reporting/selected_project_v1` (chosen ProjectV2) |
-| `[app/src/time-reporting/dump-time-reporting-project-debug.ts](app/src/time-reporting/dump-time-reporting-project-debug.ts)` | Unconditional `debug-json/time-reporting--project-v2--…` and `time-reporting--project-v2-items--…` writes |
-| `[app/src/gh/graphql-project-v2-node.ts](app/src/gh/graphql-project-v2-node.ts)` | GraphQL `node(id: …) { … on ProjectV2 { … } }` via `gh` |
-| `[app/src/gh/graphql-project-v2-items-all.ts](app/src/gh/graphql-project-v2-items-all.ts)` | Paginated `ProjectV2.items` + `fieldValues`; `Issue` / `PullRequest` `content` includes `closedAt` / `mergedAt` for time reporting |
-| `[app/src/schemas/gh-graphql-project-v2-node-response.ts](app/src/schemas/gh-graphql-project-v2-node-response.ts)` | Parse / validate that response shape (see tests) |
+| `[app/src/backend/time-reporting/time-reporting-ui.ts](app/src/backend/time-reporting/time-reporting-ui.ts)` | `TimeReportingState` callbacks: view enter/exit, project picker, KV + debug dump |
+| `[app/src/backend/time-reporting/time-reporting-selected-project-kv.ts](app/src/backend/time-reporting/time-reporting-selected-project-kv.ts)` | SQLite KV `time_reporting/selected_project_v1` (chosen ProjectV2) |
+| `[app/src/backend/time-reporting/dump-time-reporting-project-debug.ts](app/src/backend/time-reporting/dump-time-reporting-project-debug.ts)` | Unconditional `debug-json/time-reporting--project-v2--…` and `time-reporting--project-v2-items--…` writes |
+| `[app/src/backend/gh/graphql-project-v2-node.ts](app/src/backend/gh/graphql-project-v2-node.ts)` | GraphQL `node(id: …) { … on ProjectV2 { … } }` via `gh` |
+| `[app/src/backend/gh/graphql-project-v2-items-all.ts](app/src/backend/gh/graphql-project-v2-items-all.ts)` | Paginated `ProjectV2.items` + `fieldValues`; `Issue` / `PullRequest` `content` includes `closedAt` / `mergedAt` for time reporting |
+| `[app/src/backend/schemas/gh-graphql-project-v2-node-response.ts](app/src/backend/schemas/gh-graphql-project-v2-node-response.ts)` | Parse / validate that response shape (see tests) |
 
 ### Time reporting
 
-The **Time reporting** view (clock icon in the sidebar) lets you choose an **open** GitHub Project V2 from the **`slint-ui`** org—the same list used for search/filter elsewhere. Picker state and callbacks live on the Slint global **`TimeReportingState`** ([`app/src/ui/time-reporting-state.slint`](app/src/ui/time-reporting-state.slint)), mirrored in TypeScript as [`TimeReportingStateHandle`](app/src/slint-interface.ts). The selected board is stored in the app SQLite database under the KV key **`time_reporting/selected_project_v1`** (schema in [`time-reporting-selected-project-kv.ts`](app/src/time-reporting/time-reporting-selected-project-kv.ts)).
+The **Time reporting** view (clock icon in the sidebar) lets you choose an **open** GitHub Project V2 from the **`slint-ui`** org—the same list used for search/filter elsewhere. Picker state and callbacks live on the Slint global **`TimeReportingState`** ([`app/src/ui/time-reporting-state.slint`](app/src/ui/time-reporting-state.slint)), mirrored in TypeScript as [`TimeReportingStateHandle`](app/src/bridges/node/slint-interface.ts). The selected board is stored in the app SQLite database under the KV key **`time_reporting/selected_project_v1`** (schema in [`time-reporting-selected-project-kv.ts`](app/src/backend/time-reporting/time-reporting-selected-project-kv.ts)).
 
 Each time you confirm a project, the app writes the raw GraphQL response to **`debug-json/time-reporting--project-v2--<sanitized-node-id>.json`** (or `…--error.json` on failure), then **`debug-json/time-reporting--project-v2-items--<sanitized-node-id>.json`** with every board card from paginated `ProjectV2.items`. Each item includes **`fieldValues`** (custom columns) and, for linked **`Issue`** / **`PullRequest`** content, GraphQL timestamps **`closedAt`** and (for pull requests) **`mergedAt`**. Payload metadata: `source`, `projectNodeId`, counts, and `items` as raw nodes (or `…--error.json` if that fetch fails). Those writes do **not** require `GH_DEBUG_JSON`. With **`GH_DEBUG_JSON=1`** (e.g. [`pnpm dev:debug`](app/package.json)), the same files are refreshed **after sign-in** if a project is already stored, alongside the other debug dumps—see [Debug mode](#debug-mode-json-dumps) below.
 
 **Week grid:** After items load, the UI shows a scrollable table with **Mo–Fr** and **Total**. The header shows the selected **ISO week** as **`YYYY-Www`** (e.g. `2026-W13`) plus the UTC Monday–Friday date range. **Only rows that belong to that week** appear: each row is a titled **Issue** or **Pull request** with **`BOT-Total Time Spent(h)` &gt; 0** and a merge/close instant whose **ISO week (UTC)** matches the selection. Hours from that BOT field are converted to **integer minutes** with **`Math.round(hours * 60)`**. All of those minutes are shown in **one** weekday column—the **UTC calendar day** of **`mergedAt`** (PR, preferred) or **`closedAt`** (PR fallback, or Issue); **Saturday/Sunday UTC** map to **Friday** of the same ISO week so the grid always has a single day cell plus **Total**. **Previous week**, **Next week**, and **This week** rebuild the list from the **in-memory cache** without calling GraphQL again. **Refresh** re-fetches items and rebuilds. Weeks with no matching merges/closes or zero BOT totals show an empty grid with a short hint.
 
-Implementation: [`buildTimeReportingWeekRows`](app/src/time-reporting/build-time-reporting-week-rows.ts), [`referenceCloseOrMergeInstantIso`](app/src/time-reporting/time-reporting-item-reference.ts), ISO helpers in [`iso-week.ts`](app/src/time-reporting/iso-week.ts).
+Implementation: [`buildTimeReportingWeekRows`](app/src/backend/time-reporting/build-time-reporting-week-rows.ts), [`referenceCloseOrMergeInstantIso`](app/src/backend/time-reporting/time-reporting-item-reference.ts), ISO helpers in [`iso-week.ts`](app/src/backend/time-reporting/iso-week.ts).
 
 **Custom fields (board name must match or change the constant in code):**
 
-- **`BOT-Total Time Spent(h)`** — Project V2 **number** field; this is the **only** hours value used for the time-reporting grid. Constant: [`BOT_TOTAL_TIME_SPENT_FIELD_NAME`](app/src/time-reporting/project-v2-item-hours.ts).
+- **`BOT-Total Time Spent(h)`** — Project V2 **number** field; this is the **only** hours value used for the time-reporting grid. Constant: [`BOT_TOTAL_TIME_SPENT_FIELD_NAME`](app/src/backend/time-reporting/project-v2-item-hours.ts).
 
-**Not used by the time-reporting grid:** manual **`Time Log`** text parsing (the parser and [`TIME_LOG_FIELD_NAME`](app/src/time-reporting/parse-time-log.ts) remain for tests and any external scripts) and the **`Time Spent(h)`** field ([`TIME_SPENT_FIELD_NAME`](app/src/time-reporting/project-v2-item-hours.ts)).
+**Not used by the time-reporting grid:** manual **`Time Log`** text parsing (the parser and [`TIME_LOG_FIELD_NAME`](app/src/backend/time-reporting/parse-time-log.ts) remain for tests and any external scripts) and the **`Time Spent(h)`** field ([`TIME_SPENT_FIELD_NAME`](app/src/backend/time-reporting/project-v2-item-hours.ts)).
 
 **Cell drill-down:** Tap a **weekday** or **Total** cell to open a modal with the **Issue / Pull request** title, URL when present, and the **BOT-Total** amount plus the **merge/close** timestamp text stored for that cell.
 
-**Contributors:** changes under `app/src/time-reporting/` and related UI should leave **`pnpm autofix`** and **`pnpm test`** clean (no errors or warnings). Project node shape remains validated in tests via [`parseProjectV2NodeFromGraphqlResponse`](app/src/schemas/gh-graphql-project-v2-node-response.ts).
+**Contributors:** changes under `app/src/backend/time-reporting/` and related UI should leave **`pnpm autofix`** and **`pnpm test`** clean (no errors or warnings). Project node shape remains validated in tests via [`parseProjectV2NodeFromGraphqlResponse`](app/src/backend/schemas/gh-graphql-project-v2-node-response.ts).
 
-Keep the following diagrams aligned with `[app/src/main.ts](app/src/main.ts)` and `[app/src/auth/auth-ui-flow.ts](app/src/auth/auth-ui-flow.ts)` when refactoring.
+Keep the following diagrams aligned with `[app/src/main.ts](app/src/main.ts)` and `[app/src/backend/auth/auth-ui-flow.ts](app/src/backend/auth/auth-ui-flow.ts)` when refactoring.
 
 ### Architecture
 
@@ -101,7 +102,7 @@ flowchart TB
   subgraph authFlow [auth-ui-flow]
     authNode[applyAuthUi fetchAndApplyGitHubUser slintRunningCallback]
   end
-  subgraph uiBridge [slint-window-bridge]
+  subgraph uiBridge [bridges/node/slint-window-bridge]
     bridgeNode[identity dashboard org projects]
   end
   subgraph ghLayer [GitHub CLI]
@@ -114,7 +115,7 @@ flowchart TB
   subgraph dbg [github-app-debug-dumps]
     dbgNode[file output when GH_DEBUG_JSON]
   end
-  subgraph setDbg [settings-debug-panel]
+  subgraph setDbg [backend/settings/settings-debug-panel]
     setNode[rate limit and debug table]
   end
   slintWin[MainWindow Slint UI]

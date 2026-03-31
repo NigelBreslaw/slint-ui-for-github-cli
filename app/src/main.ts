@@ -24,8 +24,8 @@ import type {
   SlintSecurityAlertRow,
   SlintSelectOption,
   SlintTimeReportingWeekRow,
-} from "./slint-interface.ts";
-import { authed, dashboardTab } from "./slint-interface.ts";
+} from "./bridges/node/slint-interface.ts";
+import { authed, dashboardTab } from "./bridges/node/slint-interface.ts";
 import {
   buildTimeReportingStateCallbacks,
   hydrateTimeReportingFromKv,
@@ -35,9 +35,9 @@ import {
   clearTimeReportingSelection,
   refreshDashboardReviewRequests,
   refreshDashboardSecurityAlerts,
-} from "./slint-window-bridge.ts";
-import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./settings-debug-panel.ts";
-import { applySecurityAlertsRepoEdited } from "./settings-security-alerts-repo.ts";
+} from "./bridges/node/slint-window-bridge.ts";
+import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./backend/settings/settings-debug-panel.ts";
+import { applySecurityAlertsRepoEdited } from "./backend/settings/settings-security-alerts-repo.ts";
 
 openAppDb();
 

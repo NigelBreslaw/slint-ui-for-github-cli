@@ -1,11 +1,11 @@
 import { assignProperties } from "slint-bridge-kit";
-import { fetchGraphqlRateLimit } from "./backend/gh/graphql-rate-limit.ts";
-import { getGhCliVersionLine } from "./backend/gh/gh-cli-version.ts";
-import { GIT_COMMIT_COUNT } from "../generated/build-info.ts";
-import type { MainWindowInstance } from "./slint-interface.ts";
-import { buildCommitLabel } from "./backend/utils/package-meta.ts";
-import { formatCountdownMs } from "./backend/utils/format-countdown.ts";
-import { formatRateLimitResetLocal } from "./backend/utils/format-reset-at-local.ts";
+import { fetchGraphqlRateLimit } from "../gh/graphql-rate-limit.ts";
+import { getGhCliVersionLine } from "../gh/gh-cli-version.ts";
+import { GIT_COMMIT_COUNT } from "../../../generated/build-info.ts";
+import type { MainWindowInstance } from "../../bridges/node/slint-interface.ts";
+import { buildCommitLabel } from "../utils/package-meta.ts";
+import { formatCountdownMs } from "../utils/format-countdown.ts";
+import { formatRateLimitResetLocal } from "../utils/format-reset-at-local.ts";
 import {
   clearSecurityAlertsRepoUi,
   hydrateSecurityAlertsRepo,

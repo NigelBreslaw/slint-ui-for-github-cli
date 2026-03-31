@@ -11,7 +11,7 @@ import {
   viewerSessionFromMinimalViewer,
   writeViewerSessionCache,
 } from "../session/viewer-session-cache.ts";
-import { authed, type MainWindowInstance } from "../../slint-interface.ts";
+import { authed, type MainWindowInstance } from "../../bridges/node/slint-interface.ts";
 import { uiPerfMarkT1Text, uiPerfMarkT2Avatar, uiPerfResetSession } from "../utils/ui-perf.ts";
 import {
   applyCachedViewerToAppState,
@@ -20,7 +20,7 @@ import {
   clearUserIdentity,
   refreshSlintUiOrgProjectsForWindow,
   resetListsWithoutClearingProfile,
-} from "../../slint-window-bridge.ts";
+} from "../../bridges/node/slint-window-bridge.ts";
 import { VIEWER_APP_GRAPHQL_QUERY } from "../gh/viewer-queries.ts";
 import {
   debugUserData,

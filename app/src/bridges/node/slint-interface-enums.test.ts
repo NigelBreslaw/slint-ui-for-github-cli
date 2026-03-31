@@ -4,7 +4,7 @@ import { appView, authed, dashboardTab } from "./slint-interface.ts";
 
 /**
  * Runtime checks on `slintEnumMembers` objects so wire strings stay aligned with
- * `data-bridges/app-state.slint` enums (see slint-interface.ts).
+ * `bridges/slint/app-state.slint` enums (see slint-interface.ts).
  */
 describe("Slint wire enum members", () => {
   it("dashboard tab members match DashboardTab in app-state.slint", () => {

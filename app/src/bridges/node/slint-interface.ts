@@ -1,14 +1,14 @@
 /**
  * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`,
  * `TimeReportingState`) wired from
- * [`ui/main.slint`](./ui/main.slint) / [`data-bridges/app-state.slint`](./data-bridges/app-state.slint).
+ * [`ui/main.slint`](../../ui/main.slint) / [`bridges/slint/app-state.slint`](../slint/app-state.slint).
  * Slint enum cases use the same spelling as in `.slint` (camelCase here); wire values are defined
  * once via `slintEnumMembers` so call sites use dot access and unions stay in sync.
  */
 import * as slint from "slint-ui";
 import { slintEnumMembers, type SlintEnumValues } from "slint-bridge-kit";
-import type { SlintRgbaImage } from "./backend/gh/avatar-image.ts";
-import type { SlintProjectRow } from "./backend/gh/slint-ui-org-projects-ui.ts";
+import type { SlintRgbaImage } from "../../backend/gh/avatar-image.ts";
+import type { SlintProjectRow } from "../../backend/gh/slint-ui-org-projects-ui.ts";
 
 /** Row shape must match `ReviewRequestRow` in `app-state.slint`. */
 export type SlintReviewRequestRow = {

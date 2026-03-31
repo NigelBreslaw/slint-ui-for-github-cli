@@ -1,11 +1,11 @@
 import { assignProperties } from "slint-bridge-kit";
-import type { MainWindowInstance } from "./slint-interface.ts";
+import type { MainWindowInstance } from "../../bridges/node/slint-interface.ts";
 import {
   readSecurityAlertsRepositoryKv,
   validateSecurityAlertsRepoFullName,
   writeSecurityAlertsRepositoryKv,
-} from "./backend/settings/security-alerts-repo-kv.ts";
-import { onSecurityAlertsRepositorySaved } from "./slint-window-bridge.ts";
+} from "./security-alerts-repo-kv.ts";
+import { onSecurityAlertsRepositorySaved } from "../../bridges/node/slint-window-bridge.ts";
 
 export function hydrateSecurityAlertsRepo(window: MainWindowInstance): void {
   assignProperties(window.SettingsState, {
