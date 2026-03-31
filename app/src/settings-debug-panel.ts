@@ -1,3 +1,4 @@
+import { assignProperties } from "slint-bridge-kit";
 import { fetchGraphqlRateLimit } from "./backend/gh/graphql-rate-limit.ts";
 import { getGhCliVersionLine } from "./backend/gh/gh-cli-version.ts";
 import { GIT_COMMIT_COUNT } from "../generated/build-info.ts";
@@ -17,12 +18,14 @@ let settingsDebugEpoch = 0;
 
 function clearSettingsDebugStrings(window: MainWindowInstance): void {
   clearSecurityAlertsRepoUi(window);
-  window.SettingsState.settings_debug_gh_version = "";
-  window.SettingsState.settings_debug_rate_limit = "";
-  window.SettingsState.settings_debug_reset_at = "";
-  window.SettingsState.settings_debug_countdown = "";
-  window.SettingsState.settings_debug_commit_label = "";
-  window.SettingsState.settings_debug_error = "";
+  assignProperties(window.SettingsState, {
+    settings_debug_gh_version: "",
+    settings_debug_rate_limit: "",
+    settings_debug_reset_at: "",
+    settings_debug_countdown: "",
+    settings_debug_commit_label: "",
+    settings_debug_error: "",
+  });
 }
 
 function stopSettingsDebugCountdown(): void {
@@ -60,8 +63,10 @@ function applySettingsDebugRateLimitFetchResult(
     const t = Date.parse(resetAt);
     if (!Number.isFinite(t)) {
       errors.push("Invalid rateLimit.resetAt from API");
-      window.SettingsState.settings_debug_reset_at = resetAt;
-      window.SettingsState.settings_debug_countdown = "—";
+      assignProperties(window.SettingsState, {
+        settings_debug_reset_at: resetAt,
+        settings_debug_countdown: "—",
+      });
       settingsRateLimitDeadlineMs = null;
     } else {
       window.SettingsState.settings_debug_reset_at = formatRateLimitResetLocal(resetAt);
@@ -75,9 +80,11 @@ function applySettingsDebugRateLimitFetchResult(
       }, 1000);
     }
   } else {
-    window.SettingsState.settings_debug_rate_limit = "—";
-    window.SettingsState.settings_debug_reset_at = "—";
-    window.SettingsState.settings_debug_countdown = "—";
+    assignProperties(window.SettingsState, {
+      settings_debug_rate_limit: "—",
+      settings_debug_reset_at: "—",
+      settings_debug_countdown: "—",
+    });
     settingsRateLimitDeadlineMs = null;
     errors.push(rl.error);
   }
