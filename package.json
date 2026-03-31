@@ -19,7 +19,7 @@
     "format": "oxfmt --write src",
     "format:check": "oxfmt --check src",
     "knip": "knip",
-    "test": "node scripts/run-tests.ts"
+    "test": "node --test"
   },
   "dependencies": {
     "arktype": "2.2.0",

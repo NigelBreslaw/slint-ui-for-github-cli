@@ -15,6 +15,8 @@ export component PrimerDialog {
     in property <string> subtitle: "";
     /** Default `medium` (320px); React defaults to `xlarge` (640px) — we use a narrower default for this app. */
     in property <PrimerDialogWidth> width-preset: medium;
+    /** When false, backdrop, ×, and Escape do not call `close()` (e.g. required modal). */
+    in property <bool> allow-dismiss: true;
     callback close();
 
     width: 100%;
@@ -35,92 +37,107 @@ export component PrimerDialog {
         TouchArea {
             width: 100%;
             height: 100%;
+            enabled: root.allow-dismiss;
             clicked => {
                 root.close();
             }
         }
 
         vl := VerticalLayout {
-            width: self.preferred-width;
-            height: self.preferred-height;
+            width: 100%;
+            height: 100%;
             alignment: center;
 
-            Rectangle {
+            FocusScope {
                 width: root.panel-w;
                 max-height: root.panel-max-h;
-                background: #161b22;
-                border-radius: 12px;
-                border-width: 1px;
-                border-color: #30363d;
-                clip: true;
-                drop-shadow-offset-x: 0px;
-                drop-shadow-offset-y: 4px;
-                drop-shadow-blur: 16px;
-                drop-shadow-color: #01040966;
 
-                VerticalLayout {
-                    spacing: 0;
-                    width: 100%;
+                key-pressed(event) => {
+                    if root.allow-dismiss && event.text == Key.Escape {
+                        root.close();
+                        return accept;
+                    }
+                    return reject;
+                }
+
+                Rectangle {
+                    width: root.panel-w;
                     max-height: root.panel-max-h;
+                    background: #161b22;
+                    border-radius: 12px;
+                    border-width: 1px;
+                    border-color: #30363d;
+                    clip: true;
+                    drop-shadow-offset-x: 0px;
+                    drop-shadow-offset-y: 4px;
+                    drop-shadow-blur: 16px;
+                    drop-shadow-color: #01040966;
 
                     VerticalLayout {
                         spacing: 0;
                         width: 100%;
+                        max-height: root.panel-max-h;
 
-                        Rectangle {
+                        VerticalLayout {
+                            spacing: 0;
                             width: 100%;
-                            background: #161b22;
 
-                            HorizontalLayout {
-                                padding-left: 8px;
-                                padding-right: 4px;
-                                padding-top: 6px;
-                                padding-bottom: 6px;
-                                spacing: 8px;
+                            Rectangle {
                                 width: 100%;
+                                background: #161b22;
 
-                                VerticalLayout {
-                                    horizontal-stretch: 1;
+                                HorizontalLayout {
                                     padding-left: 8px;
-                                    padding-right: 8px;
+                                    padding-right: 4px;
                                     padding-top: 6px;
                                     padding-bottom: 6px;
-                                    spacing: 0;
+                                    spacing: 8px;
+                                    width: 100%;
 
-                                    Text {
-                                        text: root.title;
-                                        font-size: 16px;
-                                        font-weight: 600;
-                                        color: #f0f6fc;
-                                        wrap: word-wrap;
+                                    VerticalLayout {
+                                        horizontal-stretch: 1;
+                                        padding-left: 8px;
+                                        padding-right: 8px;
+                                        padding-top: 6px;
+                                        padding-bottom: 6px;
+                                        spacing: 0;
+
+                                        Text {
+                                            text: root.title;
+                                            font-size: 16px;
+                                            font-weight: 600;
+                                            color: #f0f6fc;
+                                            wrap: word-wrap;
+                                        }
+
+                                        if root.subtitle != "": Text {
+                                            text: root.subtitle;
+                                            font-size: 12px;
+                                            font-weight: 400;
+                                            color: #8b949e;
+                                            wrap: word-wrap;
+                                        }
                                     }
 
-                                    if root.subtitle != "": Text {
-                                        text: root.subtitle;
-                                        font-size: 12px;
-                                        font-weight: 400;
-                                        color: #8b949e;
-                                        wrap: word-wrap;
-                                    }
-                                }
-
-                                TouchArea {
-                                    width: 32px;
-                                    height: 32px;
-
-                                    Text {
+                                    TouchArea {
                                         width: 32px;
                                         height: 32px;
-                                        text: "×";
-                                        font-size: 22px;
-                                        font-weight: 400;
-                                        color: #8b949e;
-                                        vertical-alignment: center;
-                                        horizontal-alignment: center;
-                                    }
+                                        visible: root.allow-dismiss;
 
-                                    clicked => {
-                                        root.close();
+                                        Text {
+                                            width: 32px;
+                                            height: 32px;
+                                            text: "×";
+                                            font-size: 22px;
+                                            font-weight: 400;
+                                            color: #8b949e;
+                                            vertical-alignment: center;
+                                            horizontal-alignment: center;
+                                        }
+
+                                        clicked => {
+                                            root.close();
+                                        }
                                     }
                                 }
                             }
