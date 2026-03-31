@@ -47,6 +47,7 @@ You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. Th
 | `KeysMatching<T, V>` | type | Keys of `T` whose values are assignable to `V`. |
 | `FunctionKeysOf<T>` | type | Keys of `T` whose values are functions. |
 | `ExhaustiveCallbacks<T, K>` | type | `Required<Pick<T, K>>` — use with `satisfies` for exhaustive callback objects. |
+| `ExhaustiveAllCallbacks<T>` | type | `ExhaustiveCallbacks<T, FunctionKeysOf<T>>` — wire every function property on `T` in one map (Slint globals only; not for types with `run`/`show`/…). |
 | `slintEnumLiterals(values)` | function | Returns `values` unchanged; narrows inference for a `as const` string tuple (Slint enum cases on the wire). |
 | `SlintEnumUnion<T>` | type | `T[number]` for `T extends readonly string[]` — derive a string union from the tuple returned by `slintEnumLiterals`. |
 | `SLINT_BRIDGE_KIT_VERSION` | constant | String equal to this package’s `version` in `package.json`. |
@@ -62,6 +63,7 @@ import {
   assignProperties,
   slintEnumLiterals,
   wireFunctions,
+  type ExhaustiveAllCallbacks,
   type ExhaustiveCallbacks,
   type SlintEnumUnion,
 } from "slint-bridge-kit";
@@ -128,6 +130,17 @@ const handlers = {
 wireFunctions(appState, handlers);
 ```
 
+When **every** function property on the handle is a Slint callback and you wire them all in one object, use **`ExhaustiveAllCallbacks<T>`** instead of listing keys:
+
+```typescript
+import type { ExhaustiveAllCallbacks } from "slint-bridge-kit";
+
+const handlers = {
+  on_save: () => {},
+  on_cancel: () => {},
+} satisfies ExhaustiveAllCallbacks<MyAppState>;
+```
+
 `handlers` is built with **`Object.keys`** iteration order (your object literal key order). Use plain objects, not exotic prototypes.
 
 ---
@@ -137,6 +150,7 @@ wireFunctions(appState, handlers);
 - **`KeysMatching<T, V>`** — e.g. string-valued keys: `KeysMatching<Widget, string>`.
 - **`FunctionKeysOf<T>`** — callback key unions for documentation or `K` in `ExhaustiveCallbacks`.
 - **`ExhaustiveCallbacks<T, K extends keyof T>`** — ensures every key in `K` is present with the correct type from `T`.
+- **`ExhaustiveAllCallbacks<T>`** — same for every `FunctionKeysOf<T>` key (Slint globals only).
 
 ---
 

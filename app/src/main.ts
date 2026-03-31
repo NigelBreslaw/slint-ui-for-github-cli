@@ -1,5 +1,10 @@
 import * as slint from "slint-ui";
-import { assignProperties, wireFunctions, type ExhaustiveCallbacks } from "slint-bridge-kit";
+import {
+  assignProperties,
+  wireFunctions,
+  type ExhaustiveAllCallbacks,
+  type ExhaustiveCallbacks,
+} from "slint-bridge-kit";
 import { applyAuthUi, slintRunningCallback } from "./backend/auth/auth-ui-flow.ts";
 import { closeAppDb, openAppDb } from "./backend/db/app-db.ts";
 import { ghAuthLogout, spawnGhAuthLogin } from "./backend/gh/auth.ts";
@@ -19,11 +24,10 @@ import type {
   SlintSecurityAlertRow,
   SlintSelectOption,
   SlintTimeReportingWeekRow,
-  TimeReportingStateHandle,
 } from "./slint-interface.ts";
 import {
+  buildTimeReportingStateCallbacks,
   hydrateTimeReportingFromKv,
-  wireTimeReportingUi,
 } from "./backend/time-reporting/time-reporting-ui.ts";
 import {
   clearAuthDeviceFields,
@@ -63,7 +67,6 @@ assignProperties(window.SettingsState, {
   ]),
   primer_demo_selected_value: "github.com",
   primer_demo_selected_label: "github.com",
-  primer_demo_select_changed: () => {},
 });
 
 hydrateTimeReportingFromKv(window);
@@ -104,18 +107,11 @@ const appStateCallbacks = {
     clearTimeReportingSelection(window);
     void applyAuthUi(window);
   },
-} satisfies ExhaustiveCallbacks<
-  AppStateHandle,
-  | "project_search_changed"
-  | "open_project_url"
-  | "dashboard_init"
-  | "dashboard_tab_changed"
-  | "sign_in"
-  | "sign_out"
->;
+} satisfies ExhaustiveAllCallbacks<AppStateHandle>;
 wireFunctions(window.AppState, appStateCallbacks);
 
 const settingsStateCallbacks = {
+  primer_demo_select_changed: (_value: string) => {},
   security_alerts_repo_edited: (text: string) => {
     applySecurityAlertsRepoEdited(window, text);
   },
@@ -125,22 +121,10 @@ const settingsStateCallbacks = {
   settings_exited: () => {
     teardownSettingsDebugPanel(window);
   },
-} satisfies ExhaustiveCallbacks<
-  SettingsStateHandle,
-  "security_alerts_repo_edited" | "settings_init" | "settings_exited"
->;
+} satisfies ExhaustiveAllCallbacks<SettingsStateHandle>;
 wireFunctions(window.SettingsState, settingsStateCallbacks);
 
-wireTimeReportingUi(window);
-
-const timeReportingOpenRowHandlers = {
-  time_reporting_open_row_url: (url: string) => {
-    if (url.length > 0) {
-      openUrlInBrowser(url);
-    }
-  },
-} satisfies ExhaustiveCallbacks<TimeReportingStateHandle, "time_reporting_open_row_url">;
-wireFunctions(window.TimeReportingState, timeReportingOpenRowHandlers);
+wireFunctions(window.TimeReportingState, buildTimeReportingStateCallbacks(window));
 
 const mainWindowHandlers = {
   open_github_device_clicked: () => {

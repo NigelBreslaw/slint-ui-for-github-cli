@@ -1,11 +1,16 @@
 import * as slint from "slint-ui";
-import { assignProperties } from "slint-bridge-kit";
-import type { MainWindowInstance, SlintTimeReportingWeekRow } from "../../slint-interface.ts";
+import { assignProperties, type ExhaustiveAllCallbacks } from "slint-bridge-kit";
+import type {
+  MainWindowInstance,
+  SlintTimeReportingWeekRow,
+  TimeReportingStateHandle,
+} from "../../slint-interface.ts";
 import {
   buildFilteredProjectsModel,
   findSlintUiOpenProjectRowByNodeId,
 } from "../gh/slint-ui-org-projects-ui.ts";
 import { fetchAllProjectV2ItemsGraphql } from "../gh/graphql-project-v2-items-all.ts";
+import { openUrlInBrowser } from "../utils/open-url.ts";
 import { refreshSlintUiOrgProjectsForWindow } from "../../slint-window-bridge.ts";
 import { dumpTimeReportingProjectNodeToDebugJson } from "./dump-time-reporting-project-debug.ts";
 import { buildTimeReportingWeekRows } from "./build-time-reporting-week-rows.ts";
@@ -180,135 +185,148 @@ function openOptionalPicker(window: MainWindowInstance): void {
   });
 }
 
-/** Wire `TimeReportingState` callbacks. On project pick, persists KV and writes unconditional `debug-json`. */
-export function wireTimeReportingUi(window: MainWindowInstance): void {
-  window.TimeReportingState.time_reporting_week_prev = () => {
-    closeTimeReportingDetail(window);
-    const w = getTimeReportingSelectedWeek();
-    const next = addIsoWeeks(w.isoYear, w.isoWeek, -1);
-    setTimeReportingSelectedWeek(next);
-    applyWeekRowsToWindow(window);
-  };
+/**
+ * All `TimeReportingState` callbacks for `wireFunctions(window.TimeReportingState, …)`.
+ * On project pick, persists KV and writes unconditional `debug-json`.
+ */
+export function buildTimeReportingStateCallbacks(
+  window: MainWindowInstance,
+): ExhaustiveAllCallbacks<TimeReportingStateHandle> {
+  return {
+    time_reporting_week_prev: () => {
+      closeTimeReportingDetail(window);
+      const w = getTimeReportingSelectedWeek();
+      const next = addIsoWeeks(w.isoYear, w.isoWeek, -1);
+      setTimeReportingSelectedWeek(next);
+      applyWeekRowsToWindow(window);
+    },
 
-  window.TimeReportingState.time_reporting_week_next = () => {
-    closeTimeReportingDetail(window);
-    const w = getTimeReportingSelectedWeek();
-    const next = addIsoWeeks(w.isoYear, w.isoWeek, 1);
-    setTimeReportingSelectedWeek(next);
-    applyWeekRowsToWindow(window);
-  };
+    time_reporting_week_next: () => {
+      closeTimeReportingDetail(window);
+      const w = getTimeReportingSelectedWeek();
+      const next = addIsoWeeks(w.isoYear, w.isoWeek, 1);
+      setTimeReportingSelectedWeek(next);
+      applyWeekRowsToWindow(window);
+    },
 
-  window.TimeReportingState.time_reporting_week_this = () => {
-    closeTimeReportingDetail(window);
-    const now = currentIsoWeekUtc();
-    setTimeReportingSelectedWeek(now);
-    applyWeekRowsToWindow(window);
-  };
+    time_reporting_week_this: () => {
+      closeTimeReportingDetail(window);
+      const now = currentIsoWeekUtc();
+      setTimeReportingSelectedWeek(now);
+      applyWeekRowsToWindow(window);
+    },
 
-  window.TimeReportingState.time_reporting_refresh = () => {
-    const id = getTimeReportingCachedProjectNodeId();
-    if (id !== null) {
-      void loadProjectItemsIntoUi(window, id);
-    }
-  };
-
-  window.TimeReportingState.time_reporting_detail_close = () => {
-    closeTimeReportingDetail(window);
-  };
-
-  window.TimeReportingState.time_reporting_time_cell_clicked = (rowIndex, dayIndex) => {
-    const order = getTimeReportingWeekRowOrder();
-    const cached = getTimeReportingCachedItems();
-    const w = getTimeReportingSelectedWeek();
-    if (cached === null || rowIndex < 0 || rowIndex >= order.length) {
-      return;
-    }
-    const itemId = order[rowIndex];
-    if (itemId === undefined) {
-      return;
-    }
-    const item = findCachedProjectItemById(cached, itemId);
-    if (item === null) {
-      return;
-    }
-    const weekDates = weekdayDatesMondayToFriday(w.isoYear, w.isoWeek);
-    const { title, body } = formatTimeReportingCellDetail({
-      item,
-      itemId,
-      dayIndex,
-      weekDates,
-      detailsMap: getTimeReportingCellDetailsByKey(),
-    });
-    assignProperties(window.TimeReportingState, {
-      detail_title: title,
-      detail_body: body,
-      detail_open: true,
-    });
-  };
-
-  window.TimeReportingState.time_reporting_view_init = () => {
-    void (async () => {
-      hydrateTimeReportingFromKv(window);
-      await refreshSlintUiOrgProjectsForWindow(window);
-      if (!window.TimeReportingState.has_selected_project) {
-        openMandatoryPicker(window);
-      } else {
-        const stored = readTimeReportingSelectedProjectKv();
-        if (stored !== null) {
-          await loadProjectItemsIntoUi(window, stored.nodeId);
-        }
+    time_reporting_refresh: () => {
+      const id = getTimeReportingCachedProjectNodeId();
+      if (id !== null) {
+        void loadProjectItemsIntoUi(window, id);
       }
-    })();
-  };
+    },
 
-  window.TimeReportingState.time_reporting_view_exited = () => {
-    closeTimeReportingDetail(window);
-    closeTimeReportingPicker(window);
-  };
+    time_reporting_detail_close: () => {
+      closeTimeReportingDetail(window);
+    },
 
-  window.TimeReportingState.time_reporting_picker_cancel = () => {
-    if (!window.TimeReportingState.picker_allow_cancel) {
-      return;
-    }
-    closeTimeReportingPicker(window);
-  };
-
-  window.TimeReportingState.time_reporting_open_change_project = () => {
-    closeTimeReportingDetail(window);
-    assignProperties(window.AppState, {
-      projects_search: "",
-      projects_filtered_model: buildFilteredProjectsModel(""),
-    });
-    openOptionalPicker(window);
-    void refreshSlintUiOrgProjectsForWindow(window);
-  };
-
-  window.TimeReportingState.time_reporting_project_chosen = (id: string) => {
-    void (async () => {
-      let row = findSlintUiOpenProjectRowByNodeId(id);
-      if (row === null) {
-        await refreshSlintUiOrgProjectsForWindow(window);
-        row = findSlintUiOpenProjectRowByNodeId(id);
-      }
-      if (row === null) {
-        console.error("[time-reporting] Unknown project id after refresh:", id);
+    time_reporting_time_cell_clicked: (rowIndex, dayIndex) => {
+      const order = getTimeReportingWeekRowOrder();
+      const cached = getTimeReportingCachedItems();
+      const w = getTimeReportingSelectedWeek();
+      if (cached === null || rowIndex < 0 || rowIndex >= order.length) {
         return;
       }
-      closeTimeReportingDetail(window);
-      writeTimeReportingSelectedProjectKv({
-        schemaVersion: TIME_REPORTING_SELECTED_PROJECT_SCHEMA_VERSION,
-        nodeId: row.id,
-        number: row.number,
-        title: row.title,
-        url: row.url,
+      const itemId = order[rowIndex];
+      if (itemId === undefined) {
+        return;
+      }
+      const item = findCachedProjectItemById(cached, itemId);
+      if (item === null) {
+        return;
+      }
+      const weekDates = weekdayDatesMondayToFriday(w.isoYear, w.isoWeek);
+      const { title, body } = formatTimeReportingCellDetail({
+        item,
+        itemId,
+        dayIndex,
+        weekDates,
+        detailsMap: getTimeReportingCellDetailsByKey(),
       });
       assignProperties(window.TimeReportingState, {
-        has_selected_project: true,
-        selected_project_label: row.title,
+        detail_title: title,
+        detail_body: body,
+        detail_open: true,
       });
+    },
+
+    time_reporting_open_row_url: (url: string) => {
+      if (url.length > 0) {
+        openUrlInBrowser(url);
+      }
+    },
+
+    time_reporting_view_init: () => {
+      void (async () => {
+        hydrateTimeReportingFromKv(window);
+        await refreshSlintUiOrgProjectsForWindow(window);
+        if (!window.TimeReportingState.has_selected_project) {
+          openMandatoryPicker(window);
+        } else {
+          const stored = readTimeReportingSelectedProjectKv();
+          if (stored !== null) {
+            await loadProjectItemsIntoUi(window, stored.nodeId);
+          }
+        }
+      })();
+    },
+
+    time_reporting_view_exited: () => {
+      closeTimeReportingDetail(window);
       closeTimeReportingPicker(window);
-      await dumpTimeReportingProjectNodeToDebugJson(row.id);
-      await loadProjectItemsIntoUi(window, row.id);
-    })();
+    },
+
+    time_reporting_picker_cancel: () => {
+      if (!window.TimeReportingState.picker_allow_cancel) {
+        return;
+      }
+      closeTimeReportingPicker(window);
+    },
+
+    time_reporting_open_change_project: () => {
+      closeTimeReportingDetail(window);
+      assignProperties(window.AppState, {
+        projects_search: "",
+        projects_filtered_model: buildFilteredProjectsModel(""),
+      });
+      openOptionalPicker(window);
+      void refreshSlintUiOrgProjectsForWindow(window);
+    },
+
+    time_reporting_project_chosen: (id: string) => {
+      void (async () => {
+        let row = findSlintUiOpenProjectRowByNodeId(id);
+        if (row === null) {
+          await refreshSlintUiOrgProjectsForWindow(window);
+          row = findSlintUiOpenProjectRowByNodeId(id);
+        }
+        if (row === null) {
+          console.error("[time-reporting] Unknown project id after refresh:", id);
+          return;
+        }
+        closeTimeReportingDetail(window);
+        writeTimeReportingSelectedProjectKv({
+          schemaVersion: TIME_REPORTING_SELECTED_PROJECT_SCHEMA_VERSION,
+          nodeId: row.id,
+          number: row.number,
+          title: row.title,
+          url: row.url,
+        });
+        assignProperties(window.TimeReportingState, {
+          has_selected_project: true,
+          selected_project_label: row.title,
+        });
+        closeTimeReportingPicker(window);
+        await dumpTimeReportingProjectNodeToDebugJson(row.id);
+        await loadProjectItemsIntoUi(window, row.id);
+      })();
+    },
   };
 }

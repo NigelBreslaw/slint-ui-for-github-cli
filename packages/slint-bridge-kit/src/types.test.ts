@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import type { ExhaustiveCallbacks, FunctionKeysOf, KeysMatching } from "./types.ts";
+import type {
+  ExhaustiveAllCallbacks,
+  ExhaustiveCallbacks,
+  FunctionKeysOf,
+  KeysMatching,
+} from "./types.ts";
 import { wireFunctions } from "./wire-functions.ts";
 
 /** Compile-time helpers: if these assignments fail, `tsc` fails. */
@@ -19,9 +24,15 @@ const _keysMatchingNumber: _Equal<KeysMatching<Widget, number>, "size"> = true;
 
 const _functionKeys: _Equal<FunctionKeysOf<Widget>, "onClick" | "onHover"> = true;
 
+const _exhaustiveAll: _Equal<
+  ExhaustiveAllCallbacks<Widget>,
+  { onClick: (e: string) => void; onHover: () => void }
+> = true;
+
 void _keysMatchingString;
 void _keysMatchingNumber;
 void _functionKeys;
+void _exhaustiveAll;
 
 describe("ExhaustiveCallbacks + wireFunctions", () => {
   it("accepts a handler map that satisfies every selected callback key", () => {

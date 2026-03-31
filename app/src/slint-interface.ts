@@ -1,10 +1,12 @@
 /**
  * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`,
  * `TimeReportingState`) wired from
- * [`ui/main.slint`](./ui/main.slint) / [`ui/app-state.slint`](./ui/app-state.slint). Keep string
- * unions aligned with Slint enums (slint-node uses kebab-case for `AppState.auth`).
+ * [`ui/main.slint`](./ui/main.slint) / [`data-bridges/app-state.slint`](./data-bridges/app-state.slint).
+ * Slint enum cases use the same spelling as in `.slint` (camelCase here); string unions are derived
+ * via `slintEnumLiterals` so wire strings stay a single source of truth.
  */
 import * as slint from "slint-ui";
+import { slintEnumLiterals, type SlintEnumUnion } from "slint-bridge-kit";
 import type { SlintRgbaImage } from "./backend/gh/avatar-image.ts";
 import type { SlintProjectRow } from "./backend/gh/slint-ui-org-projects-ui.ts";
 
@@ -23,18 +25,29 @@ export type SlintSecurityAlertRow = {
 };
 
 /** Maps to `DashboardTab` in `app-state.slint`. */
-export type DashboardTabWire = "itemsToReview" | "securityAlerts";
+export const dashboardTabWireLiterals = slintEnumLiterals([
+  "itemsToReview",
+  "securityAlerts",
+] as const);
+export type DashboardTabWire = SlintEnumUnion<typeof dashboardTabWireLiterals>;
 
-/** Maps to `Authed` in `app-state.slint` (kebab-case on the wire). */
-export type AuthedAuthState =
-  | "loggedOut"
-  | "noGhCliInstalled"
-  | "ghCliVersionTooOld"
-  | "loggedIn"
-  | "authorizing";
+/** Maps to `Authed` in `app-state.slint`. */
+export const authedAuthLiterals = slintEnumLiterals([
+  "loggedOut",
+  "noGhCliInstalled",
+  "ghCliVersionTooOld",
+  "loggedIn",
+  "authorizing",
+] as const);
+export type AuthedAuthState = SlintEnumUnion<typeof authedAuthLiterals>;
 
 /** Maps to `View` in `app-state.slint`. */
-export type AppStateView = "dashboard" | "settings" | "timeReporting";
+export const appStateViewLiterals = slintEnumLiterals([
+  "dashboard",
+  "settings",
+  "timeReporting",
+] as const);
+export type AppStateView = SlintEnumUnion<typeof appStateViewLiterals>;
 
 export type AppStateHandle = {
   auth: AuthedAuthState;

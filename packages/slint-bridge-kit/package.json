@@ -1,6 +1,6 @@
 {
   "name": "slint-bridge-kit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "Small helpers for wiring slint-ui Node handles (exhaustive callbacks, batched assigns).",

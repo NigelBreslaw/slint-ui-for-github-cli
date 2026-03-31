@@ -24,3 +24,12 @@ export type FunctionKeysOf<T extends object> = {
  * Typically choose `K` as a union of {@link FunctionKeysOf} keys (or a subset) from your Slint handle type.
  */
 export type ExhaustiveCallbacks<T extends object, K extends keyof T> = Required<Pick<T, K>>;
+
+/**
+ * Handlers for every function-valued property on `T`. Use when your handle type only exposes Slint
+ * callbacks (and models/scalars) at the top level, and this object wires **all** of those callbacks
+ * in one place — e.g. `satisfies ExhaustiveAllCallbacks<AppStateHandle>`.
+ *
+ * Do **not** use for types that also include non-callback methods (e.g. `run` / `show` on a window).
+ */
+export type ExhaustiveAllCallbacks<T extends object> = ExhaustiveCallbacks<T, FunctionKeysOf<T>>;
