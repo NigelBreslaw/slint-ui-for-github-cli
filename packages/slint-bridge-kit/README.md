@@ -51,6 +51,16 @@ You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. Th
 
 ---
 
+## Barrel import
+
+Public exports are available from the package root in one import:
+
+```typescript
+import { assignProperties, wireFunctions, type ExhaustiveCallbacks } from "slint-bridge-kit";
+```
+
+---
+
 ## `assignProperties` and `undefined`
 
 - **`undefined` in `values`:** that property is **not** written; the previous value on `target` stays.
