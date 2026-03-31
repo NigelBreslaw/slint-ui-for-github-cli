@@ -133,10 +133,12 @@ async function loadProjectItemsIntoUi(window: MainWindowInstance, nodeId: string
   window.TimeReportingState.items_load_status = "Loading board items…";
   const res = await fetchAllProjectV2ItemsGraphql(nodeId);
   if (!res.ok) {
-    window.TimeReportingState.items_load_status = res.error;
-    window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
-    window.TimeReportingState.week_label = "";
-    window.TimeReportingState.week_range_subtitle = "";
+    assignProperties(window.TimeReportingState, {
+      items_load_status: res.error,
+      week_rows_model: new slint.ArrayModel<SlintTimeReportingWeekRow>([]),
+      week_label: "",
+      week_range_subtitle: "",
+    });
     clearWeekGridColumnHeaders(window);
     window.TimeReportingState.week_grid_hint = "";
     setTimeReportingWeekRowOrder([]);
@@ -237,9 +239,11 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
       weekDates,
       detailsMap: getTimeReportingCellDetailsByKey(),
     });
-    window.TimeReportingState.detail_title = title;
-    window.TimeReportingState.detail_body = body;
-    window.TimeReportingState.detail_open = true;
+    assignProperties(window.TimeReportingState, {
+      detail_title: title,
+      detail_body: body,
+      detail_open: true,
+    });
   };
 
   window.TimeReportingState.time_reporting_view_init = () => {
@@ -271,8 +275,10 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
 
   window.TimeReportingState.time_reporting_open_change_project = () => {
     closeTimeReportingDetail(window);
-    window.AppState.projects_search = "";
-    window.AppState.projects_filtered_model = buildFilteredProjectsModel("");
+    assignProperties(window.AppState, {
+      projects_search: "",
+      projects_filtered_model: buildFilteredProjectsModel(""),
+    });
     openOptionalPicker(window);
     void refreshSlintUiOrgProjectsForWindow(window);
   };
@@ -296,8 +302,10 @@ export function wireTimeReportingUi(window: MainWindowInstance): void {
         title: row.title,
         url: row.url,
       });
-      window.TimeReportingState.has_selected_project = true;
-      window.TimeReportingState.selected_project_label = row.title;
+      assignProperties(window.TimeReportingState, {
+        has_selected_project: true,
+        selected_project_label: row.title,
+      });
       closeTimeReportingPicker(window);
       await dumpTimeReportingProjectNodeToDebugJson(row.id);
       await loadProjectItemsIntoUi(window, row.id);
