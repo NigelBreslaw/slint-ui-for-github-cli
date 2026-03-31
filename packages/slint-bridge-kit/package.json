@@ -1,6 +1,6 @@
 {
   "name": "slint-bridge-kit",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "type": "module",
   "description": "Small helpers for wiring slint-ui Node handles (exhaustive callbacks, batched assigns).",
@@ -17,9 +17,11 @@
     "lint": "oxlint src",
     "lint:fix": "oxlint --fix src",
     "format": "oxfmt --write src",
-    "format:check": "oxfmt --check src"
+    "format:check": "oxfmt --check src",
+    "test": "node --test"
   },
   "devDependencies": {
+    "@types/node": "catalog:",
     "oxfmt": "catalog:",
     "oxlint": "catalog:",
     "typescript": "catalog:"

@@ -10,7 +10,8 @@
     "erasableSyntaxOnly": true,
     "rewriteRelativeImportExtensions": true,
     "allowImportingTsExtensions": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "types": ["node"]
   },
   "include": ["src/**/*.ts"]
 }

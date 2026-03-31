@@ -19,7 +19,7 @@
     "format": "pnpm --filter github-app run format && pnpm --filter slint-bridge-kit run format",
     "format:check": "pnpm --filter github-app run format:check && pnpm --filter slint-bridge-kit run format:check",
     "knip": "knip",
-    "test": "pnpm --filter github-app run test"
+    "test": "pnpm --filter github-app run test && pnpm --filter slint-bridge-kit run test"
   },
   "devDependencies": {
     "knip": "6.1.0"
