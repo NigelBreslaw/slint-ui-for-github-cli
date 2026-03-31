@@ -1,4 +1,5 @@
 import * as slint from "slint-ui";
+import { assignProperties } from "slint-bridge-kit";
 import type { MainWindowInstance, SlintTimeReportingWeekRow } from "../../slint-interface.ts";
 import {
   buildFilteredProjectsModel,
@@ -37,24 +38,30 @@ function ymdToMmDd(ymd: string): string {
 }
 
 function clearWeekGridColumnHeaders(window: MainWindowInstance): void {
-  window.TimeReportingState.week_hdr_mo = "";
-  window.TimeReportingState.week_hdr_tu = "";
-  window.TimeReportingState.week_hdr_we = "";
-  window.TimeReportingState.week_hdr_th = "";
-  window.TimeReportingState.week_hdr_fr = "";
+  assignProperties(window.TimeReportingState, {
+    week_hdr_mo: "",
+    week_hdr_tu: "",
+    week_hdr_we: "",
+    week_hdr_th: "",
+    week_hdr_fr: "",
+  });
 }
 
 function setWeekGridColumnHeaders(window: MainWindowInstance, weekDates: string[]): void {
-  window.TimeReportingState.week_hdr_mo = ymdToMmDd(weekDates[0] ?? "");
-  window.TimeReportingState.week_hdr_tu = ymdToMmDd(weekDates[1] ?? "");
-  window.TimeReportingState.week_hdr_we = ymdToMmDd(weekDates[2] ?? "");
-  window.TimeReportingState.week_hdr_th = ymdToMmDd(weekDates[3] ?? "");
-  window.TimeReportingState.week_hdr_fr = ymdToMmDd(weekDates[4] ?? "");
+  assignProperties(window.TimeReportingState, {
+    week_hdr_mo: ymdToMmDd(weekDates[0] ?? ""),
+    week_hdr_tu: ymdToMmDd(weekDates[1] ?? ""),
+    week_hdr_we: ymdToMmDd(weekDates[2] ?? ""),
+    week_hdr_th: ymdToMmDd(weekDates[3] ?? ""),
+    week_hdr_fr: ymdToMmDd(weekDates[4] ?? ""),
+  });
 }
 
 function closeTimeReportingPicker(window: MainWindowInstance): void {
-  window.TimeReportingState.picker_open = false;
-  window.TimeReportingState.picker_allow_cancel = false;
+  assignProperties(window.TimeReportingState, {
+    picker_open: false,
+    picker_allow_cancel: false,
+  });
 }
 
 function closeTimeReportingDetail(window: MainWindowInstance): void {
@@ -143,22 +150,30 @@ async function loadProjectItemsIntoUi(window: MainWindowInstance, nodeId: string
 export function hydrateTimeReportingFromKv(window: MainWindowInstance): void {
   const stored = readTimeReportingSelectedProjectKv();
   if (stored === null) {
-    window.TimeReportingState.has_selected_project = false;
-    window.TimeReportingState.selected_project_label = "";
+    assignProperties(window.TimeReportingState, {
+      has_selected_project: false,
+      selected_project_label: "",
+    });
     return;
   }
-  window.TimeReportingState.has_selected_project = true;
-  window.TimeReportingState.selected_project_label = stored.title;
+  assignProperties(window.TimeReportingState, {
+    has_selected_project: true,
+    selected_project_label: stored.title,
+  });
 }
 
 function openMandatoryPicker(window: MainWindowInstance): void {
-  window.TimeReportingState.picker_allow_cancel = false;
-  window.TimeReportingState.picker_open = true;
+  assignProperties(window.TimeReportingState, {
+    picker_allow_cancel: false,
+    picker_open: true,
+  });
 }
 
 function openOptionalPicker(window: MainWindowInstance): void {
-  window.TimeReportingState.picker_allow_cancel = true;
-  window.TimeReportingState.picker_open = true;
+  assignProperties(window.TimeReportingState, {
+    picker_allow_cancel: true,
+    picker_open: true,
+  });
 }
 
 /** Wire `TimeReportingState` callbacks. On project pick, persists KV and writes unconditional `debug-json`. */
