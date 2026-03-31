@@ -1,3 +1,4 @@
+import { assignProperties } from "slint-bridge-kit";
 import type { MainWindowInstance } from "./slint-interface.ts";
 import {
   readSecurityAlertsRepositoryKv,
@@ -7,8 +8,10 @@ import {
 import { onSecurityAlertsRepositorySaved } from "./slint-window-bridge.ts";
 
 export function hydrateSecurityAlertsRepo(window: MainWindowInstance): void {
-  window.SettingsState.security_alerts_repo_input = readSecurityAlertsRepositoryKv();
-  window.SettingsState.security_alerts_repo_error = "";
+  assignProperties(window.SettingsState, {
+    security_alerts_repo_input: readSecurityAlertsRepositoryKv(),
+    security_alerts_repo_error: "",
+  });
 }
 
 export function applySecurityAlertsRepoEdited(window: MainWindowInstance, text: string): void {
@@ -17,13 +20,17 @@ export function applySecurityAlertsRepoEdited(window: MainWindowInstance, text: 
     window.SettingsState.security_alerts_repo_error = v.message;
     return;
   }
-  window.SettingsState.security_alerts_repo_error = "";
   writeSecurityAlertsRepositoryKv(v.value);
-  window.SettingsState.security_alerts_repo_input = v.value;
+  assignProperties(window.SettingsState, {
+    security_alerts_repo_error: "",
+    security_alerts_repo_input: v.value,
+  });
   onSecurityAlertsRepositorySaved(window);
 }
 
 export function clearSecurityAlertsRepoUi(window: MainWindowInstance): void {
-  window.SettingsState.security_alerts_repo_input = "";
-  window.SettingsState.security_alerts_repo_error = "";
+  assignProperties(window.SettingsState, {
+    security_alerts_repo_input: "",
+    security_alerts_repo_error: "",
+  });
 }
