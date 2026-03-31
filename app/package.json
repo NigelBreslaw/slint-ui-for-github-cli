@@ -1,0 +1,38 @@
+{
+  "name": "github-app",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "autofix": "pnpm lint:fix && pnpm format && pnpm typecheck",
+    "start": "pnpm dev",
+    "gen-build-info": "node scripts/write-build-info.ts",
+    "dev": "node scripts/write-build-info.ts && node src/main.ts",
+    "dev:debug": "node scripts/write-build-info.ts && cross-env GH_DEBUG_JSON=1 GH_DEBUG_SKIP_SLINT_UI_PROJECT_DUMPS=1 node src/main.ts",
+    "dev:debug:projects": "node scripts/write-build-info.ts && cross-env GH_DEBUG_JSON=1 node src/main.ts",
+    "typecheck": "node scripts/write-build-info.ts && tsc --noEmit",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint --fix src",
+    "format": "oxfmt --write src",
+    "format:check": "oxfmt --check src",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "arktype": "2.2.0",
+    "better-sqlite3": "12.8.0",
+    "clipboardy": "5.3.1",
+    "sharp": "0.34.5",
+    "slint-ui": "1.16.0-nightly.2026033114"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "7.6.13",
+    "@types/node": "25.5.0",
+    "cross-env": "10.1.0",
+    "oxfmt": "0.42.0",
+    "oxlint": "1.57.0",
+    "typescript": "6.0.2"
+  }
+}

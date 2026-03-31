@@ -7,6 +7,12 @@ settings:
 importers:
 
   .:
+    devDependencies:
+      knip:
+        specifier: 6.1.0
+        version: 6.1.0
+
+  app:
     dependencies:
       arktype:
         specifier: 2.2.0
@@ -33,9 +39,6 @@ importers:
       cross-env:
         specifier: 10.1.0
         version: 10.1.0
-      knip:
-        specifier: 6.1.0
-        version: 6.1.0
       oxfmt:
         specifier: 0.42.0
         version: 0.42.0

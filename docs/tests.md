@@ -1,6 +1,6 @@
 # Tests
 
-This project uses Node’s built-in test runner ([`node:test`](https://nodejs.org/api/test.html)) and [`node:assert/strict`](https://nodejs.org/api/assert.html). Test files are named `*.test.ts` and live next to (or near) the code they cover.
+This project uses Node’s built-in test runner ([`node:test`](https://nodejs.org/api/test.html)) and [`node:assert/strict`](https://nodejs.org/api/assert.html). Test files are named `*.test.ts` and live under [`app/src/`](../app/src/) next to (or near) the code they cover.
 
 ## Running tests
 
@@ -8,7 +8,7 @@ This project uses Node’s built-in test runner ([`node:test`](https://nodejs.or
 pnpm test
 ```
 
-This runs [`scripts/run-tests.ts`](../scripts/run-tests.ts), which discovers every file matching `src/**/*.test.ts` and invokes `node --test` on that list.
+This runs `pnpm --filter github-app test`, which executes **`node --test`** with **cwd [`app/`](../app/)**, so Node discovers every file matching `app/src/**/*.test.ts` (same as `src/**/*.test.ts` relative to the app package).
 
 Type checking is separate:
 
@@ -25,9 +25,9 @@ pnpm typecheck
 
 ## Test files and cases
 
-### `src/utils/format-countdown.test.ts`
+### `app/src/utils/format-countdown.test.ts`
 
-Exercises [`formatCountdownMs`](../src/utils/format-countdown.ts) (countdown string `MM:SS`).
+Exercises [`formatCountdownMs`](../app/src/utils/format-countdown.ts) (countdown string `MM:SS`).
 
 | Case | Intent |
 | --- | --- |
@@ -36,18 +36,18 @@ Exercises [`formatCountdownMs`](../src/utils/format-countdown.ts) (countdown str
 | formats exactly one minute | Boundary at 60s |
 | returns 00:00 for zero, negative, NaN, and Infinity | Non-positive / non-finite inputs |
 
-### `src/utils/format-reset-at-local.test.ts`
+### `app/src/utils/format-reset-at-local.test.ts`
 
-Exercises [`formatRateLimitResetLocal`](../src/utils/format-reset-at-local.ts) (friendly local display of GitHub `rateLimit.resetAt`).
+Exercises [`formatRateLimitResetLocal`](../app/src/utils/format-reset-at-local.ts) (friendly local display of GitHub `rateLimit.resetAt`).
 
 | Case | Intent |
 | --- | --- |
 | matches Date#toLocaleString with the same formatting options (stable under TZ=UTC) | Implementation stays aligned with the same `toLocaleString` options; `TZ=UTC` set in the test for stability |
 | returns the input when the timestamp is not parseable | Invalid ISO string is passed through unchanged |
 
-### `src/gh/map-gh-exec-error.test.ts`
+### `app/src/gh/map-gh-exec-error.test.ts`
 
-Exercises [`mapGhExecError`](../src/gh/map-gh-exec-error.ts) (normalizing `execFile` / `gh` failures).
+Exercises [`mapGhExecError`](../app/src/gh/map-gh-exec-error.ts) (normalizing `execFile` / `gh` failures).
 
 | Case | Intent |
 | --- | --- |
@@ -57,9 +57,9 @@ Exercises [`mapGhExecError`](../src/gh/map-gh-exec-error.ts) (normalizing `execF
 | uses Error message for generic Error | Plain `Error` |
 | stringifies unknown values | Non-object throwables |
 
-### `src/gh/status-emoji-from-graphql.test.ts`
+### `app/src/gh/status-emoji-from-graphql.test.ts`
 
-Exercises [`statusEmojiFromGraphqlHtml`](../src/gh/status-emoji-from-graphql.ts) (strip HTML around emoji from GraphQL).
+Exercises [`statusEmojiFromGraphqlHtml`](../app/src/gh/status-emoji-from-graphql.ts) (strip HTML around emoji from GraphQL).
 
 | Case | Intent |
 | --- | --- |
@@ -68,9 +68,9 @@ Exercises [`statusEmojiFromGraphqlHtml`](../src/gh/status-emoji-from-graphql.ts)
 | strips nested tags | Multiple tags |
 | returns empty when only tags remain after strip | No visible glyph left |
 
-### `src/debug/parse-org-logins.test.ts`
+### `app/src/debug/parse-org-logins.test.ts`
 
-Exercises [`parseOrgLogins`](../src/debug/parse-org-logins.ts) (REST `user/orgs` paginated list → org slugs for debug dumps).
+Exercises [`parseOrgLogins`](../app/src/debug/parse-org-logins.ts) (REST `user/orgs` paginated list → org slugs for debug dumps).
 
 | Case | Intent |
 | --- | --- |
@@ -79,9 +79,9 @@ Exercises [`parseOrgLogins`](../src/debug/parse-org-logins.ts) (REST `user/orgs`
 | collects string login fields in order | Happy path; extra fields allowed |
 | skips rows without a string login | Null rows, missing `login`, numeric `login`; empty string login kept |
 
-### `src/time-reporting/parse-time-reporting-selected-project.test.ts`
+### `app/src/time-reporting/parse-time-reporting-selected-project.test.ts`
 
-Exercises [`parseTimeReportingSelectedProjectJson`](../src/time-reporting/time-reporting-selected-project-kv.ts) (KV JSON for the chosen GitHub ProjectV2 used by Time reporting; no SQLite in tests).
+Exercises [`parseTimeReportingSelectedProjectJson`](../app/src/time-reporting/time-reporting-selected-project-kv.ts) (KV JSON for the chosen GitHub ProjectV2 used by Time reporting; no SQLite in tests).
 
 | Case | Intent |
 | --- | --- |
@@ -92,9 +92,9 @@ Exercises [`parseTimeReportingSelectedProjectJson`](../src/time-reporting/time-r
 | returns null when title or url is not a string | Required display fields |
 | accepts a valid v1 payload | Round-trip with `JSON.stringify` |
 
-### `src/time-reporting/sanitize-time-reporting-debug-stem.test.ts`
+### `app/src/time-reporting/sanitize-time-reporting-debug-stem.test.ts`
 
-Exercises [`sanitizeTimeReportingDebugStem`](../src/time-reporting/sanitize-time-reporting-debug-stem.ts) (filename-safe segment for Time reporting `debug-json` stems).
+Exercises [`sanitizeTimeReportingDebugStem`](../app/src/time-reporting/sanitize-time-reporting-debug-stem.ts) (filename-safe segment for Time reporting `debug-json` stems).
 
 | Case | Intent |
 | --- | --- |
@@ -102,9 +102,9 @@ Exercises [`sanitizeTimeReportingDebugStem`](../src/time-reporting/sanitize-time
 | replaces slashes and spaces with underscores | Disallowed characters normalized |
 | is stable for the same input | Idempotent |
 
-### `src/schemas/gh-graphql-project-v2-node-response.test.ts`
+### `app/src/schemas/gh-graphql-project-v2-node-response.test.ts`
 
-Exercises [`parseProjectV2NodeFromGraphqlResponse`](../src/schemas/gh-graphql-project-v2-node-response.ts) (GraphQL `data.node` for a single `ProjectV2`; inline fixtures only—no `gh`).
+Exercises [`parseProjectV2NodeFromGraphqlResponse`](../app/src/schemas/gh-graphql-project-v2-node-response.ts) (GraphQL `data.node` for a single `ProjectV2`; inline fixtures only—no `gh`).
 
 | Case | Intent |
 | --- | --- |
@@ -116,9 +116,9 @@ Exercises [`parseProjectV2NodeFromGraphqlResponse`](../src/schemas/gh-graphql-pr
 | rejects wrong __typename when present | Non-`ProjectV2` union member |
 | accepts ProjectV2 when __typename is ProjectV2 | Explicit typename allowed |
 
-### `src/session/viewer-session-cache.test.ts`
+### `app/src/session/viewer-session-cache.test.ts`
 
-Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (persisted viewer snapshot for fast startup; no SQLite in tests—JSON only).
+Exercises [`parseViewerSessionJson`](../app/src/session/viewer-session-cache.ts) (persisted viewer snapshot for fast startup; no SQLite in tests—JSON only).
 
 | Case | Intent |
 | --- | --- |
@@ -130,9 +130,9 @@ Exercises [`parseViewerSessionJson`](../src/session/viewer-session-cache.ts) (pe
 | returns null when login is missing | Empty `login` string |
 | returns null when name has wrong type | Type guard on `name` |
 
-### `src/schemas/gh-graphql-rate-limit.test.ts`
+### `app/src/schemas/gh-graphql-rate-limit.test.ts`
 
-Exercises [`parseGhGraphqlRateLimitResponse`](../src/schemas/gh-graphql-rate-limit.ts) against JSON fixtures in [`src/test/fixtures/graphql/`](../src/test/fixtures/graphql/).
+Exercises [`parseGhGraphqlRateLimitResponse`](../app/src/schemas/gh-graphql-rate-limit.ts) against JSON fixtures in [`src/test/fixtures/graphql/`](../app/src/test/fixtures/graphql/).
 
 | Case | Fixture (if any) | Intent |
 | --- | --- | --- |
@@ -143,9 +143,9 @@ Exercises [`parseGhGraphqlRateLimitResponse`](../src/schemas/gh-graphql-rate-lim
 | rejects wrong types on rateLimit | `rate-limit-bad-limit-type.json` | Arktype rejects bad types |
 | rejects non-object root | _(inline `null`)_ | Non-object payload |
 
-### `src/schemas/gh-graphql-viewer-minimal.test.ts`
+### `app/src/schemas/gh-graphql-viewer-minimal.test.ts`
 
-Exercises [`parseGhGraphqlViewerMinimalResponse`](../src/schemas/gh-graphql-viewer-minimal.ts) against the same fixture directory.
+Exercises [`parseGhGraphqlViewerMinimalResponse`](../app/src/schemas/gh-graphql-viewer-minimal.ts) against the same fixture directory.
 
 | Case | Fixture (if any) | Intent |
 | --- | --- | --- |
@@ -161,7 +161,7 @@ Exercises [`parseGhGraphqlViewerMinimalResponse`](../src/schemas/gh-graphql-view
 
 ## GraphQL fixtures
 
-Static payloads live under `src/test/fixtures/graphql/`:
+Static payloads live under `app/src/test/fixtures/graphql/`:
 
 | File | Role |
 | --- | --- |
@@ -177,14 +177,14 @@ Static payloads live under `src/test/fixtures/graphql/`:
 | `viewer-viewer-null.json` | `data.viewer` null |
 | `viewer-missing-login.json` | Viewer object missing `login` |
 
-Time reporting `node(id: …)` tests use **inline** objects in [`gh-graphql-project-v2-node-response.test.ts`](../src/schemas/gh-graphql-project-v2-node-response.test.ts) (not separate fixture files).
+Time reporting `node(id: …)` tests use **inline** objects in [`gh-graphql-project-v2-node-response.test.ts`](../app/src/schemas/gh-graphql-project-v2-node-response.test.ts) (not separate fixture files).
 
 ---
 
 ## Tooling notes
 
-- **Knip** treats `src/**/*.test.ts` as entry files (see [`knip.json`](../knip.json)) so test files are not reported as unused.
-- **Oxlint / oxfmt** run on `src/` (including `*.test.ts`) via `pnpm lint` and `pnpm format`.
+- **Knip** treats the app workspace’s `src/**/*.test.ts` as entry files (see root [`knip.json`](../knip.json)) so test files are not reported as unused.
+- **Oxlint / oxfmt** run on the app package’s `src/` (including `*.test.ts`) via `pnpm lint` / `pnpm format` (from **`app/`**, or root scripts that filter to **`github-app`**).
 
 ## Related docs
 

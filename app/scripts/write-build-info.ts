@@ -1,11 +1,28 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
-import { mkdirSync, writeFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-const outDir = join(root, "generated");
+/** Directory containing this package (`app/`), i.e. parent of `scripts/`. */
+const appRoot = join(dirname(fileURLToPath(import.meta.url)), "..");
+
+function findGitRoot(startDir: string): string {
+  let dir = startDir;
+  for (;;) {
+    if (existsSync(join(dir, ".git"))) {
+      return dir;
+    }
+    const parent = join(dir, "..");
+    if (parent === dir) {
+      return startDir;
+    }
+    dir = parent;
+  }
+}
+
+const gitRoot = findGitRoot(appRoot);
+const outDir = join(appRoot, "generated");
 const outFile = join(outDir, "build-info.ts");
 
 let count = 0;
@@ -13,7 +30,7 @@ try {
   count = Number.parseInt(
     execFileSync("git", ["rev-list", "--count", "HEAD"], {
       encoding: "utf8",
-      cwd: root,
+      cwd: gitRoot,
     }).trim(),
     10,
   );

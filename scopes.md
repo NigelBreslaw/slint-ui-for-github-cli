@@ -2,7 +2,7 @@
 
 This app calls the GitHub REST API and GitHub CLI with the credentials from **`gh auth login`** on your machine. Those credentials are OAuth tokens with a set of [scopes](https://docs.github.com/en/apps/oauth-apps/building-oauth-apps/scopes-for-oauth-apps).
 
-The app requires **GitHub CLI 2.89.0 or newer** (see [`MIN_GH_CLI_VERSION`](src/gh/gh-cli-version.ts)); older versions are blocked at startup before scope checks.
+The app requires **GitHub CLI 2.89.0 or newer** (see [`MIN_GH_CLI_VERSION`](app/src/gh/gh-cli-version.ts)); older versions are blocked at startup before scope checks.
 
 ## Required classic OAuth scopes
 
