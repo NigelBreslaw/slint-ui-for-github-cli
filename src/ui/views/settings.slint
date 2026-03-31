@@ -1,5 +1,8 @@
 import { SettingsState } from "../../data-bridges/settings-state.slint";
+import { ButtonBlack } from "../components/buttons.slint";
+import { PrimerDialog } from "../components/primer-dialog.slint";
 import { PrimerSelect, ValidationStatus } from "../components/primer-select.slint";
+import { PrimerSpinner } from "../components/primer-spinner.slint";
 
 component TableRow {
 
@@ -89,6 +92,13 @@ export component Settings {
                     }
                 }
 
+                ButtonBlack {
+                    label: "Open Primer dialog demo";
+                    clicked => {
+                        primer-demo-popup.show();
+                    }
+                }
+
             //     Text {
             //         text: "Security alerts repository";
             //         font-size: 14px;
@@ -171,6 +181,36 @@ export component Settings {
                 color: #f85149;
                 font-size: 13px;
                 wrap: word-wrap;
+            }
+        }
+
+        primer-demo-popup := PopupWindow {
+            x: 0;
+            y: 0;
+            width: root.width;
+            height: root.height;
+            close-policy: no-auto-close;
+
+
+
+            PrimerDialog {
+                x: 0;
+                y: 0;
+                width: 100%;
+                height: 100%;
+                title: "Loading";
+                close => {
+                    primer-demo-popup.close();
+                }
+
+                VerticalLayout {
+                    alignment: center;
+                    width: 100%;
+
+                    PrimerSpinner {
+                        size: medium;
+                    }
+                }
             }
         }
     }

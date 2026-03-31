@@ -1,0 +1,55 @@
+// Primer-style Spinner (dark only). Geometry matches Primer React Spinner.tsx:
+// https://github.com/primer/react/blob/main/packages/react/src/Spinner/Spinner.tsx
+// — viewBox 16×16, circle r=7 stroke @ 25% opacity, arc path M15 8a7.002 7.002 0 00-7-7, stroke 2, 1s/rev.
+
+export enum SpinnerSize {
+    small,
+    medium,
+    large,
+}
+
+export component PrimerSpinner {
+    in property <SpinnerSize> size: medium;
+
+    private property <length> box: size == SpinnerSize.small ? 16px : size == SpinnerSize.large ? 64px : 32px;
+    /** `currentColor` on dark: strong segment; track uses strokeOpacity 0.25 in React. */
+    private property <color> segment-color: #f0f6fc;
+    private property <color> track-color: #f0f6fc40;
+
+    width: box;
+    height: box;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        transform-rotation: animation-tick() / 1000ms * 360deg;
+
+        Path {
+            width: 100%;
+            height: 100%;
+            viewbox-x: 0;
+            viewbox-y: 0;
+            viewbox-width: 16;
+            viewbox-height: 16;
+            fill: transparent;
+            stroke: root.track-color;
+            stroke-width: 2px;
+            commands: "M 15 8 A 7 7 0 1 1 1 8 A 7 7 0 1 1 15 8";
+        }
+
+        Path {
+            width: 100%;
+            height: 100%;
+            viewbox-x: 0;
+            viewbox-y: 0;
+            viewbox-width: 16;
+            viewbox-height: 16;
+            fill: transparent;
+            stroke: root.segment-color;
+            stroke-width: 2px;
+            stroke-line-cap: round;
+            commands: "M 15 8 a 7.002 7.002 0 0 0 -7 -7";
+        }
+    }
+}

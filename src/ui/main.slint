@@ -1,8 +1,4 @@
-import {
-    Spinner,
-    Palette,
-    StyleMetrics,
-} from "std-widgets.slint";
+import { Palette, StyleMetrics } from "std-widgets.slint";
 import {
     Authed,
     AppState,
@@ -20,6 +16,7 @@ import { Dashboard } from "views/dashboard.slint";
 import { ButtonBlack } from "components/buttons.slint";
 import { SideBar } from "components/sideBar.slint";
 import { TimeReporting } from "views/time-reporting.slint";
+import { PrimerSpinner } from "components/primer-spinner.slint";
 
 // Export so backend can access the enums and global state.
 export { Authed, AppState, DashboardTab, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
@@ -76,7 +73,11 @@ export component MainWindow inherits Window {
             width: 100%;
             height: 100%;
 
-            Text {
+            if root.status_message == "Loading…" || root.status_message == "Checking…": PrimerSpinner {
+                size: large;
+            }
+
+            if root.status_message != "" && root.status_message != "Loading…" && root.status_message != "Checking…": Text {
                 text: status_message;
                 font-size: 18px;
                 horizontal-alignment: center;
@@ -253,8 +254,8 @@ export component MainWindow inherits Window {
                     }
                 }
 
-                Spinner {
-                    indeterminate: true;
+                PrimerSpinner {
+                    size: medium;
                 }
             }
         }

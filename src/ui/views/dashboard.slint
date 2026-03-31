@@ -1,8 +1,7 @@
 import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../data-bridges/app-state.slint";
-import {
-    PrimerUnderlineNavItem,
-} from "../components/primer-underline-nav-item.slint";
+import { PrimerSpinner } from "../components/primer-spinner.slint";
+import { PrimerUnderlineNavItem } from "../components/primer-underline-nav-item.slint";
 
 export component Dashboard {
     width: 100%;
@@ -97,7 +96,16 @@ export component Dashboard {
                 }
             }
 
-            if AppState.review-requests-load-status != "": Text {
+            if AppState.review-requests-load-status == "Loading review requests…": HorizontalLayout {
+                spacing: 10px;
+                alignment: start;
+
+                PrimerSpinner {
+                    size: small;
+                }
+            }
+
+            if AppState.review-requests-load-status != "" && AppState.review-requests-load-status != "Loading review requests…": Text {
                 text: AppState.review-requests-load-status;
                 color: #8b949e;
                 wrap: word-wrap;
@@ -146,7 +154,16 @@ export component Dashboard {
                 color: #c9d1d9;
             }
 
-            if AppState.security-alerts-load-status != "": Text {
+            if AppState.security-alerts-load-status == "Loading security alerts…": HorizontalLayout {
+                spacing: 10px;
+                alignment: start;
+
+                PrimerSpinner {
+                    size: small;
+                }
+            }
+
+            if AppState.security-alerts-load-status != "" && AppState.security-alerts-load-status != "Loading security alerts…": Text {
                 text: AppState.security-alerts-load-status;
                 color: #8b949e;
                 wrap: word-wrap;

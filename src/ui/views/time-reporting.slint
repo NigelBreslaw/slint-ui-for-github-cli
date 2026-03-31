@@ -2,6 +2,7 @@ import { ListView } from "std-widgets.slint";
 import { AppState } from "../../data-bridges/app-state.slint";
 import { TimeReportingState } from "../../data-bridges/time-reporting-state.slint";
 import { ButtonBlack } from "../components/buttons.slint";
+import { PrimerSpinner } from "../components/primer-spinner.slint";
 
 export component TimeReporting {
     width: 100%;
@@ -89,7 +90,16 @@ export component TimeReporting {
                     }
                 }
 
-                if TimeReportingState.items-load-status != "": Text {
+                if TimeReportingState.items-load-status == "Loading board items…": HorizontalLayout {
+                    spacing: 10px;
+                    alignment: start;
+
+                    PrimerSpinner {
+                        size: small;
+                    }
+                }
+
+                if TimeReportingState.items-load-status != "" && TimeReportingState.items-load-status != "Loading board items…": Text {
                     text: TimeReportingState.items-load-status;
                     color: #8b949e;
                     wrap: word-wrap;
@@ -395,7 +405,16 @@ export component TimeReporting {
                 wrap: word-wrap;
             }
 
-            if AppState.projects-load-status != "": Text {
+            if AppState.projects-load-status == "Loading projects…": HorizontalLayout {
+                spacing: 10px;
+                alignment: start;
+
+                PrimerSpinner {
+                    size: small;
+                }
+            }
+
+            if AppState.projects-load-status != "" && AppState.projects-load-status != "Loading projects…": Text {
                 text: AppState.projects-load-status;
                 color: #8b949e;
                 wrap: word-wrap;
