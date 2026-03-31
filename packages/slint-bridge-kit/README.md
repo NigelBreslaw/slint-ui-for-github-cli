@@ -48,8 +48,10 @@ You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. Th
 | `FunctionKeysOf<T>` | type | Keys of `T` whose values are functions. |
 | `ExhaustiveCallbacks<T, K>` | type | `Required<Pick<T, K>>` — use with `satisfies` for exhaustive callback objects. |
 | `ExhaustiveAllCallbacks<T>` | type | `ExhaustiveCallbacks<T, FunctionKeysOf<T>>` — wire every function property on `T` in one map (Slint globals only; not for types with `run`/`show`/…). |
-| `slintEnumLiterals(values)` | function | Returns `values` unchanged; narrows inference for a `as const` string tuple (Slint enum cases on the wire). |
-| `SlintEnumUnion<T>` | type | `T[number]` for `T extends readonly string[]` — derive a string union from the tuple returned by `slintEnumLiterals`. |
+| `slintEnumMembers(cases)` | function | Readonly `{ [K in cases[number]]: K }` — dot access for Slint wire enum strings (`Authed.loggedIn`). |
+| `SlintEnumValues<M>` | type | Union of values from a members object (use instead of `SlintEnumUnion<typeof tuple>` with `slintEnumMembers`). |
+| `slintEnumLiterals(values)` | function | **Deprecated.** Returns `values` unchanged; prefer `slintEnumMembers`. |
+| `SlintEnumUnion<T>` | type | **Deprecated.** `T[number]` for tuples from `slintEnumLiterals`; prefer `SlintEnumValues<typeof members>`. |
 | `SLINT_BRIDGE_KIT_VERSION` | constant | String equal to this package’s `version` in `package.json`. |
 
 ---
@@ -61,19 +63,39 @@ Public exports are available from the package root in one import:
 ```typescript
 import {
   assignProperties,
-  slintEnumLiterals,
+  slintEnumMembers,
   wireFunctions,
   type ExhaustiveAllCallbacks,
   type ExhaustiveCallbacks,
-  type SlintEnumUnion,
+  type SlintEnumValues,
 } from "slint-bridge-kit";
 ```
 
 ---
 
-## Slint enum literals (string unions)
+## Slint enum members (dot access)
 
-Keep Slint-facing string enums in **one** `as const` list, export the union for TypeScript, and reuse the same array at runtime (e.g. `includes` checks):
+List Slint wire enum cases **once** as a `as const` array; `slintEnumMembers` returns a readonly object with `key === value` so call sites use `Authed.loggedIn` instead of raw strings. Use `SlintEnumValues<typeof Authed>` for the string union type.
+
+```typescript
+import { slintEnumMembers, type SlintEnumValues } from "slint-bridge-kit";
+
+export const Authed = slintEnumMembers([
+  "loggedOut",
+  "loggedIn",
+  "authorizing",
+] as const);
+
+export type AuthState = SlintEnumValues<typeof Authed>;
+
+// window.AppState.auth = Authed.loggedIn;
+```
+
+At runtime, use `Object.values(Authed)` (or `Object.keys`) where you previously used a tuple with `includes`.
+
+### Deprecated: `slintEnumLiterals` + `SlintEnumUnion`
+
+These remain for backward compatibility and will be removed in a future major release:
 
 ```typescript
 import { slintEnumLiterals, type SlintEnumUnion } from "slint-bridge-kit";
@@ -81,7 +103,6 @@ import { slintEnumLiterals, type SlintEnumUnion } from "slint-bridge-kit";
 export const AUTH_STATES = slintEnumLiterals([
   "logged-out",
   "logged-in",
-  "authorizing",
 ] as const);
 
 export type AuthState = SlintEnumUnion<typeof AUTH_STATES>;
@@ -151,6 +172,7 @@ const handlers = {
 - **`FunctionKeysOf<T>`** — callback key unions for documentation or `K` in `ExhaustiveCallbacks`.
 - **`ExhaustiveCallbacks<T, K extends keyof T>`** — ensures every key in `K` is present with the correct type from `T`.
 - **`ExhaustiveAllCallbacks<T>`** — same for every `FunctionKeysOf<T>` key (Slint globals only).
+- **`SlintEnumValues<M>`** — union of wire strings from a `slintEnumMembers` object.
 
 ---
 
