@@ -1,9 +1,9 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "tags": [
-    "-lintignore"
-  ],
-  "entry": [
-    "src/**/*.test.ts"
-  ]
+  "tags": ["-lintignore"],
+  "workspaces": {
+    ".": {
+      "entry": ["src/**/*.test.ts"]
+    }
+  }
 }

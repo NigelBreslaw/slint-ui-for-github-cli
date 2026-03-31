@@ -46,6 +46,12 @@ importers:
         specifier: 6.0.2
         version: 6.0.2
 
+  packages/slint-bridge-kit:
+    dependencies:
+      typescript:
+        specifier: '>=5.4.0'
+        version: 6.0.2
+
 packages:
 
   '@ark/schema@0.56.0':
