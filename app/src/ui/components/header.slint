@@ -1,4 +1,4 @@
-import { AppState, Authed, View } from "../../data-bridges/app-state.slint";
+import { AppState, AppView, Authed } from "../../data-bridges/app-state.slint";
 import { TimeReportingState } from "../../data-bridges/time-reporting-state.slint";
 import { ButtonBlack } from "buttons.slint";
 
@@ -253,10 +253,10 @@ export component Header {
             height: self.preferred-height;
             width: self.preferred-width;
             spacing: 16px;
-            visible: AppState.auth == Authed.loggedIn && (AppState.view == View.dashboard || AppState.view == View.settings || AppState.view == View.timeReporting);
+            visible: AppState.auth == Authed.loggedIn && (AppState.view == AppView.dashboard || AppState.view == AppView.settings || AppState.view == AppView.timeReporting);
 
             Text {
-                text: AppState.view == View.dashboard ? "Dashboard" : AppState.view == View.settings ? "Settings" : "Time reporting";
+                text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : "Time reporting";
                 font-size: 20px;
                 font-weight: 700;
                 color: #f0f6fc;
@@ -267,7 +267,7 @@ export component Header {
         ButtonBlack {
             x: (parent.width - self.width) / 2;
             y: (parent.height - self.height) / 2;
-            visible: AppState.view == View.timeReporting && TimeReportingState.has-selected-project;
+            visible: AppState.view == AppView.timeReporting && TimeReportingState.has-selected-project;
             label: "Change project";
             clicked => {
                 TimeReportingState.time-reporting-open-change-project();

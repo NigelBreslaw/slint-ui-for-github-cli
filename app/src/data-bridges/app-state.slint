@@ -33,7 +33,7 @@ export enum Authed {
     authorizing,
 }
 
-export enum View {
+export enum AppView {
     dashboard,
     settings,
     timeReporting,
@@ -60,20 +60,20 @@ export global AppState {
     in property <[SecurityAlertRow]> security-alerts-model;
     callback dashboard-tab-changed(DashboardTab);
 
-    in-out property <View> view: dashboard;
-    callback set-view(View);
+    in-out property <AppView> view: dashboard;
+    callback set-view(AppView);
     callback dashboard-init;
 
     set-view(v) => {
         if v != self.view {
-            if self.view == View.settings {
+            if self.view == AppView.settings {
                 SettingsState.settings-exited();
             }
-            if self.view == View.timeReporting {
+            if self.view == AppView.timeReporting {
                 TimeReportingState.time-reporting-view-exited();
             }
             self.view = v;
-            if v == View.settings {
+            if v == AppView.settings {
                 SettingsState.settings-init();
             }
 

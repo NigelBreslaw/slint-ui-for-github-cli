@@ -25,7 +25,7 @@ import type {
   SlintSelectOption,
   SlintTimeReportingWeekRow,
 } from "./slint-interface.ts";
-import { authedWire, dashboardTabWire } from "./slint-interface.ts";
+import { authed, dashboardTab } from "./slint-interface.ts";
 import {
   buildTimeReportingStateCallbacks,
   hydrateTimeReportingFromKv,
@@ -83,13 +83,13 @@ const appStateCallbacks = {
     void refreshDashboardReviewRequests(window);
   },
   dashboard_tab_changed: (tab) => {
-    if (tab === dashboardTabWire.securityAlerts) {
+    if (tab === dashboardTab.securityAlerts) {
       void refreshDashboardSecurityAlerts(window);
     }
   },
   sign_in: () => {
     clearAuthDeviceFields(window);
-    assignProperties(window.AppState, { auth: authedWire.authorizing });
+    assignProperties(window.AppState, { auth: authed.authorizing });
     window.show_auth_window();
     spawnGhAuthLogin({
       onDeviceFlowInfo: (info) => {

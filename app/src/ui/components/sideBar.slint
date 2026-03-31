@@ -1,4 +1,4 @@
-import { AppState, Authed, View } from "../../data-bridges/app-state.slint";
+import { AppState, AppView, Authed } from "../../data-bridges/app-state.slint";
 
 export component SideBar {
     width: 24px + (16px * 2);
@@ -24,7 +24,7 @@ export component SideBar {
 
             ta := TouchArea {
                 clicked => {
-                    AppState.set-view(View.dashboard);
+                    AppState.set-view(AppView.dashboard);
                 }
             }
         }
@@ -39,7 +39,7 @@ export component SideBar {
 
             TouchArea {
                 clicked => {
-                    AppState.set-view(View.timeReporting);
+                    AppState.set-view(AppView.timeReporting);
                 }
             }
         }
@@ -54,7 +54,7 @@ export component SideBar {
 
             TouchArea {
                 clicked => {
-                    AppState.set-view(View.settings);
+                    AppState.set-view(AppView.settings);
                 }
             }
         }

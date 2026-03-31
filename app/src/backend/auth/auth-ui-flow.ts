@@ -11,7 +11,7 @@ import {
   viewerSessionFromMinimalViewer,
   writeViewerSessionCache,
 } from "../session/viewer-session-cache.ts";
-import { authedWire, type MainWindowInstance } from "../../slint-interface.ts";
+import { authed, type MainWindowInstance } from "../../slint-interface.ts";
 import { uiPerfMarkT1Text, uiPerfMarkT2Avatar, uiPerfResetSession } from "../utils/ui-perf.ts";
 import {
   applyCachedViewerToAppState,
@@ -155,7 +155,7 @@ export function applyAuthUi(window: MainWindowInstance): void {
   const op = beginAuthOperation();
 
   assignProperties(window, { gh_cli_version_block_detail: "", status_message: "Checking…" });
-  assignProperties(window.AppState, { auth: authedWire.loggedIn });
+  assignProperties(window.AppState, { auth: authed.loggedIn });
   clearAuthDeviceFields(window);
   window.close_auth_window();
 
@@ -204,7 +204,7 @@ export function applyAuthUi(window: MainWindowInstance): void {
       } else {
         gh_cli_version_block_detail = versionGate.error;
       }
-      assignProperties(window.AppState, { auth: authedWire.ghCliVersionTooOld });
+      assignProperties(window.AppState, { auth: authed.ghCliVersionTooOld });
       assignProperties(window, { status_message, gh_cli_version_block_detail });
       if (slintEventLoopHasStarted) {
         window.show_gh_cli_version_too_old();
@@ -223,7 +223,7 @@ export function applyAuthUi(window: MainWindowInstance): void {
       return;
     }
     if (!scopeCheck.ok && scopeCheck.noGh === true) {
-      assignProperties(window.AppState, { auth: authedWire.noGhCliInstalled });
+      assignProperties(window.AppState, { auth: authed.noGhCliInstalled });
       assignProperties(window, { status_message: "gh not found (install GitHub CLI)" });
       if (slintEventLoopHasStarted) {
         window.show_no_gh_cli_installed();
@@ -237,7 +237,7 @@ export function applyAuthUi(window: MainWindowInstance): void {
       return;
     }
     if (!scopeCheck.ok) {
-      assignProperties(window.AppState, { auth: authedWire.loggedOut });
+      assignProperties(window.AppState, { auth: authed.loggedOut });
       assignProperties(window, {
         status_message: `${scopeCheck.message} Click Login to authorize with the required scopes.`,
       });

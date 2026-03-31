@@ -25,49 +25,42 @@ export type SlintSecurityAlertRow = {
 };
 
 /** Maps to `DashboardTab` in `app-state.slint`. */
-export const dashboardTabWire = slintEnumMembers([
-  "itemsToReview",
-  "securityAlerts",
-] as const);
-export type DashboardTabWire = SlintEnumValues<typeof dashboardTabWire>;
+export const dashboardTab = slintEnumMembers(["itemsToReview", "securityAlerts"] as const);
+export type DashboardTab = SlintEnumValues<typeof dashboardTab>;
 
 /** Maps to `Authed` in `app-state.slint`. */
-export const authedWire = slintEnumMembers([
+export const authed = slintEnumMembers([
   "loggedOut",
   "noGhCliInstalled",
   "ghCliVersionTooOld",
   "loggedIn",
   "authorizing",
 ] as const);
-export type AuthedAuthState = SlintEnumValues<typeof authedWire>;
+export type Authed = SlintEnumValues<typeof authed>;
 
-/** Maps to `View` in `app-state.slint`. */
-export const appStateViewWire = slintEnumMembers([
-  "dashboard",
-  "settings",
-  "timeReporting",
-] as const);
-export type AppStateView = SlintEnumValues<typeof appStateViewWire>;
+/** Maps to `AppView` in `app-state.slint`. */
+export const appView = slintEnumMembers(["dashboard", "settings", "timeReporting"] as const);
+export type AppView = SlintEnumValues<typeof appView>;
 
 export type AppStateHandle = {
-  auth: AuthedAuthState;
+  auth: Authed;
   user_login: string;
   user_name: string;
   user_profile_url: string;
   user_status_message: string;
   user_status_emoji: string;
   avatar?: SlintRgbaImage;
-  view: AppStateView;
+  view: AppView;
   review_requests_data_ready: boolean;
   review_requests_total: number;
   review_requests_load_status: string;
   review_requests_model: slint.ArrayModel<SlintReviewRequestRow>;
-  dashboard_active_tab: DashboardTabWire;
+  dashboard_active_tab: DashboardTab;
   security_alerts_data_ready: boolean;
   security_alerts_total: number;
   security_alerts_load_status: string;
   security_alerts_model: slint.ArrayModel<SlintSecurityAlertRow>;
-  dashboard_tab_changed: (tab: DashboardTabWire) => void;
+  dashboard_tab_changed: (tab: DashboardTab) => void;
   projects_search: string;
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;

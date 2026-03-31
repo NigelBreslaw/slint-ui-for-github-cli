@@ -49,9 +49,7 @@ You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. Th
 | `ExhaustiveCallbacks<T, K>` | type | `Required<Pick<T, K>>` — use with `satisfies` for exhaustive callback objects. |
 | `ExhaustiveAllCallbacks<T>` | type | `ExhaustiveCallbacks<T, FunctionKeysOf<T>>` — wire every function property on `T` in one map (Slint globals only; not for types with `run`/`show`/…). |
 | `slintEnumMembers(cases)` | function | Readonly `{ [K in cases[number]]: K }` — dot access for Slint wire enum strings (`Authed.loggedIn`). |
-| `SlintEnumValues<M>` | type | Union of values from a members object (use instead of `SlintEnumUnion<typeof tuple>` with `slintEnumMembers`). |
-| `slintEnumLiterals(values)` | function | **Deprecated.** Returns `values` unchanged; prefer `slintEnumMembers`. |
-| `SlintEnumUnion<T>` | type | **Deprecated.** `T[number]` for tuples from `slintEnumLiterals`; prefer `SlintEnumValues<typeof members>`. |
+| `SlintEnumValues<M>` | type | Union of string values from a members object returned by `slintEnumMembers`. |
 | `SLINT_BRIDGE_KIT_VERSION` | constant | String equal to this package’s `version` in `package.json`. |
 
 ---
@@ -92,21 +90,6 @@ export type AuthState = SlintEnumValues<typeof Authed>;
 ```
 
 At runtime, use `Object.values(Authed)` (or `Object.keys`) where you previously used a tuple with `includes`.
-
-### Deprecated: `slintEnumLiterals` + `SlintEnumUnion`
-
-These remain for backward compatibility and will be removed in a future major release:
-
-```typescript
-import { slintEnumLiterals, type SlintEnumUnion } from "slint-bridge-kit";
-
-export const AUTH_STATES = slintEnumLiterals([
-  "logged-out",
-  "logged-in",
-] as const);
-
-export type AuthState = SlintEnumUnion<typeof AUTH_STATES>;
-```
 
 ---
 

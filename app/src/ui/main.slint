@@ -1,12 +1,12 @@
 import { Palette, StyleMetrics } from "std-widgets.slint";
 import {
+    AppView,
     Authed,
     AppState,
     DashboardTab,
     ProjectRow,
     ReviewRequestRow,
     SecurityAlertRow,
-    View,
 } from "../data-bridges/app-state.slint";
 import { SettingsState } from "../data-bridges/settings-state.slint";
 import { TimeReportingState, TimeReportingWeekRow } from "../data-bridges/time-reporting-state.slint";
@@ -19,7 +19,7 @@ import { TimeReporting } from "views/time-reporting.slint";
 import { PrimerSpinner } from "components/primer-spinner.slint";
 
 // Export so backend can access the enums and global state.
-export { Authed, AppState, DashboardTab, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
+export { AppView, Authed, AppState, DashboardTab, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
 
 export component MainWindow inherits Window {
     callback close-auth-window;
@@ -100,11 +100,11 @@ export component MainWindow inherits Window {
         height: root.height - self.y;
         visible: AppState.auth == Authed.loggedIn;
 
-        if AppState.view == View.dashboard: Dashboard { }
+        if AppState.view == AppView.dashboard: Dashboard { }
 
-        if AppState.view == View.settings: Settings { }
+        if AppState.view == AppView.settings: Settings { }
 
-        if AppState.view == View.timeReporting: TimeReporting { }
+        if AppState.view == AppView.timeReporting: TimeReporting { }
     }
 
     header := Header { }

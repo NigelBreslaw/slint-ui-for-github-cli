@@ -1,7 +1,7 @@
 export { assignProperties } from "./assign-properties.ts";
 export { SLINT_BRIDGE_KIT_VERSION } from "./version.ts";
-export type { SlintEnumUnion, SlintEnumValues } from "./slint-enum-literals.ts";
-export { slintEnumLiterals, slintEnumMembers } from "./slint-enum-literals.ts";
+export type { SlintEnumValues } from "./slint-enum-members.ts";
+export { slintEnumMembers } from "./slint-enum-members.ts";
 export type {
   ExhaustiveAllCallbacks,
   ExhaustiveCallbacks,

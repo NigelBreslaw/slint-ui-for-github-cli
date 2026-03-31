@@ -1,6 +1,6 @@
 {
   "name": "slint-bridge-kit",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "description": "Small helpers for wiring slint-ui Node handles (exhaustive callbacks, batched assigns).",
@@ -14,7 +14,7 @@
   },
   "files": [
     "src/assign-properties.ts",
-    "src/slint-enum-literals.ts",
+    "src/slint-enum-members.ts",
     "src/index.ts",
     "src/types.ts",
     "src/version.ts",
