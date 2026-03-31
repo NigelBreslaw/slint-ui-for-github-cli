@@ -2,11 +2,11 @@
  * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`,
  * `TimeReportingState`) wired from
  * [`ui/main.slint`](./ui/main.slint) / [`data-bridges/app-state.slint`](./data-bridges/app-state.slint).
- * Slint enum cases use the same spelling as in `.slint` (camelCase here); string unions are derived
- * via `slintEnumLiterals` so wire strings stay a single source of truth.
+ * Slint enum cases use the same spelling as in `.slint` (camelCase here); wire values are defined
+ * once via `slintEnumMembers` so call sites use dot access and unions stay in sync.
  */
 import * as slint from "slint-ui";
-import { slintEnumLiterals, type SlintEnumUnion } from "slint-bridge-kit";
+import { slintEnumMembers, type SlintEnumValues } from "slint-bridge-kit";
 import type { SlintRgbaImage } from "./backend/gh/avatar-image.ts";
 import type { SlintProjectRow } from "./backend/gh/slint-ui-org-projects-ui.ts";
 
@@ -25,29 +25,29 @@ export type SlintSecurityAlertRow = {
 };
 
 /** Maps to `DashboardTab` in `app-state.slint`. */
-export const dashboardTabWireLiterals = slintEnumLiterals([
+export const dashboardTabWire = slintEnumMembers([
   "itemsToReview",
   "securityAlerts",
 ] as const);
-export type DashboardTabWire = SlintEnumUnion<typeof dashboardTabWireLiterals>;
+export type DashboardTabWire = SlintEnumValues<typeof dashboardTabWire>;
 
 /** Maps to `Authed` in `app-state.slint`. */
-export const authedAuthLiterals = slintEnumLiterals([
+export const authedWire = slintEnumMembers([
   "loggedOut",
   "noGhCliInstalled",
   "ghCliVersionTooOld",
   "loggedIn",
   "authorizing",
 ] as const);
-export type AuthedAuthState = SlintEnumUnion<typeof authedAuthLiterals>;
+export type AuthedAuthState = SlintEnumValues<typeof authedWire>;
 
 /** Maps to `View` in `app-state.slint`. */
-export const appStateViewLiterals = slintEnumLiterals([
+export const appStateViewWire = slintEnumMembers([
   "dashboard",
   "settings",
   "timeReporting",
 ] as const);
-export type AppStateView = SlintEnumUnion<typeof appStateViewLiterals>;
+export type AppStateView = SlintEnumValues<typeof appStateViewWire>;
 
 export type AppStateHandle = {
   auth: AuthedAuthState;

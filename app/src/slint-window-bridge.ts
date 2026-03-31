@@ -15,6 +15,7 @@ import type {
   SlintSecurityAlertRow,
   SlintTimeReportingWeekRow,
 } from "./slint-interface.ts";
+import { appStateViewWire, dashboardTabWire } from "./slint-interface.ts";
 import { readSecurityAlertsRepositoryOwnerRepo } from "./backend/settings/security-alerts-repo-kv.ts";
 import { resetTimeReportingItemsState } from "./backend/time-reporting/time-reporting-items-cache.ts";
 import { clearTimeReportingSelectedProjectKv } from "./backend/time-reporting/time-reporting-selected-project-kv.ts";
@@ -41,7 +42,7 @@ function formatDependabotAlertsUserError(message: string): string {
 function resetDashboardSecurityAlertsUi(window: MainWindowInstance): void {
   securityAlertsFetchGeneration++;
   assignProperties(window.AppState, {
-    dashboard_active_tab: "itemsToReview",
+    dashboard_active_tab: dashboardTabWire.itemsToReview,
     security_alerts_data_ready: false,
     security_alerts_total: 0,
     security_alerts_load_status: "",
@@ -60,7 +61,7 @@ export function onSecurityAlertsRepositorySaved(window: MainWindowInstance): voi
     security_alerts_load_status: "",
     security_alerts_model: new slint.ArrayModel<SlintSecurityAlertRow>([]),
   });
-  if (window.AppState.dashboard_active_tab === "securityAlerts") {
+  if (window.AppState.dashboard_active_tab === dashboardTabWire.securityAlerts) {
     void refreshDashboardSecurityAlerts(window);
   }
 }
@@ -147,7 +148,7 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
 /** Resets in-memory lists and org project cache; does not clear Time reporting KV (same GitHub user). */
 export function resetListsWithoutClearingProfile(window: MainWindowInstance): void {
   assignProperties(window.AppState, {
-    view: "dashboard",
+    view: appStateViewWire.dashboard,
     review_requests_data_ready: false,
     review_requests_total: 0,
     review_requests_load_status: "",
@@ -186,7 +187,7 @@ export function clearUserIdentity(window: MainWindowInstance): void {
     user_profile_url: "",
     user_status_message: "",
     user_status_emoji: "",
-    view: "dashboard",
+    view: appStateViewWire.dashboard,
     review_requests_data_ready: false,
     review_requests_total: 0,
     review_requests_load_status: "",
