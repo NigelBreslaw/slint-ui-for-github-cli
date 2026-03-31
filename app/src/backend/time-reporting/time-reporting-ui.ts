@@ -82,9 +82,11 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   const nodeId = getTimeReportingCachedProjectNodeId();
   if (items === null || nodeId === null) {
     setTimeReportingWeekRowOrder([]);
-    window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
-    window.TimeReportingState.week_label = "";
-    window.TimeReportingState.week_range_subtitle = "";
+    assignProperties(window.TimeReportingState, {
+      week_rows_model: new slint.ArrayModel<SlintTimeReportingWeekRow>([]),
+      week_label: "",
+      week_range_subtitle: "",
+    });
     clearWeekGridColumnHeaders(window);
     window.TimeReportingState.week_grid_hint = "";
     return;
@@ -94,18 +96,18 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   const { rows, cellDetailsByKey } = buildTimeReportingWeekRows(items, { targetWeek: week });
   setTimeReportingCachedItems(nodeId, items, cellDetailsByKey);
   setTimeReportingWeekRowOrder(rows.map((r) => r.item_id));
-  window.TimeReportingState.week_label = formatIsoWeekLabel(week.isoYear, week.isoWeek);
-  window.TimeReportingState.week_range_subtitle =
-    weekDates.length >= 5 ? `${weekDates[0]} – ${weekDates[4]}` : "";
+  assignProperties(window.TimeReportingState, {
+    week_label: formatIsoWeekLabel(week.isoYear, week.isoWeek),
+    week_range_subtitle: weekDates.length >= 5 ? `${weekDates[0]} – ${weekDates[4]}` : "",
+  });
   setWeekGridColumnHeaders(window, weekDates);
-  if (rows.length === 0 && window.TimeReportingState.items_load_status === "") {
-    window.TimeReportingState.week_grid_hint =
-      items.length === 0
+  const week_grid_hint =
+    rows.length === 0 && window.TimeReportingState.items_load_status === ""
+      ? items.length === 0
         ? "No items on this board."
-        : "No items merged or closed in this week with BOT-Total Time Spent(h) > 0.";
-  } else {
-    window.TimeReportingState.week_grid_hint = "";
-  }
+        : "No items merged or closed in this week with BOT-Total Time Spent(h) > 0."
+      : "";
+  window.TimeReportingState.week_grid_hint = week_grid_hint;
   const weekKey = formatIsoWeekLabel(week.isoYear, week.isoWeek);
   const slintRows = rows.map(
     (r): SlintTimeReportingWeekRow => ({
@@ -121,9 +123,9 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
       total: r.total,
     }),
   );
-  window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>(
-    slintRows,
-  );
+  assignProperties(window.TimeReportingState, {
+    week_rows_model: new slint.ArrayModel<SlintTimeReportingWeekRow>(slintRows),
+  });
 }
 
 async function loadProjectItemsIntoUi(window: MainWindowInstance, nodeId: string): Promise<void> {
