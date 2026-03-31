@@ -1,49 +1,109 @@
 # slint-bridge-kit
 
-Small, app-agnostic helpers for wiring **slint-ui** Node handles: batched property writes and callback wiring. No Slint types or domain code inside this package.
+Small, **app-agnostic** helpers for wiring **[slint-ui](https://www.npmjs.com/package/slint-ui)** Node handles: batched property writes and callback maps. This package does **not** import Slint, ship `.slint` files, or embed domain types—your app owns `AppState` / `MainWindow` shapes (e.g. hand-written or generated from `.slint`).
 
-## Runtime API
+**Semver:** `0.x` releases may include breaking API changes; pin or use a lockfile. After `1.0.0`, breaking changes require a major bump.
 
-### `assignProperties(target, values)`
+---
 
-Copies properties from `values` onto `target`. **`undefined` values are skipped** — the key is not written, so the previous value on `target` remains. **`null` is copied** like any other value.
+## Install
 
-If you need to set a property to `undefined`, assign it directly on `target` instead of using this helper.
+**Monorepo / workspace (pnpm):**
 
-### `wireFunctions(target, handlers)`
+```json
+{
+  "dependencies": {
+    "slint-bridge-kit": "workspace:*"
+  }
+}
+```
 
-For each key in `handlers`, sets `target[key] = handlers[key]`. Keys not listed in `handlers` are left unchanged.
+**Published package (when available):**
 
-## Type-only helpers
+```bash
+pnpm add slint-bridge-kit
+```
 
-These types emit **no JavaScript**; they exist for TypeScript consumers only.
+You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. This library ships **TypeScript source** as the runtime entry (see `exports` in `package.json`); Node 20+ with [type stripping](https://nodejs.org/api/typescript.html) or a bundler that resolves `.ts` is typical.
 
-### `KeysMatching<T, V>`
+---
 
-Keys of `T` whose property types are assignable to `V`.
+## Peer dependencies
 
-### `FunctionKeysOf<T>`
+| Package      | Purpose |
+| ------------ | ------- |
+| `typescript` | `>=5.4.0` — types and `satisfies` / `ExhaustiveCallbacks` ergonomics |
 
-Keys of `T` whose values are functions (any parameters / return type).
+**slint-ui** is not declared as a peer here because this package does not import it; real apps should depend on `slint-ui` separately and pass Slint objects into these helpers.
 
-### `ExhaustiveCallbacks<T, K>`
+---
 
-`Required<Pick<T, K>>` — an object that must define **every** key in the union `K`, with the same value types as on `T`. Combine with `satisfies` so a typo or missing callback is a **compile error**, then pass the object to `wireFunctions(target, handlers)`.
+## API reference
+
+| Name | Kind | Summary |
+| ---- | ---- | -------- |
+| `assignProperties(target, values)` | function | Copy `Partial<typeof target>` onto `target`; **skips** keys whose value is **`undefined`**; **`null` is assigned**. |
+| `wireFunctions(target, handlers)` | function | For each key in `handlers`, set `target[key] = handlers[key]`; other keys unchanged. |
+| `KeysMatching<T, V>` | type | Keys of `T` whose values are assignable to `V`. |
+| `FunctionKeysOf<T>` | type | Keys of `T` whose values are functions. |
+| `ExhaustiveCallbacks<T, K>` | type | `Required<Pick<T, K>>` — use with `satisfies` for exhaustive callback objects. |
+| `SLINT_BRIDGE_KIT_VERSION` | constant | String equal to this package’s `version` in `package.json`. |
+
+---
+
+## `assignProperties` and `undefined`
+
+- **`undefined` in `values`:** that property is **not** written; the previous value on `target` stays.
+- **`null`:** written normally (useful when Slint or your model allows `null`).
+- To **clear** to `undefined` explicitly, assign on `target` directly—do not rely on this helper.
+
+```typescript
+import { assignProperties } from "slint-bridge-kit";
+
+assignProperties(appState, {
+  user_login: "",
+  avatar: undefined, // skipped — does NOT clear avatar
+});
+```
+
+---
+
+## `wireFunctions` + exhaustive callbacks
+
+Use **`satisfies ExhaustiveCallbacks<…>`** so TypeScript rejects a missing or wrongly typed callback before you wire:
 
 ```typescript
 import type { ExhaustiveCallbacks } from "slint-bridge-kit";
 import { wireFunctions } from "slint-bridge-kit";
 
-const handlers = {
-  sign_in: () => {},
-  sign_out: () => {},
-} satisfies ExhaustiveCallbacks<YourAppStateType, "sign_in" | "sign_out">;
+type MyAppState = {
+  title: string;
+  on_save: () => void;
+  on_cancel: () => void;
+};
 
-wireFunctions(window.AppState, handlers);
+declare const appState: MyAppState;
+
+const handlers = {
+  on_save: () => {},
+  on_cancel: () => {},
+} satisfies ExhaustiveCallbacks<MyAppState, "on_save" | "on_cancel">;
+
+wireFunctions(appState, handlers);
 ```
 
-Replace `YourAppStateType` with your real Slint-backed handle type (defined in the app, not in this package). You can use `FunctionKeysOf` in the app to derive allowed callback key unions when helpful.
+`handlers` is built with **`Object.keys`** iteration order (your object literal key order). Use plain objects, not exotic prototypes.
 
-## Peer / consumers
+---
 
-Apps should depend on **slint-ui** and their own generated or hand-written window/global types. This package stays generic.
+## Type-only helpers (no runtime)
+
+- **`KeysMatching<T, V>`** — e.g. string-valued keys: `KeysMatching<Widget, string>`.
+- **`FunctionKeysOf<T>`** — callback key unions for documentation or `K` in `ExhaustiveCallbacks`.
+- **`ExhaustiveCallbacks<T, K extends keyof T>`** — ensures every key in `K` is present with the correct type from `T`.
+
+---
+
+## License
+
+MIT — see `package.json`.
