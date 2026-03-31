@@ -74,20 +74,20 @@ export component Settings {
             //     width: 450px;
             //     padding-bottom: 16px;
 
-            //     PrimerSelect {
-            //         block: true;
-            //         label-text: "GitHub host";
-            //         placeholder: "Choose host…";
-            //         caption: "Example Primer-style select; choice is not persisted.";
-            //         options: SettingsState.primer-demo-select-options;
-            //         selected-value <=> SettingsState.primer-demo-selected-value;
-            //         selected-label <=> SettingsState.primer-demo-selected-label;
-            //         validation-status: SettingsState.primer-demo-selected-value != "" ? ValidationStatus.success : ValidationStatus.none;
-            //         validation-message: SettingsState.primer-demo-selected-value != "" ? "Host selected for this session." : "";
-            //         selected-changed(v) => {
-            //             SettingsState.primer-demo-select-changed(v);
-            //         }
-            //     }
+                PrimerSelect {
+                    block: true;
+                    label-text: "GitHub host";
+                    placeholder: "Choose host…";
+                    caption: "Example Primer-style select; choice is not persisted.";
+                    options: SettingsState.primer-demo-select-options;
+                    selected-value <=> SettingsState.primer-demo-selected-value;
+                    selected-label <=> SettingsState.primer-demo-selected-label;
+                    validation-status: SettingsState.primer-demo-selected-value != "" ? ValidationStatus.success : ValidationStatus.none;
+                    validation-message: SettingsState.primer-demo-selected-value != "" ? "Host selected for this session." : "";
+                    selected-changed(v) => {
+                        SettingsState.primer-demo-select-changed(v);
+                    }
+                }
 
             //     Text {
             //         text: "Security alerts repository";

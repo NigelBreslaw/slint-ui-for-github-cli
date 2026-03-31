@@ -1,11 +1,13 @@
-// Primer-style Select (dark only). Reference: https://primer.style/product/components/select/
-// Layered drop-shadow: same pattern as ButtonGreen in buttons.slint.
-// Popup + scroll patterns informed by Slint Material DropDownMenu (reimplemented, not copied).
+// Primer-style Select trigger (dark only). Reference: https://primer.style/product/components/select/
+// Options open via Slint ContextMenuArea (native menu). Layered drop-shadow: same pattern as ButtonGreen in buttons.slint.
 // When `selected-value` or `options` change from TypeScript, keep `selected-label` in sync there
 // (Slint cannot scan the options model in a `changed` handler in this toolchain).
 
-import { SelectOption } from "primer-select-common.slint";
-import { PrimerSelectMenu } from "primer-select-menu.slint";
+export struct SelectOption {
+    value: string,
+    label: string,
+    enabled: bool,
+}
 
 export enum SelectSize {
     small,
@@ -32,11 +34,7 @@ export component PrimerSelect {
     in property <bool> block: false;
     in property <SelectSize> size: medium;
     in property <[SelectOption]> options;
-    in property <int> max-visible-rows: 7;
     callback selected-changed(string);
-
-    private property <int> highlighted-index: -1;
-    private property <bool> menu-open: false;
 
     horizontal-stretch: block ? 1 : 0;
     min-width: 200px;
@@ -48,7 +46,6 @@ export component PrimerSelect {
     private property <color> border-success: #238636;
     private property <color> fill-bg: #0d1117;
     private property <color> fill-hover: #161b22;
-    private property <color> fill-selected: #21262d;
     private property <color> text-primary: #f0f6fc;
     private property <color> text-muted: #8b949e;
     private property <color> text-error: #f85149;
@@ -57,12 +54,7 @@ export component PrimerSelect {
     private property <color> trigger-border-color:
         validation-status == ValidationStatus.error ? border-error : validation-status == ValidationStatus.success ? border-success : border-default;
 
-    private property <length> menu-list-viewport-height: max(min(options.length * trigger-height, max-visible-rows * trigger-height), options.length == 0 ? trigger-height : 0px);
-
-    private property <length> popup-panel-height: trigger-height + 1px + menu-list-viewport-height;
-
     function apply-pick-at(ix: int) {
-
         if ix < 0 || ix >= options.length {
             return;
         }
@@ -72,27 +64,7 @@ export component PrimerSelect {
         root.selected-value = options[ix].value;
         root.selected-label = options[ix].label;
         root.selected-index = ix;
-        root.menu-open = false;
         root.selected-changed(options[ix].value);
-
-        // menu.close();
-        test.start();
-    }
-
-    test := Timer {
-        interval: 20ms;
-        running: false;
-        triggered => {
-            self.stop();
-            menu.close();
-        }
-    }
-
-    function step-highlight(delta: int) {
-        if options.length <= 0 {
-            return;
-        }
-        root.highlighted-index = Math.mod(root.highlighted-index + delta + options.length, options.length);
     }
 
     VerticalLayout {
@@ -115,45 +87,19 @@ export component PrimerSelect {
                 horizontal-stretch: block ? 1 : 0;
                 height: trigger-height;
 
-                root-focus := FocusScope {
+                select-ctx := ContextMenuArea {
                     width: 100%;
                     height: 100%;
+                    enabled: !root.disabled && root.options.length > 0;
 
-                    key-pressed(event) => {
-                        if root.disabled || root.options.length == 0 {
-                            return reject;
-                        }
-                        if event.text == Key.DownArrow {
-                            if root.menu-open {
-                                root.step-highlight(1);
-                            } else {
-                                root.highlighted-index = root.selected-index >= 0 ? root.selected-index : 0;
-                                root.menu-open = true;
-                                menu.show();
+                    Menu {
+                        for opt[index] in options: MenuItem {
+                            title: opt.label;
+                            enabled: opt.enabled;
+                            activated => {
+                                root.apply-pick-at(index);
                             }
-                            return accept;
                         }
-                        if event.text == Key.UpArrow {
-                            if root.menu-open {
-                                root.step-highlight(-1);
-                            } else {
-                                root.highlighted-index = root.selected-index >= 0 ? root.selected-index : 0;
-                                root.menu-open = true;
-                                menu.show();
-                            }
-                            return accept;
-                        }
-                        if event.text == Key.Return {
-                            if root.menu-open {
-                                root.apply-pick-at(root.highlighted-index);
-                            } else {
-                                root.highlighted-index = root.selected-index >= 0 ? root.selected-index : 0;
-                                root.menu-open = true;
-                                menu.show();
-                            }
-                            return accept;
-                        }
-                        reject
                     }
 
                     Rectangle {
@@ -176,7 +122,7 @@ export component PrimerSelect {
                         drop-shadow-color: #01040999;
                     }
 
-                    trigger-bg := Rectangle {
+                    Rectangle {
                         width: parent.width;
                         height: parent.height;
                         background: disabled ? fill-bg : ta.has-hover ? fill-hover : fill-bg;
@@ -212,134 +158,11 @@ export component PrimerSelect {
                     }
 
                     ta := TouchArea {
+                        width: 100%;
+                        height: 100%;
                         clicked => {
-                            if !disabled && options.length > 0 {
-                                if root.menu-open {
-                                    root.menu-open = false;
-                                    menu.close();
-                                } else {
-                                    root.highlighted-index = root.selected-index >= 0 ? root.selected-index : 0;
-                                    root.menu-open = true;
-                                    menu.show();
-                                }
-                            }
-                        }
-                    }
-
-                    menu := PopupWindow {
-                        close-policy: close-on-click-outside;
-                        x: 0;
-                        y: parent.height + 4px;
-                        width: parent.width;
-
-                        // sync-timer := Timer {
-                        //     interval: 32ms;
-                        //     running: true;
-                        //     triggered => {
-                        //         root.menu-open = parent.visible;
-                        //     }
-                        // }
-
-                        Rectangle {
-                            width: 100%;
-                            height: root.popup-panel-height;
-                            background: fill-bg;
-                            border-radius: 6px;
-                            border-width: 1px;
-                            border-color: border-default;
-                            clip: true;
-
-                            VerticalLayout {
-                                spacing: 0;
-                                width: 100%;
-                                height: 100%;
-
-                                VerticalLayout {
-                                    spacing: 0;
-                                    width: 100%;
-
-                                    Rectangle {
-                                        height: root.trigger-height;
-                                        background: fill-hover;
-
-                                        TouchArea {
-                                            clicked => {
-                                            // root.menu-open = false;
-                                            // menu.close();
-                                        }
-
-                                            HorizontalLayout {
-                                                padding-left: 10px;
-                                                padding-right: 8px;
-                                                spacing: 8px;
-                                                width: 100%;
-                                                height: 100%;
-
-                                                Text {
-                                                    horizontal-stretch: 1;
-                                                    vertical-alignment: center;
-                                                    text: selected-label != "" ? selected-label : placeholder;
-                                                    font-size: root.trigger-font;
-                                                    color: selected-label != "" ? text-primary : text-muted;
-                                                    overflow: elide;
-                                                }
-
-                                                Image {
-                                                    width: 16px;
-                                                    height: 16px;
-                                                    vertical-alignment: center;
-                                                    source: @image-url("../../assets/16px/chevron-up.svg");
-                                                    colorize: text-muted;
-                                                }
-                                            }
-                                        }
-                                    }
-
-                                    Rectangle {
-                                        height: 1px;
-                                        background: border-default;
-                                    }
-                                }
-
-                                menu-keys := Rectangle {
-                                    horizontal-stretch: 1;
-                                    height: root.menu-list-viewport-height;
-
-                                    
-
-                                    if options.length > 0: PrimerSelectMenu {
-                                        width: 100%;
-                                        height: 100%;
-                                        options: root.options;
-                                        row-height: root.trigger-height;
-                                        font-size: root.trigger-font;
-                                        fill-hover: root.fill-hover;
-                                        text-primary: root.text-primary;
-                                        text-muted: root.text-muted;
-                                        fill-selected: root.fill-selected;
-                                        highlighted-index: root.highlighted-index;
-                                        viewport-height: root.menu-list-viewport-height;
-                                        pick(ix) => {
-                                            root.apply-pick-at(ix);
-                                        }
-                                    }
-
-                                    if options.length == 0: Rectangle {
-                                        height: 100%;
-                                        background: fill-bg;
-
-                                        Text {
-                                            x: 10px;
-                                            y: 0;
-                                            width: parent.width - 20px;
-                                            height: parent.height;
-                                            text: "No options";
-                                            font-size: root.trigger-font;
-                                            color: text-muted;
-                                            vertical-alignment: center;
-                                        }
-                                    }
-                                }
+                            if !root.disabled && root.options.length > 0 {
+                                select-ctx.show({ x: 0px, y: 0px });
                             }
                         }
                     }
