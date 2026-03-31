@@ -97,6 +97,7 @@ export component MainWindow inherits Window {
         y: header.header-height;
         width: root.width - self.x;
         height: root.height - self.y;
+        visible: AppState.auth == Authed.loggedIn;
 
         if AppState.view == View.dashboard: Dashboard { }
 

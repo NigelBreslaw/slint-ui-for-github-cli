@@ -69,71 +69,71 @@ export component Settings {
             width: self.preferred-width;
             height: self.preferred-height;
 
-            VerticalLayout {
-                spacing: 8px;
-                width: 450px;
-                padding-bottom: 16px;
+            // VerticalLayout {
+            //     spacing: 8px;
+            //     width: 450px;
+            //     padding-bottom: 16px;
 
-                PrimerSelect {
-                    block: true;
-                    label-text: "GitHub host";
-                    placeholder: "Choose host…";
-                    caption: "Example Primer-style select; choice is not persisted.";
-                    options: SettingsState.primer-demo-select-options;
-                    selected-value <=> SettingsState.primer-demo-selected-value;
-                    selected-label <=> SettingsState.primer-demo-selected-label;
-                    validation-status: SettingsState.primer-demo-selected-value != "" ? ValidationStatus.success : ValidationStatus.none;
-                    validation-message: SettingsState.primer-demo-selected-value != "" ? "Host selected for this session." : "";
-                    selected-changed(v) => {
-                        SettingsState.primer-demo-select-changed(v);
-                    }
-                }
+            //     PrimerSelect {
+            //         block: true;
+            //         label-text: "GitHub host";
+            //         placeholder: "Choose host…";
+            //         caption: "Example Primer-style select; choice is not persisted.";
+            //         options: SettingsState.primer-demo-select-options;
+            //         selected-value <=> SettingsState.primer-demo-selected-value;
+            //         selected-label <=> SettingsState.primer-demo-selected-label;
+            //         validation-status: SettingsState.primer-demo-selected-value != "" ? ValidationStatus.success : ValidationStatus.none;
+            //         validation-message: SettingsState.primer-demo-selected-value != "" ? "Host selected for this session." : "";
+            //         selected-changed(v) => {
+            //             SettingsState.primer-demo-select-changed(v);
+            //         }
+            //     }
 
-                Text {
-                    text: "Security alerts repository";
-                    font-size: 14px;
-                    font-weight: 600;
-                    color: #f0f6fc;
-                }
+            //     Text {
+            //         text: "Security alerts repository";
+            //         font-size: 14px;
+            //         font-weight: 600;
+            //         color: #f0f6fc;
+            //     }
 
-                Text {
-                    text: "GitHub owner/repo whose Dependabot alerts this app will list (e.g. myorg/myrepo). Leave empty to disable.";
-                    font-size: 12px;
-                    color: #8b949e;
-                    wrap: word-wrap;
-                }
+            //     Text {
+            //         text: "GitHub owner/repo whose Dependabot alerts this app will list (e.g. myorg/myrepo). Leave empty to disable.";
+            //         font-size: 12px;
+            //         color: #8b949e;
+            //         wrap: word-wrap;
+            //     }
 
-                Rectangle {
-                    width: 100%;
-                    height: 40px;
-                    background: #0d1117;
-                    border-radius: 6px;
-                    border-width: 1px;
-                    border-color: #30363d;
-                    clip: true;
+            //     Rectangle {
+            //         width: 100%;
+            //         height: 40px;
+            //         background: #0d1117;
+            //         border-radius: 6px;
+            //         border-width: 1px;
+            //         border-color: #30363d;
+            //         clip: true;
 
-                    TextInput {
-                        x: 10px;
-                        y: 0;
-                        width: parent.width - 20px;
-                        height: parent.height;
-                        text: SettingsState.security-alerts-repo-input;
-                        font-size: 14px;
-                        color: #f0f6fc;
-                        edited => {
-                            SettingsState.security-alerts-repo-input = self.text;
-                            SettingsState.security-alerts-repo-edited(self.text);
-                        }
-                    }
-                }
+            //         TextInput {
+            //             x: 10px;
+            //             y: 0;
+            //             width: parent.width - 20px;
+            //             height: parent.height;
+            //             text: SettingsState.security-alerts-repo-input;
+            //             font-size: 14px;
+            //             color: #f0f6fc;
+            //             edited => {
+            //                 SettingsState.security-alerts-repo-input = self.text;
+            //                 SettingsState.security-alerts-repo-edited(self.text);
+            //             }
+            //         }
+            //     }
 
-                if SettingsState.security-alerts-repo-error != "": Text {
-                    text: SettingsState.security-alerts-repo-error;
-                    color: #f85149;
-                    font-size: 13px;
-                    wrap: word-wrap;
-                }
-            }
+            //     if SettingsState.security-alerts-repo-error != "": Text {
+            //         text: SettingsState.security-alerts-repo-error;
+            //         color: #f85149;
+            //         font-size: 13px;
+            //         wrap: word-wrap;
+            //     }
+            // }
 
             VerticalLayout {
                 spacing: 0;

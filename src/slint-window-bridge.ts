@@ -132,7 +132,7 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
 
 /** Resets in-memory lists and org project cache; does not clear Time reporting KV (same GitHub user). */
 export function resetListsWithoutClearingProfile(window: MainWindowInstance): void {
-  window.AppState.view = "none";
+  window.AppState.view = "dashboard";
   window.AppState.review_requests_data_ready = false;
   window.AppState.review_requests_total = 0;
   window.AppState.review_requests_load_status = "";
@@ -165,7 +165,7 @@ export function clearUserIdentity(window: MainWindowInstance): void {
   window.AppState.user_profile_url = "";
   window.AppState.user_status_message = "";
   window.AppState.user_status_emoji = "";
-  window.AppState.view = "none";
+  window.AppState.view = "dashboard";
   window.AppState.review_requests_data_ready = false;
   window.AppState.review_requests_total = 0;
   window.AppState.review_requests_load_status = "";

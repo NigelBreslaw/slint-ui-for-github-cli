@@ -34,7 +34,7 @@ export type AuthedAuthState =
   | "authorizing";
 
 /** Maps to `View` in `app-state.slint`. */
-export type AppStateView = "none" | "dashboard" | "settings" | "timeReporting";
+export type AppStateView = "dashboard" | "settings" | "timeReporting";
 
 export type AppStateHandle = {
   auth: AuthedAuthState;
