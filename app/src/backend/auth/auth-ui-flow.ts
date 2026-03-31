@@ -1,3 +1,4 @@
+import { assignProperties } from "slint-bridge-kit";
 import { checkRequiredGitHubCliScopes } from "../gh/auth.ts";
 import { checkGhCliVersionGate, formatMinGhCliVersion } from "../gh/gh-cli-version.ts";
 import { emptyTransparentAvatarImage, loadAvatarRgba } from "../gh/avatar-image.ts";
@@ -93,13 +94,15 @@ async function fetchAndApplyGitHubUser(
   }
   const viewer = parsed.viewer;
   window.status_message = "";
-  window.AppState.user_login = viewer.login;
-  window.AppState.user_name = viewer.name ?? "";
-  window.AppState.user_profile_url = viewer.url;
   const st = viewer.status;
-  window.AppState.user_status_message = st?.message ?? "";
   const emojiPlain = statusEmojiFromGraphqlHtml(st?.emojiHTML ?? null);
-  window.AppState.user_status_emoji = emojiPlain;
+  assignProperties(window.AppState, {
+    user_login: viewer.login,
+    user_name: viewer.name ?? "",
+    user_profile_url: viewer.url,
+    user_status_message: st?.message ?? "",
+    user_status_emoji: emojiPlain,
+  });
   uiPerfMarkT1Text("network");
   writeViewerSessionCache(viewerSessionFromMinimalViewer(viewer, emojiPlain));
   // Do not set emptyTransparentAvatarImage here: it would blank the avatar for the whole
@@ -151,9 +154,8 @@ export function applyAuthUi(window: MainWindowInstance): void {
   pendingShowGhVersionTooOldOverlay = false;
   const op = beginAuthOperation();
 
-  window.gh_cli_version_block_detail = "";
-  window.AppState.auth = "loggedIn";
-  window.status_message = "Checking…";
+  assignProperties(window, { gh_cli_version_block_detail: "", status_message: "Checking…" });
+  assignProperties(window.AppState, { auth: "loggedIn" });
   clearAuthDeviceFields(window);
   window.close_auth_window();
 
@@ -191,17 +193,19 @@ export function applyAuthUi(window: MainWindowInstance): void {
       versionGate.kind === "unparseable" ||
       versionGate.kind === "exec_failed"
     ) {
-      window.AppState.auth = "ghCliVersionTooOld";
       const minV = formatMinGhCliVersion();
-      window.status_message = `GitHub CLI must be updated to at least version ${minV}.`;
+      const status_message = `GitHub CLI must be updated to at least version ${minV}.`;
+      let gh_cli_version_block_detail: string;
       if (versionGate.kind === "too_old") {
         const { major, minor, patch } = versionGate.parsed;
-        window.gh_cli_version_block_detail = `Current version: ${major}.${minor}.${patch}`;
+        gh_cli_version_block_detail = `Current version: ${major}.${minor}.${patch}`;
       } else if (versionGate.kind === "unparseable") {
-        window.gh_cli_version_block_detail = `Could not parse version from: ${versionGate.line}`;
+        gh_cli_version_block_detail = `Could not parse version from: ${versionGate.line}`;
       } else {
-        window.gh_cli_version_block_detail = versionGate.error;
+        gh_cli_version_block_detail = versionGate.error;
       }
+      assignProperties(window.AppState, { auth: "ghCliVersionTooOld" });
+      assignProperties(window, { status_message, gh_cli_version_block_detail });
       if (slintEventLoopHasStarted) {
         window.show_gh_cli_version_too_old();
       } else {
@@ -219,8 +223,8 @@ export function applyAuthUi(window: MainWindowInstance): void {
       return;
     }
     if (!scopeCheck.ok && scopeCheck.noGh === true) {
-      window.AppState.auth = "noGhCliInstalled";
-      window.status_message = "gh not found (install GitHub CLI)";
+      assignProperties(window.AppState, { auth: "noGhCliInstalled" });
+      assignProperties(window, { status_message: "gh not found (install GitHub CLI)" });
       if (slintEventLoopHasStarted) {
         window.show_no_gh_cli_installed();
       } else {
@@ -233,8 +237,10 @@ export function applyAuthUi(window: MainWindowInstance): void {
       return;
     }
     if (!scopeCheck.ok) {
-      window.AppState.auth = "loggedOut";
-      window.status_message = `${scopeCheck.message} Click Login to authorize with the required scopes.`;
+      assignProperties(window.AppState, { auth: "loggedOut" });
+      assignProperties(window, {
+        status_message: `${scopeCheck.message} Click Login to authorize with the required scopes.`,
+      });
       clearAuthDeviceFields(window);
       window.close_auth_window();
       clearUserIdentity(window);
