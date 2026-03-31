@@ -12,11 +12,14 @@ import { openUrlInBrowser } from "./backend/utils/open-url.ts";
 import { clearViewerSessionCache } from "./backend/session/viewer-session-cache.ts";
 import type {
   AppStateHandle,
+  MainWindowInstance,
   MainWindowModule,
+  SettingsStateHandle,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
   SlintSelectOption,
   SlintTimeReportingWeekRow,
+  TimeReportingStateHandle,
 } from "./slint-interface.ts";
 import {
   hydrateTimeReportingFromKv,
@@ -112,35 +115,47 @@ const appStateCallbacks = {
 >;
 wireFunctions(window.AppState, appStateCallbacks);
 
-window.SettingsState.security_alerts_repo_edited = (text: string) => {
-  applySecurityAlertsRepoEdited(window, text);
-};
-
-window.SettingsState.settings_init = () => {
-  void loadSettingsDebugPanel(window);
-};
-
-window.SettingsState.settings_exited = () => {
-  teardownSettingsDebugPanel(window);
-};
+const settingsStateCallbacks = {
+  security_alerts_repo_edited: (text: string) => {
+    applySecurityAlertsRepoEdited(window, text);
+  },
+  settings_init: () => {
+    void loadSettingsDebugPanel(window);
+  },
+  settings_exited: () => {
+    teardownSettingsDebugPanel(window);
+  },
+} satisfies ExhaustiveCallbacks<
+  SettingsStateHandle,
+  "security_alerts_repo_edited" | "settings_init" | "settings_exited"
+>;
+wireFunctions(window.SettingsState, settingsStateCallbacks);
 
 wireTimeReportingUi(window);
 
-window.TimeReportingState.time_reporting_open_row_url = (url: string) => {
-  if (url.length > 0) {
-    openUrlInBrowser(url);
-  }
-};
+const timeReportingOpenRowHandlers = {
+  time_reporting_open_row_url: (url: string) => {
+    if (url.length > 0) {
+      openUrlInBrowser(url);
+    }
+  },
+} satisfies ExhaustiveCallbacks<TimeReportingStateHandle, "time_reporting_open_row_url">;
+wireFunctions(window.TimeReportingState, timeReportingOpenRowHandlers);
 
-window.open_github_device_clicked = () => {
-  void copyTextToClipboard(window.auth_device_code).finally(() => {
-    openUrlInBrowser(window.auth_device_url);
-  });
-};
-
-window.open_cli_install_page = () => {
-  openUrlInBrowser("https://cli.github.com/");
-};
+const mainWindowHandlers = {
+  open_github_device_clicked: () => {
+    void copyTextToClipboard(window.auth_device_code).finally(() => {
+      openUrlInBrowser(window.auth_device_url);
+    });
+  },
+  open_cli_install_page: () => {
+    openUrlInBrowser("https://cli.github.com/");
+  },
+} satisfies ExhaustiveCallbacks<
+  MainWindowInstance,
+  "open_github_device_clicked" | "open_cli_install_page"
+>;
+wireFunctions(window, mainWindowHandlers);
 
 window.show();
 applyAuthUi(window);
