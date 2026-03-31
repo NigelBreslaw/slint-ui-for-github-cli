@@ -4,6 +4,9 @@
   "workspaces": {
     "app": {
       "entry": ["src/**/*.test.ts"]
+    },
+    "slint-bridge-kit": {
+      "entry": ["src/index.ts"]
     }
   }
 }

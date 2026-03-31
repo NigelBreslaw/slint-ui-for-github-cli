@@ -7,17 +7,17 @@
     "node": ">=24"
   },
   "scripts": {
-    "autofix": "pnpm dedupe --prefer-offline && pnpm --filter github-app run autofix && pnpm --filter slint-bridge-kit exec tsc --noEmit -p . && pnpm knip",
+    "autofix": "pnpm dedupe --prefer-offline && pnpm --filter github-app run autofix && pnpm --filter slint-bridge-kit run autofix && pnpm knip",
     "start": "pnpm dev",
     "dev": "pnpm --filter github-app run dev",
     "dev:debug": "pnpm --filter github-app run dev:debug",
     "dev:debug:projects": "pnpm --filter github-app run dev:debug:projects",
     "gen-build-info": "pnpm --filter github-app run gen-build-info",
-    "typecheck": "pnpm --filter github-app run typecheck",
-    "lint": "pnpm --filter github-app run lint",
-    "lint:fix": "pnpm --filter github-app run lint:fix",
-    "format": "pnpm --filter github-app run format",
-    "format:check": "pnpm --filter github-app run format:check",
+    "typecheck": "pnpm --filter github-app run typecheck && pnpm --filter slint-bridge-kit run typecheck",
+    "lint": "pnpm --filter github-app run lint && pnpm --filter slint-bridge-kit run lint",
+    "lint:fix": "pnpm --filter github-app run lint:fix && pnpm --filter slint-bridge-kit run lint:fix",
+    "format": "pnpm --filter github-app run format && pnpm --filter slint-bridge-kit run format",
+    "format:check": "pnpm --filter github-app run format:check && pnpm --filter slint-bridge-kit run format:check",
     "knip": "knip",
     "test": "pnpm --filter github-app run test"
   },

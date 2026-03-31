@@ -11,8 +11,18 @@
     },
     "./package.json": "./package.json"
   },
-  "peerDependencies": {
-    "typescript": ">=5.4.0"
+  "scripts": {
+    "autofix": "pnpm lint:fix && pnpm format && pnpm typecheck",
+    "typecheck": "tsc --noEmit",
+    "lint": "oxlint src",
+    "lint:fix": "oxlint --fix src",
+    "format": "oxfmt --write src",
+    "format:check": "oxfmt --check src"
+  },
+  "devDependencies": {
+    "oxfmt": "catalog:",
+    "oxlint": "catalog:",
+    "typescript": "catalog:"
   },
   "license": "MIT"
 }
