@@ -1,4 +1,6 @@
 import * as slint from "slint-ui";
+import type { ExhaustiveCallbacks } from "slint-bridge-kit";
+import { wireFunctions } from "slint-bridge-kit";
 import { applyAuthUi, slintRunningCallback } from "./backend/auth/auth-ui-flow.ts";
 import { closeAppDb, openAppDb } from "./backend/db/app-db.ts";
 import { ghAuthLogout, spawnGhAuthLogin } from "./backend/gh/auth.ts";
@@ -10,6 +12,7 @@ import { copyTextToClipboard } from "./backend/utils/clipboard-write.ts";
 import { openUrlInBrowser } from "./backend/utils/open-url.ts";
 import { clearViewerSessionCache } from "./backend/session/viewer-session-cache.ts";
 import type {
+  AppStateHandle,
   MainWindowModule,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
@@ -55,23 +58,53 @@ window.SettingsState.primer_demo_selected_label = "github.com";
 window.SettingsState.primer_demo_select_changed = () => {};
 
 hydrateTimeReportingFromKv(window);
-window.AppState.project_search_changed = (query: string) => {
-  window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
-};
 
-window.AppState.open_project_url = (url: string) => {
-  openUrlInBrowser(url);
-};
-
-window.AppState.dashboard_init = () => {
-  void refreshDashboardReviewRequests(window);
-};
-
-window.AppState.dashboard_tab_changed = (tab) => {
-  if (tab === "securityAlerts") {
-    void refreshDashboardSecurityAlerts(window);
-  }
-};
+const appStateCallbacks = {
+  project_search_changed: (query: string) => {
+    window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
+  },
+  open_project_url: (url: string) => {
+    openUrlInBrowser(url);
+  },
+  dashboard_init: () => {
+    void refreshDashboardReviewRequests(window);
+  },
+  dashboard_tab_changed: (tab) => {
+    if (tab === "securityAlerts") {
+      void refreshDashboardSecurityAlerts(window);
+    }
+  },
+  sign_in: () => {
+    clearAuthDeviceFields(window);
+    window.AppState.auth = "authorizing";
+    window.show_auth_window();
+    spawnGhAuthLogin({
+      onDeviceFlowInfo: (info) => {
+        window.auth_device_code = info.code;
+        window.auth_device_url = info.url;
+      },
+      onClose: () => {
+        clearAuthDeviceFields(window);
+        void applyAuthUi(window);
+      },
+    });
+  },
+  sign_out: () => {
+    ghAuthLogout();
+    clearViewerSessionCache();
+    clearTimeReportingSelection(window);
+    void applyAuthUi(window);
+  },
+} satisfies ExhaustiveCallbacks<
+  AppStateHandle,
+  | "project_search_changed"
+  | "open_project_url"
+  | "dashboard_init"
+  | "dashboard_tab_changed"
+  | "sign_in"
+  | "sign_out"
+>;
+wireFunctions(window.AppState, appStateCallbacks);
 
 window.SettingsState.security_alerts_repo_edited = (text: string) => {
   applySecurityAlertsRepoEdited(window, text);
@@ -97,29 +130,6 @@ window.open_github_device_clicked = () => {
   void copyTextToClipboard(window.auth_device_code).finally(() => {
     openUrlInBrowser(window.auth_device_url);
   });
-};
-
-window.AppState.sign_in = () => {
-  clearAuthDeviceFields(window);
-  window.AppState.auth = "authorizing";
-  window.show_auth_window();
-  spawnGhAuthLogin({
-    onDeviceFlowInfo: (info) => {
-      window.auth_device_code = info.code;
-      window.auth_device_url = info.url;
-    },
-    onClose: () => {
-      clearAuthDeviceFields(window);
-      void applyAuthUi(window);
-    },
-  });
-};
-
-window.AppState.sign_out = () => {
-  ghAuthLogout();
-  clearViewerSessionCache();
-  clearTimeReportingSelection(window);
-  void applyAuthUi(window);
 };
 
 window.open_cli_install_page = () => {

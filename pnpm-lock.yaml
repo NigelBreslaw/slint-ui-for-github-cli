@@ -41,6 +41,9 @@ importers:
       sharp:
         specifier: 0.34.5
         version: 0.34.5
+      slint-bridge-kit:
+        specifier: workspace:*
+        version: link:../packages/slint-bridge-kit
       slint-ui:
         specifier: 1.16.0-nightly.2026033114
         version: 1.16.0-nightly.2026033114(@emnapi/runtime@1.9.1)(@types/node@25.5.0)
