@@ -1,6 +1,5 @@
 import * as slint from "slint-ui";
-import type { ExhaustiveCallbacks } from "slint-bridge-kit";
-import { wireFunctions } from "slint-bridge-kit";
+import { assignProperties, wireFunctions, type ExhaustiveCallbacks } from "slint-bridge-kit";
 import { applyAuthUi, slintRunningCallback } from "./backend/auth/auth-ui-flow.ts";
 import { closeAppDb, openAppDb } from "./backend/db/app-db.ts";
 import { ghAuthLogout, spawnGhAuthLogin } from "./backend/gh/auth.ts";
@@ -43,19 +42,26 @@ const window = new ui.MainWindow({
   "gh-cli-version-block-detail": "",
 });
 
-window.AppState.projects_filtered_model = new slint.ArrayModel<SlintProjectRow>([]);
-window.AppState.review_requests_model = new slint.ArrayModel<SlintReviewRequestRow>([]);
-window.AppState.security_alerts_model = new slint.ArrayModel<SlintSecurityAlertRow>([]);
-window.TimeReportingState.week_rows_model = new slint.ArrayModel<SlintTimeReportingWeekRow>([]);
+assignProperties(window.AppState, {
+  projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+  review_requests_model: new slint.ArrayModel<SlintReviewRequestRow>([]),
+  security_alerts_model: new slint.ArrayModel<SlintSecurityAlertRow>([]),
+});
 
-window.SettingsState.primer_demo_select_options = new slint.ArrayModel<SlintSelectOption>([
-  { value: "github.com", label: "github.com", enabled: true },
-  { value: "enterprise", label: "GitHub Enterprise Server", enabled: true },
-  { value: "disabled-demo", label: "Disabled (demo)", enabled: false },
-]);
-window.SettingsState.primer_demo_selected_value = "github.com";
-window.SettingsState.primer_demo_selected_label = "github.com";
-window.SettingsState.primer_demo_select_changed = () => {};
+assignProperties(window.TimeReportingState, {
+  week_rows_model: new slint.ArrayModel<SlintTimeReportingWeekRow>([]),
+});
+
+assignProperties(window.SettingsState, {
+  primer_demo_select_options: new slint.ArrayModel<SlintSelectOption>([
+    { value: "github.com", label: "github.com", enabled: true },
+    { value: "enterprise", label: "GitHub Enterprise Server", enabled: true },
+    { value: "disabled-demo", label: "Disabled (demo)", enabled: false },
+  ]),
+  primer_demo_selected_value: "github.com",
+  primer_demo_selected_label: "github.com",
+  primer_demo_select_changed: () => {},
+});
 
 hydrateTimeReportingFromKv(window);
 
