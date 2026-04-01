@@ -18,6 +18,10 @@ import { SideBar } from "components/sideBar.slint";
 import { TimeReporting } from "views/time-reporting.slint";
 import { PrimerSpinner } from "components/primer-spinner.slint";
 
+// import fonts
+import "../assets/fonts/MonaSans-VariableFont.ttf";
+import "../assets/fonts/MonaSans-Italic-VariableFont.ttf";
+
 // Export so backend can access the enums and global state.
 export { AppView, Authed, AppState, DashboardTab, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
 
@@ -61,6 +65,9 @@ export component MainWindow inherits Window {
     min-height: 400px;
     title: "GitHub CLI";
     background: #0d1116;
+    default-font-family: "Mona Sans";
+    default-font-size: 14px;
+
 
     HorizontalLayout {
         alignment: center;
