@@ -26,7 +26,7 @@
     "better-sqlite3": "12.8.0",
     "clipboardy": "5.3.1",
     "sharp": "0.34.5",
-    "slint-ui": "1.16.0-nightly.2026033114"
+    "slint-ui": "1.16.0-nightly.2026040119"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",
