@@ -36,7 +36,10 @@ import {
   refreshDashboardReviewRequests,
   refreshDashboardSecurityAlerts,
 } from "./bridges/node/slint-window-bridge.ts";
-import { loadSettingsDebugPanel, teardownSettingsDebugPanel } from "./backend/settings/settings-debug-panel.ts";
+import {
+  loadSettingsDebugPanel,
+  teardownSettingsDebugPanel,
+} from "./backend/settings/settings-debug-panel.ts";
 import { applySecurityAlertsRepoEdited } from "./backend/settings/settings-security-alerts-repo.ts";
 
 openAppDb();
