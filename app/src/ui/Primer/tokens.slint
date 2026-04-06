@@ -10,8 +10,9 @@ export global Tokens {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
-    // Private literals from primer-ui-react legacy-theme colors/dark.ts + light.ts innermost fallbacks,
-    // with #RRGGBBAA where Primer uses rgba (alpha = round(a * 255) as hex).
+    // Private literals from primer-ui-react legacy-theme colors/dark.ts + light.ts innermost fallbacks.
+    // Use rgba() where Primer uses rgba; hex where Primer uses hex.
+    // Primer hsla(...) maps to Slint hsv(h, s, v, a) (same sRGB); Slint 1.16 has no hsla() builtin.
 
     property <color> bgColor-inset-dark: #010409;
     property <color> bgColor-inset-light: #f6f8fa;
@@ -30,13 +31,13 @@ export global Tokens {
     property <color> bgColor-canvas-subtle-dark: #161b22;
     property <color> bgColor-canvas-subtle-light: #f6f8fa;
 
-    // colors.neutral.subtle — rgba(110,118,129,0.1) / rgba(234,238,242,0.5)
-    property <color> bgColor-neutral-muted-dark: #6e76811a;
-    property <color> bgColor-neutral-muted-light: #eaeef280;
+    // colors.neutral.subtle
+    property <color> bgColor-neutral-muted-dark: rgba(110, 118, 129, 0.1);
+    property <color> bgColor-neutral-muted-light: rgba(234, 238, 242, 0.5);
 
-    // colors.border.muted — light: hsla(210,18%,87%,1) => #d8dee4 (HSL math)
     property <color> borderColor-muted-dark: #21262d;
-    property <color> borderColor-muted-light: #d8dee4;
+
+    property <color> borderColor-muted-light: hsv(210, 5.263157894736848%, 89.41176470588236%, 1);
 
     property <color> accent-underline-dark: #f78166;
     property <color> accent-underline-light: #fd8c73;
@@ -48,16 +49,15 @@ export global Tokens {
     property <color> fgColor-link-light: #0969da;
 
     // colors.primer.canvas.backdrop
-    property <color> overlay-scrim-dark: #010409cc;
-    property <color> overlay-scrim-light: #1f232880;
+    property <color> overlay-scrim-dark: rgba(1, 4, 9, 0.8);
+    property <color> overlay-scrim-light: rgba(31, 35, 40, 0.5);
 
-    // Derived from colors.shadow.medium tail color (dark: #010409; light: rgba(140,149,159,0.15))
-    property <color> drop-shadow-dark: #01040966;
-    property <color> drop-shadow-light: #8c959f26;
+    property <color> drop-shadow-dark: #010409;
+    property <color> drop-shadow-light: rgba(140, 149, 159, 0.15);
 
-    // colors.actionListItem.inlineDivider rgba(48,54,61,0.48) / rgba(208,215,222,0.48)
-    property <color> menu-separator-dark: #30363d7a;
-    property <color> menu-separator-light: #d0d7de7a;
+    // colors.actionListItem.inlineDivider
+    property <color> menu-separator-dark: rgba(48, 54, 61, 0.48);
+    property <color> menu-separator-light: rgba(208, 215, 222, 0.48);
 
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
