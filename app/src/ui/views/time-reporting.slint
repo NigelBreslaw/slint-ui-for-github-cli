@@ -4,7 +4,7 @@ import { TimeReportingState } from "../../bridges/slint/time-reporting-state.sli
 import { Button } from "../Primer/Buttons/buttons.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
 import { Spinner } from "../Primer/primer.slint";
-import { Tokens } from "../Primer/tokens.slint";
+import { PrimerColors } from "../Primer/tokens.slint";
 
 export component TimeReporting {
     width: 100%;
@@ -17,7 +17,7 @@ export component TimeReporting {
     Rectangle {
         width: 100%;
         height: 100%;
-        background: Tokens.bgColor-default;
+        background: PrimerColors.bgColor-default;
 
         VerticalLayout {
             padding: 16px;
@@ -33,7 +33,7 @@ export component TimeReporting {
                     text: TimeReportingState.selected-project-label;
                     font-size: 16px;
                     font-weight: 600;
-                    color: Tokens.fgColor-default;
+                    color: PrimerColors.fgColor-default;
                     wrap: word-wrap;
                 }
 
@@ -58,14 +58,14 @@ export component TimeReporting {
                             text: TimeReportingState.week-label;
                             font-size: 15px;
                             font-weight: 600;
-                            color: Tokens.fgColor-default;
+                            color: PrimerColors.fgColor-default;
                             horizontal-alignment: center;
                         }
 
                         if TimeReportingState.week-range-subtitle != "": Text {
                             text: TimeReportingState.week-range-subtitle;
                             font-size: 12px;
-                            color: Tokens.fgColor-muted;
+                            color: PrimerColors.fgColor-muted;
                             horizontal-alignment: center;
                         }
                     }
@@ -103,7 +103,7 @@ export component TimeReporting {
 
                 if TimeReportingState.items-load-status != "" && TimeReportingState.items-load-status != "Loading board items…": Text {
                     text: TimeReportingState.items-load-status;
-                    color: Tokens.fgColor-muted;
+                    color: PrimerColors.fgColor-muted;
                     wrap: word-wrap;
                     font-size: 13px;
                 }
@@ -112,10 +112,10 @@ export component TimeReporting {
                     vertical-stretch: 1;
                     width: 100%;
                     min-height: 120px;
-                    background: Tokens.bgColor-neutral-muted;
+                    background: PrimerColors.bgColor-neutral-muted;
                     border-radius: 8px;
                     border-width: 1px;
-                    border-color: Tokens.borderColor-muted;
+                    border-color: PrimerColors.borderColor-muted;
 
                     VerticalLayout {
                         padding: 8px;
@@ -132,7 +132,7 @@ export component TimeReporting {
                                 text: "Task";
                                 font-size: 11px;
                                 font-weight: 600;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                             }
 
                             Text {
@@ -140,7 +140,7 @@ export component TimeReporting {
                                 text: "Mo";
                                 font-size: 11px;
                                 font-weight: 600;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
 
@@ -149,7 +149,7 @@ export component TimeReporting {
                                 text: "Tu";
                                 font-size: 11px;
                                 font-weight: 600;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
 
@@ -158,7 +158,7 @@ export component TimeReporting {
                                 text: "We";
                                 font-size: 11px;
                                 font-weight: 600;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
 
@@ -167,7 +167,7 @@ export component TimeReporting {
                                 text: "Th";
                                 font-size: 11px;
                                 font-weight: 600;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
 
@@ -176,7 +176,7 @@ export component TimeReporting {
                                 text: "Fr";
                                 font-size: 11px;
                                 font-weight: 600;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
 
@@ -185,7 +185,7 @@ export component TimeReporting {
                                 text: "Total";
                                 font-size: 11px;
                                 font-weight: 600;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
                         }
@@ -204,7 +204,7 @@ export component TimeReporting {
                                 text: TimeReportingState.week-hdr-mo;
                                 font-size: 10px;
                                 font-weight: 500;
-                                color: Tokens.fgColor-placeholder;
+                                color: PrimerColors.fgColor-placeholder;
                                 horizontal-alignment: right;
                             }
 
@@ -213,7 +213,7 @@ export component TimeReporting {
                                 text: TimeReportingState.week-hdr-tu;
                                 font-size: 10px;
                                 font-weight: 500;
-                                color: Tokens.fgColor-placeholder;
+                                color: PrimerColors.fgColor-placeholder;
                                 horizontal-alignment: right;
                             }
 
@@ -222,7 +222,7 @@ export component TimeReporting {
                                 text: TimeReportingState.week-hdr-we;
                                 font-size: 10px;
                                 font-weight: 500;
-                                color: Tokens.fgColor-placeholder;
+                                color: PrimerColors.fgColor-placeholder;
                                 horizontal-alignment: right;
                             }
 
@@ -231,7 +231,7 @@ export component TimeReporting {
                                 text: TimeReportingState.week-hdr-th;
                                 font-size: 10px;
                                 font-weight: 500;
-                                color: Tokens.fgColor-placeholder;
+                                color: PrimerColors.fgColor-placeholder;
                                 horizontal-alignment: right;
                             }
 
@@ -240,7 +240,7 @@ export component TimeReporting {
                                 text: TimeReportingState.week-hdr-fr;
                                 font-size: 10px;
                                 font-weight: 500;
-                                color: Tokens.fgColor-placeholder;
+                                color: PrimerColors.fgColor-placeholder;
                                 horizontal-alignment: right;
                             }
 
@@ -252,7 +252,7 @@ export component TimeReporting {
 
                         Rectangle {
                             height: 1px;
-                            background: Tokens.borderColor-muted;
+                            background: PrimerColors.borderColor-muted;
                         }
 
                         if TimeReportingState.week-grid-hint != "": VerticalLayout {
@@ -261,7 +261,7 @@ export component TimeReporting {
 
                             Text {
                                 text: TimeReportingState.week-grid-hint;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 font-size: 13px;
                                 wrap: word-wrap;
                                 horizontal-alignment: center;
@@ -272,7 +272,7 @@ export component TimeReporting {
                             width: 100%;
                             for week_row[row_ix] in TimeReportingState.week-rows-model: Rectangle {
                                 height: 36px;
-                                background: mod(row_ix, 2) == 0 ? Tokens.bgColor-neutral-muted : Tokens.bgColor-canvas-subtle;
+                                background: mod(row_ix, 2) == 0 ? PrimerColors.bgColor-neutral-muted : PrimerColors.bgColor-canvas-subtle;
 
                                 Text {
                                     width: 1px;
@@ -280,7 +280,7 @@ export component TimeReporting {
                                     x: 0;
                                     y: 0;
                                     font-size: 1px;
-                                    color: Tokens.fgColor-default;
+                                    color: PrimerColors.fgColor-default;
                                     text: week_row.grid-week-key;
                                 }
 
@@ -297,7 +297,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.title;
-                                            color: title_ta.has-hover ? Tokens.fgColor-link : Tokens.fgColor-default;
+                                            color: title_ta.has-hover ? PrimerColors.fgColor-link : PrimerColors.fgColor-default;
                                             overflow: elide;
                                             font-size: 13px;
                                             vertical-alignment: center;
@@ -312,7 +312,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.mon;
-                                            color: Tokens.fgColor-subtle;
+                                            color: PrimerColors.fgColor-subtle;
                                             font-size: 13px;
                                             horizontal-alignment: right;
                                             vertical-alignment: center;
@@ -327,7 +327,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.tue;
-                                            color: Tokens.fgColor-subtle;
+                                            color: PrimerColors.fgColor-subtle;
                                             font-size: 13px;
                                             horizontal-alignment: right;
                                             vertical-alignment: center;
@@ -342,7 +342,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.wed;
-                                            color: Tokens.fgColor-subtle;
+                                            color: PrimerColors.fgColor-subtle;
                                             font-size: 13px;
                                             horizontal-alignment: right;
                                             vertical-alignment: center;
@@ -357,7 +357,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.thu;
-                                            color: Tokens.fgColor-subtle;
+                                            color: PrimerColors.fgColor-subtle;
                                             font-size: 13px;
                                             horizontal-alignment: right;
                                             vertical-alignment: center;
@@ -372,7 +372,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.fri;
-                                            color: Tokens.fgColor-subtle;
+                                            color: PrimerColors.fgColor-subtle;
                                             font-size: 13px;
                                             horizontal-alignment: right;
                                             vertical-alignment: center;
@@ -387,7 +387,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.total;
-                                            color: Tokens.fgColor-subtle;
+                                            color: PrimerColors.fgColor-subtle;
                                             font-size: 13px;
                                             horizontal-alignment: right;
                                             vertical-alignment: center;
@@ -403,7 +403,7 @@ export component TimeReporting {
             if !TimeReportingState.has-selected-project: Text {
                 text: "Choose a GitHub Project (classic board) for time entries. Open the dialog when prompted.";
                 font-size: 14px;
-                color: Tokens.fgColor-muted;
+                color: PrimerColors.fgColor-muted;
                 wrap: word-wrap;
             }
 
@@ -418,7 +418,7 @@ export component TimeReporting {
 
             if AppState.projects-load-status != "" && AppState.projects-load-status != "Loading projects…": Text {
                 text: AppState.projects-load-status;
-                color: Tokens.fgColor-muted;
+                color: PrimerColors.fgColor-muted;
                 wrap: word-wrap;
             }
         }
@@ -447,10 +447,10 @@ export component TimeReporting {
                     Rectangle {
                         width: 100%;
                         height: 40px;
-                        background: Tokens.bgColor-neutral-muted;
+                        background: PrimerColors.bgColor-neutral-muted;
                         border-radius: 6px;
                         border-width: 1px;
-                        border-color: Tokens.borderColor-muted;
+                        border-color: PrimerColors.borderColor-muted;
                         clip: true;
 
                         TextInput {
@@ -460,7 +460,7 @@ export component TimeReporting {
                             height: parent.height;
                             text: AppState.projects-search;
                             font-size: 14px;
-                            color: Tokens.fgColor-default;
+                            color: PrimerColors.fgColor-default;
                             edited => {
                                 AppState.projects-search = self.text;
                                 AppState.project_search_changed(self.text);
@@ -471,10 +471,10 @@ export component TimeReporting {
                     Rectangle {
                         height: 220px;
                         width: 100%;
-                        background: Tokens.bgColor-neutral-muted;
+                        background: PrimerColors.bgColor-neutral-muted;
                         border-radius: 8px;
                         border-width: 1px;
-                        border-color: Tokens.borderColor-muted;
+                        border-color: PrimerColors.borderColor-muted;
 
                         ListView {
                             width: parent.width - 2px;
@@ -483,7 +483,7 @@ export component TimeReporting {
                             y: 1px;
                             for row[index] in AppState.projects-filtered-model: Rectangle {
                                 height: 52px;
-                                background: mod(index, 2) == 0 ? Tokens.bgColor-neutral-muted : Tokens.bgColor-canvas-subtle;
+                                background: mod(index, 2) == 0 ? PrimerColors.bgColor-neutral-muted : PrimerColors.bgColor-canvas-subtle;
 
                                 TouchArea {
                                     clicked => {
@@ -495,7 +495,7 @@ export component TimeReporting {
                                         spacing: 2px;
                                         Text {
                                             text: row.title;
-                                            color: Tokens.fgColor-default;
+                                            color: PrimerColors.fgColor-default;
                                             overflow: elide;
                                             font-size: 14px;
                                         }
@@ -503,7 +503,7 @@ export component TimeReporting {
                                         Text {
                                             text: "#" + row.number + " · slint-ui";
                                             font-size: 12px;
-                                            color: Tokens.fgColor-muted;
+                                            color: PrimerColors.fgColor-muted;
                                         }
                                     }
                                 }
@@ -541,7 +541,7 @@ export component TimeReporting {
             Rectangle {
                 width: parent.width;
                 height: parent.height;
-                background: Tokens.overlay-scrim;
+                background: PrimerColors.overlay-scrim;
 
                 TouchArea {
                     width: 100%;
@@ -559,10 +559,10 @@ export component TimeReporting {
 
                 Rectangle {
                     width: min(parent.width - 48px, 520px);
-                    background: Tokens.bgColor-canvas-subtle;
+                    background: PrimerColors.bgColor-canvas-subtle;
                     border-radius: 12px;
                     border-width: 1px;
-                    border-color: Tokens.borderColor-muted;
+                    border-color: PrimerColors.borderColor-muted;
 
                     VerticalLayout {
                         padding: 20px;
@@ -573,13 +573,13 @@ export component TimeReporting {
                             text: TimeReportingState.detail-title;
                             font-size: 17px;
                             font-weight: 600;
-                            color: Tokens.fgColor-default;
+                            color: PrimerColors.fgColor-default;
                             wrap: word-wrap;
                         }
 
                         Rectangle {
                             height: 1px;
-                            background: Tokens.borderColor-muted;
+                            background: PrimerColors.borderColor-muted;
                         }
 
                         Flickable {
@@ -591,7 +591,7 @@ export component TimeReporting {
                             detail-body-text := Text {
                                 width: 100%;
                                 text: TimeReportingState.detail-body;
-                                color: Tokens.fgColor-subtle;
+                                color: PrimerColors.fgColor-subtle;
                                 font-size: 13px;
                                 wrap: word-wrap;
                             }

@@ -12,7 +12,7 @@ import { AppHeader } from "components/AppHeader.slint";
 import { SettingsState } from "../bridges/slint/settings-state.slint";
 import { TimeReportingState, TimeReportingWeekRow } from "../bridges/slint/time-reporting-state.slint";
 import { Spinner } from "Primer/primer.slint";
-import { Tokens } from "Primer/tokens.slint";
+import { PrimerColors } from "Primer/tokens.slint";
 import { Settings } from "views/settings.slint";
 import { Dashboard } from "views/dashboard.slint";
 import { Button } from "Primer/Buttons/buttons.slint";
@@ -179,7 +179,7 @@ export component MainWindow inherits Window {
                 text: root.gh-cli-version-block-detail;
                 font-size: 14px;
                 horizontal-alignment: center;
-                color: Tokens.fgColor-muted;
+                color: PrimerColors.fgColor-muted;
                 wrap: word-wrap;
             }
 

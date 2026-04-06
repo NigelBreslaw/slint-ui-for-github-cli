@@ -1,18 +1,18 @@
 import { AppState, AppView, Authed } from "../../bridges/slint/app-state.slint";
-import { Tokens } from "../Primer/tokens.slint";
+import { PrimerColors } from "../Primer/tokens.slint";
 
 export component SideBar {
     width: 24px + (16px * 2);
     height: 100%;
     Rectangle {
         height: root.height;
-        background: Tokens.bgColor-inset;
+        background: PrimerColors.bgColor-inset;
 
         Rectangle {
             x: parent.width - self.width;
             width: 1px;
             height: 100%;
-            background: Tokens.borderColor-default;
+            background: PrimerColors.borderColor-default;
         }
 
         Image {
@@ -20,7 +20,7 @@ export component SideBar {
             y: 16px;
             width: 24px;
             height: 24px;
-            colorize: Tokens.fgColor-muted;
+            colorize: PrimerColors.fgColor-muted;
             source: @image-url("../../assets/24px/inbox.svg");
 
             ta := TouchArea {
@@ -35,7 +35,7 @@ export component SideBar {
             y: 56px;
             width: 24px;
             height: 24px;
-            colorize: Tokens.fgColor-muted;
+            colorize: PrimerColors.fgColor-muted;
             source: @image-url("../../assets/24px/history.svg");
 
             TouchArea {
@@ -50,7 +50,7 @@ export component SideBar {
             y: parent.height - self.height - 16px;
             width: 24px;
             height: 24px;
-            colorize: Tokens.fgColor-muted;
+            colorize: PrimerColors.fgColor-muted;
             source: @image-url("../../assets/24px/gear.svg");
 
             TouchArea {

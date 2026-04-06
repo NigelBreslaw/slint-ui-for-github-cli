@@ -2,7 +2,7 @@ import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
 import { PrimerUnderlineNavItem } from "../components/primer-underline-nav-item.slint";
 import { Spinner } from "../Primer/primer.slint";
-import { Tokens, Size } from "../Primer/tokens.slint";
+import { PrimerColors, Size } from "../Primer/tokens.slint";
 
 export component Dashboard {
     width: 100%;
@@ -15,7 +15,7 @@ export component Dashboard {
     Rectangle {
         width: 100%;
         height: 100%;
-        background: Tokens.bgColor-default;
+        background: PrimerColors.bgColor-default;
     }
 
     VerticalLayout {
@@ -52,7 +52,7 @@ export component Dashboard {
             Rectangle {
                 height: 1px;
                 width: 100%;
-                background: Tokens.borderColor-muted;
+                background: PrimerColors.borderColor-muted;
             }
         }
 
@@ -65,7 +65,7 @@ export component Dashboard {
                 text: "Review requests";
                 font-size: 14px;
                 font-weight: 600;
-                color: Tokens.fgColor-subtle;
+                color: PrimerColors.fgColor-subtle;
             }
 
             Rectangle {
@@ -91,7 +91,7 @@ export component Dashboard {
                         text: AppState.review-requests-total + " pull requests are waiting on your review.";
                         font-size: 14px;
                         font-weight: 400;
-                        color: Tokens.fgColor-default;
+                        color: PrimerColors.fgColor-default;
                         vertical-alignment: center;
                     }
                 }
@@ -108,7 +108,7 @@ export component Dashboard {
 
             if AppState.review-requests-load-status != "" && AppState.review-requests-load-status != "Loading review requests…": Text {
                 text: AppState.review-requests-load-status;
-                color: Tokens.fgColor-muted;
+                color: PrimerColors.fgColor-muted;
                 wrap: word-wrap;
             }
 
@@ -116,7 +116,7 @@ export component Dashboard {
                 width: 100%;
                 for row[index] in AppState.review-requests-model: Rectangle {
                     height: 56px;
-                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : Tokens.bgColor-canvas-subtle;
+                    background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
 
                     TouchArea {
                         clicked => {
@@ -128,14 +128,14 @@ export component Dashboard {
                             spacing: 4px;
                             Text {
                                 text: row.title;
-                                color: Tokens.fgColor-default;
+                                color: PrimerColors.fgColor-default;
                                 overflow: elide;
                             }
 
                             Text {
                                 text: row.repo_label;
                                 font-size: 12px;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                             }
                         }
                     }
@@ -152,7 +152,7 @@ export component Dashboard {
                 text: "Dependabot alerts";
                 font-size: 14px;
                 font-weight: 600;
-                color: Tokens.fgColor-subtle;
+                color: PrimerColors.fgColor-subtle;
             }
 
             if AppState.security-alerts-load-status == "Loading security alerts…": HorizontalLayout {
@@ -166,13 +166,13 @@ export component Dashboard {
 
             if AppState.security-alerts-load-status != "" && AppState.security-alerts-load-status != "Loading security alerts…": Text {
                 text: AppState.security-alerts-load-status;
-                color: Tokens.fgColor-muted;
+                color: PrimerColors.fgColor-muted;
                 wrap: word-wrap;
             }
 
             if AppState.security-alerts-data-ready && AppState.security-alerts-total == 0 && AppState.security-alerts-load-status == "": Text {
                 text: "No Dependabot alerts returned for this repository.";
-                color: Tokens.fgColor-muted;
+                color: PrimerColors.fgColor-muted;
                 font-size: 13px;
                 wrap: word-wrap;
             }
@@ -181,7 +181,7 @@ export component Dashboard {
                 width: 100%;
                 for row[index] in AppState.security-alerts-model: Rectangle {
                     height: 56px;
-                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : Tokens.bgColor-canvas-subtle;
+                    background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
 
                     TouchArea {
                         clicked => {
@@ -193,14 +193,14 @@ export component Dashboard {
                             spacing: 4px;
                             Text {
                                 text: row.title;
-                                color: Tokens.fgColor-default;
+                                color: PrimerColors.fgColor-default;
                                 overflow: elide;
                             }
 
                             Text {
                                 text: row.subtitle;
                                 font-size: 12px;
-                                color: Tokens.fgColor-muted;
+                                color: PrimerColors.fgColor-muted;
                                 overflow: elide;
                             }
                         }

@@ -4,7 +4,7 @@ import { UserMenu } from "./UserMenu.slint";
 import { AppState, Authed, AppView } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
 import { Button, ButtonVariant } from "../Primer/Buttons/buttons.slint";
-import { Tokens } from "../Primer/tokens.slint";
+import { PrimerColors } from "../Primer/tokens.slint";
 
 global HeaderState {
     in-out property <bool> menu-visible: false;
@@ -33,7 +33,7 @@ export component AppHeader {
                 text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : "Time reporting";
                 font-size: 14px;
                 font-weight: 500;
-                color: Tokens.fgColor-default;
+                color: PrimerColors.fgColor-default;
                 overflow: elide;
             }
         }

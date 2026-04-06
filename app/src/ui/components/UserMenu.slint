@@ -1,5 +1,5 @@
 import { Avatar, DoubleDropShadow } from "../Primer/primer.slint";
-import { Tokens } from "../Primer/tokens.slint";
+import { PrimerColors } from "../Primer/tokens.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 
 global MenuStyle {
@@ -22,7 +22,7 @@ component MenuSeparator inherits VerticalLayout {
 
     Rectangle {
         height: 1px;
-        background: Tokens.actionListItem-inline-divider;
+        background: PrimerColors.actionListItem-inline-divider;
     }
 
     Rectangle {
@@ -63,7 +63,7 @@ component MenuItem {
                 icon := Image {
                     width: 100%;
                     height: 100%;
-                    colorize: Tokens.fgColor-default;
+                    colorize: PrimerColors.fgColor-default;
                 }
             }
         }
@@ -72,7 +72,7 @@ component MenuItem {
             height: self.preferred-height;
             font-size: 14px;
             font-weight: 400;
-            color: Tokens.fgColor-default;
+            color: PrimerColors.fgColor-default;
         }
     }
 }
@@ -90,15 +90,15 @@ export component UserMenu {
 
     DoubleDropShadow {
         border-radius: MenuStyle.border-radius;
-        back-layer: { offset-x: 0px, offset-y: 6px, blur: 18px, color: Tokens.drop-shadow };
-        front-layer: { offset-x: 0px, offset-y: 6px, blur: 12px, color: Tokens.drop-shadow };
+        back-layer: { offset-x: 0px, offset-y: 6px, blur: 18px, color: PrimerColors.drop-shadow };
+        front-layer: { offset-x: 0px, offset-y: 6px, blur: 12px, color: PrimerColors.drop-shadow };
     }
 
     Rectangle {
         border-radius: MenuStyle.border-radius;
         border-width: 1px;
-        border-color: Tokens.borderColor-default;
-        background: Tokens.bgColor-inset;
+        border-color: PrimerColors.borderColor-default;
+        background: PrimerColors.bgColor-inset;
     }
 
     content := VerticalLayout {
@@ -167,7 +167,7 @@ export component UserMenu {
                     text: root.user_status_message;
                     visible: root.user_status_message != "";
                     font-size: 14px;
-                    color: Tokens.fgColor-default;
+                    color: PrimerColors.fgColor-default;
                     font-weight: 400;
                 }
             }

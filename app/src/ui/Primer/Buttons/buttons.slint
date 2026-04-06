@@ -1,6 +1,6 @@
 import { Palette } from "std-widgets.slint";
 import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
-import { LayoutTokens, Size, Tokens } from "../tokens.slint";
+import { LayoutTokens, PrimerColors, Size, Tokens } from "../tokens.slint";
 
 
 export enum ButtonVariant {
@@ -27,7 +27,7 @@ struct ButtonShadowState {
 }
 
 // Filled height/padding follow `size`; link is content-sized (StyledText has no font-size in Slint).
-// Colors: Tokens (primer-tokens naming). Link label: StyledText + @markdown.
+// Colors: Tokens (button palette) + PrimerColors (semantic fg/link/inset). Link label: StyledText + @markdown.
 export component Button {
     in property <ButtonVariant> variant: ButtonVariant.default;
     in property <Size> size: Size.medium;
@@ -95,7 +95,7 @@ export component Button {
             return {
                 bg: Tokens.button-link-bgColor-rest,
                 border: Tokens.button-link-borderColor-rest,
-                fg: Tokens.fgColor-link,
+                fg: PrimerColors.fgColor-link,
             };
         }
         if v == ButtonVariant.primary {
@@ -314,7 +314,7 @@ export component Button {
         text: @markdown("[\{label}](#)");
         horizontal-alignment: left;
         vertical-alignment: center;
-        link-color: Tokens.fgColor-link;
+        link-color: PrimerColors.fgColor-link;
     }
 
     link-md-hover := StyledText {
@@ -324,7 +324,7 @@ export component Button {
         text: @markdown("[<u>\{label}</u>](#)");
         horizontal-alignment: left;
         vertical-alignment: center;
-        link-color: Tokens.fgColor-link;
+        link-color: PrimerColors.fgColor-link;
     }
 
     ta := TouchArea {
@@ -365,7 +365,7 @@ export component IconButton {
 
     in property <ButtonStyle> style: {
         button-default-fgColor-rest: Tokens.iconButton-fgColor-rest,
-        button-default-bgColor-active: Tokens.bgColor-inset,
+        button-default-bgColor-active: PrimerColors.bgColor-inset,
         button-default-bgColor-hover: Tokens.iconButton-bgColor-hover,
         button-default-borderColor-active: Tokens.color-btn-border,
     };

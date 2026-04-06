@@ -4,7 +4,7 @@
 // (Slint cannot scan the options model in a `changed` handler in this toolchain).
 
 import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
-import { Size, Tokens } from "../tokens.slint";
+import { PrimerColors, Size } from "../tokens.slint";
 
 export struct SelectOption {
     value: string,
@@ -43,7 +43,7 @@ export component Select {
     private property <color> border-success: #238636;
     private property <color> fill-bg: #0d1117;
     private property <color> fill-hover: #161b22;
-    private property <color> text-primary: Tokens.fgColor-default;
+    private property <color> text-primary: PrimerColors.fgColor-default;
     private property <color> text-muted: #8b949e;
     private property <color> text-error: #f85149;
     private property <color> text-success: #3fb950;

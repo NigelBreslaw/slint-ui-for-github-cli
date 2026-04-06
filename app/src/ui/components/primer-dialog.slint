@@ -3,7 +3,7 @@
 // In-window overlay (Rectangle). For a floating layer, wrap this component in a PopupWindow
 // and call show()/close() on that window from the parent — do not use PopupWindow + init { show() } here.
 
-import { Tokens } from "../Primer/tokens.slint";
+import { PrimerColors } from "../Primer/tokens.slint";
 
 export enum PrimerDialogWidth {
     small,
@@ -34,7 +34,7 @@ export component PrimerDialog {
     Rectangle {
         width: 100%;
         height: 100%;
-        background: Tokens.overlay-scrim;
+        background: PrimerColors.overlay-scrim;
 
         TouchArea {
             width: 100%;
@@ -65,15 +65,15 @@ export component PrimerDialog {
                 Rectangle {
                     width: root.panel-w;
                     max-height: root.panel-max-h;
-                    background: Tokens.bgColor-canvas-subtle;
+                    background: PrimerColors.bgColor-canvas-subtle;
                     border-radius: 12px;
                     border-width: 1px;
-                    border-color: Tokens.borderColor-muted;
+                    border-color: PrimerColors.borderColor-muted;
                     clip: true;
                     drop-shadow-offset-x: 0px;
                     drop-shadow-offset-y: 4px;
                     drop-shadow-blur: 16px;
-                    drop-shadow-color: Tokens.drop-shadow;
+                    drop-shadow-color: PrimerColors.drop-shadow;
 
                     VerticalLayout {
                         spacing: 0;
@@ -86,7 +86,7 @@ export component PrimerDialog {
 
                             Rectangle {
                                 width: 100%;
-                                background: Tokens.bgColor-canvas-subtle;
+                                background: PrimerColors.bgColor-canvas-subtle;
 
                                 HorizontalLayout {
                                     padding-left: 8px;
@@ -108,7 +108,7 @@ export component PrimerDialog {
                                             text: root.title;
                                             font-size: 16px;
                                             font-weight: 600;
-                                            color: Tokens.fgColor-default;
+                                            color: PrimerColors.fgColor-default;
                                             wrap: word-wrap;
                                         }
 
@@ -116,7 +116,7 @@ export component PrimerDialog {
                                             text: root.subtitle;
                                             font-size: 12px;
                                             font-weight: 400;
-                                            color: Tokens.fgColor-muted;
+                                            color: PrimerColors.fgColor-muted;
                                             wrap: word-wrap;
                                         }
                                     }
@@ -132,7 +132,7 @@ export component PrimerDialog {
                                             text: "×";
                                             font-size: 22px;
                                             font-weight: 400;
-                                            color: Tokens.fgColor-muted;
+                                            color: PrimerColors.fgColor-muted;
                                             vertical-alignment: center;
                                             horizontal-alignment: center;
                                         }
@@ -148,7 +148,7 @@ export component PrimerDialog {
                         Rectangle {
                             width: 100%;
                             height: 1px;
-                            background: Tokens.borderColor-muted;
+                            background: PrimerColors.borderColor-muted;
                         }
                     }
 

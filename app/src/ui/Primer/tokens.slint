@@ -33,14 +33,12 @@ export global LayoutTokens {
     out property <length> borderRadius-medium: 6px;
 }
 
-export global Tokens {
+// Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; not button-palette literals.
+export global PrimerColors {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
     // Private literals from primer-ui-react legacy-theme colors/dark.ts + light.ts innermost fallbacks.
-    // Use rgba() where Primer uses rgba; hex where Primer uses hex.
-    // Primer hsla(...) maps to Slint hsv(h, s, v, a) (same sRGB); Slint 1.16 has no hsla() builtin.
-
     property <color> bgColor-inset-dark: #010409;
     property <color> bgColor-inset-light: #f6f8fa;
     property <color> bgColor-default-dark: #0d1117;
@@ -58,7 +56,6 @@ export global Tokens {
     property <color> bgColor-canvas-subtle-dark: #161b22;
     property <color> bgColor-canvas-subtle-light: #f6f8fa;
 
-    // colors.neutral.subtle
     property <color> bgColor-neutral-muted-dark: rgba(110, 118, 129, 0.1);
     property <color> bgColor-neutral-muted-light: rgba(234, 238, 242, 0.5);
 
@@ -75,7 +72,6 @@ export global Tokens {
     property <color> fgColor-link-dark: #2f81f7;
     property <color> fgColor-link-light: #0969da;
 
-    // colors.primer.canvas.backdrop
     property <color> overlay-scrim-dark: rgba(1, 4, 9, 0.8);
     property <color> overlay-scrim-light: rgba(31, 35, 40, 0.5);
 
@@ -84,6 +80,29 @@ export global Tokens {
 
     property <color> actionListItem-inline-divider-dark: rgba(48, 54, 61, 0.48);
     property <color> actionListItem-inline-divider-light: rgba(208, 215, 222, 0.48);
+
+    out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
+    out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
+    out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
+    out property <color> borderColor-default: color-scheme == ColorScheme.dark ? borderColor-default-dark : borderColor-default-light;
+
+    out property <color> fgColor-muted: color-scheme == ColorScheme.dark ? fgColor-muted-dark : fgColor-muted-light;
+    out property <color> fgColor-subtle: color-scheme == ColorScheme.dark ? fgColor-subtle-dark : fgColor-subtle-light;
+    out property <color> bgColor-canvas-subtle: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
+    out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
+    out property <color> bgColor-neutral-muted: color-scheme == ColorScheme.dark ? bgColor-neutral-muted-dark : bgColor-neutral-muted-light;
+    out property <color> borderColor-muted: color-scheme == ColorScheme.dark ? borderColor-muted-dark : borderColor-muted-light;
+    out property <color> accent-underline: color-scheme == ColorScheme.dark ? accent-underline-dark : accent-underline-light;
+    out property <color> fgColor-placeholder: color-scheme == ColorScheme.dark ? fgColor-placeholder-dark : fgColor-placeholder-light;
+    out property <color> fgColor-link: color-scheme == ColorScheme.dark ? fgColor-link-dark : fgColor-link-light;
+    out property <color> overlay-scrim: color-scheme == ColorScheme.dark ? overlay-scrim-dark : overlay-scrim-light;
+    out property <color> drop-shadow: color-scheme == ColorScheme.dark ? drop-shadow-dark : drop-shadow-light;
+    out property <color> actionListItem-inline-divider: color-scheme == ColorScheme.dark ? actionListItem-inline-divider-dark : actionListItem-inline-divider-light;
+}
+
+export global Tokens {
+
+    property <ColorScheme> color-scheme: Palette.color-scheme;
 
     // --- Primer color-btn-* + related (legacy pattern; maps to --color-btn-* / --button-* in primer-tokens fallbacks)
     // Values match current Button in buttons.slint (github.com palette). hsv() where legacy theme used hsla.
@@ -174,25 +193,6 @@ export global Tokens {
     property <color> iconButton-fgColor-rest-light: #59636e;
     property <color> iconButton-bgColor-hover-dark: #16191e;
 
-    out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
-    out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
-    out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
-    out property <color> borderColor-default: color-scheme == ColorScheme.dark ? borderColor-default-dark : borderColor-default-light;
-
-    out property <color> fgColor-muted: color-scheme == ColorScheme.dark ? fgColor-muted-dark : fgColor-muted-light;
-    out property <color> fgColor-subtle: color-scheme == ColorScheme.dark ? fgColor-subtle-dark : fgColor-subtle-light;
-    out property <color> bgColor-canvas-subtle: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
-    // Primer --bgColor-muted maps to color-canvas-subtle (same as canvas.subtle)
-    out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
-    out property <color> bgColor-neutral-muted: color-scheme == ColorScheme.dark ? bgColor-neutral-muted-dark : bgColor-neutral-muted-light;
-    out property <color> borderColor-muted: color-scheme == ColorScheme.dark ? borderColor-muted-dark : borderColor-muted-light;
-    out property <color> accent-underline: color-scheme == ColorScheme.dark ? accent-underline-dark : accent-underline-light;
-    out property <color> fgColor-placeholder: color-scheme == ColorScheme.dark ? fgColor-placeholder-dark : fgColor-placeholder-light;
-    out property <color> fgColor-link: color-scheme == ColorScheme.dark ? fgColor-link-dark : fgColor-link-light;
-    out property <color> overlay-scrim: color-scheme == ColorScheme.dark ? overlay-scrim-dark : overlay-scrim-light;
-    out property <color> drop-shadow: color-scheme == ColorScheme.dark ? drop-shadow-dark : drop-shadow-light;
-    out property <color> actionListItem-inline-divider: color-scheme == ColorScheme.dark ? actionListItem-inline-divider-dark : actionListItem-inline-divider-light;
-
     // --- Scheme-resolved color-btn-* (alias targets for button-* below)
     out property <color> color-btn-text: color-scheme == ColorScheme.dark ? color-btn-text-dark : color-btn-text-light;
     out property <color> color-btn-bg: color-scheme == ColorScheme.dark ? color-btn-bg-dark : color-btn-bg-light;
@@ -255,7 +255,7 @@ export global Tokens {
     out property <color> button-danger-bgColor-rest: color-btn-bg;
     out property <color> button-danger-bgColor-hover: color-btn-danger-hover-bg;
     out property <color> button-danger-bgColor-active: color-btn-danger-selected-bg;
-    out property <color> button-danger-bgColor-disabled: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-canvas-subtle-light;
+    out property <color> button-danger-bgColor-disabled: color-scheme == ColorScheme.dark ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
     out property <color> button-danger-borderColor-rest: color-btn-border;
     out property <color> button-danger-borderColor-hover: color-btn-danger-hover-border;
     out property <color> button-danger-borderColor-active: color-btn-danger-selected-border;

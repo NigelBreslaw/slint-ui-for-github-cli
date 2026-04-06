@@ -1,6 +1,6 @@
 // Primer-style UnderlineNav item (dark only): label + 2px accent when selected; TouchArea for tap targets.
 
-import { Tokens } from "../Primer/tokens.slint";
+import { PrimerColors } from "../Primer/tokens.slint";
 
 export component PrimerUnderlineNavItem {
     in property <string> label;
@@ -23,7 +23,7 @@ export component PrimerUnderlineNavItem {
             text: root.label;
             font-size: 13px;
             font-weight: root.selected ? 600 : 500;
-            color: root.selected ? Tokens.fgColor-default : Tokens.fgColor-muted;
+            color: root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
             vertical-alignment: center;
         }
     }
@@ -32,7 +32,7 @@ export component PrimerUnderlineNavItem {
         y: parent.height - self.height;
         height: 2px;
         width: 100%;
-        background: root.selected ? Tokens.accent-underline : #00000000;
+        background: root.selected ? PrimerColors.accent-underline : #00000000;
     }
 
     ta := TouchArea { }
