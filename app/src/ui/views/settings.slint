@@ -20,7 +20,7 @@ component TableRow {
         Rectangle {
             width: 190px;
             min-height: 40px;
-            background: header-row ? Tokens.bgColor-muted : Tokens.bgColor-neutral-muted;
+            background: header-row ? Tokens.borderColor-muted : Tokens.bgColor-neutral-muted;
             border-width: 1px;
             border-color: Tokens.borderColor-muted;
 
@@ -39,7 +39,7 @@ component TableRow {
         Rectangle {
             horizontal-stretch: 1;
             min-height: 40px;
-            background: header-row ? Tokens.bgColor-muted : Tokens.bgColor-canvas-subtle;
+            background: header-row ? Tokens.borderColor-muted : Tokens.bgColor-canvas-subtle;
             border-width: 1px;
             border-color: Tokens.borderColor-muted;
 
@@ -50,7 +50,7 @@ component TableRow {
                 text: value-text;
                 font-size: header-row ? 14px : 15px;
                 font-weight: header-row ? 600 : 400;
-                color: header-row ? Tokens.fgColor-default : Tokens.fgColor-secondary;
+                color: header-row ? Tokens.fgColor-default : Tokens.fgColor-subtle;
                 wrap: word-wrap;
             }
         }

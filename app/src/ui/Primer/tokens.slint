@@ -10,39 +10,54 @@ export global Tokens {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
-    property <color> bgColor-inset-dark: #020408;
-    property <color> bgColor-inset-light: #f7f8fa;
-    property <color> bgColor-default-dark: #0d1116;
-    property <color> bgColor-default-light: #ffffff;
-    property <color> fgColor-default-dark: #f0f6fc;
-    property <color> fgColor-default-light: #0d1116;
-    property <color> borderColor-default-dark: #3e444d;
-    property <color> borderColor-default-light: #D3D9DF;
+    // Private literals from primer-ui-react legacy-theme colors/dark.ts + light.ts innermost fallbacks,
+    // with #RRGGBBAA where Primer uses rgba (alpha = round(a * 255) as hex).
 
-    property <color> fgColor-muted-dark: #8b949e;
+    property <color> bgColor-inset-dark: #010409;
+    property <color> bgColor-inset-light: #f6f8fa;
+    property <color> bgColor-default-dark: #0d1117;
+    property <color> bgColor-default-light: #ffffff;
+    property <color> fgColor-default-dark: #e6edf3;
+    property <color> fgColor-default-light: #1f2328;
+    property <color> borderColor-default-dark: #30363d;
+    property <color> borderColor-default-light: #d0d7de;
+
+    property <color> fgColor-muted-dark: #848d97;
     property <color> fgColor-muted-light: #656d76;
-    property <color> fgColor-secondary-dark: #c9d1d9;
-    property <color> fgColor-secondary-light: #57606a;
+    property <color> fgColor-subtle-dark: #6e7681;
+    property <color> fgColor-subtle-light: #6e7781;
+
     property <color> bgColor-canvas-subtle-dark: #161b22;
     property <color> bgColor-canvas-subtle-light: #f6f8fa;
-    property <color> bgColor-muted-dark: #21262d;
-    property <color> bgColor-muted-light: #eff2f5;
-    property <color> bgColor-neutral-muted-dark: #0d1117;
-    property <color> bgColor-neutral-muted-light: #ffffff;
-    property <color> borderColor-muted-dark: #30363d;
-    property <color> borderColor-muted-light: #d0d7de;
+
+    // colors.neutral.subtle — rgba(110,118,129,0.1) / rgba(234,238,242,0.5)
+    property <color> bgColor-neutral-muted-dark: #6e76811a;
+    property <color> bgColor-neutral-muted-light: #eaeef280;
+
+    // colors.border.muted — light: hsla(210,18%,87%,1) => #d8dee4 (HSL math)
+    property <color> borderColor-muted-dark: #21262d;
+    property <color> borderColor-muted-light: #d8dee4;
+
     property <color> accent-underline-dark: #f78166;
-    property <color> accent-underline-light: #cf432e;
+    property <color> accent-underline-light: #fd8c73;
+
     property <color> fgColor-placeholder-dark: #6e7681;
     property <color> fgColor-placeholder-light: #8c959f;
-    property <color> fgColor-link-dark: #58a6ff;
+
+    property <color> fgColor-link-dark: #2f81f7;
     property <color> fgColor-link-light: #0969da;
-    property <color> overlay-scrim-dark: #010409aa;
-    property <color> overlay-scrim-light: #1f232866;
+
+    // colors.primer.canvas.backdrop
+    property <color> overlay-scrim-dark: #010409cc;
+    property <color> overlay-scrim-light: #1f232880;
+
+    // Derived from colors.shadow.medium tail color (dark: #010409; light: rgba(140,149,159,0.15))
     property <color> drop-shadow-dark: #01040966;
-    property <color> drop-shadow-light: #1f232833;
-    property <color> menu-separator-dark: #2b3139;
-    property <color> menu-separator-light: #d8dee4;
+    property <color> drop-shadow-light: #8c959f26;
+
+    // colors.actionListItem.inlineDivider rgba(48,54,61,0.48) / rgba(208,215,222,0.48)
+    property <color> menu-separator-dark: #30363d7a;
+    property <color> menu-separator-light: #d0d7de7a;
 
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
@@ -50,9 +65,10 @@ export global Tokens {
     out property <color> borderColor-default: color-scheme == ColorScheme.dark ? borderColor-default-dark : borderColor-default-light;
 
     out property <color> fgColor-muted: color-scheme == ColorScheme.dark ? fgColor-muted-dark : fgColor-muted-light;
-    out property <color> fgColor-secondary: color-scheme == ColorScheme.dark ? fgColor-secondary-dark : fgColor-secondary-light;
+    out property <color> fgColor-subtle: color-scheme == ColorScheme.dark ? fgColor-subtle-dark : fgColor-subtle-light;
     out property <color> bgColor-canvas-subtle: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
-    out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-muted-dark : bgColor-muted-light;
+    // Primer --bgColor-muted maps to color-canvas-subtle (same as canvas.subtle)
+    out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
     out property <color> bgColor-neutral-muted: color-scheme == ColorScheme.dark ? bgColor-neutral-muted-dark : bgColor-neutral-muted-light;
     out property <color> borderColor-muted: color-scheme == ColorScheme.dark ? borderColor-muted-dark : borderColor-muted-light;
     out property <color> accent-underline: color-scheme == ColorScheme.dark ? accent-underline-dark : accent-underline-light;
