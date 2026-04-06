@@ -55,9 +55,8 @@ export global Tokens {
     property <color> drop-shadow-dark: #010409;
     property <color> drop-shadow-light: rgba(140, 149, 159, 0.15);
 
-    // colors.actionListItem.inlineDivider
-    property <color> menu-separator-dark: rgba(48, 54, 61, 0.48);
-    property <color> menu-separator-light: rgba(208, 215, 222, 0.48);
+    property <color> actionListItem-inline-divider-dark: rgba(48, 54, 61, 0.48);
+    property <color> actionListItem-inline-divider-light: rgba(208, 215, 222, 0.48);
 
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
@@ -76,5 +75,5 @@ export global Tokens {
     out property <color> fgColor-link: color-scheme == ColorScheme.dark ? fgColor-link-dark : fgColor-link-light;
     out property <color> overlay-scrim: color-scheme == ColorScheme.dark ? overlay-scrim-dark : overlay-scrim-light;
     out property <color> drop-shadow: color-scheme == ColorScheme.dark ? drop-shadow-dark : drop-shadow-light;
-    out property <color> menu-separator: color-scheme == ColorScheme.dark ? menu-separator-dark : menu-separator-light;
+    out property <color> actionListItem-inline-divider: color-scheme == ColorScheme.dark ? actionListItem-inline-divider-dark : actionListItem-inline-divider-light;
 }
