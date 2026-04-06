@@ -2,7 +2,7 @@ import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
 import { PrimerUnderlineNavItem } from "../components/primer-underline-nav-item.slint";
 import { Spinner } from "../Primer/primer.slint";
-import { Tokens } from "../Primer/Tokens/tokens.slint";
+import { Tokens, Size } from "../Primer/tokens.slint";
 
 export component Dashboard {
     width: 100%;
@@ -102,7 +102,7 @@ export component Dashboard {
                 alignment: start;
 
                 Spinner {
-                    size: small;
+                    size: Size.small;
                 }
             }
 
