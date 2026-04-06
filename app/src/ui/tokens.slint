@@ -1,0 +1,26 @@
+import { Palette } from "std-widgets.slint";
+
+export enum IconSize {
+    small,
+    medium,
+    large,
+}
+
+export global Tokens {
+
+    in-out property <ColorScheme> color-scheme: Palette.color-scheme;
+
+    property <color> bgColor-inset-dark: #020408;
+    property <color> bgColor-inset-light: #f7f8fa;
+    property <color> bgColor-default-dark: #0d1116;
+    property <color> bgColor-default-light: #ffffff;
+    property <color> fgColor-default-dark: #f0f6fc;
+    property <color> fgColor-default-light: #0d1116;
+    property <color> borderColor-default-dark: #3e444d;
+    property <color> borderColor-default-light: #D3D9DF;
+
+    out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
+    out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
+    out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
+    out property <color> borderColor-default: color-scheme == ColorScheme.dark ? borderColor-default-dark : borderColor-default-light;
+}

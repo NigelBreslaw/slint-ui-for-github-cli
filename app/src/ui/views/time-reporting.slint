@@ -4,6 +4,7 @@ import { TimeReportingState } from "../../bridges/slint/time-reporting-state.sli
 import { ButtonBlack } from "../components/buttons.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
 import { PrimerSpinner } from "../components/primer-spinner.slint";
+import { Tokens } from "../tokens.slint";
 
 export component TimeReporting {
     width: 100%;
@@ -16,7 +17,7 @@ export component TimeReporting {
     Rectangle {
         width: 100%;
         height: 100%;
-        background: #0d1117;
+        background: Tokens.bgColor-default;
 
         VerticalLayout {
             padding: 16px;

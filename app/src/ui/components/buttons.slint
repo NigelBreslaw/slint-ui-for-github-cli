@@ -1,3 +1,5 @@
+import { IconSize, Tokens } from "../tokens.slint";
+
 export component ButtonBlack {
     height: 32px;
     width: label.preferred-width + (2 * 16px);
@@ -64,4 +66,65 @@ export component ButtonGreen {
     }
 
     ta := TouchArea { }
+}
+
+
+enum Variant {
+    default,
+    primary,
+    danger,
+    invisible
+}
+
+struct ButtonStyle {
+    button-default-fgColor-rest: color, // text color
+    button-default-bgColor-active: color, // background
+    button-default-bgColor-hover: color, // background
+    button-default-borderColor-active: color, // border
+}
+
+export component IconButton {
+
+    in property <IconSize> size: IconSize.medium;
+    in property <Variant> variant: Variant.default;
+    in property icon-source <=> img.source;
+    callback clicked <=> ta.clicked;
+
+    property <ButtonStyle> dark-style: {
+        button-default-fgColor-rest: #9398A0,
+        button-default-bgColor-active: Tokens.bgColor-inset,
+        button-default-bgColor-hover: #16191E,
+        button-default-borderColor-active: #3F444C
+    };
+
+    property <ButtonStyle> light-style: {
+        button-default-fgColor-rest: #59636e,
+        button-default-bgColor-active: Tokens.bgColor-inset,
+        button-default-bgColor-hover: #eff2f5,
+        button-default-borderColor-active: #D3D9DF
+    };
+
+
+    in property <ButtonStyle> style: Tokens.color-scheme == ColorScheme.dark ? dark-style : light-style;
+
+    width: size == IconSize.small ? 28px : size == IconSize.medium ? 32px : 40px;
+    height: self.width;
+
+    Rectangle {
+        border-radius: 6px;
+        border-width: 1px;
+        border-color: style.button-default-borderColor-active;
+        background: ta.has-hover ? style.button-default-bgColor-hover : style.button-default-bgColor-active;
+
+    }
+
+    img := Image {
+        width: 16px;
+        height: self.width;
+        colorize: style.button-default-fgColor-rest;
+    }
+
+    ta := TouchArea {
+
+    }
 }

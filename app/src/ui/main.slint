@@ -36,10 +36,6 @@ export component MainWindow inherits Window {
 
     in property <string> gh-cli-version-block-detail: "";
 
-    init => {
-        Palette.color-scheme = ColorScheme.dark;
-    }
-
     close-auth-window => {
         auth_window.close();
     }

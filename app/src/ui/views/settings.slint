@@ -3,6 +3,7 @@ import { ButtonBlack } from "../components/buttons.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
 import { PrimerSelect, ValidationStatus } from "../components/primer-select.slint";
 import { PrimerSpinner } from "../components/primer-spinner.slint";
+import { Tokens } from "../tokens.slint";
 
 component TableRow {
 
@@ -64,7 +65,7 @@ export component Settings {
     Rectangle {
         width: 100%;
         height: 100%;
-        background: #0d1117;
+        background: Tokens.bgColor-default;
 
         VerticalLayout {
             padding: 16px;

@@ -1,17 +1,18 @@
 import { AppState, AppView, Authed } from "../../bridges/slint/app-state.slint";
+import { Tokens } from "../tokens.slint";
 
 export component SideBar {
     width: 24px + (16px * 2);
     height: 100%;
     Rectangle {
         height: root.height;
-        background: #020408;
+        background: Tokens.bgColor-inset;
 
         Rectangle {
             x: parent.width - self.width;
             width: 1px;
             height: 100%;
-            background: #3e444d;
+            background: Tokens.borderColor-default;
         }
 
         Image {
