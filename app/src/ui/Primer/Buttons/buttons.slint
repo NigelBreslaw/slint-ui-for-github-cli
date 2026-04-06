@@ -242,10 +242,10 @@ enum Variant {
 }
 
 struct ButtonStyle {
-    button-default-fgColor-rest: color, // text color
-    button-default-bgColor-active: color, // background
-    button-default-bgColor-hover: color, // background
-    button-default-borderColor-active: color, // border
+    button-default-fgColor-rest: color,
+    button-default-bgColor-active: color,
+    button-default-bgColor-hover: color,
+    button-default-borderColor-active: color,
 }
 
 export component IconButton {
@@ -255,22 +255,12 @@ export component IconButton {
     in property icon-source <=> img.source;
     callback clicked <=> ta.clicked;
 
-    property <ButtonStyle> dark-style: {
-        button-default-fgColor-rest: #9398A0,
+    in property <ButtonStyle> style: {
+        button-default-fgColor-rest: Tokens.iconButton-fgColor-rest,
         button-default-bgColor-active: Tokens.bgColor-inset,
-        button-default-bgColor-hover: #16191E,
-        button-default-borderColor-active: #3F444C
+        button-default-bgColor-hover: Tokens.iconButton-bgColor-hover,
+        button-default-borderColor-active: Tokens.color-btn-border,
     };
-
-    property <ButtonStyle> light-style: {
-        button-default-fgColor-rest: #59636e,
-        button-default-bgColor-active: Tokens.bgColor-inset,
-        button-default-bgColor-hover: #eff2f5,
-        button-default-borderColor-active: #D3D9DF
-    };
-
-
-    in property <ButtonStyle> style: Palette.color-scheme == ColorScheme.dark ? dark-style : light-style;
 
     width: size == Size.small ? 28px : size == Size.medium ? 32px : 40px;
     height: self.width;
