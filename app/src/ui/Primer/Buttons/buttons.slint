@@ -11,8 +11,23 @@ export enum ButtonVariant {
     link,
 }
 
-// PR1–4: medium for filled variants; link is content-sized (PR5 for full Size wiring).
-// Link label: StyledText + @markdown (see https://snapshots.slint.dev/master/docs/slint/reference/elements/styled-text/ ).
+struct ButtonPaint {
+    bg: color,
+    border: color,
+    fg: color,
+}
+
+struct ButtonShadowState {
+    back-color: color,
+    back-blur: length,
+    back-y: length,
+    front-color: color,
+    front-blur: length,
+    front-y: length,
+}
+
+// Medium filled variants; link is content-sized (PR5 for full Size wiring).
+// Colors: Tokens (primer-tokens naming). Link label: StyledText + @markdown.
 export component Button {
     in property <ButtonVariant> variant: ButtonVariant.default;
     in property <bool> disabled: false;
@@ -20,158 +35,235 @@ export component Button {
     callback clicked <=> ta.clicked;
 
     private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
-
-    // colors.btn + colors.btn.primary — legacy-theme dark.ts / light.ts innermost fallbacks
-    private property <color> default-fg: is-dark ? #c9d1d9 : #24292f;
-    private property <color> default-bg-rest: is-dark ? #21262d : #f6f8fa;
-    private property <color> default-border: is-dark ? #3f444c : #d3d9df;
-    private property <color> default-bg-hover: is-dark ? #252b33 : #eff2f5;
-    private property <color> default-bg-active: is-dark ? hsv(207.273, 0.215686, 0.2, 1) : hsv(228, 0.020833, 0.941176, 1);
-
-    private property <color> primary-fg: #ffffff;
-    private property <color> primary-bg-rest: is-dark ? #238636 : #1f883d;
-    private property <color> primary-border: is-dark ? rgba(240, 246, 252, 0.1) : rgba(31, 35, 40, 0.15);
-    private property <color> primary-bg-hover: is-dark ? #2ea043 : #1a7f37;
-    private property <color> primary-bg-active: is-dark ? #238636 : hsv(137.053, 0.798319, 0.466667, 1);
-    private property <color> primary-fg-disabled: is-dark ? rgba(255, 255, 255, 0.5) : rgba(255, 255, 255, 0.8);
-    private property <color> primary-bg-disabled: is-dark ? rgba(35, 134, 54, 0.6) : #94d3a2;
-
-    private property <color> danger-bg-rest: default-bg-rest;
-    private property <color> danger-border-rest: default-border;
-    private property <color> danger-fg-rest: is-dark ? #f85149 : #cf222e;
-    private property <color> danger-fg-hover: #ffffff;
-    private property <color> danger-bg-hover: is-dark ? #da3633 : #cf222e;
-    private property <color> danger-border-hover: is-dark ? #f85149 : rgba(31, 35, 40, 0.15);
-    private property <color> danger-fg-active: #ffffff;
-    private property <color> danger-bg-active: is-dark ? #b62324 : #a40e26;
-    private property <color> danger-border-active: is-dark ? #ff7b72 : rgba(31, 35, 40, 0.15);
-    private property <color> danger-fg-disabled: is-dark ? rgba(248, 81, 73, 0.5) : rgba(207, 34, 46, 0.5);
-    private property <color> danger-bg-disabled: is-dark ? #0d1117 : #f6f8fa;
-
-    private property <color> invisible-bg-rest: #00000000;
-    private property <color> invisible-border-rest: #00000000;
-    private property <color> invisible-bg-hover: is-dark ? rgba(177, 186, 196, 0.12) : rgba(208, 215, 222, 0.32);
-    private property <color> invisible-bg-active: is-dark ? rgba(177, 186, 196, 0.2) : rgba(208, 215, 222, 0.48);
-    private property <color> invisible-bg-disabled: is-dark ? rgba(177, 186, 196, 0.08) : rgba(208, 215, 222, 0.24);
-    private property <color> invisible-border-disabled: invisible-bg-disabled;
-    private property <color> invisible-fg-disabled: is-dark ? #484f58 : #8c959f;
-    private property <color> link-fg-disabled: invisible-fg-disabled;
-
-    private property <color> default-fg-disabled: Tokens.fgColor-muted;
-
     private property <bool> is-link: variant == ButtonVariant.link;
-
-    private property <color> fill-bg:
-        disabled
-        ? (
-            variant == ButtonVariant.link ? #00000000
-            : variant == ButtonVariant.invisible ? invisible-bg-disabled
-            : variant == ButtonVariant.danger ? danger-bg-disabled
-            : variant == ButtonVariant.primary ? primary-bg-disabled
-            : default-bg-rest
-        )
-        : variant == ButtonVariant.link
-        ? #00000000
-        : variant == ButtonVariant.primary
-        ? (ta.pressed ? primary-bg-active : ta.has-hover ? primary-bg-hover : primary-bg-rest)
-        : variant == ButtonVariant.danger
-        ? (ta.pressed ? danger-bg-active : ta.has-hover ? danger-bg-hover : danger-bg-rest)
-        : variant == ButtonVariant.invisible
-        ? (ta.pressed ? invisible-bg-active : ta.has-hover ? invisible-bg-hover : invisible-bg-rest)
-        : (ta.pressed ? default-bg-active : ta.has-hover ? default-bg-hover : default-bg-rest);
-
-    private property <color> fill-border:
-        disabled
-        ? (
-            variant == ButtonVariant.link ? #00000000
-            : variant == ButtonVariant.invisible ? invisible-border-disabled
-            : variant == ButtonVariant.danger ? danger-border-rest
-            : variant == ButtonVariant.primary ? primary-border
-            : default-border
-        )
-        : variant == ButtonVariant.link
-        ? #00000000
-        : variant == ButtonVariant.primary
-        ? primary-border
-        : variant == ButtonVariant.danger
-        ? (ta.pressed ? danger-border-active : ta.has-hover ? danger-border-hover : danger-border-rest)
-        : variant == ButtonVariant.invisible
-        ? invisible-border-rest
-        : default-border;
-
-    private property <color> label-color:
-        disabled
-        ? (
-            variant == ButtonVariant.link ? link-fg-disabled
-            : variant == ButtonVariant.invisible ? invisible-fg-disabled
-            : variant == ButtonVariant.danger ? danger-fg-disabled
-            : variant == ButtonVariant.primary ? primary-fg-disabled
-            : default-fg-disabled
-        )
-        : variant == ButtonVariant.link
-        ? Tokens.fgColor-link
-        : variant == ButtonVariant.primary
-        ? primary-fg
-        : variant == ButtonVariant.danger
-        ? (ta.pressed ? danger-fg-active : ta.has-hover ? danger-fg-hover : danger-fg-rest)
-        : default-fg;
-
-    private property <color> shadow-none: #00000000;
     private property <bool> primary-pressed-light: variant == ButtonVariant.primary && !is-dark && ta.pressed;
     private property <bool> danger-pressed-light: variant == ButtonVariant.danger && !is-dark && ta.pressed;
     private property <bool> danger-hover-light: variant == ButtonVariant.danger && !is-dark && ta.has-hover && !ta.pressed;
 
-    private property <color> btn-shadow-back-color:
-        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark
-        ? shadow-none
-        : danger-pressed-light
-        ? rgba(76, 0, 20, 0.2)
-        : primary-pressed-light
-        ? rgba(0, 45, 17, 0.2)
-        : danger-hover-light
-        ? rgba(31, 35, 40, 0.1)
-        : variant == ButtonVariant.primary
-        ? rgba(31, 35, 40, 0.1)
-        : variant == ButtonVariant.danger
-        ? rgba(31, 35, 40, 0.04)
-        : rgba(31, 35, 40, 0.04);
+    pure function button-paint(v: ButtonVariant, dis: bool, hover: bool, pressed: bool) -> ButtonPaint {
+        if dis {
+            if v == ButtonVariant.link {
+                return {
+                    bg: Tokens.button-link-bgColor-rest,
+                    border: Tokens.button-link-borderColor-rest,
+                    fg: Tokens.control-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.invisible {
+                return {
+                    bg: Tokens.button-invisible-bgColor-disabled,
+                    border: Tokens.button-invisible-borderColor-disabled,
+                    fg: Tokens.button-invisible-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.danger {
+                return {
+                    bg: Tokens.button-danger-bgColor-disabled,
+                    border: Tokens.button-danger-borderColor-disabled,
+                    fg: Tokens.button-danger-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.primary {
+                return {
+                    bg: Tokens.button-primary-bgColor-disabled,
+                    border: Tokens.button-primary-borderColor-disabled,
+                    fg: Tokens.button-primary-fgColor-disabled,
+                };
+            }
+            return {
+                bg: Tokens.button-default-bgColor-disabled,
+                border: Tokens.button-default-borderColor-disabled,
+                fg: Tokens.control-fgColor-disabled,
+            };
+        }
+        if v == ButtonVariant.link {
+            return {
+                bg: Tokens.button-link-bgColor-rest,
+                border: Tokens.button-link-borderColor-rest,
+                fg: Tokens.fgColor-link,
+            };
+        }
+        if v == ButtonVariant.primary {
+            if pressed {
+                return {
+                    bg: Tokens.button-primary-bgColor-active,
+                    border: Tokens.button-primary-borderColor-rest,
+                    fg: Tokens.button-primary-fgColor-rest,
+                };
+            }
+            if hover {
+                return {
+                    bg: Tokens.button-primary-bgColor-hover,
+                    border: Tokens.button-primary-borderColor-rest,
+                    fg: Tokens.button-primary-fgColor-rest,
+                };
+            }
+            return {
+                bg: Tokens.button-primary-bgColor-rest,
+                border: Tokens.button-primary-borderColor-rest,
+                fg: Tokens.button-primary-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.danger {
+            if pressed {
+                return {
+                    bg: Tokens.button-danger-bgColor-active,
+                    border: Tokens.button-danger-borderColor-active,
+                    fg: Tokens.button-danger-fgColor-active,
+                };
+            }
+            if hover {
+                return {
+                    bg: Tokens.button-danger-bgColor-hover,
+                    border: Tokens.button-danger-borderColor-hover,
+                    fg: Tokens.button-danger-fgColor-hover,
+                };
+            }
+            return {
+                bg: Tokens.button-danger-bgColor-rest,
+                border: Tokens.button-danger-borderColor-rest,
+                fg: Tokens.button-danger-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.invisible {
+            if pressed {
+                return {
+                    bg: Tokens.button-invisible-bgColor-active,
+                    border: Tokens.button-invisible-borderColor-rest,
+                    fg: Tokens.button-invisible-fgColor-rest,
+                };
+            }
+            if hover {
+                return {
+                    bg: Tokens.button-invisible-bgColor-hover,
+                    border: Tokens.button-invisible-borderColor-rest,
+                    fg: Tokens.button-invisible-fgColor-rest,
+                };
+            }
+            return {
+                bg: Tokens.button-invisible-bgColor-rest,
+                border: Tokens.button-invisible-borderColor-rest,
+                fg: Tokens.button-invisible-fgColor-rest,
+            };
+        }
+        // default — border matches legacy filled default (same rest border for hover/active)
+        if pressed {
+            return {
+                bg: Tokens.button-default-bgColor-active,
+                border: Tokens.button-default-borderColor-rest,
+                fg: Tokens.button-default-fgColor-rest,
+            };
+        }
+        if hover {
+            return {
+                bg: Tokens.button-default-bgColor-hover,
+                border: Tokens.button-default-borderColor-rest,
+                fg: Tokens.button-default-fgColor-rest,
+            };
+        }
+        return {
+            bg: Tokens.button-default-bgColor-rest,
+            border: Tokens.button-default-borderColor-rest,
+            fg: Tokens.button-default-fgColor-rest,
+        };
+    }
 
-    private property <length> btn-shadow-back-blur:
-        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 3px : 0px;
+    pure function button-shadow(
+        v: ButtonVariant,
+        dis: bool,
+        dark: bool,
+        d-pl: bool,
+        p-pl: bool,
+        d-hv: bool,
+    ) -> ButtonShadowState {
+        if v == ButtonVariant.invisible || v == ButtonVariant.link || dis || dark {
+            return {
+                back-color: #00000000,
+                back-blur: 0px,
+                back-y: 0px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if d-pl {
+            return {
+                back-color: Tokens.button-shadow-danger-back-pressed-light,
+                back-blur: 3px,
+                back-y: 2px,
+                front-color: Tokens.button-shadow-danger-front-pressed-light,
+                front-blur: 1px,
+                front-y: 1px,
+            };
+        }
+        if p-pl {
+            return {
+                back-color: Tokens.button-shadow-primary-back-pressed-light,
+                back-blur: 3px,
+                back-y: 2px,
+                front-color: Tokens.button-shadow-primary-front-pressed-light,
+                front-blur: 1px,
+                front-y: 1px,
+            };
+        }
+        if d-hv {
+            return {
+                back-color: Tokens.button-shadow-elevated-light,
+                back-blur: 0px,
+                back-y: 1px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if v == ButtonVariant.primary {
+            return {
+                back-color: Tokens.button-shadow-elevated-light,
+                back-blur: 0px,
+                back-y: 1px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if v == ButtonVariant.danger {
+            return {
+                back-color: Tokens.button-shadow-ambient-light,
+                back-blur: 0px,
+                back-y: 1px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        return {
+            back-color: Tokens.button-shadow-ambient-light,
+            back-blur: 0px,
+            back-y: 1px,
+            front-color: #00000000,
+            front-blur: 0px,
+            front-y: 0px,
+        };
+    }
 
-    private property <length> btn-shadow-back-y:
-        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 2px : 1px;
-
-    private property <color> btn-shadow-front-color:
-        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark
-        ? shadow-none
-        : danger-pressed-light
-        ? rgba(76, 0, 20, 0.14)
-        : primary-pressed-light
-        ? rgba(0, 45, 17, 0.14)
-        : shadow-none;
-
-    private property <length> btn-shadow-front-blur:
-        variant != ButtonVariant.invisible && variant != ButtonVariant.link && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
-
-    private property <length> btn-shadow-front-y:
-        variant != ButtonVariant.invisible && variant != ButtonVariant.link && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
+    private property <ButtonPaint> paint: button-paint(variant, disabled, ta.has-hover, ta.pressed);
+    private property <ButtonShadowState> btn-sh: button-shadow(variant, disabled, is-dark, danger-pressed-light, primary-pressed-light, danger-hover-light);
 
     DoubleDropShadow {
         width: parent.width;
         height: parent.height;
         border-radius: 6px;
-        back-layer: { offset-x: 0px, offset-y: btn-shadow-back-y, blur: btn-shadow-back-blur, color: btn-shadow-back-color };
-        front-layer: { offset-x: 0px, offset-y: btn-shadow-front-y, blur: btn-shadow-front-blur, color: btn-shadow-front-color };
+        back-layer: { offset-x: 0px, offset-y: btn-sh.back-y, blur: btn-sh.back-blur, color: btn-sh.back-color };
+        front-layer: { offset-x: 0px, offset-y: btn-sh.front-y, blur: btn-sh.front-blur, color: btn-sh.front-color };
     }
 
     Rectangle {
         width: parent.width;
         height: parent.height;
-        background: fill-bg;
+        background: paint.bg;
         border-radius: is-link ? 0px : 6px;
         border-width: is-link ? 0px : 1px;
-        border-color: fill-border;
+        border-color: paint.border;
     }
 
     text-label := Text {
@@ -179,7 +271,7 @@ export component Button {
         width: 100%;
         height: 100%;
         text: root.label;
-        color: label-color;
+        color: paint.fg;
         font-size: 14px;
         font-weight: 600;
         vertical-alignment: center;
@@ -192,7 +284,7 @@ export component Button {
         width: 100%;
         height: 100%;
         text: root.label;
-        color: label-color;
+        color: paint.fg;
         font-size: 14px;
         font-weight: 600;
         horizontal-alignment: left;
@@ -203,7 +295,7 @@ export component Button {
         visible: is-link && !disabled && !ta.has-hover;
         width: 100%;
         height: 100%;
-        text: @markdown("\{label}");
+        text: @markdown("[\{label}](#)");
         horizontal-alignment: left;
         vertical-alignment: center;
         link-color: Tokens.fgColor-link;
@@ -213,7 +305,7 @@ export component Button {
         visible: is-link && !disabled && ta.has-hover;
         width: 100%;
         height: 100%;
-        text: @markdown("[\{label}](#)");
+        text: @markdown("[<u>\{label}</u>](#)");
         horizontal-alignment: left;
         vertical-alignment: center;
         link-color: Tokens.fgColor-link;
