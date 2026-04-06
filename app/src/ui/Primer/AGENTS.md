@@ -1,0 +1,90 @@
+# Primer Slint — guide for contributors and AI assistants
+
+This document stands alone in the repo. Past chats or Cursor plan files are not a reliable archive; use **local upstream clones** and the files linked below when porting or extending components.
+
+## Purpose
+
+- **Audience:** Humans and AI assistants adding **Primer-style** UI in Slint under `app/src/ui/Primer/`.
+- **Goals:** Stay close to Primer naming and layering, avoid duplicating color literals across globals, keep `export global` declaration order valid for Slint, and ship changes in reviewable steps.
+
+## Upstream references (consult before inventing values)
+
+| Location | Role |
+|----------|------|
+| `/Users/nigelb/slint/primer-tokens` | **primer-tokens** — functional and component token JSON5 (e.g. `src/tokens/functional/color/control.json5`, `functional/size/size.json5`, `component/button.json5`, shadow tokens). Use for **token names**, **layering** (base → functional → component), and **hex / hsla / hsv** as the source of truth when porting. |
+| `/Users/nigelb/slint/primer-ui-react` | **primer-ui-react** — how tokens become **CSS custom properties** in `*.module.css` (e.g. `internal/components/TextInputWrapper.module.css`, `Select/Select.module.css`, button-related styles). Use for **interaction states**, **sizes**, **validation**, and **variable names**, even when this Slint port is simplified. |
+
+Also see the public docs: [Primer Design System](https://primer.style/design/system).
+
+## In-repo architecture
+
+- **Barrel:** [`primer.slint`](primer.slint) re-exports Primer components plus `LayoutTokens`, `PrimerColors`, `ButtonTokens`, and `Size`.
+- **Tokens:** [`tokens.slint`](tokens.slint) holds **several `export global` singletons** in one file. **Order matters:** declare `PrimerColors` before `ButtonTokens`, because `ButtonTokens` references `PrimerColors` `out` properties.
+
+### Token layers (current convention)
+
+| Global | Contents |
+|--------|----------|
+| **LayoutTokens** | Lengths, typography sizes, line heights, control dimensions, padding, icon sizes, border radius. **No** light/dark color scheme. |
+| **PrimerColors** | Semantic surfaces (fg, bg, border, link, overlay, shadows, success validation, control-trigger shadows, etc.) plus **shared primitives** (e.g. emphasis greens, `fgOnEmphasis`) so each **hex / rgb / hsv** appears **once** when values are shared. |
+| **ButtonTokens** | GitHub-style `color-btn-*` and resolved `button-*` colors, action-list tints, icon-button tints, filled-button shadow colors. Composes from **`PrimerColors` `out` properties** where possible instead of repeating literals. |
+
+**Cross-global rule:** Treat other globals as exposing only their **`out`** bindings to dependents. Do not rely on reading another global’s **private** fields from outside that global.
+
+```mermaid
+flowchart TB
+  LT[LayoutTokens]
+  PC[PrimerColors]
+  BT[ButtonTokens]
+  LT --> Components[Slint components]
+  PC --> Components
+  PC --> BT
+  BT --> Components
+```
+
+## Adding design tokens (checklist)
+
+1. **Naming** — Prefer Primer / CSS-variable families: `fgColor-*`, `bgColor-*`, `borderColor-*`, `control-*`, `button-*`, `shadow-*`, etc.
+2. **Reuse first** — Check existing `out` properties on `LayoutTokens`, `PrimerColors`, and `ButtonTokens` before adding literals (e.g. chrome: `bgColor-default`, `borderColor-default`, `fgColor-muted`; buttons: `ButtonTokens` chains).
+3. **New shared color** — Add **one** private literal (or a small primitive group) under **`PrimerColors`**, expose semantics via **`out`**, then reference from **`ButtonTokens`** or components. **Do not** repeat the same hex for the same meaning in multiple globals.
+4. **New length / radius / typography** — Prefer **`LayoutTokens`** unless the value is truly one-off and never reused (then a **private** on the component is acceptable).
+5. **Scheme** — Where colors depend on theme, follow the existing pattern: `property <ColorScheme> color-scheme: Palette.color-scheme` and `color-scheme == ColorScheme.dark ? *-dark : *-light` (or equivalent) on `out` properties.
+6. **Compile** — After token edits, verify Slint loads the app entry (see [Verification](#verification)).
+
+## Adding a new Primer component
+
+1. Find the closest **primer-ui-react** component and the matching **primer-tokens** functional/component files.
+2. Add `app/src/ui/Primer/<Name>/` with a clear root `*.slint` (and subfolders if needed).
+3. **Imports:**
+   - App views / chrome: **`PrimerColors`** and **`LayoutTokens`** (from `tokens.slint` or the `primer.slint` barrel).
+   - Controls that use the GitHub button palette or danger/success alignment: **`ButtonTokens`** + **`PrimerColors`** as needed (see [`Buttons/buttons.slint`](Buttons/buttons.slint) and [`Select/select.slint`](Select/select.slint)).
+4. **Export** new components from [`primer.slint`](primer.slint) when they are part of the public Primer surface for this app.
+5. **Docs** — User-facing notes go in [`readme.md`](readme.md). Process, tokens, and PR workflow stay in **this file** (`AGENTS.md`).
+
+## Typical PR sequence for a new component
+
+Split or merge PRs by size; small widgets can combine steps.
+
+| Stage | Focus |
+|-------|--------|
+| **PR1 — Spike / API** | Component shell, properties, callbacks, minimal layout; must compile; PR description lists upstream paths you mirrored. |
+| **PR2 — Tokens** | New `LayoutTokens` / `PrimerColors` / `ButtonTokens` entries; **deduplicate** literals; cite primer-tokens keys or CSS vars in the PR. |
+| **PR3 — Visual parity** | Hover, disabled, focus, validation, sizing, shadows, typography; optional screenshots or Storybook references from primer-ui-react. |
+| **PR4 — Integration** | Wire into `main.slint` or a view; TypeScript bridges if needed; avoid unrelated refactors. |
+| **PR5 — Docs / cleanup** | Update `readme.md` or focused comments; remove dead code; update `AGENTS.md` if the process or layers change. |
+
+Trivial components may merge PR1+PR2; large or risky work may split PR3 further.
+
+## Verification
+
+From the **monorepo root**:
+
+```bash
+pnpm typecheck
+```
+
+Slint: load `app/src/ui/main.slint` the same way the app does (e.g. `slint-ui` `loadFile` in `app/src/main.ts`). Fix compile errors before merging token or component changes.
+
+## Limitations
+
+This Slint Primer folder is **incomplete** and not pixel-identical to GitHub’s production CSS. Prefer consistency **within this repo** and traceability to **primer-tokens** / **primer-ui-react** over perfect parity in one pass.

@@ -1,5 +1,7 @@
 ### A simplified version of Microsoft's Primer Design System written in Slint.
 
+Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) for upstream references, token layers, and a suggested PR workflow when adding components.
+
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.
 
