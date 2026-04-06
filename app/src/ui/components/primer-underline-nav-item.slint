@@ -23,7 +23,7 @@ export component PrimerUnderlineNavItem {
             text: root.label;
             font-size: 13px;
             font-weight: root.selected ? 600 : 500;
-            color: root.selected ? Tokens.fgColor-default : #8b949e;
+            color: root.selected ? Tokens.fgColor-default : Tokens.fgColor-muted;
             vertical-alignment: center;
         }
     }
@@ -32,7 +32,7 @@ export component PrimerUnderlineNavItem {
         y: parent.height - self.height;
         height: 2px;
         width: 100%;
-        background: root.selected ? #f78166 : #00000000;
+        background: root.selected ? Tokens.accent-underline : #00000000;
     }
 
     ta := TouchArea { }

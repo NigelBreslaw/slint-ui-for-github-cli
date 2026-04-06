@@ -20,9 +20,9 @@ component TableRow {
         Rectangle {
             width: 190px;
             min-height: 40px;
-            background: header-row ? #21262d : #0d1117;
+            background: header-row ? Tokens.bgColor-muted : Tokens.bgColor-neutral-muted;
             border-width: 1px;
-            border-color: #30363d;
+            border-color: Tokens.borderColor-muted;
 
             Text {
                 x: 12px;
@@ -39,9 +39,9 @@ component TableRow {
         Rectangle {
             horizontal-stretch: 1;
             min-height: 40px;
-            background: header-row ? #21262d : #161b22;
+            background: header-row ? Tokens.bgColor-muted : Tokens.bgColor-canvas-subtle;
             border-width: 1px;
-            border-color: #30363d;
+            border-color: Tokens.borderColor-muted;
 
             Text {
                 x: 12px;
@@ -50,7 +50,7 @@ component TableRow {
                 text: value-text;
                 font-size: header-row ? 14px : 15px;
                 font-weight: header-row ? 600 : 400;
-                color: header-row ? Tokens.fgColor-default : #c9d1d9;
+                color: header-row ? Tokens.fgColor-default : Tokens.fgColor-secondary;
                 wrap: word-wrap;
             }
         }

@@ -1,3 +1,4 @@
+import { Palette } from "std-widgets.slint";
 import { Size, Tokens } from "../tokens.slint";
 
 export component ButtonBlack {
@@ -105,7 +106,7 @@ export component IconButton {
     };
 
 
-    in property <ButtonStyle> style: Tokens.color-scheme == ColorScheme.dark ? dark-style : light-style;
+    in property <ButtonStyle> style: Palette.color-scheme == ColorScheme.dark ? dark-style : light-style;
 
     width: size == Size.small ? 28px : size == Size.medium ? 32px : 40px;
     height: self.width;

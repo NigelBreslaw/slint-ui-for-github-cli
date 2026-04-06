@@ -1,3 +1,4 @@
+import { Palette } from "std-widgets.slint";
 import { Tokens } from "../tokens.slint";
 
 export component Avatar {
@@ -20,7 +21,7 @@ export component Avatar {
 
     Rectangle {
         border-width: 1px;
-        border-color: Tokens.color-scheme == ColorScheme.dark ? #28292d : #D7D8DB;
+        border-color: Palette.color-scheme == ColorScheme.dark ? #28292d : #D7D8DB;
         border-radius: self.width / 2;
     }
 

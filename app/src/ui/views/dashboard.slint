@@ -52,7 +52,7 @@ export component Dashboard {
             Rectangle {
                 height: 1px;
                 width: 100%;
-                background: #30363d;
+                background: Tokens.borderColor-muted;
             }
         }
 
@@ -65,7 +65,7 @@ export component Dashboard {
                 text: "Review requests";
                 font-size: 14px;
                 font-weight: 600;
-                color: #c9d1d9;
+                color: Tokens.fgColor-secondary;
             }
 
             Rectangle {
@@ -108,7 +108,7 @@ export component Dashboard {
 
             if AppState.review-requests-load-status != "" && AppState.review-requests-load-status != "Loading review requests…": Text {
                 text: AppState.review-requests-load-status;
-                color: #8b949e;
+                color: Tokens.fgColor-muted;
                 wrap: word-wrap;
             }
 
@@ -116,7 +116,7 @@ export component Dashboard {
                 width: 100%;
                 for row[index] in AppState.review-requests-model: Rectangle {
                     height: 56px;
-                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : #161b22;
+                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : Tokens.bgColor-canvas-subtle;
 
                     TouchArea {
                         clicked => {
@@ -135,7 +135,7 @@ export component Dashboard {
                             Text {
                                 text: row.repo_label;
                                 font-size: 12px;
-                                color: #8b949e;
+                                color: Tokens.fgColor-muted;
                             }
                         }
                     }
@@ -152,7 +152,7 @@ export component Dashboard {
                 text: "Dependabot alerts";
                 font-size: 14px;
                 font-weight: 600;
-                color: #c9d1d9;
+                color: Tokens.fgColor-secondary;
             }
 
             if AppState.security-alerts-load-status == "Loading security alerts…": HorizontalLayout {
@@ -166,13 +166,13 @@ export component Dashboard {
 
             if AppState.security-alerts-load-status != "" && AppState.security-alerts-load-status != "Loading security alerts…": Text {
                 text: AppState.security-alerts-load-status;
-                color: #8b949e;
+                color: Tokens.fgColor-muted;
                 wrap: word-wrap;
             }
 
             if AppState.security-alerts-data-ready && AppState.security-alerts-total == 0 && AppState.security-alerts-load-status == "": Text {
                 text: "No Dependabot alerts returned for this repository.";
-                color: #8b949e;
+                color: Tokens.fgColor-muted;
                 font-size: 13px;
                 wrap: word-wrap;
             }
@@ -181,7 +181,7 @@ export component Dashboard {
                 width: 100%;
                 for row[index] in AppState.security-alerts-model: Rectangle {
                     height: 56px;
-                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : #161b22;
+                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : Tokens.bgColor-canvas-subtle;
 
                     TouchArea {
                         clicked => {
@@ -200,7 +200,7 @@ export component Dashboard {
                             Text {
                                 text: row.subtitle;
                                 font-size: 12px;
-                                color: #8b949e;
+                                color: Tokens.fgColor-muted;
                                 overflow: elide;
                             }
                         }

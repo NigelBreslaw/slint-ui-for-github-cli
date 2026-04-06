@@ -12,6 +12,7 @@ import { AppHeader } from "components/AppHeader.slint";
 import { SettingsState } from "../bridges/slint/settings-state.slint";
 import { TimeReportingState, TimeReportingWeekRow } from "../bridges/slint/time-reporting-state.slint";
 import { Spinner } from "Primer/primer.slint";
+import { Tokens } from "Primer/tokens.slint";
 import { Settings } from "views/settings.slint";
 import { Dashboard } from "views/dashboard.slint";
 import { ButtonBlack } from "Primer/Buttons/buttons.slint";
@@ -27,6 +28,7 @@ import "../assets/fonts/VeraMono.ttf"; // "Bitstream Vera Sans Mono"
 export { AppView, Authed, AppState, DashboardTab, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
 
 export component MainWindow inherits Window {
+
     callback close-auth-window;
     callback show_auth_window;
     callback open-github-device-clicked;
@@ -63,7 +65,6 @@ export component MainWindow inherits Window {
     title: "GitHub CLI";
     default-font-family: "Mona Sans";
     default-font-size: 14px;
-
 
     HorizontalLayout {
         alignment: center;
@@ -178,7 +179,7 @@ export component MainWindow inherits Window {
                 text: root.gh-cli-version-block-detail;
                 font-size: 14px;
                 horizontal-alignment: center;
-                color: #8b949e;
+                color: Tokens.fgColor-muted;
                 wrap: word-wrap;
             }
 

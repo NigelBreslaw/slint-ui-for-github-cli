@@ -8,7 +8,7 @@ export enum Size {
 
 export global Tokens {
 
-    in-out property <ColorScheme> color-scheme: Palette.color-scheme;
+    property <ColorScheme> color-scheme: Palette.color-scheme;
 
     property <color> bgColor-inset-dark: #020408;
     property <color> bgColor-inset-light: #f7f8fa;
@@ -19,8 +19,46 @@ export global Tokens {
     property <color> borderColor-default-dark: #3e444d;
     property <color> borderColor-default-light: #D3D9DF;
 
+    property <color> fgColor-muted-dark: #8b949e;
+    property <color> fgColor-muted-light: #656d76;
+    property <color> fgColor-secondary-dark: #c9d1d9;
+    property <color> fgColor-secondary-light: #57606a;
+    property <color> bgColor-canvas-subtle-dark: #161b22;
+    property <color> bgColor-canvas-subtle-light: #f6f8fa;
+    property <color> bgColor-muted-dark: #21262d;
+    property <color> bgColor-muted-light: #eff2f5;
+    property <color> bgColor-neutral-muted-dark: #0d1117;
+    property <color> bgColor-neutral-muted-light: #ffffff;
+    property <color> borderColor-muted-dark: #30363d;
+    property <color> borderColor-muted-light: #d0d7de;
+    property <color> accent-underline-dark: #f78166;
+    property <color> accent-underline-light: #cf432e;
+    property <color> fgColor-placeholder-dark: #6e7681;
+    property <color> fgColor-placeholder-light: #8c959f;
+    property <color> fgColor-link-dark: #58a6ff;
+    property <color> fgColor-link-light: #0969da;
+    property <color> overlay-scrim-dark: #010409aa;
+    property <color> overlay-scrim-light: #1f232866;
+    property <color> drop-shadow-dark: #01040966;
+    property <color> drop-shadow-light: #1f232833;
+    property <color> menu-separator-dark: #2b3139;
+    property <color> menu-separator-light: #d8dee4;
+
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
     out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
     out property <color> borderColor-default: color-scheme == ColorScheme.dark ? borderColor-default-dark : borderColor-default-light;
+
+    out property <color> fgColor-muted: color-scheme == ColorScheme.dark ? fgColor-muted-dark : fgColor-muted-light;
+    out property <color> fgColor-secondary: color-scheme == ColorScheme.dark ? fgColor-secondary-dark : fgColor-secondary-light;
+    out property <color> bgColor-canvas-subtle: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
+    out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-muted-dark : bgColor-muted-light;
+    out property <color> bgColor-neutral-muted: color-scheme == ColorScheme.dark ? bgColor-neutral-muted-dark : bgColor-neutral-muted-light;
+    out property <color> borderColor-muted: color-scheme == ColorScheme.dark ? borderColor-muted-dark : borderColor-muted-light;
+    out property <color> accent-underline: color-scheme == ColorScheme.dark ? accent-underline-dark : accent-underline-light;
+    out property <color> fgColor-placeholder: color-scheme == ColorScheme.dark ? fgColor-placeholder-dark : fgColor-placeholder-light;
+    out property <color> fgColor-link: color-scheme == ColorScheme.dark ? fgColor-link-dark : fgColor-link-light;
+    out property <color> overlay-scrim: color-scheme == ColorScheme.dark ? overlay-scrim-dark : overlay-scrim-light;
+    out property <color> drop-shadow: color-scheme == ColorScheme.dark ? drop-shadow-dark : drop-shadow-light;
+    out property <color> menu-separator: color-scheme == ColorScheme.dark ? menu-separator-dark : menu-separator-light;
 }
