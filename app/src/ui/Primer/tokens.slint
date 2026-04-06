@@ -33,14 +33,16 @@ export global LayoutTokens {
     out property <length> borderRadius-medium: 6px;
 }
 
-// Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; not button-palette literals.
+// Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
 export global PrimerColors {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
     // Private literals from primer-ui-react legacy-theme colors/dark.ts + light.ts innermost fallbacks.
+    // Single storage per hex/rgb/hsv; semantic tokens alias primitives (also shared with ButtonTokens via `out`).
     property <color> bgColor-inset-dark: #010409;
-    property <color> bgColor-inset-light: #f6f8fa;
+    property <color> canvas-subtle-light: #f6f8fa;
+    property <color> bgColor-inset-light: canvas-subtle-light;
     property <color> bgColor-default-dark: #0d1117;
     property <color> bgColor-default-light: #ffffff;
     property <color> fgColor-default-dark: #e6edf3;
@@ -54,7 +56,7 @@ export global PrimerColors {
     property <color> fgColor-subtle-light: #6e7781;
 
     property <color> bgColor-canvas-subtle-dark: #161b22;
-    property <color> bgColor-canvas-subtle-light: #f6f8fa;
+    property <color> bgColor-canvas-subtle-light: canvas-subtle-light;
 
     property <color> bgColor-neutral-muted-dark: rgba(110, 118, 129, 0.1);
     property <color> bgColor-neutral-muted-light: rgba(234, 238, 242, 0.5);
@@ -81,11 +83,19 @@ export global PrimerColors {
     property <color> actionListItem-inline-divider-dark: rgba(48, 54, 61, 0.48);
     property <color> actionListItem-inline-divider-light: rgba(208, 215, 222, 0.48);
 
-    // Validation / form success (primer functional fgColor.success + border emphasis; TextInput success border uses success emphasis).
+    // Greens: primer scale / success fg + success emphasis (same hex as GitHub primary button bg in each mode).
+    property <color> green-success-fg-light: #1a7f37;
     property <color> fgColor-success-dark: #3fb950;
-    property <color> fgColor-success-light: #1a7f37;
-    property <color> borderColor-success-emphasis-dark: #238636;
-    property <color> borderColor-success-emphasis-light: #1f883d;
+    property <color> fgColor-success-light: green-success-fg-light;
+    property <color> green-emphasis-dark: #238636;
+    property <color> green-emphasis-light: #1f883d;
+    property <color> borderColor-success-emphasis-dark: green-emphasis-dark;
+    property <color> borderColor-success-emphasis-light: green-emphasis-light;
+    // Primary button selected bg (light): hsv from legacy theme — stored once here for ButtonTokens.
+    property <color> button-primary-selected-bg-light: hsv(137.053, 0.798319, 0.466667, 1);
+    property <color> fg-on-emphasis: #ffffff;
+    property <color> green-primary-hover-dark: #2ea043;
+    property <color> green-primary-disabled-bg-dark: rgba(35, 134, 54, 0.6);
 
     // Stacked inset shadow on control triggers (Select); dark: #010409 @ ~40% / ~60% alpha. Light: soft neutral layers.
     property <color> shadow-controlTrigger-back-dark: #01040966;
@@ -114,9 +124,14 @@ export global PrimerColors {
     out property <color> borderColor-success-emphasis: color-scheme == ColorScheme.dark ? borderColor-success-emphasis-dark : borderColor-success-emphasis-light;
     out property <color> shadow-controlTrigger-back: color-scheme == ColorScheme.dark ? shadow-controlTrigger-back-dark : shadow-controlTrigger-back-light;
     out property <color> shadow-controlTrigger-front: color-scheme == ColorScheme.dark ? shadow-controlTrigger-front-dark : shadow-controlTrigger-front-light;
+    out property <color> buttonPrimarySelectedBackgroundLight: button-primary-selected-bg-light;
+    out property <color> fgOnEmphasis: fg-on-emphasis;
+    out property <color> greenPrimaryHoverDark: green-primary-hover-dark;
+    out property <color> greenPrimaryDisabledBgDark: green-primary-disabled-bg-dark;
 }
 
 // color-btn-*, button-*, filled-button shadows, iconButton palette, control disabled fg. Used by Button / IconButton.
+// Hex/rgb/hsv literals live in PrimerColors when shared; this global only composes scheme + internal aliases.
 export global ButtonTokens {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
@@ -124,68 +139,32 @@ export global ButtonTokens {
     property <color> color-btn-text-dark: #c9d1d9;
     property <color> color-btn-text-light: #24292f;
 
-    property <color> color-btn-bg-dark: #21262d;
-    property <color> color-btn-bg-light: #f6f8fa;
-
-    property <color> color-btn-border-dark: #3f444c;
-    property <color> color-btn-border-light: #d3d9df;
+    property <color> color-btn-neutral-border-dark: #3f444c;
+    property <color> color-btn-neutral-border-light: #d3d9df;
 
     property <color> color-btn-hover-bg-dark: #252b33;
     property <color> color-btn-hover-bg-light: #eff2f5;
 
-    property <color> color-btn-hover-border-dark: #3f444c;
-    property <color> color-btn-hover-border-light: #d3d9df;
-
     property <color> color-btn-active-bg-dark: hsv(207.273, 0.215686, 0.2, 1);
     property <color> color-btn-active-bg-light: hsv(228, 0.020833, 0.941176, 1);
 
-    property <color> color-btn-active-border-dark: #3f444c;
-    property <color> color-btn-active-border-light: #d3d9df;
+    property <color> color-btn-primary-border-on-dark: rgba(240, 246, 252, 0.1);
+    property <color> color-btn-primary-border-on-light: rgba(31, 35, 40, 0.15);
 
-    property <color> color-btn-primary-text: #ffffff;
-
-    property <color> color-btn-primary-bg-dark: #238636;
-    property <color> color-btn-primary-bg-light: #1f883d;
-
-    property <color> color-btn-primary-border-dark: rgba(240, 246, 252, 0.1);
-    property <color> color-btn-primary-border-light: rgba(31, 35, 40, 0.15);
-
-    property <color> color-btn-primary-hover-bg-dark: #2ea043;
-    property <color> color-btn-primary-hover-bg-light: #1a7f37;
-
-    property <color> color-btn-primary-hover-border-dark: rgba(240, 246, 252, 0.1);
-    property <color> color-btn-primary-hover-border-light: rgba(31, 35, 40, 0.15);
-
-    property <color> color-btn-primary-selected-bg-dark: #238636;
-    property <color> color-btn-primary-selected-bg-light: hsv(137.053, 0.798319, 0.466667, 1);
+    property <color> color-btn-primary-disabled-bg-light: #94d3a2;
 
     property <color> color-btn-primary-disabled-text-dark: rgba(255, 255, 255, 0.5);
     property <color> color-btn-primary-disabled-text-light: rgba(255, 255, 255, 0.8);
 
-    property <color> color-btn-primary-disabled-bg-dark: rgba(35, 134, 54, 0.6);
-    property <color> color-btn-primary-disabled-bg-light: #94d3a2;
-
-    property <color> color-btn-primary-disabled-border-dark: rgba(240, 246, 252, 0.1);
-    property <color> color-btn-primary-disabled-border-light: rgba(31, 35, 40, 0.15);
-
-    property <color> color-btn-danger-text-dark: #f85149;
-    property <color> color-btn-danger-text-light: #cf222e;
-
-    property <color> color-btn-danger-hover-text: #ffffff;
+    property <color> color-btn-danger-fg-dark: #f85149;
+    property <color> color-btn-danger-fg-light: #cf222e;
 
     property <color> color-btn-danger-hover-bg-dark: #da3633;
-    property <color> color-btn-danger-hover-bg-light: #cf222e;
-
-    property <color> color-btn-danger-hover-border-dark: #f85149;
-    property <color> color-btn-danger-hover-border-light: rgba(31, 35, 40, 0.15);
-
-    property <color> color-btn-danger-selected-text: #ffffff;
 
     property <color> color-btn-danger-selected-bg-dark: #b62324;
     property <color> color-btn-danger-selected-bg-light: #a40e26;
 
     property <color> color-btn-danger-selected-border-dark: #ff7b72;
-    property <color> color-btn-danger-selected-border-light: rgba(31, 35, 40, 0.15);
 
     property <color> color-btn-danger-disabled-text-dark: rgba(248, 81, 73, 0.5);
     property <color> color-btn-danger-disabled-text-light: rgba(207, 34, 46, 0.5);
@@ -209,27 +188,27 @@ export global ButtonTokens {
 
     // --- Scheme-resolved color-btn-* (alias targets for button-* below)
     out property <color> color-btn-text: color-scheme == ColorScheme.dark ? color-btn-text-dark : color-btn-text-light;
-    out property <color> color-btn-bg: color-scheme == ColorScheme.dark ? color-btn-bg-dark : color-btn-bg-light;
-    out property <color> color-btn-border: color-scheme == ColorScheme.dark ? color-btn-border-dark : color-btn-border-light;
+    out property <color> color-btn-bg: color-scheme == ColorScheme.dark ? PrimerColors.borderColor-muted : PrimerColors.bgColor-canvas-subtle;
+    out property <color> color-btn-border: color-scheme == ColorScheme.dark ? color-btn-neutral-border-dark : color-btn-neutral-border-light;
     out property <color> color-btn-hover-bg: color-scheme == ColorScheme.dark ? color-btn-hover-bg-dark : color-btn-hover-bg-light;
-    out property <color> color-btn-hover-border: color-scheme == ColorScheme.dark ? color-btn-hover-border-dark : color-btn-hover-border-light;
+    out property <color> color-btn-hover-border: color-scheme == ColorScheme.dark ? color-btn-neutral-border-dark : color-btn-neutral-border-light;
     out property <color> color-btn-active-bg: color-scheme == ColorScheme.dark ? color-btn-active-bg-dark : color-btn-active-bg-light;
-    out property <color> color-btn-active-border: color-scheme == ColorScheme.dark ? color-btn-active-border-dark : color-btn-active-border-light;
+    out property <color> color-btn-active-border: color-scheme == ColorScheme.dark ? color-btn-neutral-border-dark : color-btn-neutral-border-light;
 
-    out property <color> color-btn-primary-bg: color-scheme == ColorScheme.dark ? color-btn-primary-bg-dark : color-btn-primary-bg-light;
-    out property <color> color-btn-primary-border: color-scheme == ColorScheme.dark ? color-btn-primary-border-dark : color-btn-primary-border-light;
-    out property <color> color-btn-primary-hover-bg: color-scheme == ColorScheme.dark ? color-btn-primary-hover-bg-dark : color-btn-primary-hover-bg-light;
-    out property <color> color-btn-primary-hover-border: color-scheme == ColorScheme.dark ? color-btn-primary-hover-border-dark : color-btn-primary-hover-border-light;
-    out property <color> color-btn-primary-selected-bg: color-scheme == ColorScheme.dark ? color-btn-primary-selected-bg-dark : color-btn-primary-selected-bg-light;
+    out property <color> color-btn-primary-bg: PrimerColors.borderColor-success-emphasis;
+    out property <color> color-btn-primary-border: color-scheme == ColorScheme.dark ? color-btn-primary-border-on-dark : color-btn-primary-border-on-light;
+    out property <color> color-btn-primary-hover-bg: color-scheme == ColorScheme.dark ? PrimerColors.greenPrimaryHoverDark : PrimerColors.fgColor-success;
+    out property <color> color-btn-primary-hover-border: color-scheme == ColorScheme.dark ? color-btn-primary-border-on-dark : color-btn-primary-border-on-light;
+    out property <color> color-btn-primary-selected-bg: color-scheme == ColorScheme.dark ? PrimerColors.borderColor-success-emphasis : PrimerColors.buttonPrimarySelectedBackgroundLight;
     out property <color> color-btn-primary-disabled-text: color-scheme == ColorScheme.dark ? color-btn-primary-disabled-text-dark : color-btn-primary-disabled-text-light;
-    out property <color> color-btn-primary-disabled-bg: color-scheme == ColorScheme.dark ? color-btn-primary-disabled-bg-dark : color-btn-primary-disabled-bg-light;
-    out property <color> color-btn-primary-disabled-border: color-scheme == ColorScheme.dark ? color-btn-primary-disabled-border-dark : color-btn-primary-disabled-border-light;
+    out property <color> color-btn-primary-disabled-bg: color-scheme == ColorScheme.dark ? PrimerColors.greenPrimaryDisabledBgDark : color-btn-primary-disabled-bg-light;
+    out property <color> color-btn-primary-disabled-border: color-scheme == ColorScheme.dark ? color-btn-primary-border-on-dark : color-btn-primary-border-on-light;
 
-    out property <color> color-btn-danger-text: color-scheme == ColorScheme.dark ? color-btn-danger-text-dark : color-btn-danger-text-light;
-    out property <color> color-btn-danger-hover-bg: color-scheme == ColorScheme.dark ? color-btn-danger-hover-bg-dark : color-btn-danger-hover-bg-light;
-    out property <color> color-btn-danger-hover-border: color-scheme == ColorScheme.dark ? color-btn-danger-hover-border-dark : color-btn-danger-hover-border-light;
+    out property <color> color-btn-danger-text: color-scheme == ColorScheme.dark ? color-btn-danger-fg-dark : color-btn-danger-fg-light;
+    out property <color> color-btn-danger-hover-bg: color-scheme == ColorScheme.dark ? color-btn-danger-hover-bg-dark : color-btn-danger-fg-light;
+    out property <color> color-btn-danger-hover-border: color-scheme == ColorScheme.dark ? color-btn-danger-fg-dark : color-btn-primary-border-on-light;
     out property <color> color-btn-danger-selected-bg: color-scheme == ColorScheme.dark ? color-btn-danger-selected-bg-dark : color-btn-danger-selected-bg-light;
-    out property <color> color-btn-danger-selected-border: color-scheme == ColorScheme.dark ? color-btn-danger-selected-border-dark : color-btn-danger-selected-border-light;
+    out property <color> color-btn-danger-selected-border: color-scheme == ColorScheme.dark ? color-btn-danger-selected-border-dark : color-btn-primary-border-on-light;
     out property <color> color-btn-danger-disabled-text: color-scheme == ColorScheme.dark ? color-btn-danger-disabled-text-dark : color-btn-danger-disabled-text-light;
 
     out property <color> color-action-list-item-default-hover-bg: color-scheme == ColorScheme.dark ? color-action-list-item-default-hover-bg-dark : color-action-list-item-default-hover-bg-light;
@@ -252,7 +231,7 @@ export global ButtonTokens {
     out property <color> button-default-borderColor-active: color-btn-active-border;
     out property <color> button-default-borderColor-disabled: color-btn-border;
 
-    out property <color> button-primary-fgColor-rest: color-btn-primary-text;
+    out property <color> button-primary-fgColor-rest: PrimerColors.fgOnEmphasis;
     out property <color> button-primary-fgColor-disabled: color-btn-primary-disabled-text;
     out property <color> button-primary-bgColor-rest: color-btn-primary-bg;
     out property <color> button-primary-bgColor-hover: color-btn-primary-hover-bg;
@@ -263,8 +242,8 @@ export global ButtonTokens {
     out property <color> button-primary-borderColor-disabled: color-btn-primary-disabled-border;
 
     out property <color> button-danger-fgColor-rest: color-btn-danger-text;
-    out property <color> button-danger-fgColor-hover: color-btn-danger-hover-text;
-    out property <color> button-danger-fgColor-active: color-btn-danger-selected-text;
+    out property <color> button-danger-fgColor-hover: PrimerColors.fgOnEmphasis;
+    out property <color> button-danger-fgColor-active: PrimerColors.fgOnEmphasis;
     out property <color> button-danger-fgColor-disabled: color-btn-danger-disabled-text;
     out property <color> button-danger-bgColor-rest: color-btn-bg;
     out property <color> button-danger-bgColor-hover: color-btn-danger-hover-bg;
