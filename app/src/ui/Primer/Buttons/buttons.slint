@@ -2,7 +2,7 @@ import { Palette } from "std-widgets.slint";
 import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
 import { Size, Tokens } from "../tokens.slint";
 
-// Aligned with primer-ui-react Button VariantType (PR1: default + primary only).
+
 export enum ButtonVariant {
     default,
     primary,
@@ -45,14 +45,37 @@ export component Button {
 
     private property <color> label-color: variant == ButtonVariant.primary ? primary-fg : default-fg;
 
-    // Same control-sized double shadow as Select trigger (not the UserMenu panel shadow).
-    private property <color> control-shadow-soft: is-dark ? #01040966 : rgba(31, 35, 40, 0.08);
-    private property <color> control-shadow-hard: is-dark ? #01040999 : rgba(31, 35, 40, 0.14);
+    private property <color> shadow-none: #00000000;
+    private property <bool> primary-pressed-light: variant == ButtonVariant.primary && !is-dark && ta.pressed;
+
+    private property <color> btn-shadow-back-color:
+        is-dark
+        ? shadow-none
+        : primary-pressed-light
+        ? rgba(0, 45, 17, 0.2)
+        : variant == ButtonVariant.primary
+        ? rgba(31, 35, 40, 0.1)
+        : rgba(31, 35, 40, 0.04);
+
+    private property <length> btn-shadow-back-blur:
+        is-dark ? 0px : primary-pressed-light ? 3px : 0px;
+
+    private property <length> btn-shadow-back-y:
+        is-dark ? 0px : primary-pressed-light ? 2px : 1px;
+
+    private property <color> btn-shadow-front-color:
+        is-dark ? shadow-none : primary-pressed-light ? rgba(0, 45, 17, 0.14) : shadow-none;
+
+    private property <length> btn-shadow-front-blur: primary-pressed-light && !is-dark ? 1px : 0px;
+
+    private property <length> btn-shadow-front-y: primary-pressed-light && !is-dark ? 1px : 0px;
 
     DoubleDropShadow {
+        width: parent.width;
+        height: parent.height;
         border-radius: 6px;
-        back-layer: { offset-x: 0px, offset-y: 1px, blur: 2px, color: control-shadow-soft };
-        front-layer: { offset-x: 0px, offset-y: 1px, blur: 1px, color: control-shadow-hard };
+        back-layer: { offset-x: 0px, offset-y: btn-shadow-back-y, blur: btn-shadow-back-blur, color: btn-shadow-back-color };
+        front-layer: { offset-x: 0px, offset-y: btn-shadow-front-y, blur: btn-shadow-front-blur, color: btn-shadow-front-color };
     }
 
     Rectangle {
