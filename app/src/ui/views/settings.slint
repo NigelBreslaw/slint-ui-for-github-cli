@@ -1,5 +1,5 @@
 import { SettingsState } from "../../bridges/slint/settings-state.slint";
-import { Button } from "../Primer/Buttons/buttons.slint";
+import { Button, ButtonVariant } from "../Primer/Buttons/buttons.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
 import { Select, Spinner, ValidationStatus } from "../Primer/primer.slint";
 import { Tokens } from "../Primer/tokens.slint";
@@ -97,6 +97,16 @@ export component Settings {
                     clicked => {
                         primer-demo-popup.show();
                     }
+                }
+
+                Rectangle {
+                    height: 8px;
+                }
+
+                Button {
+                    label: "Danger button (demo)";
+                    variant: ButtonVariant.danger;
+                    clicked => { }
                 }
 
             //     Text {
