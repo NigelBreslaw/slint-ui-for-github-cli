@@ -1,6 +1,6 @@
 import { Palette } from "std-widgets.slint";
 import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
-import { LayoutTokens, PrimerColors, Size, Tokens } from "../tokens.slint";
+import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 
 
 export enum ButtonVariant {
@@ -27,7 +27,7 @@ struct ButtonShadowState {
 }
 
 // Filled height/padding follow `size`; link is content-sized (StyledText has no font-size in Slint).
-// Colors: Tokens (button palette) + PrimerColors (semantic fg/link/inset). Link label: StyledText + @markdown.
+// Colors: ButtonTokens (button palette) + PrimerColors (semantic fg/link/inset). Link label: StyledText + @markdown.
 export component Button {
     in property <ButtonVariant> variant: ButtonVariant.default;
     in property <Size> size: Size.medium;
@@ -59,127 +59,127 @@ export component Button {
         if dis {
             if v == ButtonVariant.link {
                 return {
-                    bg: Tokens.button-link-bgColor-rest,
-                    border: Tokens.button-link-borderColor-rest,
-                    fg: Tokens.control-fgColor-disabled,
+                    bg: ButtonTokens.button-link-bgColor-rest,
+                    border: ButtonTokens.button-link-borderColor-rest,
+                    fg: ButtonTokens.control-fgColor-disabled,
                 };
             }
             if v == ButtonVariant.invisible {
                 return {
-                    bg: Tokens.button-invisible-bgColor-disabled,
-                    border: Tokens.button-invisible-borderColor-disabled,
-                    fg: Tokens.button-invisible-fgColor-disabled,
+                    bg: ButtonTokens.button-invisible-bgColor-disabled,
+                    border: ButtonTokens.button-invisible-borderColor-disabled,
+                    fg: ButtonTokens.button-invisible-fgColor-disabled,
                 };
             }
             if v == ButtonVariant.danger {
                 return {
-                    bg: Tokens.button-danger-bgColor-disabled,
-                    border: Tokens.button-danger-borderColor-disabled,
-                    fg: Tokens.button-danger-fgColor-disabled,
+                    bg: ButtonTokens.button-danger-bgColor-disabled,
+                    border: ButtonTokens.button-danger-borderColor-disabled,
+                    fg: ButtonTokens.button-danger-fgColor-disabled,
                 };
             }
             if v == ButtonVariant.primary {
                 return {
-                    bg: Tokens.button-primary-bgColor-disabled,
-                    border: Tokens.button-primary-borderColor-disabled,
-                    fg: Tokens.button-primary-fgColor-disabled,
+                    bg: ButtonTokens.button-primary-bgColor-disabled,
+                    border: ButtonTokens.button-primary-borderColor-disabled,
+                    fg: ButtonTokens.button-primary-fgColor-disabled,
                 };
             }
             return {
-                bg: Tokens.button-default-bgColor-disabled,
-                border: Tokens.button-default-borderColor-disabled,
-                fg: Tokens.control-fgColor-disabled,
+                bg: ButtonTokens.button-default-bgColor-disabled,
+                border: ButtonTokens.button-default-borderColor-disabled,
+                fg: ButtonTokens.control-fgColor-disabled,
             };
         }
         if v == ButtonVariant.link {
             return {
-                bg: Tokens.button-link-bgColor-rest,
-                border: Tokens.button-link-borderColor-rest,
+                bg: ButtonTokens.button-link-bgColor-rest,
+                border: ButtonTokens.button-link-borderColor-rest,
                 fg: PrimerColors.fgColor-link,
             };
         }
         if v == ButtonVariant.primary {
             if pressed {
                 return {
-                    bg: Tokens.button-primary-bgColor-active,
-                    border: Tokens.button-primary-borderColor-rest,
-                    fg: Tokens.button-primary-fgColor-rest,
+                    bg: ButtonTokens.button-primary-bgColor-active,
+                    border: ButtonTokens.button-primary-borderColor-rest,
+                    fg: ButtonTokens.button-primary-fgColor-rest,
                 };
             }
             if hover {
                 return {
-                    bg: Tokens.button-primary-bgColor-hover,
-                    border: Tokens.button-primary-borderColor-rest,
-                    fg: Tokens.button-primary-fgColor-rest,
+                    bg: ButtonTokens.button-primary-bgColor-hover,
+                    border: ButtonTokens.button-primary-borderColor-rest,
+                    fg: ButtonTokens.button-primary-fgColor-rest,
                 };
             }
             return {
-                bg: Tokens.button-primary-bgColor-rest,
-                border: Tokens.button-primary-borderColor-rest,
-                fg: Tokens.button-primary-fgColor-rest,
+                bg: ButtonTokens.button-primary-bgColor-rest,
+                border: ButtonTokens.button-primary-borderColor-rest,
+                fg: ButtonTokens.button-primary-fgColor-rest,
             };
         }
         if v == ButtonVariant.danger {
             if pressed {
                 return {
-                    bg: Tokens.button-danger-bgColor-active,
-                    border: Tokens.button-danger-borderColor-active,
-                    fg: Tokens.button-danger-fgColor-active,
+                    bg: ButtonTokens.button-danger-bgColor-active,
+                    border: ButtonTokens.button-danger-borderColor-active,
+                    fg: ButtonTokens.button-danger-fgColor-active,
                 };
             }
             if hover {
                 return {
-                    bg: Tokens.button-danger-bgColor-hover,
-                    border: Tokens.button-danger-borderColor-hover,
-                    fg: Tokens.button-danger-fgColor-hover,
+                    bg: ButtonTokens.button-danger-bgColor-hover,
+                    border: ButtonTokens.button-danger-borderColor-hover,
+                    fg: ButtonTokens.button-danger-fgColor-hover,
                 };
             }
             return {
-                bg: Tokens.button-danger-bgColor-rest,
-                border: Tokens.button-danger-borderColor-rest,
-                fg: Tokens.button-danger-fgColor-rest,
+                bg: ButtonTokens.button-danger-bgColor-rest,
+                border: ButtonTokens.button-danger-borderColor-rest,
+                fg: ButtonTokens.button-danger-fgColor-rest,
             };
         }
         if v == ButtonVariant.invisible {
             if pressed {
                 return {
-                    bg: Tokens.button-invisible-bgColor-active,
-                    border: Tokens.button-invisible-borderColor-rest,
-                    fg: Tokens.button-invisible-fgColor-rest,
+                    bg: ButtonTokens.button-invisible-bgColor-active,
+                    border: ButtonTokens.button-invisible-borderColor-rest,
+                    fg: ButtonTokens.button-invisible-fgColor-rest,
                 };
             }
             if hover {
                 return {
-                    bg: Tokens.button-invisible-bgColor-hover,
-                    border: Tokens.button-invisible-borderColor-rest,
-                    fg: Tokens.button-invisible-fgColor-rest,
+                    bg: ButtonTokens.button-invisible-bgColor-hover,
+                    border: ButtonTokens.button-invisible-borderColor-rest,
+                    fg: ButtonTokens.button-invisible-fgColor-rest,
                 };
             }
             return {
-                bg: Tokens.button-invisible-bgColor-rest,
-                border: Tokens.button-invisible-borderColor-rest,
-                fg: Tokens.button-invisible-fgColor-rest,
+                bg: ButtonTokens.button-invisible-bgColor-rest,
+                border: ButtonTokens.button-invisible-borderColor-rest,
+                fg: ButtonTokens.button-invisible-fgColor-rest,
             };
         }
         // default — border matches legacy filled default (same rest border for hover/active)
         if pressed {
             return {
-                bg: Tokens.button-default-bgColor-active,
-                border: Tokens.button-default-borderColor-rest,
-                fg: Tokens.button-default-fgColor-rest,
+                bg: ButtonTokens.button-default-bgColor-active,
+                border: ButtonTokens.button-default-borderColor-rest,
+                fg: ButtonTokens.button-default-fgColor-rest,
             };
         }
         if hover {
             return {
-                bg: Tokens.button-default-bgColor-hover,
-                border: Tokens.button-default-borderColor-rest,
-                fg: Tokens.button-default-fgColor-rest,
+                bg: ButtonTokens.button-default-bgColor-hover,
+                border: ButtonTokens.button-default-borderColor-rest,
+                fg: ButtonTokens.button-default-fgColor-rest,
             };
         }
         return {
-            bg: Tokens.button-default-bgColor-rest,
-            border: Tokens.button-default-borderColor-rest,
-            fg: Tokens.button-default-fgColor-rest,
+            bg: ButtonTokens.button-default-bgColor-rest,
+            border: ButtonTokens.button-default-borderColor-rest,
+            fg: ButtonTokens.button-default-fgColor-rest,
         };
     }
 
@@ -203,27 +203,27 @@ export component Button {
         }
         if d-pl {
             return {
-                back-color: Tokens.button-shadow-danger-back-pressed-light,
+                back-color: ButtonTokens.button-shadow-danger-back-pressed-light,
                 back-blur: 3px,
                 back-y: 2px,
-                front-color: Tokens.button-shadow-danger-front-pressed-light,
+                front-color: ButtonTokens.button-shadow-danger-front-pressed-light,
                 front-blur: 1px,
                 front-y: 1px,
             };
         }
         if p-pl {
             return {
-                back-color: Tokens.button-shadow-primary-back-pressed-light,
+                back-color: ButtonTokens.button-shadow-primary-back-pressed-light,
                 back-blur: 3px,
                 back-y: 2px,
-                front-color: Tokens.button-shadow-primary-front-pressed-light,
+                front-color: ButtonTokens.button-shadow-primary-front-pressed-light,
                 front-blur: 1px,
                 front-y: 1px,
             };
         }
         if d-hv {
             return {
-                back-color: Tokens.button-shadow-elevated-light,
+                back-color: ButtonTokens.button-shadow-elevated-light,
                 back-blur: 0px,
                 back-y: 1px,
                 front-color: #00000000,
@@ -233,7 +233,7 @@ export component Button {
         }
         if v == ButtonVariant.primary {
             return {
-                back-color: Tokens.button-shadow-elevated-light,
+                back-color: ButtonTokens.button-shadow-elevated-light,
                 back-blur: 0px,
                 back-y: 1px,
                 front-color: #00000000,
@@ -243,7 +243,7 @@ export component Button {
         }
         if v == ButtonVariant.danger {
             return {
-                back-color: Tokens.button-shadow-ambient-light,
+                back-color: ButtonTokens.button-shadow-ambient-light,
                 back-blur: 0px,
                 back-y: 1px,
                 front-color: #00000000,
@@ -252,7 +252,7 @@ export component Button {
             };
         }
         return {
-            back-color: Tokens.button-shadow-ambient-light,
+            back-color: ButtonTokens.button-shadow-ambient-light,
             back-blur: 0px,
             back-y: 1px,
             front-color: #00000000,
@@ -364,10 +364,10 @@ export component IconButton {
     callback clicked <=> ta.clicked;
 
     in property <ButtonStyle> style: {
-        button-default-fgColor-rest: Tokens.iconButton-fgColor-rest,
+        button-default-fgColor-rest: ButtonTokens.iconButton-fgColor-rest,
         button-default-bgColor-active: PrimerColors.bgColor-inset,
-        button-default-bgColor-hover: Tokens.iconButton-bgColor-hover,
-        button-default-borderColor-active: Tokens.color-btn-border,
+        button-default-bgColor-hover: ButtonTokens.iconButton-bgColor-hover,
+        button-default-borderColor-active: ButtonTokens.color-btn-border,
     };
 
     private property <length> icon-img-size:

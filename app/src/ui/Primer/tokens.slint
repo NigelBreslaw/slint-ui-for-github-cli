@@ -100,7 +100,8 @@ export global PrimerColors {
     out property <color> actionListItem-inline-divider: color-scheme == ColorScheme.dark ? actionListItem-inline-divider-dark : actionListItem-inline-divider-light;
 }
 
-export global Tokens {
+// color-btn-*, button-*, filled-button shadows, iconButton palette, control disabled fg. Used by Button / IconButton.
+export global ButtonTokens {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
@@ -188,7 +189,7 @@ export global Tokens {
     property <color> color-primer-fg-disabled-dark: #484f58;
     property <color> color-primer-fg-disabled-light: #8c959f;
 
-    // IconButton (toolbar) grays — PR2 will wire; distinct from color-btn-text on purpose for current UI
+    // IconButton (toolbar) grays — distinct from color-btn-text on purpose for current UI
     property <color> iconButton-fgColor-rest-dark: #9398a0;
     property <color> iconButton-fgColor-rest-light: #59636e;
     property <color> iconButton-bgColor-hover-dark: #16191e;
