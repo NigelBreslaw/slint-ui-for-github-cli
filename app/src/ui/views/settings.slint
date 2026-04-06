@@ -47,8 +47,9 @@ component TableRow {
                 y: 10px;
                 width: parent.width - 24px;
                 text: value-text;
-                font-size: header-row ? 14px : 15px;
+                font-size: header-row ? 12px : 13px;
                 font-weight: header-row ? 600 : 400;
+                font-family: "Bitstream Vera Sans Mono";
                 color: header-row ? PrimerColors.fgColor-default : PrimerColors.fgColor-subtle;
                 wrap: word-wrap;
             }
@@ -80,74 +81,73 @@ export component Settings {
                     block: true;
                     label-text: "GitHub host";
                     placeholder: "Choose host…";
-                    caption: "Example Primer-style select; choice is not persisted.";
                     options: SettingsState.primer-demo-select-options;
                     selected-value <=> SettingsState.primer-demo-selected-value;
                     selected-label <=> SettingsState.primer-demo-selected-label;
                     validation-status: SettingsState.primer-demo-selected-value != "" ? ValidationStatus.success : ValidationStatus.none;
-                    validation-message: SettingsState.primer-demo-selected-value != "" ? "Host selected for this session." : "";
+                    // validation-message: SettingsState.primer-demo-selected-value != "" ? "Host selected for this session." : "";
                     selected-changed(v) => {
                         SettingsState.primer-demo-select-changed(v);
                     }
                 }
 
-                Button {
-                    label: "Open Primer dialog demo";
-                    clicked => {
-                        primer-demo-popup.show();
-                    }
-                }
+                // Button {
+                //     label: "Open Primer dialog demo";
+                //     clicked => {
+                //         primer-demo-popup.show();
+                //     }
+                // }
 
-                Rectangle {
-                    height: 8px;
-                }
+                // Rectangle {
+                //     height: 8px;
+                // }
 
-                Button {
-                    label: "Small default (demo)";
-                    size: Size.small;
-                    clicked => { }
-                }
+                // Button {
+                //     label: "Small default (demo)";
+                //     size: Size.small;
+                //     clicked => { }
+                // }
 
-                Rectangle {
-                    height: 8px;
-                }
+                // Rectangle {
+                //     height: 8px;
+                // }
 
-                Button {
-                    label: "Large primary (demo)";
-                    variant: ButtonVariant.primary;
-                    size: Size.large;
-                    clicked => { }
-                }
+                // Button {
+                //     label: "Large primary (demo)";
+                //     variant: ButtonVariant.primary;
+                //     size: Size.large;
+                //     clicked => { }
+                // }
 
-                Rectangle {
-                    height: 8px;
-                }
+                // Rectangle {
+                //     height: 8px;
+                // }
 
-                Button {
-                    label: "Danger button (demo)";
-                    variant: ButtonVariant.danger;
-                    clicked => { }
-                }
+                // Button {
+                //     label: "Danger button (demo)";
+                //     variant: ButtonVariant.danger;
+                //     clicked => { }
+                // }
 
-                Rectangle {
-                    height: 8px;
-                }
+                // Rectangle {
+                //     height: 8px;
+                // }
 
-                Button {
-                    label: "Invisible button (demo)";
-                    variant: ButtonVariant.invisible;
-                    clicked => { }
-                }
+                // Button {
+                //     label: "Invisible button (demo)";
+                //     variant: ButtonVariant.invisible;
+                //     clicked => { }
+                // }
 
-                Rectangle {
-                    height: 8px;
-                }
+                // Rectangle {
+                //     height: 8px;
+                // }
 
-                Button {
-                    label: "Link-style button (demo)";
-                    variant: ButtonVariant.link;
-                    clicked => { }
-                }
+                // Button {
+                //     label: "Link-style button (demo)";
+                //     variant: ButtonVariant.link;
+                //     clicked => { }
+                // }
 
             //     Text {
             //         text: "Security alerts repository";

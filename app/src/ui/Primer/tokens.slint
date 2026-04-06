@@ -81,6 +81,18 @@ export global PrimerColors {
     property <color> actionListItem-inline-divider-dark: rgba(48, 54, 61, 0.48);
     property <color> actionListItem-inline-divider-light: rgba(208, 215, 222, 0.48);
 
+    // Validation / form success (primer functional fgColor.success + border emphasis; TextInput success border uses success emphasis).
+    property <color> fgColor-success-dark: #3fb950;
+    property <color> fgColor-success-light: #1a7f37;
+    property <color> borderColor-success-emphasis-dark: #238636;
+    property <color> borderColor-success-emphasis-light: #1f883d;
+
+    // Stacked inset shadow on control triggers (Select); dark: #010409 @ ~40% / ~60% alpha. Light: soft neutral layers.
+    property <color> shadow-controlTrigger-back-dark: #01040966;
+    property <color> shadow-controlTrigger-front-dark: #01040999;
+    property <color> shadow-controlTrigger-back-light: rgba(31, 35, 40, 0.12);
+    property <color> shadow-controlTrigger-front-light: rgba(31, 35, 40, 0.18);
+
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
     out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
@@ -98,6 +110,10 @@ export global PrimerColors {
     out property <color> overlay-scrim: color-scheme == ColorScheme.dark ? overlay-scrim-dark : overlay-scrim-light;
     out property <color> drop-shadow: color-scheme == ColorScheme.dark ? drop-shadow-dark : drop-shadow-light;
     out property <color> actionListItem-inline-divider: color-scheme == ColorScheme.dark ? actionListItem-inline-divider-dark : actionListItem-inline-divider-light;
+    out property <color> fgColor-success: color-scheme == ColorScheme.dark ? fgColor-success-dark : fgColor-success-light;
+    out property <color> borderColor-success-emphasis: color-scheme == ColorScheme.dark ? borderColor-success-emphasis-dark : borderColor-success-emphasis-light;
+    out property <color> shadow-controlTrigger-back: color-scheme == ColorScheme.dark ? shadow-controlTrigger-back-dark : shadow-controlTrigger-back-light;
+    out property <color> shadow-controlTrigger-front: color-scheme == ColorScheme.dark ? shadow-controlTrigger-front-dark : shadow-controlTrigger-front-light;
 }
 
 // color-btn-*, button-*, filled-button shadows, iconButton palette, control disabled fg. Used by Button / IconButton.
