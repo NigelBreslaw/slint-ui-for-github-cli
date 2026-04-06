@@ -1,0 +1,28 @@
+import { Tokens } from "../Tokens/tokens.slint";
+
+export component Avatar {
+
+    in-out property source <=> avatar.source;
+
+    width: 34px;
+    height: self.width;
+
+    Rectangle {
+        width: parent.width - 2px;
+        height: self.width;
+        border-radius: self.width / 2;
+        clip: true;
+        avatar := Image {
+            width: parent.width;
+            height: self.width;
+        }
+    }
+
+    Rectangle {
+        border-width: 1px;
+        border-color: Tokens.color-scheme == ColorScheme.dark ? #28292d : #D7D8DB;
+        border-radius: self.width / 2;
+    }
+
+    @children
+}

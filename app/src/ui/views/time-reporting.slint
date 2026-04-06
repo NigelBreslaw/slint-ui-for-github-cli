@@ -1,10 +1,10 @@
 import { ListView } from "std-widgets.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
-import { ButtonBlack } from "../components/buttons.slint";
+import { ButtonBlack } from "../Primer/Buttons/buttons.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
-import { PrimerSpinner } from "../components/primer-spinner.slint";
-import { Tokens } from "../tokens.slint";
+import { Spinner } from "../Primer/primer.slint";
+import { Tokens } from "../Primer/Tokens/tokens.slint";
 
 export component TimeReporting {
     width: 100%;
@@ -33,7 +33,7 @@ export component TimeReporting {
                     text: TimeReportingState.selected-project-label;
                     font-size: 16px;
                     font-weight: 600;
-                    color: #f0f6fc;
+                    color: Tokens.fgColor-default;
                     wrap: word-wrap;
                 }
 
@@ -58,7 +58,7 @@ export component TimeReporting {
                             text: TimeReportingState.week-label;
                             font-size: 15px;
                             font-weight: 600;
-                            color: #f0f6fc;
+                            color: Tokens.fgColor-default;
                             horizontal-alignment: center;
                         }
 
@@ -96,7 +96,7 @@ export component TimeReporting {
                     spacing: 10px;
                     alignment: start;
 
-                    PrimerSpinner {
+                    Spinner {
                         size: small;
                     }
                 }
@@ -280,7 +280,7 @@ export component TimeReporting {
                                     x: 0;
                                     y: 0;
                                     font-size: 1px;
-                                    color: #f0f6fc00;
+                                    color: Tokens.fgColor-default;
                                     text: week_row.grid-week-key;
                                 }
 
@@ -297,7 +297,7 @@ export component TimeReporting {
 
                                         Text {
                                             text: week_row.title;
-                                            color: title_ta.has-hover ? #58a6ff : #f0f6fc;
+                                            color: title_ta.has-hover ? #58a6ff : Tokens.fgColor-default;
                                             overflow: elide;
                                             font-size: 13px;
                                             vertical-alignment: center;
@@ -411,7 +411,7 @@ export component TimeReporting {
                 spacing: 10px;
                 alignment: start;
 
-                PrimerSpinner {
+                Spinner {
                     size: small;
                 }
             }
@@ -460,7 +460,7 @@ export component TimeReporting {
                             height: parent.height;
                             text: AppState.projects-search;
                             font-size: 14px;
-                            color: #f0f6fc;
+                            color: Tokens.fgColor-default;
                             edited => {
                                 AppState.projects-search = self.text;
                                 AppState.project_search_changed(self.text);
@@ -495,7 +495,7 @@ export component TimeReporting {
                                         spacing: 2px;
                                         Text {
                                             text: row.title;
-                                            color: #f0f6fc;
+                                            color: Tokens.fgColor-default;
                                             overflow: elide;
                                             font-size: 14px;
                                         }
@@ -573,7 +573,7 @@ export component TimeReporting {
                             text: TimeReportingState.detail-title;
                             font-size: 17px;
                             font-weight: 600;
-                            color: #f0f6fc;
+                            color: Tokens.fgColor-default;
                             wrap: word-wrap;
                         }
 

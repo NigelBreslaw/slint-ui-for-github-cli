@@ -1,4 +1,4 @@
-import { IconSize, Tokens } from "../tokens.slint";
+import { Size, Tokens } from "../Tokens/tokens.slint";
 
 export component ButtonBlack {
     height: 32px;
@@ -85,7 +85,7 @@ struct ButtonStyle {
 
 export component IconButton {
 
-    in property <IconSize> size: IconSize.medium;
+    in property <Size> size: medium;
     in property <Variant> variant: Variant.default;
     in property icon-source <=> img.source;
     callback clicked <=> ta.clicked;
@@ -107,7 +107,7 @@ export component IconButton {
 
     in property <ButtonStyle> style: Tokens.color-scheme == ColorScheme.dark ? dark-style : light-style;
 
-    width: size == IconSize.small ? 28px : size == IconSize.medium ? 32px : 40px;
+    width: size == Size.small ? 28px : size == Size.medium ? 32px : 40px;
     height: self.width;
 
     Rectangle {

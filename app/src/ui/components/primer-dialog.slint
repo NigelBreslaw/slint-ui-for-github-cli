@@ -3,6 +3,8 @@
 // In-window overlay (Rectangle). For a floating layer, wrap this component in a PopupWindow
 // and call show()/close() on that window from the parent — do not use PopupWindow + init { show() } here.
 
+import { Tokens } from "../Primer/Tokens/tokens.slint";
+
 export enum PrimerDialogWidth {
     small,
     medium,
@@ -106,7 +108,7 @@ export component PrimerDialog {
                                             text: root.title;
                                             font-size: 16px;
                                             font-weight: 600;
-                                            color: #f0f6fc;
+                                            color: Tokens.fgColor-default;
                                             wrap: word-wrap;
                                         }
 

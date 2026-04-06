@@ -1,0 +1,24 @@
+// import { AppState, AppView, Authed } from "../../../bridges/slint/app-state.slint";
+import { TimeReportingState } from "../../../bridges/slint/time-reporting-state.slint";
+import { ButtonBlack, IconButton } from "../Buttons/buttons.slint";
+import { Tokens } from "../Tokens/tokens.slint";
+
+
+export component PageHeader {
+    width: 100%;
+    height: 64px;
+
+    Rectangle {
+        Rectangle {
+            background: Tokens.bgColor-inset;
+        }
+
+        Rectangle {
+            y: parent.height - self.height;
+            width: 100%;
+            height: 1px;
+            background: Tokens.borderColor-default;
+        }
+    }
+    @children
+}

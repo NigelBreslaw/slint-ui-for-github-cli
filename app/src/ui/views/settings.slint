@@ -1,9 +1,8 @@
 import { SettingsState } from "../../bridges/slint/settings-state.slint";
-import { ButtonBlack } from "../components/buttons.slint";
+import { ButtonBlack } from "../Primer/Buttons/buttons.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
-import { PrimerSelect, ValidationStatus } from "../components/primer-select.slint";
-import { PrimerSpinner } from "../components/primer-spinner.slint";
-import { Tokens } from "../tokens.slint";
+import { Select, Spinner, ValidationStatus } from "../Primer/primer.slint";
+import { Tokens } from "../Primer/Tokens/tokens.slint";
 
 component TableRow {
 
@@ -32,7 +31,7 @@ component TableRow {
                 text: label-text;
                 font-size: header-row ? 14px : 15px;
                 font-weight: header-row ? 600 : 400;
-                color: #f0f6fc;
+                color: Tokens.fgColor-default;
                 wrap: word-wrap;
             }
         }
@@ -51,7 +50,7 @@ component TableRow {
                 text: value-text;
                 font-size: header-row ? 14px : 15px;
                 font-weight: header-row ? 600 : 400;
-                color: header-row ? #f0f6fc : #c9d1d9;
+                color: header-row ? Tokens.fgColor-default : #c9d1d9;
                 wrap: word-wrap;
             }
         }
@@ -78,7 +77,7 @@ export component Settings {
             //     width: 450px;
             //     padding-bottom: 16px;
 
-                PrimerSelect {
+                Select {
                     block: true;
                     label-text: "GitHub host";
                     placeholder: "Choose host…";
@@ -209,7 +208,7 @@ export component Settings {
                     alignment: center;
                     width: 100%;
 
-                    PrimerSpinner {
+                    Spinner {
                         size: medium;
                     }
                 }

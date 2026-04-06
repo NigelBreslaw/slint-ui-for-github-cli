@@ -3,16 +3,12 @@
 // When `selected-value` or `options` change from TypeScript, keep `selected-label` in sync there
 // (Slint cannot scan the options model in a `changed` handler in this toolchain).
 
+import { Size, Tokens } from "../Tokens/tokens.slint";
+
 export struct SelectOption {
     value: string,
     label: string,
     enabled: bool,
-}
-
-export enum SelectSize {
-    small,
-    medium,
-    large,
 }
 
 export enum ValidationStatus {
@@ -21,7 +17,7 @@ export enum ValidationStatus {
     success,
 }
 
-export component PrimerSelect {
+export component Select {
     in property <string> label-text: "";
     in-out property <string> selected-value: "";
     in-out property <string> selected-label: "";
@@ -32,21 +28,21 @@ export component PrimerSelect {
     in property <string> validation-message: "";
     in property <bool> disabled: false;
     in property <bool> block: false;
-    in property <SelectSize> size: medium;
+    in property <Size> size: medium;
     in property <[SelectOption]> options;
     callback selected-changed(string);
 
     horizontal-stretch: block ? 1 : 0;
     min-width: 200px;
 
-    private property <length> trigger-height: size == SelectSize.small ? 28px : size == SelectSize.large ? 40px : 32px;
-    private property <length> trigger-font: size == SelectSize.small ? 12px : size == SelectSize.large ? 15px : 14px;
+    private property <length> trigger-height: size == Size.small ? 28px : size == Size.large ? 40px : 32px;
+    private property <length> trigger-font: size == Size.small ? 12px : size == Size.large ? 15px : 14px;
     private property <color> border-default: #30363d;
     private property <color> border-error: #f85149;
     private property <color> border-success: #238636;
     private property <color> fill-bg: #0d1117;
     private property <color> fill-hover: #161b22;
-    private property <color> text-primary: #f0f6fc;
+    private property <color> text-primary: Tokens.fgColor-default;
     private property <color> text-muted: #8b949e;
     private property <color> text-error: #f85149;
     private property <color> text-success: #3fb950;
@@ -151,7 +147,7 @@ export component PrimerSelect {
                                 width: 16px;
                                 height: 16px;
                                 vertical-alignment: center;
-                                source: @image-url("../../assets/16px/chevron-down.svg");
+                                source: @image-url("../../../assets/16px/chevron-down.svg");
                                 colorize: text-muted;
                             }
                         }
@@ -185,7 +181,7 @@ export component PrimerSelect {
                 width: 16px;
                 height: 16px;
                 vertical-alignment: top;
-                source: validation-status == ValidationStatus.error ? @image-url("../../assets/16px/alert.svg") : @image-url("../../assets/16px/check-circle.svg");
+                source: validation-status == ValidationStatus.error ? @image-url("../../../assets/16px/alert.svg") : @image-url("../../../assets/16px/check-circle.svg");
                 colorize: validation-status == ValidationStatus.error ? text-error : text-success;
             }
 

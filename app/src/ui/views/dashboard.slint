@@ -1,8 +1,8 @@
 import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
-import { PrimerSpinner } from "../components/primer-spinner.slint";
 import { PrimerUnderlineNavItem } from "../components/primer-underline-nav-item.slint";
-import { Tokens } from "../tokens.slint";
+import { Spinner } from "../Primer/primer.slint";
+import { Tokens } from "../Primer/Tokens/tokens.slint";
 
 export component Dashboard {
     width: 100%;
@@ -91,7 +91,7 @@ export component Dashboard {
                         text: AppState.review-requests-total + " pull requests are waiting on your review.";
                         font-size: 14px;
                         font-weight: 400;
-                        color: #f0f6fc;
+                        color: Tokens.fgColor-default;
                         vertical-alignment: center;
                     }
                 }
@@ -101,7 +101,7 @@ export component Dashboard {
                 spacing: 10px;
                 alignment: start;
 
-                PrimerSpinner {
+                Spinner {
                     size: small;
                 }
             }
@@ -128,7 +128,7 @@ export component Dashboard {
                             spacing: 4px;
                             Text {
                                 text: row.title;
-                                color: #f0f6fc;
+                                color: Tokens.fgColor-default;
                                 overflow: elide;
                             }
 
@@ -159,7 +159,7 @@ export component Dashboard {
                 spacing: 10px;
                 alignment: start;
 
-                PrimerSpinner {
+                Spinner {
                     size: small;
                 }
             }
@@ -193,7 +193,7 @@ export component Dashboard {
                             spacing: 4px;
                             Text {
                                 text: row.title;
-                                color: #f0f6fc;
+                                color: Tokens.fgColor-default;
                                 overflow: elide;
                             }
 

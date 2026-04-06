@@ -1,0 +1,198 @@
+import { Avatar } from "../Primer/primer.slint";
+import { Tokens } from "../Primer/Tokens/tokens.slint";
+import { AppState } from "../../bridges/slint/app-state.slint";
+
+global MenuStyle {
+    out property <length> border-radius: 12px;
+    out property <length> menu-width: 256px;
+}
+
+export global HeaderState {
+    in-out property <bool> menu-visible: false;
+}
+
+component MenuSeparator inherits VerticalLayout {
+    height: self.preferred-height;
+    width: 100%;
+    padding-left: 8px;
+    padding-right: 8px;
+    Rectangle {
+        height: 8px;
+    }
+
+    Rectangle {
+        height: 1px;
+        background: #2b3139;
+    }
+
+    Rectangle {
+        height: 8px;
+    }
+}
+
+component MenuItem {
+
+    in-out property icon-source <=> icon.source;
+    in-out property label-text <=> label.text;
+
+    callback clicked;
+
+    width: MenuStyle.menu-width;
+    height: content.preferred-height;
+
+    ta := TouchArea {
+        clicked => {
+            HeaderState.menu-visible = false;
+            root.clicked();
+        }
+    }
+
+    content := HorizontalLayout {
+        x: 0;
+        width: self.preferred-width;
+        height: 16px;
+        padding-left: 16px;
+        padding-right: 16px;
+        Rectangle {
+            width: 20px;
+            height: 16px;
+            Rectangle {
+                x: 0;
+                width: 16px;
+                height: self.width;
+                icon := Image {
+                    width: 100%;
+                    height: 100%;
+                    colorize: Tokens.fgColor-default;
+                }
+            }
+        }
+
+        label := Text {
+            height: self.preferred-height;
+            font-size: 14px;
+            font-weight: 400;
+            color: Tokens.fgColor-default;
+        }
+    }
+}
+export component UserMenu {
+
+    in-out property <image> avatar-source <=> avatar.source;
+    in property <string> user_status_emoji;
+    in property <string> user_status_message;
+
+    width: MenuStyle.menu-width;
+    height: content.preferred-height;
+
+    // Block clicks
+    TouchArea { }
+
+    Rectangle {
+        border-radius: MenuStyle.border-radius;
+        drop-shadow-offset-y: 6px;
+        drop-shadow-blur: 18px;
+        drop-shadow-color: #01040966;
+    }
+
+    Rectangle {
+        border-radius: MenuStyle.border-radius;
+        drop-shadow-offset-y: 6px;
+        drop-shadow-blur: 12px;
+        drop-shadow-color: #01040966;
+    }
+
+    Rectangle {
+        border-radius: MenuStyle.border-radius;
+        border-width: 1px;
+        border-color: #3e444d;
+        background: Tokens.bgColor-inset;
+    }
+
+    content := VerticalLayout {
+        y: 0;
+        height: self.preferred-height;
+        Rectangle {
+            height: 16px;
+        }
+
+        header-content := Rectangle {
+            x: 16px;
+            width: parent.width - (2 * self.x);
+            height: 100px - 16px;
+
+            VerticalLayout {
+                spacing: 8px;
+                width: parent.width;
+                HorizontalLayout {
+                    spacing: 8px;
+                    width: self.preferred-width;
+
+                    avatar := Avatar { }
+
+                    VerticalLayout {
+                        y: 3px;
+                        height: self.preferred-height;
+                        spacing: 4px;
+                        // Text {
+                        //     width: 120px;
+                        //     text: AppState.user_login;
+                        //     visible: AppState.user_login != "";
+                        //     font-size: 14px;
+                        //     font-weight: 550;
+                        //     color: HeaderStyle.menu-item-text-color;
+                        //     overflow: elide;
+                        // }
+
+                        // Text {
+                        //     width: 120px;
+                        //     text: AppState.user_name;
+                        //     visible: AppState.user_name != "";
+                        //     font-size: 14px;
+                        //     color: #9198a1;
+                        //     font-weight: 400;
+                        //     overflow: elide;
+                        //     letter-spacing: 0.15px;
+                        // }
+                    }
+                }
+            }
+
+            HorizontalLayout {
+                x: 0px;
+                y: parent.height - self.height - 14px;
+                spacing: 8px;
+                width: self.preferred-width;
+                height: self.preferred-height;
+
+                Text {
+                    text: root.user_status_emoji;
+                    visible: root.user_status_emoji != "";
+                    font-size: 14px;
+                }
+
+                Text {
+                    text: root.user_status_message;
+                    visible: root.user_status_message != "";
+                    font-size: 14px;
+                    color: Tokens.fgColor-default;
+                    font-weight: 400;
+                }
+            }
+        }
+
+        MenuSeparator { }
+
+        MenuItem {
+            icon-source: @image-url("../../assets/16px/sign-out.svg");
+            label-text: "Sign out";
+            clicked => {
+                AppState.sign-out();
+            }
+        }
+
+        Rectangle {
+            height: 16px;
+        }
+    }
+}

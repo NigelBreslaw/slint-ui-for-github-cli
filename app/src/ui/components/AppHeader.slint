@@ -1,0 +1,108 @@
+import { Avatar, IconButton, PageHeader } from "../primer/primer.slint";
+import { UserMenu } from "./UserMenu.slint";
+import { AppState, Authed, AppView } from "../../bridges/slint/app-state.slint";
+import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
+import { ButtonBlack } from "../Primer/Buttons/buttons.slint";
+import { Tokens } from "../Primer/Tokens/tokens.slint";
+
+global HeaderState {
+    in-out property <bool> menu-visible: false;
+}
+
+export component AppHeader {
+
+    property <length> title-left-inset: 16px;
+    out property <length> header-height: ph.height;
+
+    width: 100%;
+    height: 100%;
+
+    ph := PageHeader {
+        y: 0;
+
+        HorizontalLayout {
+            x: root.title-left-inset;
+            y: (parent.height - self.height) / 2;
+            height: self.preferred-height;
+            width: self.preferred-width;
+            spacing: 16px;
+            visible: AppState.auth == Authed.loggedIn && (AppState.view == AppView.dashboard || AppState.view == AppView.settings || AppState.view == AppView.timeReporting);
+
+            Text {
+                text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : "Time reporting";
+                font-size: 14px;
+                font-weight: 500;
+                color: Tokens.fgColor-default;
+                overflow: elide;
+            }
+        }
+
+        ButtonBlack {
+            x: (parent.width - self.width) / 2;
+            y: (parent.height - self.height) / 2;
+            visible: AppState.view == AppView.timeReporting && TimeReportingState.has-selected-project;
+            label: "Change project";
+            clicked => {
+                TimeReportingState.time-reporting-open-change-project();
+            }
+        }
+
+        sign-in := ButtonBlack {
+            x: parent.width - self.width - self.y;
+            y: (parent.height - self.height) / 2;
+            visible: AppState.auth == Authed.loggedOut;
+            label: "Sign in";
+            clicked => {
+                AppState.sign_in();
+            }
+        }
+
+        HorizontalLayout {
+            x: parent.width - self.width - self.y;
+            y: (parent.height - self.height) / 2;
+            visible: AppState.auth == Authed.loggedIn;
+
+            spacing: 8px;
+            width: self.preferred-width;
+            height: self.preferred-height;
+
+            IconButton {
+                y: (parent.height - self.height) / 2;
+                clicked => {
+                    if (Tokens.color-scheme == ColorScheme.dark) {
+                        Tokens.color-scheme = ColorScheme.light;
+                    } else {
+                        Tokens.color-scheme = ColorScheme.dark;
+                    }
+                }
+                icon-source: Tokens.color-scheme == ColorScheme.dark ? @image-url("../../assets/16px/moon.svg") : @image-url("../../assets/16px/sun.svg");
+            }
+
+            avatar-container := Avatar {
+                source: AppState.avatar;
+                TouchArea {
+                    clicked => {
+                        HeaderState.menu-visible = true;
+                    }
+                }
+            }
+        }
+
+        menu := UserMenu {
+            x: parent.width - self.width - 14px;
+            y: avatar-container.y + avatar-container.height + 2px;
+            avatar-source: AppState.avatar;
+            visible: HeaderState.menu-visible;
+        }
+    }
+
+    TouchArea {
+        y: 0;
+        width: root.width;
+        height: root.height;
+        visible: HeaderState.menu-visible;
+        clicked => {
+            HeaderState.menu-visible = false;
+        }
+    }
+}

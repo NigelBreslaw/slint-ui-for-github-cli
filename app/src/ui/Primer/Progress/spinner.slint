@@ -2,18 +2,14 @@
 // https://github.com/primer/react/blob/main/packages/react/src/Spinner/Spinner.tsx
 // — viewBox 16×16, circle r=7 stroke @ 25% opacity, arc path M15 8a7.002 7.002 0 00-7-7, stroke 2, 1s/rev.
 
-export enum SpinnerSize {
-    small,
-    medium,
-    large,
-}
+import { Size, Tokens } from "../Tokens/tokens.slint";
 
-export component PrimerSpinner {
-    in property <SpinnerSize> size: medium;
+export component Spinner {
+    in property <Size> size: medium;
 
-    private property <length> box: size == SpinnerSize.small ? 16px : size == SpinnerSize.large ? 64px : 32px;
+    private property <length> box: size == Size.small ? 16px : size == Size.large ? 64px : 32px;
     /** `currentColor` on dark: strong segment; track uses strokeOpacity 0.25 in React. */
-    private property <color> segment-color: #f0f6fc;
+    private property <color> segment-color: Tokens.fgColor-default;
     private property <color> track-color: #f0f6fc40;
 
     width: box;
