@@ -1,4 +1,4 @@
-import { Avatar } from "../Primer/primer.slint";
+import { Avatar, DoubleDropShadow } from "../Primer/primer.slint";
 import { Tokens } from "../Primer/tokens.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 
@@ -88,18 +88,10 @@ export component UserMenu {
     // Block clicks
     TouchArea { }
 
-    Rectangle {
+    DoubleDropShadow {
         border-radius: MenuStyle.border-radius;
-        drop-shadow-offset-y: 6px;
-        drop-shadow-blur: 18px;
-        drop-shadow-color: Tokens.drop-shadow;
-    }
-
-    Rectangle {
-        border-radius: MenuStyle.border-radius;
-        drop-shadow-offset-y: 6px;
-        drop-shadow-blur: 12px;
-        drop-shadow-color: Tokens.drop-shadow;
+        back-layer: { offset-x: 0px, offset-y: 6px, blur: 18px, color: Tokens.drop-shadow };
+        front-layer: { offset-x: 0px, offset-y: 6px, blur: 12px, color: Tokens.drop-shadow };
     }
 
     Rectangle {

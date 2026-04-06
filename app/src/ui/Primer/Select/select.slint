@@ -1,8 +1,9 @@
 // Primer-style Select trigger (dark only). Reference: https://primer.style/product/components/select/
-// Options open via Slint ContextMenuArea (native menu). Layered drop-shadow: same pattern as ButtonGreen in buttons.slint.
+// Options open via Slint ContextMenuArea (native menu).
 // When `selected-value` or `options` change from TypeScript, keep `selected-label` in sync there
 // (Slint cannot scan the options model in a `changed` handler in this toolchain).
 
+import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
 import { Size, Tokens } from "../tokens.slint";
 
 export struct SelectOption {
@@ -98,24 +99,12 @@ export component Select {
                         }
                     }
 
-                    Rectangle {
+                    DoubleDropShadow {
                         width: parent.width;
                         height: parent.height;
                         border-radius: 6px;
-                        drop-shadow-offset-x: 0px;
-                        drop-shadow-offset-y: 1px;
-                        drop-shadow-blur: 2px;
-                        drop-shadow-color: #01040966;
-                    }
-
-                    Rectangle {
-                        width: parent.width;
-                        height: parent.height;
-                        border-radius: 6px;
-                        drop-shadow-offset-x: 0px;
-                        drop-shadow-offset-y: 1px;
-                        drop-shadow-blur: 1px;
-                        drop-shadow-color: #01040999;
+                        back-layer: { offset-x: 0px, offset-y: 1px, blur: 2px, color: #01040966 };
+                        front-layer: { offset-x: 0px, offset-y: 1px, blur: 1px, color: #01040999 };
                     }
 
                     Rectangle {

@@ -1,4 +1,5 @@
 import { Palette } from "std-widgets.slint";
+import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
 import { Size, Tokens } from "../tokens.slint";
 
 // Aligned with primer-ui-react Button VariantType (PR1: default + primary only).
@@ -43,6 +44,16 @@ export component Button {
     private property <color> fill-border: variant == ButtonVariant.primary ? primary-border : default-border;
 
     private property <color> label-color: variant == ButtonVariant.primary ? primary-fg : default-fg;
+
+    // Same control-sized double shadow as Select trigger (not the UserMenu panel shadow).
+    private property <color> control-shadow-soft: is-dark ? #01040966 : rgba(31, 35, 40, 0.08);
+    private property <color> control-shadow-hard: is-dark ? #01040999 : rgba(31, 35, 40, 0.14);
+
+    DoubleDropShadow {
+        border-radius: 6px;
+        back-layer: { offset-x: 0px, offset-y: 1px, blur: 2px, color: control-shadow-soft };
+        front-layer: { offset-x: 0px, offset-y: 1px, blur: 1px, color: control-shadow-hard };
+    }
 
     Rectangle {
         width: parent.width;
