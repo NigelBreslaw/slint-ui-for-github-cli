@@ -26,13 +26,28 @@ struct ButtonShadowState {
     front-y: length,
 }
 
-// Medium filled variants; link is content-sized (PR5 for full Size wiring).
+// Filled height/padding follow `size`; link is content-sized (StyledText has no font-size in Slint).
 // Colors: Tokens (primer-tokens naming). Link label: StyledText + @markdown.
 export component Button {
     in property <ButtonVariant> variant: ButtonVariant.default;
+    in property <Size> size: Size.medium;
     in property <bool> disabled: false;
     in property <string> label: "";
     callback clicked <=> ta.clicked;
+
+    // Primer ButtonBase: only [data-size='small'] changes font-size; large keeps text-body-size-medium (L9 + L165–179).
+    private property <length> filled-label-font-size:
+        size == Size.small ? Tokens.text-body-size-small : Tokens.text-body-size-medium;
+
+    private property <length> btn-padding-inline:
+        size == Size.small
+        ? Tokens.control-small-paddingInline-condensed
+        : size == Size.large ? Tokens.control-large-paddingInline-spacious : Tokens.control-medium-paddingInline-normal;
+
+    private property <length> btn-control-height:
+        size == Size.small
+        ? Tokens.control-small-size
+        : size == Size.large ? Tokens.control-large-size : Tokens.control-medium-size;
 
     private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
     private property <bool> is-link: variant == ButtonVariant.link;
@@ -252,7 +267,7 @@ export component Button {
     DoubleDropShadow {
         width: parent.width;
         height: parent.height;
-        border-radius: 6px;
+        border-radius: is-link ? 0px : Tokens.borderRadius-medium;
         back-layer: { offset-x: 0px, offset-y: btn-sh.back-y, blur: btn-sh.back-blur, color: btn-sh.back-color };
         front-layer: { offset-x: 0px, offset-y: btn-sh.front-y, blur: btn-sh.front-blur, color: btn-sh.front-color };
     }
@@ -261,7 +276,7 @@ export component Button {
         width: parent.width;
         height: parent.height;
         background: paint.bg;
-        border-radius: is-link ? 0px : 6px;
+        border-radius: is-link ? 0px : Tokens.borderRadius-medium;
         border-width: is-link ? 0px : 1px;
         border-color: paint.border;
     }
@@ -272,8 +287,8 @@ export component Button {
         height: 100%;
         text: root.label;
         color: paint.fg;
-        font-size: 14px;
-        font-weight: 600;
+        font-size: filled-label-font-size;
+        font-weight: Tokens.base-text-weight-medium;
         vertical-alignment: center;
         horizontal-alignment: center;
     }
@@ -285,8 +300,9 @@ export component Button {
         height: 100%;
         text: root.label;
         color: paint.fg;
-        font-size: 14px;
-        font-weight: 600;
+        // Primer link uses font-size: inherit; Slint has no inherit — use body medium as default context.
+        font-size: Tokens.text-body-size-medium;
+        font-weight: Tokens.base-text-weight-medium;
         horizontal-alignment: left;
         vertical-alignment: center;
     }
@@ -319,10 +335,10 @@ export component Button {
 
     width: is-link
         ? (disabled ? link-text-disabled.preferred-width : max(link-md.preferred-width, link-md-hover.preferred-width))
-        : text-label.preferred-width + (2 * 16px);
+        : text-label.preferred-width + (2 * btn-padding-inline);
     height: is-link
         ? (disabled ? link-text-disabled.preferred-height : max(link-md.preferred-height, link-md-hover.preferred-height))
-        : 32px;
+        : btn-control-height;
 }
 
 
@@ -342,7 +358,7 @@ struct ButtonStyle {
 
 export component IconButton {
 
-    in property <Size> size: medium;
+    in property <Size> size: Size.medium;
     in property <Variant> variant: Variant.default;
     in property icon-source <=> img.source;
     callback clicked <=> ta.clicked;
@@ -354,11 +370,16 @@ export component IconButton {
         button-default-borderColor-active: Tokens.color-btn-border,
     };
 
-    width: size == Size.small ? 28px : size == Size.medium ? 32px : 40px;
+    private property <length> icon-img-size:
+        size == Size.small
+        ? Tokens.iconButton-icon-size-small
+        : size == Size.large ? Tokens.iconButton-icon-size-large : Tokens.iconButton-icon-size-medium;
+
+    width: size == Size.small ? Tokens.control-small-size : size == Size.large ? Tokens.control-large-size : Tokens.control-medium-size;
     height: self.width;
 
     Rectangle {
-        border-radius: 6px;
+        border-radius: Tokens.borderRadius-medium;
         border-width: 1px;
         border-color: style.button-default-borderColor-active;
         background: ta.has-hover ? style.button-default-bgColor-hover : style.button-default-bgColor-active;
@@ -366,8 +387,8 @@ export component IconButton {
     }
 
     img := Image {
-        width: 16px;
-        height: self.width;
+        width: icon-img-size;
+        height: icon-img-size;
         colorize: style.button-default-fgColor-rest;
     }
 
