@@ -7,9 +7,10 @@ export enum ButtonVariant {
     default,
     primary,
     danger,
+    invisible,
 }
 
-// PR1–2: medium only (32px height, 16px horizontal padding); sizes in a later PR.
+// PR1–3: medium only (32px height, 16px horizontal padding); sizes in a later PR.
 export component Button {
     height: 32px;
     width: label.preferred-width + (2 * 16px);
@@ -56,29 +57,57 @@ export component Button {
     private property <color> danger-fg-disabled: is-dark ? rgba(248, 81, 73, 0.5) : rgba(207, 34, 46, 0.5);
     private property <color> danger-bg-disabled: is-dark ? #0d1117 : #f6f8fa;
 
+    // PR3: invisible — ButtonBase.module.css; hover/active bg from actionListItem.default (legacy light.ts / dark.ts).
+    private property <color> invisible-bg-rest: #00000000;
+    private property <color> invisible-border-rest: #00000000;
+    private property <color> invisible-bg-hover: is-dark ? rgba(177, 186, 196, 0.12) : rgba(208, 215, 222, 0.32);
+    private property <color> invisible-bg-active: is-dark ? rgba(177, 186, 196, 0.2) : rgba(208, 215, 222, 0.48);
+    private property <color> invisible-bg-disabled: is-dark ? rgba(177, 186, 196, 0.08) : rgba(208, 215, 222, 0.24);
+    private property <color> invisible-border-disabled: invisible-bg-disabled;
+    private property <color> invisible-fg-disabled: is-dark ? #484f58 : #8c959f;
+
     private property <color> default-fg-disabled: Tokens.fgColor-muted;
 
     private property <color> fill-bg:
         disabled
-        ? (variant == ButtonVariant.danger ? danger-bg-disabled : variant == ButtonVariant.primary ? primary-bg-disabled : default-bg-rest)
+        ? (
+            variant == ButtonVariant.invisible ? invisible-bg-disabled
+            : variant == ButtonVariant.danger ? danger-bg-disabled
+            : variant == ButtonVariant.primary ? primary-bg-disabled
+            : default-bg-rest
+        )
         : variant == ButtonVariant.primary
         ? (ta.pressed ? primary-bg-active : ta.has-hover ? primary-bg-hover : primary-bg-rest)
         : variant == ButtonVariant.danger
         ? (ta.pressed ? danger-bg-active : ta.has-hover ? danger-bg-hover : danger-bg-rest)
+        : variant == ButtonVariant.invisible
+        ? (ta.pressed ? invisible-bg-active : ta.has-hover ? invisible-bg-hover : invisible-bg-rest)
         : (ta.pressed ? default-bg-active : ta.has-hover ? default-bg-hover : default-bg-rest);
 
     private property <color> fill-border:
         disabled
-        ? (variant == ButtonVariant.danger ? danger-border-rest : variant == ButtonVariant.primary ? primary-border : default-border)
+        ? (
+            variant == ButtonVariant.invisible ? invisible-border-disabled
+            : variant == ButtonVariant.danger ? danger-border-rest
+            : variant == ButtonVariant.primary ? primary-border
+            : default-border
+        )
         : variant == ButtonVariant.primary
         ? primary-border
         : variant == ButtonVariant.danger
         ? (ta.pressed ? danger-border-active : ta.has-hover ? danger-border-hover : danger-border-rest)
+        : variant == ButtonVariant.invisible
+        ? invisible-border-rest
         : default-border;
 
     private property <color> label-color:
         disabled
-        ? (variant == ButtonVariant.danger ? danger-fg-disabled : variant == ButtonVariant.primary ? primary-fg-disabled : default-fg-disabled)
+        ? (
+            variant == ButtonVariant.invisible ? invisible-fg-disabled
+            : variant == ButtonVariant.danger ? danger-fg-disabled
+            : variant == ButtonVariant.primary ? primary-fg-disabled
+            : default-fg-disabled
+        )
         : variant == ButtonVariant.primary
         ? primary-fg
         : variant == ButtonVariant.danger
@@ -91,8 +120,9 @@ export component Button {
     private property <bool> danger-hover-light: variant == ButtonVariant.danger && !is-dark && ta.has-hover && !ta.pressed;
 
     // Shadows: default resting vs primary resting vs danger (rest = default, hover = shadow-resting-small, pressed ≈ selected inset).
+    // Invisible: no shadow (ButtonBase `box-shadow: none`).
     private property <color> btn-shadow-back-color:
-        disabled || is-dark
+        variant == ButtonVariant.invisible || disabled || is-dark
         ? shadow-none
         : danger-pressed-light
         ? rgba(76, 0, 20, 0.2)
@@ -107,13 +137,13 @@ export component Button {
         : rgba(31, 35, 40, 0.04);
 
     private property <length> btn-shadow-back-blur:
-        disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 3px : 0px;
+        variant == ButtonVariant.invisible || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 3px : 0px;
 
     private property <length> btn-shadow-back-y:
-        disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 2px : 1px;
+        variant == ButtonVariant.invisible || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 2px : 1px;
 
     private property <color> btn-shadow-front-color:
-        disabled || is-dark
+        variant == ButtonVariant.invisible || disabled || is-dark
         ? shadow-none
         : danger-pressed-light
         ? rgba(76, 0, 20, 0.14)
@@ -122,10 +152,10 @@ export component Button {
         : shadow-none;
 
     private property <length> btn-shadow-front-blur:
-        !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
+        variant != ButtonVariant.invisible && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
 
     private property <length> btn-shadow-front-y:
-        !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
+        variant != ButtonVariant.invisible && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
 
     DoubleDropShadow {
         width: parent.width;
