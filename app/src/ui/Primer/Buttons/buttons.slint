@@ -8,16 +8,15 @@ export enum ButtonVariant {
     primary,
     danger,
     invisible,
+    link,
 }
 
-// PR1–3: medium only (32px height, 16px horizontal padding); sizes in a later PR.
+// PR1–4: medium for filled variants; link is content-sized (PR5 for full Size wiring).
+// Link label: StyledText + @markdown (see https://snapshots.slint.dev/master/docs/slint/reference/elements/styled-text/ ).
 export component Button {
-    height: 32px;
-    width: label.preferred-width + (2 * 16px);
-
     in property <ButtonVariant> variant: ButtonVariant.default;
     in property <bool> disabled: false;
-    in property label <=> label.text;
+    in property <string> label: "";
     callback clicked <=> ta.clicked;
 
     private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
@@ -25,30 +24,22 @@ export component Button {
     // colors.btn + colors.btn.primary — legacy-theme dark.ts / light.ts innermost fallbacks
     private property <color> default-fg: is-dark ? #c9d1d9 : #24292f;
     private property <color> default-bg-rest: is-dark ? #21262d : #f6f8fa;
-    // Match IconButton: one stable border for rest/hover/press (GitHub default btn does not ramp border on hover).
     private property <color> default-border: is-dark ? #3f444c : #d3d9df;
-    // Subtle bg shift only — same idea as IconButton (#010409 → #16191E), scaled for default btn fill.
     private property <color> default-bg-hover: is-dark ? #252b33 : #eff2f5;
-    // hsla(212,12%,18%,1) dark / hsla(220,14%,93%,1) light
     private property <color> default-bg-active: is-dark ? hsv(207.273, 0.215686, 0.2, 1) : hsv(228, 0.020833, 0.941176, 1);
 
     private property <color> primary-fg: #ffffff;
     private property <color> primary-bg-rest: is-dark ? #238636 : #1f883d;
     private property <color> primary-border: is-dark ? rgba(240, 246, 252, 0.1) : rgba(31, 35, 40, 0.15);
     private property <color> primary-bg-hover: is-dark ? #2ea043 : #1a7f37;
-    // dark: same as rest; light: hsla(137,66%,28%,1)
     private property <color> primary-bg-active: is-dark ? #238636 : hsv(137.053, 0.798319, 0.466667, 1);
     private property <color> primary-fg-disabled: is-dark ? rgba(255, 255, 255, 0.5) : rgba(255, 255, 255, 0.8);
     private property <color> primary-bg-disabled: is-dark ? rgba(35, 134, 54, 0.6) : #94d3a2;
 
-    // PR2: colors.btn.danger — rest bg/border same as default btn (color-fallbacks danger-bg/rest → --color-btn-bg)
     private property <color> danger-bg-rest: default-bg-rest;
     private property <color> danger-border-rest: default-border;
     private property <color> danger-fg-rest: is-dark ? #f85149 : #cf222e;
     private property <color> danger-fg-hover: #ffffff;
-    // Light: primer-tokens component/button.json5 — hover = bgColor.danger.emphasis = base.color.red.5 (#cf222e);
-    // active = base.color.red.6 (#a40e26). Legacy light.ts used #a40e26 for hover (red.6); that reads muddy vs current scale.
-    // Dark: legacy dark.ts hover #da3633 / active #b62324 (matches base red.5 / red.6 on dark scale).
     private property <color> danger-bg-hover: is-dark ? #da3633 : #cf222e;
     private property <color> danger-border-hover: is-dark ? #f85149 : rgba(31, 35, 40, 0.15);
     private property <color> danger-fg-active: #ffffff;
@@ -57,7 +48,6 @@ export component Button {
     private property <color> danger-fg-disabled: is-dark ? rgba(248, 81, 73, 0.5) : rgba(207, 34, 46, 0.5);
     private property <color> danger-bg-disabled: is-dark ? #0d1117 : #f6f8fa;
 
-    // PR3: invisible — ButtonBase.module.css; hover/active bg from actionListItem.default (legacy light.ts / dark.ts).
     private property <color> invisible-bg-rest: #00000000;
     private property <color> invisible-border-rest: #00000000;
     private property <color> invisible-bg-hover: is-dark ? rgba(177, 186, 196, 0.12) : rgba(208, 215, 222, 0.32);
@@ -65,17 +55,23 @@ export component Button {
     private property <color> invisible-bg-disabled: is-dark ? rgba(177, 186, 196, 0.08) : rgba(208, 215, 222, 0.24);
     private property <color> invisible-border-disabled: invisible-bg-disabled;
     private property <color> invisible-fg-disabled: is-dark ? #484f58 : #8c959f;
+    private property <color> link-fg-disabled: invisible-fg-disabled;
 
     private property <color> default-fg-disabled: Tokens.fgColor-muted;
+
+    private property <bool> is-link: variant == ButtonVariant.link;
 
     private property <color> fill-bg:
         disabled
         ? (
-            variant == ButtonVariant.invisible ? invisible-bg-disabled
+            variant == ButtonVariant.link ? #00000000
+            : variant == ButtonVariant.invisible ? invisible-bg-disabled
             : variant == ButtonVariant.danger ? danger-bg-disabled
             : variant == ButtonVariant.primary ? primary-bg-disabled
             : default-bg-rest
         )
+        : variant == ButtonVariant.link
+        ? #00000000
         : variant == ButtonVariant.primary
         ? (ta.pressed ? primary-bg-active : ta.has-hover ? primary-bg-hover : primary-bg-rest)
         : variant == ButtonVariant.danger
@@ -87,11 +83,14 @@ export component Button {
     private property <color> fill-border:
         disabled
         ? (
-            variant == ButtonVariant.invisible ? invisible-border-disabled
+            variant == ButtonVariant.link ? #00000000
+            : variant == ButtonVariant.invisible ? invisible-border-disabled
             : variant == ButtonVariant.danger ? danger-border-rest
             : variant == ButtonVariant.primary ? primary-border
             : default-border
         )
+        : variant == ButtonVariant.link
+        ? #00000000
         : variant == ButtonVariant.primary
         ? primary-border
         : variant == ButtonVariant.danger
@@ -103,11 +102,14 @@ export component Button {
     private property <color> label-color:
         disabled
         ? (
-            variant == ButtonVariant.invisible ? invisible-fg-disabled
+            variant == ButtonVariant.link ? link-fg-disabled
+            : variant == ButtonVariant.invisible ? invisible-fg-disabled
             : variant == ButtonVariant.danger ? danger-fg-disabled
             : variant == ButtonVariant.primary ? primary-fg-disabled
             : default-fg-disabled
         )
+        : variant == ButtonVariant.link
+        ? Tokens.fgColor-link
         : variant == ButtonVariant.primary
         ? primary-fg
         : variant == ButtonVariant.danger
@@ -119,10 +121,8 @@ export component Button {
     private property <bool> danger-pressed-light: variant == ButtonVariant.danger && !is-dark && ta.pressed;
     private property <bool> danger-hover-light: variant == ButtonVariant.danger && !is-dark && ta.has-hover && !ta.pressed;
 
-    // Shadows: default resting vs primary resting vs danger (rest = default, hover = shadow-resting-small, pressed ≈ selected inset).
-    // Invisible: no shadow (ButtonBase `box-shadow: none`).
     private property <color> btn-shadow-back-color:
-        variant == ButtonVariant.invisible || disabled || is-dark
+        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark
         ? shadow-none
         : danger-pressed-light
         ? rgba(76, 0, 20, 0.2)
@@ -137,13 +137,13 @@ export component Button {
         : rgba(31, 35, 40, 0.04);
 
     private property <length> btn-shadow-back-blur:
-        variant == ButtonVariant.invisible || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 3px : 0px;
+        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 3px : 0px;
 
     private property <length> btn-shadow-back-y:
-        variant == ButtonVariant.invisible || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 2px : 1px;
+        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark ? 0px : danger-pressed-light || primary-pressed-light ? 2px : 1px;
 
     private property <color> btn-shadow-front-color:
-        variant == ButtonVariant.invisible || disabled || is-dark
+        variant == ButtonVariant.invisible || variant == ButtonVariant.link || disabled || is-dark
         ? shadow-none
         : danger-pressed-light
         ? rgba(76, 0, 20, 0.14)
@@ -152,10 +152,10 @@ export component Button {
         : shadow-none;
 
     private property <length> btn-shadow-front-blur:
-        variant != ButtonVariant.invisible && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
+        variant != ButtonVariant.invisible && variant != ButtonVariant.link && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
 
     private property <length> btn-shadow-front-y:
-        variant != ButtonVariant.invisible && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
+        variant != ButtonVariant.invisible && variant != ButtonVariant.link && !disabled && !is-dark && (danger-pressed-light || primary-pressed-light) ? 1px : 0px;
 
     DoubleDropShadow {
         width: parent.width;
@@ -169,12 +169,16 @@ export component Button {
         width: parent.width;
         height: parent.height;
         background: fill-bg;
-        border-radius: 6px;
-        border-width: 1px;
+        border-radius: is-link ? 0px : 6px;
+        border-width: is-link ? 0px : 1px;
         border-color: fill-border;
     }
 
-    label := Text {
+    text-label := Text {
+        visible: !is-link;
+        width: 100%;
+        height: 100%;
+        text: root.label;
         color: label-color;
         font-size: 14px;
         font-weight: 600;
@@ -182,9 +186,51 @@ export component Button {
         horizontal-alignment: center;
     }
 
+    // Link: separate StyledText per hover (each @markdown is a single literal). TouchArea on top for hover + click.
+    link-text-disabled := Text {
+        visible: is-link && disabled;
+        width: 100%;
+        height: 100%;
+        text: root.label;
+        color: label-color;
+        font-size: 14px;
+        font-weight: 600;
+        horizontal-alignment: left;
+        vertical-alignment: center;
+    }
+
+    link-md := StyledText {
+        visible: is-link && !disabled && !ta.has-hover;
+        width: 100%;
+        height: 100%;
+        text: @markdown("\{label}");
+        horizontal-alignment: left;
+        vertical-alignment: center;
+        link-color: Tokens.fgColor-link;
+    }
+
+    link-md-hover := StyledText {
+        visible: is-link && !disabled && ta.has-hover;
+        width: 100%;
+        height: 100%;
+        text: @markdown("[\{label}](#)");
+        horizontal-alignment: left;
+        vertical-alignment: center;
+        link-color: Tokens.fgColor-link;
+    }
+
     ta := TouchArea {
+        width: parent.width;
+        height: parent.height;
         enabled: !disabled;
     }
+
+    width: is-link
+        ? (disabled ? link-text-disabled.preferred-width : max(link-md.preferred-width, link-md-hover.preferred-width))
+        : text-label.preferred-width + (2 * 16px);
+    height: is-link
+        ? (disabled ? link-text-disabled.preferred-height : max(link-md.preferred-height, link-md-hover.preferred-height))
+        : 32px;
 }
 
 
