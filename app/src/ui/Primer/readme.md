@@ -7,6 +7,16 @@ specified in detail.
 
 - [Primer Design System](https://primer.style/design/system)
 
+## Design tokens
+
+[`tokens.slint`](tokens.slint) defines three globals (and `Size`). They are re-exported from [`primer.slint`](primer.slint) for discovery.
+
+- **LayoutTokens** — control sizes, padding, typography lengths, border radius (no light/dark literals).
+- **PrimerColors** — semantic surface colors (fg, bg, border, link, overlay, drop-shadow, etc.) resolved from `Palette.color-scheme`.
+- **ButtonTokens** — `color-btn-*`, `button-*`, action-list hover backgrounds, disabled fg, icon-button tints, and filled-button shadow colors; a few values compose from **PrimerColors**.
+
+Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** pull **ButtonTokens** and **PrimerColors** from `tokens.slint`.
+
 ## Caution:
 
 This is a simplified version of the Primer Design System. It's incomplete, it's certainly
