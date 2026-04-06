@@ -1,6 +1,6 @@
 import { Palette } from "std-widgets.slint";
 import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
-import { Size, Tokens } from "../tokens.slint";
+import { LayoutTokens, Size, Tokens } from "../tokens.slint";
 
 
 export enum ButtonVariant {
@@ -37,17 +37,17 @@ export component Button {
 
     // Primer ButtonBase: only [data-size='small'] changes font-size; large keeps text-body-size-medium (L9 + L165–179).
     private property <length> filled-label-font-size:
-        size == Size.small ? Tokens.text-body-size-small : Tokens.text-body-size-medium;
+        size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
     private property <length> btn-padding-inline:
         size == Size.small
-        ? Tokens.control-small-paddingInline-condensed
-        : size == Size.large ? Tokens.control-large-paddingInline-spacious : Tokens.control-medium-paddingInline-normal;
+        ? LayoutTokens.control-small-paddingInline-condensed
+        : size == Size.large ? LayoutTokens.control-large-paddingInline-spacious : LayoutTokens.control-medium-paddingInline-normal;
 
     private property <length> btn-control-height:
         size == Size.small
-        ? Tokens.control-small-size
-        : size == Size.large ? Tokens.control-large-size : Tokens.control-medium-size;
+        ? LayoutTokens.control-small-size
+        : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
 
     private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
     private property <bool> is-link: variant == ButtonVariant.link;
@@ -267,7 +267,7 @@ export component Button {
     DoubleDropShadow {
         width: parent.width;
         height: parent.height;
-        border-radius: is-link ? 0px : Tokens.borderRadius-medium;
+        border-radius: is-link ? 0px : LayoutTokens.borderRadius-medium;
         back-layer: { offset-x: 0px, offset-y: btn-sh.back-y, blur: btn-sh.back-blur, color: btn-sh.back-color };
         front-layer: { offset-x: 0px, offset-y: btn-sh.front-y, blur: btn-sh.front-blur, color: btn-sh.front-color };
     }
@@ -276,7 +276,7 @@ export component Button {
         width: parent.width;
         height: parent.height;
         background: paint.bg;
-        border-radius: is-link ? 0px : Tokens.borderRadius-medium;
+        border-radius: is-link ? 0px : LayoutTokens.borderRadius-medium;
         border-width: is-link ? 0px : 1px;
         border-color: paint.border;
     }
@@ -288,7 +288,7 @@ export component Button {
         text: root.label;
         color: paint.fg;
         font-size: filled-label-font-size;
-        font-weight: Tokens.base-text-weight-medium;
+        font-weight: LayoutTokens.base-text-weight-medium;
         vertical-alignment: center;
         horizontal-alignment: center;
     }
@@ -301,8 +301,8 @@ export component Button {
         text: root.label;
         color: paint.fg;
         // Primer link uses font-size: inherit; Slint has no inherit — use body medium as default context.
-        font-size: Tokens.text-body-size-medium;
-        font-weight: Tokens.base-text-weight-medium;
+        font-size: LayoutTokens.text-body-size-medium;
+        font-weight: LayoutTokens.base-text-weight-medium;
         horizontal-alignment: left;
         vertical-alignment: center;
     }
@@ -372,14 +372,14 @@ export component IconButton {
 
     private property <length> icon-img-size:
         size == Size.small
-        ? Tokens.iconButton-icon-size-small
-        : size == Size.large ? Tokens.iconButton-icon-size-large : Tokens.iconButton-icon-size-medium;
+        ? LayoutTokens.iconButton-icon-size-small
+        : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
 
-    width: size == Size.small ? Tokens.control-small-size : size == Size.large ? Tokens.control-large-size : Tokens.control-medium-size;
+    width: size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
     height: self.width;
 
     Rectangle {
-        border-radius: Tokens.borderRadius-medium;
+        border-radius: LayoutTokens.borderRadius-medium;
         border-width: 1px;
         border-color: style.button-default-borderColor-active;
         background: ta.has-hover ? style.button-default-bgColor-hover : style.button-default-bgColor-active;
