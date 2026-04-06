@@ -116,7 +116,7 @@ export component Dashboard {
                 width: 100%;
                 for row[index] in AppState.review-requests-model: Rectangle {
                     height: 56px;
-                    background: mod(index, 2) == 0 ? #0d1116 : #161b22;
+                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : #161b22;
 
                     TouchArea {
                         clicked => {
@@ -181,7 +181,7 @@ export component Dashboard {
                 width: 100%;
                 for row[index] in AppState.security-alerts-model: Rectangle {
                     height: 56px;
-                    background: mod(index, 2) == 0 ? #0d1116 : #161b22;
+                    background: mod(index, 2) == 0 ? Tokens.bgColor-default : #161b22;
 
                     TouchArea {
                         clicked => {
