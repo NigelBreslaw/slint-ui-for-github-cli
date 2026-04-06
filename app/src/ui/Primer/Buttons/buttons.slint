@@ -1,69 +1,64 @@
 import { Palette } from "std-widgets.slint";
 import { Size, Tokens } from "../tokens.slint";
 
-export component ButtonBlack {
+// Aligned with primer-ui-react Button VariantType (PR1: default + primary only).
+export enum ButtonVariant {
+    default,
+    primary,
+}
+
+// PR1: medium only (32px height, 16px horizontal padding); sizes in a later PR.
+export component Button {
     height: 32px;
     width: label.preferred-width + (2 * 16px);
 
+    in property <ButtonVariant> variant: ButtonVariant.default;
     in property label <=> label.text;
     callback clicked <=> ta.clicked;
+
+    private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
+
+    // colors.btn + colors.btn.primary — legacy-theme dark.ts / light.ts innermost fallbacks
+    private property <color> default-fg: is-dark ? #c9d1d9 : #24292f;
+    private property <color> default-bg-rest: is-dark ? #21262d : #f6f8fa;
+    // Match IconButton: one stable border for rest/hover/press (GitHub default btn does not ramp border on hover).
+    private property <color> default-border: is-dark ? #3f444c : #d3d9df;
+    // Subtle bg shift only — same idea as IconButton (#010409 → #16191E), scaled for default btn fill.
+    private property <color> default-bg-hover: is-dark ? #252b33 : #eff2f5;
+    // hsla(212,12%,18%,1) dark / hsla(220,14%,93%,1) light
+    private property <color> default-bg-active: is-dark ? hsv(207.273, 0.215686, 0.2, 1) : hsv(228, 0.020833, 0.941176, 1);
+
+    private property <color> primary-fg: #ffffff;
+    private property <color> primary-bg-rest: is-dark ? #238636 : #1f883d;
+    private property <color> primary-border: is-dark ? rgba(240, 246, 252, 0.1) : rgba(31, 35, 40, 0.15);
+    private property <color> primary-bg-hover: is-dark ? #2ea043 : #1a7f37;
+    // dark: same as rest; light: hsla(137,66%,28%,1)
+    private property <color> primary-bg-active: is-dark ? #238636 : hsv(137.053, 0.798319, 0.466667, 1);
+
+    private property <color> fill-bg:
+        variant == ButtonVariant.primary
+        ? (ta.pressed ? primary-bg-active : ta.has-hover ? primary-bg-hover : primary-bg-rest)
+        : (ta.pressed ? default-bg-active : ta.has-hover ? default-bg-hover : default-bg-rest);
+
+    private property <color> fill-border: variant == ButtonVariant.primary ? primary-border : default-border;
+
+    private property <color> label-color: variant == ButtonVariant.primary ? primary-fg : default-fg;
 
     Rectangle {
         width: parent.width;
         height: parent.height;
-        background: ta.has-hover ? #262c36 : #202830;
+        background: fill-bg;
         border-radius: 6px;
         border-width: 1px;
-        border-color: #3e444d;
+        border-color: fill-border;
     }
 
     label := Text {
-        color: #f0f6fd;
+        color: label-color;
         font-size: 14px;
         font-weight: 600;
         vertical-alignment: center;
         horizontal-alignment: center;
-    }
-
-    ta := TouchArea { }
-}
-
-export component ButtonGreen {
-    height: 32px;
-    width: label.preferred-width + (2 * 16px);
-
-    in property label <=> label.text;
-    callback clicked <=> ta.clicked;
-
-    Rectangle {
-        border-radius: 6px;
-        drop-shadow-offset-x: 0px;
-        drop-shadow-offset-y: 1px;
-        drop-shadow-blur: 3px;
-        drop-shadow-color: #01040999;
-    }
-
-    Rectangle {
-        border-radius: 6px;
-        drop-shadow-offset-x: 0px;
-        drop-shadow-offset-y: 1px;
-        drop-shadow-blur: 1px;
-        drop-shadow-color: #01040999;
-    }
-
-    Rectangle {
-        width: parent.width;
-        height: parent.height;
-        background: ta.pressed ? #2e9a40 : ta.has-hover ? #2b8f3c : #248536;
-        border-radius: 6px;
-        border-width: 1px;
-        border-color: #3e444d;
-
-        label := Text {
-            color: #f0f6fd;
-            font-size: 14px;
-            font-weight: 600;
-        }
     }
 
     ta := TouchArea { }

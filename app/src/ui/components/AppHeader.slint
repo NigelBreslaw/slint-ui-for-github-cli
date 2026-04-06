@@ -3,7 +3,7 @@ import { Avatar, IconButton, PageHeader } from "../primer/primer.slint";
 import { UserMenu } from "./UserMenu.slint";
 import { AppState, Authed, AppView } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
-import { ButtonBlack } from "../Primer/Buttons/buttons.slint";
+import { Button, ButtonVariant } from "../Primer/Buttons/buttons.slint";
 import { Tokens } from "../Primer/tokens.slint";
 
 global HeaderState {
@@ -38,17 +38,18 @@ export component AppHeader {
             }
         }
 
-        ButtonBlack {
+        Button {
             x: (parent.width - self.width) / 2;
             y: (parent.height - self.height) / 2;
             visible: AppState.view == AppView.timeReporting && TimeReportingState.has-selected-project;
             label: "Change project";
+            variant: ButtonVariant.primary;
             clicked => {
                 TimeReportingState.time-reporting-open-change-project();
             }
         }
 
-        sign-in := ButtonBlack {
+        sign-in := Button {
             x: parent.width - self.width - self.y;
             y: (parent.height - self.height) / 2;
             visible: AppState.auth == Authed.loggedOut;

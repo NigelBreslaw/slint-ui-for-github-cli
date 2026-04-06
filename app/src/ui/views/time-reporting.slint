@@ -1,7 +1,7 @@
 import { ListView } from "std-widgets.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
-import { ButtonBlack } from "../Primer/Buttons/buttons.slint";
+import { Button } from "../Primer/Buttons/buttons.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
 import { Spinner } from "../Primer/primer.slint";
 import { Tokens } from "../Primer/tokens.slint";
@@ -43,7 +43,7 @@ export component TimeReporting {
                     spacing: 8px;
                     alignment: center;
 
-                    ButtonBlack {
+                    Button {
                         label: "←";
                         clicked => {
                             TimeReportingState.time-reporting-week-prev();
@@ -70,21 +70,21 @@ export component TimeReporting {
                         }
                     }
 
-                    ButtonBlack {
+                    Button {
                         label: "→";
                         clicked => {
                             TimeReportingState.time-reporting-week-next();
                         }
                     }
 
-                    ButtonBlack {
+                    Button {
                         label: "This week";
                         clicked => {
                             TimeReportingState.time-reporting-week-this();
                         }
                     }
 
-                    ButtonBlack {
+                    Button {
                         label: "Refresh";
                         clicked => {
                             TimeReportingState.time-reporting-refresh();
@@ -520,7 +520,7 @@ export component TimeReporting {
                             height: 1px;
                         }
 
-                        ButtonBlack {
+                        Button {
                             visible: TimeReportingState.picker-allow-cancel;
                             label: "Cancel";
                             clicked => {
@@ -599,7 +599,7 @@ export component TimeReporting {
 
                         HorizontalLayout {
                             alignment: end;
-                            ButtonBlack {
+                            Button {
                                 label: "Close";
                                 clicked => {
                                     TimeReportingState.time-reporting-detail-close();

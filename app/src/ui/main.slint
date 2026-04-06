@@ -15,7 +15,7 @@ import { Spinner } from "Primer/primer.slint";
 import { Tokens } from "Primer/tokens.slint";
 import { Settings } from "views/settings.slint";
 import { Dashboard } from "views/dashboard.slint";
-import { ButtonBlack } from "Primer/Buttons/buttons.slint";
+import { Button } from "Primer/Buttons/buttons.slint";
 import { SideBar } from "components/sideBar.slint";
 import { TimeReporting } from "views/time-reporting.slint";
 
@@ -138,7 +138,7 @@ export component MainWindow inherits Window {
                 wrap: word-wrap;
             }
 
-            ButtonBlack {
+            Button {
                 label: "Open CLI install page";
                 clicked => {
                     root.open_cli_install_page();
@@ -183,7 +183,7 @@ export component MainWindow inherits Window {
                 wrap: word-wrap;
             }
 
-            ButtonBlack {
+            Button {
                 label: "Open GitHub CLI install page";
                 clicked => {
                     root.open_cli_install_page();
@@ -250,7 +250,7 @@ export component MainWindow inherits Window {
                     }
                 }
 
-                ButtonBlack {
+                Button {
                     visible: root.auth-device-code != "";
                     label: "Copy code to clipboard and open web login";
                     clicked => {
