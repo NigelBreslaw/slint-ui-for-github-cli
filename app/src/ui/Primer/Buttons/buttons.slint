@@ -1,5 +1,5 @@
 import { Palette } from "std-widgets.slint";
-import { DoubleDropShadow } from "../Effects/double-drop-shadow.slint";
+import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 
 
@@ -264,12 +264,14 @@ export component Button {
     private property <ButtonPaint> paint: button-paint(variant, disabled, ta.has-hover, ta.pressed);
     private property <ButtonShadowState> btn-sh: button-shadow(variant, disabled, is-dark, danger-pressed-light, primary-pressed-light, danger-hover-light);
 
-    DoubleDropShadow {
+    MultiDropShadow {
         width: parent.width;
         height: parent.height;
         border-radius: is-link ? 0px : LayoutTokens.borderRadius-medium;
-        back-layer: { offset-x: 0px, offset-y: btn-sh.back-y, blur: btn-sh.back-blur, color: btn-sh.back-color };
-        front-layer: { offset-x: 0px, offset-y: btn-sh.front-y, blur: btn-sh.front-blur, color: btn-sh.front-color };
+        shadows: [
+            { color: btn-sh.back-color, offset-x: 0px, offset-y: btn-sh.back-y, blur: btn-sh.back-blur },
+            { color: btn-sh.front-color, offset-x: 0px, offset-y: btn-sh.front-y, blur: btn-sh.front-blur },
+        ];
     }
 
     Rectangle {
