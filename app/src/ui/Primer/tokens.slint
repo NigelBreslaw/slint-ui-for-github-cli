@@ -1,9 +1,27 @@
 import { Palette } from "std-widgets.slint";
+import { DropShadowLayer } from "./Effects/multi-drop-shadow.slint";
 
 export enum Size {
     small,
     medium,
     large,
+}
+
+export global ShadowTokens {
+
+    property <[DropShadowLayer]> shadow-floating-small-light: [
+        { color: #d1d9e080, offset-x: 0px, offset-y: 0px, blur: 1px },
+        { color: #25292e0a, offset-x: 0px, offset-y: 6px, blur: 12px },
+        { color: #25292e1f, offset-x: 0px, offset-y: 6px, blur: 18px },
+    ];
+    property <[DropShadowLayer]> shadow-floating-small-dark: [
+        { color: #3d444d, offset-x: 0px, offset-y: 0px, blur: 1px },
+        { color: #01040966, offset-x: 0px, offset-y: 6px, blur: 12px },
+        { color: #01040966, offset-x: 0px, offset-y: 6px, blur: 18px },
+    ];
+
+    out property <[DropShadowLayer]> shadow-floating-small: Palette.color-scheme == ColorScheme.dark ? shadow-floating-small-dark : shadow-floating-small-light;
+
 }
 
 // Primer functional/size + typography (no color-scheme). Matches ButtonBase.module.css variable names.

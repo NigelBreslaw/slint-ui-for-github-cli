@@ -1,6 +1,7 @@
 import { Avatar, MultiDropShadow } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
+import { ShadowTokens } from "../primer/tokens.slint";
 
 global MenuStyle {
     out property <length> border-radius: 12px;
@@ -90,10 +91,7 @@ export component UserMenu {
 
     MultiDropShadow {
         border-radius: MenuStyle.border-radius;
-        shadows: [
-            { color: PrimerColors.drop-shadow, offset-x: 0px, offset-y: 6px, blur: 18px },
-            { color: PrimerColors.drop-shadow, offset-x: 0px, offset-y: 6px, blur: 12px },
-        ];
+        shadows: ShadowTokens.shadow-floating-small;
     }
 
     Rectangle {
