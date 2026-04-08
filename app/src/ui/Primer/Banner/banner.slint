@@ -1,0 +1,144 @@
+import { BannerTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+
+// Mirrors @primer/react Banner variants (Banner.tsx / Banner.module.css).
+export enum BannerVariant {
+    critical,
+    info,
+    success,
+    upsell,
+    warning,
+}
+
+export enum BannerLayout {
+    default,
+    compact,
+}
+
+export component Banner {
+    in property <string> title: "";
+    in property <string> description: "";
+    in property <BannerVariant> variant: BannerVariant.info;
+    in property <BannerLayout> layout: BannerLayout.default;
+    in property <bool> flush: false;
+    in property <bool> hide-title: false;
+    /// When true and variant is `info` or `upsell`, `leading-icon` replaces the default icon.
+    in property <bool> has-custom-leading-icon: false;
+    in property <image> leading-icon;
+
+    private property <length> pad-inline:
+        layout == BannerLayout.compact ? LayoutTokens.banner-padding-compact : LayoutTokens.banner-padding-default;
+    private property <length> pad-block: pad-inline;
+
+    private property <length> icon-size:
+        hide-title ? LayoutTokens.banner-icon-size-title-hidden : LayoutTokens.banner-icon-size-default;
+
+    private property <length> icon-cell-width:
+        LayoutTokens.banner-icon-container-padding * 2 + icon-size;
+
+    private property <bool> use-custom-leading:
+        has-custom-leading-icon && (variant == BannerVariant.info || variant == BannerVariant.upsell);
+
+    private property <color> banner-bg:
+        variant == BannerVariant.critical ? BannerTokens.banner-bgColor-critical
+        : variant == BannerVariant.info ? BannerTokens.banner-bgColor-info
+        : variant == BannerVariant.success ? BannerTokens.banner-bgColor-success
+        : variant == BannerVariant.upsell ? BannerTokens.banner-bgColor-upsell
+        : BannerTokens.banner-bgColor-warning;
+
+    private property <color> banner-border:
+        variant == BannerVariant.critical ? BannerTokens.banner-borderColor-critical
+        : variant == BannerVariant.info ? BannerTokens.banner-borderColor-info
+        : variant == BannerVariant.success ? BannerTokens.banner-borderColor-success
+        : variant == BannerVariant.upsell ? BannerTokens.banner-borderColor-upsell
+        : BannerTokens.banner-borderColor-warning;
+
+    private property <color> banner-icon-fg:
+        variant == BannerVariant.critical ? BannerTokens.banner-icon-fgColor-critical
+        : variant == BannerVariant.info ? BannerTokens.banner-icon-fgColor-info
+        : variant == BannerVariant.success ? BannerTokens.banner-icon-fgColor-success
+        : variant == BannerVariant.upsell ? BannerTokens.banner-icon-fgColor-upsell
+        : BannerTokens.banner-icon-fgColor-warning;
+
+    private property <image> default-leading-source:
+        variant == BannerVariant.critical ? @image-url("../../../assets/16px/stop.svg")
+        : variant == BannerVariant.info ? @image-url("../../../assets/16px/info.svg")
+        : variant == BannerVariant.success ? @image-url("../../../assets/16px/circle-check.svg")
+        : variant == BannerVariant.upsell ? @image-url("../../../assets/16px/info.svg")
+        : @image-url("../../../assets/16px/alert.svg");
+
+    private property <image> resolved-leading-source: use-custom-leading ? leading-icon : default-leading-source;
+
+    min-width: 120px;
+    preferred-width: 100%;
+
+    Rectangle {
+        width: 100%;
+        background: banner-bg;
+        border-radius: flush ? 0px : LayoutTokens.borderRadius-medium;
+        border-width: flush ? 0px : 1px;
+        border-color: banner-border;
+
+        VerticalLayout {
+            width: 100%;
+            spacing: 0;
+
+            if flush: Rectangle {
+                height: 1px;
+                width: 100%;
+                background: banner-border;
+            }
+
+            HorizontalLayout {
+                padding-left: pad-inline;
+                padding-right: pad-inline;
+                padding-top: pad-block;
+                padding-bottom: pad-block;
+                spacing: 4px;
+                width: 100%;
+                alignment: start;
+
+                Rectangle {
+                    width: icon-cell-width;
+                    height: icon-size + LayoutTokens.banner-icon-container-padding * 2;
+
+                    Image {
+                        x: (parent.width - self.width) / 2;
+                        y: LayoutTokens.banner-icon-container-padding;
+                        width: icon-size;
+                        height: icon-size;
+                        source: resolved-leading-source;
+                        colorize: banner-icon-fg;
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+                    horizontal-stretch: 1;
+
+                    if !hide-title: Text {
+                        text: title;
+                        color: PrimerColors.fgColor-default;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        wrap: word-wrap;
+                        width: 100%;
+                    }
+
+                    Text {
+                        text: description;
+                        color: PrimerColors.fgColor-default;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        wrap: word-wrap;
+                        width: 100%;
+                    }
+                }
+            }
+
+            if flush: Rectangle {
+                height: 1px;
+                width: 100%;
+                background: banner-border;
+            }
+        }
+    }
+}
