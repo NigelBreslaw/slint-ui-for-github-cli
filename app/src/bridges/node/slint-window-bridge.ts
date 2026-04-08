@@ -224,6 +224,7 @@ export async function refreshDashboardReviewRequests(window: MainWindowInstance)
         title: r.title,
         url: r.url,
         repo_label: r.repo_label,
+        author_login: r.author_login,
       })),
     ),
   });

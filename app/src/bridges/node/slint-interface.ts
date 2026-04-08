@@ -15,6 +15,7 @@ export type SlintReviewRequestRow = {
   title: string;
   url: string;
   repo_label: string;
+  author_login: string;
 };
 
 /** Row shape must match `SecurityAlertRow` in `app-state.slint`. */

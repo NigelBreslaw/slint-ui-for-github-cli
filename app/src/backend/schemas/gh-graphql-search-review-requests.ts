@@ -13,11 +13,15 @@ const repositorySchema = type({
   nameWithOwner: "string",
 });
 
+const authorActorSchema = type({ login: "string" });
+
 /** `Issue` and `PullRequest` search hits both expose these fields. */
 const searchResultNodeSchema = type({
   title: "string",
   url: "string",
   repository: repositorySchema,
+  /** PR/issue author login; null for e.g. ghost users. Omitted in rare API shapes — treat as unknown. */
+  author: authorActorSchema.or(type.null).optional(),
 });
 
 const searchEdgeSchema = type({
@@ -37,6 +41,8 @@ export type ReviewRequestRow = {
   title: string;
   url: string;
   repo_label: string;
+  /** `author.login` when present; empty when author is null or missing (not the same as “who clicked Request review”). */
+  author_login: string;
 };
 
 function graphqlErrorMessage(errors: unknown): string {
@@ -66,6 +72,7 @@ function mapPageToRows(page: ReviewRequestSearchPage): ReviewRequestRow[] {
       title: node.title,
       url: node.url,
       repo_label: node.repository.nameWithOwner,
+      author_login: node.author?.login ?? "",
     });
   }
   return rows;
@@ -128,6 +135,9 @@ query ReviewRequests($searchQuery: String!, $first: Int!, $after: String) {
         ... on PullRequest {
           title
           url
+          author {
+            login
+          }
           repository {
             nameWithOwner
           }
@@ -135,6 +145,9 @@ query ReviewRequests($searchQuery: String!, $first: Int!, $after: String) {
         ... on Issue {
           title
           url
+          author {
+            login
+          }
           repository {
             nameWithOwner
           }
