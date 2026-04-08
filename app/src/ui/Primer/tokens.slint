@@ -349,13 +349,20 @@ export global ButtonTokens {
     out property <color> button-link-bgColor-rest: #00000000;
     out property <color> button-link-borderColor-rest: #00000000;
 
-    // Filled-button shadows (light theme only in app; theme-independent rgba)
+    // Filled-button shadows (rgba; light vs dark tuned for contrast on canvas)
     out property <color> button-shadow-ambient-light: rgba(31, 35, 40, 0.04);
     out property <color> button-shadow-elevated-light: rgba(31, 35, 40, 0.1);
     out property <color> button-shadow-danger-back-pressed-light: rgba(76, 0, 20, 0.2);
     out property <color> button-shadow-primary-back-pressed-light: rgba(0, 45, 17, 0.2);
     out property <color> button-shadow-danger-front-pressed-light: rgba(76, 0, 20, 0.14);
     out property <color> button-shadow-primary-front-pressed-light: rgba(0, 45, 17, 0.14);
+
+    out property <color> button-shadow-ambient-dark: rgba(0, 0, 0, 0.32);
+    out property <color> button-shadow-elevated-dark: rgba(0, 0, 0, 0.52);
+    out property <color> button-shadow-danger-back-pressed-dark: rgba(0, 0, 0, 0.45);
+    out property <color> button-shadow-primary-back-pressed-dark: rgba(0, 0, 0, 0.42);
+    out property <color> button-shadow-danger-front-pressed-dark: rgba(0, 0, 0, 0.32);
+    out property <color> button-shadow-primary-front-pressed-dark: rgba(0, 0, 0, 0.28);
 }
 
 // Banner.module.css --banner-* per variant; values are PrimerColors functional tokens only (no literals here).

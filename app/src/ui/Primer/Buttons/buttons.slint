@@ -51,9 +51,9 @@ export component Button {
 
     private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
     private property <bool> is-link: variant == ButtonVariant.link;
-    private property <bool> primary-pressed-light: variant == ButtonVariant.primary && !is-dark && ta.pressed;
-    private property <bool> danger-pressed-light: variant == ButtonVariant.danger && !is-dark && ta.pressed;
-    private property <bool> danger-hover-light: variant == ButtonVariant.danger && !is-dark && ta.has-hover && !ta.pressed;
+    private property <bool> primary-pressed: variant == ButtonVariant.primary && ta.pressed;
+    private property <bool> danger-pressed: variant == ButtonVariant.danger && ta.pressed;
+    private property <bool> danger-hover: variant == ButtonVariant.danger && ta.has-hover && !ta.pressed;
 
     pure function button-paint(v: ButtonVariant, dis: bool, hover: bool, pressed: bool) -> ButtonPaint {
         if dis {
@@ -191,11 +191,71 @@ export component Button {
         p-pl: bool,
         d-hv: bool,
     ) -> ButtonShadowState {
-        if v == ButtonVariant.invisible || v == ButtonVariant.link || dis || dark {
+        if v == ButtonVariant.invisible || v == ButtonVariant.link || dis {
             return {
                 back-color: #00000000,
                 back-blur: 0px,
                 back-y: 0px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if dark {
+            if d-pl {
+                return {
+                    back-color: ButtonTokens.button-shadow-danger-back-pressed-dark,
+                    back-blur: 3px,
+                    back-y: 2px,
+                    front-color: ButtonTokens.button-shadow-danger-front-pressed-dark,
+                    front-blur: 1px,
+                    front-y: 1px,
+                };
+            }
+            if p-pl {
+                return {
+                    back-color: ButtonTokens.button-shadow-primary-back-pressed-dark,
+                    back-blur: 3px,
+                    back-y: 2px,
+                    front-color: ButtonTokens.button-shadow-primary-front-pressed-dark,
+                    front-blur: 1px,
+                    front-y: 1px,
+                };
+            }
+            if d-hv {
+                return {
+                    back-color: ButtonTokens.button-shadow-elevated-dark,
+                    back-blur: 0px,
+                    back-y: 1px,
+                    front-color: #00000000,
+                    front-blur: 0px,
+                    front-y: 0px,
+                };
+            }
+            if v == ButtonVariant.primary {
+                return {
+                    back-color: ButtonTokens.button-shadow-elevated-dark,
+                    back-blur: 2px,
+                    back-y: 2px,
+                    front-color: #00000000,
+                    front-blur: 0px,
+                    front-y: 0px,
+                };
+            }
+            if v == ButtonVariant.danger {
+                return {
+                    back-color: ButtonTokens.button-shadow-ambient-dark,
+                    back-blur: 0px,
+                    back-y: 1px,
+                    front-color: #00000000,
+                    front-blur: 0px,
+                    front-y: 0px,
+                };
+            }
+            return {
+                back-color: ButtonTokens.button-shadow-ambient-dark,
+                back-blur: 0px,
+                back-y: 1px,
                 front-color: #00000000,
                 front-blur: 0px,
                 front-y: 0px,
@@ -262,7 +322,7 @@ export component Button {
     }
 
     private property <ButtonPaint> paint: button-paint(variant, disabled, ta.has-hover, ta.pressed);
-    private property <ButtonShadowState> btn-sh: button-shadow(variant, disabled, is-dark, danger-pressed-light, primary-pressed-light, danger-hover-light);
+    private property <ButtonShadowState> btn-sh: button-shadow(variant, disabled, is-dark, danger-pressed, primary-pressed, danger-hover);
 
     MultiDropShadow {
         width: parent.width;
