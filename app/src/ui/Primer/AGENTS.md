@@ -9,9 +9,9 @@ This document stands alone in the repo. Past chats or Cursor plan files are not 
 
 ## Upstream references (consult before inventing values)
 
-| Location | Role |
-|----------|------|
-| `/Users/nigelb/slint/primer-tokens` | **primer-tokens** — functional and component token JSON5 (e.g. `src/tokens/functional/color/control.json5`, `functional/size/size.json5`, `component/button.json5`, shadow tokens). Use for **token names**, **layering** (base → functional → component), and **hex / hsla / hsv** as the source of truth when porting. |
+| Location                              | Role                                                                                                                                                                                                                                                                                                                         |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/Users/nigelb/slint/primer-tokens`   | **primer-tokens** — functional and component token JSON5 (e.g. `src/tokens/functional/color/control.json5`, `functional/size/size.json5`, `component/button.json5`, shadow tokens). Use for **token names**, **layering** (base → functional → component), and **hex / hsla / hsv** as the source of truth when porting.     |
 | `/Users/nigelb/slint/primer-ui-react` | **primer-ui-react** — how tokens become **CSS custom properties** in `*.module.css` (e.g. `internal/components/TextInputWrapper.module.css`, `Select/Select.module.css`, button-related styles). Use for **interaction states**, **sizes**, **validation**, and **variable names**, even when this Slint port is simplified. |
 
 Also see the public docs: [Primer Design System](https://primer.style/design/system).
@@ -23,11 +23,11 @@ Also see the public docs: [Primer Design System](https://primer.style/design/sys
 
 ### Token layers (current convention)
 
-| Global | Contents |
-|--------|----------|
-| **LayoutTokens** | Lengths, typography sizes, line heights, control dimensions, padding, icon sizes, border radius. **No** light/dark color scheme. |
+| Global           | Contents                                                                                                                                                                                                                                             |
+| ---------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **LayoutTokens** | Lengths, typography sizes, line heights, control dimensions, padding, icon sizes, border radius. **No** light/dark color scheme.                                                                                                                     |
 | **PrimerColors** | Semantic surfaces (fg, bg, border, link, overlay, shadows, success validation, control-trigger shadows, etc.) plus **shared primitives** (e.g. emphasis greens, `fgOnEmphasis`) so each **hex / rgb / hsv** appears **once** when values are shared. |
-| **ButtonTokens** | GitHub-style `color-btn-*` and resolved `button-*` colors, action-list tints, icon-button tints, filled-button shadow colors. Composes from **`PrimerColors` `out` properties** where possible instead of repeating literals. |
+| **ButtonTokens** | GitHub-style `color-btn-*` and resolved `button-*` colors, action-list tints, icon-button tints, filled-button shadow colors. Composes from **`PrimerColors` `out` properties** where possible instead of repeating literals.                        |
 
 **Cross-global rule:** Treat other globals as exposing only their **`out`** bindings to dependents. Do not rely on reading another global’s **private** fields from outside that global.
 
@@ -65,13 +65,13 @@ flowchart TB
 
 Split or merge PRs by size; small widgets can combine steps.
 
-| Stage | Focus |
-|-------|--------|
-| **PR1 — Spike / API** | Component shell, properties, callbacks, minimal layout; must compile; PR description lists upstream paths you mirrored. |
-| **PR2 — Tokens** | New `LayoutTokens` / `PrimerColors` / `ButtonTokens` entries; **deduplicate** literals; cite primer-tokens keys or CSS vars in the PR. |
-| **PR3 — Visual parity** | Hover, disabled, focus, validation, sizing, shadows, typography; optional screenshots or Storybook references from primer-ui-react. |
-| **PR4 — Integration** | Wire into `main.slint` or a view; TypeScript bridges if needed; avoid unrelated refactors. |
-| **PR5 — Docs / cleanup** | Update `readme.md` or focused comments; remove dead code; update `AGENTS.md` if the process or layers change. |
+| Stage                    | Focus                                                                                                                                  |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------- |
+| **PR1 — Spike / API**    | Component shell, properties, callbacks, minimal layout; must compile; PR description lists upstream paths you mirrored.                |
+| **PR2 — Tokens**         | New `LayoutTokens` / `PrimerColors` / `ButtonTokens` entries; **deduplicate** literals; cite primer-tokens keys or CSS vars in the PR. |
+| **PR3 — Visual parity**  | Hover, disabled, focus, validation, sizing, shadows, typography; optional screenshots or Storybook references from primer-ui-react.    |
+| **PR4 — Integration**    | Wire into `main.slint` or a view; TypeScript bridges if needed; avoid unrelated refactors.                                             |
+| **PR5 — Docs / cleanup** | Update `readme.md` or focused comments; remove dead code; update `AGENTS.md` if the process or layers change.                          |
 
 Trivial components may merge PR1+PR2; large or risky work may split PR3 further.
 

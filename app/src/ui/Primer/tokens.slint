@@ -49,6 +49,14 @@ export global LayoutTokens {
     out property <length> iconButton-icon-size-large: 18px;
 
     out property <length> borderRadius-medium: 6px;
+
+    // Banner (Banner.module.css padding / icon box; legacy-theme base-size-8 / base-size-4 / base-size-20 / base-size-16)
+    out property <length> banner-padding-default: 8px;
+    out property <length> banner-padding-compact: 4px;
+    out property <length> banner-icon-size-default: 20px;
+    out property <length> banner-icon-size-title-hidden: 16px;
+    out property <length> banner-icon-container-padding: 8px;
+    out property <int> base-text-weight-semibold: 600;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
@@ -121,6 +129,39 @@ export global PrimerColors {
     property <color> shadow-controlTrigger-back-light: rgba(31, 35, 40, 0.12);
     property <color> shadow-controlTrigger-front-light: rgba(31, 35, 40, 0.18);
 
+    // Banner surfaces: primer-tokens bgColor/borderColor/fgColor + primer-ui-react legacy-theme light.ts / dark.ts fallbacks.
+    property <color> bgColor-accent-muted-light: #ddf4ff;
+    property <color> bgColor-accent-muted-dark: rgba(56, 139, 253, 0.1);
+    property <color> borderColor-accent-muted-light: rgba(84, 174, 255, 0.4);
+    property <color> borderColor-accent-muted-dark: rgba(56, 139, 253, 0.4);
+
+    property <color> bgColor-success-muted-light: #dafbe1;
+    property <color> bgColor-success-muted-dark: rgba(46, 160, 67, 0.15);
+    property <color> borderColor-success-muted-light: rgba(74, 194, 107, 0.4);
+    property <color> borderColor-success-muted-dark: rgba(46, 160, 67, 0.4);
+
+    property <color> bgColor-attention-muted-light: #fff8c5;
+    property <color> bgColor-attention-muted-dark: rgba(187, 128, 9, 0.15);
+    property <color> borderColor-attention-muted-light: rgba(212, 167, 44, 0.4);
+    property <color> borderColor-attention-muted-dark: rgba(187, 128, 9, 0.4);
+    property <color> fgColor-attention-light: #9a6700;
+    property <color> fgColor-attention-dark: #d29922;
+
+    property <color> bgColor-danger-muted-light: #ffebe9;
+    property <color> bgColor-danger-muted-dark: rgba(248, 81, 73, 0.1);
+    property <color> borderColor-danger-muted-light: rgba(255, 129, 130, 0.4);
+    property <color> borderColor-danger-muted-dark: rgba(248, 81, 73, 0.4);
+    property <color> fgColor-danger-light: #d1242f;
+    property <color> fgColor-danger-dark: #f85149;
+
+    // upsell banner uses done.* muted surfaces; fgColor-upsell aliases fgColor.done in primer-tokens.
+    property <color> bgColor-done-muted-light: #fbefff;
+    property <color> bgColor-done-muted-dark: rgba(163, 113, 247, 0.1);
+    property <color> borderColor-done-muted-light: rgba(194, 151, 255, 0.4);
+    property <color> borderColor-done-muted-dark: rgba(163, 113, 247, 0.4);
+    property <color> fgColor-done-light: #8250df;
+    property <color> fgColor-done-dark: #a371f7;
+
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
     out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
@@ -146,6 +187,24 @@ export global PrimerColors {
     out property <color> fgOnEmphasis: fg-on-emphasis;
     out property <color> greenPrimaryHoverDark: green-primary-hover-dark;
     out property <color> greenPrimaryDisabledBgDark: green-primary-disabled-bg-dark;
+
+    out property <color> fgColor-accent: fgColor-link;
+    out property <color> bgColor-accent-muted: color-scheme == ColorScheme.dark ? bgColor-accent-muted-dark : bgColor-accent-muted-light;
+    out property <color> borderColor-accent-muted: color-scheme == ColorScheme.dark ? borderColor-accent-muted-dark : borderColor-accent-muted-light;
+    out property <color> bgColor-success-muted: color-scheme == ColorScheme.dark ? bgColor-success-muted-dark : bgColor-success-muted-light;
+    out property <color> borderColor-success-muted: color-scheme == ColorScheme.dark ? borderColor-success-muted-dark : borderColor-success-muted-light;
+    out property <color> bgColor-attention-muted: color-scheme == ColorScheme.dark ? bgColor-attention-muted-dark : bgColor-attention-muted-light;
+    out property <color> borderColor-attention-muted: color-scheme == ColorScheme.dark ? borderColor-attention-muted-dark : borderColor-attention-muted-light;
+    out property <color> fgColor-attention: color-scheme == ColorScheme.dark ? fgColor-attention-dark : fgColor-attention-light;
+    out property <color> bgColor-danger-muted: color-scheme == ColorScheme.dark ? bgColor-danger-muted-dark : bgColor-danger-muted-light;
+    out property <color> borderColor-danger-muted: color-scheme == ColorScheme.dark ? borderColor-danger-muted-dark : borderColor-danger-muted-light;
+    out property <color> fgColor-danger: color-scheme == ColorScheme.dark ? fgColor-danger-dark : fgColor-danger-light;
+    out property <color> bgColor-done-muted: color-scheme == ColorScheme.dark ? bgColor-done-muted-dark : bgColor-done-muted-light;
+    out property <color> borderColor-done-muted: color-scheme == ColorScheme.dark ? borderColor-done-muted-dark : borderColor-done-muted-light;
+    out property <color> fgColor-done: color-scheme == ColorScheme.dark ? fgColor-done-dark : fgColor-done-light;
+    out property <color> bgColor-upsell-muted: bgColor-done-muted;
+    out property <color> borderColor-upsell-muted: borderColor-done-muted;
+    out property <color> fgColor-upsell: fgColor-done;
 }
 
 // color-btn-*, button-*, filled-button shadows, iconButton palette, control disabled fg. Used by Button / IconButton.
@@ -292,4 +351,27 @@ export global ButtonTokens {
     out property <color> button-shadow-primary-back-pressed-light: rgba(0, 45, 17, 0.2);
     out property <color> button-shadow-danger-front-pressed-light: rgba(76, 0, 20, 0.14);
     out property <color> button-shadow-primary-front-pressed-light: rgba(0, 45, 17, 0.14);
+}
+
+// Banner.module.css --banner-* per variant; values are PrimerColors functional tokens only (no literals here).
+export global BannerTokens {
+    out property <color> banner-bgColor-critical: PrimerColors.bgColor-danger-muted;
+    out property <color> banner-borderColor-critical: PrimerColors.borderColor-danger-muted;
+    out property <color> banner-icon-fgColor-critical: PrimerColors.fgColor-danger;
+
+    out property <color> banner-bgColor-info: PrimerColors.bgColor-accent-muted;
+    out property <color> banner-borderColor-info: PrimerColors.borderColor-accent-muted;
+    out property <color> banner-icon-fgColor-info: PrimerColors.fgColor-accent;
+
+    out property <color> banner-bgColor-success: PrimerColors.bgColor-success-muted;
+    out property <color> banner-borderColor-success: PrimerColors.borderColor-success-muted;
+    out property <color> banner-icon-fgColor-success: PrimerColors.fgColor-success;
+
+    out property <color> banner-bgColor-upsell: PrimerColors.bgColor-upsell-muted;
+    out property <color> banner-borderColor-upsell: PrimerColors.borderColor-upsell-muted;
+    out property <color> banner-icon-fgColor-upsell: PrimerColors.fgColor-upsell;
+
+    out property <color> banner-bgColor-warning: PrimerColors.bgColor-attention-muted;
+    out property <color> banner-borderColor-warning: PrimerColors.borderColor-attention-muted;
+    out property <color> banner-icon-fgColor-warning: PrimerColors.fgColor-attention;
 }
