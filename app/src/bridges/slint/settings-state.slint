@@ -6,9 +6,8 @@ export global SettingsState {
 
     /** Options for the Primer-style select demo (wired from TypeScript `ArrayModel`). */
     in property <[SelectOption]> primer-demo-select-options;
-    in-out property <string> primer-demo-selected-value: "";
-    in-out property <string> primer-demo-selected-label: "";
-    callback primer-demo-select-changed(string);
+    in-out property <int> primer-demo-selected-index: -1;
+    callback primer-demo-select-changed(value_index: int);
 
     in-out property <string> security-alerts-repo-input: "";
     in-out property <string> security-alerts-repo-error: "";

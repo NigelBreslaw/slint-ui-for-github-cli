@@ -69,8 +69,7 @@ assignProperties(window.SettingsState, {
     { value: "enterprise", label: "GitHub Enterprise Server", enabled: true },
     { value: "disabled-demo", label: "Disabled (demo)", enabled: false },
   ]),
-  primer_demo_selected_value: "github.com",
-  primer_demo_selected_label: "github.com",
+  primer_demo_selected_index: 0,
 });
 
 hydrateTimeReportingFromKv(window);
@@ -115,7 +114,9 @@ const appStateCallbacks = {
 wireFunctions(window.AppState, appStateCallbacks);
 
 const settingsStateCallbacks = {
-  primer_demo_select_changed: (_value: string) => {},
+  primer_demo_select_changed: (_index: number) => {
+    window.SettingsState.primer_demo_selected_index = _index;
+  },
   security_alerts_repo_edited: (text: string) => {
     applySecurityAlertsRepoEdited(window, text);
   },

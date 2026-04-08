@@ -26,7 +26,7 @@
     "clipboardy": "5.3.1",
     "sharp": "0.34.5",
     "slint-bridge-kit": "workspace:*",
-    "slint-ui": "1.16.0-nightly.2026040119"
+    "slint-ui": "1.16.0-nightly.2026040720"
   },
   "devDependencies": {
     "@types/better-sqlite3": "7.6.13",

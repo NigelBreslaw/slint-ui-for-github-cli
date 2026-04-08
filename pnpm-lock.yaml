@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/slint-bridge-kit
       slint-ui:
-        specifier: 1.16.0-nightly.2026040119
-        version: 1.16.0-nightly.2026040119(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
+        specifier: 1.16.0-nightly.2026040720
+        version: 1.16.0-nightly.2026040720(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
     devDependencies:
       '@types/better-sqlite3':
         specifier: 7.6.13
@@ -1295,34 +1295,34 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
-  '@slint-ui/slint-ui-binary-darwin-arm64@1.16.0-nightly.2026040119':
-    resolution: {integrity: sha512-CpV0Oq55c1sqct2n/TAAcBp0Ia7vc2CDPrvggjUswiH1baiWUr9InKSSVZ8eUsMLzAfKuiDJMrMXQ5uC7ZOEjQ==}
+  '@slint-ui/slint-ui-binary-darwin-arm64@1.16.0-nightly.2026040720':
+    resolution: {integrity: sha512-EIuxCb5ivTYw0wvdInjk4JpZr36Pg2uH0pclDmefUtnyLS3YAB1vOp0suIEZa8rdRBGrAhRrv7MQlA/Bj5Q0SA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040119':
-    resolution: {integrity: sha512-68yDO9kcM67JLquNM1exIkcOmvGQzFwax00+rFjg3abpVh8yQieq309axuoMSl5mYZdJwl1+iP8dlzRJZ0a9dQ==}
+  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040720':
+    resolution: {integrity: sha512-oRbUhr67sNHfz8zmBI/Q0DUDFUnSf5m8jGnZiZXB896oL+vt4LwnJrcivT7kILgVt13wMgGk3T3NNfWK1sg+2A==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
     libc: [glibc]
 
-  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.16.0-nightly.2026040119':
-    resolution: {integrity: sha512-L4KWSkMv6oEl+QuVQOq4Zj/ASFj6pe84Ls+QiNXW/4CjqDZYQx8udJcxyR+Yi0NT/cgKbGoB+BfT/7zNCpRasA==}
+  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.16.0-nightly.2026040720':
+    resolution: {integrity: sha512-2HxoCP4Nn2zMB8kc0tzRZF1qwYCIZCa65Uo698/vjmjC0uWZl7QVHT0zsCzpX37zO5j7++BMDG+4c+JGQ0V7XA==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
     libc: [glibc]
 
-  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040119':
-    resolution: {integrity: sha512-GM9bcMwwxcxu4DSLmynT10Zwz8EQXWqMg6pOoUrqm/gZ9yefk+Ldbfv58imlXMYMyrQ6zdpvywKIenZU1Cl5NA==}
+  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040720':
+    resolution: {integrity: sha512-Sumnb3X/mrg2r8ILD8Yj+JOcdUw63DhLEofm48PsNqTBARpziNKjv2F3voPf6NhkHgOgTrMgu5Ku5uEZqRmiQQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
-  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040119':
-    resolution: {integrity: sha512-aOn6JVXDOM1t6ofqlrRXQZvu0ioLBa1toKUhxGLdNTcWY8NCipR1DY8a17Tqs+00NmKTVZN7T8DG5lZF9Ej9EQ==}
+  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040720':
+    resolution: {integrity: sha512-TqAyceS+VEtvlI/APWK1S0AhRywKcQzNQe+pb7bm4chW+n4qu3p+17izUjbi1qqxMn809rvFwF2Ic8NGyGF3Pg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -1792,8 +1792,8 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
-  slint-ui@1.16.0-nightly.2026040119:
-    resolution: {integrity: sha512-P4D7qH1fKlZhM3qYL6UTrUVVNEtqZSeSdJLGNDZAJvA/itrpCe5KlXC6eQYKRFI4KnmffANs9IuIRO+jqsLbIg==}
+  slint-ui@1.16.0-nightly.2026040720:
+    resolution: {integrity: sha512-ubKZ10oSSoxtMVP1Hjufzv1LYg/M1TqPNbOM1DhIOkOD5bg4NKxiZHUKBMdyO9nGIWb5m+nlqUmN1xXVR3LYug==}
     engines: {node: '>= 10'}
 
   smol-toml@1.6.1:
@@ -2741,19 +2741,19 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@slint-ui/slint-ui-binary-darwin-arm64@1.16.0-nightly.2026040119':
+  '@slint-ui/slint-ui-binary-darwin-arm64@1.16.0-nightly.2026040720':
     optional: true
 
-  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040119':
+  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040720':
     optional: true
 
-  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.16.0-nightly.2026040119':
+  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.16.0-nightly.2026040720':
     optional: true
 
-  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040119':
+  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040720':
     optional: true
 
-  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040119':
+  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040720':
     optional: true
 
   '@tybys/wasm-util@0.10.1':
@@ -3311,15 +3311,15 @@ snapshots:
       once: 1.4.0
       simple-concat: 1.0.1
 
-  slint-ui@1.16.0-nightly.2026040119(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0):
+  slint-ui@1.16.0-nightly.2026040720(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0):
     dependencies:
       '@napi-rs/cli': 3.6.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
     optionalDependencies:
-      '@slint-ui/slint-ui-binary-darwin-arm64': 1.16.0-nightly.2026040119
-      '@slint-ui/slint-ui-binary-linux-arm64-gnu': 1.16.0-nightly.2026040119
-      '@slint-ui/slint-ui-binary-linux-x64-gnu': 1.16.0-nightly.2026040119
-      '@slint-ui/slint-ui-binary-win32-arm64-msvc': 1.16.0-nightly.2026040119
-      '@slint-ui/slint-ui-binary-win32-x64-msvc': 1.16.0-nightly.2026040119
+      '@slint-ui/slint-ui-binary-darwin-arm64': 1.16.0-nightly.2026040720
+      '@slint-ui/slint-ui-binary-linux-arm64-gnu': 1.16.0-nightly.2026040720
+      '@slint-ui/slint-ui-binary-linux-x64-gnu': 1.16.0-nightly.2026040720
+      '@slint-ui/slint-ui-binary-win32-arm64-msvc': 1.16.0-nightly.2026040720
+      '@slint-ui/slint-ui-binary-win32-x64-msvc': 1.16.0-nightly.2026040720
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'

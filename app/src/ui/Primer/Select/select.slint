@@ -4,7 +4,12 @@
 // (Slint cannot scan the options model in a `changed` handler in this toolchain).
 
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
-import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import {
+    ButtonTokens,
+    LayoutTokens,
+    PrimerColors,
+    Size,
+} from "../tokens.slint";
 
 export struct SelectOption {
     value: string,
@@ -20,8 +25,8 @@ export enum ValidationStatus {
 
 export component Select {
     in property <string> label-text: "";
-    in-out property <string> selected-value: "";
-    in-out property <string> selected-label: "";
+    in-out property <string> selected-value: selected-index > -1 ? options[selected-index].value : "";
+    out property <string> selected-label: selected-index > -1 ? options[selected-index].label : "";
     in-out property <int> selected-index: -1;
     in property <string> placeholder: "Select…";
     in property <string> caption: "";
@@ -31,24 +36,17 @@ export component Select {
     in property <bool> block: false;
     in property <Size> size: medium;
     in property <[SelectOption]> options;
-    callback selected-changed(string);
-
-    horizontal-stretch: block ? 1 : 0;
-    min-width: 200px;
+    callback selected-changed(value_index:int);
 
     private property <length> trigger-height:
-        size == Size.small
-        ? LayoutTokens.control-small-size
-        : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
+        size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
 
     // Match Button filled label sizing; large uses medium body (Primer TextInputBaseWrapper).
     private property <length> trigger-font:
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
     private property <color> trigger-border-color:
-        validation-status == ValidationStatus.error
-        ? ButtonTokens.color-btn-danger-text
-        : validation-status == ValidationStatus.success ? PrimerColors.borderColor-success-emphasis : PrimerColors.borderColor-default;
+        validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : validation-status == ValidationStatus.success ? PrimerColors.borderColor-success-emphasis : PrimerColors.borderColor-default;
 
     function apply-pick-at(ix: int) {
         if ix < 0 || ix >= options.length {
@@ -57,15 +55,14 @@ export component Select {
         if !options[ix].enabled {
             return;
         }
-        root.selected-value = options[ix].value;
-        root.selected-label = options[ix].label;
-        root.selected-index = ix;
-        root.selected-changed(options[ix].value);
+        root.selected-changed(ix);
     }
 
-    VerticalLayout {
+    height: vl.preferred-height;
+
+    vl := VerticalLayout {
         spacing: 6px;
-        horizontal-stretch: block ? 1 : 0;
+        width: block ? root.width : self.preferred-width;
 
         if label-text != "": Text {
             text: label-text;
@@ -75,83 +72,83 @@ export component Select {
             wrap: word-wrap;
         }
 
-        VerticalLayout {
-            spacing: 0;
-            horizontal-stretch: block ? 1 : 0;
+        trigger-wrap := Rectangle {
+            height: trigger-height;
 
-            trigger-wrap := Rectangle {
-                horizontal-stretch: block ? 1 : 0;
-                height: trigger-height;
+            select-ctx := ContextMenuArea {
+                width: 100%;
+                height: 100%;
+                enabled: !root.disabled && root.options.length > 0;
 
-                select-ctx := ContextMenuArea {
-                    width: 100%;
-                    height: 100%;
-                    enabled: !root.disabled && root.options.length > 0;
-
-                    Menu {
-                        for opt[index] in options: MenuItem {
-                            title: opt.label;
-                            enabled: opt.enabled;
-                            activated => {
-                                root.apply-pick-at(index);
-                            }
+                Menu {
+                    for opt[index] in options: MenuItem {
+                        title: opt.label;
+                        enabled: opt.enabled;
+                        activated => {
+                            root.apply-pick-at(index);
                         }
                     }
+                }
 
-                    MultiDropShadow {
-                        width: parent.width;
-                        height: parent.height;
-                        border-radius: LayoutTokens.borderRadius-medium;
-                        shadows: [
-                            { color: PrimerColors.shadow-controlTrigger-back, offset-x: 0px, offset-y: 1px, blur: 2px },
-                            { color: PrimerColors.shadow-controlTrigger-front, offset-x: 0px, offset-y: 1px, blur: 1px },
-                        ];
-                    }
+                MultiDropShadow {
+                    width: parent.width;
+                    height: parent.height;
+                    border-radius: LayoutTokens.borderRadius-medium;
+                    shadows: [
+                        {
+                            color: PrimerColors.shadow-controlTrigger-back,
+                            offset-x: 0px,
+                            offset-y: 1px,
+                            blur: 2px
+                        },
+                        {
+                            color: PrimerColors.shadow-controlTrigger-front,
+                            offset-x: 0px,
+                            offset-y: 1px,
+                            blur: 1px
+                        },
+                    ];
+                }
 
-                    Rectangle {
-                        width: parent.width;
-                        height: parent.height;
-                        background: disabled
-                            ? PrimerColors.bgColor-default
-                            : ta.has-hover ? PrimerColors.bgColor-canvas-subtle : PrimerColors.bgColor-default;
-                        border-radius: LayoutTokens.borderRadius-medium;
-                        border-width: 1px;
-                        border-color: trigger-border-color;
-                        clip: false;
+                Rectangle {
+                    width: parent.width;
+                    height: parent.height;
+                    background: disabled ? PrimerColors.bgColor-default : ta.has-hover ? PrimerColors.bgColor-canvas-subtle : PrimerColors.bgColor-default;
+                    border-radius: LayoutTokens.borderRadius-medium;
+                    border-width: 1px;
+                    border-color: trigger-border-color;
+                    clip: false;
 
-                        HorizontalLayout {
-                            padding-left: 10px;
-                            padding-right: 8px;
-                            spacing: 8px;
-                            width: 100%;
-                            height: 100%;
-
-                            Text {
-                                horizontal-stretch: 1;
-                                vertical-alignment: center;
-                                text: selected-label != "" ? selected-label : placeholder;
-                                font-size: trigger-font;
-                                color: selected-label != "" ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
-                                overflow: elide;
-                            }
-
-                            Image {
-                                width: LayoutTokens.iconButton-icon-size-medium;
-                                height: LayoutTokens.iconButton-icon-size-medium;
-                                vertical-alignment: center;
-                                source: @image-url("../../../assets/16px/chevron-down.svg");
-                                colorize: PrimerColors.fgColor-muted;
-                            }
-                        }
-                    }
-
-                    ta := TouchArea {
+                    HorizontalLayout {
+                        padding-left: 10px;
+                        padding-right: 8px;
+                        spacing: 8px;
                         width: 100%;
                         height: 100%;
-                        clicked => {
-                            if !root.disabled && root.options.length > 0 {
-                                select-ctx.show({ x: 0px, y: 0px });
-                            }
+
+                        Text {
+                            horizontal-stretch: 1;
+                            vertical-alignment: center;
+                            text: selected-label != "" ? selected-label : placeholder;
+                            font-size: trigger-font;
+                            color: selected-label != "" ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+                            overflow: elide;
+                        }
+
+                        Image {
+                            vertical-alignment: center;
+                            source: @image-url("../../../assets/16px/select-chevron.svg");
+                            colorize: PrimerColors.fgColor-muted;
+                        }
+                    }
+                }
+
+                ta := TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    clicked => {
+                        if !root.disabled && root.options.length > 0 {
+                            select-ctx.show({ x: 0px, y: 0px });
                         }
                     }
                 }
@@ -167,7 +164,7 @@ export component Select {
 
         if validation-message != "" && validation-status != ValidationStatus.none: HorizontalLayout {
             spacing: 6px;
-            horizontal-stretch: block ? 1 : 0;
+            // horizontal-stretch: block ? 1 : 0;
 
             Image {
                 width: LayoutTokens.iconButton-icon-size-medium;

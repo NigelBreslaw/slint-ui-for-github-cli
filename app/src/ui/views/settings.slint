@@ -72,24 +72,18 @@ export component Settings {
             width: self.preferred-width;
             height: self.preferred-height;
 
-            // VerticalLayout {
-            //     spacing: 8px;
-            //     width: 450px;
-            //     padding-bottom: 16px;
-
-                Select {
-                    block: true;
-                    label-text: "GitHub host";
-                    placeholder: "Choose host…";
-                    options: SettingsState.primer-demo-select-options;
-                    selected-value <=> SettingsState.primer-demo-selected-value;
-                    selected-label <=> SettingsState.primer-demo-selected-label;
-                    validation-status: SettingsState.primer-demo-selected-value != "" ? ValidationStatus.success : ValidationStatus.none;
-                    // validation-message: SettingsState.primer-demo-selected-value != "" ? "Host selected for this session." : "";
-                    selected-changed(v) => {
-                        SettingsState.primer-demo-select-changed(v);
-                    }
-                }
+            // Select {
+            //     block: true;
+            //     label-text: "GitHub host";
+            //     placeholder: "Choose host…";
+            //     options: SettingsState.primer-demo-select-options;
+            //     selected-index <=> SettingsState.primer-demo-selected-index;
+            //     validation-status: ValidationStatus.success;
+            //     validation-message: "Host selected for this session.";
+            //     selected-changed(value_index) => {
+            //         SettingsState.primer-demo-select-changed(value_index);
+            //     }
+            // }
 
                 // Button {
                 //     label: "Open Primer dialog demo";
