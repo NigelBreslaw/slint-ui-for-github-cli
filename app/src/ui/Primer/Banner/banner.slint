@@ -48,7 +48,9 @@ export component Banner {
     private property <length> pad-block: pad-inline;
 
     private property <length> icon-size:
-        hide-title ? LayoutTokens.banner-icon-size-title-hidden : LayoutTokens.banner-icon-size-default;
+        variant == BannerVariant.warning
+        ? LayoutTokens.banner-icon-size-inline
+        : hide-title ? LayoutTokens.banner-icon-size-title-hidden : LayoutTokens.banner-icon-size-default;
 
     private property <length> icon-cell-width:
         LayoutTokens.banner-icon-container-padding * 2 + icon-size;
