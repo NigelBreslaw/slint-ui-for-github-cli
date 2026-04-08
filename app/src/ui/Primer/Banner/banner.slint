@@ -36,6 +36,8 @@ export component Banner {
     /// Secondary action (React `Banner.SecondaryAction` uses Button `invisible`).
     in property <string> secondary-action-label: "";
     callback secondary-action;
+    /// When true and actions are present, primary/secondary render in the top row after the text column (full-width notice). Default stacks actions below the description.
+    in property <bool> actions-trailing: false;
 
     private property <length> dismiss-icon-side: 16px;
     private property <length> dismiss-cell-width:
@@ -56,9 +58,17 @@ export component Banner {
 
     private property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
 
+    private property <bool> use-trailing-actions: actions-trailing && has-actions;
+
+    /// Matches legacy dismiss sizing when actions sit below the description (not when `actions-trailing`).
+    private property <length> stacked-actions-dismiss-nudge:
+        has-actions && !actions-trailing ? LayoutTokens.banner-dismiss-margin-when-actions : 0px;
+
     private property <length> dismiss-icon-y:
         LayoutTokens.banner-icon-container-padding
-        + (dismissible && has-actions ? LayoutTokens.banner-dismiss-margin-when-actions : 0px);
+        + (dismissible ? stacked-actions-dismiss-nudge : 0px);
+
+    private property <length> dismiss-cell-extra-height: stacked-actions-dismiss-nudge;
 
     private property <color> banner-bg:
         variant == BannerVariant.critical ? BannerTokens.banner-bgColor-critical
@@ -158,7 +168,7 @@ export component Banner {
                         accessible-description: hide-title && title != "" ? description : "";
                     }
 
-                    if has-actions: HorizontalLayout {
+                    if has-actions && !use-trailing-actions: HorizontalLayout {
                         spacing: LayoutTokens.banner-actions-gap;
                         width: 100%;
                         alignment: start;
@@ -183,10 +193,32 @@ export component Banner {
                     }
                 }
 
+                if use-trailing-actions: HorizontalLayout {
+                    spacing: LayoutTokens.banner-actions-gap;
+                    alignment: start;
+
+                    if secondary-action-label != "": Button {
+                        label: secondary-action-label;
+                        variant: ButtonVariant.invisible;
+                        size: action-size;
+                        clicked => {
+                            root.secondary-action();
+                        }
+                    }
+
+                    if primary-action-label != "": Button {
+                        label: primary-action-label;
+                        variant: primary-action-variant;
+                        size: action-size;
+                        clicked => {
+                            root.primary-action();
+                        }
+                    }
+                }
+
                 if dismissible: Rectangle {
                     width: dismiss-cell-width;
-                    height: icon-size + LayoutTokens.banner-icon-container-padding * 2
-                        + (has-actions ? LayoutTokens.banner-dismiss-margin-when-actions : 0px);
+                    height: icon-size + LayoutTokens.banner-icon-container-padding * 2 + dismiss-cell-extra-height;
 
                     Image {
                         x: (parent.width - self.width) / 2;

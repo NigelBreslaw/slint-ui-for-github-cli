@@ -198,8 +198,10 @@ export component PrimerGallery {
                         description: "Secondary uses invisible; primary uses default outline (Banner.PrimaryAction).";
                         secondary-action-label: "Secondary";
                         primary-action-label: "Primary";
-                        secondary-action => { }
-                        primary-action => { }
+                        secondary-action => {
+                        }
+                        primary-action => {
+                        }
                     }
 
                     Banner {
@@ -209,7 +211,29 @@ export component PrimerGallery {
                         description: "Set primary-action-variant to primary for a GitHub-style green button (not React default).";
                         primary-action-label: "Continue";
                         primary-action-variant: ButtonVariant.primary;
-                        primary-action => { }
+                        primary-action => {
+                        }
+                    }
+
+                    Text {
+                        text: "Trailing actions (full-width notice row)";
+                        color: PrimerColors.fgColor-muted;
+                        font-size: 12px;
+                    }
+
+                    Banner {
+                        width: 100%;
+                        variant: BannerVariant.warning;
+                        title: "Trailing layout";
+                        description: "With actions-trailing, buttons sit in the top row after the text column (text stretches).";
+                        actions-trailing: true;
+                        secondary-action-label: "Details";
+                        primary-action-label: "Primary";
+                        primary-action-variant: ButtonVariant.primary;
+                        secondary-action => {
+                        }
+                        primary-action => {
+                        }
                     }
 
                     Banner {
@@ -220,9 +244,12 @@ export component PrimerGallery {
                         dismissible: true;
                         secondary-action-label: "Details";
                         primary-action-label: "OK";
-                        dismiss => { }
-                        secondary-action => { }
-                        primary-action => { }
+                        dismiss => {
+                        }
+                        secondary-action => {
+                        }
+                        primary-action => {
+                        }
                     }
 
                     Button {
@@ -257,19 +284,22 @@ export component PrimerGallery {
 
                         Button {
                             label: "Default";
-                            clicked => { }
+                            clicked => {
+                            }
                         }
 
                         Button {
                             label: "Primary";
                             variant: ButtonVariant.primary;
-                            clicked => { }
+                            clicked => {
+                            }
                         }
 
                         Button {
                             label: "Danger";
                             variant: ButtonVariant.danger;
-                            clicked => { }
+                            clicked => {
+                            }
                         }
                     }
 
@@ -279,14 +309,16 @@ export component PrimerGallery {
                         Button {
                             label: "Small";
                             size: Size.small;
-                            clicked => { }
+                            clicked => {
+                            }
                         }
 
                         Button {
                             label: "Large primary";
                             size: Size.large;
                             variant: ButtonVariant.primary;
-                            clicked => { }
+                            clicked => {
+                            }
                         }
                     }
                 }
@@ -321,6 +353,7 @@ export component PrimerGallery {
                                 font-size: 12px;
                                 color: PrimerColors.fgColor-muted;
                             }
+
                             Spinner { }
                         }
 
@@ -332,6 +365,7 @@ export component PrimerGallery {
                                 font-size: 12px;
                                 color: PrimerColors.fgColor-muted;
                             }
+
                             Spinner {
                                 size: large;
                             }
@@ -366,7 +400,8 @@ export component PrimerGallery {
                         selected-index <=> demo-select-index;
                         validation-status: ValidationStatus.success;
                         validation-message: "Static gallery model.";
-                        selected-changed(_idx) => { }
+                        selected-changed(_idx) => {
+                        }
                     }
                 }
 
