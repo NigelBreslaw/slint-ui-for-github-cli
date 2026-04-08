@@ -1,7 +1,7 @@
 import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
 import { PrimerUnderlineNavItem } from "../components/primer-underline-nav-item.slint";
-import { Banner, BannerVariant, Spinner } from "../Primer/primer.slint";
+import { Banner, BannerVariant, ButtonVariant, Spinner } from "../Primer/primer.slint";
 import { PrimerColors, Size } from "../Primer/tokens.slint";
 
 export component Dashboard {
@@ -90,30 +90,31 @@ export component Dashboard {
                 wrap: word-wrap;
             }
 
-            ListView {
+            Rectangle {
+                vertical-stretch: 1;
                 width: 100%;
-                for row[index] in AppState.review-requests-model: Rectangle {
-                    height: 56px;
-                    background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
+                min-height: 120px;
+                clip: true;
 
-                    TouchArea {
-                        clicked => {
-                            AppState.open_project_url(row.url);
-                        }
+                review-flick := Flickable {
+                    width: parent.width;
+                    height: parent.height;
+                    viewport-width: self.width;
+                    viewport-height: review-banners.preferred-height;
 
-                        VerticalLayout {
-                            padding: 8px;
-                            spacing: 4px;
-                            Text {
-                                text: row.title;
-                                color: PrimerColors.fgColor-default;
-                                overflow: elide;
-                            }
+                    review-banners := VerticalLayout {
+                        width: review-flick.width;
+                        spacing: 10px;
 
-                            Text {
-                                text: row.repo_label;
-                                font-size: 12px;
-                                color: PrimerColors.fgColor-muted;
+                        for row in AppState.review-requests-model: Banner {
+                            width: 100%;
+                            variant: BannerVariant.warning;
+                            title: row.title;
+                            description: row.repo_label;
+                            primary-action-label: "Review";
+                            primary-action-variant: ButtonVariant.primary;
+                            primary-action => {
+                                AppState.open_project_url(row.url);
                             }
                         }
                     }
