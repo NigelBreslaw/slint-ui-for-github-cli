@@ -18,6 +18,12 @@ export enum BannerLayout {
 export component Banner {
     in property <string> title: "";
     in property <string> description: "";
+    /// GitHub-style review line: `**{login}**` via `@markdown` (only `login` is interpolated). When false, use plain `description`.
+    in property <bool> review-request-notice: false;
+    /// PR author login for `review-request-notice`; empty shows “Someone requested…”.
+    in property <string> review-request-login: "";
+    /// Optional second line below the main body (e.g. repo · PR title), muted small text.
+    in property <string> detail: "";
     in property <BannerVariant> variant: BannerVariant.info;
     in property <BannerLayout> layout: BannerLayout.default;
     in property <bool> flush: false;
@@ -149,6 +155,7 @@ export component Banner {
                 VerticalLayout {
                     spacing: 4px;
                     horizontal-stretch: 1;
+                    min-width: 0px;
 
                     if !hide-title: Text {
                         text: title;
@@ -159,7 +166,26 @@ export component Banner {
                         width: 100%;
                     }
 
-                    Text {
+                    if review-request-notice && review-request-login != "": StyledText {
+                        text: @markdown("**\{review-request-login}** requested your review on this pull request.");
+                        width: 100%;
+                        horizontal-alignment: left;
+                        vertical-alignment: top;
+                        accessible-role: AccessibleRole.text;
+                        accessible-label: hide-title && title != "" ? title : "";
+                    }
+
+                    if review-request-notice && review-request-login == "": Text {
+                        text: "Someone requested your review on this pull request.";
+                        color: PrimerColors.fgColor-default;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        wrap: word-wrap;
+                        width: 100%;
+                        accessible-role: AccessibleRole.text;
+                        accessible-label: hide-title && title != "" ? title : "";
+                    }
+
+                    if !review-request-notice: Text {
                         text: description;
                         color: PrimerColors.fgColor-default;
                         font-size: LayoutTokens.text-body-size-medium;
@@ -168,6 +194,14 @@ export component Banner {
                         accessible-role: AccessibleRole.text;
                         accessible-label: hide-title && title != "" ? title : "";
                         accessible-description: hide-title && title != "" ? description : "";
+                    }
+
+                    if detail != "": Text {
+                        text: detail;
+                        color: PrimerColors.fgColor-muted;
+                        font-size: 12px;
+                        wrap: word-wrap;
+                        width: 100%;
                     }
 
                     if has-actions && !use-trailing-actions: HorizontalLayout {
@@ -198,6 +232,7 @@ export component Banner {
                 if use-trailing-actions: HorizontalLayout {
                     spacing: LayoutTokens.banner-actions-gap;
                     alignment: start;
+                    horizontal-stretch: 0;
 
                     if secondary-action-label != "": Button {
                         label: secondary-action-label;

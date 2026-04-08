@@ -109,9 +109,15 @@ export component Dashboard {
                         for row in AppState.review-requests-model: Banner {
                             width: 100%;
                             variant: BannerVariant.warning;
-                            title: row.title;
-                            description: row.repo_label;
-                            primary-action-label: "Review";
+                            hide-title: true;
+                            title: row.author_login != ""
+                                ? row.author_login + " requested your review on this pull request. " + row.repo_label + " · " + row.title
+                                : "Someone requested your review on this pull request. " + row.repo_label + " · " + row.title;
+                            review-request-notice: true;
+                            review-request-login: row.author_login;
+                            detail: row.repo_label + " · " + row.title;
+                            // actions-trailing: true;
+                            primary-action-label: "Add your review";
                             primary-action-variant: ButtonVariant.primary;
                             primary-action => {
                                 AppState.open_project_url(row.url);
