@@ -1,4 +1,5 @@
-import { BannerTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+import { Button, ButtonVariant } from "../Buttons/buttons.slint";
+import { BannerTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 
 // Mirrors @primer/react Banner variants (Banner.tsx / Banner.module.css).
 export enum BannerVariant {
@@ -27,6 +28,14 @@ export component Banner {
     /// When true, shows a dismiss control (Primer `onDismiss`). Wire `dismiss` to hide the banner.
     in property <bool> dismissible: false;
     callback dismiss;
+    /// Primary action (React `Banner.PrimaryAction` uses Button `default`; set `primary-action-variant` to `primary` for green CTA).
+    in property <string> primary-action-label: "";
+    in property <ButtonVariant> primary-action-variant: ButtonVariant.default;
+    in property <Size> action-size: Size.medium;
+    callback primary-action;
+    /// Secondary action (React `Banner.SecondaryAction` uses Button `invisible`).
+    in property <string> secondary-action-label: "";
+    callback secondary-action;
 
     private property <length> dismiss-icon-side: 16px;
     private property <length> dismiss-cell-width:
@@ -44,6 +53,12 @@ export component Banner {
 
     private property <bool> use-custom-leading:
         has-custom-leading-icon && (variant == BannerVariant.info || variant == BannerVariant.upsell);
+
+    private property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
+
+    private property <length> dismiss-icon-y:
+        LayoutTokens.banner-icon-container-padding
+        + (dismissible && has-actions ? LayoutTokens.banner-dismiss-margin-when-actions : 0px);
 
     private property <color> banner-bg:
         variant == BannerVariant.critical ? BannerTokens.banner-bgColor-critical
@@ -139,19 +154,43 @@ export component Banner {
                         wrap: word-wrap;
                         width: 100%;
                         accessible-role: AccessibleRole.text;
-                        // When title is visually hidden, expose it as the accessible name (Slint requires constant role).
                         accessible-label: hide-title && title != "" ? title : "";
                         accessible-description: hide-title && title != "" ? description : "";
+                    }
+
+                    if has-actions: HorizontalLayout {
+                        spacing: LayoutTokens.banner-actions-gap;
+                        width: 100%;
+                        alignment: start;
+
+                        if secondary-action-label != "": Button {
+                            label: secondary-action-label;
+                            variant: ButtonVariant.invisible;
+                            size: action-size;
+                            clicked => {
+                                root.secondary-action();
+                            }
+                        }
+
+                        if primary-action-label != "": Button {
+                            label: primary-action-label;
+                            variant: primary-action-variant;
+                            size: action-size;
+                            clicked => {
+                                root.primary-action();
+                            }
+                        }
                     }
                 }
 
                 if dismissible: Rectangle {
                     width: dismiss-cell-width;
-                    height: icon-size + LayoutTokens.banner-icon-container-padding * 2;
+                    height: icon-size + LayoutTokens.banner-icon-container-padding * 2
+                        + (has-actions ? LayoutTokens.banner-dismiss-margin-when-actions : 0px);
 
                     Image {
                         x: (parent.width - self.width) / 2;
-                        y: LayoutTokens.banner-icon-container-padding;
+                        y: dismiss-icon-y;
                         width: dismiss-icon-side;
                         height: dismiss-icon-side;
                         source: @image-url("../../../assets/16px/x.svg");

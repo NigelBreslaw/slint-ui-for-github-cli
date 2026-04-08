@@ -13,12 +13,12 @@ specified in detail.
 
 [`tokens.slint`](tokens.slint) defines the globals below (and `Size`). They are re-exported from [`primer.slint`](primer.slint) for discovery.
 
-- **LayoutTokens** — control sizes, padding, typography lengths, border radius (no light/dark literals). Banner spacing and icon metrics: `banner-padding-default`, `banner-padding-compact`, `banner-icon-size-default`, `banner-icon-size-title-hidden`, `banner-icon-container-padding`, `base-text-weight-semibold`.
+- **LayoutTokens** — control sizes, padding, typography lengths, border radius (no light/dark literals). Banner spacing and icon metrics: `banner-padding-default`, `banner-padding-compact`, `banner-icon-size-default`, `banner-icon-size-title-hidden`, `banner-icon-container-padding`, `base-text-weight-semibold`, `banner-actions-gap` (12px, matches `Banner.module.css` action `column-gap`), `banner-dismiss-margin-when-actions` (2px when actions + dismiss).
 - **PrimerColors** — semantic surface colors (fg, bg, border, link, overlay, drop-shadow, etc.) resolved from `Palette.color-scheme`. Banner-related functional colors include muted surfaces and borders for accent, success, attention, danger, and done/upsell (e.g. `bgColor-accent-muted`, `borderColor-danger-muted`, `fgColor-danger`, `fgColor-attention`, `fgColor-upsell` / `bgColor-upsell-muted`, plus existing `fgColor-success` for success banners).
 - **ButtonTokens** — `color-btn-*`, `button-*`, action-list hover backgrounds, disabled fg, icon-button tints, and filled-button shadow colors; composes from **PrimerColors** where possible.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 
-Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text).
+Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). Action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
 
 ## Banner
 
@@ -36,10 +36,16 @@ Slint port of [@primer/react `Banner`](https://primer.style/product/components/b
 | `leading-icon`            | `image`         | Custom leading visual when allowed.                                                                                  |
 | `dismissible`             | `bool`          | Shows a dismiss control tinted like the variant icon.                                                                |
 | `dismiss`                 | `callback`      | Invoked when the user activates dismiss.                                                                             |
+| `primary-action-label`    | `string`        | Non-empty shows a primary **Button**; empty hides it.                                                                |
+| `primary-action-variant`  | `ButtonVariant` | Defaults to **`default`** (matches React `Banner.PrimaryAction`). Use **`primary`** for a green CTA.                 |
+| `action-size`             | `Size`          | `small` / `medium` / `large` for both action buttons.                                                                |
+| `primary-action`          | `callback`      | Primary button click.                                                                                                |
+| `secondary-action-label`  | `string`        | Non-empty shows a secondary **Button** (`invisible`, like React `Banner.SecondaryAction`).                           |
+| `secondary-action`        | `callback`      | Secondary button click.                                                                                              |
 
 Default leading icons live under `app/src/assets/16px/` (`stop`, `info`, `circle-check`, `alert`, and `x` for dismiss). In-app examples: **Primer gallery** view (sidebar palette icon).
 
-**Not ported yet:** primary/secondary actions and `actionsLayout` (see Primer React API).
+**Actions layout:** Actions render in a row **below** the description inside the content column (`column-gap` = `LayoutTokens.banner-actions-gap`). This matches narrow / stacked behavior from Primer CSS; **`actionsLayout`** (`default` / `inline` / `stacked`) and wide-viewport placement beside the text are **not** ported yet.
 
 ## Caution:
 

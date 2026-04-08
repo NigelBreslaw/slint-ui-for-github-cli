@@ -185,6 +185,46 @@ export component PrimerGallery {
                         }
                     }
 
+                    Text {
+                        text: "Primary / secondary actions";
+                        color: PrimerColors.fgColor-muted;
+                        font-size: 12px;
+                    }
+
+                    Banner {
+                        width: 100%;
+                        variant: BannerVariant.info;
+                        title: "Actions (React parity)";
+                        description: "Secondary uses invisible; primary uses default outline (Banner.PrimaryAction).";
+                        secondary-action-label: "Secondary";
+                        primary-action-label: "Primary";
+                        secondary-action => { }
+                        primary-action => { }
+                    }
+
+                    Banner {
+                        width: 100%;
+                        variant: BannerVariant.info;
+                        title: "Green primary CTA";
+                        description: "Set primary-action-variant to primary for a GitHub-style green button (not React default).";
+                        primary-action-label: "Continue";
+                        primary-action-variant: ButtonVariant.primary;
+                        primary-action => { }
+                    }
+
+                    Banner {
+                        width: 100%;
+                        variant: BannerVariant.info;
+                        title: "Dismiss + actions";
+                        description: "Dismiss control gets extra top margin when actions are present.";
+                        dismissible: true;
+                        secondary-action-label: "Details";
+                        primary-action-label: "OK";
+                        dismiss => { }
+                        secondary-action => { }
+                        primary-action => { }
+                    }
+
                     Button {
                         visible: !PrimerGalleryState.show-dismiss-demo;
                         label: "Show dismissible banner again";
