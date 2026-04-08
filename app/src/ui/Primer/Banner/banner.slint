@@ -24,6 +24,13 @@ export component Banner {
     /// When true and variant is `info` or `upsell`, `leading-icon` replaces the default icon.
     in property <bool> has-custom-leading-icon: false;
     in property <image> leading-icon;
+    /// When true, shows a dismiss control (Primer `onDismiss`). Wire `dismiss` to hide the banner.
+    in property <bool> dismissible: false;
+    callback dismiss;
+
+    private property <length> dismiss-icon-side: 16px;
+    private property <length> dismiss-cell-width:
+        LayoutTokens.banner-icon-container-padding * 2 + dismiss-icon-side;
 
     private property <length> pad-inline:
         layout == BannerLayout.compact ? LayoutTokens.banner-padding-compact : LayoutTokens.banner-padding-default;
@@ -68,6 +75,9 @@ export component Banner {
 
     private property <image> resolved-leading-source: use-custom-leading ? leading-icon : default-leading-source;
 
+    /// Visually hidden title (Primer `hideTitle`): expose title + description on the root for assistive tech.
+    private property <bool> a11y-root-carries-content: hide-title && (title != "" || description != "");
+
     min-width: 120px;
     preferred-width: 100%;
 
@@ -77,6 +87,9 @@ export component Banner {
         border-radius: flush ? 0px : LayoutTokens.borderRadius-medium;
         border-width: flush ? 0px : 1px;
         border-color: banner-border;
+        accessible-role: a11y-root-carries-content ? AccessibleRole.text : AccessibleRole.none;
+        accessible-label: a11y-root-carries-content ? (title != "" ? title : description) : "";
+        accessible-description: a11y-root-carries-content && title != "" ? description : "";
 
         VerticalLayout {
             width: 100%;
@@ -130,6 +143,31 @@ export component Banner {
                         font-size: LayoutTokens.text-body-size-medium;
                         wrap: word-wrap;
                         width: 100%;
+                        accessible-role: a11y-root-carries-content ? AccessibleRole.none : AccessibleRole.text;
+                    }
+                }
+
+                if dismissible: Rectangle {
+                    width: dismiss-cell-width;
+                    height: icon-size + LayoutTokens.banner-icon-container-padding * 2;
+
+                    Image {
+                        x: (parent.width - self.width) / 2;
+                        y: LayoutTokens.banner-icon-container-padding;
+                        width: dismiss-icon-side;
+                        height: dismiss-icon-side;
+                        source: @image-url("../../../assets/16px/x.svg");
+                        colorize: banner-icon-fg;
+                    }
+
+                    TouchArea {
+                        width: parent.width;
+                        height: parent.height;
+                        accessible-role: AccessibleRole.button;
+                        accessible-label: "Dismiss";
+                        clicked => {
+                            root.dismiss();
+                        }
                     }
                 }
             }
