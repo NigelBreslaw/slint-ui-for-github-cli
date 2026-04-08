@@ -1,7 +1,7 @@
 import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
 import { PrimerUnderlineNavItem } from "../components/primer-underline-nav-item.slint";
-import { Spinner } from "../Primer/primer.slint";
+import { Banner, BannerVariant, Spinner } from "../Primer/primer.slint";
 import { PrimerColors, Size } from "../Primer/tokens.slint";
 
 export component Dashboard {
@@ -68,33 +68,11 @@ export component Dashboard {
                 color: PrimerColors.fgColor-subtle;
             }
 
-            Rectangle {
-                height: 47px;
-                background: #26211A;
-                border-radius: 6px;
-                border-width: 1px;
-                border-color: #5F4921;
-
-                visible: AppState.review-requests-total > 0;
-
-                HorizontalLayout {
-                    x: 0;
-                    padding: 14px;
-                    spacing: 14px;
-                    width: self.preferred-width;
-                    Image {
-                        source: @image-url("../../assets/16px/alert.svg");
-                        colorize: #CA9C3E;
-                    }
-
-                    Text {
-                        text: AppState.review-requests-total + " pull requests are waiting on your review.";
-                        font-size: 14px;
-                        font-weight: 400;
-                        color: PrimerColors.fgColor-default;
-                        vertical-alignment: center;
-                    }
-                }
+            if AppState.review-requests-total > 0: Banner {
+                width: 100%;
+                variant: BannerVariant.info;
+                title: "Open reviews";
+                description: AppState.review-requests-total == 1 ? "1 pull request is waiting on your review." : AppState.review-requests-total + " pull requests are waiting on your review.";
             }
 
             if AppState.review-requests-load-status == "Loading review requests…": HorizontalLayout {
