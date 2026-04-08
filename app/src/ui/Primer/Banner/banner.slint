@@ -18,12 +18,10 @@ export enum BannerLayout {
 export component Banner {
     in property <string> title: "";
     in property <string> description: "";
-    /// GitHub-style review line: `**{login}**` via `@markdown` (only `login` is interpolated). When false, use plain `description`.
-    in property <bool> review-request-notice: false;
-    /// PR author login for `review-request-notice`; empty shows “Someone requested…”.
-    in property <string> review-request-login: "";
-    /// Optional second line below the main body (e.g. repo · PR title), muted small text.
-    in property <string> detail: "";
+    /// When non-empty, shown bold via `@markdown` as the first segment; use `description` for the plain remainder (often a leading space + rest of sentence). Empty uses a single plain `description` line.
+    in property <string> description-emphasis: "";
+    /// Optional secondary line (Slint extension; React Banner uses `title` + `description` only). Muted small body text.
+    in property <string> subtitle: "";
     in property <BannerVariant> variant: BannerVariant.info;
     in property <BannerLayout> layout: BannerLayout.default;
     in property <bool> flush: false;
@@ -53,18 +51,17 @@ export component Banner {
         layout == BannerLayout.compact ? LayoutTokens.banner-padding-compact : LayoutTokens.banner-padding-default;
     private property <length> pad-block: pad-inline;
 
+    private property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
+
+    // Matches Banner.module.css: 20px default; 16px only when title hidden and no actions.
     private property <length> icon-size:
-        variant == BannerVariant.warning
-        ? LayoutTokens.banner-icon-size-inline
-        : hide-title ? LayoutTokens.banner-icon-size-title-hidden : LayoutTokens.banner-icon-size-default;
+        hide-title && !has-actions ? LayoutTokens.banner-icon-size-title-hidden : LayoutTokens.banner-icon-size-default;
 
     private property <length> icon-cell-width:
         LayoutTokens.banner-icon-container-padding * 2 + icon-size;
 
     private property <bool> use-custom-leading:
         has-custom-leading-icon && (variant == BannerVariant.info || variant == BannerVariant.upsell);
-
-    private property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
 
     private property <bool> use-trailing-actions: actions-trailing && has-actions;
 
@@ -166,26 +163,31 @@ export component Banner {
                         width: 100%;
                     }
 
-                    if review-request-notice && review-request-login != "": StyledText {
-                        text: @markdown("**\{review-request-login}** requested your review on this pull request.");
+                    if description-emphasis != "": HorizontalLayout {
                         width: 100%;
-                        horizontal-alignment: left;
-                        vertical-alignment: top;
-                        accessible-role: AccessibleRole.text;
-                        accessible-label: hide-title && title != "" ? title : "";
+                        min-width: 0px;
+                        spacing: 0px;
+
+                        StyledText {
+                            text: @markdown("**\{description-emphasis}**");
+                            horizontal-alignment: left;
+                            vertical-alignment: top;
+                            accessible-role: AccessibleRole.text;
+                            accessible-label: hide-title && title != "" ? title : "";
+                        }
+
+                        Text {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            text: description;
+                            color: PrimerColors.fgColor-default;
+                            font-size: LayoutTokens.text-body-size-medium;
+                            wrap: word-wrap;
+                            vertical-alignment: top;
+                        }
                     }
 
-                    if review-request-notice && review-request-login == "": Text {
-                        text: "Someone requested your review on this pull request.";
-                        color: PrimerColors.fgColor-default;
-                        font-size: LayoutTokens.text-body-size-medium;
-                        wrap: word-wrap;
-                        width: 100%;
-                        accessible-role: AccessibleRole.text;
-                        accessible-label: hide-title && title != "" ? title : "";
-                    }
-
-                    if !review-request-notice: Text {
+                    if description-emphasis == "": Text {
                         text: description;
                         color: PrimerColors.fgColor-default;
                         font-size: LayoutTokens.text-body-size-medium;
@@ -196,10 +198,10 @@ export component Banner {
                         accessible-description: hide-title && title != "" ? description : "";
                     }
 
-                    if detail != "": Text {
-                        text: detail;
+                    if subtitle != "": Text {
+                        text: subtitle;
                         color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
+                        font-size: LayoutTokens.text-body-size-small;
                         wrap: word-wrap;
                         width: 100%;
                     }

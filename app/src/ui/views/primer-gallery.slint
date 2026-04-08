@@ -216,6 +216,21 @@ export component PrimerGallery {
                     }
 
                     Text {
+                        text: "Description emphasis + subtitle";
+                        color: PrimerColors.fgColor-muted;
+                        font-size: 12px;
+                    }
+
+                    Banner {
+                        width: 100%;
+                        variant: BannerVariant.info;
+                        title: "Rich description pattern";
+                        description-emphasis: "octocat";
+                        description: " filed a follow-up on this thread.";
+                        subtitle: "Muted second line (Slint extension; React Banner is title + description only).";
+                    }
+
+                    Text {
                         text: "Trailing actions (full-width notice row)";
                         color: PrimerColors.fgColor-muted;
                         font-size: 12px;

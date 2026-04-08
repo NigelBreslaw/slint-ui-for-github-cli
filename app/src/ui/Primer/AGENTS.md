@@ -32,7 +32,7 @@ Also see the public docs: [Primer Design System](https://primer.style/design/sys
 
 **Cross-global rule:** Treat other globals as exposing only their **`out`** bindings to dependents. Do not rely on reading another global’s **private** fields from outside that global.
 
-**Banner rule:** **`Banner`** (and any future banner-like chrome) should read **background, border, and icon tint** from **`BannerTokens`** (and lengths from **`LayoutTokens`**). Use **`PrimerColors`** inside **`Banner`** only for non-banner semantics (e.g. default foreground for title/description text), not for ad hoc variant colors.
+**Banner rule:** **`Banner`** (and any future banner-like chrome) should read **background, border, and icon tint** from **`BannerTokens`** (and lengths from **`LayoutTokens`**). Use **`PrimerColors`** inside **`Banner`** only for non-banner semantics (e.g. default foreground for title/description text), not for ad hoc variant colors. **Product-specific sentences** (e.g. review-request copy) belong in **views**; **`Banner`** exposes structure only (`title`, `description`, optional **`description-emphasis`** / **`subtitle`**, actions).
 
 ```mermaid
 flowchart TB
