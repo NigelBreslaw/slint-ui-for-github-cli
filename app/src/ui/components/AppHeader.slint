@@ -2,7 +2,9 @@ import { Palette } from "std-widgets.slint";
 import { Avatar, IconButton, PageHeader } from "../primer/primer.slint";
 import { UserMenu } from "./UserMenu.slint";
 import { AppState, Authed, AppView } from "../../bridges/slint/app-state.slint";
-import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
+import {
+    TimeReportingState,
+} from "../../bridges/slint/time-reporting-state.slint";
 import { Button, ButtonVariant } from "../Primer/Buttons/buttons.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 
@@ -89,13 +91,6 @@ export component AppHeader {
                 }
             }
         }
-
-        menu := UserMenu {
-            x: parent.width - self.width - 14px;
-            y: avatar-container.y + avatar-container.height + 2px;
-            avatar-source: AppState.avatar;
-            visible: HeaderState.menu-visible;
-        }
     }
 
     TouchArea {
@@ -106,5 +101,14 @@ export component AppHeader {
         clicked => {
             HeaderState.menu-visible = false;
         }
+    }
+
+    menu := UserMenu {
+        x: parent.width - self.width - 14px;
+        y: avatar-container.absolute-position.y + avatar-container.height + 2px;
+        avatar-source: AppState.avatar;
+        visible: HeaderState.menu-visible;
+        user_status_message: AppState.user_status_message;
+        user_status_emoji: AppState.user_status_emoji;
     }
 }

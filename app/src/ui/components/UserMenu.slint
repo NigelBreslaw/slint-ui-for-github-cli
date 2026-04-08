@@ -77,6 +77,7 @@ component MenuItem {
         }
     }
 }
+
 export component UserMenu {
 
     in-out property <image> avatar-source <=> avatar.source;
@@ -123,29 +124,27 @@ export component UserMenu {
                     avatar := Avatar { }
 
                     VerticalLayout {
-                        y: 3px;
                         height: self.preferred-height;
-                        spacing: 4px;
-                        // Text {
-                        //     width: 120px;
-                        //     text: AppState.user_login;
-                        //     visible: AppState.user_login != "";
-                        //     font-size: 14px;
-                        //     font-weight: 550;
-                        //     color: HeaderStyle.menu-item-text-color;
-                        //     overflow: elide;
-                        // }
+                        spacing: -3px;
+                        Text {
+                            width: 120px;
+                            text: AppState.user_login;
+                            visible: AppState.user_login != "";
+                            font-size: 14px;
+                            font-weight: 600;
+                            color: PrimerColors.fgColor-default;
+                            overflow: elide;
+                        }
 
-                        // Text {
-                        //     width: 120px;
-                        //     text: AppState.user_name;
-                        //     visible: AppState.user_name != "";
-                        //     font-size: 14px;
-                        //     color: #9198a1;
-                        //     font-weight: 400;
-                        //     overflow: elide;
-                        //     letter-spacing: 0.15px;
-                        // }
+                        Text {
+                            width: 120px;
+                            text: AppState.user_name;
+                            visible: AppState.user_name != "";
+                            font-size: 14px;
+                            color: PrimerColors.fgColor-muted;
+                            font-weight: 400;
+                            overflow: elide;
+                        }
                     }
                 }
             }
@@ -161,14 +160,16 @@ export component UserMenu {
                     text: root.user_status_emoji;
                     visible: root.user_status_emoji != "";
                     font-size: 14px;
+                    vertical-alignment: center;
                 }
 
                 Text {
+                    height: 20px;
                     text: root.user_status_message;
-                    visible: root.user_status_message != "";
                     font-size: 14px;
                     color: PrimerColors.fgColor-default;
                     font-weight: 400;
+                    vertical-alignment: center;
                 }
             }
         }
@@ -179,6 +180,7 @@ export component UserMenu {
             icon-source: @image-url("../../assets/16px/sign-out.svg");
             label-text: "Sign out";
             clicked => {
+                HeaderState.menu-visible = false;
                 AppState.sign-out();
             }
         }

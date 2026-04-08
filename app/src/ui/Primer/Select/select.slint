@@ -36,7 +36,7 @@ export component Select {
     in property <bool> block: false;
     in property <Size> size: medium;
     in property <[SelectOption]> options;
-    callback selected-changed(value_index:int);
+    callback selected-changed(value_index: int);
 
     private property <length> trigger-height:
         size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;

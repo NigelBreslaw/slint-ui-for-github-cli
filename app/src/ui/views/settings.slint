@@ -1,6 +1,12 @@
 import { SettingsState } from "../../bridges/slint/settings-state.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
-import { Button, ButtonVariant, Select, Spinner, ValidationStatus } from "../Primer/primer.slint";
+import {
+    Button,
+    ButtonVariant,
+    Select,
+    Spinner,
+    ValidationStatus,
+} from "../Primer/primer.slint";
 import { PrimerColors, Size } from "../Primer/tokens.slint";
 
 component TableRow {
@@ -234,8 +240,6 @@ export component Settings {
             width: root.width;
             height: root.height;
             close-policy: no-auto-close;
-
-
 
             PrimerDialog {
                 x: 0;
