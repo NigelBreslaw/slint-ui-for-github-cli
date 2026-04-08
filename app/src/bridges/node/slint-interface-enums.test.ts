@@ -33,6 +33,7 @@ describe("Slint wire enum members", () => {
     assert.ok(values.includes("dashboard"));
     assert.ok(values.includes("settings"));
     assert.ok(values.includes("timeReporting"));
-    assert.equal(values.length, 3);
+    assert.ok(values.includes("primerGallery"));
+    assert.equal(values.length, 4);
   });
 });

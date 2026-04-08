@@ -29,10 +29,10 @@ export component AppHeader {
             height: self.preferred-height;
             width: self.preferred-width;
             spacing: 16px;
-            visible: AppState.auth == Authed.loggedIn && (AppState.view == AppView.dashboard || AppState.view == AppView.settings || AppState.view == AppView.timeReporting);
+            visible: AppState.auth == Authed.loggedIn && (AppState.view == AppView.dashboard || AppState.view == AppView.settings || AppState.view == AppView.timeReporting || AppState.view == AppView.primerGallery);
 
             Text {
-                text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : "Time reporting";
+                text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : AppState.view == AppView.timeReporting ? "Time reporting" : "Primer gallery";
                 font-size: 14px;
                 font-weight: 500;
                 color: PrimerColors.fgColor-default;

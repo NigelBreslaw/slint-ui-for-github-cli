@@ -75,9 +75,6 @@ export component Banner {
 
     private property <image> resolved-leading-source: use-custom-leading ? leading-icon : default-leading-source;
 
-    /// Visually hidden title (Primer `hideTitle`): expose title + description on the root for assistive tech.
-    private property <bool> a11y-root-carries-content: hide-title && (title != "" || description != "");
-
     min-width: 120px;
     preferred-width: 100%;
 
@@ -87,9 +84,7 @@ export component Banner {
         border-radius: flush ? 0px : LayoutTokens.borderRadius-medium;
         border-width: flush ? 0px : 1px;
         border-color: banner-border;
-        accessible-role: a11y-root-carries-content ? AccessibleRole.text : AccessibleRole.none;
-        accessible-label: a11y-root-carries-content ? (title != "" ? title : description) : "";
-        accessible-description: a11y-root-carries-content && title != "" ? description : "";
+        accessible-role: AccessibleRole.none;
 
         VerticalLayout {
             width: 100%;
@@ -143,7 +138,10 @@ export component Banner {
                         font-size: LayoutTokens.text-body-size-medium;
                         wrap: word-wrap;
                         width: 100%;
-                        accessible-role: a11y-root-carries-content ? AccessibleRole.none : AccessibleRole.text;
+                        accessible-role: AccessibleRole.text;
+                        // When title is visually hidden, expose it as the accessible name (Slint requires constant role).
+                        accessible-label: hide-title && title != "" ? title : "";
+                        accessible-description: hide-title && title != "" ? description : "";
                     }
                 }
 

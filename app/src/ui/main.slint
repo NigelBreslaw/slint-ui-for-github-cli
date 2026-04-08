@@ -15,6 +15,7 @@ import { Button, Spinner } from "Primer/primer.slint";
 import { PrimerColors } from "Primer/tokens.slint";
 import { Settings } from "views/settings.slint";
 import { Dashboard } from "views/dashboard.slint";
+import { PrimerGallery } from "views/primer-gallery.slint";
 import { SideBar } from "components/sideBar.slint";
 import { TimeReporting } from "views/time-reporting.slint";
 
@@ -108,6 +109,8 @@ export component MainWindow inherits Window {
         if AppState.view == AppView.settings: Settings { }
 
         if AppState.view == AppView.timeReporting: TimeReporting { }
+
+        if AppState.view == AppView.primerGallery: PrimerGallery { }
     }
 
     header := AppHeader { }

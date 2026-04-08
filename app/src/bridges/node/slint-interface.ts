@@ -39,7 +39,12 @@ export const authed = slintEnumMembers([
 export type Authed = SlintEnumValues<typeof authed>;
 
 /** Maps to `AppView` in `app-state.slint`. */
-export const appView = slintEnumMembers(["dashboard", "settings", "timeReporting"] as const);
+export const appView = slintEnumMembers([
+  "dashboard",
+  "settings",
+  "timeReporting",
+  "primerGallery",
+] as const);
 export type AppView = SlintEnumValues<typeof appView>;
 
 export type AppStateHandle = {
