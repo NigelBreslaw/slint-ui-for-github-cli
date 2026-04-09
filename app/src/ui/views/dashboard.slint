@@ -1,12 +1,23 @@
 import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
-import { PrimerUnderlineNavItem } from "../components/primer-underline-nav-item.slint";
-import { Banner, BannerVariant, ButtonVariant, Spinner } from "../Primer/primer.slint";
+import {
+    Banner,
+    BannerVariant,
+    ButtonVariant,
+    Spinner,
+    UnderlineNav,
+    UnderlineNavItem,
+} from "../Primer/primer.slint";
 import { PrimerColors, Size } from "../Primer/tokens.slint";
 
 export component Dashboard {
     width: 100%;
     height: 100%;
+
+    private property <[UnderlineNavItem]> dashboard-nav-items: [
+        { label: "Items to review", enabled: true, counter: "" },
+        { label: "Security alerts", enabled: true, counter: "" },
+    ];
 
     init => {
         AppState.dashboard-init();
@@ -23,36 +34,20 @@ export component Dashboard {
         spacing: 12px;
         height: 100%;
 
-        VerticalLayout {
-            spacing: 0;
-
-            HorizontalLayout {
-                spacing: 8px;
-                width: self.preferred-width;
-
-                PrimerUnderlineNavItem {
-                    label: "Items to review";
-                    selected: AppState.dashboard-active-tab == DashboardTab.itemsToReview;
-                    clicked => {
-                        AppState.dashboard-active-tab = DashboardTab.itemsToReview;
-                        AppState.dashboard-tab-changed(DashboardTab.itemsToReview);
-                    }
+        UnderlineNav {
+            width: 100%;
+            items: dashboard-nav-items;
+            selected-index: AppState.dashboard-active-tab == DashboardTab.itemsToReview ? 0 : 1;
+            accessible-name: "Dashboard";
+            item-activated(idx) => {
+                if idx == 0 {
+                    AppState.dashboard-active-tab = DashboardTab.itemsToReview;
+                    AppState.dashboard-tab-changed(DashboardTab.itemsToReview);
                 }
-
-                PrimerUnderlineNavItem {
-                    label: "Security alerts";
-                    selected: AppState.dashboard-active-tab == DashboardTab.securityAlerts;
-                    clicked => {
-                        AppState.dashboard-active-tab = DashboardTab.securityAlerts;
-                        AppState.dashboard-tab-changed(DashboardTab.securityAlerts);
-                    }
+                if idx == 1 {
+                    AppState.dashboard-active-tab = DashboardTab.securityAlerts;
+                    AppState.dashboard-tab-changed(DashboardTab.securityAlerts);
                 }
-            }
-
-            Rectangle {
-                height: 1px;
-                width: 100%;
-                background: PrimerColors.borderColor-muted;
             }
         }
 
