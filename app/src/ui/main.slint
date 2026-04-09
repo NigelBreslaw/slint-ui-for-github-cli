@@ -63,6 +63,13 @@ export component MainWindow inherits Window {
     min-width: 400px;
     min-height: 400px;
     title: "GitHub CLI";
+
+    changed width => {
+        AppState.window_geometry_changed(root.width, root.height);
+    }
+    changed height => {
+        AppState.window_geometry_changed(root.width, root.height);
+    }
     default-font-family: "Mona Sans";
     default-font-size: 14px;
 

@@ -41,6 +41,10 @@ import {
   teardownSettingsDebugPanel,
 } from "./backend/settings/settings-debug-panel.ts";
 import { applySecurityAlertsRepoEdited } from "./backend/settings/settings-security-alerts-repo.ts";
+import {
+  createMainWindowGeometryPersister,
+  restoreMainWindowGeometry,
+} from "./backend/window/window-geometry-main.ts";
 
 openAppDb();
 
@@ -52,6 +56,9 @@ const window = new ui.MainWindow({
   "auth-device-url": "",
   "gh-cli-version-block-detail": "",
 });
+
+restoreMainWindowGeometry(window);
+const windowGeometryPersister = createMainWindowGeometryPersister(window);
 
 assignProperties(window.AppState, {
   projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
@@ -110,6 +117,9 @@ const appStateCallbacks = {
     clearTimeReportingSelection(window);
     void applyAuthUi(window);
   },
+  window_geometry_changed: (_width: number, _height: number) => {
+    windowGeometryPersister.schedulePersist();
+  },
 } satisfies ExhaustiveAllCallbacks<AppStateHandle>;
 wireFunctions(window.AppState, appStateCallbacks);
 
@@ -154,6 +164,8 @@ await slint.runEventLoop({
   },
 });
 teardownSettingsDebugPanel(window);
+windowGeometryPersister.persistNow();
+windowGeometryPersister.dispose();
 window.hide();
 closeAppDb();
 // Slint's Node bridge uses a repeating timer (~16 ms) merged with Node's loop; a TTY also

@@ -71,6 +71,7 @@ export type AppStateHandle = {
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
   project_search_changed: (query: string) => void;
+  window_geometry_changed: (width: number, height: number) => void;
   sign_out: () => void;
   sign_in: () => void;
   open_project_url: (url: string) => void;
@@ -151,6 +152,7 @@ export type MainWindowInstance = {
   run(): Promise<void>;
   show(): void;
   hide(): void;
+  window: import("slint-ui").Window;
   AppState: AppStateHandle;
   SettingsState: SettingsStateHandle;
   TimeReportingState: TimeReportingStateHandle;
