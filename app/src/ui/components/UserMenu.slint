@@ -1,4 +1,4 @@
-import { Avatar, MultiDropShadow } from "../Primer/primer.slint";
+import { Avatar, Button, ButtonAlignContent, ButtonVariant, MultiDropShadow } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { ShadowTokens } from "../primer/tokens.slint";
@@ -28,53 +28,6 @@ component MenuSeparator inherits VerticalLayout {
 
     Rectangle {
         height: 8px;
-    }
-}
-
-component MenuItem {
-
-    in-out property icon-source <=> icon.source;
-    in-out property label-text <=> label.text;
-
-    callback clicked;
-
-    width: MenuStyle.menu-width;
-    height: content.preferred-height;
-
-    ta := TouchArea {
-        clicked => {
-            HeaderState.menu-visible = false;
-            root.clicked();
-        }
-    }
-
-    content := HorizontalLayout {
-        x: 0;
-        width: self.preferred-width;
-        height: 16px;
-        padding-left: 16px;
-        padding-right: 16px;
-        Rectangle {
-            width: 20px;
-            height: 16px;
-            Rectangle {
-                x: 0;
-                width: 16px;
-                height: self.width;
-                icon := Image {
-                    width: 100%;
-                    height: 100%;
-                    colorize: PrimerColors.fgColor-default;
-                }
-            }
-        }
-
-        label := Text {
-            height: self.preferred-height;
-            font-size: 14px;
-            font-weight: 400;
-            color: PrimerColors.fgColor-default;
-        }
     }
 }
 
@@ -149,36 +102,28 @@ export component UserMenu {
                 }
             }
 
-            HorizontalLayout {
+            status-button := Button {
                 x: 0px;
                 y: parent.height - self.height - 14px;
-                spacing: 8px;
-                width: self.preferred-width;
-                height: self.preferred-height;
-
-                Text {
-                    text: root.user_status_emoji;
-                    visible: root.user_status_emoji != "";
-                    font-size: 14px;
-                    vertical-alignment: center;
-                }
-
-                Text {
-                    height: 20px;
-                    text: root.user_status_message;
-                    font-size: 14px;
-                    color: PrimerColors.fgColor-default;
-                    font-weight: 400;
-                    vertical-alignment: center;
+                width: parent.width;
+                variant: ButtonVariant.invisible;
+                align-content: ButtonAlignContent.start;
+                leading-text: root.user_status_emoji;
+                label: root.user_status_message;
+                clicked => {
                 }
             }
         }
 
         MenuSeparator { }
 
-        MenuItem {
-            icon-source: @image-url("../../assets/16px/sign-out.svg");
-            label-text: "Sign out";
+        Button {
+            width: 100%;
+            variant: ButtonVariant.invisible;
+            align-content: ButtonAlignContent.start;
+            has-leading-icon: true;
+            leading-icon: @image-url("../../assets/16px/sign-out.svg");
+            label: "Sign out";
             clicked => {
                 HeaderState.menu-visible = false;
                 AppState.sign-out();
