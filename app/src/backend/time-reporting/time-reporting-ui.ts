@@ -2,9 +2,11 @@ import * as slint from "slint-ui";
 import { assignProperties, type ExhaustiveAllCallbacks } from "slint-bridge-kit";
 import type {
   MainWindowInstance,
+  SlintProjectBoardListRow,
   SlintTimeReportingWeekRow,
   TimeReportingStateHandle,
 } from "../../bridges/node/slint-interface.ts";
+import { applyProjectBoardListToWindow } from "../project-board/apply-project-board-list-to-window.ts";
 import {
   buildFilteredProjectsModel,
   findSlintUiOpenProjectRowByNodeId,
@@ -133,7 +135,14 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
   });
 }
 
-async function loadProjectItemsIntoUi(window: MainWindowInstance, nodeId: string): Promise<void> {
+/**
+ * One GraphQL fetch for `ProjectV2.items`, then updates in-memory cache, the time-reporting week
+ * grid, and the project board list model. Debug JSON dumps stay on the existing paths (e.g. project pick).
+ */
+async function reloadProjectV2ItemsIntoCacheAndUi(
+  window: MainWindowInstance,
+  nodeId: string,
+): Promise<void> {
   closeTimeReportingDetail(window);
   window.TimeReportingState.items_load_status = "Loading board items…";
   const res = await fetchAllProjectV2ItemsGraphql(nodeId);
@@ -147,12 +156,16 @@ async function loadProjectItemsIntoUi(window: MainWindowInstance, nodeId: string
     clearWeekGridColumnHeaders(window);
     window.TimeReportingState.week_grid_hint = "";
     setTimeReportingWeekRowOrder([]);
+    assignProperties(window.ProjectBoardListState, {
+      board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+    });
     return;
   }
   setTimeReportingSelectedWeek(currentIsoWeekUtc());
   setTimeReportingCachedItems(nodeId, res.items, new Map());
   window.TimeReportingState.items_load_status = "";
   applyWeekRowsToWindow(window);
+  applyProjectBoardListToWindow(window);
 }
 
 /** Apply `time_reporting/selected_project_v1` from SQLite to `TimeReportingState` (call on startup and when entering the view). */
@@ -219,7 +232,7 @@ export function buildTimeReportingStateCallbacks(
     time_reporting_refresh: () => {
       const id = getTimeReportingCachedProjectNodeId();
       if (id !== null) {
-        void loadProjectItemsIntoUi(window, id);
+        void reloadProjectV2ItemsIntoCacheAndUi(window, id);
       }
     },
 
@@ -272,7 +285,7 @@ export function buildTimeReportingStateCallbacks(
         } else {
           const stored = readTimeReportingSelectedProjectKv();
           if (stored !== null) {
-            await loadProjectItemsIntoUi(window, stored.nodeId);
+            await reloadProjectV2ItemsIntoCacheAndUi(window, stored.nodeId);
           }
         }
       })();
@@ -325,7 +338,7 @@ export function buildTimeReportingStateCallbacks(
         });
         closeTimeReportingPicker(window);
         await dumpTimeReportingProjectNodeToDebugJson(row.id);
-        await loadProjectItemsIntoUi(window, row.id);
+        await reloadProjectV2ItemsIntoCacheAndUi(window, row.id);
       })();
     },
   };
