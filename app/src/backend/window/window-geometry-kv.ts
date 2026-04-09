@@ -3,9 +3,9 @@
  */
 import { kvGet, kvSet } from "../db/app-db.ts";
 
-export const WINDOW_GEOMETRY_KV_KEY = "window_geometry_v1";
+const WINDOW_GEOMETRY_KV_KEY = "window_geometry_v1";
 
-export const WINDOW_GEOMETRY_SCHEMA_VERSION = 1 as const;
+const WINDOW_GEOMETRY_SCHEMA_VERSION = 1 as const;
 
 /** Matches [`main.slint`](../../ui/main.slint) `min-width` / `min-height`. */
 export const WINDOW_GEOMETRY_MIN_LENGTH = 400;
@@ -13,14 +13,14 @@ export const WINDOW_GEOMETRY_MIN_LENGTH = 400;
 /** Reject absurd values from corrupted KV or manual DB edits. */
 export const WINDOW_GEOMETRY_MAX_LENGTH = 100_000;
 
-export type WindowGeometryV1 = {
+type WindowGeometryV1 = {
   schemaVersion: typeof WINDOW_GEOMETRY_SCHEMA_VERSION;
   width: number;
   height: number;
   maximized: boolean;
 };
 
-export type WindowGeometryWrite = {
+type WindowGeometryWrite = {
   width: number;
   height: number;
   maximized?: boolean;

@@ -3,7 +3,7 @@
  * `flush` runs `fn` immediately with the latest arguments from the last scheduled call.
  * `cancel` drops the pending invocation without calling `fn`.
  */
-export type DebouncedFn<A extends unknown[]> = ((...args: A) => void) & {
+type DebouncedFn<A extends unknown[]> = ((...args: A) => void) & {
   flush: () => void;
   cancel: () => void;
 };

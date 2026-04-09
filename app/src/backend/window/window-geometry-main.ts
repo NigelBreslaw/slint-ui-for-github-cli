@@ -13,7 +13,7 @@ export function restoreMainWindowGeometry(window: MainWindowInstance): void {
   window.window.maximized = saved.maximized;
 }
 
-export type MainWindowGeometryPersister = {
+type MainWindowGeometryPersister = {
   schedulePersist: () => void;
   persistNow: () => void;
   dispose: () => void;
