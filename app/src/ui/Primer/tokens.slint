@@ -60,6 +60,9 @@ export global LayoutTokens {
     // BannerActions: Banner.module.css --base-size-12 column-gap, --base-size-2 dismiss margin when data-has-actions
     out property <length> banner-actions-gap: 12px;
     out property <length> banner-dismiss-margin-when-actions: 2px;
+
+    // Button inner row: Primer ButtonBase.module.css .ButtonContent gap (--base-size-8)
+    out property <length> button-content-gap: 8px;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
@@ -361,6 +364,35 @@ export global ButtonTokens {
     out property <color> button-shadow-primary-back-pressed-dark: rgba(0, 0, 0, 0.42);
     out property <color> button-shadow-danger-front-pressed-dark: rgba(0, 0, 0, 0.32);
     out property <color> button-shadow-primary-front-pressed-dark: rgba(0, 0, 0, 0.28);
+
+    // CounterLabel inside Button (ButtonBase.module.css .CounterLabel + legacy-theme light.ts / dark.ts fallbacks)
+    property <color> buttonCounter-default-bg-rest-light: rgba(31, 35, 40, 0.08);
+    property <color> buttonCounter-default-bg-rest-dark: #30363d;
+    property <color> buttonCounter-primary-bg-rest-light: rgba(0, 45, 17, 0.2);
+    property <color> buttonCounter-primary-bg-rest-dark: rgba(4, 38, 15, 0.2);
+    property <color> buttonCounter-danger-bg-rest-light: rgba(207, 34, 46, 0.1);
+    property <color> buttonCounter-danger-bg-rest-dark: rgba(73, 2, 2, 0.2);
+    property <color> buttonCounter-danger-fg-rest-light: #a40e26;
+    property <color> buttonCounter-danger-fg-rest-dark: #f85149;
+    property <color> buttonCounter-danger-bg-hover: rgba(255, 255, 255, 0.2);
+    property <color> buttonCounter-danger-bg-disabled-light: rgba(207, 34, 46, 0.05);
+    property <color> buttonCounter-danger-bg-disabled-dark: rgba(218, 54, 51, 0.05);
+    property <color> buttonCounter-danger-fg-disabled-light: rgba(207, 34, 46, 0.5);
+    property <color> buttonCounter-danger-fg-disabled-dark: rgba(248, 81, 73, 0.5);
+
+    out property <color> buttonCounter-borderColor: #00000000;
+    out property <color> buttonCounter-default-bgColor-rest: color-scheme == ColorScheme.dark ? buttonCounter-default-bg-rest-dark : buttonCounter-default-bg-rest-light;
+    out property <color> buttonCounter-default-fgColor-rest: button-default-fgColor-rest;
+    out property <color> buttonCounter-primary-bgColor-rest: color-scheme == ColorScheme.dark ? buttonCounter-primary-bg-rest-dark : buttonCounter-primary-bg-rest-light;
+    out property <color> buttonCounter-primary-fgColor-rest: button-primary-fgColor-rest;
+    out property <color> buttonCounter-danger-bgColor-rest: color-scheme == ColorScheme.dark ? buttonCounter-danger-bg-rest-dark : buttonCounter-danger-bg-rest-light;
+    out property <color> buttonCounter-danger-fgColor-rest: color-scheme == ColorScheme.dark ? buttonCounter-danger-fg-rest-dark : buttonCounter-danger-fg-rest-light;
+    out property <color> buttonCounter-danger-bgColor-hover: buttonCounter-danger-bg-hover;
+    out property <color> buttonCounter-danger-fgColor-hover: PrimerColors.fgOnEmphasis;
+    out property <color> buttonCounter-danger-bgColor-disabled: color-scheme == ColorScheme.dark ? buttonCounter-danger-bg-disabled-dark : buttonCounter-danger-bg-disabled-light;
+    out property <color> buttonCounter-danger-fgColor-disabled: color-scheme == ColorScheme.dark ? buttonCounter-danger-fg-disabled-dark : buttonCounter-danger-fg-disabled-light;
+    out property <color> buttonCounter-invisible-bgColor-rest: buttonCounter-default-bgColor-rest;
+    out property <color> buttonCounter-invisible-fgColor-rest: button-invisible-fgColor-rest;
 }
 
 // Banner.module.css --banner-* per variant; values are PrimerColors functional tokens only (no literals here).

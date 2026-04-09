@@ -2,11 +2,12 @@ import { PrimerColors, Size } from "../tokens.slint";
 
 export component Spinner {
     in property <Size> size: medium;
+    /** Override stroke for segment arc; default matches standalone Spinner (fg default). */
+    in property <color> segment-color: PrimerColors.fgColor-default;
+    /** Override track arc color; default matches prior hard-coded track. */
+    in property <color> track-color: #f0f6fc40;
 
     private property <length> box: size == Size.small ? 16px : size == Size.large ? 64px : 32px;
-    /** `currentColor` on dark: strong segment; track uses strokeOpacity 0.25 in React. */
-    private property <color> segment-color: PrimerColors.fgColor-default;
-    private property <color> track-color: #f0f6fc40;
 
     width: box;
     height: box;
@@ -25,7 +26,7 @@ export component Spinner {
             viewbox-width: 16;
             viewbox-height: 16;
             fill: transparent;
-            stroke: root.track-color;
+            stroke: track-color;
             stroke-width: 2px;
             commands: "M 15 8 A 7 7 0 1 1 1 8 A 7 7 0 1 1 15 8";
         }
@@ -38,7 +39,7 @@ export component Spinner {
             viewbox-width: 16;
             viewbox-height: 16;
             fill: transparent;
-            stroke: root.segment-color;
+            stroke: segment-color;
             stroke-width: 2px;
             stroke-line-cap: round;
             commands: "M 15 8 a 7.002 7.002 0 0 0 -7 -7";
