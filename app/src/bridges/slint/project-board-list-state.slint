@@ -13,6 +13,8 @@ export global ProjectBoardListState {
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";
     in-out property <string> items-load-status: "";
-    /** Filled in later PRs; scaffold uses an empty model. */
+    /** Row count for empty-state copy (`board-rows-model` length is not always visible in Slint). */
+    in-out property <int> board-items-count: 0;
     in-out property <[ProjectBoardListRow]> board-rows-model;
 }
+

@@ -7,6 +7,7 @@ import type {
   TimeReportingStateHandle,
 } from "../../bridges/node/slint-interface.ts";
 import { applyProjectBoardListToWindow } from "../project-board/apply-project-board-list-to-window.ts";
+import { hydrateProjectBoardListLabelsFromKv } from "../project-board/hydrate-project-board-list-from-kv.ts";
 import {
   buildFilteredProjectsModel,
   findSlintUiOpenProjectRowByNodeId,
@@ -139,12 +140,15 @@ function applyWeekRowsToWindow(window: MainWindowInstance): void {
  * One GraphQL fetch for `ProjectV2.items`, then updates in-memory cache, the time-reporting week
  * grid, and the project board list model. Debug JSON dumps stay on the existing paths (e.g. project pick).
  */
-async function reloadProjectV2ItemsIntoCacheAndUi(
+export async function reloadProjectV2ItemsIntoCacheAndUi(
   window: MainWindowInstance,
   nodeId: string,
 ): Promise<void> {
   closeTimeReportingDetail(window);
   window.TimeReportingState.items_load_status = "Loading board items…";
+  assignProperties(window.ProjectBoardListState, {
+    items_load_status: "Loading board items…",
+  });
   const res = await fetchAllProjectV2ItemsGraphql(nodeId);
   if (!res.ok) {
     assignProperties(window.TimeReportingState, {
@@ -157,7 +161,9 @@ async function reloadProjectV2ItemsIntoCacheAndUi(
     window.TimeReportingState.week_grid_hint = "";
     setTimeReportingWeekRowOrder([]);
     assignProperties(window.ProjectBoardListState, {
+      items_load_status: res.error,
       board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+      board_items_count: 0,
     });
     return;
   }
@@ -166,6 +172,18 @@ async function reloadProjectV2ItemsIntoCacheAndUi(
   window.TimeReportingState.items_load_status = "";
   applyWeekRowsToWindow(window);
   applyProjectBoardListToWindow(window);
+  const stored = readTimeReportingSelectedProjectKv();
+  if (stored !== null && stored.nodeId === nodeId) {
+    assignProperties(window.ProjectBoardListState, {
+      items_load_status: "",
+      has_selected_project: true,
+      selected_project_label: stored.title,
+    });
+  } else {
+    assignProperties(window.ProjectBoardListState, {
+      items_load_status: "",
+    });
+  }
 }
 
 /** Apply `time_reporting/selected_project_v1` from SQLite to `TimeReportingState` (call on startup and when entering the view). */
@@ -279,6 +297,7 @@ export function buildTimeReportingStateCallbacks(
     time_reporting_view_init: () => {
       void (async () => {
         hydrateTimeReportingFromKv(window);
+        hydrateProjectBoardListLabelsFromKv(window);
         await refreshSlintUiOrgProjectsForWindow(window);
         if (!window.TimeReportingState.has_selected_project) {
           openMandatoryPicker(window);
@@ -333,6 +352,10 @@ export function buildTimeReportingStateCallbacks(
           url: row.url,
         });
         assignProperties(window.TimeReportingState, {
+          has_selected_project: true,
+          selected_project_label: row.title,
+        });
+        assignProperties(window.ProjectBoardListState, {
           has_selected_project: true,
           selected_project_label: row.title,
         });

@@ -13,11 +13,13 @@ export function applyProjectBoardListToWindow(window: MainWindowInstance): void 
   if (items === null) {
     assignProperties(window.ProjectBoardListState, {
       board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+      board_items_count: 0,
     });
     return;
   }
   const rows = mapProjectV2ItemsToListRows(items);
   assignProperties(window.ProjectBoardListState, {
     board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>(rows),
+    board_items_count: rows.length,
   });
 }

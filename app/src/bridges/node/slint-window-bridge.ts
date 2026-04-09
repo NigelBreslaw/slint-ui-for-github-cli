@@ -11,6 +11,7 @@ import { fetchDependabotAlertsForRepo } from "../../backend/gh/dependabot-alerts
 import { fetchAllReviewRequestsSearch } from "../../backend/gh/graphql-review-requests.ts";
 import type {
   MainWindowInstance,
+  SlintProjectBoardListRow,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
   SlintTimeReportingWeekRow,
@@ -141,6 +142,13 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
     detail_open: false,
     detail_title: "",
     detail_body: "",
+  });
+  assignProperties(window.ProjectBoardListState, {
+    has_selected_project: false,
+    selected_project_label: "",
+    items_load_status: "",
+    board_items_count: 0,
+    board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
   });
   resetTimeReportingItemsState();
 }

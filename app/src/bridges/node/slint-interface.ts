@@ -132,6 +132,7 @@ export type ProjectBoardListStateHandle = {
   has_selected_project: boolean;
   selected_project_label: string;
   items_load_status: string;
+  board_items_count: number;
   board_rows_model: slint.ArrayModel<SlintProjectBoardListRow>;
 };
 

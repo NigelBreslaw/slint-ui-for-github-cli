@@ -1,4 +1,6 @@
+import { ListView } from "std-widgets.slint";
 import { ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
+import { Button, Spinner } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 
 export component ProjectBoardList {
@@ -16,23 +18,126 @@ export component ProjectBoardList {
 
         VerticalLayout {
             padding: 16px;
-            spacing: 8px;
+            spacing: 12px;
             width: 100%;
             height: 100%;
 
-            Text {
-                text: "Project board";
-                font-size: 16px;
-                font-weight: 600;
-                color: PrimerColors.fgColor-default;
-                wrap: word-wrap;
+            if !ProjectBoardListState.has-selected-project: VerticalLayout {
+                spacing: 8px;
+                width: 100%;
+
+                Text {
+                    text: "No project selected";
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: PrimerColors.fgColor-default;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Choose a GitHub Project in Time reporting (clock icon). This list shows every issue and pull request on that board.";
+                    font-size: 13px;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
             }
 
-            Text {
-                text: "List of project items will appear here (PR 4).";
-                font-size: 13px;
-                color: PrimerColors.fgColor-muted;
-                wrap: word-wrap;
+            if ProjectBoardListState.has-selected-project: VerticalLayout {
+                spacing: 10px;
+                width: 100%;
+                vertical-stretch: 1;
+
+                Text {
+                    text: ProjectBoardListState.selected-project-label;
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: PrimerColors.fgColor-default;
+                    wrap: word-wrap;
+                }
+
+                HorizontalLayout {
+                    spacing: 8px;
+                    alignment: start;
+
+                    Button {
+                        label: "Refresh";
+                        clicked => {
+                            ProjectBoardListState.project-board-list-refresh();
+                        }
+                    }
+                }
+
+                if ProjectBoardListState.items-load-status == "Loading board items…": HorizontalLayout {
+                    spacing: 10px;
+                    alignment: start;
+
+                    Spinner {
+                        size: small;
+                    }
+                }
+
+                if ProjectBoardListState.items-load-status != "" && ProjectBoardListState.items-load-status != "Loading board items…": Text {
+                    text: ProjectBoardListState.items-load-status;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                    font-size: 13px;
+                }
+
+                if ProjectBoardListState.items-load-status == "" && ProjectBoardListState.board-items-count == 0: Text {
+                    text: "No items on this board.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+
+                Rectangle {
+                    vertical-stretch: 1;
+                    width: 100%;
+                    min-height: 120px;
+                    clip: true;
+                    background: PrimerColors.bgColor-neutral-muted;
+                    border-radius: 8px;
+                    border-width: 1px;
+                    border-color: PrimerColors.borderColor-muted;
+                    visible: ProjectBoardListState.items-load-status == "" && ProjectBoardListState.board-items-count > 0;
+
+                    ListView {
+                        width: parent.width - 16px;
+                        height: parent.height - 16px;
+                        x: 8px;
+                        y: 8px;
+
+                        for row[index] in ProjectBoardListState.board-rows-model: Rectangle {
+                            height: 56px;
+                            background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
+
+                            TouchArea {
+                                clicked => {
+                                    ProjectBoardListState.project-board-list-open-row-url(row.url);
+                                }
+
+                                VerticalLayout {
+                                    padding: 8px;
+                                    spacing: 4px;
+                                    width: 100%;
+
+                                    Text {
+                                        text: row.title;
+                                        color: PrimerColors.fgColor-default;
+                                        overflow: elide;
+                                    }
+
+                                    Text {
+                                        text: row.subtitle;
+                                        font-size: 12px;
+                                        color: PrimerColors.fgColor-muted;
+                                        overflow: elide;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -19,7 +19,6 @@ import type {
   AppStateHandle,
   MainWindowInstance,
   MainWindowModule,
-  ProjectBoardListStateHandle,
   SettingsStateHandle,
   SlintProjectBoardListRow,
   SlintReviewRequestRow,
@@ -28,6 +27,8 @@ import type {
   SlintTimeReportingWeekRow,
 } from "./bridges/node/slint-interface.ts";
 import { authed, dashboardTab } from "./bridges/node/slint-interface.ts";
+import { buildProjectBoardListStateCallbacks } from "./backend/project-board/project-board-list-ui.ts";
+import { hydrateProjectBoardListLabelsFromKv } from "./backend/project-board/hydrate-project-board-list-from-kv.ts";
 import {
   buildTimeReportingStateCallbacks,
   hydrateTimeReportingFromKv,
@@ -74,6 +75,7 @@ assignProperties(window.TimeReportingState, {
 
 assignProperties(window.ProjectBoardListState, {
   board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+  board_items_count: 0,
 });
 
 assignProperties(window.SettingsState, {
@@ -86,6 +88,7 @@ assignProperties(window.SettingsState, {
 });
 
 hydrateTimeReportingFromKv(window);
+hydrateProjectBoardListLabelsFromKv(window);
 
 const appStateCallbacks = {
   project_search_changed: (query: string) => {
@@ -147,13 +150,7 @@ wireFunctions(window.SettingsState, settingsStateCallbacks);
 
 wireFunctions(window.TimeReportingState, buildTimeReportingStateCallbacks(window));
 
-const projectBoardListStateCallbacks = {
-  project_board_list_view_init: () => {},
-  project_board_list_view_exited: () => {},
-  project_board_list_refresh: () => {},
-  project_board_list_open_row_url: (_url: string) => {},
-} satisfies ExhaustiveAllCallbacks<ProjectBoardListStateHandle>;
-wireFunctions(window.ProjectBoardListState, projectBoardListStateCallbacks);
+wireFunctions(window.ProjectBoardListState, buildProjectBoardListStateCallbacks(window));
 
 const mainWindowHandlers = {
   open_github_device_clicked: () => {
