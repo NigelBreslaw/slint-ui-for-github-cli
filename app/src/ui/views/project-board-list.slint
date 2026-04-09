@@ -1,5 +1,8 @@
 import { ListView } from "std-widgets.slint";
-import { ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
+import {
+    ProjectBoardItemKind,
+    ProjectBoardListState,
+} from "../../bridges/slint/project-board-list-state.slint";
 import { Button, Spinner } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 
@@ -101,37 +104,132 @@ export component ProjectBoardList {
                     border-color: PrimerColors.borderColor-muted;
                     visible: ProjectBoardListState.items-load-status == "" && ProjectBoardListState.board-items-count > 0;
 
-                    ListView {
+                    VerticalLayout {
                         width: parent.width - 16px;
                         height: parent.height - 16px;
                         x: 8px;
                         y: 8px;
+                        spacing: 0px;
 
-                        for row[index] in ProjectBoardListState.board-rows-model: Rectangle {
-                            height: 56px;
-                            background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
+                        HorizontalLayout {
+                            height: 28px;
+                            spacing: 6px;
+                            alignment: center;
 
-                            TouchArea {
-                                clicked => {
-                                    ProjectBoardListState.project-board-list-open-row-url(row.url);
-                                }
+                            Text {
+                                width: 32px;
+                                text: "";
+                                horizontal-alignment: right;
+                            }
 
-                                VerticalLayout {
-                                    padding: 8px;
-                                    spacing: 4px;
-                                    width: 100%;
+                            Rectangle {
+                                width: 16px;
+                                height: 16px;
+                            }
 
-                                    Text {
-                                        text: row.title;
-                                        color: PrimerColors.fgColor-default;
-                                        overflow: elide;
+                            Rectangle {
+                                width: 10px;
+                                height: 10px;
+                            }
+
+                            Text {
+                                text: "Title";
+                                font-size: 12px;
+                                font-weight: 600;
+                                color: PrimerColors.fgColor-muted;
+                                vertical-alignment: center;
+                            }
+                        }
+
+                        Rectangle {
+                            height: 1px;
+                            width: 100%;
+                            background: PrimerColors.borderColor-muted;
+                        }
+
+                        ListView {
+                            vertical-stretch: 1;
+                            width: 100%;
+                            height: 100%;
+
+                            for row[index] in ProjectBoardListState.board-rows-model: Rectangle {
+                                height: 56px;
+                                background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
+
+                                TouchArea {
+                                    clicked => {
+                                        ProjectBoardListState.project-board-list-open-row-url(row.url);
                                     }
 
-                                    Text {
-                                        text: row.subtitle;
-                                        font-size: 12px;
-                                        color: PrimerColors.fgColor-muted;
-                                        overflow: elide;
+                                    HorizontalLayout {
+                                        padding: 8px;
+                                        spacing: 6px;
+                                        width: 100%;
+                                        height: 100%;
+                                        alignment: center;
+
+                                        Text {
+                                            width: 32px;
+                                            text: index + 1;
+                                            horizontal-alignment: right;
+                                            vertical-alignment: center;
+                                            font-size: 12px;
+                                            color: PrimerColors.fgColor-muted;
+                                        }
+
+                                        Image {
+                                            width: 16px;
+                                            height: 16px;
+                                            vertical-alignment: center;
+                                            colorize: PrimerColors.fgColor-muted;
+                                            source: row.kind == ProjectBoardItemKind.pullRequest ? @image-url("../../assets/16px/git-pull-request.svg") : row.kind == ProjectBoardItemKind.issue ? @image-url("../../assets/16px/issue-opened.svg") : @image-url("../../assets/16px/issue-draft.svg");
+                                        }
+
+                                        Rectangle {
+                                            width: 10px;
+                                            height: 10px;
+                                            border-radius: 5px;
+                                            background: row.kind == ProjectBoardItemKind.draftIssue ? PrimerColors.fgColor-muted : row.state == "OPEN" ? PrimerColors.fgColor-success : row.kind == ProjectBoardItemKind.pullRequest && row.state == "MERGED" ? PrimerColors.fgColor-done : row.kind == ProjectBoardItemKind.pullRequest && row.state == "CLOSED" ? PrimerColors.fgColor-danger : row.state == "CLOSED" ? PrimerColors.fgColor-done : PrimerColors.fgColor-muted;
+                                        }
+
+                                        VerticalLayout {
+                                            horizontal-stretch: 1;
+                                            spacing: 4px;
+
+                                            HorizontalLayout {
+                                                spacing: 6px;
+                                                alignment: center;
+
+                                                Text {
+                                                    horizontal-stretch: 1;
+                                                    text: row.title;
+                                                    color: PrimerColors.fgColor-default;
+                                                    overflow: elide;
+                                                    vertical-alignment: center;
+                                                }
+
+                                                if row.kind == ProjectBoardItemKind.draftIssue: Text {
+                                                    text: "Draft";
+                                                    font-size: 13px;
+                                                    color: PrimerColors.fgColor-muted;
+                                                    vertical-alignment: center;
+                                                }
+
+                                                if row.kind != ProjectBoardItemKind.draftIssue && row.number > 0: Text {
+                                                    text: "#" + row.number;
+                                                    font-size: 13px;
+                                                    color: PrimerColors.fgColor-muted;
+                                                    vertical-alignment: center;
+                                                }
+                                            }
+
+                                            if row.subtitle != "": Text {
+                                                text: row.subtitle;
+                                                font-size: 12px;
+                                                color: PrimerColors.fgColor-muted;
+                                                overflow: elide;
+                                            }
+                                        }
                                     }
                                 }
                             }
