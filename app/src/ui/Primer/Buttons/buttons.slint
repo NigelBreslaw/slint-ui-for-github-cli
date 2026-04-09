@@ -141,6 +141,18 @@ export component Button {
                 fg: ButtonTokens.buttonCounter-invisible-fgColor-rest,
             };
         }
+        if v == ButtonVariant.link {
+            if dis {
+                return {
+                    bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+                    fg: fg-disabled,
+                };
+            }
+            return {
+                bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+                fg: PrimerColors.fgColor-default,
+            };
+        }
         return {
             bg: ButtonTokens.buttonCounter-default-bgColor-rest,
             fg: ButtonTokens.buttonCounter-default-fgColor-rest,
@@ -531,38 +543,118 @@ export component Button {
         }
     }
 
-    // Link: separate StyledText per hover (each @markdown is a single literal). TouchArea on top for hover + click.
-    link-text-disabled := Text {
-        visible: is-link && disabled;
+    // Link: same slot model as filled (leading / trailing / count / loading); label uses StyledText + @markdown per hover.
+    link-layout := HorizontalLayout {
+        visible: is-link;
         width: 100%;
         height: 100%;
-        text: root.label;
-        color: paint.fg;
-        // Primer link uses font-size: inherit; Slint has no inherit — use body medium as default context.
-        font-size: LayoutTokens.text-body-size-medium;
-        font-weight: LayoutTokens.base-text-weight-medium;
-        horizontal-alignment: left;
-        vertical-alignment: center;
-    }
+        spacing: LayoutTokens.button-content-gap;
+        alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
 
-    link-md := StyledText {
-        visible: is-link && !disabled && !ta.has-hover;
-        width: 100%;
-        height: 100%;
-        text: @markdown("[\{label}](#)");
-        horizontal-alignment: left;
-        vertical-alignment: center;
-        link-color: PrimerColors.fgColor-link;
-    }
+        if loading-only-spinner: Spinner {
+            size: btn-spinner-size;
+            segment-color: paint.fg;
+            track-color: btn-spinner-track;
+        }
 
-    link-md-hover := StyledText {
-        visible: is-link && !disabled && ta.has-hover;
-        width: 100%;
-        height: 100%;
-        text: @markdown("[<u>\{label}</u>](#)");
-        horizontal-alignment: left;
-        vertical-alignment: center;
-        link-color: PrimerColors.fgColor-link;
+        if loading-replaces-leading: Spinner {
+            size: btn-spinner-size;
+            segment-color: paint.fg;
+            track-color: btn-spinner-track;
+        }
+
+        if !loading-replaces-leading && leading-text != "": Text {
+            text: leading-text;
+            color: paint.fg;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            vertical-alignment: center;
+        }
+
+        if !loading-replaces-leading && leading-text == "" && has-leading-icon: Image {
+            width: btn-icon-size;
+            height: btn-icon-size;
+            source: leading-icon;
+            colorize: paint.fg;
+        }
+
+        if is-link && disabled && !loading-only-spinner: Text {
+            text: root.label;
+            color: paint.fg;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            vertical-alignment: center;
+            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+            min-width: 0px;
+            overflow: elide;
+        }
+
+        link-md := StyledText {
+            visible: is-link && !disabled && !loading-only-spinner && !ta.has-hover;
+            text: @markdown("[\{label}](#)");
+            vertical-alignment: center;
+            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+            min-width: 0px;
+            link-color: PrimerColors.fgColor-link;
+        }
+
+        link-md-hover := StyledText {
+            visible: is-link && !disabled && !loading-only-spinner && ta.has-hover;
+            text: @markdown("[<u>\{label}</u>](#)");
+            vertical-alignment: center;
+            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+            min-width: 0px;
+            link-color: PrimerColors.fgColor-link;
+        }
+
+        if loading-replaces-trailing: Spinner {
+            size: btn-spinner-size;
+            segment-color: paint.fg;
+            track-color: btn-spinner-track;
+        }
+
+        if !loading-replaces-trailing && show-count: Rectangle {
+            border-radius: 20px;
+            border-width: 1px;
+            border-color: ButtonTokens.buttonCounter-borderColor;
+            background: btn-counter-paint.bg;
+            height: self.preferred-height;
+            horizontal-stretch: 0;
+
+            HorizontalLayout {
+                padding-top: 2px;
+                padding-bottom: 2px;
+                padding-left: 6px;
+                padding-right: 6px;
+                alignment: center;
+
+                Text {
+                    text: count;
+                    color: btn-counter-paint.fg;
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    vertical-alignment: center;
+                }
+            }
+        }
+
+        if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
+            text: trailing-text;
+            color: paint.fg;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            vertical-alignment: center;
+        }
+
+        if !loading-replaces-trailing && !show-count && trailing-text == "" && has-trailing-icon: Image {
+            width: btn-icon-size;
+            height: btn-icon-size;
+            source: trailing-icon;
+            colorize: paint.fg;
+        }
     }
 
     ta := TouchArea {
@@ -571,12 +663,8 @@ export component Button {
         enabled: !disabled && !loading;
     }
 
-    width: is-link
-        ? (disabled ? link-text-disabled.preferred-width : max(link-md.preferred-width, link-md-hover.preferred-width))
-        : filled-layout.preferred-width;
-    height: is-link
-        ? (disabled ? link-text-disabled.preferred-height : max(link-md.preferred-height, link-md-hover.preferred-height))
-        : btn-control-height;
+    width: is-link ? link-layout.preferred-width : filled-layout.preferred-width;
+    height: is-link ? link-layout.preferred-height : btn-control-height;
 }
 
 
