@@ -19,7 +19,9 @@ import type {
   AppStateHandle,
   MainWindowInstance,
   MainWindowModule,
+  ProjectBoardListStateHandle,
   SettingsStateHandle,
+  SlintProjectBoardListRow,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
   SlintSelectOption,
@@ -68,6 +70,10 @@ assignProperties(window.AppState, {
 
 assignProperties(window.TimeReportingState, {
   week_rows_model: new slint.ArrayModel<SlintTimeReportingWeekRow>([]),
+});
+
+assignProperties(window.ProjectBoardListState, {
+  board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
 });
 
 assignProperties(window.SettingsState, {
@@ -140,6 +146,14 @@ const settingsStateCallbacks = {
 wireFunctions(window.SettingsState, settingsStateCallbacks);
 
 wireFunctions(window.TimeReportingState, buildTimeReportingStateCallbacks(window));
+
+const projectBoardListStateCallbacks = {
+  project_board_list_view_init: () => {},
+  project_board_list_view_exited: () => {},
+  project_board_list_refresh: () => {},
+  project_board_list_open_row_url: (_url: string) => {},
+} satisfies ExhaustiveAllCallbacks<ProjectBoardListStateHandle>;
+wireFunctions(window.ProjectBoardListState, projectBoardListStateCallbacks);
 
 const mainWindowHandlers = {
   open_github_device_clicked: () => {

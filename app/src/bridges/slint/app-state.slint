@@ -1,3 +1,4 @@
+import { ProjectBoardListState } from "project-board-list-state.slint";
 import { SettingsState } from "settings-state.slint";
 import { TimeReportingState } from "time-reporting-state.slint";
 
@@ -38,6 +39,7 @@ export enum AppView {
     dashboard,
     settings,
     timeReporting,
+    projectBoardList,
     primerGallery,
 }
 
@@ -73,6 +75,9 @@ export global AppState {
             }
             if self.view == AppView.timeReporting {
                 TimeReportingState.time-reporting-view-exited();
+            }
+            if self.view == AppView.projectBoardList {
+                ProjectBoardListState.project-board-list-view-exited();
             }
             self.view = v;
             if v == AppView.settings {

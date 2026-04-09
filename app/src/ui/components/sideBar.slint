@@ -51,6 +51,21 @@ export component SideBar {
             width: 24px;
             height: 24px;
             colorize: PrimerColors.fgColor-muted;
+            source: @image-url("../../assets/24px/layout-grid.svg");
+
+            TouchArea {
+                clicked => {
+                    AppState.set-view(AppView.projectBoardList);
+                }
+            }
+        }
+
+        Image {
+            x: 16px;
+            y: 136px;
+            width: 24px;
+            height: 24px;
+            colorize: PrimerColors.fgColor-muted;
             source: @image-url("../../assets/24px/palette.svg");
 
             TouchArea {

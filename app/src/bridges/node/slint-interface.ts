@@ -1,6 +1,6 @@
 /**
  * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`,
- * `TimeReportingState`) wired from
+ * `TimeReportingState`, `ProjectBoardListState`) wired from
  * [`ui/main.slint`](../../ui/main.slint) / [`bridges/slint/app-state.slint`](../slint/app-state.slint).
  * Slint enum cases use the same spelling as in `.slint` (camelCase here); wire values are defined
  * once via `slintEnumMembers` so call sites use dot access and unions stay in sync.
@@ -44,6 +44,7 @@ export const appView = slintEnumMembers([
   "dashboard",
   "settings",
   "timeReporting",
+  "projectBoardList",
   "primerGallery",
 ] as const);
 export type AppView = SlintEnumValues<typeof appView>;
@@ -116,6 +117,24 @@ export type SlintTimeReportingWeekRow = {
   total: string;
 };
 
+/** Matches `ProjectBoardListRow` in `project-board-list-state.slint`. */
+export type SlintProjectBoardListRow = {
+  title: string;
+  subtitle: string;
+  url: string;
+};
+
+export type ProjectBoardListStateHandle = {
+  project_board_list_view_init: () => void;
+  project_board_list_view_exited: () => void;
+  project_board_list_refresh: () => void;
+  project_board_list_open_row_url: (url: string) => void;
+  has_selected_project: boolean;
+  selected_project_label: string;
+  items_load_status: string;
+  board_rows_model: slint.ArrayModel<SlintProjectBoardListRow>;
+};
+
 export type TimeReportingStateHandle = {
   time_reporting_view_init: () => void;
   time_reporting_view_exited: () => void;
@@ -156,6 +175,7 @@ export type MainWindowInstance = {
   AppState: AppStateHandle;
   SettingsState: SettingsStateHandle;
   TimeReportingState: TimeReportingStateHandle;
+  ProjectBoardListState: ProjectBoardListStateHandle;
   login_clicked?: () => void;
   open_github_device_clicked?: () => void;
   show_auth_window: () => void;
