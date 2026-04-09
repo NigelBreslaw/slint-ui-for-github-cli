@@ -31,7 +31,7 @@ Horizontal tabs with a model (`[UnderlineNavItem]`), controlled `selected-index`
 | `accessible-name`          | When non-empty, sets **`AccessibleRole.tab-list`** and the landmark label (React `aria-label` on the list).                                                                       |
 | `UnderlineNavItem.counter` | Empty hides the counter; non-empty shows **`Button`** counter pill unless **`loading-counters`** is true.                                                                         |
 
-The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** to align with **`.UnderlineWrapper`**.
+The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** to align with **`.UnderlineWrapper`**. When tabs are wider than the nav, the row is inside a horizontal **`Flickable`** (`viewport-width` = content width) so users can scroll sideways (Primer overflow behavior; scroll arrows **F16** not implemented).
 
 ## Banner
 

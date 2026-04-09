@@ -97,22 +97,29 @@ export component UnderlineNav {
         accessible-role: accessible-name != "" ? AccessibleRole.tab-list : AccessibleRole.none;
         accessible-label: accessible-name;
 
-        HorizontalLayout {
-            spacing: 8px;
-            min-height: LayoutTokens.control-xlarge-size;
-            padding-left: inset-padding-inline;
-            padding-right: inset-padding-inline;
-            width: parent.width;
-            alignment: center;
+        nav-flick := Flickable {
+            width: 100%;
+            height: tabs-row.preferred-height;
+            viewport-width: tabs-row.preferred-width;
+            viewport-height: self.height;
 
-            for item[index] in items: UnderlineNavItemRow {
-                label: item.label;
-                selected: index == root.selected-index;
-                enabled: item.enabled;
-                counter: item.counter;
-                loading-counters: root.loading-counters;
-                clicked => {
-                    root.item-activated(index);
+            tabs-row := HorizontalLayout {
+                spacing: 8px;
+                min-height: LayoutTokens.control-xlarge-size;
+                padding-left: inset-padding-inline;
+                padding-right: inset-padding-inline;
+                width: self.preferred-width;
+                alignment: center;
+
+                for item[index] in items: UnderlineNavItemRow {
+                    label: item.label;
+                    selected: index == root.selected-index;
+                    enabled: item.enabled;
+                    counter: item.counter;
+                    loading-counters: root.loading-counters;
+                    clicked => {
+                        root.item-activated(index);
+                    }
                 }
             }
         }
