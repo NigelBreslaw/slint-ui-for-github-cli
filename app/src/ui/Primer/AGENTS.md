@@ -82,6 +82,21 @@ Split or merge PRs by size; small widgets can combine steps.
 
 Trivial components may merge PR1+PR2; large or risky work may split PR3 further.
 
+## Implementation plans and PR breakdown tables
+
+Any **implementation plan** for **Primer** work (or other **multi-PR** UI changes in this repo) must include an **ordered PR breakdown table** so changes can land in reviewable steps. This applies to humans and to AI assistants drafting plans in issues, design docs, or chat.
+
+The table should list **PRs in merge order** and include at least:
+
+| Column         | Contents                                                                                  |
+| -------------- | ----------------------------------------------------------------------------------------- |
+| **PR**         | Sequence number (1, 2, …).                                                                |
+| **Title**      | Short, descriptive name.                                                                  |
+| **Scope**      | What ships (paths, components, behavior).                                                 |
+| **Acceptance** | How to verify (e.g. `pnpm typecheck`, Slint `main.slint` load, gallery or manual checks). |
+
+Call out **dependencies** (e.g. “PR3 must follow PR2”) and **optional merges** (e.g. “PR2+PR3 may be one PR if small”). The **last row** of a plan may be a process-only PR (e.g. updating this `AGENTS.md`) when the plan itself introduces a new rule.
+
 ## Verification
 
 From the **monorepo root**:
