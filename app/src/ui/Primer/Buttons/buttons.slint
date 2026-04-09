@@ -448,212 +448,217 @@ export component Button {
         border-color: paint.border;
     }
 
-    filled-layout := HorizontalLayout {
+    // HorizontalLayout.alignment is main-axis (horizontal) only; cross-axis defaults to top. Center the row vertically.
+    filled-outer := VerticalLayout {
         visible: !is-link;
-        width: 100%;
         height: 100%;
-        padding-left: btn-padding-inline;
-        padding-right: btn-padding-inline;
-        spacing: LayoutTokens.button-content-gap;
-        alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
+        alignment: center;
 
-        if loading-only-spinner: Spinner {
-            size: btn-spinner-size;
-            segment-color: paint.fg;
-            track-color: btn-spinner-track;
-        }
+        filled-row := HorizontalLayout {
+            padding-left: btn-padding-inline;
+            padding-right: btn-padding-inline;
+            spacing: LayoutTokens.button-content-gap;
+            alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
 
-        if loading-replaces-leading: Spinner {
-            size: btn-spinner-size;
-            segment-color: paint.fg;
-            track-color: btn-spinner-track;
-        }
+            if loading-only-spinner: Spinner {
+                size: btn-spinner-size;
+                segment-color: paint.fg;
+                track-color: btn-spinner-track;
+            }
 
-        if !loading-replaces-leading && leading-text != "": Text {
-            text: leading-text;
-            color: paint.fg;
-            font-size: filled-label-font-size;
-            font-weight: LayoutTokens.base-text-weight-medium;
-            vertical-alignment: center;
-        }
+            if loading-replaces-leading: Spinner {
+                size: btn-spinner-size;
+                segment-color: paint.fg;
+                track-color: btn-spinner-track;
+            }
 
-        if !loading-replaces-leading && leading-text == "" && has-leading-icon: Image {
-            width: btn-icon-size;
-            height: btn-icon-size;
-            source: leading-icon;
-            colorize: paint.fg;
-        }
+            if !loading-replaces-leading && leading-text != "": Text {
+                text: leading-text;
+                color: paint.fg;
+                font-size: filled-label-font-size;
+                font-weight: LayoutTokens.base-text-weight-medium;
+                vertical-alignment: center;
+            }
 
-        if !loading-only-spinner: Text {
-            text: root.label;
-            color: paint.fg;
-            font-size: filled-label-font-size;
-            font-weight: LayoutTokens.base-text-weight-medium;
-            vertical-alignment: center;
-            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
-            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
-            min-width: 0px;
-            overflow: elide;
-        }
+            if !loading-replaces-leading && leading-text == "" && has-leading-icon: Image {
+                width: btn-icon-size;
+                height: btn-icon-size;
+                source: leading-icon;
+                colorize: paint.fg;
+            }
 
-        if loading-replaces-trailing: Spinner {
-            size: btn-spinner-size;
-            segment-color: paint.fg;
-            track-color: btn-spinner-track;
-        }
+            if !loading-only-spinner: Text {
+                text: root.label;
+                color: paint.fg;
+                font-size: filled-label-font-size;
+                font-weight: LayoutTokens.base-text-weight-medium;
+                vertical-alignment: center;
+                horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+                horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+                min-width: 0px;
+                overflow: elide;
+            }
 
-        if !loading-replaces-trailing && show-count: Rectangle {
-            border-radius: 20px;
-            border-width: 1px;
-            border-color: ButtonTokens.buttonCounter-borderColor;
-            background: btn-counter-paint.bg;
-            height: self.preferred-height;
-            horizontal-stretch: 0;
+            if loading-replaces-trailing: Spinner {
+                size: btn-spinner-size;
+                segment-color: paint.fg;
+                track-color: btn-spinner-track;
+            }
 
-            HorizontalLayout {
-                padding-top: 2px;
-                padding-bottom: 2px;
-                padding-left: 6px;
-                padding-right: 6px;
-                alignment: center;
+            if !loading-replaces-trailing && show-count: Rectangle {
+                border-radius: 20px;
+                border-width: 1px;
+                border-color: ButtonTokens.buttonCounter-borderColor;
+                background: btn-counter-paint.bg;
+                horizontal-stretch: 0;
 
-                Text {
-                    text: count;
-                    color: btn-counter-paint.fg;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-semibold;
-                    vertical-alignment: center;
+                HorizontalLayout {
+                    padding-top: 2px;
+                    padding-bottom: 2px;
+                    padding-left: 6px;
+                    padding-right: 6px;
+                    alignment: center;
+
+                    Text {
+                        text: count;
+                        color: btn-counter-paint.fg;
+                        font-size: LayoutTokens.text-body-size-small;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        vertical-alignment: center;
+                    }
                 }
             }
-        }
 
-        if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
-            text: trailing-text;
-            color: paint.fg;
-            font-size: filled-label-font-size;
-            font-weight: LayoutTokens.base-text-weight-medium;
-            vertical-alignment: center;
-        }
+            if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
+                text: trailing-text;
+                color: paint.fg;
+                font-size: filled-label-font-size;
+                font-weight: LayoutTokens.base-text-weight-medium;
+                vertical-alignment: center;
+            }
 
-        if !loading-replaces-trailing && !show-count && trailing-text == "" && has-trailing-icon: Image {
-            width: btn-icon-size;
-            height: btn-icon-size;
-            source: trailing-icon;
-            colorize: paint.fg;
+            if !loading-replaces-trailing && !show-count && trailing-text == "" && has-trailing-icon: Image {
+                width: btn-icon-size;
+                height: btn-icon-size;
+                source: trailing-icon;
+                colorize: paint.fg;
+            }
         }
     }
 
     // Link: same slot model as filled (leading / trailing / count / loading); label uses StyledText + @markdown per hover.
-    link-layout := HorizontalLayout {
+    link-outer := VerticalLayout {
         visible: is-link;
-        width: 100%;
         height: 100%;
-        spacing: LayoutTokens.button-content-gap;
-        alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
+        alignment: center;
 
-        if loading-only-spinner: Spinner {
-            size: btn-spinner-size;
-            segment-color: paint.fg;
-            track-color: btn-spinner-track;
-        }
+        link-row := HorizontalLayout {
+            spacing: LayoutTokens.button-content-gap;
+            alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
 
-        if loading-replaces-leading: Spinner {
-            size: btn-spinner-size;
-            segment-color: paint.fg;
-            track-color: btn-spinner-track;
-        }
+            if loading-only-spinner: Spinner {
+                size: btn-spinner-size;
+                segment-color: paint.fg;
+                track-color: btn-spinner-track;
+            }
 
-        if !loading-replaces-leading && leading-text != "": Text {
-            text: leading-text;
-            color: paint.fg;
-            font-size: LayoutTokens.text-body-size-medium;
-            font-weight: LayoutTokens.base-text-weight-medium;
-            vertical-alignment: center;
-        }
+            if loading-replaces-leading: Spinner {
+                size: btn-spinner-size;
+                segment-color: paint.fg;
+                track-color: btn-spinner-track;
+            }
 
-        if !loading-replaces-leading && leading-text == "" && has-leading-icon: Image {
-            width: btn-icon-size;
-            height: btn-icon-size;
-            source: leading-icon;
-            colorize: paint.fg;
-        }
+            if !loading-replaces-leading && leading-text != "": Text {
+                text: leading-text;
+                color: paint.fg;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: LayoutTokens.base-text-weight-medium;
+                vertical-alignment: center;
+            }
 
-        if is-link && disabled && !loading-only-spinner: Text {
-            text: root.label;
-            color: paint.fg;
-            font-size: LayoutTokens.text-body-size-medium;
-            font-weight: LayoutTokens.base-text-weight-medium;
-            vertical-alignment: center;
-            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
-            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
-            min-width: 0px;
-            overflow: elide;
-        }
+            if !loading-replaces-leading && leading-text == "" && has-leading-icon: Image {
+                width: btn-icon-size;
+                height: btn-icon-size;
+                source: leading-icon;
+                colorize: paint.fg;
+            }
 
-        link-md := StyledText {
-            visible: is-link && !disabled && !loading-only-spinner && !ta.has-hover;
-            text: @markdown("[\{label}](#)");
-            vertical-alignment: center;
-            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
-            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
-            min-width: 0px;
-            link-color: PrimerColors.fgColor-link;
-        }
+            if is-link && disabled && !loading-only-spinner: Text {
+                text: root.label;
+                color: paint.fg;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: LayoutTokens.base-text-weight-medium;
+                vertical-alignment: center;
+                horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+                horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+                min-width: 0px;
+                overflow: elide;
+            }
 
-        link-md-hover := StyledText {
-            visible: is-link && !disabled && !loading-only-spinner && ta.has-hover;
-            text: @markdown("[<u>\{label}</u>](#)");
-            vertical-alignment: center;
-            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
-            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
-            min-width: 0px;
-            link-color: PrimerColors.fgColor-link;
-        }
+            link-md := StyledText {
+                visible: is-link && !disabled && !loading-only-spinner && !ta.has-hover;
+                text: @markdown("[\{label}](#)");
+                vertical-alignment: center;
+                horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+                horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+                min-width: 0px;
+                link-color: PrimerColors.fgColor-link;
+            }
 
-        if loading-replaces-trailing: Spinner {
-            size: btn-spinner-size;
-            segment-color: paint.fg;
-            track-color: btn-spinner-track;
-        }
+            link-md-hover := StyledText {
+                visible: is-link && !disabled && !loading-only-spinner && ta.has-hover;
+                text: @markdown("[<u>\{label}</u>](#)");
+                vertical-alignment: center;
+                horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+                horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+                min-width: 0px;
+                link-color: PrimerColors.fgColor-link;
+            }
 
-        if !loading-replaces-trailing && show-count: Rectangle {
-            border-radius: 20px;
-            border-width: 1px;
-            border-color: ButtonTokens.buttonCounter-borderColor;
-            background: btn-counter-paint.bg;
-            height: self.preferred-height;
-            horizontal-stretch: 0;
+            if loading-replaces-trailing: Spinner {
+                size: btn-spinner-size;
+                segment-color: paint.fg;
+                track-color: btn-spinner-track;
+            }
 
-            HorizontalLayout {
-                padding-top: 2px;
-                padding-bottom: 2px;
-                padding-left: 6px;
-                padding-right: 6px;
-                alignment: center;
+            if !loading-replaces-trailing && show-count: Rectangle {
+                border-radius: 20px;
+                border-width: 1px;
+                border-color: ButtonTokens.buttonCounter-borderColor;
+                background: btn-counter-paint.bg;
+                horizontal-stretch: 0;
 
-                Text {
-                    text: count;
-                    color: btn-counter-paint.fg;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-semibold;
-                    vertical-alignment: center;
+                HorizontalLayout {
+                    padding-top: 2px;
+                    padding-bottom: 2px;
+                    padding-left: 6px;
+                    padding-right: 6px;
+                    alignment: center;
+
+                    Text {
+                        text: count;
+                        color: btn-counter-paint.fg;
+                        font-size: LayoutTokens.text-body-size-small;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        vertical-alignment: center;
+                    }
                 }
             }
-        }
 
-        if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
-            text: trailing-text;
-            color: paint.fg;
-            font-size: LayoutTokens.text-body-size-medium;
-            font-weight: LayoutTokens.base-text-weight-medium;
-            vertical-alignment: center;
-        }
+            if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
+                text: trailing-text;
+                color: paint.fg;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: LayoutTokens.base-text-weight-medium;
+                vertical-alignment: center;
+            }
 
-        if !loading-replaces-trailing && !show-count && trailing-text == "" && has-trailing-icon: Image {
-            width: btn-icon-size;
-            height: btn-icon-size;
-            source: trailing-icon;
-            colorize: paint.fg;
+            if !loading-replaces-trailing && !show-count && trailing-text == "" && has-trailing-icon: Image {
+                width: btn-icon-size;
+                height: btn-icon-size;
+                source: trailing-icon;
+                colorize: paint.fg;
+            }
         }
     }
 
@@ -663,8 +668,8 @@ export component Button {
         enabled: !disabled && !loading;
     }
 
-    width: is-link ? link-layout.preferred-width : filled-layout.preferred-width;
-    height: is-link ? link-layout.preferred-height : btn-control-height;
+    width: is-link ? link-row.preferred-width : filled-row.preferred-width;
+    height: is-link ? link-outer.preferred-height : btn-control-height;
 }
 
 
