@@ -2,6 +2,7 @@ import { Palette } from "std-widgets.slint";
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import { Spinner } from "../Progress/spinner.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import "../../../assets/fonts/MonaSans-VariableFont.ttf";
 
 export enum ButtonAlignContent {
     center,
@@ -89,11 +90,11 @@ export component Button {
 
     pure function button-counter-paint(
         v: ButtonVariant,
-        dis: bool,
+        disabled: bool,
         d-hv: bool,
         fg-disabled: color,
     ) -> ButtonCounterPaint {
-        if dis {
+        if disabled {
             if v == ButtonVariant.danger {
                 return {
                     bg: ButtonTokens.buttonCounter-danger-bgColor-disabled,
@@ -142,7 +143,7 @@ export component Button {
             };
         }
         if v == ButtonVariant.link {
-            if dis {
+            if disabled {
                 return {
                     bg: ButtonTokens.buttonCounter-default-bgColor-rest,
                     fg: fg-disabled,
@@ -159,8 +160,8 @@ export component Button {
         };
     }
 
-    pure function button-paint(v: ButtonVariant, dis: bool, hover: bool, pressed: bool) -> ButtonPaint {
-        if dis {
+    pure function button-paint(v: ButtonVariant, disabled: bool, hover: bool, pressed: bool) -> ButtonPaint {
+        if disabled {
             if v == ButtonVariant.link {
                 return {
                     bg: ButtonTokens.button-link-bgColor-rest,
@@ -289,13 +290,13 @@ export component Button {
 
     pure function button-shadow(
         v: ButtonVariant,
-        dis: bool,
+        disabled: bool,
         dark: bool,
         d-pl: bool,
         p-pl: bool,
         d-hv: bool,
     ) -> ButtonShadowState {
-        if v == ButtonVariant.invisible || v == ButtonVariant.link || dis {
+        if v == ButtonVariant.invisible || v == ButtonVariant.link || disabled {
             return {
                 back-color: #00000000,
                 back-blur: 0px,
@@ -451,14 +452,15 @@ export component Button {
     // HorizontalLayout.alignment is main-axis (horizontal) only; cross-axis defaults to top. Center the row vertically.
     filled-outer := VerticalLayout {
         visible: !is-link;
-        height: 100%;
+        height: btn-icon-size;
         alignment: center;
+    
 
         filled-row := HorizontalLayout {
-            padding-left: btn-padding-inline;
-            padding-right: btn-padding-inline;
+            height: btn-icon-size;
+            padding-left: align-content == ButtonAlignContent.start ? btn-padding-inline: btn-padding-inline * 2;
+            padding-right: align-content == ButtonAlignContent.start ? btn-padding-inline: btn-padding-inline * 2;
             spacing: LayoutTokens.button-content-gap;
-            alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
 
             if loading-only-spinner: Spinner {
                 size: btn-spinner-size;
@@ -488,15 +490,16 @@ export component Button {
             }
 
             if !loading-only-spinner: Text {
+                y: (parent.height - self.preferred-height) / 2;
                 text: root.label;
                 color: paint.fg;
                 font-size: filled-label-font-size;
                 font-weight: LayoutTokens.base-text-weight-medium;
-                vertical-alignment: center;
                 horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
                 horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
-                min-width: 0px;
+                height: self.preferred-height;
                 overflow: elide;
+                font-family: "Mona Sans";
             }
 
             if loading-replaces-trailing: Spinner {
@@ -550,11 +553,11 @@ export component Button {
     link-outer := VerticalLayout {
         visible: is-link;
         height: 100%;
-        alignment: center;
+        alignment: align-content == ButtonAlignContent.center ? center : start;
 
         link-row := HorizontalLayout {
             spacing: LayoutTokens.button-content-gap;
-            alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
+            alignment: align-content == ButtonAlignContent.center ? center : start;
 
             if loading-only-spinner: Spinner {
                 size: btn-spinner-size;
@@ -575,7 +578,6 @@ export component Button {
                 font-weight: LayoutTokens.base-text-weight-medium;
                 vertical-alignment: center;
             }
-
             if !loading-replaces-leading && leading-text == "" && has-leading-icon: Image {
                 width: btn-icon-size;
                 height: btn-icon-size;
@@ -593,6 +595,7 @@ export component Button {
                 horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
                 min-width: 0px;
                 overflow: elide;
+                font-family: "Mona Sans";
             }
 
             link-md := StyledText {

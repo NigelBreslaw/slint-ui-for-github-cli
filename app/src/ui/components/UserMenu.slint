@@ -1,4 +1,10 @@
-import { Avatar, Button, ButtonAlignContent, ButtonVariant, MultiDropShadow } from "../Primer/primer.slint";
+import {
+    Avatar,
+    Button,
+    ButtonAlignContent,
+    ButtonVariant,
+    MultiDropShadow,
+} from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { ShadowTokens } from "../primer/tokens.slint";
@@ -15,19 +21,10 @@ export global HeaderState {
 component MenuSeparator inherits VerticalLayout {
     height: self.preferred-height;
     width: 100%;
-    padding-left: 8px;
-    padding-right: 8px;
-    Rectangle {
-        height: 8px;
-    }
 
     Rectangle {
         height: 1px;
         background: PrimerColors.actionListItem-inline-divider;
-    }
-
-    Rectangle {
-        height: 8px;
     }
 }
 
@@ -56,69 +53,60 @@ export component UserMenu {
     }
 
     content := VerticalLayout {
-        y: 0;
-        height: self.preferred-height;
-        Rectangle {
-            height: 16px;
-        }
+        width: 100%;
+        padding: 8px;
+        spacing: 8px;
 
-        header-content := Rectangle {
-            x: 16px;
-            width: parent.width - (2 * self.x);
-            height: 100px - 16px;
-
-            VerticalLayout {
+        VerticalLayout {
+            padding: 8px;
+            spacing: 8px;
+            width: parent.width;
+            HorizontalLayout {
                 spacing: 8px;
-                width: parent.width;
-                HorizontalLayout {
-                    spacing: 8px;
-                    width: self.preferred-width;
+                width: self.preferred-width;
 
-                    avatar := Avatar { }
+                avatar := Avatar { }
 
-                    VerticalLayout {
-                        height: self.preferred-height;
-                        spacing: -3px;
-                        Text {
-                            width: 120px;
-                            text: AppState.user_login;
-                            visible: AppState.user_login != "";
-                            font-size: 14px;
-                            font-weight: 600;
-                            color: PrimerColors.fgColor-default;
-                            overflow: elide;
-                        }
+                VerticalLayout {
+                    height: self.preferred-height;
+                    spacing: -3px;
+                    Text {
+                        width: 120px;
+                        text: AppState.user_login;
+                        visible: AppState.user_login != "";
+                        font-size: 14px;
+                        font-weight: 600;
+                        color: PrimerColors.fgColor-default;
+                        overflow: elide;
+                    }
 
-                        Text {
-                            width: 120px;
-                            text: AppState.user_name;
-                            visible: AppState.user_name != "";
-                            font-size: 14px;
-                            color: PrimerColors.fgColor-muted;
-                            font-weight: 400;
-                            overflow: elide;
-                        }
+                    Text {
+                        width: 120px;
+                        text: AppState.user_name;
+                        visible: AppState.user_name != "";
+                        font-size: 14px;
+                        color: PrimerColors.fgColor-muted;
+                        font-weight: 400;
+                        overflow: elide;
                     }
                 }
             }
+        }
 
-            status-button := Button {
-                x: 0px;
-                y: parent.height - self.height - 14px;
-                width: parent.width;
-                variant: ButtonVariant.invisible;
-                align-content: ButtonAlignContent.start;
-                leading-text: root.user_status_emoji;
-                label: root.user_status_message;
-                clicked => {
-                }
+        status-button := Button {
+            width: parent.width - (parent.padding * 2);
+            variant: ButtonVariant.invisible;
+            align-content: ButtonAlignContent.start;
+            leading-text: root.user_status_emoji;
+            label: root.user_status_message;
+            clicked => {
             }
         }
 
         MenuSeparator { }
 
         Button {
-            width: 100%;
+            width: parent.width - (parent.padding * 2);
             variant: ButtonVariant.invisible;
             align-content: ButtonAlignContent.start;
             has-leading-icon: true;
@@ -128,10 +116,6 @@ export component UserMenu {
                 HeaderState.menu-visible = false;
                 AppState.sign-out();
             }
-        }
-
-        Rectangle {
-            height: 16px;
         }
     }
 }
