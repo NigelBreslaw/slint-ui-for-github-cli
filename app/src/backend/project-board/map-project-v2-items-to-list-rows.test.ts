@@ -108,7 +108,7 @@ describe("mapProjectV2ItemsToListRows", () => {
     },
   };
 
-  it("maps PullRequest with repo, state, elided assignees, and Status field", () => {
+  it("maps PullRequest with kind, state, number, and title", () => {
     const rows = mapProjectV2ItemsToListRows([prMerged]);
     assert.equal(rows.length, 1);
     assert.equal(rows[0].kind, projectBoardItemKind.pullRequest);
@@ -116,10 +116,7 @@ describe("mapProjectV2ItemsToListRows", () => {
     assert.equal(rows[0].number, 447);
     assert.equal(rows[0].title, "Add test logs and coverage report");
     assert.equal(rows[0].url, "https://github.com/slint-ui/account/pull/447");
-    assert.equal(
-      rows[0].subtitle,
-      "slint-ui/account#447 · Pull request · MERGED · NigelBreslaw, other +1 · Merged",
-    );
+    assert.equal(rows[0].subtitle, "");
   });
 
   it("maps Issue without assignees or project Status", () => {
@@ -128,7 +125,7 @@ describe("mapProjectV2ItemsToListRows", () => {
     assert.equal(rows[0].kind, projectBoardItemKind.issue);
     assert.equal(rows[0].state, "CLOSED");
     assert.equal(rows[0].number, 12);
-    assert.equal(rows[0].subtitle, "slint-ui/account#12 · Issue · CLOSED");
+    assert.equal(rows[0].subtitle, "");
   });
 
   it("maps DraftIssue and uses empty url from itemContentTitleUrl", () => {
@@ -139,7 +136,7 @@ describe("mapProjectV2ItemsToListRows", () => {
     assert.equal(rows[0].number, 0);
     assert.equal(rows[0].title, "Ideas backlog");
     assert.equal(rows[0].url, "");
-    assert.equal(rows[0].subtitle, "Draft · alice · Backlog");
+    assert.equal(rows[0].subtitle, "");
   });
 
   it("preserves order and skips items without content title", () => {
@@ -176,8 +173,7 @@ describe("mapProjectV2ItemsToListRows", () => {
     assert.equal(rows[0].state, "MERGED");
     assert.equal(rows[0].number, 1);
     assert.equal(rows[0].title, "Fixture PR in week");
-    assert.ok(rows[0].subtitle.includes("Pull request"));
-    assert.ok(rows[0].subtitle.includes("MERGED"));
+    assert.equal(rows[0].subtitle, "");
     assert.equal(rows[2].kind, projectBoardItemKind.pullRequest);
     assert.equal(rows[2].state, "OPEN");
     assert.equal(rows[2].number, 3);

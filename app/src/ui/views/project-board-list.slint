@@ -119,7 +119,7 @@ export component ProjectBoardList {
                             Text {
                                 width: 32px;
                                 text: "";
-                                horizontal-alignment: right;
+                                horizontal-alignment: left;
                             }
 
                             Rectangle {
@@ -153,7 +153,7 @@ export component ProjectBoardList {
                             height: 100%;
 
                             for row[index] in ProjectBoardListState.board-rows-model: Rectangle {
-                                height: 56px;
+                                height: 40px;
                                 background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
 
                                 TouchArea {
@@ -166,12 +166,12 @@ export component ProjectBoardList {
                                         spacing: 6px;
                                         width: 100%;
                                         height: 100%;
-                                        alignment: center;
+                                        alignment: start;
 
                                         Text {
                                             width: 32px;
                                             text: index + 1;
-                                            horizontal-alignment: right;
+                                            horizontal-alignment: left;
                                             vertical-alignment: center;
                                             font-size: 12px;
                                             color: PrimerColors.fgColor-muted;
@@ -181,53 +181,37 @@ export component ProjectBoardList {
                                             width: 16px;
                                             height: 16px;
                                             vertical-alignment: center;
-                                            colorize: PrimerColors.fgColor-muted;
+                                            colorize: row.kind == ProjectBoardItemKind.draftIssue ? PrimerColors.fgColor-muted : row.state == "OPEN" ? PrimerColors.fgColor-success : row.kind == ProjectBoardItemKind.pullRequest && row.state == "MERGED" ? PrimerColors.fgColor-done : row.kind == ProjectBoardItemKind.pullRequest && row.state == "CLOSED" ? PrimerColors.fgColor-danger : row.state == "CLOSED" ? PrimerColors.fgColor-done : PrimerColors.fgColor-muted;
                                             source: row.kind == ProjectBoardItemKind.pullRequest ? @image-url("../../assets/16px/git-pull-request.svg") : row.kind == ProjectBoardItemKind.issue ? @image-url("../../assets/16px/issue-opened.svg") : @image-url("../../assets/16px/issue-draft.svg");
                                         }
 
-                                        Rectangle {
-                                            width: 10px;
-                                            height: 10px;
-                                            border-radius: 5px;
-                                            background: row.kind == ProjectBoardItemKind.draftIssue ? PrimerColors.fgColor-muted : row.state == "OPEN" ? PrimerColors.fgColor-success : row.kind == ProjectBoardItemKind.pullRequest && row.state == "MERGED" ? PrimerColors.fgColor-done : row.kind == ProjectBoardItemKind.pullRequest && row.state == "CLOSED" ? PrimerColors.fgColor-danger : row.state == "CLOSED" ? PrimerColors.fgColor-done : PrimerColors.fgColor-muted;
-                                        }
+                                        
 
-                                        VerticalLayout {
+                                        HorizontalLayout {
                                             horizontal-stretch: 1;
-                                            spacing: 4px;
+                                            spacing: 6px;
+                                            alignment: start;
 
-                                            HorizontalLayout {
-                                                spacing: 6px;
-                                                alignment: center;
-
-                                                Text {
-                                                    horizontal-stretch: 1;
-                                                    text: row.title;
-                                                    color: PrimerColors.fgColor-default;
-                                                    overflow: elide;
-                                                    vertical-alignment: center;
-                                                }
-
-                                                if row.kind == ProjectBoardItemKind.draftIssue: Text {
-                                                    text: "Draft";
-                                                    font-size: 13px;
-                                                    color: PrimerColors.fgColor-muted;
-                                                    vertical-alignment: center;
-                                                }
-
-                                                if row.kind != ProjectBoardItemKind.draftIssue && row.number > 0: Text {
-                                                    text: "#" + row.number;
-                                                    font-size: 13px;
-                                                    color: PrimerColors.fgColor-muted;
-                                                    vertical-alignment: center;
-                                                }
+                                            Text {
+                                                horizontal-stretch: 1;
+                                                text: row.title;
+                                                color: PrimerColors.fgColor-default;
+                                                overflow: elide;
+                                                vertical-alignment: center;
                                             }
 
-                                            if row.subtitle != "": Text {
-                                                text: row.subtitle;
-                                                font-size: 12px;
+                                            if row.kind == ProjectBoardItemKind.draftIssue: Text {
+                                                text: "Draft";
+                                                font-size: 13px;
                                                 color: PrimerColors.fgColor-muted;
-                                                overflow: elide;
+                                                vertical-alignment: center;
+                                            }
+
+                                            if row.kind != ProjectBoardItemKind.draftIssue && row.number > 0: Text {
+                                                text: "#" + row.number;
+                                                font-size: 13px;
+                                                color: PrimerColors.fgColor-muted;
+                                                vertical-alignment: center;
                                             }
                                         }
                                     }
