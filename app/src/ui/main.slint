@@ -10,7 +10,7 @@ import {
 } from "../bridges/slint/app-state.slint";
 import { AppHeader } from "components/AppHeader.slint";
 import { SettingsState } from "../bridges/slint/settings-state.slint";
-import { ProjectBoardListRow, ProjectBoardListState } from "../bridges/slint/project-board-list-state.slint";
+import { ProjectBoardItemKind, ProjectBoardListRow, ProjectBoardListState } from "../bridges/slint/project-board-list-state.slint";
 import { TimeReportingState, TimeReportingWeekRow } from "../bridges/slint/time-reporting-state.slint";
 import { Button, Spinner } from "Primer/primer.slint";
 import { PrimerColors } from "Primer/tokens.slint";
@@ -27,7 +27,7 @@ import "../assets/fonts/MonaSans-Italic-VariableFont.ttf"; // "Mona Sans"
 import "../assets/fonts/VeraMono.ttf"; // "Bitstream Vera Sans Mono"
 
 // Export so backend can access the enums and global state.
-export { AppView, Authed, AppState, DashboardTab, ProjectBoardListRow, ProjectBoardListState, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
+export { AppView, Authed, AppState, DashboardTab, ProjectBoardItemKind, ProjectBoardListRow, ProjectBoardListState, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
 
 export component MainWindow inherits Window {
 

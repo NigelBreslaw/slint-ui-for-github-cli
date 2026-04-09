@@ -1,4 +1,15 @@
+export enum ProjectBoardItemKind {
+    pullRequest,
+    issue,
+    draftIssue,
+}
+
 export struct ProjectBoardListRow {
+    kind: ProjectBoardItemKind,
+    /** GraphQL `OPEN` / `CLOSED` / `MERGED`; empty for draft issues. */
+    state: string,
+    /** `0` when not applicable (draft). */
+    number: int,
     title: string,
     subtitle: string,
     url: string,

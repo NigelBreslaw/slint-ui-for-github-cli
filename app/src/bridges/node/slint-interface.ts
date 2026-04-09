@@ -117,8 +117,19 @@ export type SlintTimeReportingWeekRow = {
   total: string;
 };
 
+/** Maps to `ProjectBoardItemKind` in `project-board-list-state.slint`. */
+export const projectBoardItemKind = slintEnumMembers([
+  "pullRequest",
+  "issue",
+  "draftIssue",
+] as const);
+export type ProjectBoardItemKind = SlintEnumValues<typeof projectBoardItemKind>;
+
 /** Matches `ProjectBoardListRow` in `project-board-list-state.slint`. */
 export type SlintProjectBoardListRow = {
+  kind: ProjectBoardItemKind;
+  state: string;
+  number: number;
   title: string;
   subtitle: string;
   url: string;

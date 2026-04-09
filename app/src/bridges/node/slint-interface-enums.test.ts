@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { appView, authed, dashboardTab } from "./slint-interface.ts";
+import { appView, authed, dashboardTab, projectBoardItemKind } from "./slint-interface.ts";
 
 /**
  * Runtime checks on `slintEnumMembers` objects so wire strings stay aligned with
- * `bridges/slint/app-state.slint` enums (see slint-interface.ts).
+ * Slint enums in `app-state.slint` and `project-board-list-state.slint` (see slint-interface.ts).
  */
 describe("Slint wire enum members", () => {
   it("dashboard tab members match DashboardTab in app-state.slint", () => {
@@ -36,5 +36,13 @@ describe("Slint wire enum members", () => {
     assert.ok(values.includes("projectBoardList"));
     assert.ok(values.includes("primerGallery"));
     assert.equal(values.length, 5);
+  });
+
+  it("project board item kind members match ProjectBoardItemKind in project-board-list-state.slint", () => {
+    const values = Object.values(projectBoardItemKind);
+    assert.ok(values.includes("pullRequest"));
+    assert.ok(values.includes("issue"));
+    assert.ok(values.includes("draftIssue"));
+    assert.equal(values.length, 3);
   });
 });

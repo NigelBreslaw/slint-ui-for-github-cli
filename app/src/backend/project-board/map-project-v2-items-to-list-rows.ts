@@ -1,11 +1,58 @@
+import {
+  projectBoardItemKind,
+  type ProjectBoardItemKind,
+} from "../../bridges/node/slint-interface.ts";
 import { itemContentTitleUrl } from "../time-reporting/project-v2-item-hours.ts";
 
 /** Matches Slint `ProjectBoardListRow` / wire `SlintProjectBoardListRow`. */
 type ProjectBoardListRowTs = {
+  kind: ProjectBoardItemKind;
+  state: string;
+  number: number;
   title: string;
   subtitle: string;
   url: string;
 };
+
+function graphqlStateString(content: Record<string, unknown>): string {
+  const s = content.state;
+  return typeof s === "string" ? s : "";
+}
+
+function contentIssueNumber(content: Record<string, unknown>): number {
+  const n = content.number;
+  if (typeof n === "number" && Number.isFinite(n)) {
+    return n;
+  }
+  return 0;
+}
+
+function kindStateNumberFromContent(content: Record<string, unknown>): {
+  kind: ProjectBoardItemKind;
+  state: string;
+  number: number;
+} {
+  const tn = content.__typename;
+  if (tn === "PullRequest") {
+    return {
+      kind: projectBoardItemKind.pullRequest,
+      state: graphqlStateString(content),
+      number: contentIssueNumber(content),
+    };
+  }
+  if (tn === "Issue") {
+    return {
+      kind: projectBoardItemKind.issue,
+      state: graphqlStateString(content),
+      number: contentIssueNumber(content),
+    };
+  }
+  return {
+    kind: projectBoardItemKind.draftIssue,
+    state: "",
+    number: 0,
+  };
+}
 
 /** GitHub Projects single-select column often named `Status`. */
 export const PROJECT_BOARD_STATUS_FIELD_NAME = "Status";
@@ -149,7 +196,11 @@ export function mapProjectV2ItemsToListRows(items: unknown[]): ProjectBoardListR
     }
     const c = content as Record<string, unknown>;
     const status = extractProjectV2SingleSelectName(item, PROJECT_BOARD_STATUS_FIELD_NAME);
+    const { kind, state, number } = kindStateNumberFromContent(c);
     rows.push({
+      kind,
+      state,
+      number,
       title: meta.title,
       url: meta.url,
       subtitle: buildSubtitle(c, status),
