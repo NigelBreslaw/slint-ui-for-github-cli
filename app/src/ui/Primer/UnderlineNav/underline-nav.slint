@@ -7,16 +7,29 @@ import {
 } from "../Buttons/buttons.slint";
 import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 
+export enum UnderlineNavVariant {
+    inset,
+    flush,
+}
+
 export struct UnderlineNavItem {
     label: string,
     enabled: bool,
+    /// Non-empty shows a counter pill (or a loading placeholder when `UnderlineNav.loading-counters` is true).
+    counter: string,
 }
 
 component UnderlineNavItemRow {
     in property <string> label;
     in property <bool> selected;
     in property <bool> enabled: true;
+    in property <string> counter: "";
+    in property <bool> loading-counters: false;
     callback clicked;
+
+    private property <bool> show-counter-slot: counter != "";
+    private property <bool> show-counter-value: show-counter-slot && !loading-counters;
+    private property <bool> show-counter-loading: show-counter-slot && loading-counters;
 
     width: self.preferred-width;
 
@@ -24,18 +37,34 @@ component UnderlineNavItemRow {
         spacing: 0px;
         width: self.preferred-width;
 
-        nav-btn := Button {
-            variant: ButtonVariant.invisible;
-            size: Size.medium;
-            align-content: ButtonAlignContent.start;
-            label: root.label;
-            disabled: !root.enabled;
-            label-typography-override: true;
-            label-font-size-override: LayoutTokens.text-body-size-medium;
-            label-font-weight-override: root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium;
-            label-color-override: root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
-            clicked => {
-                root.clicked();
+        HorizontalLayout {
+            spacing: LayoutTokens.button-content-gap;
+            width: self.preferred-width;
+            alignment: center;
+
+            nav-btn := Button {
+                variant: ButtonVariant.invisible;
+                size: Size.medium;
+                align-content: ButtonAlignContent.start;
+                label: root.label;
+                count: show-counter-value ? counter : "";
+                disabled: !root.enabled;
+                label-typography-override: true;
+                label-font-size-override: LayoutTokens.text-body-size-medium;
+                label-font-weight-override: root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium;
+                label-color-override: root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+                clicked => {
+                    root.clicked();
+                }
+            }
+
+            if show-counter-loading: Rectangle {
+                width: 24px;
+                height: 16px;
+                border-radius: 20px;
+                border-width: 1px;
+                border-color: PrimerColors.borderColor-default;
+                background: PrimerColors.bgColor-neutral-muted;
             }
         }
 
@@ -50,22 +79,38 @@ component UnderlineNavItemRow {
 export component UnderlineNav {
     in property <[UnderlineNavItem]> items;
     in property <int> selected-index: -1;
+    /// `inset`: horizontal padding (`stack-padding-normal`). `flush`: no inline padding (matches `[data-variant='flush']`).
+    in property <UnderlineNavVariant> variant: UnderlineNavVariant.inset;
+    /// When true, non-empty item `counter` values render a fixed-size skeleton instead of the numeric pill (UnderlineNav `LoadingCounter`).
+    in property <bool> loading-counters: false;
+    /// When non-empty, exposes a `tab-list` landmark for assistive tech (React `aria-label` on the list).
+    in property <string> accessible-name: "";
     callback item-activated(index: int);
 
     width: 100%;
 
+    private property <length> inset-padding-inline: variant == UnderlineNavVariant.inset ? LayoutTokens.stack-padding-normal : 0px;
+
     VerticalLayout {
         spacing: 0px;
         width: root.width;
+        accessible-role: accessible-name != "" ? AccessibleRole.tab-list : AccessibleRole.none;
+        accessible-label: accessible-name;
 
         HorizontalLayout {
             spacing: 8px;
-            width: self.preferred-width;
+            min-height: LayoutTokens.control-xlarge-size;
+            padding-left: inset-padding-inline;
+            padding-right: inset-padding-inline;
+            width: parent.width;
+            alignment: center;
 
             for item[index] in items: UnderlineNavItemRow {
                 label: item.label;
                 selected: index == root.selected-index;
                 enabled: item.enabled;
+                counter: item.counter;
+                loading-counters: root.loading-counters;
                 clicked => {
                     root.item-activated(index);
                 }
