@@ -117,7 +117,7 @@ export component Banner {
         accessible-role: AccessibleRole.none;
 
         VerticalLayout {
-            width: 100%;
+            // width: 100%;
             spacing: 0;
 
             if flush: Rectangle {
@@ -132,8 +132,9 @@ export component Banner {
                 padding-top: pad-block;
                 padding-bottom: pad-block;
                 spacing: 4px;
-                width: 100%;
+                // width: 100%;
                 alignment: start;
+                // width: self.preferred-width;
 
                 Rectangle {
                     width: icon-cell-width;
@@ -151,8 +152,8 @@ export component Banner {
 
                 VerticalLayout {
                     spacing: 4px;
-                    horizontal-stretch: 1;
-                    min-width: 0px;
+                    width: self.preferred-width;
+                    horizontal-stretch: 0;
 
                     if !hide-title: Text {
                         text: title;
@@ -160,7 +161,6 @@ export component Banner {
                         font-size: LayoutTokens.text-body-size-medium;
                         font-weight: LayoutTokens.base-text-weight-semibold;
                         wrap: word-wrap;
-                        width: 100%;
                     }
 
                     if description-emphasis != "": HorizontalLayout {
@@ -192,7 +192,6 @@ export component Banner {
                         color: PrimerColors.fgColor-default;
                         font-size: LayoutTokens.text-body-size-medium;
                         wrap: word-wrap;
-                        width: 100%;
                         accessible-role: AccessibleRole.text;
                         accessible-label: hide-title && title != "" ? title : "";
                         accessible-description: hide-title && title != "" ? description : "";
@@ -231,11 +230,9 @@ export component Banner {
                     }
                 }
 
+
                 if use-trailing-actions: HorizontalLayout {
                     spacing: LayoutTokens.banner-actions-gap;
-                    alignment: start;
-                    horizontal-stretch: 0;
-
                     if secondary-action-label != "": Button {
                         label: secondary-action-label;
                         variant: ButtonVariant.invisible;

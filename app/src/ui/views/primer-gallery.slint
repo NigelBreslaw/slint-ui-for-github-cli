@@ -18,8 +18,8 @@ global PrimerGalleryState {
 }
 
 export component PrimerGallery {
-    width: 100%;
-    height: 100%;
+    width: 900px;//100%;
+    height: 800px;//100%;
 
     private property <[SelectOption]> demo-select-options: [
         { value: "one", label: "First option", enabled: true },
@@ -71,6 +71,21 @@ export component PrimerGallery {
                 VerticalLayout {
                     spacing: 12px;
                     width: 100%;
+
+                    Banner {
+                        width: 100%;
+                        variant: BannerVariant.warning;
+                        title: "Trailing layout";
+                        description: "With actions-trailing, buttons sit in the top row after the text column (text stretches).";
+                        actions-trailing: true;
+                        secondary-action-label: "Details";
+                        primary-action-label: "Primary";
+                        primary-action-variant: ButtonVariant.primary;
+                        secondary-action => {
+                        }
+                        primary-action => {
+                        }
+                    }
 
                     Text {
                         text: "Banner";
