@@ -27,22 +27,23 @@ component UnderlineNavItemRow {
     in property <bool> loading-counters: false;
     callback clicked;
 
+
     private property <bool> show-counter-slot: counter != "";
     private property <bool> show-counter-value: show-counter-slot && !loading-counters;
     private property <bool> show-counter-loading: show-counter-slot && loading-counters;
 
-    width: self.preferred-width;
+    // width: 10px;
 
     VerticalLayout {
         spacing: 0px;
-        width: self.preferred-width;
+        // width: self.preferred-width;
 
         HorizontalLayout {
             spacing: LayoutTokens.button-content-gap;
-            width: self.preferred-width;
-            alignment: center;
+            alignment: start;
 
             nav-btn := Button {
+                horizontal-stretch: 0;
                 variant: ButtonVariant.invisible;
                 size: Size.medium;
                 align-content: ButtonAlignContent.start;
@@ -70,7 +71,6 @@ component UnderlineNavItemRow {
 
         Rectangle {
             height: 2px;
-            width: 100%;
             background: root.selected ? PrimerColors.accent-underline : #00000000;
         }
     }
@@ -87,39 +87,31 @@ export component UnderlineNav {
     in property <string> accessible-name: "";
     callback item-activated(index: int);
 
-    width: 100%;
-
     private property <length> inset-padding-inline: variant == UnderlineNavVariant.inset ? LayoutTokens.stack-padding-normal : 0px;
 
     VerticalLayout {
         spacing: 0px;
-        width: root.width;
-        accessible-role: accessible-name != "" ? AccessibleRole.tab-list : AccessibleRole.none;
+        accessible-role: AccessibleRole.tab-list;
         accessible-label: accessible-name;
+        height: self.preferred-height;
 
-        nav-flick := Flickable {
-            width: 100%;
-            height: tabs-row.preferred-height;
-            viewport-width: tabs-row.preferred-width;
-            viewport-height: self.height;
+        tabs-row := HorizontalLayout {
+            spacing: 8px;
+            // min-height: LayoutTokens.control-xlarge-size;
+            padding-left: inset-padding-inline;
+            padding-right: inset-padding-inline;
+            alignment: start;
 
-            tabs-row := HorizontalLayout {
-                spacing: 8px;
-                min-height: LayoutTokens.control-xlarge-size;
-                padding-left: inset-padding-inline;
-                padding-right: inset-padding-inline;
-                width: self.preferred-width;
-                alignment: center;
 
-                for item[index] in items: UnderlineNavItemRow {
-                    label: item.label;
-                    selected: index == root.selected-index;
-                    enabled: item.enabled;
-                    counter: item.counter;
-                    loading-counters: root.loading-counters;
-                    clicked => {
-                        root.item-activated(index);
-                    }
+
+            for item[index] in items: UnderlineNavItemRow {
+                label: item.label;
+                selected: index == root.selected-index;
+                enabled: item.enabled;
+                counter: item.counter;
+                loading-counters: root.loading-counters;
+                clicked => {
+                    root.item-activated(index);
                 }
             }
         }

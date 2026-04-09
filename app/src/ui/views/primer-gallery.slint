@@ -10,6 +10,9 @@ import {
     SelectOption,
     Spinner,
     Size,
+    UnderlineNav,
+    UnderlineNavItem,
+    UnderlineNavVariant,
     ValidationStatus,
 } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
@@ -19,6 +22,8 @@ global PrimerGalleryState {
 }
 
 export component PrimerGallery {
+    // width: 500px;
+    // height: 500px;
     width: 100%;
     height: 100%;
 
@@ -29,603 +34,668 @@ export component PrimerGallery {
     ];
     private property <int> demo-select-index: 0;
 
+    private property <int> gallery-tab-index: 0;
+    private property <[UnderlineNavItem]> gallery-section-tabs: [
+        { label: "Banner", enabled: true, counter: "" },
+        { label: "UnderlineNav", enabled: true, counter: "" },
+        { label: "Buttons", enabled: true, counter: "" },
+        { label: "Select & Spinner", enabled: true, counter: "" },
+        { label: "Avatar", enabled: true, counter: "" },
+    ];
+
+    private property <int> demo-underline-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-items: [
+        { label: "Code", enabled: true, counter: "" },
+        { label: "Issues", enabled: true, counter: "12" },
+        { label: "Pull requests", enabled: true, counter: "3" },
+    ];
+    private property <int> demo-underline-flush-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-flush-items: [
+        { label: "Actions", enabled: true, counter: "" },
+        { label: "Projects", enabled: true, counter: "" },
+    ];
+    private property <int> demo-underline-loading-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-loading-items: [
+        { label: "Open", enabled: true, counter: "8" },
+        { label: "Closed", enabled: true, counter: "24" },
+    ];
+    private property <int> demo-underline-scroll-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-scroll-items: [
+        { label: "Overview", enabled: true, counter: "" },
+        { label: "Repositories", enabled: true, counter: "" },
+        { label: "Projects", enabled: true, counter: "" },
+        { label: "Packages", enabled: true, counter: "" },
+        { label: "Stars", enabled: true, counter: "" },
+        { label: "Sponsors", enabled: true, counter: "" },
+    ];
+
     Rectangle {
         width: 100%;
         height: 100%;
         background: PrimerColors.bgColor-default;
 
-        flick := Flickable {
+        VerticalLayout {
+            padding: 16px;
+            spacing: 16px;
             width: parent.width;
             height: parent.height;
-            viewport-width: self.width;
-            viewport-height: scroll-body.preferred-height;
-
-            scroll-body := VerticalLayout {
-                width: flick.width;
-                padding: 16px;
-                spacing: 28px;
-
-                Text {
-                    text: "Primer gallery";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 18px;
-                    font-weight: 600;
-                    wrap: word-wrap;
-                    width: 100%;
+            gallery-nav := UnderlineNav {
+                items: gallery-section-tabs;
+                selected-index: gallery-tab-index;
+                accessible-name: "Primer gallery sections";
+                item-activated(idx) => {
+                    gallery-tab-index = idx;
                 }
+            }
 
-                Text {
-                    text: "In-app showcase of Slint Primer components. Banner tokens match primer-ui-react Banner.module.css.";
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 13px;
-                    wrap: word-wrap;
-                    width: 100%;
-                }
+            tab-flick := Flickable {
+                width: 100%;
+                height: 100%;
+                viewport-width: self.width;
+                viewport-height: tab-panel.preferred-height;
 
-                Rectangle {
-                    height: 1px;
-                    width: 100%;
-                    background: PrimerColors.borderColor-muted;
-                }
+                tab-panel := VerticalLayout {
+                    width: tab-flick.width;
+                    height: self.preferred-height;
 
-                // --- Banner ---
-                VerticalLayout {
-                    spacing: 12px;
-                    width: 100%;
-
-                    Text {
-                        text: "Banner";
-                        color: PrimerColors.fgColor-default;
-                        font-size: 15px;
-                        font-weight: 600;
-                    }
-
-                    Text {
-                        text: "Variants";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    Banner {
+                    if gallery-tab-index == 0: VerticalLayout {
+                        spacing: 12px;
                         width: 100%;
-                        variant: BannerVariant.critical;
-                        title: "Critical";
-                        description: "Something went wrong or needs immediate attention.";
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.critical;
+                            title: "Critical";
+                            description: "Something went wrong or needs immediate attention.";
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            title: "Info";
+                            description: "Supplemental context or a non-blocking notice.";
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.success;
+                            title: "Success";
+                            description: "The operation completed successfully.";
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.upsell;
+                            title: "Upsell";
+                            description: "Upgrade or try a premium capability.";
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.warning;
+                            title: "Warning";
+                            description: "Review this before continuing.";
+                        }
+
+                        Text {
+                            text: "Layout & leading visual";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            layout: BannerLayout.compact;
+                            title: "Compact padding";
+                            description: "Uses reduced padding (base-size-4).";
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            flush: true;
+                            title: "Flush";
+                            description: "Top and bottom border only, no side border or radius.";
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            hide-title: true;
+                            title: "Hidden title (still in accessibility)";
+                            description: "Title is not drawn; icon uses the smaller size.";
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            title: "Custom leading icon";
+                            description: "Info variant with has-custom-leading-icon and gear asset.";
+                            has-custom-leading-icon: true;
+                            leading-icon: @image-url("../../assets/24px/gear.svg");
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.upsell;
+                            title: "Upsell + custom icon";
+                            description: "Custom leading visual is allowed for upsell as well.";
+                            has-custom-leading-icon: true;
+                            leading-icon: @image-url("../../assets/24px/gear.svg");
+                        }
+
+                        Text {
+                            text: "Dismissible";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        if PrimerGalleryState.show-dismiss-demo: Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            title: "Dismissible banner";
+                            description: "Tap the × to hide this sample; use the button below to bring it back.";
+                            dismissible: true;
+                            dismiss => {
+                                PrimerGalleryState.show-dismiss-demo = false;
+                            }
+                        }
+
+                        Text {
+                            text: "Primary / secondary actions";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            title: "Actions (React parity)";
+                            description: "Secondary uses invisible; primary uses default outline (Banner.PrimaryAction).";
+                            secondary-action-label: "Secondary";
+                            primary-action-label: "Primary";
+                            secondary-action => {
+                            }
+                            primary-action => {
+                            }
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            title: "Green primary CTA";
+                            description: "Set primary-action-variant to primary for a GitHub-style green button (not React default).";
+                            primary-action-label: "Continue";
+                            primary-action-variant: ButtonVariant.primary;
+                            primary-action => {
+                            }
+                        }
+
+                        Text {
+                            text: "Description emphasis + subtitle";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            title: "Rich description pattern";
+                            description-emphasis: "octocat";
+                            description: " filed a follow-up on this thread.";
+                            subtitle: "Muted second line (Slint extension; React Banner is title + description only).";
+                        }
+
+                        Text {
+                            text: "Trailing actions (full-width notice row)";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.warning;
+                            title: "Trailing layout";
+                            description: "With actions-trailing, buttons sit in the top row after the text column (text stretches).";
+                            actions-trailing: true;
+                            secondary-action-label: "Details";
+                            primary-action-label: "Primary";
+                            primary-action-variant: ButtonVariant.primary;
+                            secondary-action => {
+                            }
+                            primary-action => {
+                            }
+                        }
+
+                        Banner {
+                            width: 100%;
+                            variant: BannerVariant.info;
+                            title: "Dismiss + actions";
+                            description: "Dismiss control gets extra top margin when actions are present.";
+                            dismissible: true;
+                            secondary-action-label: "Details";
+                            primary-action-label: "OK";
+                            dismiss => {
+                            }
+                            secondary-action => {
+                            }
+                            primary-action => {
+                            }
+                        }
+
+                        Button {
+                            label: "Show dismissible banner again";
+                            clicked => {
+                                PrimerGalleryState.show-dismiss-demo = true;
+                            }
+                        }
                     }
 
-                    Banner {
+                    if gallery-tab-index == 1: VerticalLayout {
+                        spacing: 12px;
                         width: 100%;
-                        variant: BannerVariant.info;
-                        title: "Info";
-                        description: "Supplemental context or a non-blocking notice.";
+
+                        Text {
+                            text: "UnderlineNav";
+                            color: PrimerColors.fgColor-default;
+                            font-size: 15px;
+                            font-weight: 600;
+                        }
+
+                        Text {
+                            text: "Inset variant with counters (static).";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        UnderlineNav {
+                            width: 100%;
+                            items: demo-underline-items;
+                            selected-index: demo-underline-selected;
+                            accessible-name: "Demo repository tabs";
+                            item-activated(idx) => {
+                                demo-underline-selected = idx;
+                            }
+                        }
+
+                        Text {
+                            text: "Flush variant";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        UnderlineNav {
+                            width: 100%;
+                            variant: UnderlineNavVariant.flush;
+                            items: demo-underline-flush-items;
+                            selected-index: demo-underline-flush-selected;
+                            accessible-name: "Demo flush tabs";
+                            item-activated(idx) => {
+                                demo-underline-flush-selected = idx;
+                            }
+                        }
+
+                        Text {
+                            text: "loading-counters (skeleton pills)";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        UnderlineNav {
+                            width: 100%;
+                            loading-counters: true;
+                            items: demo-underline-loading-items;
+                            selected-index: demo-underline-loading-selected;
+                            accessible-name: "Demo loading counters";
+                            item-activated(idx) => {
+                                demo-underline-loading-selected = idx;
+                            }
+                        }
+
+                        Text {
+                            text: "Narrow width (horizontal scroll)";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        Rectangle {
+                            width: 260px;
+                            clip: true;
+
+                            UnderlineNav {
+                                width: 100%;
+                                items: demo-underline-scroll-items;
+                                selected-index: demo-underline-scroll-selected;
+                                accessible-name: "Demo overflow tabs";
+                                item-activated(idx) => {
+                                    demo-underline-scroll-selected = idx;
+                                }
+                            }
+                        }
                     }
 
-                    Banner {
+                    if gallery-tab-index == 2: VerticalLayout {
+                        spacing: 12px;
                         width: 100%;
-                        variant: BannerVariant.success;
-                        title: "Success";
-                        description: "The operation completed successfully.";
+
+                        Text {
+                            text: "Buttons";
+                            color: PrimerColors.fgColor-default;
+                            font-size: 15px;
+                            font-weight: 600;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Default";
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Primary";
+                                variant: ButtonVariant.primary;
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Danger";
+                                variant: ButtonVariant.danger;
+                                clicked => {
+                                }
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Small";
+                                size: Size.small;
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Large primary";
+                                size: Size.large;
+                                variant: ButtonVariant.primary;
+                                clicked => {
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: "alignContent (leading icon + label)";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Center";
+                                has-leading-icon: true;
+                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Start";
+                                align-content: ButtonAlignContent.start;
+                                has-leading-icon: true;
+                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                clicked => {
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: "Leading & trailing visuals";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Icon + label";
+                                has-leading-icon: true;
+                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Emoji leading";
+                                leading-text: "⭐";
+                                clicked => {
+                                }
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Trailing text";
+                                trailing-text: "→";
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Icon both sides";
+                                has-leading-icon: true;
+                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                has-trailing-icon: true;
+                                trailing-icon: @image-url("../../assets/16px/circle-check.svg");
+                                clicked => {
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: "Count";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Issues";
+                                count: "12";
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Merge";
+                                variant: ButtonVariant.primary;
+                                count: "3";
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Delete";
+                                variant: ButtonVariant.danger;
+                                count: "99+";
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Filter";
+                                variant: ButtonVariant.invisible;
+                                count: "8";
+                                clicked => {
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: "Loading";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Saving…";
+                                loading: true;
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Downloading";
+                                loading: true;
+                                has-leading-icon: true;
+                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Watch";
+                                count: "4";
+                                loading: true;
+                                clicked => {
+                                }
+                            }
+                        }
+
+                        Text {
+                            text: "Link variant";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+
+                            Button {
+                                label: "Link only";
+                                variant: ButtonVariant.link;
+                                clicked => {
+                                }
+                            }
+
+                            Button {
+                                label: "Link + emoji";
+                                variant: ButtonVariant.link;
+                                leading-text: "📎";
+                                align-content: ButtonAlignContent.start;
+                                clicked => {
+                                }
+                            }
+                        }
                     }
 
-                    Banner {
+                    if gallery-tab-index == 3: VerticalLayout {
+                        spacing: 28px;
                         width: 100%;
-                        variant: BannerVariant.upsell;
-                        title: "Upsell";
-                        description: "Upgrade or try a premium capability.";
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.warning;
-                        title: "Warning";
-                        description: "Review this before continuing.";
-                    }
-
-                    Text {
-                        text: "Layout & leading visual";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        layout: BannerLayout.compact;
-                        title: "Compact padding";
-                        description: "Uses reduced padding (base-size-4).";
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        flush: true;
-                        title: "Flush";
-                        description: "Top and bottom border only, no side border or radius.";
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        hide-title: true;
-                        title: "Hidden title (still in accessibility)";
-                        description: "Title is not drawn; icon uses the smaller size.";
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        title: "Custom leading icon";
-                        description: "Info variant with has-custom-leading-icon and gear asset.";
-                        has-custom-leading-icon: true;
-                        leading-icon: @image-url("../../assets/24px/gear.svg");
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.upsell;
-                        title: "Upsell + custom icon";
-                        description: "Custom leading visual is allowed for upsell as well.";
-                        has-custom-leading-icon: true;
-                        leading-icon: @image-url("../../assets/24px/gear.svg");
-                    }
-
-                    Text {
-                        text: "Dismissible";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    if PrimerGalleryState.show-dismiss-demo: Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        title: "Dismissible banner";
-                        description: "Tap the × to hide this sample; use the button below to bring it back.";
-                        dismissible: true;
-                        dismiss => {
-                            PrimerGalleryState.show-dismiss-demo = false;
-                        }
-                    }
-
-                    Text {
-                        text: "Primary / secondary actions";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        title: "Actions (React parity)";
-                        description: "Secondary uses invisible; primary uses default outline (Banner.PrimaryAction).";
-                        secondary-action-label: "Secondary";
-                        primary-action-label: "Primary";
-                        secondary-action => {
-                        }
-                        primary-action => {
-                        }
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        title: "Green primary CTA";
-                        description: "Set primary-action-variant to primary for a GitHub-style green button (not React default).";
-                        primary-action-label: "Continue";
-                        primary-action-variant: ButtonVariant.primary;
-                        primary-action => {
-                        }
-                    }
-
-                    Text {
-                        text: "Description emphasis + subtitle";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        title: "Rich description pattern";
-                        description-emphasis: "octocat";
-                        description: " filed a follow-up on this thread.";
-                        subtitle: "Muted second line (Slint extension; React Banner is title + description only).";
-                    }
-
-                    Text {
-                        text: "Trailing actions (full-width notice row)";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.warning;
-                        title: "Trailing layout";
-                        description: "With actions-trailing, buttons sit in the top row after the text column (text stretches).";
-                        actions-trailing: true;
-                        secondary-action-label: "Details";
-                        primary-action-label: "Primary";
-                        primary-action-variant: ButtonVariant.primary;
-                        secondary-action => {
-                        }
-                        primary-action => {
-                        }
-                    }
-
-                    Banner {
-                        width: 100%;
-                        variant: BannerVariant.info;
-                        title: "Dismiss + actions";
-                        description: "Dismiss control gets extra top margin when actions are present.";
-                        dismissible: true;
-                        secondary-action-label: "Details";
-                        primary-action-label: "OK";
-                        dismiss => {
-                        }
-                        secondary-action => {
-                        }
-                        primary-action => {
-                        }
-                    }
-
-                    Button {
-                        visible: !PrimerGalleryState.show-dismiss-demo;
-                        label: "Show dismissible banner again";
-                        clicked => {
-                            PrimerGalleryState.show-dismiss-demo = true;
-                        }
-                    }
-                }
-
-                Rectangle {
-                    height: 1px;
-                    width: 100%;
-                    background: PrimerColors.borderColor-muted;
-                }
-
-                // --- Buttons ---
-                VerticalLayout {
-                    spacing: 12px;
-                    width: 100%;
-
-                    Text {
-                        text: "Buttons";
-                        color: PrimerColors.fgColor-default;
-                        font-size: 15px;
-                        font-weight: 600;
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Default";
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Primary";
-                            variant: ButtonVariant.primary;
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Danger";
-                            variant: ButtonVariant.danger;
-                            clicked => {
-                            }
-                        }
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Small";
-                            size: Size.small;
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Large primary";
-                            size: Size.large;
-                            variant: ButtonVariant.primary;
-                            clicked => {
-                            }
-                        }
-                    }
-
-                    Text {
-                        text: "alignContent (leading icon + label)";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Center";
-                            has-leading-icon: true;
-                            leading-icon: @image-url("../../assets/16px/info.svg");
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Start";
-                            align-content: ButtonAlignContent.start;
-                            has-leading-icon: true;
-                            leading-icon: @image-url("../../assets/16px/info.svg");
-                            clicked => {
-                            }
-                        }
-                    }
-
-                    Text {
-                        text: "Leading & trailing visuals";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Icon + label";
-                            has-leading-icon: true;
-                            leading-icon: @image-url("../../assets/16px/info.svg");
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Emoji leading";
-                            leading-text: "⭐";
-                            clicked => {
-                            }
-                        }
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Trailing text";
-                            trailing-text: "→";
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Icon both sides";
-                            has-leading-icon: true;
-                            leading-icon: @image-url("../../assets/16px/info.svg");
-                            has-trailing-icon: true;
-                            trailing-icon: @image-url("../../assets/16px/circle-check.svg");
-                            clicked => {
-                            }
-                        }
-                    }
-
-                    Text {
-                        text: "Count";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Issues";
-                            count: "12";
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Merge";
-                            variant: ButtonVariant.primary;
-                            count: "3";
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Delete";
-                            variant: ButtonVariant.danger;
-                            count: "99+";
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Filter";
-                            variant: ButtonVariant.invisible;
-                            count: "8";
-                            clicked => {
-                            }
-                        }
-                    }
-
-                    Text {
-                        text: "Loading";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Saving…";
-                            loading: true;
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Downloading";
-                            loading: true;
-                            has-leading-icon: true;
-                            leading-icon: @image-url("../../assets/16px/info.svg");
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Watch";
-                            count: "4";
-                            loading: true;
-                            clicked => {
-                            }
-                        }
-                    }
-
-                    Text {
-                        text: "Link variant";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    HorizontalLayout {
-                        spacing: 8px;
-
-                        Button {
-                            label: "Link only";
-                            variant: ButtonVariant.link;
-                            clicked => {
-                            }
-                        }
-
-                        Button {
-                            label: "Link + emoji";
-                            variant: ButtonVariant.link;
-                            leading-text: "📎";
-                            align-content: ButtonAlignContent.start;
-                            clicked => {
-                            }
-                        }
-                    }
-                }
-
-                Rectangle {
-                    height: 1px;
-                    width: 100%;
-                    background: PrimerColors.borderColor-muted;
-                }
-
-                // --- Spinner ---
-                VerticalLayout {
-                    spacing: 12px;
-                    width: 100%;
-
-                    Text {
-                        text: "Spinner";
-                        color: PrimerColors.fgColor-default;
-                        font-size: 15px;
-                        font-weight: 600;
-                    }
-
-                    HorizontalLayout {
-                        spacing: 16px;
-                        alignment: start;
 
                         VerticalLayout {
-                            spacing: 4px;
-                            alignment: start;
+                            spacing: 12px;
+                            width: 100%;
+
                             Text {
-                                text: "Medium";
-                                font-size: 12px;
-                                color: PrimerColors.fgColor-muted;
+                                text: "Spinner";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
                             }
 
-                            Spinner { }
+                            HorizontalLayout {
+                                spacing: 16px;
+                                alignment: start;
+
+                                VerticalLayout {
+                                    spacing: 4px;
+                                    alignment: start;
+                                    Text {
+                                        text: "Medium";
+                                        font-size: 12px;
+                                        color: PrimerColors.fgColor-muted;
+                                    }
+
+                                    Spinner { }
+                                }
+
+                                VerticalLayout {
+                                    spacing: 4px;
+                                    alignment: start;
+                                    Text {
+                                        text: "Large";
+                                        font-size: 12px;
+                                        color: PrimerColors.fgColor-muted;
+                                    }
+
+                                    Spinner {
+                                        size: large;
+                                    }
+                                }
+                            }
                         }
 
                         VerticalLayout {
-                            spacing: 4px;
-                            alignment: start;
+                            spacing: 12px;
+                            width: 100%;
+
                             Text {
-                                text: "Large";
-                                font-size: 12px;
-                                color: PrimerColors.fgColor-muted;
+                                text: "Select";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
                             }
 
-                            Spinner {
-                                size: large;
+                            Select {
+                                width: 100%;
+                                block: true;
+                                label-text: "Demo select";
+                                placeholder: "Choose an option…";
+                                options: demo-select-options;
+                                selected-index <=> demo-select-index;
+                                validation-status: ValidationStatus.success;
+                                validation-message: "Static gallery model.";
+                                selected-changed(_idx) => {
+                                }
                             }
                         }
                     }
-                }
 
-                Rectangle {
-                    height: 1px;
-                    width: 100%;
-                    background: PrimerColors.borderColor-muted;
-                }
-
-                // --- Select ---
-                VerticalLayout {
-                    spacing: 12px;
-                    width: 100%;
-
-                    Text {
-                        text: "Select";
-                        color: PrimerColors.fgColor-default;
-                        font-size: 15px;
-                        font-weight: 600;
-                    }
-
-                    Select {
+                    if gallery-tab-index == 4: VerticalLayout {
+                        spacing: 12px;
                         width: 100%;
-                        block: true;
-                        label-text: "Demo select";
-                        placeholder: "Choose an option…";
-                        options: demo-select-options;
-                        selected-index <=> demo-select-index;
-                        validation-status: ValidationStatus.success;
-                        validation-message: "Static gallery model.";
-                        selected-changed(_idx) => {
+
+                        Text {
+                            text: "Avatar";
+                            color: PrimerColors.fgColor-default;
+                            font-size: 15px;
+                            font-weight: 600;
                         }
+
+                        Text {
+                            text: "Placeholder (no image bound in this demo).";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        Avatar { }
                     }
-                }
-
-                Rectangle {
-                    height: 1px;
-                    width: 100%;
-                    background: PrimerColors.borderColor-muted;
-                }
-
-                // --- Avatar ---
-                VerticalLayout {
-                    spacing: 12px;
-                    width: 100%;
-
-                    Text {
-                        text: "Avatar";
-                        color: PrimerColors.fgColor-default;
-                        font-size: 15px;
-                        font-weight: 600;
-                    }
-
-                    Text {
-                        text: "Placeholder (no image bound in this demo).";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 12px;
-                    }
-
-                    Avatar { }
-                }
-
-                Rectangle {
-                    height: 80px;
-                    width: 100%;
-                    background: transparent;
                 }
             }
         }

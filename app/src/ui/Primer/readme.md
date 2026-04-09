@@ -28,7 +28,7 @@ Horizontal tabs with a model (`[UnderlineNavItem]`), controlled `selected-index`
 | -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `variant`                  | **`UnderlineNavVariant.inset`** (default): `LayoutTokens.stack-padding-normal` inline padding on the item row. **`flush`**: no inline padding (matches `[data-variant='flush']`). |
 | `loading-counters`         | When true, items with a non-empty **`counter`** show a fixed skeleton (24×16, pill) instead of the numeric **`Button`** counter, avoiding layout jump while counts load.          |
-| `accessible-name`          | When non-empty, sets **`AccessibleRole.tab-list`** and the landmark label (React `aria-label` on the list).                                                                       |
+| `accessible-name`          | Landmark label for **`AccessibleRole.tab-list`** (matches React `aria-label`). Role is always **`tab-list`**; leave empty when no name is needed.                                 |
 | `UnderlineNavItem.counter` | Empty hides the counter; non-empty shows **`Button`** counter pill unless **`loading-counters`** is true.                                                                         |
 
 The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** to align with **`.UnderlineWrapper`**. When tabs are wider than the nav, the row is inside a horizontal **`Flickable`** (`viewport-width` = content width) so users can scroll sideways (Primer overflow behavior; scroll arrows **F16** not implemented).
