@@ -1,0 +1,81 @@
+// Primer-style underline navigation: model-driven items, full-width muted rail, accent bar under the selected tab.
+// Item body: Button variant invisible + size medium (matches primer-ui-react UnderlineTabbedInterface body-medium text).
+import {
+    Button,
+    ButtonAlignContent,
+    ButtonVariant,
+} from "../Buttons/buttons.slint";
+import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+
+export struct UnderlineNavItem {
+    label: string,
+    enabled: bool,
+}
+
+component UnderlineNavItemRow {
+    in property <string> label;
+    in property <bool> selected;
+    in property <bool> enabled: true;
+    callback clicked;
+
+    width: self.preferred-width;
+
+    VerticalLayout {
+        spacing: 0px;
+        width: self.preferred-width;
+
+        nav-btn := Button {
+            variant: ButtonVariant.invisible;
+            size: Size.medium;
+            align-content: ButtonAlignContent.start;
+            label: root.label;
+            disabled: !root.enabled;
+            label-typography-override: true;
+            label-font-size-override: LayoutTokens.text-body-size-medium;
+            label-font-weight-override: root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium;
+            label-color-override: root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+            clicked => {
+                root.clicked();
+            }
+        }
+
+        Rectangle {
+            height: 2px;
+            width: 100%;
+            background: root.selected ? PrimerColors.accent-underline : #00000000;
+        }
+    }
+}
+
+export component UnderlineNav {
+    in property <[UnderlineNavItem]> items;
+    in property <int> selected-index: -1;
+    callback item-activated(index: int);
+
+    width: 100%;
+
+    VerticalLayout {
+        spacing: 0px;
+        width: root.width;
+
+        HorizontalLayout {
+            spacing: 8px;
+            width: self.preferred-width;
+
+            for item[index] in items: UnderlineNavItemRow {
+                label: item.label;
+                selected: index == root.selected-index;
+                enabled: item.enabled;
+                clicked => {
+                    root.item-activated(index);
+                }
+            }
+        }
+
+        Rectangle {
+            height: 1px;
+            width: 100%;
+            background: PrimerColors.borderColor-muted;
+        }
+    }
+}

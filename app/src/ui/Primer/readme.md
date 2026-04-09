@@ -20,6 +20,10 @@ specified in detail.
 
 Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). Action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
 
+## UnderlineNav
+
+Horizontal tabs with a model (`[UnderlineNavItem]`), controlled `selected-index`, and `item-activated(index)`. Each item is an **invisible** **`Button`** (`Size.medium`) plus optional **label typography overrides** on **`Button`** for selected vs muted labels; a 2px accent sits under the active item and a full-width muted rule sits under the row. See **primer-ui-react** `UnderlineTabbedInterface` for upstream spacing/typography targets.
+
 ## Banner
 
 Slint port of [@primer/react `Banner`](https://primer.style/product/components/banner/) — source of truth for behavior and variants: [`Banner.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.tsx) and [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css). Color literals in **PrimerColors** are aligned with **primer-tokens** functional color (`bgColor.json5`, `borderColor.json5`, `fgColor.json5`) and **primer-ui-react** legacy theme fallbacks (`light.ts` / `dark.ts`).

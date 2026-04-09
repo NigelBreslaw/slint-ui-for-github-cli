@@ -55,6 +55,12 @@ export component Button {
     in property <string> trailing-text: "";
     callback clicked <=> ta.clicked;
 
+    // When true, label + adjacent leading/trailing text/icons in the filled row use the overrides below instead of `paint.fg` / default label size+weight (e.g. UnderlineNav selected vs muted).
+    in property <bool> label-typography-override: false;
+    in property <length> label-font-size-override: 0px;
+    in property <int> label-font-weight-override: 500;
+    in property <color> label-color-override: #000000;
+
     // Primer ButtonBase: only [data-size='small'] changes font-size; large keeps text-body-size-medium (L9 + L165–179).
     private property <length> filled-label-font-size:
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
@@ -427,6 +433,9 @@ export component Button {
     }
 
     private property <ButtonPaint> paint: button-paint(variant, disabled, ta.has-hover, ta.pressed);
+    private property <length> effective-label-font-size: label-typography-override ? label-font-size-override : filled-label-font-size;
+    private property <int> effective-label-font-weight: label-typography-override ? label-font-weight-override : LayoutTokens.base-text-weight-medium;
+    private property <color> effective-label-fg: label-typography-override ? label-color-override : paint.fg;
     private property <ButtonCounterPaint> btn-counter-paint: button-counter-paint(variant, disabled, danger-counter-hover, paint.fg);
     private property <ButtonShadowState> btn-sh: button-shadow(variant, disabled, is-dark, danger-pressed, primary-pressed, danger-hover);
 
@@ -476,9 +485,9 @@ export component Button {
 
             if !loading-replaces-leading && leading-text != "": Text {
                 text: leading-text;
-                color: paint.fg;
-                font-size: filled-label-font-size;
-                font-weight: LayoutTokens.base-text-weight-medium;
+                color: effective-label-fg;
+                font-size: effective-label-font-size;
+                font-weight: effective-label-font-weight;
                 vertical-alignment: center;
             }
 
@@ -486,15 +495,15 @@ export component Button {
                 width: btn-icon-size;
                 height: btn-icon-size;
                 source: leading-icon;
-                colorize: paint.fg;
+                colorize: effective-label-fg;
             }
 
             if !loading-only-spinner: Text {
                 y: (parent.height - self.preferred-height) / 2;
                 text: root.label;
-                color: paint.fg;
-                font-size: filled-label-font-size;
-                font-weight: LayoutTokens.base-text-weight-medium;
+                color: effective-label-fg;
+                font-size: effective-label-font-size;
+                font-weight: effective-label-font-weight;
                 horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
                 horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
                 height: self.preferred-height;
@@ -534,9 +543,9 @@ export component Button {
 
             if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
                 text: trailing-text;
-                color: paint.fg;
-                font-size: filled-label-font-size;
-                font-weight: LayoutTokens.base-text-weight-medium;
+                color: effective-label-fg;
+                font-size: effective-label-font-size;
+                font-weight: effective-label-font-weight;
                 vertical-alignment: center;
             }
 
@@ -544,7 +553,7 @@ export component Button {
                 width: btn-icon-size;
                 height: btn-icon-size;
                 source: trailing-icon;
-                colorize: paint.fg;
+                colorize: effective-label-fg;
             }
         }
     }
