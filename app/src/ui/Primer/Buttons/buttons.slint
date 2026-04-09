@@ -1,7 +1,12 @@
 import { Palette } from "std-widgets.slint";
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
+import { Spinner } from "../Progress/spinner.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 
+export enum ButtonAlignContent {
+    center,
+    start,
+}
 
 export enum ButtonVariant {
     default,
@@ -26,6 +31,11 @@ struct ButtonShadowState {
     front-y: length,
 }
 
+struct ButtonCounterPaint {
+    bg: color,
+    fg: color,
+}
+
 // Filled height/padding follow `size`; link is content-sized (StyledText has no font-size in Slint).
 // Colors: ButtonTokens (button palette) + PrimerColors (semantic fg/link/inset). Link label: StyledText + @markdown.
 export component Button {
@@ -33,6 +43,15 @@ export component Button {
     in property <Size> size: Size.medium;
     in property <bool> disabled: false;
     in property <string> label: "";
+    in property <bool> loading: false;
+    in property <ButtonAlignContent> align-content: ButtonAlignContent.center;
+    in property <string> count: "";
+    in property <bool> has-leading-icon: false;
+    in property <image> leading-icon;
+    in property <string> leading-text: "";
+    in property <bool> has-trailing-icon: false;
+    in property <image> trailing-icon;
+    in property <string> trailing-text: "";
     callback clicked <=> ta.clicked;
 
     // Primer ButtonBase: only [data-size='small'] changes font-size; large keeps text-body-size-medium (L9 + L165–179).
@@ -54,6 +73,79 @@ export component Button {
     private property <bool> primary-pressed: variant == ButtonVariant.primary && ta.pressed;
     private property <bool> danger-pressed: variant == ButtonVariant.danger && ta.pressed;
     private property <bool> danger-hover: variant == ButtonVariant.danger && ta.has-hover && !ta.pressed;
+    private property <bool> has-leading-slot: leading-text != "" || has-leading-icon;
+    private property <bool> show-trailing-visual: trailing-text != "" || has-trailing-icon;
+    private property <bool> show-count: count != "" && !show-trailing-visual;
+    private property <bool> loading-replaces-leading: loading && has-leading-slot;
+    private property <bool> loading-replaces-trailing: loading && !has-leading-slot && (show-trailing-visual || show-count);
+    private property <bool> loading-only-spinner: loading && !has-leading-slot && !show-trailing-visual && !show-count;
+    private property <bool> danger-counter-hover: variant == ButtonVariant.danger && !disabled && (ta.has-hover || ta.pressed);
+    private property <length> btn-icon-size:
+        size == Size.small
+        ? LayoutTokens.iconButton-icon-size-small
+        : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
+    private property <Size> btn-spinner-size: size == Size.large ? Size.medium : Size.small;
+    private property <color> btn-spinner-track: is-dark ? #ffffff30 : #1f232830;
+
+    pure function button-counter-paint(
+        v: ButtonVariant,
+        dis: bool,
+        d-hv: bool,
+        fg-disabled: color,
+    ) -> ButtonCounterPaint {
+        if dis {
+            if v == ButtonVariant.danger {
+                return {
+                    bg: ButtonTokens.buttonCounter-danger-bgColor-disabled,
+                    fg: ButtonTokens.buttonCounter-danger-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.primary {
+                return {
+                    bg: ButtonTokens.buttonCounter-primary-bgColor-rest,
+                    fg: fg-disabled,
+                };
+            }
+            if v == ButtonVariant.invisible {
+                return {
+                    bg: ButtonTokens.buttonCounter-invisible-bgColor-rest,
+                    fg: fg-disabled,
+                };
+            }
+            return {
+                bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+                fg: fg-disabled,
+            };
+        }
+        if v == ButtonVariant.danger {
+            if d-hv {
+                return {
+                    bg: ButtonTokens.buttonCounter-danger-bgColor-hover,
+                    fg: ButtonTokens.buttonCounter-danger-fgColor-hover,
+                };
+            }
+            return {
+                bg: ButtonTokens.buttonCounter-danger-bgColor-rest,
+                fg: ButtonTokens.buttonCounter-danger-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.primary {
+            return {
+                bg: ButtonTokens.buttonCounter-primary-bgColor-rest,
+                fg: ButtonTokens.buttonCounter-primary-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.invisible {
+            return {
+                bg: ButtonTokens.buttonCounter-invisible-bgColor-rest,
+                fg: ButtonTokens.buttonCounter-invisible-fgColor-rest,
+            };
+        }
+        return {
+            bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+            fg: ButtonTokens.buttonCounter-default-fgColor-rest,
+        };
+    }
 
     pure function button-paint(v: ButtonVariant, dis: bool, hover: bool, pressed: bool) -> ButtonPaint {
         if dis {
@@ -322,6 +414,7 @@ export component Button {
     }
 
     private property <ButtonPaint> paint: button-paint(variant, disabled, ta.has-hover, ta.pressed);
+    private property <ButtonCounterPaint> btn-counter-paint: button-counter-paint(variant, disabled, danger-counter-hover, paint.fg);
     private property <ButtonShadowState> btn-sh: button-shadow(variant, disabled, is-dark, danger-pressed, primary-pressed, danger-hover);
 
     MultiDropShadow {
@@ -343,16 +436,99 @@ export component Button {
         border-color: paint.border;
     }
 
-    text-label := Text {
+    filled-layout := HorizontalLayout {
         visible: !is-link;
         width: 100%;
         height: 100%;
-        text: root.label;
-        color: paint.fg;
-        font-size: filled-label-font-size;
-        font-weight: LayoutTokens.base-text-weight-medium;
-        vertical-alignment: center;
-        horizontal-alignment: center;
+        padding-left: btn-padding-inline;
+        padding-right: btn-padding-inline;
+        spacing: LayoutTokens.button-content-gap;
+        alignment: align-content == ButtonAlignContent.center ? LayoutAlignment.center : LayoutAlignment.start;
+
+        if loading-only-spinner: Spinner {
+            size: btn-spinner-size;
+            segment-color: paint.fg;
+            track-color: btn-spinner-track;
+        }
+
+        if loading-replaces-leading: Spinner {
+            size: btn-spinner-size;
+            segment-color: paint.fg;
+            track-color: btn-spinner-track;
+        }
+
+        if !loading-replaces-leading && leading-text != "": Text {
+            text: leading-text;
+            color: paint.fg;
+            font-size: filled-label-font-size;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            vertical-alignment: center;
+        }
+
+        if !loading-replaces-leading && leading-text == "" && has-leading-icon: Image {
+            width: btn-icon-size;
+            height: btn-icon-size;
+            source: leading-icon;
+            colorize: paint.fg;
+        }
+
+        if !loading-only-spinner: Text {
+            text: root.label;
+            color: paint.fg;
+            font-size: filled-label-font-size;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            vertical-alignment: center;
+            horizontal-alignment: align-content == ButtonAlignContent.center ? center : left;
+            horizontal-stretch: align-content == ButtonAlignContent.start && (has-leading-slot || show-trailing-visual || show-count || loading-replaces-leading || loading-replaces-trailing) ? 1 : 0;
+            min-width: 0px;
+            overflow: elide;
+        }
+
+        if loading-replaces-trailing: Spinner {
+            size: btn-spinner-size;
+            segment-color: paint.fg;
+            track-color: btn-spinner-track;
+        }
+
+        if !loading-replaces-trailing && show-count: Rectangle {
+            border-radius: 20px;
+            border-width: 1px;
+            border-color: ButtonTokens.buttonCounter-borderColor;
+            background: btn-counter-paint.bg;
+            height: self.preferred-height;
+            horizontal-stretch: 0;
+
+            HorizontalLayout {
+                padding-top: 2px;
+                padding-bottom: 2px;
+                padding-left: 6px;
+                padding-right: 6px;
+                alignment: center;
+
+                Text {
+                    text: count;
+                    color: btn-counter-paint.fg;
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    vertical-alignment: center;
+                }
+            }
+        }
+
+        if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
+            text: trailing-text;
+            color: paint.fg;
+            font-size: filled-label-font-size;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            vertical-alignment: center;
+        }
+
+        if !loading-replaces-trailing && !show-count && trailing-text == "" && has-trailing-icon: Image {
+            width: btn-icon-size;
+            height: btn-icon-size;
+            source: trailing-icon;
+            colorize: paint.fg;
+        }
     }
 
     // Link: separate StyledText per hover (each @markdown is a single literal). TouchArea on top for hover + click.
@@ -392,12 +568,12 @@ export component Button {
     ta := TouchArea {
         width: parent.width;
         height: parent.height;
-        enabled: !disabled;
+        enabled: !disabled && !loading;
     }
 
     width: is-link
         ? (disabled ? link-text-disabled.preferred-width : max(link-md.preferred-width, link-md-hover.preferred-width))
-        : text-label.preferred-width + (2 * btn-padding-inline);
+        : filled-layout.preferred-width;
     height: is-link
         ? (disabled ? link-text-disabled.preferred-height : max(link-md.preferred-height, link-md-hover.preferred-height))
         : btn-control-height;
