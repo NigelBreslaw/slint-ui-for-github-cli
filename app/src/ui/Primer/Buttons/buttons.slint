@@ -7,7 +7,7 @@ import {
     ButtonPaint,
     ButtonShadowState,
     ButtonVariant,
-} from "./button-types.slint";
+} from "./types.slint";
 import { ButtonLogic } from "./logic.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 import "../../../assets/fonts/MonaSans-VariableFont.ttf";
@@ -102,7 +102,7 @@ export component Button {
         visible: !is-link;
         height: btn-icon-size;
         alignment: center;
-    
+
 
         filled-row := HorizontalLayout {
             height: btn-icon-size;

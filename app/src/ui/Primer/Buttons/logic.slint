@@ -3,11 +3,11 @@ import {
     ButtonPaint,
     ButtonShadowState,
     ButtonVariant,
-} from "./button-types.slint";
+} from "./types.slint";
 import { ButtonTokens, PrimerColors } from "../tokens.slint";
 
 export global ButtonLogic {
-    pure function button-counter-paint(v: ButtonVariant, disabled: bool, d-hv: bool, fg-disabled: color) -> ButtonCounterPaint {
+    public pure function button-counter-paint(v: ButtonVariant, disabled: bool, d-hv: bool, fg-disabled: color) -> ButtonCounterPaint {
         if disabled {
             if v == ButtonVariant.danger {
                 return {
@@ -74,7 +74,7 @@ export global ButtonLogic {
         };
     }
 
-    pure function button-paint(v: ButtonVariant, disabled: bool, hover: bool, pressed: bool) -> ButtonPaint {
+    public pure function button-paint(v: ButtonVariant, disabled: bool, hover: bool, pressed: bool) -> ButtonPaint {
         if disabled {
             if v == ButtonVariant.link {
                 return {
@@ -202,7 +202,7 @@ export global ButtonLogic {
         };
     }
 
-    pure function button-shadow(v: ButtonVariant, disabled: bool, dark: bool, d-pl: bool, p-pl: bool, d-hv: bool) -> ButtonShadowState {
+    public pure function button-shadow(v: ButtonVariant, disabled: bool, dark: bool, d-pl: bool, p-pl: bool, d-hv: bool) -> ButtonShadowState {
         if v == ButtonVariant.invisible || v == ButtonVariant.link || disabled {
             return {
                 back-color: #00000000,
