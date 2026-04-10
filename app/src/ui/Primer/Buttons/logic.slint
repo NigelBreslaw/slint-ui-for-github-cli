@@ -1,0 +1,335 @@
+import {
+    ButtonCounterPaint,
+    ButtonPaint,
+    ButtonShadowState,
+    ButtonVariant,
+} from "./button-types.slint";
+import { ButtonTokens, PrimerColors } from "../tokens.slint";
+
+export global ButtonLogic {
+    pure function button-counter-paint(v: ButtonVariant, disabled: bool, d-hv: bool, fg-disabled: color) -> ButtonCounterPaint {
+        if disabled {
+            if v == ButtonVariant.danger {
+                return {
+                    bg: ButtonTokens.buttonCounter-danger-bgColor-disabled,
+                    fg: ButtonTokens.buttonCounter-danger-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.primary {
+                return {
+                    bg: ButtonTokens.buttonCounter-primary-bgColor-rest,
+                    fg: fg-disabled,
+                };
+            }
+            if v == ButtonVariant.invisible {
+                return {
+                    bg: ButtonTokens.buttonCounter-invisible-bgColor-rest,
+                    fg: fg-disabled,
+                };
+            }
+            return {
+                bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+                fg: fg-disabled,
+            };
+        }
+        if v == ButtonVariant.danger {
+            if d-hv {
+                return {
+                    bg: ButtonTokens.buttonCounter-danger-bgColor-hover,
+                    fg: ButtonTokens.buttonCounter-danger-fgColor-hover,
+                };
+            }
+            return {
+                bg: ButtonTokens.buttonCounter-danger-bgColor-rest,
+                fg: ButtonTokens.buttonCounter-danger-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.primary {
+            return {
+                bg: ButtonTokens.buttonCounter-primary-bgColor-rest,
+                fg: ButtonTokens.buttonCounter-primary-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.invisible {
+            return {
+                bg: ButtonTokens.buttonCounter-invisible-bgColor-rest,
+                fg: ButtonTokens.buttonCounter-invisible-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.link {
+            if disabled {
+                return {
+                    bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+                    fg: fg-disabled,
+                };
+            }
+            return {
+                bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+                fg: PrimerColors.fgColor-default,
+            };
+        }
+        return {
+            bg: ButtonTokens.buttonCounter-default-bgColor-rest,
+            fg: ButtonTokens.buttonCounter-default-fgColor-rest,
+        };
+    }
+
+    pure function button-paint(v: ButtonVariant, disabled: bool, hover: bool, pressed: bool) -> ButtonPaint {
+        if disabled {
+            if v == ButtonVariant.link {
+                return {
+                    bg: ButtonTokens.button-link-bgColor-rest,
+                    border: ButtonTokens.button-link-borderColor-rest,
+                    fg: ButtonTokens.control-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.invisible {
+                return {
+                    bg: ButtonTokens.button-invisible-bgColor-disabled,
+                    border: ButtonTokens.button-invisible-borderColor-disabled,
+                    fg: ButtonTokens.button-invisible-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.danger {
+                return {
+                    bg: ButtonTokens.button-danger-bgColor-disabled,
+                    border: ButtonTokens.button-danger-borderColor-disabled,
+                    fg: ButtonTokens.button-danger-fgColor-disabled,
+                };
+            }
+            if v == ButtonVariant.primary {
+                return {
+                    bg: ButtonTokens.button-primary-bgColor-disabled,
+                    border: ButtonTokens.button-primary-borderColor-disabled,
+                    fg: ButtonTokens.button-primary-fgColor-disabled,
+                };
+            }
+            return {
+                bg: ButtonTokens.button-default-bgColor-disabled,
+                border: ButtonTokens.button-default-borderColor-disabled,
+                fg: ButtonTokens.control-fgColor-disabled,
+            };
+        }
+        if v == ButtonVariant.link {
+            return {
+                bg: ButtonTokens.button-link-bgColor-rest,
+                border: ButtonTokens.button-link-borderColor-rest,
+                fg: PrimerColors.fgColor-link,
+            };
+        }
+        if v == ButtonVariant.primary {
+            if pressed {
+                return {
+                    bg: ButtonTokens.button-primary-bgColor-active,
+                    border: ButtonTokens.button-primary-borderColor-rest,
+                    fg: ButtonTokens.button-primary-fgColor-rest,
+                };
+            }
+            if hover {
+                return {
+                    bg: ButtonTokens.button-primary-bgColor-hover,
+                    border: ButtonTokens.button-primary-borderColor-rest,
+                    fg: ButtonTokens.button-primary-fgColor-rest,
+                };
+            }
+            return {
+                bg: ButtonTokens.button-primary-bgColor-rest,
+                border: ButtonTokens.button-primary-borderColor-rest,
+                fg: ButtonTokens.button-primary-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.danger {
+            if pressed {
+                return {
+                    bg: ButtonTokens.button-danger-bgColor-active,
+                    border: ButtonTokens.button-danger-borderColor-active,
+                    fg: ButtonTokens.button-danger-fgColor-active,
+                };
+            }
+            if hover {
+                return {
+                    bg: ButtonTokens.button-danger-bgColor-hover,
+                    border: ButtonTokens.button-danger-borderColor-hover,
+                    fg: ButtonTokens.button-danger-fgColor-hover,
+                };
+            }
+            return {
+                bg: ButtonTokens.button-danger-bgColor-rest,
+                border: ButtonTokens.button-danger-borderColor-rest,
+                fg: ButtonTokens.button-danger-fgColor-rest,
+            };
+        }
+        if v == ButtonVariant.invisible {
+            if pressed {
+                return {
+                    bg: ButtonTokens.button-invisible-bgColor-active,
+                    border: ButtonTokens.button-invisible-borderColor-rest,
+                    fg: ButtonTokens.button-invisible-fgColor-rest,
+                };
+            }
+            if hover {
+                return {
+                    bg: ButtonTokens.button-invisible-bgColor-hover,
+                    border: ButtonTokens.button-invisible-borderColor-rest,
+                    fg: ButtonTokens.button-invisible-fgColor-rest,
+                };
+            }
+            return {
+                bg: ButtonTokens.button-invisible-bgColor-rest,
+                border: ButtonTokens.button-invisible-borderColor-rest,
+                fg: ButtonTokens.button-invisible-fgColor-rest,
+            };
+        }
+        // default — border matches legacy filled default (same rest border for hover/active)
+        if pressed {
+            return {
+                bg: ButtonTokens.button-default-bgColor-active,
+                border: ButtonTokens.button-default-borderColor-rest,
+                fg: ButtonTokens.button-default-fgColor-rest,
+            };
+        }
+        if hover {
+            return {
+                bg: ButtonTokens.button-default-bgColor-hover,
+                border: ButtonTokens.button-default-borderColor-rest,
+                fg: ButtonTokens.button-default-fgColor-rest,
+            };
+        }
+        return {
+            bg: ButtonTokens.button-default-bgColor-rest,
+            border: ButtonTokens.button-default-borderColor-rest,
+            fg: ButtonTokens.button-default-fgColor-rest,
+        };
+    }
+
+    pure function button-shadow(v: ButtonVariant, disabled: bool, dark: bool, d-pl: bool, p-pl: bool, d-hv: bool) -> ButtonShadowState {
+        if v == ButtonVariant.invisible || v == ButtonVariant.link || disabled {
+            return {
+                back-color: #00000000,
+                back-blur: 0px,
+                back-y: 0px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if dark {
+            if d-pl {
+                return {
+                    back-color: ButtonTokens.button-shadow-danger-back-pressed-dark,
+                    back-blur: 3px,
+                    back-y: 2px,
+                    front-color: ButtonTokens.button-shadow-danger-front-pressed-dark,
+                    front-blur: 1px,
+                    front-y: 1px,
+                };
+            }
+            if p-pl {
+                return {
+                    back-color: ButtonTokens.button-shadow-primary-back-pressed-dark,
+                    back-blur: 3px,
+                    back-y: 2px,
+                    front-color: ButtonTokens.button-shadow-primary-front-pressed-dark,
+                    front-blur: 1px,
+                    front-y: 1px,
+                };
+            }
+            if d-hv {
+                return {
+                    back-color: ButtonTokens.button-shadow-elevated-dark,
+                    back-blur: 0px,
+                    back-y: 1px,
+                    front-color: #00000000,
+                    front-blur: 0px,
+                    front-y: 0px,
+                };
+            }
+            if v == ButtonVariant.primary {
+                return {
+                    back-color: ButtonTokens.button-shadow-elevated-dark,
+                    back-blur: 2px,
+                    back-y: 2px,
+                    front-color: #00000000,
+                    front-blur: 0px,
+                    front-y: 0px,
+                };
+            }
+            if v == ButtonVariant.danger {
+                return {
+                    back-color: ButtonTokens.button-shadow-ambient-dark,
+                    back-blur: 0px,
+                    back-y: 1px,
+                    front-color: #00000000,
+                    front-blur: 0px,
+                    front-y: 0px,
+                };
+            }
+            return {
+                back-color: ButtonTokens.button-shadow-ambient-dark,
+                back-blur: 0px,
+                back-y: 1px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if d-pl {
+            return {
+                back-color: ButtonTokens.button-shadow-danger-back-pressed-light,
+                back-blur: 3px,
+                back-y: 2px,
+                front-color: ButtonTokens.button-shadow-danger-front-pressed-light,
+                front-blur: 1px,
+                front-y: 1px,
+            };
+        }
+        if p-pl {
+            return {
+                back-color: ButtonTokens.button-shadow-primary-back-pressed-light,
+                back-blur: 3px,
+                back-y: 2px,
+                front-color: ButtonTokens.button-shadow-primary-front-pressed-light,
+                front-blur: 1px,
+                front-y: 1px,
+            };
+        }
+        if d-hv {
+            return {
+                back-color: ButtonTokens.button-shadow-elevated-light,
+                back-blur: 0px,
+                back-y: 1px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if v == ButtonVariant.primary {
+            return {
+                back-color: ButtonTokens.button-shadow-elevated-light,
+                back-blur: 0px,
+                back-y: 1px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        if v == ButtonVariant.danger {
+            return {
+                back-color: ButtonTokens.button-shadow-ambient-light,
+                back-blur: 0px,
+                back-y: 1px,
+                front-color: #00000000,
+                front-blur: 0px,
+                front-y: 0px,
+            };
+        }
+        return {
+            back-color: ButtonTokens.button-shadow-ambient-light,
+            back-blur: 0px,
+            back-y: 1px,
+            front-color: #00000000,
+            front-blur: 0px,
+            front-y: 0px,
+        };
+    }
+}
