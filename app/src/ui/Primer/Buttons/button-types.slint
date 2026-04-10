@@ -1,0 +1,34 @@
+// Shared Button enums and paint/shadow structs (single source of truth for PR2 logic module).
+
+export enum ButtonAlignContent {
+    center,
+    start,
+}
+
+export enum ButtonVariant {
+    default,
+    primary,
+    danger,
+    invisible,
+    link,
+}
+
+export struct ButtonPaint {
+    bg: color,
+    border: color,
+    fg: color,
+}
+
+export struct ButtonShadowState {
+    back-color: color,
+    back-blur: length,
+    back-y: length,
+    front-color: color,
+    front-blur: length,
+    front-y: length,
+}
+
+export struct ButtonCounterPaint {
+    bg: color,
+    fg: color,
+}

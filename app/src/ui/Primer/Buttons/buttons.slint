@@ -1,41 +1,17 @@
 import { Palette } from "std-widgets.slint";
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import { Spinner } from "../Progress/spinner.slint";
+import {
+    ButtonAlignContent,
+    ButtonCounterPaint,
+    ButtonPaint,
+    ButtonShadowState,
+    ButtonVariant,
+} from "./button-types.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 import "../../../assets/fonts/MonaSans-VariableFont.ttf";
 
-export enum ButtonAlignContent {
-    center,
-    start,
-}
-
-export enum ButtonVariant {
-    default,
-    primary,
-    danger,
-    invisible,
-    link,
-}
-
-struct ButtonPaint {
-    bg: color,
-    border: color,
-    fg: color,
-}
-
-struct ButtonShadowState {
-    back-color: color,
-    back-blur: length,
-    back-y: length,
-    front-color: color,
-    front-blur: length,
-    front-y: length,
-}
-
-struct ButtonCounterPaint {
-    bg: color,
-    fg: color,
-}
+export { ButtonAlignContent, ButtonVariant }
 
 // Filled height/padding follow `size`; link is content-sized (StyledText has no font-size in Slint).
 // Colors: ButtonTokens (button palette) + PrimerColors (semantic fg/link/inset). Link label: StyledText + @markdown.
