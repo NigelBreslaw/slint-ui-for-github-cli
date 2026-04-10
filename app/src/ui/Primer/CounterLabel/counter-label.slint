@@ -1,0 +1,35 @@
+import { LayoutTokens } from "../tokens.slint";
+
+// Primer CounterLabel shell; caller supplies colors (e.g. Button + ButtonLogic.button-counter-paint).
+export component CounterLabel {
+    in property <string> text: "";
+    in property <color> background;
+    in property <color> foreground;
+    in property <color> counter-border;
+
+    visible: text != "";
+    horizontal-stretch: 0;
+
+    Rectangle {
+        border-radius: LayoutTokens.counter-label-border-radius;
+        border-width: LayoutTokens.counter-label-border-width;
+        border-color: root.counter-border;
+        background: root.background;
+
+        HorizontalLayout {
+            padding-top: LayoutTokens.counter-label-padding-block;
+            padding-bottom: LayoutTokens.counter-label-padding-block;
+            padding-left: LayoutTokens.counter-label-padding-inline;
+            padding-right: LayoutTokens.counter-label-padding-inline;
+            alignment: center;
+
+            Text {
+                text: root.text;
+                color: root.foreground;
+                font-size: LayoutTokens.text-body-size-small;
+                font-weight: LayoutTokens.base-text-weight-semibold;
+                vertical-alignment: center;
+            }
+        }
+    }
+}

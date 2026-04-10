@@ -8,6 +8,7 @@ import {
     ButtonShadowState,
     ButtonVariant,
 } from "./types.slint";
+import { CounterLabel } from "../CounterLabel/counter-label.slint";
 import { ButtonLogic } from "./logic.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 import "../../../assets/fonts/MonaSans-VariableFont.ttf";
@@ -156,28 +157,11 @@ export component Button {
                 track-color: btn-spinner-track;
             }
 
-            if !loading-replaces-trailing && show-count: Rectangle {
-                border-radius: 20px;
-                border-width: 1px;
-                border-color: ButtonTokens.buttonCounter-borderColor;
+            if !loading-replaces-trailing && show-count: CounterLabel {
+                text: count;
                 background: btn-counter-paint.bg;
-                horizontal-stretch: 0;
-
-                HorizontalLayout {
-                    padding-top: 2px;
-                    padding-bottom: 2px;
-                    padding-left: 6px;
-                    padding-right: 6px;
-                    alignment: center;
-
-                    Text {
-                        text: count;
-                        color: btn-counter-paint.fg;
-                        font-size: LayoutTokens.text-body-size-small;
-                        font-weight: LayoutTokens.base-text-weight-semibold;
-                        vertical-alignment: center;
-                    }
-                }
+                foreground: btn-counter-paint.fg;
+                counter-border: ButtonTokens.buttonCounter-borderColor;
             }
 
             if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
@@ -272,28 +256,11 @@ export component Button {
                 track-color: btn-spinner-track;
             }
 
-            if !loading-replaces-trailing && show-count: Rectangle {
-                border-radius: 20px;
-                border-width: 1px;
-                border-color: ButtonTokens.buttonCounter-borderColor;
+            if !loading-replaces-trailing && show-count: CounterLabel {
+                text: count;
                 background: btn-counter-paint.bg;
-                horizontal-stretch: 0;
-
-                HorizontalLayout {
-                    padding-top: 2px;
-                    padding-bottom: 2px;
-                    padding-left: 6px;
-                    padding-right: 6px;
-                    alignment: center;
-
-                    Text {
-                        text: count;
-                        color: btn-counter-paint.fg;
-                        font-size: LayoutTokens.text-body-size-small;
-                        font-weight: LayoutTokens.base-text-weight-semibold;
-                        vertical-alignment: center;
-                    }
-                }
+                foreground: btn-counter-paint.fg;
+                counter-border: ButtonTokens.buttonCounter-borderColor;
             }
 
             if !loading-replaces-trailing && !show-count && trailing-text != "": Text {
