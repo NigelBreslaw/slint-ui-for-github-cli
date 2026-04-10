@@ -1,8 +1,15 @@
-import { LayoutTokens } from "../tokens.slint";
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
 
-// Primer CounterLabel shell; caller supplies colors (e.g. Button + ButtonLogic.button-counter-paint).
+export enum CounterLabelVariant {
+    primary,
+    secondary,
+}
+
+// Primer CounterLabel: paint from parent (Button) or `use-primer-scheme` + `scheme` (SegmentedControl-style).
 export component CounterLabel {
     in property <string> text: "";
+    in property <bool> use-primer-scheme: false;
+    in property <CounterLabelVariant> scheme: secondary;
     in property <color> background;
     in property <color> foreground;
     in property <color> counter-border;
@@ -10,11 +17,21 @@ export component CounterLabel {
     visible: text != "";
     horizontal-stretch: 0;
 
+    private property <color> effective-bg:
+        use-primer-scheme
+        ? (scheme == CounterLabelVariant.primary ? PrimerColors.bgColor-neutral-emphasis : PrimerColors.bgColor-neutral-muted)
+        : background;
+    private property <color> effective-fg:
+        use-primer-scheme
+        ? (scheme == CounterLabelVariant.primary ? PrimerColors.fgOnEmphasis : PrimerColors.fgColor-default)
+        : foreground;
+    private property <color> effective-border: use-primer-scheme ? PrimerColors.counter-borderColor : counter-border;
+
     Rectangle {
         border-radius: LayoutTokens.counter-label-border-radius;
         border-width: LayoutTokens.counter-label-border-width;
-        border-color: root.counter-border;
-        background: root.background;
+        border-color: effective-border;
+        background: effective-bg;
 
         HorizontalLayout {
             padding-top: LayoutTokens.counter-label-padding-block;
@@ -25,7 +42,7 @@ export component CounterLabel {
 
             Text {
                 text: root.text;
-                color: root.foreground;
+                color: effective-fg;
                 font-size: LayoutTokens.text-body-size-small;
                 font-weight: LayoutTokens.base-text-weight-semibold;
                 vertical-alignment: center;

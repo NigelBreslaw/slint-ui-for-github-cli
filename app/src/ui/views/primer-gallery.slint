@@ -6,6 +6,8 @@ import {
     Button,
     ButtonAlignContent,
     ButtonVariant,
+    CounterLabel,
+    CounterLabelVariant,
     Select,
     SelectOption,
     Spinner,
@@ -384,6 +386,29 @@ export component PrimerGallery {
                             color: PrimerColors.fgColor-default;
                             font-size: 15px;
                             font-weight: 600;
+                        }
+
+                        Text {
+                            text: "CounterLabel (Primer scheme, standalone)";
+                            color: PrimerColors.fgColor-muted;
+                            font-size: 12px;
+                        }
+
+                        HorizontalLayout {
+                            spacing: 8px;
+                            width: self.preferred-width;
+
+                            CounterLabel {
+                                text: "12";
+                                use-primer-scheme: true;
+                                scheme: CounterLabelVariant.secondary;
+                            }
+
+                            CounterLabel {
+                                text: "3";
+                                use-primer-scheme: true;
+                                scheme: CounterLabelVariant.primary;
+                            }
                         }
 
                         HorizontalLayout {

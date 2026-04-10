@@ -102,6 +102,9 @@ export global PrimerColors {
 
     property <color> bgColor-neutral-muted-dark: rgba(110, 118, 129, 0.1);
     property <color> bgColor-neutral-muted-light: rgba(234, 238, 242, 0.5);
+    // bgColor.neutral.emphasis (primer-tokens functional); CounterLabel primary variant
+    property <color> bgColor-neutral-emphasis-light: #24292f;
+    property <color> bgColor-neutral-emphasis-dark: #656d76;
 
     property <color> borderColor-muted-dark: #21262d;
 
@@ -188,6 +191,8 @@ export global PrimerColors {
     out property <color> bgColor-canvas-subtle: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
     out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
     out property <color> bgColor-neutral-muted: color-scheme == ColorScheme.dark ? bgColor-neutral-muted-dark : bgColor-neutral-muted-light;
+    out property <color> bgColor-neutral-emphasis: color-scheme == ColorScheme.dark ? bgColor-neutral-emphasis-dark : bgColor-neutral-emphasis-light;
+    out property <color> counter-borderColor: #00000000;
     out property <color> borderColor-muted: color-scheme == ColorScheme.dark ? borderColor-muted-dark : borderColor-muted-light;
     out property <color> accent-underline: color-scheme == ColorScheme.dark ? accent-underline-dark : accent-underline-light;
     out property <color> fgColor-placeholder: color-scheme == ColorScheme.dark ? fgColor-placeholder-dark : fgColor-placeholder-light;
