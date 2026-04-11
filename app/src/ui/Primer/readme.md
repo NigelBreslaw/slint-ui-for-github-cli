@@ -76,7 +76,7 @@ Slint port of the Primer product [**Label**](https://primer.style/product/compon
 | `variant`  | `LabelVariant`  | `default`, `primary`, `secondary`, `accent`, `success`, `attention`, `severe`, `danger`, `done`, `sponsors` (matches React).              |
 | `size`     | `LabelSize`     | `small` or `large` (React `small` / `large`; distinct from **Button** `Size`).                                                              |
 
-Colors resolve through **`LabelTokens`**; **`Label/logic.slint`** maps `variant` → token. Examples: **Primer gallery** (sidebar palette icon), **Label** tab.
+Colors resolve through **`LabelTokens`**; **`Label/logic.slint`** maps `variant` → token. Examples: **Primer gallery** (sidebar palette icon), **Misc** tab.
 
 ## Caution:
 

@@ -44,9 +44,7 @@ export component PrimerGallery {
         { label: "Banner", enabled: true, counter: "" },
         { label: "UnderlineNav", enabled: true, counter: "" },
         { label: "Buttons", enabled: true, counter: "" },
-        { label: "Select & Spinner", enabled: true, counter: "" },
-        { label: "Avatar", enabled: true, counter: "" },
-        { label: "Label", enabled: true, counter: "" },
+        { label: "Misc", enabled: true, counter: "" },
     ];
 
     private property <int> demo-underline-selected: 0;
@@ -642,6 +640,31 @@ export component PrimerGallery {
                             width: 100%;
 
                             Text {
+                                text: "Select";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Select {
+                                width: 100%;
+                                block: true;
+                                label-text: "Demo select";
+                                placeholder: "Choose an option…";
+                                options: demo-select-options;
+                                selected-index <=> demo-select-index;
+                                validation-status: ValidationStatus.success;
+                                validation-message: "Static gallery model.";
+                                selected-changed(_idx) => {
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
                                 text: "Spinner";
                                 color: PrimerColors.fgColor-default;
                                 font-size: 15px;
@@ -685,147 +708,122 @@ export component PrimerGallery {
                             width: 100%;
 
                             Text {
-                                text: "Select";
+                                text: "Avatar";
                                 color: PrimerColors.fgColor-default;
                                 font-size: 15px;
                                 font-weight: 600;
                             }
 
-                            Select {
+                            Text {
+                                text: "Placeholder (no image bound in this demo).";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                            }
+
+                            Avatar { }
+                        }
+
+                        VerticalLayout {
+                            spacing: 16px;
+                            width: 100%;
+
+                            Text {
+                                text: "Label";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Product metadata chips — see Primer Label at primer.style. Not the same as CounterLabel (numeric pills on buttons).";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            VerticalLayout {
+                                spacing: 8px;
                                 width: 100%;
-                                block: true;
-                                label-text: "Demo select";
-                                placeholder: "Choose an option…";
-                                options: demo-select-options;
-                                selected-index <=> demo-select-index;
-                                validation-status: ValidationStatus.success;
-                                validation-message: "Static gallery model.";
-                                selected-changed(_idx) => {
+
+                                Text {
+                                    text: "Style variants (small)";
+                                    color: PrimerColors.fgColor-muted;
+                                    font-size: 12px;
                                 }
-                            }
-                        }
-                    }
 
-                    if gallery-tab-index == 4: VerticalLayout {
-                        spacing: 12px;
-                        width: 100%;
-
-                        Text {
-                            text: "Avatar";
-                            color: PrimerColors.fgColor-default;
-                            font-size: 15px;
-                            font-weight: 600;
-                        }
-
-                        Text {
-                            text: "Placeholder (no image bound in this demo).";
-                            color: PrimerColors.fgColor-muted;
-                            font-size: 12px;
-                        }
-
-                        Avatar { }
-                    }
-
-                    if gallery-tab-index == 5: VerticalLayout {
-                        spacing: 16px;
-                        width: 100%;
-
-                        Text {
-                            text: "Label";
-                            color: PrimerColors.fgColor-default;
-                            font-size: 15px;
-                            font-weight: 600;
-                        }
-
-                        Text {
-                            text: "Product metadata chips — see Primer Label at primer.style. Not the same as CounterLabel (numeric pills on buttons).";
-                            color: PrimerColors.fgColor-muted;
-                            font-size: 12px;
-                            wrap: word-wrap;
-                        }
-
-                        VerticalLayout {
-                            spacing: 8px;
-                            width: 100%;
-
-                            Text {
-                                text: "Style variants (small)";
-                                color: PrimerColors.fgColor-muted;
-                                font-size: 12px;
-                            }
-
-                            HorizontalLayout {
-                                spacing: 8px;
-
-                                Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.small; }
-                                Label { text: "Primary"; variant: LabelVariant.primary; size: LabelSize.small; }
-                                Label { text: "Secondary"; variant: LabelVariant.secondary; size: LabelSize.small; }
-                                Label { text: "Accent"; variant: LabelVariant.accent; size: LabelSize.small; }
-                                Label { text: "Success"; variant: LabelVariant.success; size: LabelSize.small; }
-                            }
-
-                            HorizontalLayout {
-                                spacing: 8px;
-
-                                Label { text: "Attention"; variant: LabelVariant.attention; size: LabelSize.small; }
-                                Label { text: "Severe"; variant: LabelVariant.severe; size: LabelSize.small; }
-                                Label { text: "Danger"; variant: LabelVariant.danger; size: LabelSize.small; }
-                                Label { text: "Done"; variant: LabelVariant.done; size: LabelSize.small; }
-                                Label { text: "Sponsors"; variant: LabelVariant.sponsors; size: LabelSize.small; }
-                            }
-                        }
-
-                        VerticalLayout {
-                            spacing: 8px;
-                            width: 100%;
-
-                            Text {
-                                text: "Size variants (default + primary)";
-                                color: PrimerColors.fgColor-muted;
-                                font-size: 12px;
-                            }
-
-                            HorizontalLayout {
-                                spacing: 16px;
-                                alignment: start;
-
-                                VerticalLayout {
-                                    spacing: 4px;
-                                    alignment: start;
-
-                                    Text {
-                                        text: "Small";
-                                        font-size: 12px;
-                                        color: PrimerColors.fgColor-muted;
-                                    }
+                                HorizontalLayout {
+                                    spacing: 8px;
 
                                     Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.small; }
+                                    Label { text: "Primary"; variant: LabelVariant.primary; size: LabelSize.small; }
+                                    Label { text: "Secondary"; variant: LabelVariant.secondary; size: LabelSize.small; }
+                                    Label { text: "Accent"; variant: LabelVariant.accent; size: LabelSize.small; }
+                                    Label { text: "Success"; variant: LabelVariant.success; size: LabelSize.small; }
                                 }
 
-                                VerticalLayout {
-                                    spacing: 4px;
-                                    alignment: start;
+                                HorizontalLayout {
+                                    spacing: 8px;
 
-                                    Text {
-                                        text: "Large";
-                                        font-size: 12px;
-                                        color: PrimerColors.fgColor-muted;
-                                    }
+                                    Label { text: "Attention"; variant: LabelVariant.attention; size: LabelSize.small; }
+                                    Label { text: "Severe"; variant: LabelVariant.severe; size: LabelSize.small; }
+                                    Label { text: "Danger"; variant: LabelVariant.danger; size: LabelSize.small; }
+                                    Label { text: "Done"; variant: LabelVariant.done; size: LabelSize.small; }
+                                    Label { text: "Sponsors"; variant: LabelVariant.sponsors; size: LabelSize.small; }
+                                }
+                            }
 
-                                    Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.large; }
+                            VerticalLayout {
+                                spacing: 8px;
+                                width: 100%;
+
+                                Text {
+                                    text: "Size variants (default + primary)";
+                                    color: PrimerColors.fgColor-muted;
+                                    font-size: 12px;
                                 }
 
-                                VerticalLayout {
-                                    spacing: 4px;
+                                HorizontalLayout {
+                                    spacing: 16px;
                                     alignment: start;
 
-                                    Text {
-                                        text: "Large primary";
-                                        font-size: 12px;
-                                        color: PrimerColors.fgColor-muted;
+                                    VerticalLayout {
+                                        spacing: 4px;
+                                        alignment: start;
+
+                                        Text {
+                                            text: "Small";
+                                            font-size: 12px;
+                                            color: PrimerColors.fgColor-muted;
+                                        }
+
+                                        Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.small; }
                                     }
 
-                                    Label { text: "Primary"; variant: LabelVariant.primary; size: LabelSize.large; }
+                                    VerticalLayout {
+                                        spacing: 4px;
+                                        alignment: start;
+
+                                        Text {
+                                            text: "Large";
+                                            font-size: 12px;
+                                            color: PrimerColors.fgColor-muted;
+                                        }
+
+                                        Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.large; }
+                                    }
+
+                                    VerticalLayout {
+                                        spacing: 4px;
+                                        alignment: start;
+
+                                        Text {
+                                            text: "Large primary";
+                                            font-size: 12px;
+                                            color: PrimerColors.fgColor-muted;
+                                        }
+
+                                        Label { text: "Primary"; variant: LabelVariant.primary; size: LabelSize.large; }
+                                    }
                                 }
                             }
                         }
