@@ -9,6 +9,8 @@ import {
     CounterLabel,
     CounterLabelVariant,
     Label,
+    LabelGroup,
+    LabelGroupItem,
     LabelSize,
     LabelVariant,
     Select,
@@ -38,6 +40,13 @@ export component PrimerGallery {
         { value: "three", label: "Third option", enabled: false },
     ];
     private property <int> demo-select-index: 0;
+
+    private property <[LabelGroupItem]> demo-label-group-items: [
+        { text: "bug", variant: LabelVariant.danger, size: LabelSize.small },
+        { text: "enhancement", variant: LabelVariant.accent, size: LabelSize.small },
+        { text: "good first issue", variant: LabelVariant.success, size: LabelSize.small },
+        { text: "documentation", variant: LabelVariant.secondary, size: LabelSize.small },
+    ];
 
     private property <int> gallery-tab-index: 0;
     private property <[UnderlineNavItem]> gallery-section-tabs: [
@@ -825,6 +834,30 @@ export component PrimerGallery {
                                         Label { text: "Primary"; variant: LabelVariant.primary; size: LabelSize.large; }
                                     }
                                 }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "LabelGroup";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Row of Label chips (MVP: no truncation or +N more).";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            LabelGroup {
+                                width: 100%;
+                                items: demo-label-group-items;
                             }
                         }
                     }

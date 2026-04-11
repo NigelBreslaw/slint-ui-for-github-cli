@@ -13,13 +13,13 @@ specified in detail.
 
 [`tokens.slint`](tokens.slint) defines the globals below (and `Size`). They are re-exported from [`primer.slint`](primer.slint) for discovery.
 
-- **LayoutTokens** — control sizes, padding, typography lengths, border radius (no light/dark literals). Banner spacing and icon metrics: `banner-padding-default`, `banner-padding-compact`, `banner-icon-size-default` (20px leading icon, matches `Banner.module.css` `.BannerIcon svg`), `banner-icon-size-title-hidden` (16px when `hide-title` and no actions), `banner-icon-container-padding`, `base-text-weight-semibold`, `banner-actions-gap` (12px, matches `Banner.module.css` action `column-gap`), `banner-dismiss-margin-when-actions` (2px when actions + dismiss). **Label** metrics: `label-height-small` / `label-height-large`, `label-padding-inline-*`, `label-border-width`, `label-border-radius-pill`.
+- **LayoutTokens** — control sizes, padding, typography lengths, border radius (no light/dark literals). Banner spacing and icon metrics: `banner-padding-default`, `banner-padding-compact`, `banner-icon-size-default` (20px leading icon, matches `Banner.module.css` `.BannerIcon svg`), `banner-icon-size-title-hidden` (16px when `hide-title` and no actions), `banner-icon-container-padding`, `base-text-weight-semibold`, `banner-actions-gap` (12px, matches `Banner.module.css` action `column-gap`), `banner-dismiss-margin-when-actions` (2px when actions + dismiss). **Label** metrics: `label-height-small` / `label-height-large`, `label-padding-inline-*`, `label-border-width`, `label-border-radius-pill`. **LabelGroup** row gap: `label-group-gap` (`LabelGroup.module.css`); item row min-height reuses `control-small-size` (28px).
 - **PrimerColors** — semantic surface colors (fg, bg, border, link, overlay, drop-shadow, etc.) resolved from `Palette.color-scheme`. Banner-related functional colors include muted surfaces and borders for accent, success, attention, danger, and done/upsell (e.g. `bgColor-accent-muted`, `borderColor-danger-muted`, `fgColor-danger`, `fgColor-attention`, `fgColor-upsell` / `bgColor-upsell-muted`, plus existing `fgColor-success` for success banners).
 - **ButtonTokens** — `color-btn-*`, `button-*`, action-list hover backgrounds, disabled fg, icon-button tints, and filled-button shadow colors (`button-shadow-*-light` / `button-shadow-*-dark`); composes from **PrimerColors** where possible.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
 
-Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). **Label** uses **LabelTokens** and **LayoutTokens**; variant mapping is implemented in [`Label/logic.slint`](Label/logic.slint). Action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
+Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). **Label** uses **LabelTokens** and **LayoutTokens**; variant mapping is implemented in [`Label/logic.slint`](Label/logic.slint). **LabelGroup** composes **Label** + **LayoutTokens** only (see [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint)). Action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
 
 ## UnderlineNav
 
@@ -77,6 +77,18 @@ Slint port of the Primer product [**Label**](https://primer.style/product/compon
 | `size`     | `LabelSize`     | `small` or `large` (React `small` / `large`; distinct from **Button** `Size`).                                                              |
 
 Colors resolve through **`LabelTokens`**; **`Label/logic.slint`** maps `variant` → token. Examples: **Primer gallery** (sidebar palette icon), **Misc** tab.
+
+## LabelGroup
+
+Slint port of Primer [**LabelGroup**](https://primer.style/product/components/label-group/) (horizontal group of **Label** chips). Upstream: [`LabelGroup.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/LabelGroup/LabelGroup.tsx) and [`LabelGroup.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/LabelGroup/LabelGroup.module.css).
+
+**MVP:** Model-driven row with **`LayoutTokens.label-group-gap`** and per-item min-height via **`control-small-size`**. **Not** in this port yet: React **`visibleChildCount`** (`auto` / number), **`overflowStyle`** (`inline` / `overlay`), **+N more** control, overlay, or `IntersectionObserver` truncation.
+
+| Property | Type | Notes |
+| -------- | ---- | ----- |
+| `items` | `[LabelGroupItem]` | Each entry has `text`, `variant` (**`LabelVariant`**), `size` (**`LabelSize`**). |
+
+Examples: **Primer gallery**, **Misc** tab (**LabelGroup** subsection).
 
 ## Caution:
 

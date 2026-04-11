@@ -1,0 +1,39 @@
+// Primer LabelGroup — horizontal row of Label chips (LabelGroup.module.css gap + ItemWrapper min-height).
+// MVP: no truncation / +N more (see AGENTS.md); matches React when visibleChildCount is unset.
+import { Label } from "../Label/label.slint";
+import { LabelSize, LabelVariant } from "../Label/types.slint";
+import { LayoutTokens } from "../tokens.slint";
+
+export struct LabelGroupItem {
+    text: string,
+    variant: LabelVariant,
+    size: LabelSize,
+}
+
+export component LabelGroup {
+    in property <[LabelGroupItem]> items: [];
+
+    Rectangle {
+        width: 100%;
+        clip: true;
+        background: #00000000;
+
+        HorizontalLayout {
+            width: 100%;
+            spacing: LayoutTokens.label-group-gap;
+            alignment: center;
+
+            for item[index] in items: VerticalLayout {
+                min-height: LayoutTokens.control-small-size;
+                horizontal-stretch: 0;
+                alignment: center;
+
+                Label {
+                    text: item.text;
+                    variant: item.variant;
+                    size: item.size;
+                }
+            }
+        }
+    }
+}
