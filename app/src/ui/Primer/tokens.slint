@@ -73,6 +73,14 @@ export global LayoutTokens {
     out property <length> counter-label-padding-inline: 6px;
     out property <length> counter-label-border-radius: 20px;
     out property <length> counter-label-border-width: 1px;
+
+    // Label.module.css — height --base-size-20 / --base-size-24, padding 0 --base-size-6 / --base-size-8, --borderWidth-thin, --borderRadius-full
+    out property <length> label-height-small: 20px;
+    out property <length> label-height-large: 24px;
+    out property <length> label-padding-inline-small: 6px;
+    out property <length> label-padding-inline-large: 8px;
+    out property <length> label-border-width: 1px;
+    out property <length> label-border-radius-pill: 100px;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
@@ -181,6 +189,26 @@ export global PrimerColors {
     property <color> fgColor-done-light: #8250df;
     property <color> fgColor-done-dark: #a371f7;
 
+    // Label.module.css + legacy-theme — light: emphasis matches fg where primer-tokens uses one hex (accent/attention/sponsors/done/severe); dark keeps distinct literals.
+    // bgColor.accent.emphasis (light) == fgColor.accent == fgColor.link (primer-tokens functional color fallbacks).
+    property <color> bgColor-accent-emphasis-light: fgColor-link-light;
+    property <color> bgColor-accent-emphasis-dark: #1f6feb;
+    property <color> bgColor-attention-emphasis-light: fgColor-attention-light;
+    property <color> bgColor-attention-emphasis-dark: #9e6a03;
+    property <color> fgColor-severe-light: #bc4c00;
+    property <color> fgColor-severe-dark: #db6d28;
+    property <color> bgColor-severe-emphasis-light: fgColor-severe-light;
+    property <color> bgColor-severe-emphasis-dark: #bd561d;
+    // borderColor.danger.emphasis — single storage; ButtonTokens danger fg/hover reuse (legacy-theme danger.emphasis).
+    property <color> borderColor-danger-emphasis-light: #cf222e;
+    property <color> borderColor-danger-emphasis-dark: #da3633;
+    property <color> bgColor-done-emphasis-light: fgColor-done-light;
+    property <color> bgColor-done-emphasis-dark: #8957e5;
+    property <color> fgColor-sponsors-light: #bf3989;
+    property <color> fgColor-sponsors-dark: #db61a2;
+    property <color> bgColor-sponsors-emphasis-light: fgColor-sponsors-light;
+    property <color> bgColor-sponsors-emphasis-dark: #bf4b8a;
+
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
     out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
@@ -226,6 +254,15 @@ export global PrimerColors {
     out property <color> bgColor-upsell-muted: bgColor-done-muted;
     out property <color> borderColor-upsell-muted: borderColor-done-muted;
     out property <color> fgColor-upsell: fgColor-done;
+
+    out property <color> bgColor-accent-emphasis: color-scheme == ColorScheme.dark ? bgColor-accent-emphasis-dark : bgColor-accent-emphasis-light;
+    out property <color> bgColor-attention-emphasis: color-scheme == ColorScheme.dark ? bgColor-attention-emphasis-dark : bgColor-attention-emphasis-light;
+    out property <color> fgColor-severe: color-scheme == ColorScheme.dark ? fgColor-severe-dark : fgColor-severe-light;
+    out property <color> bgColor-severe-emphasis: color-scheme == ColorScheme.dark ? bgColor-severe-emphasis-dark : bgColor-severe-emphasis-light;
+    out property <color> borderColor-danger-emphasis: color-scheme == ColorScheme.dark ? borderColor-danger-emphasis-dark : borderColor-danger-emphasis-light;
+    out property <color> bgColor-done-emphasis: color-scheme == ColorScheme.dark ? bgColor-done-emphasis-dark : bgColor-done-emphasis-light;
+    out property <color> fgColor-sponsors: color-scheme == ColorScheme.dark ? fgColor-sponsors-dark : fgColor-sponsors-light;
+    out property <color> bgColor-sponsors-emphasis: color-scheme == ColorScheme.dark ? bgColor-sponsors-emphasis-dark : bgColor-sponsors-emphasis-light;
 }
 
 // color-btn-*, button-*, filled-button shadows, iconButton palette, control disabled fg. Used by Button / IconButton.
@@ -255,9 +292,6 @@ export global ButtonTokens {
     property <color> color-btn-primary-disabled-text-light: rgba(255, 255, 255, 0.8);
 
     property <color> color-btn-danger-fg-dark: #f85149;
-    property <color> color-btn-danger-fg-light: #cf222e;
-
-    property <color> color-btn-danger-hover-bg-dark: #da3633;
 
     property <color> color-btn-danger-selected-bg-dark: #b62324;
     property <color> color-btn-danger-selected-bg-light: #a40e26;
@@ -302,8 +336,8 @@ export global ButtonTokens {
     out property <color> color-btn-primary-disabled-bg: color-scheme == ColorScheme.dark ? PrimerColors.greenPrimaryDisabledBgDark : color-btn-primary-disabled-bg-light;
     out property <color> color-btn-primary-disabled-border: color-scheme == ColorScheme.dark ? color-btn-primary-border-on-dark : color-btn-primary-border-on-light;
 
-    out property <color> color-btn-danger-text: color-scheme == ColorScheme.dark ? color-btn-danger-fg-dark : color-btn-danger-fg-light;
-    out property <color> color-btn-danger-hover-bg: color-scheme == ColorScheme.dark ? color-btn-danger-hover-bg-dark : color-btn-danger-fg-light;
+    out property <color> color-btn-danger-text: color-scheme == ColorScheme.dark ? color-btn-danger-fg-dark : PrimerColors.borderColor-danger-emphasis;
+    out property <color> color-btn-danger-hover-bg: PrimerColors.borderColor-danger-emphasis;
     out property <color> color-btn-danger-hover-border: color-scheme == ColorScheme.dark ? color-btn-danger-fg-dark : color-btn-primary-border-on-light;
     out property <color> color-btn-danger-selected-bg: color-scheme == ColorScheme.dark ? color-btn-danger-selected-bg-dark : color-btn-danger-selected-bg-light;
     out property <color> color-btn-danger-selected-border: color-scheme == ColorScheme.dark ? color-btn-danger-selected-border-dark : color-btn-primary-border-on-light;
@@ -431,4 +465,37 @@ export global BannerTokens {
     out property <color> banner-bgColor-warning: PrimerColors.bgColor-attention-muted;
     out property <color> banner-borderColor-warning: PrimerColors.borderColor-attention-muted;
     out property <color> banner-icon-fgColor-warning: PrimerColors.fgColor-attention;
+}
+
+// Label.module.css [data-variant] — fg + border-color (transparent background); composes from PrimerColors only.
+export global LabelTokens {
+    out property <color> label-fg-default: PrimerColors.fgColor-default;
+    out property <color> label-border-default: PrimerColors.borderColor-default;
+
+    out property <color> label-fg-primary: PrimerColors.fgColor-default;
+    out property <color> label-border-primary: PrimerColors.fgColor-default;
+
+    out property <color> label-fg-secondary: PrimerColors.fgColor-muted;
+    out property <color> label-border-secondary: PrimerColors.borderColor-muted;
+
+    out property <color> label-fg-accent: PrimerColors.fgColor-accent;
+    out property <color> label-border-accent: PrimerColors.bgColor-accent-emphasis;
+
+    out property <color> label-fg-success: PrimerColors.fgColor-success;
+    out property <color> label-border-success: PrimerColors.borderColor-success-emphasis;
+
+    out property <color> label-fg-attention: PrimerColors.fgColor-attention;
+    out property <color> label-border-attention: PrimerColors.bgColor-attention-emphasis;
+
+    out property <color> label-fg-severe: PrimerColors.fgColor-severe;
+    out property <color> label-border-severe: PrimerColors.bgColor-severe-emphasis;
+
+    out property <color> label-fg-danger: PrimerColors.fgColor-danger;
+    out property <color> label-border-danger: PrimerColors.borderColor-danger-emphasis;
+
+    out property <color> label-fg-done: PrimerColors.fgColor-done;
+    out property <color> label-border-done: PrimerColors.bgColor-done-emphasis;
+
+    out property <color> label-fg-sponsors: PrimerColors.fgColor-sponsors;
+    out property <color> label-border-sponsors: PrimerColors.bgColor-sponsors-emphasis;
 }

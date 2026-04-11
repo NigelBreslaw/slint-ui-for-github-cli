@@ -24,15 +24,17 @@ Small, **app-agnostic** helpers for wiring **[slint-ui](https://www.npmjs.com/pa
 pnpm add slint-bridge-kit
 ```
 
-You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. This library ships **TypeScript source** as the runtime entry (see `exports` in `package.json`); Node 20+ with [type stripping](https://nodejs.org/api/typescript.html) or a bundler that resolves `.ts` is typical.
+You also need `**slint-ui**` and a TypeScript toolchain in the consuming app. This library ships **TypeScript source** as the runtime entry (see `exports` in `package.json`); Node 20+ with [type stripping](https://nodejs.org/api/typescript.html) or a bundler that resolves `.ts` is typical.
 
 ---
 
 ## Peer dependencies
 
-| Package      | Purpose |
-| ------------ | ------- |
+
+| Package      | Purpose                                                              |
+| ------------ | -------------------------------------------------------------------- |
 | `typescript` | `>=5.4.0` — types and `satisfies` / `ExhaustiveCallbacks` ergonomics |
+
 
 **slint-ui** is not declared as a peer here because this package does not import it; real apps should depend on `slint-ui` separately and pass Slint objects into these helpers.
 
@@ -40,17 +42,19 @@ You also need **`slint-ui`** and a TypeScript toolchain in the consuming app. Th
 
 ## API reference
 
-| Name | Kind | Summary |
-| ---- | ---- | -------- |
-| `assignProperties(target, values)` | function | Copy `Partial<typeof target>` onto `target`; **skips** keys whose value is **`undefined`**; **`null` is assigned**. |
-| `wireFunctions(target, handlers)` | function | For each key in `handlers`, set `target[key] = handlers[key]`; other keys unchanged. |
-| `KeysMatching<T, V>` | type | Keys of `T` whose values are assignable to `V`. |
-| `FunctionKeysOf<T>` | type | Keys of `T` whose values are functions. |
-| `ExhaustiveCallbacks<T, K>` | type | `Required<Pick<T, K>>` — use with `satisfies` for exhaustive callback objects. |
-| `ExhaustiveAllCallbacks<T>` | type | `ExhaustiveCallbacks<T, FunctionKeysOf<T>>` — wire every function property on `T` in one map (Slint globals only; not for types with `run`/`show`/…). |
-| `slintEnumMembers(cases)` | function | Readonly `{ [K in cases[number]]: K }` — dot access for Slint wire enum strings (`Authed.loggedIn`). |
-| `SlintEnumValues<M>` | type | Union of string values from a members object returned by `slintEnumMembers`. |
-| `SLINT_BRIDGE_KIT_VERSION` | constant | String equal to this package’s `version` in `package.json`. |
+
+| Name                               | Kind     | Summary                                                                                                                                               |
+| ---------------------------------- | -------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `assignProperties(target, values)` | function | Copy `Partial<typeof target>` onto `target`; **skips** keys whose value is `**undefined`**; `**null` is assigned**.                                   |
+| `wireFunctions(target, handlers)`  | function | For each key in `handlers`, set `target[key] = handlers[key]`; other keys unchanged.                                                                  |
+| `KeysMatching<T, V>`               | type     | Keys of `T` whose values are assignable to `V`.                                                                                                       |
+| `FunctionKeysOf<T>`                | type     | Keys of `T` whose values are functions.                                                                                                               |
+| `ExhaustiveCallbacks<T, K>`        | type     | `Required<Pick<T, K>>` — use with `satisfies` for exhaustive callback objects.                                                                        |
+| `ExhaustiveAllCallbacks<T>`        | type     | `ExhaustiveCallbacks<T, FunctionKeysOf<T>>` — wire every function property on `T` in one map (Slint globals only; not for types with `run`/`show`/…). |
+| `slintEnumMembers(cases)`          | function | Readonly `{ [K in cases[number]]: K }` — dot access for Slint wire enum strings (`Authed.loggedIn`).                                                  |
+| `SlintEnumValues<M>`               | type     | Union of string values from a members object returned by `slintEnumMembers`.                                                                          |
+| `SLINT_BRIDGE_KIT_VERSION`         | constant | String equal to this package’s `version` in `package.json`.                                                                                           |
+
 
 ---
 
@@ -95,8 +99,8 @@ At runtime, use `Object.values(Authed)` (or `Object.keys`) where you previously 
 
 ## `assignProperties` and `undefined`
 
-- **`undefined` in `values`:** that property is **not** written; the previous value on `target` stays.
-- **`null`:** written normally (useful when Slint or your model allows `null`).
+- `**undefined` in `values`:** that property is **not** written; the previous value on `target` stays.
+- `**null`:** written normally (useful when Slint or your model allows `null`).
 - To **clear** to `undefined` explicitly, assign on `target` directly—do not rely on this helper.
 
 ```typescript
@@ -112,7 +116,7 @@ assignProperties(appState, {
 
 ## `wireFunctions` + exhaustive callbacks
 
-Use **`satisfies ExhaustiveCallbacks<…>`** so TypeScript rejects a missing or wrongly typed callback before you wire:
+Use `**satisfies ExhaustiveCallbacks<…>**` so TypeScript rejects a missing or wrongly typed callback before you wire:
 
 ```typescript
 import type { ExhaustiveCallbacks } from "slint-bridge-kit";
@@ -134,7 +138,7 @@ const handlers = {
 wireFunctions(appState, handlers);
 ```
 
-When **every** function property on the handle is a Slint callback and you wire them all in one object, use **`ExhaustiveAllCallbacks<T>`** instead of listing keys:
+When **every** function property on the handle is a Slint callback and you wire them all in one object, use `**ExhaustiveAllCallbacks<T>`** instead of listing keys:
 
 ```typescript
 import type { ExhaustiveAllCallbacks } from "slint-bridge-kit";
@@ -145,17 +149,17 @@ const handlers = {
 } satisfies ExhaustiveAllCallbacks<MyAppState>;
 ```
 
-`handlers` is built with **`Object.keys`** iteration order (your object literal key order). Use plain objects, not exotic prototypes.
+`handlers` is built with `**Object.keys**` iteration order (your object literal key order). Use plain objects, not exotic prototypes.
 
 ---
 
 ## Type-only helpers (no runtime)
 
-- **`KeysMatching<T, V>`** — e.g. string-valued keys: `KeysMatching<Widget, string>`.
-- **`FunctionKeysOf<T>`** — callback key unions for documentation or `K` in `ExhaustiveCallbacks`.
-- **`ExhaustiveCallbacks<T, K extends keyof T>`** — ensures every key in `K` is present with the correct type from `T`.
-- **`ExhaustiveAllCallbacks<T>`** — same for every `FunctionKeysOf<T>` key (Slint globals only).
-- **`SlintEnumValues<M>`** — union of wire strings from a `slintEnumMembers` object.
+- `**KeysMatching<T, V>**` — e.g. string-valued keys: `KeysMatching<Widget, string>`.
+- `**FunctionKeysOf<T>**` — callback key unions for documentation or `K` in `ExhaustiveCallbacks`.
+- `**ExhaustiveCallbacks<T, K extends keyof T>**` — ensures every key in `K` is present with the correct type from `T`.
+- `**ExhaustiveAllCallbacks<T>**` — same for every `FunctionKeysOf<T>` key (Slint globals only).
+- `**SlintEnumValues<M>**` — union of wire strings from a `slintEnumMembers` object.
 
 ---
 
