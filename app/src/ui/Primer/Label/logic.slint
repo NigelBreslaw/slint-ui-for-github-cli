@@ -1,0 +1,84 @@
+import { LabelTokens, LayoutTokens } from "../tokens.slint";
+import { LabelVariant, LabelSize } from "./types.slint";
+
+export global LabelLogic {
+    public pure function label-height(s: LabelSize) -> length {
+        if s == LabelSize.large {
+            return LayoutTokens.label-height-large;
+        }
+        // Remaining case: LabelSize.small (only other enum value).
+        return LayoutTokens.label-height-small;
+    }
+
+    public pure function label-padding-inline(s: LabelSize) -> length {
+        if s == LabelSize.large {
+            return LayoutTokens.label-padding-inline-large;
+        }
+        // Remaining case: LabelSize.small (only other enum value).
+        return LayoutTokens.label-padding-inline-small;
+    }
+
+    public pure function label-fg(v: LabelVariant) -> color {
+        if v == LabelVariant.primary {
+            return LabelTokens.label-fg-primary;
+        }
+        if v == LabelVariant.secondary {
+            return LabelTokens.label-fg-secondary;
+        }
+        if v == LabelVariant.accent {
+            return LabelTokens.label-fg-accent;
+        }
+        if v == LabelVariant.success {
+            return LabelTokens.label-fg-success;
+        }
+        if v == LabelVariant.attention {
+            return LabelTokens.label-fg-attention;
+        }
+        if v == LabelVariant.severe {
+            return LabelTokens.label-fg-severe;
+        }
+        if v == LabelVariant.danger {
+            return LabelTokens.label-fg-danger;
+        }
+        if v == LabelVariant.done {
+            return LabelTokens.label-fg-done;
+        }
+        if v == LabelVariant.sponsors {
+            return LabelTokens.label-fg-sponsors;
+        }
+        // Remaining case: LabelVariant.default (Primer’s neutral “default” chip; also the safe fallback).
+        return LabelTokens.label-fg-default;
+    }
+
+    public pure function label-border(v: LabelVariant) -> color {
+        if v == LabelVariant.primary {
+            return LabelTokens.label-border-primary;
+        }
+        if v == LabelVariant.secondary {
+            return LabelTokens.label-border-secondary;
+        }
+        if v == LabelVariant.accent {
+            return LabelTokens.label-border-accent;
+        }
+        if v == LabelVariant.success {
+            return LabelTokens.label-border-success;
+        }
+        if v == LabelVariant.attention {
+            return LabelTokens.label-border-attention;
+        }
+        if v == LabelVariant.severe {
+            return LabelTokens.label-border-severe;
+        }
+        if v == LabelVariant.danger {
+            return LabelTokens.label-border-danger;
+        }
+        if v == LabelVariant.done {
+            return LabelTokens.label-border-done;
+        }
+        if v == LabelVariant.sponsors {
+            return LabelTokens.label-border-sponsors;
+        }
+        // Remaining case: LabelVariant.default (Primer’s neutral “default” chip; also the safe fallback).
+        return LabelTokens.label-border-default;
+    }
+}

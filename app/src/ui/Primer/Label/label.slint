@@ -1,0 +1,42 @@
+import { LabelLogic } from "./logic.slint";
+import { LayoutTokens } from "../tokens.slint";
+import { LabelSize, LabelVariant } from "./types.slint";
+
+export { LabelSize, LabelVariant }
+
+// Primer product Label — transparent fill, thin border + fg per variant (Label.module.css).
+export component Label {
+    in property <string> text: "";
+    in property <LabelVariant> variant: default;
+    in property <LabelSize> size: small;
+
+    visible: text != "";
+    horizontal-stretch: 0;
+
+    private property <length> effective-height: LabelLogic.label-height(size);
+    private property <length> effective-padding-inline: LabelLogic.label-padding-inline(size);
+    private property <color> effective-fg: LabelLogic.label-fg(variant);
+    private property <color> effective-border: LabelLogic.label-border(variant);
+
+    Rectangle {
+        height: effective-height;
+        border-radius: LayoutTokens.label-border-radius-pill;
+        border-width: LayoutTokens.label-border-width;
+        border-color: effective-border;
+        background: #00000000;
+
+        HorizontalLayout {
+            padding-left: effective-padding-inline;
+            padding-right: effective-padding-inline;
+            alignment: center;
+
+            Text {
+                text: root.text;
+                color: effective-fg;
+                font-size: LayoutTokens.text-body-size-small;
+                font-weight: LayoutTokens.base-text-weight-medium;
+                vertical-alignment: center;
+            }
+        }
+    }
+}
