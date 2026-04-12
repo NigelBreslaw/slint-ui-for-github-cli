@@ -1,0 +1,91 @@
+import {
+  dataTableCellKind,
+  labelSize,
+  labelVariant,
+  projectBoardItemKind,
+  type DataTableCellKindWire,
+  type ProjectBoardItemKind,
+  type SlintDataTableCell,
+  type SlintDataTableImage,
+  type SlintDataTableRow,
+} from "../../bridges/node/slint-interface.ts";
+import type { ProjectBoardDataTableIcons } from "./project-board-datatable-icons.ts";
+
+/** Matches `ProjectBoardListRow` / `mapProjectV2ItemsToListRows` row shape. */
+type ProjectBoardListRowTs = {
+  kind: ProjectBoardItemKind;
+  state: string;
+  number: number;
+  title: string;
+  subtitle: string;
+  url: string;
+};
+
+function kindLabel(kind: ProjectBoardItemKind): string {
+  if (kind === projectBoardItemKind.pullRequest) {
+    return "Pull request";
+  }
+  if (kind === projectBoardItemKind.issue) {
+    return "Issue";
+  }
+  return "Draft";
+}
+
+function kindIcon(icons: ProjectBoardDataTableIcons, kind: ProjectBoardItemKind): SlintDataTableImage {
+  if (kind === projectBoardItemKind.pullRequest) {
+    return icons.pullRequest;
+  }
+  if (kind === projectBoardItemKind.issue) {
+    return icons.issue;
+  }
+  return icons.draftIssue;
+}
+
+function metaText(row: ProjectBoardListRowTs): string {
+  if (row.kind === projectBoardItemKind.draftIssue) {
+    return "Draft";
+  }
+  if (row.number > 0) {
+    return `#${row.number}`;
+  }
+  return "";
+}
+
+function dataTableCell(kind: DataTableCellKindWire, text: string, icon: SlintDataTableImage): SlintDataTableCell {
+  return {
+    kind,
+    text,
+    label_variant: labelVariant.default,
+    label_size: labelSize.small,
+    icon,
+  };
+}
+
+/**
+ * Builds `DataTableRow` data for the project board (column order: `#`, Type, Title, Meta).
+ * Row **`id`** is the issue/PR URL so `row-clicked` can open it in PR9.
+ */
+export function mapProjectBoardListRowsToDataTableRows(
+  rows: ProjectBoardListRowTs[],
+  icons: ProjectBoardDataTableIcons,
+): SlintDataTableRow[] {
+  const out: SlintDataTableRow[] = [];
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]!;
+    const ph = icons.placeholder;
+    out.push({
+      id: row.url,
+      cells: [
+        dataTableCell(dataTableCellKind.text, String(i + 1), ph),
+        dataTableCell(
+          dataTableCellKind.icon_text,
+          kindLabel(row.kind),
+          kindIcon(icons, row.kind),
+        ),
+        dataTableCell(dataTableCellKind.text, row.title, ph),
+        dataTableCell(dataTableCellKind.text, metaText(row), ph),
+      ],
+    });
+  }
+  return out;
+}

@@ -11,6 +11,7 @@ import { fetchDependabotAlertsForRepo } from "../../backend/gh/dependabot-alerts
 import { fetchAllReviewRequestsSearch } from "../../backend/gh/graphql-review-requests.ts";
 import type {
   MainWindowInstance,
+  SlintDataTableRow,
   SlintProjectBoardListRow,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
@@ -149,6 +150,7 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
     items_load_status: "",
     board_items_count: 0,
     board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+    board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
   });
   resetTimeReportingItemsState();
 }

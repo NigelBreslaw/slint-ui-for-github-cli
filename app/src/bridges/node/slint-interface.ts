@@ -1,6 +1,6 @@
 /**
  * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`,
- * `TimeReportingState`, `ProjectBoardListState`) wired from
+ * `TimeReportingState`, `ProjectBoardListState`) plus DataTable / Label wire enums in this module, wired from
  * [`ui/main.slint`](../../ui/main.slint) / [`bridges/slint/app-state.slint`](../slint/app-state.slint).
  * Slint enum cases use the same spelling as in `.slint` (camelCase here); wire values are defined
  * once via `slintEnumMembers` so call sites use dot access and unions stay in sync.
@@ -125,6 +125,51 @@ export const projectBoardItemKind = slintEnumMembers([
 ] as const);
 export type ProjectBoardItemKind = SlintEnumValues<typeof projectBoardItemKind>;
 
+/** Maps to `DataTableCellKind` in `DataTable/types.slint`. */
+export const dataTableCellKind = slintEnumMembers(["text", "label", "icon_text", "action"] as const);
+export type DataTableCellKindWire = SlintEnumValues<typeof dataTableCellKind>;
+
+/** Maps to `LabelVariant` in `Label/types.slint` (cell placeholders). */
+export const labelVariant = slintEnumMembers([
+  "default",
+  "primary",
+  "secondary",
+  "accent",
+  "success",
+  "attention",
+  "severe",
+  "danger",
+  "done",
+  "sponsors",
+] as const);
+export type LabelVariantWire = SlintEnumValues<typeof labelVariant>;
+
+/** Maps to `LabelSize` in `Label/types.slint`. */
+export const labelSize = slintEnumMembers(["small", "large"] as const);
+export type LabelSizeWire = SlintEnumValues<typeof labelSize>;
+
+/** Pixel buffer for Slint `image` on `DataTableCell` (Node bridge). */
+export type SlintDataTableImage = {
+  width: number;
+  height: number;
+  data: Buffer | Uint8Array;
+};
+
+/** Matches `DataTableCell` in `DataTable/types.slint` (Node uses `label_*` for hyphenated fields). */
+export type SlintDataTableCell = {
+  kind: DataTableCellKindWire;
+  text: string;
+  label_variant: LabelVariantWire;
+  label_size: LabelSizeWire;
+  icon: SlintDataTableImage;
+};
+
+/** Matches `DataTableRow` in `DataTable/types.slint`. */
+export type SlintDataTableRow = {
+  id: string;
+  cells: SlintDataTableCell[];
+};
+
 /** Matches `ProjectBoardListRow` in `project-board-list-state.slint`. */
 export type SlintProjectBoardListRow = {
   kind: ProjectBoardItemKind;
@@ -145,6 +190,7 @@ export type ProjectBoardListStateHandle = {
   items_load_status: string;
   board_items_count: number;
   board_rows_model: slint.ArrayModel<SlintProjectBoardListRow>;
+  board_data_table_rows: slint.ArrayModel<SlintDataTableRow>;
 };
 
 export type TimeReportingStateHandle = {

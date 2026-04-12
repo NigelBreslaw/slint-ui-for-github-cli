@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { appView, authed, dashboardTab, projectBoardItemKind } from "./slint-interface.ts";
+import {
+  appView,
+  authed,
+  dashboardTab,
+  dataTableCellKind,
+  labelSize,
+  labelVariant,
+  projectBoardItemKind,
+} from "./slint-interface.ts";
 
 /**
  * Runtime checks on `slintEnumMembers` objects so wire strings stay aligned with
@@ -44,5 +52,25 @@ describe("Slint wire enum members", () => {
     assert.ok(values.includes("issue"));
     assert.ok(values.includes("draftIssue"));
     assert.equal(values.length, 3);
+  });
+
+  it("data table cell kind members match DataTableCellKind in DataTable/types.slint", () => {
+    const values = Object.values(dataTableCellKind);
+    for (const s of ["text", "label", "icon_text", "action"]) {
+      assert.ok(values.includes(s), `missing ${s}`);
+    }
+    assert.equal(values.length, 4);
+  });
+
+  it("label variant members match LabelVariant in Label/types.slint", () => {
+    const values = Object.values(labelVariant);
+    assert.equal(values.length, 10);
+  });
+
+  it("label size members match LabelSize in Label/types.slint", () => {
+    const values = Object.values(labelSize);
+    assert.ok(values.includes("small"));
+    assert.ok(values.includes("large"));
+    assert.equal(values.length, 2);
   });
 });

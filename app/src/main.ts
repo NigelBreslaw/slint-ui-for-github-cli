@@ -20,6 +20,7 @@ import type {
   MainWindowInstance,
   MainWindowModule,
   SettingsStateHandle,
+  SlintDataTableRow,
   SlintProjectBoardListRow,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
@@ -75,6 +76,7 @@ assignProperties(window.TimeReportingState, {
 
 assignProperties(window.ProjectBoardListState, {
   board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+  board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
   board_items_count: 0,
 });
 

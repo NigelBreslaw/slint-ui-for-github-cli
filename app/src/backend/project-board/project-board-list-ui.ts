@@ -3,6 +3,7 @@ import { assignProperties, type ExhaustiveAllCallbacks } from "slint-bridge-kit"
 import type {
   MainWindowInstance,
   ProjectBoardListStateHandle,
+  SlintDataTableRow,
   SlintProjectBoardListRow,
 } from "../../bridges/node/slint-interface.ts";
 import { openUrlInBrowser } from "../utils/open-url.ts";
@@ -27,6 +28,7 @@ export function buildProjectBoardListStateCallbacks(
             selected_project_label: "",
             items_load_status: "",
             board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+            board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
             board_items_count: 0,
           });
           return;
@@ -39,7 +41,7 @@ export function buildProjectBoardListStateCallbacks(
         const items = getTimeReportingCachedItems();
         if (cachedId === stored.nodeId && items !== null) {
           assignProperties(window.ProjectBoardListState, { items_load_status: "" });
-          applyProjectBoardListToWindow(window);
+          await applyProjectBoardListToWindow(window);
           return;
         }
         await reloadProjectV2ItemsIntoCacheAndUi(window, stored.nodeId);

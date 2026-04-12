@@ -2,6 +2,7 @@ import * as slint from "slint-ui";
 import { assignProperties, type ExhaustiveAllCallbacks } from "slint-bridge-kit";
 import type {
   MainWindowInstance,
+  SlintDataTableRow,
   SlintProjectBoardListRow,
   SlintTimeReportingWeekRow,
   TimeReportingStateHandle,
@@ -163,6 +164,7 @@ export async function reloadProjectV2ItemsIntoCacheAndUi(
     assignProperties(window.ProjectBoardListState, {
       items_load_status: res.error,
       board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
+      board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
       board_items_count: 0,
     });
     return;
@@ -171,7 +173,7 @@ export async function reloadProjectV2ItemsIntoCacheAndUi(
   setTimeReportingCachedItems(nodeId, res.items, new Map());
   window.TimeReportingState.items_load_status = "";
   applyWeekRowsToWindow(window);
-  applyProjectBoardListToWindow(window);
+  await applyProjectBoardListToWindow(window);
   const stored = readTimeReportingSelectedProjectKv();
   if (stored !== null && stored.nodeId === nodeId) {
     assignProperties(window.ProjectBoardListState, {
