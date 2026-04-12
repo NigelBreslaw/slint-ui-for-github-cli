@@ -31,6 +31,7 @@ import {
     NavListGroupHeadingVariant,
     NavListItem,
     Select,
+    SelectPanel,
     SelectOption,
     Spinner,
     Size,
@@ -57,6 +58,9 @@ export component PrimerGallery {
         { value: "three", label: "Third option", enabled: false },
     ];
     private property <int> demo-select-index: 0;
+    private property <string> demo-select-panel-query: "";
+    private property <int> demo-select-panel-selected-index: -1;
+    private property <string> demo-select-panel-hint: "Parent filters items in real dialogs; type to see filter-changed.";
 
     private property <[LabelGroupItem]> demo-label-group-items: [
         { text: "bug", variant: LabelVariant.danger, size: LabelSize.small },
@@ -931,6 +935,50 @@ export component PrimerGallery {
                                 validation-message: "Static gallery model.";
                                 selected-changed(_idx) => {
                                 }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "SelectPanel";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Filter field plus scrollable list (single-select). The parent filters `items` from `filter-text`; this gallery uses a static model.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            SelectPanel {
+                                width: 100%;
+                                max-width: 420px;
+                                filter-text <=> demo-select-panel-query;
+                                filter-placeholder: "Filter choices…";
+                                items: demo-select-options;
+                                item-count: 3;
+                                selected-index <=> demo-select-panel-selected-index;
+                                loading: false;
+                                empty-message: "No matching choices.";
+                                filter-changed(q) => {
+                                    demo-select-panel-hint = "filter-changed: \"" + q + "\"";
+                                }
+                                selected-changed(ix) => {
+                                    demo-select-panel-hint = "selected-changed: index " + ix;
+                                }
+                            }
+
+                            Text {
+                                text: demo-select-panel-hint;
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
                             }
                         }
 
