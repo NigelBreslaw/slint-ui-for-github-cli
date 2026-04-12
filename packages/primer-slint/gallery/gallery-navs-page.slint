@@ -1,0 +1,579 @@
+import {
+    ActionListRow,
+    Icons,
+    NavList,
+    NavListGroup,
+    NavListGroupHeadingVariant,
+    NavListItem,
+    UnderlineNav,
+    UnderlineNavItem,
+    UnderlineNavVariant,
+} from "../primer.slint";
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
+
+/// UnderlineNav, ActionListRow, and NavList demos from `app/src/ui/views/primer-gallery.slint`.
+export component GalleryNavsPage inherits VerticalLayout {
+    spacing: 28px;
+    width: 100%;
+
+    private property <[NavListItem]> demo-nav-flat-items: [
+        {
+            data: {
+                label: "Dashboard",
+                current: true,
+                inactive: false,
+                inactive-text: "",
+                description: "Overview and activity",
+                has-leading-visual: true,
+                leading-icon: Icons.layout_grid,
+                trailing-text: "New",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Settings",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: true,
+                leading-icon: Icons.gear_24,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Billing (inactive)",
+                current: false,
+                inactive: true,
+                inactive-text: "Not available on your plan.",
+                description: "Payment method",
+                has-leading-visual: true,
+                leading-icon: Icons.stop,
+                trailing-text: "Pro",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+    ];
+    private property <[NavListGroup]> demo-nav-groups: [
+        {
+            title: "Repository",
+            heading-variant: NavListGroupHeadingVariant.filled,
+            items: [
+                {
+                    data: {
+                        label: "Code",
+                        current: true,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "Browse files and folders",
+                        has-leading-visual: true,
+                        leading-icon: Icons.layout_grid,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Issues",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: true,
+                        leading-icon: Icons.issue_opened,
+                        trailing-text: "24",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+            ],
+        },
+        {
+            title: "Organization",
+            heading-variant: NavListGroupHeadingVariant.subtle,
+            items: [
+                {
+                    data: {
+                        label: "People",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "Members and roles",
+                        has-leading-visual: true,
+                        leading-icon: Icons.inbox,
+                        trailing-text: "8",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Teams",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: true,
+                        leading-icon: Icons.pull_request,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+            ],
+        },
+    ];
+    private property <[NavListItem]> demo-nav-subnav-items: [
+        {
+            data: {
+                label: "Overview",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: true,
+                leading-icon: Icons.layout_grid,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Pull requests",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "Nested items; parent toggles open.",
+                has-leading-visual: true,
+                leading-icon: Icons.pull_request,
+                trailing-text: "",
+            },
+            children: [
+                {
+                    data: {
+                        label: "Open",
+                        current: true,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "12",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Closed",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "240",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+            ],
+            subnav-default-open: true,
+        },
+    ];
+    // Minimal labels — common Primer sidebar: blue accent bar + muted row for `current`.
+    private property <[NavListItem]> demo-nav-sidebar-items: [
+        {
+            data: {
+                label: "Item 1",
+                current: true,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Item 2",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Item 3",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+    ];
+    private property <string> demo-nav-last: "";
+
+    private property <int> demo-underline-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-items: [
+        { label: "Code", enabled: true, counter: "" },
+        { label: "Issues", enabled: true, counter: "12" },
+        { label: "Pull requests", enabled: true, counter: "3" },
+    ];
+    private property <int> demo-underline-flush-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-flush-items: [
+        { label: "Actions", enabled: true, counter: "" },
+        { label: "Projects", enabled: true, counter: "" },
+    ];
+    private property <int> demo-underline-loading-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-loading-items: [
+        { label: "Open", enabled: true, counter: "8" },
+        { label: "Closed", enabled: true, counter: "24" },
+    ];
+    private property <int> demo-underline-scroll-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-scroll-items: [
+        { label: "Overview", enabled: true, counter: "" },
+        { label: "Repositories", enabled: true, counter: "" },
+        { label: "Projects", enabled: true, counter: "" },
+        { label: "Packages", enabled: true, counter: "" },
+        { label: "Stars", enabled: true, counter: "" },
+        { label: "Sponsors", enabled: true, counter: "" },
+    ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "UnderlineNav";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Inset variant with counters (static).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            width: 100%;
+            items: demo-underline-items;
+            selected-index: demo-underline-selected;
+            accessible-name: "Demo repository tabs";
+            item-activated(idx) => {
+                demo-underline-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Flush variant";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            width: 100%;
+            variant: UnderlineNavVariant.flush;
+            items: demo-underline-flush-items;
+            selected-index: demo-underline-flush-selected;
+            accessible-name: "Demo flush tabs";
+            item-activated(idx) => {
+                demo-underline-flush-selected = idx;
+            }
+        }
+
+        Text {
+            text: "loading-counters (skeleton pills)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            width: 100%;
+            loading-counters: true;
+            items: demo-underline-loading-items;
+            selected-index: demo-underline-loading-selected;
+            accessible-name: "Demo loading counters";
+            item-activated(idx) => {
+                demo-underline-loading-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Narrow width (horizontal scroll)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Rectangle {
+            width: 260px;
+            clip: true;
+
+            UnderlineNav {
+                width: 100%;
+                items: demo-underline-scroll-items;
+                selected-index: demo-underline-scroll-selected;
+                accessible-name: "Demo overflow tabs";
+                item-activated(idx) => {
+                    demo-underline-scroll-selected = idx;
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "ActionListRow";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Shared list-row chrome (hover / pressed / selected). NavList and SelectPanel build on this.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
+            ActionListRow {
+                width: 100%;
+                label: "Unselected row";
+                selected: false;
+                disabled: false;
+                clicked => {
+                }
+            }
+
+            ActionListRow {
+                width: 100%;
+                label: "Selected row";
+                selected: true;
+                disabled: false;
+                clicked => {
+                }
+            }
+
+            ActionListRow {
+                width: 100%;
+                label: "Disabled row";
+                selected: false;
+                disabled: true;
+                has-leading-visual: true;
+                leading-icon: Icons.alert;
+                description: "With description";
+                trailing-text: "·";
+                clicked => {
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "NavList (flat)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Leading icons, optional description line, trailing text; current row, inactive row with explanation. Clicks report (group-index, path) — flat list uses group 0; path is dot-separated indices for SubNav.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: demo-nav-last == "" ? "Last activation: —" : "Last activation: " + demo-nav-last;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            width: 100%;
+            max-width: 360px;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: 1px;
+            border-color: PrimerColors.borderColor-default;
+            background: PrimerColors.bgColor-canvas-subtle;
+
+            VerticalLayout {
+                padding: 8px;
+                width: 100%;
+
+                NavList {
+                    width: 100%;
+                    items: demo-nav-flat-items;
+                    groups: [];
+                    item-activated(gi, path) => {
+                        demo-nav-last = "flat (" + gi + ", " + path + ")";
+                    }
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "NavList (sidebar accent)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Typical repo sidebar: sidebar-current-indicator adds a blue vertical bar on the current row, neutral muted background, and semibold label; other rows stay plain.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            width: 100%;
+            max-width: 360px;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: 1px;
+            border-color: PrimerColors.borderColor-default;
+            background: PrimerColors.bgColor-canvas-subtle;
+
+            VerticalLayout {
+                padding: 8px;
+                width: 100%;
+
+                NavList {
+                    width: 100%;
+                    items: demo-nav-sidebar-items;
+                    groups: [];
+                    sidebar-current-indicator: true;
+                    item-activated(gi, path) => {
+                        demo-nav-last = "sidebar (" + gi + ", " + path + ")";
+                    }
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "NavList (grouped)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Filled and subtle group headings, divider between groups; items may show leading icon, description, and trailing count.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            width: 100%;
+            max-width: 360px;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: 1px;
+            border-color: PrimerColors.borderColor-default;
+            background: PrimerColors.bgColor-canvas-subtle;
+
+            VerticalLayout {
+                padding: 8px;
+                width: 100%;
+
+                NavList {
+                    width: 100%;
+                    items: [];
+                    groups: demo-nav-groups;
+                    item-activated(gi, path) => {
+                        demo-nav-last = "grouped (" + gi + ", " + path + ")";
+                    }
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "NavList (SubNav)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Parent rows with children show a chevron and expand/collapse; activation reports a dot-separated path (e.g. 1.0 for first nested item under the second top-level row). Nesting is capped at four levels.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            width: 100%;
+            max-width: 360px;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: 1px;
+            border-color: PrimerColors.borderColor-default;
+            background: PrimerColors.bgColor-canvas-subtle;
+
+            VerticalLayout {
+                padding: 8px;
+                width: 100%;
+
+                NavList {
+                    width: 100%;
+                    items: demo-nav-subnav-items;
+                    groups: [];
+                    item-activated(gi, path) => {
+                        demo-nav-last = "subnav (" + gi + ", " + path + ")";
+                    }
+                }
+            }
+        }
+    }
+}
