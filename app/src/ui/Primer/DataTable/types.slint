@@ -28,6 +28,13 @@ export enum DataTableCellKind {
     action,
 }
 
+/// Semantic tint for **`iconText`** icons (maps to **`PrimerColors`** in **`data-table.slint`**). Ignored for other cell kinds.
+export enum DataTableIconTint {
+    default,
+    success,
+    done,
+}
+
 export struct DataTableColumn {
     header: string,
     id: string,
@@ -56,6 +63,8 @@ export struct DataTableCell {
     label-size: LabelSize,
     /// When `kind == iconText` or **`action`**, **`Image`** / **IconButton** source; for `text` / `label` supply any placeholder (ignored).
     icon: image,
+    /// When `kind == iconText`, tints **`icon`** only; ignored otherwise.
+    icon-tint: DataTableIconTint,
 }
 
 export struct DataTableRow {

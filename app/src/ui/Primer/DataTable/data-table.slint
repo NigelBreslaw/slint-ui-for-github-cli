@@ -16,6 +16,7 @@ import {
     DataTableCellKind,
     DataTableCellPadding,
     DataTableColumn,
+    DataTableIconTint,
     DataTableRow,
     DataTableSortDirection,
 } from "./types.slint";
@@ -307,7 +308,7 @@ export component DataTable {
                                             height: LayoutTokens.iconButton-icon-size-medium;
                                             vertical-alignment: center;
                                             source: cell.icon;
-                                            colorize: PrimerColors.fgColor-default;
+                                            colorize: icon-text-tint-color(cell.icon-tint);
                                         }
 
                                         if index < columns.length && columns[index].monospace: Text {
@@ -389,5 +390,9 @@ export component DataTable {
 
     pure function sort-icon-visible(cid: string, header-hover: bool) -> bool {
         return sort-column-active(cid) || header-hover;
+    }
+
+    pure function icon-text-tint-color(t: DataTableIconTint) -> color {
+        return t == DataTableIconTint.success ? PrimerColors.fgColor-success : t == DataTableIconTint.done ? PrimerColors.fgColor-done : PrimerColors.fgColor-default;
     }
 }

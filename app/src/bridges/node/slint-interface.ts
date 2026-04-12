@@ -134,6 +134,10 @@ export type ProjectBoardItemKind = SlintEnumValues<typeof projectBoardItemKind>;
 export const dataTableCellKind = slintEnumMembers(["text", "label", "iconText", "action"] as const);
 export type DataTableCellKindWire = SlintEnumValues<typeof dataTableCellKind>;
 
+/** Maps to `DataTableIconTint` in `DataTable/types.slint`. */
+export const dataTableIconTint = slintEnumMembers(["default", "success", "done"] as const);
+export type DataTableIconTintWire = SlintEnumValues<typeof dataTableIconTint>;
+
 /** Maps to `LabelVariant` in `Label/types.slint` (cell placeholders). */
 export const labelVariant = slintEnumMembers([
   "default",
@@ -168,6 +172,8 @@ export type SlintDataTableCell = {
   label_size: LabelSizeWire;
   /** Use **`ImageData`** from the slint-ui runtime (e.g. **`SlintImageData`**); plain `{ width, height, data }` breaks nested `ArrayModel` marshalling. */
   icon: ImageData;
+  /** `iconText` icon tint; **`default`** for other kinds. */
+  icon_tint: DataTableIconTintWire;
 };
 
 /** Matches `DataTableRow` in `DataTable/types.slint`. */

@@ -5,6 +5,7 @@ import {
   authed,
   dashboardTab,
   dataTableCellKind,
+  dataTableIconTint,
   labelSize,
   labelVariant,
   projectBoardItemKind,
@@ -60,6 +61,14 @@ describe("Slint wire enum members", () => {
       assert.ok((values as string[]).includes(s), `missing ${s}`);
     }
     assert.equal(values.length, 4);
+  });
+
+  it("data table icon tint members match DataTableIconTint in DataTable/types.slint", () => {
+    const values = Object.values(dataTableIconTint);
+    for (const s of ["default", "success", "done"] as const) {
+      assert.ok((values as string[]).includes(s), `missing ${s}`);
+    }
+    assert.equal(values.length, 3);
   });
 
   it("label variant members match LabelVariant in Label/types.slint", () => {

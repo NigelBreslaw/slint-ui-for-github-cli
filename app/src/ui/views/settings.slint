@@ -6,6 +6,7 @@ import {
     DataTableCellKind,
     DataTableCellPadding,
     DataTableColumn,
+    DataTableIconTint,
     DataTableSortDirection,
     Icons,
     LabelSize,
@@ -68,11 +69,11 @@ export component Settings {
                         width: 100%;
                         columns: settings-debug-columns;
                         rows: [
-                            { id: "build", cells: [{ kind: DataTableCellKind.text, text: "Build", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-commit-label, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }] },
-                            { id: "gh", cells: [{ kind: DataTableCellKind.text, text: "GitHub CLI", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-gh-version, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }] },
-                            { id: "rate", cells: [{ kind: DataTableCellKind.text, text: "GraphQL rate limit", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-rate-limit, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }] },
-                            { id: "reset", cells: [{ kind: DataTableCellKind.text, text: "Resets at (local time)", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-reset-at, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }] },
-                            { id: "countdown", cells: [{ kind: DataTableCellKind.text, text: "Time until reset", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-countdown, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }] },
+                            { id: "build", cells: [{ kind: DataTableCellKind.text, text: "Build", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-commit-label, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }] },
+                            { id: "gh", cells: [{ kind: DataTableCellKind.text, text: "GitHub CLI", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-gh-version, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }] },
+                            { id: "rate", cells: [{ kind: DataTableCellKind.text, text: "GraphQL rate limit", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-rate-limit, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }] },
+                            { id: "reset", cells: [{ kind: DataTableCellKind.text, text: "Resets at (local time)", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-reset-at, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }] },
+                            { id: "countdown", cells: [{ kind: DataTableCellKind.text, text: "Time until reset", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-countdown, label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }] },
                         ];
                         cell-padding: DataTableCellPadding.normal;
                         sorted-column-id: "";

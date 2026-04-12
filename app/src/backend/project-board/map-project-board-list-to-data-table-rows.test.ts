@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { dataTableCellKind, projectBoardItemKind } from "../../bridges/node/slint-interface.ts";
+import {
+  dataTableCellKind,
+  dataTableIconTint,
+  projectBoardItemKind,
+} from "../../bridges/node/slint-interface.ts";
 import {
   toSlintImageData,
   type ProjectBoardDataTableIcons,
@@ -37,6 +41,7 @@ describe("mapProjectBoardListRowsToDataTableRows", () => {
     assert.equal(out[0]!.cells[0]!.text, "1");
     assert.equal(out[0]!.cells[1]!.kind, dataTableCellKind.iconText);
     assert.equal(out[0]!.cells[1]!.text, "Pull request");
+    assert.equal(out[0]!.cells[1]!.icon_tint, dataTableIconTint.success);
     assert.equal(out[0]!.cells[2]!.text, "Fix bug");
     assert.equal(out[0]!.cells[3]!.text, "#99");
   });
@@ -69,5 +74,36 @@ describe("mapProjectBoardListRowsToDataTableRows", () => {
     ];
     const out = mapProjectBoardListRowsToDataTableRows(rows, mockIcons());
     assert.equal(out[0]!.cells[3]!.text, "Draft");
+    assert.equal(out[0]!.cells[1]!.icon_tint, dataTableIconTint.default);
+  });
+
+  it("uses done tint for merged pull requests", () => {
+    const rows = [
+      {
+        kind: projectBoardItemKind.pullRequest,
+        state: "MERGED",
+        number: 1,
+        title: "Done",
+        subtitle: "",
+        url: "https://github.com/o/r/pull/1",
+      },
+    ];
+    const out = mapProjectBoardListRowsToDataTableRows(rows, mockIcons());
+    assert.equal(out[0]!.cells[1]!.icon_tint, dataTableIconTint.done);
+  });
+
+  it("uses done tint for closed issues", () => {
+    const rows = [
+      {
+        kind: projectBoardItemKind.issue,
+        state: "CLOSED",
+        number: 2,
+        title: "Closed",
+        subtitle: "",
+        url: "https://github.com/o/r/issues/2",
+      },
+    ];
+    const out = mapProjectBoardListRowsToDataTableRows(rows, mockIcons());
+    assert.equal(out[0]!.cells[1]!.icon_tint, dataTableIconTint.done);
   });
 });

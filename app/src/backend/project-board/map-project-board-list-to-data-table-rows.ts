@@ -1,9 +1,11 @@
 import {
   dataTableCellKind,
+  dataTableIconTint,
   labelSize,
   labelVariant,
   projectBoardItemKind,
   type DataTableCellKindWire,
+  type DataTableIconTintWire,
   type ProjectBoardItemKind,
   type SlintDataTableCell,
   type SlintDataTableRow,
@@ -41,6 +43,20 @@ function kindIcon(icons: ProjectBoardDataTableIcons, kind: ProjectBoardItemKind)
   return icons.draftIssue;
 }
 
+function iconTintForRow(row: ProjectBoardListRowTs): DataTableIconTintWire {
+  if (row.kind === projectBoardItemKind.draftIssue) {
+    return dataTableIconTint.default;
+  }
+  const s = row.state.toUpperCase();
+  if (s === "OPEN") {
+    return dataTableIconTint.success;
+  }
+  if (s === "CLOSED" || s === "MERGED") {
+    return dataTableIconTint.done;
+  }
+  return dataTableIconTint.default;
+}
+
 function metaText(row: ProjectBoardListRowTs): string {
   if (row.kind === projectBoardItemKind.draftIssue) {
     return "Draft";
@@ -55,6 +71,7 @@ function dataTableCell(
   kind: DataTableCellKindWire,
   text: string,
   icon: ImageData,
+  iconTint: DataTableIconTintWire = dataTableIconTint.default,
 ): SlintDataTableCell {
   return {
     kind,
@@ -62,6 +79,7 @@ function dataTableCell(
     label_variant: labelVariant.default,
     label_size: labelSize.small,
     icon,
+    icon_tint: iconTint,
   };
 }
 
@@ -84,7 +102,12 @@ export function mapProjectBoardListRowsToDataTableRows(
       id: row.url,
       cells: [
         dataTableCell(dataTableCellKind.text, String(displayIndex), ph),
-        dataTableCell(dataTableCellKind.iconText, kindLabel(row.kind), kindIcon(icons, row.kind)),
+        dataTableCell(
+          dataTableCellKind.iconText,
+          kindLabel(row.kind),
+          kindIcon(icons, row.kind),
+          iconTintForRow(row),
+        ),
         dataTableCell(dataTableCellKind.text, row.title, ph),
         dataTableCell(dataTableCellKind.text, metaText(row), ph),
       ],
