@@ -1,0 +1,263 @@
+import {
+    Button,
+    ButtonAlignContent,
+    ButtonVariant,
+    CounterLabel,
+    CounterLabelVariant,
+    Icons,
+    Size,
+} from "../primer.slint";
+import { PrimerColors } from "../tokens.slint";
+
+/// Button, CounterLabel, and related demos migrated from `app/src/ui/views/primer-gallery.slint` (Buttons tab).
+export component GalleryButtonsPage inherits VerticalLayout {
+    spacing: 12px;
+    width: 100%;
+
+    Text {
+        text: "Buttons";
+        color: PrimerColors.fgColor-default;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    Text {
+        text: "CounterLabel (Primer scheme, standalone)";
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+        width: self.preferred-width;
+
+        CounterLabel {
+            text: "12";
+            use-primer-scheme: true;
+            scheme: CounterLabelVariant.secondary;
+        }
+
+        CounterLabel {
+            text: "3";
+            use-primer-scheme: true;
+            scheme: CounterLabelVariant.primary;
+        }
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Default";
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Primary";
+            variant: ButtonVariant.primary;
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Danger";
+            variant: ButtonVariant.danger;
+            clicked => {
+            }
+        }
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Small";
+            size: Size.small;
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Large primary";
+            size: Size.large;
+            variant: ButtonVariant.primary;
+            clicked => {
+            }
+        }
+    }
+
+    Text {
+        text: "alignContent (leading icon + label)";
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Center";
+            has-leading-icon: true;
+            leading-icon: Icons.info;
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Start";
+            align-content: ButtonAlignContent.start;
+            has-leading-icon: true;
+            leading-icon: Icons.info;
+            clicked => {
+            }
+        }
+    }
+
+    Text {
+        text: "Leading & trailing visuals";
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Icon + label";
+            has-leading-icon: true;
+            leading-icon: Icons.info;
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Emoji leading";
+            leading-text: "⭐";
+            clicked => {
+            }
+        }
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Trailing text";
+            trailing-text: "→";
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Icon both sides";
+            has-leading-icon: true;
+            leading-icon: Icons.info;
+            has-trailing-icon: true;
+            trailing-icon: Icons.circle_check;
+            clicked => {
+            }
+        }
+    }
+
+    Text {
+        text: "Count";
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Issues";
+            count: "12";
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Merge";
+            variant: ButtonVariant.primary;
+            count: "3";
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Delete";
+            variant: ButtonVariant.danger;
+            count: "99+";
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Filter";
+            variant: ButtonVariant.invisible;
+            count: "8";
+            clicked => {
+            }
+        }
+    }
+
+    Text {
+        text: "Loading";
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Saving…";
+            loading: true;
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Downloading";
+            loading: true;
+            has-leading-icon: true;
+            leading-icon: Icons.info;
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Watch";
+            count: "4";
+            loading: true;
+            clicked => {
+            }
+        }
+    }
+
+    Text {
+        text: "Link variant";
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+    }
+
+    HorizontalLayout {
+        spacing: 8px;
+
+        Button {
+            label: "Link only";
+            variant: ButtonVariant.link;
+            clicked => {
+            }
+        }
+
+        Button {
+            label: "Link + emoji";
+            variant: ButtonVariant.link;
+            leading-text: "📎";
+            align-content: ButtonAlignContent.start;
+            clicked => {
+            }
+        }
+    }
+}
