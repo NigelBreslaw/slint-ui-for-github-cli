@@ -5,6 +5,7 @@ import { GalleryButtonsPage } from "./gallery-buttons-page.slint";
 import { GalleryNavsPage } from "./gallery-navs-page.slint";
 import { GalleryFeedbackPage } from "./gallery-feedback-page.slint";
 import { GalleryFormsPage } from "./gallery-forms-page.slint";
+import { GalleryDataPage } from "./gallery-data-page.slint";
 
 import "../assets/fonts/MonaSans-VariableFont.ttf";
 import "../assets/fonts/MonaSans-Italic-VariableFont.ttf";
@@ -81,7 +82,11 @@ export component GalleryWindow inherits Window {
                             width: 100%;
                         }
 
-                        if GalleryState.selected-group-index != 0 && GalleryState.selected-group-index != 1 && GalleryState.selected-group-index != 2 && GalleryState.selected-group-index != 3: VerticalLayout {
+                        if GalleryState.selected-group-index == 4: GalleryDataPage {
+                            width: 100%;
+                        }
+
+                        if GalleryState.selected-group-index != 0 && GalleryState.selected-group-index != 1 && GalleryState.selected-group-index != 2 && GalleryState.selected-group-index != 3 && GalleryState.selected-group-index != 4: VerticalLayout {
                             spacing: 8px;
                             width: 100%;
 

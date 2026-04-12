@@ -88,6 +88,8 @@ export component UnderlineNav {
 
     VerticalLayout {
         spacing: 0px;
+        /// Prefer intrinsic width from tab items; parents can still set `width: 100%` for full-bleed rails.
+        horizontal-stretch: 0;
         accessible-role: AccessibleRole.tab-list;
         accessible-label: accessible-name;
         height: self.preferred-height;

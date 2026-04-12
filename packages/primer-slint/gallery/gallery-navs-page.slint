@@ -15,6 +15,7 @@ import { LayoutTokens, PrimerColors } from "../tokens.slint";
 export component GalleryNavsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
+    alignment: start;
 
     private property <[NavListItem]> demo-nav-flat-items: [
         {
@@ -265,6 +266,7 @@ export component GalleryNavsPage inherits VerticalLayout {
     VerticalLayout {
         spacing: 12px;
         width: 100%;
+        alignment: start;
 
         Text {
             text: "UnderlineNav";
@@ -280,7 +282,6 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         UnderlineNav {
-            width: 100%;
             items: demo-underline-items;
             selected-index: demo-underline-selected;
             accessible-name: "Demo repository tabs";
@@ -296,7 +297,6 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         UnderlineNav {
-            width: 100%;
             variant: UnderlineNavVariant.flush;
             items: demo-underline-flush-items;
             selected-index: demo-underline-flush-selected;
@@ -313,7 +313,6 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         UnderlineNav {
-            width: 100%;
             loading-counters: true;
             items: demo-underline-loading-items;
             selected-index: demo-underline-loading-selected;
@@ -334,7 +333,6 @@ export component GalleryNavsPage inherits VerticalLayout {
             clip: true;
 
             UnderlineNav {
-                width: 100%;
                 items: demo-underline-scroll-items;
                 selected-index: demo-underline-scroll-selected;
                 accessible-name: "Demo overflow tabs";
@@ -348,6 +346,7 @@ export component GalleryNavsPage inherits VerticalLayout {
     VerticalLayout {
         spacing: 12px;
         width: 100%;
+        alignment: start;
 
         Text {
             text: "ActionListRow";
@@ -365,8 +364,8 @@ export component GalleryNavsPage inherits VerticalLayout {
 
         VerticalLayout {
             spacing: 0px;
-            width: 100%;
-            max-width: 360px;
+            horizontal-stretch: 0;
+            width: 360px;
 
             ActionListRow {
                 width: 100%;
@@ -404,6 +403,7 @@ export component GalleryNavsPage inherits VerticalLayout {
     VerticalLayout {
         spacing: 12px;
         width: 100%;
+        alignment: start;
 
         Text {
             text: "NavList (flat)";
@@ -427,8 +427,8 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Rectangle {
-            width: 100%;
-            max-width: 360px;
+            horizontal-stretch: 0;
+            width: 360px;
             border-radius: LayoutTokens.borderRadius-medium;
             border-width: 1px;
             border-color: PrimerColors.borderColor-default;
@@ -453,6 +453,7 @@ export component GalleryNavsPage inherits VerticalLayout {
     VerticalLayout {
         spacing: 12px;
         width: 100%;
+        alignment: start;
 
         Text {
             text: "NavList (sidebar accent)";
@@ -469,8 +470,8 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Rectangle {
-            width: 100%;
-            max-width: 360px;
+            horizontal-stretch: 0;
+            width: 360px;
             border-radius: LayoutTokens.borderRadius-medium;
             border-width: 1px;
             border-color: PrimerColors.borderColor-default;
@@ -496,6 +497,7 @@ export component GalleryNavsPage inherits VerticalLayout {
     VerticalLayout {
         spacing: 12px;
         width: 100%;
+        alignment: start;
 
         Text {
             text: "NavList (grouped)";
@@ -512,8 +514,8 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Rectangle {
-            width: 100%;
-            max-width: 360px;
+            horizontal-stretch: 0;
+            width: 360px;
             border-radius: LayoutTokens.borderRadius-medium;
             border-width: 1px;
             border-color: PrimerColors.borderColor-default;
@@ -538,6 +540,7 @@ export component GalleryNavsPage inherits VerticalLayout {
     VerticalLayout {
         spacing: 12px;
         width: 100%;
+        alignment: start;
 
         Text {
             text: "NavList (SubNav)";
@@ -554,8 +557,8 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Rectangle {
-            width: 100%;
-            max-width: 360px;
+            horizontal-stretch: 0;
+            width: 360px;
             border-radius: LayoutTokens.borderRadius-medium;
             border-width: 1px;
             border-color: PrimerColors.borderColor-default;

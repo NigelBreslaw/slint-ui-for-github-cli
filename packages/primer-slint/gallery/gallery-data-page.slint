@@ -1,0 +1,172 @@
+import {
+    DataTable,
+    DataTableCellAlign,
+    DataTableCellKind,
+    DataTableColumn,
+    DataTableIconTint,
+    DataTableRow,
+    DataTableSortDirection,
+    Icons,
+    LabelSize,
+    LabelVariant,
+    Pagination,
+    TableContainer,
+} from "../primer.slint";
+import { PrimerColors } from "../tokens.slint";
+
+/// DataTable and Pagination demos from `app/src/ui/views/primer-gallery.slint`.
+export component GalleryDataPage inherits VerticalLayout {
+    spacing: 28px;
+    width: 100%;
+
+    private property <[DataTableColumn]> demo-data-table-columns: [
+        { header: "Type", id: "kind", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.iconText, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Repository", id: "name", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Stars", id: "stars", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "License", id: "license", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.label, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Actions", id: "actions", sortable: false, align: DataTableCellAlign.end, row-header: false, cell-kind: DataTableCellKind.action, horizontal-stretch: 0, min-width: 40px, width: 40px, monospace: false },
+    ];
+    private property <[DataTableRow]> demo-data-table-rows: [
+        { id: "r1", cells: [{ kind: DataTableCellKind.iconText, text: "Pull request", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.pull_request, icon-tint: DataTableIconTint.success }, { kind: DataTableCellKind.text, text: "slint", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "2.4k", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.label, text: "MIT", label-variant: LabelVariant.success, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.action, text: "more", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.kebab_horizontal, icon-tint: DataTableIconTint.default }] },
+        { id: "r2", cells: [{ kind: DataTableCellKind.iconText, text: "Draft", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.git_pull_request_draft, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "github-app", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "120", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.label, text: "Apache-2.0", label-variant: LabelVariant.accent, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.action, text: "open-external", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.link_external, icon-tint: DataTableIconTint.default }] },
+        { id: "r3", cells: [{ kind: DataTableCellKind.iconText, text: "Issue", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.issue_opened, icon-tint: DataTableIconTint.done }, { kind: DataTableCellKind.text, text: "primer-ui-react", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "890", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.label, text: "GPL-3.0", label-variant: LabelVariant.danger, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.action, text: "copy-link", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.copy_icon, icon-tint: DataTableIconTint.default }] },
+    ];
+    private property <string> demo-data-table-sorted-column: "";
+    private property <string> demo-data-table-last-row-action: "";
+    private property <string> demo-data-table-last-row-click: "";
+    private property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;
+
+    private property <int> demo-pagination-page-index: 0;
+    private property <int> demo-pagination-page-index-prevnext: 0;
+    private property <int> demo-pagination-page-index-short: 0;
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "DataTable";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Sortable headers update gallery state via sort-toggled; row order is static in this demo (app owns sorting). TableContainer adds title, subtitle, and table-level actions (toolbar primary). Row-click fires for row hits; the Actions IconButton uses row-action only (nested TouchArea).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: demo-data-table-last-row-click == "" ? "Row-click: —" : "Row-click: " + demo-data-table-last-row-click;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: demo-data-table-last-row-action == "" ? "Row-action: —" : "Row-action: " + demo-data-table-last-row-action;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        TableContainer {
+            width: 100%;
+            title: "Repositories";
+            subtitle: "Example rows for the gallery demo.";
+            primary-action-label: "Export";
+            primary-action => { }
+
+            DataTable {
+                width: 100%;
+                columns: demo-data-table-columns;
+                rows: demo-data-table-rows;
+                sorted-column-id: demo-data-table-sorted-column;
+                sort-direction: demo-data-table-sort-direction;
+                sort-toggled(cid, dir) => {
+                    demo-data-table-sorted-column = cid;
+                    demo-data-table-sort-direction = dir;
+                }
+                row-action(rid, cid, aid) => {
+                    demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
+                }
+                row-clicked(rid) => {
+                    demo-data-table-last-row-click = rid;
+                }
+            }
+        }
+
+        Pagination {
+            width: 100%;
+            total-count: 100;
+            page-size: 25;
+            page-index: demo-pagination-page-index;
+            show-pages: true;
+            page-changed(idx) => {
+                demo-pagination-page-index = idx;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Pagination (Previous / Next only)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Same totals as above; numeric page strip hidden (matches narrow-viewport behavior in Primer React).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination {
+            width: 100%;
+            total-count: 100;
+            page-size: 25;
+            page-index: demo-pagination-page-index-prevnext;
+            show-pages: false;
+            page-changed(idx) => {
+                demo-pagination-page-index-prevnext = idx;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Pagination (single page)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Fewer items than page size — controls reflect one page.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination {
+            width: 100%;
+            total-count: 8;
+            page-size: 25;
+            page-index: demo-pagination-page-index-short;
+            show-pages: true;
+            page-changed(idx) => {
+                demo-pagination-page-index-short = idx;
+            }
+        }
+    }
+}
