@@ -29,6 +29,10 @@ export component DataTable {
         : cell-padding == DataTableCellPadding.spacious ? LayoutTokens.table-cell-padding-inline-spacious
         : LayoutTokens.table-cell-padding-inline-normal;
 
+    // Header must not use min-height: 0 with TouchArea — Slint can collapse the row to zero height.
+    private property <length> header-row-min-height:
+        pad-block + pad-block + LayoutTokens.text-body-lineHeight-medium;
+
     Rectangle {
         width: 100%;
         clip: true;
@@ -44,14 +48,18 @@ export component DataTable {
             // Header row
             HorizontalLayout {
                 width: 100%;
+                min-height: header-row-min-height;
                 spacing: 0;
 
                 for col[index] in columns: Rectangle {
                     horizontal-stretch: 1;
+                    min-height: header-row-min-height;
                     background: PrimerColors.bgColor-muted;
 
                     if col.sortable: header-ta := TouchArea {
                         width: 100%;
+                        height: 100%;
+                        min-height: header-row-min-height;
                         clicked => {
                             if sorted-column-id != col.id || sort-direction == DataTableSortDirection.none {
                                 root.sort-toggled(col.id, DataTableSortDirection.ascending);
@@ -68,7 +76,7 @@ export component DataTable {
                             padding-top: pad-block;
                             padding-bottom: pad-block;
                             width: 100%;
-                            min-height: 0;
+                            min-height: header-row-min-height;
                             spacing: 4px;
                             alignment: center;
 
@@ -109,7 +117,7 @@ export component DataTable {
                         padding-top: pad-block;
                         padding-bottom: pad-block;
                         width: 100%;
-                        min-height: 0;
+                        min-height: header-row-min-height;
 
                         Text {
                             width: 100%;
