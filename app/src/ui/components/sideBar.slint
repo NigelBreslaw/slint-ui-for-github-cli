@@ -63,21 +63,6 @@ export component SideBar {
 
         Image {
             x: 16px;
-            y: 136px;
-            width: 24px;
-            height: 24px;
-            colorize: PrimerColors.fgColor-muted;
-            source: Icons.palette;
-
-            TouchArea {
-                clicked => {
-                    AppState.set-view(AppView.primerGallery);
-                }
-            }
-        }
-
-        Image {
-            x: 16px;
             y: parent.height - self.height - 16px;
             width: 24px;
             height: 24px;

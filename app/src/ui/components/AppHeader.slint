@@ -30,10 +30,10 @@ export component AppHeader {
             height: self.preferred-height;
             width: self.preferred-width;
             spacing: 16px;
-            visible: AppState.auth == Authed.loggedIn && (AppState.view == AppView.dashboard || AppState.view == AppView.settings || AppState.view == AppView.timeReporting || AppState.view == AppView.projectBoardList || AppState.view == AppView.primerGallery);
+            visible: AppState.auth == Authed.loggedIn && (AppState.view == AppView.dashboard || AppState.view == AppView.settings || AppState.view == AppView.timeReporting || AppState.view == AppView.projectBoardList);
 
             Text {
-                text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : AppState.view == AppView.timeReporting ? "Time reporting" : AppState.view == AppView.projectBoardList ? "Project board" : "Primer gallery";
+                text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : AppState.view == AppView.timeReporting ? "Time reporting" : AppState.view == AppView.projectBoardList ? "Project board" : "";
                 font-size: 14px;
                 font-weight: 500;
                 color: PrimerColors.fgColor-default;

@@ -46,7 +46,6 @@ export const appView = slintEnumMembers([
   "settings",
   "timeReporting",
   "projectBoardList",
-  "primerGallery",
 ] as const);
 export type AppView = SlintEnumValues<typeof appView>;
 
