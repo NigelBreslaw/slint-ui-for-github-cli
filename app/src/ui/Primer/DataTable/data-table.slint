@@ -1,16 +1,23 @@
-// Primer DataTable — read-only table (Table.module.css spacing/colors; sort UI deferred).
+// Primer DataTable — Table.module.css spacing/colors; sort headers + callback (primer/react DataTable onToggleSort).
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     DataTableCellAlign,
     DataTableCellPadding,
     DataTableColumn,
     DataTableRow,
+    DataTableSortDirection,
 } from "./types.slint";
 
 export component DataTable {
     in property <[DataTableColumn]> columns: [];
     in property <[DataTableRow]> rows: [];
     in property <DataTableCellPadding> cell-padding: DataTableCellPadding.normal;
+    /// Active sort column id; empty means none (controlled; parent updates after `sort-toggled`).
+    in property <string> sorted-column-id: "";
+    in property <DataTableSortDirection> sort-direction: DataTableSortDirection.none;
+    /// When true, sorting is owned outside the table (e.g. server); `sort-toggled` still fires so parent can refresh rows.
+    in property <bool> external-sorting: true;
+    callback sort-toggled(column-id: string, direction: DataTableSortDirection);
 
     private property <length> pad-block:
         cell-padding == DataTableCellPadding.condensed ? LayoutTokens.table-cell-padding-block-condensed
@@ -43,7 +50,60 @@ export component DataTable {
                     horizontal-stretch: 1;
                     background: PrimerColors.bgColor-muted;
 
-                    HorizontalLayout {
+                    if col.sortable: header-ta := TouchArea {
+                        width: 100%;
+                        clicked => {
+                            if sorted-column-id != col.id || sort-direction == DataTableSortDirection.none {
+                                root.sort-toggled(col.id, DataTableSortDirection.ascending);
+                            } else if sort-direction == DataTableSortDirection.ascending {
+                                root.sort-toggled(col.id, DataTableSortDirection.descending);
+                            } else {
+                                root.sort-toggled(col.id, DataTableSortDirection.ascending);
+                            }
+                        }
+
+                        HorizontalLayout {
+                            padding-left: pad-inline + (index == 0 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
+                            padding-right: pad-inline + (index == columns.length - 1 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
+                            padding-top: pad-block;
+                            padding-bottom: pad-block;
+                            width: 100%;
+                            min-height: 0;
+                            spacing: 4px;
+                            alignment: center;
+
+                            if col.align == DataTableCellAlign.end: Image {
+                                width: LayoutTokens.iconButton-icon-size-medium;
+                                height: LayoutTokens.iconButton-icon-size-medium;
+                                vertical-alignment: center;
+                                visible: sort-icon-visible(col.id, header-ta.has-hover);
+                                source: sort-icon-desc(col.id) ? @image-url("../../../assets/16px/sort-desc.svg") : @image-url("../../../assets/16px/sort-asc.svg");
+                                colorize: sort-column-active(col.id) ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+                            }
+
+                            Text {
+                                horizontal-stretch: 1;
+                                text: col.header;
+                                font-size: LayoutTokens.text-body-size-small;
+                                color: sort-header-fg(col.id);
+                                font-weight: LayoutTokens.base-text-weight-semibold;
+                                horizontal-alignment: col.align == DataTableCellAlign.end ? right : left;
+                                vertical-alignment: center;
+                                wrap: word-wrap;
+                            }
+
+                            if col.align == DataTableCellAlign.start: Image {
+                                width: LayoutTokens.iconButton-icon-size-medium;
+                                height: LayoutTokens.iconButton-icon-size-medium;
+                                vertical-alignment: center;
+                                visible: sort-icon-visible(col.id, header-ta.has-hover);
+                                source: sort-icon-desc(col.id) ? @image-url("../../../assets/16px/sort-desc.svg") : @image-url("../../../assets/16px/sort-asc.svg");
+                                colorize: sort-column-active(col.id) ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+                            }
+                        }
+                    }
+
+                    if !col.sortable: HorizontalLayout {
                         padding-left: pad-inline + (index == 0 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
                         padding-right: pad-inline + (index == columns.length - 1 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
                         padding-top: pad-block;
@@ -121,5 +181,22 @@ export component DataTable {
                 }
             }
         }
+    }
+
+    // --- Sort header helpers (Table.module.css — sorted header fg default; icons on hover / active)
+    pure function sort-column-active(cid: string) -> bool {
+        return sorted-column-id == cid && sort-direction != DataTableSortDirection.none;
+    }
+
+    pure function sort-header-fg(cid: string) -> color {
+        return sort-column-active(cid) ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+    }
+
+    pure function sort-icon-desc(cid: string) -> bool {
+        return sorted-column-id == cid && sort-direction == DataTableSortDirection.descending;
+    }
+
+    pure function sort-icon-visible(cid: string, header-hover: bool) -> bool {
+        return sort-column-active(cid) || header-hover;
     }
 }

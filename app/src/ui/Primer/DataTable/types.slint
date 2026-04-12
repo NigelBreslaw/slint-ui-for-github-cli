@@ -1,4 +1,10 @@
-// Primer DataTable — column/row models (primer/react DataTable / column.ts; MVP: read-only, no sort UI).
+// Primer DataTable — column/row models (primer/react DataTable / column.ts). Sort: `DataTableSortDirection` + `sort-toggled` in `data-table.slint`.
+
+export enum DataTableSortDirection {
+    none,
+    ascending,
+    descending,
+}
 
 export enum DataTableCellPadding {
     condensed,
