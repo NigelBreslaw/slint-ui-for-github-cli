@@ -1,4 +1,5 @@
 // Primer DataTable — Table.module.css spacing/colors; sort headers + callback (primer/react DataTable onToggleSort).
+// Column widths align header and body like material `StandardTableView` / `TableColumn` (horizontal-stretch, min/preferred/max width).
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     DataTableCellAlign,
@@ -33,6 +34,14 @@ export component DataTable {
     private property <length> header-row-min-height:
         pad-block + pad-block + LayoutTokens.text-body-lineHeight-medium;
 
+    pure function col-max-width(col: DataTableColumn) -> length {
+        col.width >= 1px ? max(col.min-width, col.width) : 100000px;
+    }
+
+    pure function col-min-width(col: DataTableColumn) -> length {
+        max(col.min-width, col.width);
+    }
+
     Rectangle {
         width: 100%;
         clip: true;
@@ -52,7 +61,10 @@ export component DataTable {
                 spacing: 0;
 
                 for col[index] in columns: Rectangle {
-                    horizontal-stretch: 1;
+                    horizontal-stretch: col.horizontal-stretch;
+                    min-width: col-min-width(col);
+                    preferred-width: self.min-width;
+                    max-width: col-max-width(col);
                     min-height: header-row-min-height;
                     background: PrimerColors.bgColor-muted;
 
@@ -155,7 +167,10 @@ export component DataTable {
                             spacing: 0;
 
                             for cell[index] in row.cells: Rectangle {
-                                horizontal-stretch: 1;
+                                horizontal-stretch: index < columns.length ? columns[index].horizontal-stretch : 1;
+                                min-width: index < columns.length ? col-min-width(columns[index]) : 0px;
+                                preferred-width: self.min-width;
+                                max-width: index < columns.length ? col-max-width(columns[index]) : 100000px;
                                 background: #00000000;
 
                                 HorizontalLayout {

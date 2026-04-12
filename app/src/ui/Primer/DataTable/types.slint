@@ -23,6 +23,12 @@ export struct DataTableColumn {
     sortable: bool,
     align: DataTableCellAlign,
     row-header: bool,
+    /// Horizontal flex factor for this column (same as `StandardTableView` / `TableColumn`).
+    horizontal-stretch: float,
+    /// Minimum width; combined with `width` for layout min (see `StandardTableView` column sizing).
+    min-width: length,
+    /// If width is at least 1px, column uses a fixed width; otherwise flexible (large max-width).
+    width: length,
 }
 
 export struct DataTableRow {
