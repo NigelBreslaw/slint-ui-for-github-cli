@@ -13,7 +13,7 @@ description: >-
 
 ## Canonical reference
 
-- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — **Implementation plans and PR breakdown tables** (required columns).
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — **Implementation plans and PR breakdown tables** (required columns).
 - Orchestrator: [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md).
 
 ## 1) Plan must include a PR table

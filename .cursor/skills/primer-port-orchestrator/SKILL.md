@@ -2,7 +2,7 @@
 name: primer-port-orchestrator
 description: >-
   End-to-end playbook for porting a Primer design system component into
-  app/src/ui/Primer: ordered phases (upstream research, Slint research, variant
+  packages/primer-slint (symlinked as app/src/ui/Primer): ordered phases (upstream research, Slint research, variant
   matrix, token layers, interaction states), PR breakdown per AGENTS, and
   verification. Use when starting a new Primer port, planning multi-PR component
   work, or when the user asks what order to follow for Primer-to-Slint work.
@@ -12,8 +12,8 @@ description: >-
 
 ## Canonical documentation
 
-- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — compact reference (architecture, verification, limitations).
-- [`app/src/ui/Primer/component-imports.md`](../../../app/src/ui/Primer/component-imports.md) — which globals to import per component family.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — compact reference (architecture, verification, limitations). Same files as `app/src/ui/Primer/` via symlink.
+- [`packages/primer-slint/component-imports.md`](../../../packages/primer-slint/component-imports.md) — which globals to import per component family.
 
 ## Phases (run in order)
 
@@ -44,7 +44,7 @@ See AGENTS **Implementation plans and PR breakdown tables** for required columns
 pnpm typecheck && pnpm autofix && pnpm test
 ```
 
-Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS).
+Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS). For Primer UI demos without running the full app, `pnpm dev:gallery` loads [`packages/primer-slint/gallery/gallery-window.slint`](../../../packages/primer-slint/gallery/gallery-window.slint).
 
 ## Skill index
 

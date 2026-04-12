@@ -12,7 +12,7 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 
 ## Setup
 
-This repository is a **pnpm monorepo**: the Slint desktop app lives under [`app/`](app/) (TypeScript in `app/src/`, UI in `app/src/ui/…`), and [`packages/slint-bridge-kit`](packages/slint-bridge-kit/) is a separate workspace package. Install and run scripts from the **repository root** unless you `cd app` explicitly.
+This repository is a **pnpm monorepo**: the Slint desktop app lives under [`app/`](app/) (TypeScript in `app/src/`, UI in `app/src/ui/…`), [`packages/slint-bridge-kit`](packages/slint-bridge-kit/) is the TypeScript bridge helpers package, and [`packages/primer-slint`](packages/primer-slint/) is the Primer design system Slint library (imported by github-app through the symlink `app/src/ui/Primer` → `packages/primer-slint`). Install and run scripts from the **repository root** unless you `cd app` explicitly.
 
 From the project root:
 
@@ -35,6 +35,16 @@ pnpm start
 ```
 
 This runs the **`github-app`** workspace script from [`app/package.json`](app/package.json): `write-build-info` then `node src/main.ts` with **cwd `app/`** (TypeScript is executed directly via Node’s built-in type stripping). You can also run `cd app && pnpm dev`.
+
+### Primer gallery (standalone)
+
+To open a separate window that demos Primer components (Storybook-style groups; no GitHub CLI or sign-in), run from the repository root:
+
+```bash
+pnpm dev:gallery
+```
+
+That runs [`packages/primer-slint/gallery-main.ts`](packages/primer-slint/gallery-main.ts). See [`packages/primer-slint/gallery/README.md`](packages/primer-slint/gallery/README.md) and [`packages/primer-slint/AGENTS.md`](packages/primer-slint/AGENTS.md).
 
 **Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project,notifications` (scopes match `[REQUIRED_GH_OAUTH_SCOPES](app/src/backend/gh/required-scopes.ts)`) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run `**pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
 

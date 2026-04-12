@@ -63,7 +63,7 @@ Slint port of [@primer/react `Banner`](https://primer.style/product/components/b
 | `secondary-action`        | `callback`      | Secondary button click.                                                                                                                                                                                                                                           |
 | `actions-trailing`        | `bool`          | Default **`false`**. When **`true`** and at least one action label is set, primary/secondary render in the **top** row after the text column (text stretches; buttons stay right of the copy). When **`false`**, actions stay in a row **below** the description. |
 
-Default leading icons live under `app/src/assets/16px/` (`stop`, `info`, `circle-check`, `alert`, and `x` for dismiss). In-app examples: **Primer gallery** view (sidebar palette icon).
+Default leading icons live under `app/src/assets/16px/` (`stop`, `info`, `circle-check`, `alert`, and `x` for dismiss). Examples: **standalone gallery** (`pnpm dev:gallery` from the repo root — **Feedback** group).
 
 **Actions layout:** Default: actions in a row **below** the description (`column-gap` = `LayoutTokens.banner-actions-gap`). Set **`actions-trailing: true`** for a full-width notice row (GitHub-style review banners). React **`actionsLayout`** (`default` / `inline` / `stacked`) is only partially reflected (stacked = default; trailing ≈ inline end).
 
@@ -79,7 +79,7 @@ Slint port of the Primer product [**Label**](https://primer.style/product/compon
 | `variant` | `LabelVariant` | `default`, `primary`, `secondary`, `accent`, `success`, `attention`, `severe`, `danger`, `done`, `sponsors` (matches React). |
 | `size`    | `LabelSize`    | `small` or `large` (React `small` / `large`; distinct from **Button** `Size`).                                               |
 
-Colors resolve through **`LabelTokens`**; **`Label/logic.slint`** maps `variant` → token. Examples: **Primer gallery** (sidebar palette icon), **Misc** tab.
+Colors resolve through **`LabelTokens`**; **`Label/logic.slint`** maps `variant` → token. Examples: **standalone gallery** (`pnpm dev:gallery` — **Feedback** group).
 
 ## LabelGroup
 
@@ -91,7 +91,7 @@ Slint port of Primer [**LabelGroup**](https://primer.style/product/components/la
 | -------- | ------------------ | -------------------------------------------------------------------------------- |
 | `items`  | `[LabelGroupItem]` | Each entry has `text`, `variant` (**`LabelVariant`**), `size` (**`LabelSize`**). |
 
-Examples: **Primer gallery**, **Misc** tab (**LabelGroup** subsection).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Feedback** group).
 
 ## Checkbox
 
@@ -107,7 +107,7 @@ Slint port of Primer [**Checkbox**](https://primer.style/product/components/chec
 
 **Imports for views:** [`primer.slint`](primer.slint) — **`Checkbox`**, **`Icons`** (as needed).
 
-Examples: **Primer gallery**, **Misc** tab.
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
 
 ## CheckboxGroup
 
@@ -126,13 +126,13 @@ Slint port of Primer [**CheckboxGroup**](https://primer.style/product/components
 
 **Imports for views:** [`primer.slint`](primer.slint) — **`CheckboxGroup`**, **`Checkbox`**, **`ValidationStatus`**, **`Icons`**.
 
-Examples: **Primer gallery**, **Misc** tab.
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
 
 ## DataTable
 
 Slint port of Primer [**DataTable**](https://primer.style/product/components/data-table/) (tabular rows driven by a column model). Upstream: [`DataTable.tsx`](https://github.com/primer/react/blob/main/packages/react/src/DataTable/DataTable.tsx) and [`Table.module.css`](https://github.com/primer/react/blob/main/packages/react/src/DataTable/Table.module.css).
 
-**In this port:** **`DataTableCell`** per column (`text` plain body copy, **`label`** renders **Label**, **`iconText`** renders a leading **16px** icon + body text, **`action`** renders a small **IconButton**); **`sort-toggled`** reports header activation; **`row-clicked(row-id)`** fires when a body row is activated outside an **`action`** **IconButton**; **`row-action(row-id, column-id, action-id)`** fires when an **`action`** cell’s button is clicked (**`action-id`** is that cell’s **`text`**). See **Misc** gallery demo. **`TableContainer`** (title, subtitle, table-level actions) is in [`DataTable/table-container.slint`](DataTable/table-container.slint). **Not** ported: **`TableSkeleton`**, responsive column widths, rich `renderCell` content, or horizontal scroll parity.
+**In this port:** **`DataTableCell`** per column (`text` plain body copy, **`label`** renders **Label**, **`iconText`** renders a leading **16px** icon + body text, **`action`** renders a small **IconButton**); **`sort-toggled`** reports header activation; **`row-clicked(row-id)`** fires when a body row is activated outside an **`action`** **IconButton**; **`row-action(row-id, column-id, action-id)`** fires when an **`action`** cell’s button is clicked (**`action-id`** is that cell’s **`text`**). See **standalone gallery** (`pnpm dev:gallery` — **Data** group). **`TableContainer`** (title, subtitle, table-level actions) is in [`DataTable/table-container.slint`](DataTable/table-container.slint). **Not** ported: **`TableSkeleton`**, responsive column widths, rich `renderCell` content, or horizontal scroll parity.
 
 **Layout:** The header row and each body row are separate [`HorizontalLayout`](https://docs.slint.dev/) slices, so flex is solved **per row** unless you tie columns together. This component keeps header and body aligned by applying the **same per-column** `horizontal-stretch`, `min-width`, `preferred-width` (zero for flexible columns so width is not driven by text), and `max-width` on the cells in column _i_, following the same idea as Slint’s material [`StandardTableView`](https://github.com/slint-ui/slint/blob/master/internal/compiler/widgets/material/tableview.slint) (`TableViewColumn` / `TableViewCell`). A single [`GridLayout`](https://docs.slint.dev/) would share column tracks across all rows, but **nested repeaters inside `GridLayout`** (`for each row: Row { for each cell: … }`) have triggered an interpreter panic in `slint-ui`, so that approach is not used here until the toolchain supports it. See the Slint reference for **HorizontalLayout** and **GridLayout** behavior (stretch, min/preferred/max width).
 
@@ -150,7 +150,7 @@ Slint port of Primer [**DataTable**](https://primer.style/product/components/dat
 
 **Imports for views (building `columns` / `rows`):** Prefer [`primer.slint`](primer.slint) — **`DataTable`**, **`DataTableCell`**, **`DataTableCellKind`**, **`DataTableColumn`**, **`DataTableRow`**, **`DataTableCellAlign`**, **`DataTableCellPadding`**, **`DataTableSortDirection`**, **`TableContainer`**, **`LabelVariant`**, **`LabelSize`**, **`ButtonVariant`**, **`Size`**. For **`TableContainer`** toolbar buttons, set **`primary-action-label`** / **`secondary-action-label`** and **`action-size`** as needed. Each **`DataTableCell`** needs **`icon`**: use **`@image-url(...)`** for **`iconText`** and **`action`** cells; for **`text`** / **`label`** cells pass any placeholder **`image`** (it is not drawn). **`DataTable`** instantiates **Label** and **IconButton** internally — import those only if you use them outside the table.
 
-Examples: **Primer gallery**, **Misc** tab (**DataTable** + **Pagination** subsections).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Data** group).
 
 ## TableContainer
 
@@ -192,7 +192,7 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 **Imports for views:** [`primer.slint`](primer.slint) — **`Select`**, **`SelectPanel`**, **`SelectOption`**, **`ValidationStatus`**.
 
-Examples: **Primer gallery**, **Misc** tab (**Select** and **SelectPanel** subsections); **Project board** import dialog (**SelectPanel** for org repositories).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group); **Project board** import dialog in github-app (**SelectPanel** for org repositories).
 
 ## Pagination
 
@@ -210,7 +210,7 @@ Table footer pagination aligned with Primer **DataTable** toolbar **`Pagination`
 
 **Imports for views:** Prefer [`primer.slint`](primer.slint) — **`Pagination`**. Compose it **below** **`TableContainer`** / **`DataTable`** when paging row models in the parent (parent slices **`rows`** and updates **`page-index`**).
 
-Examples: **Primer gallery**, **Misc** tab (**DataTable** with footer **Pagination**, plus standalone **Pagination** demos).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Data** group).
 
 ## Caution:
 
