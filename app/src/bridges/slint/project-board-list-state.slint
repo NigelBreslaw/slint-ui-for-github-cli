@@ -22,12 +22,17 @@ export global ProjectBoardListState {
     callback project-board-list-view-exited;
     callback project-board-list-refresh;
     callback project-board-list-open-row-url(string);
+    callback project-board-page-changed(int);
 
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";
     in-out property <string> items-load-status: "";
     /** Row count for empty-state copy (`board-rows-model` length is not always visible in Slint). */
     in-out property <int> board-items-count: 0;
+    /** 0-based page index for `board-data-table-rows` (paged slice of the full board). */
+    in-out property <int> board-page-index: 0;
+    /** Rows per page — set from the Node bridge (`main.ts`) and bound to `Pagination`. */
+    in property <int> board-page-size: 25;
     in-out property <[ProjectBoardListRow]> board-rows-model;
     /** `DataTable` rows mirroring `board-rows-model` (bridge-built; for PR9 `DataTable` UI). Row **`id`** is the item URL. */
     in-out property <[DataTableRow]> board-data-table-rows;

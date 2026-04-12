@@ -7,7 +7,10 @@ import type {
   SlintTimeReportingWeekRow,
   TimeReportingStateHandle,
 } from "../../bridges/node/slint-interface.ts";
-import { applyProjectBoardListToWindow } from "../project-board/apply-project-board-list-to-window.ts";
+import {
+  applyProjectBoardListToWindow,
+  clearProjectBoardPagingCache,
+} from "../project-board/apply-project-board-list-to-window.ts";
 import { hydrateProjectBoardListLabelsFromKv } from "../project-board/hydrate-project-board-list-from-kv.ts";
 import {
   buildFilteredProjectsModel,
@@ -152,6 +155,7 @@ export async function reloadProjectV2ItemsIntoCacheAndUi(
   });
   const res = await fetchAllProjectV2ItemsGraphql(nodeId);
   if (!res.ok) {
+    clearProjectBoardPagingCache();
     assignProperties(window.TimeReportingState, {
       items_load_status: res.error,
       week_rows_model: new slint.ArrayModel<SlintTimeReportingWeekRow>([]),
@@ -166,6 +170,7 @@ export async function reloadProjectV2ItemsIntoCacheAndUi(
       board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
       board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
       board_items_count: 0,
+      board_page_index: 0,
     });
     return;
   }

@@ -187,10 +187,13 @@ export type ProjectBoardListStateHandle = {
   project_board_list_view_exited: () => void;
   project_board_list_refresh: () => void;
   project_board_list_open_row_url: (url: string) => void;
+  project_board_page_changed: (page_index: number) => void;
   has_selected_project: boolean;
   selected_project_label: string;
   items_load_status: string;
   board_items_count: number;
+  board_page_index: number;
+  board_page_size: number;
   board_rows_model: slint.ArrayModel<SlintProjectBoardListRow>;
   board_data_table_rows: slint.ArrayModel<SlintDataTableRow>;
 };

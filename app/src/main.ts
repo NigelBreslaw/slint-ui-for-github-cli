@@ -28,6 +28,7 @@ import type {
   SlintTimeReportingWeekRow,
 } from "./bridges/node/slint-interface.ts";
 import { authed, dashboardTab } from "./bridges/node/slint-interface.ts";
+import { DEFAULT_PROJECT_BOARD_PAGE_SIZE } from "./backend/project-board/apply-project-board-list-to-window.ts";
 import { buildProjectBoardListStateCallbacks } from "./backend/project-board/project-board-list-ui.ts";
 import { hydrateProjectBoardListLabelsFromKv } from "./backend/project-board/hydrate-project-board-list-from-kv.ts";
 import {
@@ -78,6 +79,8 @@ assignProperties(window.ProjectBoardListState, {
   board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
   board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
   board_items_count: 0,
+  board_page_index: 0,
+  board_page_size: DEFAULT_PROJECT_BOARD_PAGE_SIZE,
 });
 
 assignProperties(window.SettingsState, {

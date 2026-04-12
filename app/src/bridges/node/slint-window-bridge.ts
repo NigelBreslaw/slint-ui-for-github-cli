@@ -19,6 +19,7 @@ import type {
 } from "./slint-interface.ts";
 import { appView, dashboardTab } from "./slint-interface.ts";
 import { readSecurityAlertsRepositoryOwnerRepo } from "../../backend/settings/security-alerts-repo-kv.ts";
+import { clearProjectBoardPagingCache } from "../../backend/project-board/apply-project-board-list-to-window.ts";
 import { resetTimeReportingItemsState } from "../../backend/time-reporting/time-reporting-items-cache.ts";
 import { clearTimeReportingSelectedProjectKv } from "../../backend/time-reporting/time-reporting-selected-project-kv.ts";
 import {
@@ -144,11 +145,13 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
     detail_title: "",
     detail_body: "",
   });
+  clearProjectBoardPagingCache();
   assignProperties(window.ProjectBoardListState, {
     has_selected_project: false,
     selected_project_label: "",
     items_load_status: "",
     board_items_count: 0,
+    board_page_index: 0,
     board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
     board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
   });

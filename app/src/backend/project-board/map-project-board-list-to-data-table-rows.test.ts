@@ -41,6 +41,21 @@ describe("mapProjectBoardListRowsToDataTableRows", () => {
     assert.equal(out[0]!.cells[3]!.text, "#99");
   });
 
+  it("offsets the # column when rowIndexStart is non-zero (paging)", () => {
+    const rows = [
+      {
+        kind: projectBoardItemKind.issue,
+        state: "OPEN",
+        number: 1,
+        title: "A",
+        subtitle: "",
+        url: "https://github.com/o/r/issues/1",
+      },
+    ];
+    const out = mapProjectBoardListRowsToDataTableRows(rows, mockIcons(), 25);
+    assert.equal(out[0]!.cells[0]!.text, "26");
+  });
+
   it("uses Draft meta for draft issues", () => {
     const rows = [
       {

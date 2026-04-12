@@ -68,19 +68,22 @@ function dataTableCell(
 /**
  * Builds `DataTableRow` data for the project board (column order: `#`, Type, Title, Meta).
  * Row **`id`** is the issue/PR URL so `row-clicked` can open it in PR9.
+ * **`rowIndexStart`** — 0-based offset for the `#` column when showing a **slice** of a larger list (paging).
  */
 export function mapProjectBoardListRowsToDataTableRows(
   rows: ProjectBoardListRowTs[],
   icons: ProjectBoardDataTableIcons,
+  rowIndexStart: number = 0,
 ): SlintDataTableRow[] {
   const out: SlintDataTableRow[] = [];
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]!;
     const ph = icons.placeholder;
+    const displayIndex = rowIndexStart + i + 1;
     out.push({
       id: row.url,
       cells: [
-        dataTableCell(dataTableCellKind.text, String(i + 1), ph),
+        dataTableCell(dataTableCellKind.text, String(displayIndex), ph),
         dataTableCell(dataTableCellKind.iconText, kindLabel(row.kind), kindIcon(icons, row.kind)),
         dataTableCell(dataTableCellKind.text, row.title, ph),
         dataTableCell(dataTableCellKind.text, metaText(row), ph),

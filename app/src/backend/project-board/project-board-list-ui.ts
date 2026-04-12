@@ -8,7 +8,11 @@ import type {
 } from "../../bridges/node/slint-interface.ts";
 import { openUrlInBrowser } from "../utils/open-url.ts";
 import { reloadProjectV2ItemsIntoCacheAndUi } from "../time-reporting/time-reporting-ui.ts";
-import { applyProjectBoardListToWindow } from "./apply-project-board-list-to-window.ts";
+import {
+  applyProjectBoardListToWindow,
+  applyProjectBoardPageSliceToWindow,
+  clearProjectBoardPagingCache,
+} from "./apply-project-board-list-to-window.ts";
 import {
   getTimeReportingCachedItems,
   getTimeReportingCachedProjectNodeId,
@@ -23,6 +27,7 @@ export function buildProjectBoardListStateCallbacks(
       void (async () => {
         const stored = readTimeReportingSelectedProjectKv();
         if (stored === null) {
+          clearProjectBoardPagingCache();
           assignProperties(window.ProjectBoardListState, {
             has_selected_project: false,
             selected_project_label: "",
@@ -30,6 +35,7 @@ export function buildProjectBoardListStateCallbacks(
             board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
             board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
             board_items_count: 0,
+            board_page_index: 0,
           });
           return;
         }
@@ -64,6 +70,10 @@ export function buildProjectBoardListStateCallbacks(
       if (url.length > 0) {
         openUrlInBrowser(url);
       }
+    },
+
+    project_board_page_changed: (pageIndex: number) => {
+      applyProjectBoardPageSliceToWindow(window, pageIndex);
     },
   };
 }

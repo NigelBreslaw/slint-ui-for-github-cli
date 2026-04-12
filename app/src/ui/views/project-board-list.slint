@@ -5,6 +5,7 @@ import {
     DataTableCellKind,
     DataTableColumn,
     DataTableSortDirection,
+    Pagination,
     Spinner,
     TableContainer,
 } from "../Primer/primer.slint";
@@ -128,26 +129,43 @@ export component ProjectBoardList {
                     wrap: word-wrap;
                 }
 
-                if ProjectBoardListState.items-load-status == "" && ProjectBoardListState.board-items-count > 0: TableContainer {
+                if ProjectBoardListState.items-load-status == "" && ProjectBoardListState.board-items-count > 0: VerticalLayout {
                     width: 100%;
                     vertical-stretch: 1;
-                    min-height: 120px;
-                    title: ProjectBoardListState.selected-project-label;
-                    primary-action-label: "Refresh";
-                    primary-action => {
-                        ProjectBoardListState.project-board-list-refresh();
+                    spacing: 0;
+
+                    TableContainer {
+                        width: 100%;
+                        vertical-stretch: 1;
+                        min-height: 120px;
+                        title: ProjectBoardListState.selected-project-label;
+                        primary-action-label: "Refresh";
+                        primary-action => {
+                            ProjectBoardListState.project-board-list-refresh();
+                        }
+
+                        DataTable {
+                            width: 100%;
+                            columns: project-board-columns;
+                            rows: ProjectBoardListState.board-data-table-rows;
+                            sorted-column-id: "";
+                            sort-direction: DataTableSortDirection.none;
+                            sort-toggled(_cid, _dir) => { }
+                            row-action(_rid, _cid, _aid) => { }
+                            row-clicked(rid) => {
+                                ProjectBoardListState.project-board-list-open-row-url(rid);
+                            }
+                        }
                     }
 
-                    DataTable {
+                    Pagination {
                         width: 100%;
-                        columns: project-board-columns;
-                        rows: ProjectBoardListState.board-data-table-rows;
-                        sorted-column-id: "";
-                        sort-direction: DataTableSortDirection.none;
-                        sort-toggled(_cid, _dir) => { }
-                        row-action(_rid, _cid, _aid) => { }
-                        row-clicked(rid) => {
-                            ProjectBoardListState.project-board-list-open-row-url(rid);
+                        vertical-stretch: 0;
+                        total-count: ProjectBoardListState.board-items-count;
+                        page-size: ProjectBoardListState.board-page-size;
+                        page-index: ProjectBoardListState.board-page-index;
+                        page-changed(idx) => {
+                            ProjectBoardListState.project-board-page-changed(idx);
                         }
                     }
                 }
