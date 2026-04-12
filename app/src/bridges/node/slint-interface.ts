@@ -294,6 +294,8 @@ export type SlintIconsGlobal = {
   layout_grid: ImageData;
   palette: ImageData;
   sign_out: ImageData;
+  checkbox: ImageData;
+  checkbox_fill: ImageData;
 };
 
 export type MainWindowInstance = {
