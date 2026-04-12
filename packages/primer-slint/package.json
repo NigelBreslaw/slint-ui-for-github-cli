@@ -1,0 +1,7 @@
+{
+  "name": "primer-slint",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Primer design system components for Slint (consumed by github-app via workspace symlink app/src/ui/Primer → this folder). Slint is resolved from the github-app build."
+}

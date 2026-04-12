@@ -1,6 +1,6 @@
 ### A simplified version of Microsoft's Primer Design System written in Slint.
 
-Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and verification), [`component-imports.md`](component-imports.md) (which globals to use), and [`.cursor/skills/primer-port-orchestrator/SKILL.md`](../../../../.cursor/skills/primer-port-orchestrator/SKILL.md) (full porting procedure).
+Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and verification), [`component-imports.md`](component-imports.md) (which globals to use), and [`.cursor/skills/primer-port-orchestrator/SKILL.md`](../../.cursor/skills/primer-port-orchestrator/SKILL.md) (full porting procedure).
 
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.

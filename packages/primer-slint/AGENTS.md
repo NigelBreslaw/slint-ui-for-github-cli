@@ -2,14 +2,16 @@
 
 This document stands alone in the repo. Past chats or Cursor plan files are not a reliable archive; use **local upstream clones** and the files linked below when porting or extending components.
 
+**Location:** Library source lives in **`packages/primer-slint/`**. The **github-app** package imports it through a symlink **`app/src/ui/Primer`** → **`packages/primer-slint`** so existing Slint paths (`Primer/...`, `../Primer/...`) keep working.
+
 ## Purpose
 
-- **Audience:** Humans and AI assistants adding **Primer-style** UI in Slint under `app/src/ui/Primer/`.
+- **Audience:** Humans and AI assistants adding **Primer-style** UI in Slint under **`packages/primer-slint/`** (same tree as `app/src/ui/Primer/` in github-app).
 - **Goals:** Stay close to Primer naming and layering, avoid duplicating color literals across globals, keep `export global` declaration order valid for Slint, and ship changes in reviewable steps.
 
 ## Porting workflow
 
-**Procedure** (research → coverage matrix → token plan → interaction states → PRs) is spelled out in Cursor skills under [`.cursor/skills/`](../../../../.cursor/skills/) — start with [`primer-port-orchestrator/SKILL.md`](../../../../.cursor/skills/primer-port-orchestrator/SKILL.md). Those files are plain Markdown; you do not need Cursor to read them.
+**Procedure** (research → coverage matrix → token plan → interaction states → PRs) is spelled out in Cursor skills under [`.cursor/skills/`](../../.cursor/skills/) — start with [`primer-port-orchestrator/SKILL.md`](../../.cursor/skills/primer-port-orchestrator/SKILL.md). Those files are plain Markdown; you do not need Cursor to read them.
 
 **This document** is **reference only**: paths, token globals, imports index, verification, limitations. It does not duplicate the step-by-step porting playbook.
 
@@ -42,16 +44,16 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 
 ### Icons (`assets/icons.slint`)
 
-Single registry for bundled SVGs — see [`assets/icons.slint`](assets/icons.slint). **Full** naming rules, checklist for new icons, Banner usage, and TS bridge: [`primer-slint-icons-registry`](../../../../.cursor/skills/primer-slint-icons-registry/SKILL.md) skill.
+Single registry for bundled SVGs — see [`assets/icons.slint`](assets/icons.slint). **Full** naming rules, checklist for new icons, Banner usage, and TS bridge: [`primer-slint-icons-registry`](../../.cursor/skills/primer-slint-icons-registry/SKILL.md) skill.
 
 ## Adding design tokens
 
-Conventions: Primer-style **names** (`fgColor-*`, `bgColor-*`, …), **reuse** existing `out` properties before new literals, **one** primitive per shared color in **`PrimerColors`**, lengths in **`LayoutTokens`**, **scheme** on `out` where needed. **Workflow and audit table:** [`primer-slint-token-layers`](../../../../.cursor/skills/primer-slint-token-layers/SKILL.md) skill.
+Conventions: Primer-style **names** (`fgColor-*`, `bgColor-*`, …), **reuse** existing `out` properties before new literals, **one** primitive per shared color in **`PrimerColors`**, lengths in **`LayoutTokens`**, **scheme** on `out` where needed. **Workflow and audit table:** [`primer-slint-token-layers`](../../.cursor/skills/primer-slint-token-layers/SKILL.md) skill.
 
 ## Adding a new Primer component
 
 1. Find the closest **primer-ui-react** component and matching **primer-tokens** files.
-2. Add `app/src/ui/Primer/<Name>/` with a clear root `*.slint` (subfolders if needed).
+2. Add `packages/primer-slint/<Name>/` with a clear root `*.slint` (subfolders if needed) — also `app/src/ui/Primer/<Name>/` via symlink in github-app.
 3. **Imports:** see [**component-imports.md**](component-imports.md) for which globals each family uses.
 4. **Export** from [`primer.slint`](primer.slint) when part of the public surface.
 5. **Docs:** user-facing notes in [`readme.md`](readme.md); process stays here.
@@ -70,9 +72,9 @@ Small widgets may merge PR1+PR2; large work may split PR3.
 
 ## Implementation plans and PR breakdown tables
 
-Multi-PR **Primer** (or other UI) plans must include an **ordered** table: **PR**, **Title**, **Scope**, **Acceptance**; note dependencies and optional merges. See [`primer-port-orchestrator`](../../../../.cursor/skills/primer-port-orchestrator/SKILL.md) for planning context.
+Multi-PR **Primer** (or other UI) plans must include an **ordered** table: **PR**, **Title**, **Scope**, **Acceptance**; note dependencies and optional merges. See [`primer-port-orchestrator`](../../.cursor/skills/primer-port-orchestrator/SKILL.md) for planning context.
 
-**Executing** a multi-PR plan (one PR at a time, small chunks, user handles git, acceptance including `pnpm autofix`, `pnpm test`, and `pnpm dev` with a clean start): [`primer-port-pr-sequential`](../../../../.cursor/skills/primer-port-pr-sequential/SKILL.md).
+**Executing** a multi-PR plan (one PR at a time, small chunks, user handles git, acceptance including `pnpm autofix`, `pnpm test`, and `pnpm dev` with a clean start): [`primer-port-pr-sequential`](../../.cursor/skills/primer-port-pr-sequential/SKILL.md).
 
 **Long lists in views:** Use **`Pagination`** (`Pagination/pagination.slint`), page fields on the right Slint global (`ProjectBoardListState` / `AppState` in `bridges/slint/`), and TS **`apply…SliceToWindow`** helpers for **`ArrayModel`** slices.
 

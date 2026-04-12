@@ -7,6 +7,9 @@
     },
     "slint-bridge-kit": {
       "entry": ["src/index.ts", "src/**/*.test.ts"]
+    },
+    "primer-slint": {
+      "entry": []
     }
   }
 }
