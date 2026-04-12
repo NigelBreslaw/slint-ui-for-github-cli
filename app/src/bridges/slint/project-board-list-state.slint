@@ -87,7 +87,7 @@ export global ProjectBoardListState {
 
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";
-    /** Shown on the board after a full import success + successful reload (PR13); empty hides. Cleared when opening import again (PR14). */
+    /** Shown on the board after a full import success + successful reload (PR13); empty hides. Cleared when opening import again (PR14) or refreshing the board (PR15). */
     in-out property <string> board-import-success-message: "";
     in-out property <string> items-load-status: "";
     /** Row count for empty-state copy (`board-rows-model` length is not always visible in Slint). */

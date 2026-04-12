@@ -470,6 +470,7 @@ export function buildProjectBoardListStateCallbacks(
       if (stored === null) {
         return;
       }
+      assignProperties(window.ProjectBoardListState, { board_import_success_message: "" });
       void reloadProjectV2ItemsIntoCacheAndUi(window, stored.nodeId);
     },
 
