@@ -1,7 +1,12 @@
 // Primer DataTable — Table.module.css spacing/colors; sort headers + callback (primer/react DataTable onToggleSort).
-// Header and body use matching horizontal constraints per column (material StandardTableView pattern).
-// Flexible columns use preferred-width 0 so each row divides width evenly (not by text intrinsic size).
-// Nested repeaters inside GridLayout are avoided — they panic the Slint interpreter (dynamic_item_tree repeater lookup).
+//
+// Layout lesson: header and body must share one *column width model*. Separate HorizontalLayouts per row each run flex
+// independently; we align columns by binding the same per-index constraints on header and body cells (horizontal-stretch,
+// min-width, preferred-width — 0 for flexible columns so text does not set column width — and max-width), mirroring
+// material StandardTableView in the Slint repo: internal/compiler/widgets/material/tableview.slint (TableViewColumn / TableViewCell).
+// Slint docs: HorizontalLayout and GridLayout (stretch, min/preferred/max). A single GridLayout would unify column tracks,
+// but nested repeaters in GridLayout (for rows × for cells) have panicked the interpreter (dynamic_item_tree repeater lookup);
+// see Primer readme.md DataTable "Layout" paragraph.
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     DataTableCellAlign,

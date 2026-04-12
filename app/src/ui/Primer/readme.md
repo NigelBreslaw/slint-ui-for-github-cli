@@ -96,9 +96,11 @@ Slint port of Primer [**DataTable**](https://primer.style/product/components/dat
 
 **In this port:** String cells per row; **`sort-toggled`** reports header activation — the view or bridge **reorders `rows`** and updates **`sorted-column-id`** / **`sort-direction`** (see **Misc** gallery demo: sort state only, static rows). **Not** ported: `TableContainer` / title / subtitle / actions chrome, **`TableSkeleton`**, responsive column widths, rich `renderCell` content, or horizontal scroll parity.
 
+**Layout:** The header row and each body row are separate [`HorizontalLayout`](https://docs.slint.dev/) slices, so flex is solved **per row** unless you tie columns together. This component keeps header and body aligned by applying the **same per-column** `horizontal-stretch`, `min-width`, `preferred-width` (zero for flexible columns so width is not driven by text), and `max-width` on the cells in column *i*, following the same idea as Slint’s material [`StandardTableView`](https://github.com/slint-ui/slint/blob/master/internal/compiler/widgets/material/tableview.slint) (`TableViewColumn` / `TableViewCell`). A single [`GridLayout`](https://docs.slint.dev/) would share column tracks across all rows, but **nested repeaters inside `GridLayout`** (`for each row: Row { for each cell: … }`) have triggered an interpreter panic in `slint-ui`, so that approach is not used here until the toolchain supports it. See the Slint reference for **HorizontalLayout** and **GridLayout** behavior (stretch, min/preferred/max width).
+
 | Property           | Type                         | Notes                                                                         |
 | ------------------ | ---------------------------- | ----------------------------------------------------------------------------- |
-| `columns`          | `[DataTableColumn]`          | `header`, `id`, `sortable`, `align` (**`DataTableCellAlign`**), `row-header`. |
+| `columns`          | `[DataTableColumn]`          | `header`, `id`, `sortable`, `align` (**`DataTableCellAlign`**), `row-header`, `horizontal-stretch`, `min-width`, `width` (fixed column when ≥ 1px). |
 | `rows`             | `[DataTableRow]`             | `id`, `cells` (one string per column, same order as `columns`).               |
 | `cell-padding`     | **`DataTableCellPadding`**   | `condensed` / `normal` / `spacious`.                                          |
 | `sorted-column-id` | `string`                     | Active sort column id; empty if none.                                         |
