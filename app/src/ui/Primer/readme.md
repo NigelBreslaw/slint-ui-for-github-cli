@@ -18,6 +18,7 @@ specified in detail.
 - **ButtonTokens** — `color-btn-*`, `button-*`, action-list hover backgrounds, disabled fg, icon-button tints, and filled-button shadow colors (`button-shadow-*-light` / `button-shadow-*-dark`); composes from **PrimerColors** where possible.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
+- **CheckboxTokens** — unchecked rest/hover/pressed, checked/indeterminate accent fill + hover/active, and disabled colors; composes from **PrimerColors** and **ButtonTokens**. **`LayoutTokens.checkbox-border-radius`** matches Primer **`borderRadius-small`** (2px).
 
 Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). **Label** uses **LabelTokens** and **LayoutTokens**; variant mapping is implemented in [`Label/logic.slint`](Label/logic.slint). **LabelGroup** composes **Label** + **LayoutTokens** only (see [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint)). **DataTable** composes **LayoutTokens** + **PrimerColors** (see [`DataTable/data-table.slint`](DataTable/data-table.slint)); body cells use **Label**, **Image**, and **IconButton** for **`label`** / **`iconText`** / **`action`** kinds. **`TableContainer`** composes **Button** for the title/toolbar (see [`DataTable/table-container.slint`](DataTable/table-container.slint)). Sort icons use `@image-url` assets under `app/src/assets/16px/`. **Banner** action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
 
@@ -89,6 +90,41 @@ Slint port of Primer [**LabelGroup**](https://primer.style/product/components/la
 | `items`  | `[LabelGroupItem]` | Each entry has `text`, `variant` (**`LabelVariant`**), `size` (**`LabelSize`**). |
 
 Examples: **Primer gallery**, **Misc** tab (**LabelGroup** subsection).
+
+## Checkbox
+
+Slint port of Primer [**Checkbox**](https://primer.style/product/components/checkbox/). Upstream: primer-ui-react **`Checkbox.module.css`** — 16px control, **`borderRadius-small`**, **`control-checked-bgColor-rest`** when checked or indeterminate (accent fill + on-emphasis mark).
+
+| Property           | Type            | Notes                                                                       |
+| ------------------ | --------------- | --------------------------------------------------------------------------- |
+| `checked`          | `bool` (in-out) | Checked state.                                                              |
+| `indeterminate`    | `bool` (in-out) | When true, shows a dash; first click sets checked and clears indeterminate. |
+| `disabled`         | `bool`          | Disables interaction; uses disabled palette (including checked-disabled).   |
+| `label`            | `string`        | Optional label; hit target covers the row.                                  |
+| `toggled`          | `callback`      | Fires after a click changes state.                                          |
+
+**Imports for views:** [`primer.slint`](primer.slint) — **`Checkbox`**, **`Icons`** (as needed).
+
+Examples: **Primer gallery**, **Misc** tab.
+
+## CheckboxGroup
+
+Slint port of Primer [**CheckboxGroup**](https://primer.style/product/components/checkbox-group/) (fieldset-style stack). Upstream: React compound API (legend, caption, validation).
+
+| Property                | Type                   | Notes                                                                                                             |
+| ----------------------- | ---------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| `label`                 | `string`               | Legend; hidden when **`label-visually-hidden`** is true (no separate a11y tree in Slint).                         |
+| `label-visually-hidden` | `bool`                 | Skips visible legend; **`caption`** can still show.                                                               |
+| `caption`               | `string`               | Muted helper below the legend.                                                                                    |
+| `required`              | `bool`                 | Shows a red **`*`** next to the legend when visible.                                                              |
+| `disabled`              | `bool`                 | Dims the checkbox stack; set each child **`Checkbox`**’s **`disabled`** to the same value so toggling is blocked. |
+| `validation-status`     | **`ValidationStatus`** | **`none`**, **`error`**, **`success`** (same enum as **Select**).                                                 |
+| `validation-message`    | `string`               | Shown when **`validation-status`** is not **`none`**.                                                             |
+| `children`              | `@children`            | Place **`Checkbox`** instances here.                                                                              |
+
+**Imports for views:** [`primer.slint`](primer.slint) — **`CheckboxGroup`**, **`Checkbox`**, **`ValidationStatus`**, **`Icons`**.
+
+Examples: **Primer gallery**, **Misc** tab.
 
 ## DataTable
 

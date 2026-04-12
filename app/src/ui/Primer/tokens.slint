@@ -53,8 +53,8 @@ export global LayoutTokens {
     out property <length> iconButton-icon-size-large: 18px;
 
     out property <length> borderRadius-medium: 6px;
-    // Checkbox control box (~0.25rem); primer-ui-react Checkbox
-    out property <length> checkbox-border-radius: 4px;
+
+    out property <length> checkbox-border-radius: 3px;
 
     // Banner (Banner.module.css padding / icon box; legacy-theme base-size-8 / base-size-4 / base-size-20 / base-size-16)
     out property <length> banner-padding-default: 8px;
@@ -521,11 +521,11 @@ export global LabelTokens {
     out property <color> label-border-sponsors: PrimerColors.bgColor-sponsors-emphasis;
 }
 
-// Checkbox.module.css — control hit target + focus ring; composes from PrimerColors and ButtonTokens (disabled fg).
+// Checkbox.module.css — unchecked: control border/bg; checked/indeterminate: --control-checked-bgColor-rest (accent emphasis) + fgOnEmphasis mark; composes from PrimerColors and ButtonTokens.
 export global CheckboxTokens {
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
-    // Match ButtonTokens action-list active overlay (pressed) for parity with other controls.
+    // Unchecked pressed overlay (matches prior control parity).
     property <color> checkbox-bgColor-active-light: rgba(208, 215, 222, 0.48);
     property <color> checkbox-bgColor-active-dark: rgba(177, 186, 196, 0.2);
 
@@ -534,9 +534,31 @@ export global CheckboxTokens {
     out property <color> checkbox-bgColor-active: color-scheme == ColorScheme.dark ? checkbox-bgColor-active-dark : checkbox-bgColor-active-light;
 
     out property <color> checkbox-borderColor-rest: PrimerColors.borderColor-default;
-    out property <color> checkbox-borderColor-checked: PrimerColors.borderColor-success-emphasis;
 
-    out property <color> checkbox-borderColor-focus: PrimerColors.fgColor-link;
+    // &:checked, &:indeterminate — background + border match (Primer uses control-checked-bgColor-rest for both).
+    out property <color> checkbox-bgColor-checked: PrimerColors.bgColor-accent-emphasis;
+    out property <color> checkbox-borderColor-checked: PrimerColors.bgColor-accent-emphasis;
+
+    property <color> checkbox-bgColor-checked-hover-light: #0550ae;
+    property <color> checkbox-bgColor-checked-hover-dark: #388bfd;
+    out property <color> checkbox-bgColor-checked-hover: color-scheme == ColorScheme.dark ? checkbox-bgColor-checked-hover-dark : checkbox-bgColor-checked-hover-light;
+
+    property <color> checkbox-bgColor-checked-active-light: #044289;
+    property <color> checkbox-bgColor-checked-active-dark: #2d79f7;
+    out property <color> checkbox-bgColor-checked-active: color-scheme == ColorScheme.dark ? checkbox-bgColor-checked-active-dark : checkbox-bgColor-checked-active-light;
+
+    out property <color> checkbox-borderColor-checked-hover: checkbox-bgColor-checked-hover;
+    out property <color> checkbox-borderColor-checked-active: checkbox-bgColor-checked-active;
+
+    property <color> checkbox-bgColor-checked-disabled-light: #8c959f;
+    property <color> checkbox-bgColor-checked-disabled-dark: #6e7681;
+    out property <color> checkbox-bgColor-checked-disabled: color-scheme == ColorScheme.dark ? checkbox-bgColor-checked-disabled-dark : checkbox-bgColor-checked-disabled-light;
+
+    out property <color> checkbox-borderColor-checked-disabled: checkbox-bgColor-checked-disabled;
+
+    property <color> checkbox-fgColor-checked-disabled-light: rgba(255, 255, 255, 0.8);
+    property <color> checkbox-fgColor-checked-disabled-dark: rgba(255, 255, 255, 0.5);
+    out property <color> checkbox-fgColor-checked-disabled: color-scheme == ColorScheme.dark ? checkbox-fgColor-checked-disabled-dark : checkbox-fgColor-checked-disabled-light;
 
     out property <color> checkbox-iconColor-unchecked: PrimerColors.fgColor-default;
     out property <color> checkbox-iconColor-checked: PrimerColors.fgOnEmphasis;

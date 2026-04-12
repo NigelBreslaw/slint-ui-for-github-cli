@@ -76,7 +76,10 @@ function mergeCandidatePages(
   return [...existing, ...page].sort((x, y) => compareUpdatedAtDesc(x.updatedAt, y.updatedAt));
 }
 
-function filterCandidatesBySearch(rows: readonly RepoCandidateRow[], query: string): RepoCandidateRow[] {
+function filterCandidatesBySearch(
+  rows: readonly RepoCandidateRow[],
+  query: string,
+): RepoCandidateRow[] {
   const s = query.trim().toLowerCase();
   if (s === "") {
     return [...rows];
@@ -91,7 +94,10 @@ function filterCandidatesBySearch(rows: readonly RepoCandidateRow[], query: stri
   });
 }
 
-function toSlintImportCandidateRow(r: RepoCandidateRow, selected: boolean): SlintImportCandidateRow {
+function toSlintImportCandidateRow(
+  r: RepoCandidateRow,
+  selected: boolean,
+): SlintImportCandidateRow {
   return {
     node_id: r.nodeId,
     kind: r.kind === "issue" ? projectBoardItemKind.issue : projectBoardItemKind.pullRequest,
@@ -338,11 +344,15 @@ export function buildProjectBoardListStateCallbacks(
           return;
         }
         assignProperties(window.ProjectBoardListState, { import_candidates_load_more_busy: true });
-        const page = await fetchRepoCandidatesPageGraphql(importCandidatesOwner, importCandidatesRepo, {
-          first: 100,
-          issuesAfter: importCandidatesIssuesCursor,
-          pullRequestsAfter: importCandidatesPrsCursor,
-        });
+        const page = await fetchRepoCandidatesPageGraphql(
+          importCandidatesOwner,
+          importCandidatesRepo,
+          {
+            first: 100,
+            issuesAfter: importCandidatesIssuesCursor,
+            pullRequestsAfter: importCandidatesPrsCursor,
+          },
+        );
         assignProperties(window.ProjectBoardListState, { import_candidates_load_more_busy: false });
         if (!page.ok) {
           assignProperties(window.ProjectBoardListState, {

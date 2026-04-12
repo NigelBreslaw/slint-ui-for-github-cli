@@ -6,6 +6,8 @@ import {
     Button,
     ButtonAlignContent,
     ButtonVariant,
+    Checkbox,
+    CheckboxGroup,
     CounterLabel,
     CounterLabelVariant,
     DataTable,
@@ -77,6 +79,13 @@ export component PrimerGallery {
     private property <int> demo-pagination-page-index: 0;
     private property <int> demo-pagination-page-index-prevnext: 0;
     private property <int> demo-pagination-page-index-short: 0;
+
+    private property <bool> demo-cb-off: false;
+    private property <bool> demo-cb-on: true;
+    private property <bool> demo-cb-label: false;
+    private property <bool> demo-cb-indet: true;
+    private property <bool> demo-cg-opt1: false;
+    private property <bool> demo-cg-opt2: true;
 
     private property <int> gallery-tab-index: 3;
     private property <[UnderlineNavItem]> gallery-section-tabs: [
@@ -695,6 +704,151 @@ export component PrimerGallery {
                                 validation-status: ValidationStatus.success;
                                 validation-message: "Static gallery model.";
                                 selected-changed(_idx) => {
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "Checkbox";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Single 16px control (matches Primer); optional label, indeterminate (click resolves to checked), and optional leading icon.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            HorizontalLayout {
+                                spacing: 16px;
+                                alignment: start;
+
+                                VerticalLayout {
+                                    spacing: 4px;
+                                    alignment: start;
+
+                                    Text {
+                                        text: "Unchecked";
+                                        font-size: 12px;
+                                        color: PrimerColors.fgColor-muted;
+                                    }
+
+                                    Checkbox {
+                                        checked <=> demo-cb-off;
+                                    }
+                                }
+
+                                VerticalLayout {
+                                    spacing: 4px;
+                                    alignment: start;
+
+                                    Text {
+                                        text: "Checked";
+                                        font-size: 12px;
+                                        color: PrimerColors.fgColor-muted;
+                                    }
+
+                                    Checkbox {
+                                        checked <=> demo-cb-on;
+                                    }
+                                }
+                            }
+
+                            Checkbox {
+                                width: 100%;
+                                label: "Send email notifications";
+                                checked <=> demo-cb-label;
+                            }
+
+                            Checkbox {
+                                width: 100%;
+                                label: "Indeterminate (first click checks)";
+                                checked: false;
+                                indeterminate <=> demo-cb-indet;
+                            }
+
+                            Checkbox {
+                                width: 100%;
+                                label: "Leading icon + label";
+                                checked: true;
+                            }
+
+                            Text {
+                                text: "CheckboxGroup";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Legend, caption, required asterisk, validation, disabled dimming (mirror disabled on each Checkbox), and visually hidden legend.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            CheckboxGroup {
+                                width: 100%;
+                                label: "Features";
+                                caption: "Choose one or more options.";
+                                required: true;
+                                validation-status: !demo-cg-opt1 && !demo-cg-opt2 ? ValidationStatus.error : ValidationStatus.success;
+                                validation-message: !demo-cg-opt1 && !demo-cg-opt2 ? "Pick at least one." : "Looks good.";
+
+                                Checkbox {
+                                    width: 100%;
+                                    label: "Option A";
+                                    checked <=> demo-cg-opt1;
+                                }
+
+                                Checkbox {
+                                    width: 100%;
+                                    label: "Option B";
+                                    checked <=> demo-cg-opt2;
+                                }
+                            }
+
+                            CheckboxGroup {
+                                width: 100%;
+                                label: "Disabled group";
+                                disabled: true;
+
+                                Checkbox {
+                                    width: 100%;
+                                    label: "Cannot toggle";
+                                    disabled: true;
+                                    checked: false;
+                                }
+
+                                Checkbox {
+                                    width: 100%;
+                                    label: "Also off";
+                                    disabled: true;
+                                    checked: true;
+                                }
+                            }
+
+                            CheckboxGroup {
+                                width: 100%;
+                                label: "Screen-reader legend (hidden in UI)";
+                                label-visually-hidden: true;
+                                caption: "Legend text is not shown; caption remains.";
+
+                                Checkbox {
+                                    width: 100%;
+                                    label: "Alpha";
+                                }
+
+                                Checkbox {
+                                    width: 100%;
+                                    label: "Beta";
                                 }
                             }
                         }
