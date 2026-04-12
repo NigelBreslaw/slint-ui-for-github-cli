@@ -20,7 +20,7 @@ Also see the public docs: [Primer Design System](https://primer.style/design/sys
 
 ## In-repo architecture
 
-- **Barrel:** [`primer.slint`](primer.slint) re-exports Primer components plus `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `BannerTokens`, `LabelTokens`, and `Size`.
+- **Barrel:** [`primer.slint`](primer.slint) re-exports Primer components plus `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `BannerTokens`, `LabelTokens`, and `Size`. **DataTable** / **`TableContainer`** types and related enums live in the same barrel: **`DataTableCell`**, **`DataTableCellKind`**, **`DataTableColumn`**, **`DataTableRow`**, **`DataTableCellAlign`**, **`DataTableCellPadding`**, **`DataTableSortDirection`**, **`TableContainer`**, **`LabelVariant`**, **`LabelSize`**, **`IconButtonVariant`**, **`ButtonVariant`**. When adding new model fields or exports, update [`readme.md`](readme.md) (DataTable **Imports for views**).
 - **Tokens:** [`tokens.slint`](tokens.slint) holds **several `export global` singletons** in one file. **Order matters:** declare `PrimerColors` before `ButtonTokens`, **`BannerTokens`**, and **`LabelTokens`**, because **`ButtonTokens`**, **`BannerTokens`**, and **`LabelTokens`** reference `PrimerColors` `out` properties only (no literals in `BannerTokens` / `LabelTokens`).
 
 ### Token layers (current convention)
@@ -77,24 +77,24 @@ flowchart TB
    - **CounterLabel** (pill): [`CounterLabel/counter-label.slint`](CounterLabel/counter-label.slint) — pass explicit colors from **`Button`**, or set **`use-primer-scheme`** with **`CounterLabelVariant`** for standalone **`PrimerColors`** (`bgColor-neutral-emphasis` / `neutral-muted`, **`counter-borderColor`**).
    - **Label** (product metadata chip): **`LabelTokens`** + **`LayoutTokens`** (see [`Label/label.slint`](Label/label.slint), [`Label/logic.slint`](Label/logic.slint)); not the same as **CounterLabel**.
    - **LabelGroup** (row of **Label** chips): **`Label`** + **`LayoutTokens`** only — [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint); no separate color global.
-   - **DataTable** (tabular layout + sort headers): **`LayoutTokens`** + **`PrimerColors`** — [`DataTable/data-table.slint`](DataTable/data-table.slint); sort icons via `@image-url` (`sort-asc` / `sort-desc` under `app/src/assets/16px/`); no separate color global.
-   - **TableContainer** (title, subtitle, table toolbar around **DataTable**): [`DataTable/table-container.slint`](DataTable/table-container.slint) — **`Button`** + **`LayoutTokens`** + **`PrimerColors`**; **`DataTable`** (or other content) via `@children`.
+   - **DataTable** (tabular layout + sort headers + typed body cells): [`DataTable/data-table.slint`](DataTable/data-table.slint) composes **`LayoutTokens`** + **`PrimerColors`**; embeds **`Label`** + **`LabelVariant`** / **`LabelSize`** from [`Label/types.slint`](Label/types.slint) for **`label`** cells; **`Image`** for **`icon_text`**; **`IconButton`** (**`IconButtonVariant.invisible`**, **`Size.small`**) for **`action`** cells. Models live in [`DataTable/types.slint`](DataTable/types.slint) (re-exported from [`primer.slint`](primer.slint)). Views fill **`columns`** / **`rows`** using barrel types plus **`LabelVariant`** / **`LabelSize`** when **`label`** cells appear; **`@image-url(...)`** supplies **`icon`** for **`icon_text`** / **`action`** (dummy **`icon`** for other kinds). Sort icons via `@image-url` (`sort-asc` / `sort-desc` under `app/src/assets/16px/`). No separate DataTable color global.
+   - **TableContainer** (title, subtitle, table toolbar around **DataTable**): [`DataTable/table-container.slint`](DataTable/table-container.slint) — **`Button`** + **`ButtonVariant`** + **`LayoutTokens`** + **`PrimerColors`** + **`Size`**; **`DataTable`** (or other content) via `@children`.
    - **Banner** (and similar product banners): **`BannerTokens`** + **`LayoutTokens`** + **`PrimerColors`** for default text fg (see [`Banner/banner.slint`](Banner/banner.slint)).
 4. **Export** new components from [`primer.slint`](primer.slint) when they are part of the public Primer surface for this app.
-5. **Docs** — User-facing notes go in [`readme.md`](readme.md). Process, tokens, and PR workflow stay in **this file** (`AGENTS.md`).
+5. **Docs** — User-facing notes go in [`readme.md`](readme.md) (for **DataTable**, include **Imports for views** when the barrel exports or cell model change). Process, tokens, and PR workflow stay in **this file** (`AGENTS.md`).
 
 ## Typical PR sequence for a new component
 
-Split or merge PRs by size; small widgets can combine steps.
+Split or merge PRs by size; small widgets can combine steps. **Stage numbers are illustrative** — large features (e.g. **DataTable**) may use a separate **Docs** PR at the end for `readme.md` + `AGENTS.md` import/architecture updates (see **DataTable** in [`readme.md`](readme.md)).
 
 
-| Stage                    | Focus                                                                                                                                                   |
-| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **PR1 — Spike / API**    | Component shell, properties, callbacks, minimal layout; must compile; PR description lists upstream paths you mirrored.                                 |
-| **PR2 — Tokens**         | New `LayoutTokens` / `PrimerColors` / `ButtonTokens` / `BannerTokens` entries; **deduplicate** literals; cite primer-tokens keys or CSS vars in the PR. |
-| **PR3 — Visual parity**  | Hover, disabled, focus, validation, sizing, shadows, typography; optional screenshots or Storybook references from primer-ui-react.                     |
-| **PR4 — Integration**    | Wire into `main.slint` or a view; TypeScript bridges if needed; avoid unrelated refactors.                                                              |
-| **PR5 — Docs / cleanup** | Update `readme.md` or focused comments; remove dead code; update `AGENTS.md` if the process or layers change.                                           |
+| Stage                       | Focus                                                                                                                                                   |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **PR1 — Spike / API**       | Component shell, properties, callbacks, minimal layout; must compile; PR description lists upstream paths you mirrored.                                 |
+| **PR2 — Tokens**            | New `LayoutTokens` / `PrimerColors` / `ButtonTokens` / `BannerTokens` entries; **deduplicate** literals; cite primer-tokens keys or CSS vars in the PR. |
+| **PR3 — Visual parity**     | Hover, disabled, focus, validation, sizing, shadows, typography; optional screenshots or Storybook references from primer-ui-react.                     |
+| **PR4 — Integration**       | Wire into `main.slint` or a view; TypeScript bridges if needed; avoid unrelated refactors.                                                              |
+| **Final — Docs / cleanup**  | Update [`readme.md`](readme.md) and this file when exports or imports change; remove dead code; adjust **Barrel** / **Imports** bullets if layers change. |
 
 
 Trivial components may merge PR1+PR2; large or risky work may split PR3 further.
