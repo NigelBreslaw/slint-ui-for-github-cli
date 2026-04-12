@@ -72,7 +72,11 @@ export type AppStateHandle = {
   projects_search: string;
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
+  projects_filtered_count: number;
+  projects_picker_page_index: number;
+  projects_picker_page_size: number;
   project_search_changed: (query: string) => void;
+  projects_picker_page_changed: (page_index: number) => void;
   window_geometry_changed: (width: number, height: number) => void;
   sign_out: () => void;
   sign_in: () => void;

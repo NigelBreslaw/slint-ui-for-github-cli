@@ -1,4 +1,6 @@
-import { ArrayModel } from "slint-ui";
+import * as slint from "slint-ui";
+import { assignProperties } from "slint-bridge-kit";
+import type { MainWindowInstance } from "../../bridges/node/slint-interface.ts";
 import type { ProjectV2NodeSnapshot } from "../schemas/gh-graphql-projectsv2-page.ts";
 import { fetchAllProjectsV2ForOrgGraphql } from "./graphql-projects-v2.ts";
 
@@ -39,6 +41,22 @@ function mapOpenBoardsToRows(nodes: readonly ProjectV2NodeSnapshot[]): SlintProj
   return rows;
 }
 
+/** Default page size for the time-reporting project picker; assigned to `AppState.projects_picker_page_size` at startup. */
+export const DEFAULT_PROJECT_PICKER_PAGE_SIZE = 25;
+
+function clampPageIndex(pageIndex: number, total: number, pageSize: number): number {
+  if (total <= 0) {
+    return 0;
+  }
+  const pageCount = Math.max(1, Math.ceil(total / pageSize));
+  return Math.max(0, Math.min(pageIndex, pageCount - 1));
+}
+
+function effectivePickerPageSize(window: MainWindowInstance): number {
+  const n = window.AppState.projects_picker_page_size;
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : DEFAULT_PROJECT_PICKER_PAGE_SIZE;
+}
+
 function filterProjectRows(rows: readonly SlintProjectRow[], query: string): SlintProjectRow[] {
   const q = query.trim().toLowerCase();
   if (q === "") {
@@ -52,6 +70,43 @@ function filterProjectRows(rows: readonly SlintProjectRow[], query: string): Sli
       r.url.toLowerCase().includes(q) ||
       r.id.toLowerCase().includes(q)
     );
+  });
+}
+
+/** Full filtered row list for **`query`** (search/filter); does not page. */
+function getFilteredProjectRows(query: string): SlintProjectRow[] {
+  const base = nodesCache === null ? [] : mapOpenBoardsToRows(nodesCache);
+  return filterProjectRows(base, query);
+}
+
+/**
+ * Updates **`projects_filtered_model`** to one page of results and syncs count / page index.
+ * **`searchQuery`** defaults to **`window.AppState.projects_search`**; pass the string from
+ * **`project_search_changed`** so the slice matches the query even if TS lags the Slint write.
+ */
+export function applyProjectPickerSliceToWindow(
+  window: MainWindowInstance,
+  pageIndex: number,
+  searchQuery?: string,
+): void {
+  const q = searchQuery ?? window.AppState.projects_search;
+  const rows = getFilteredProjectRows(q);
+  const pageSize = effectivePickerPageSize(window);
+  if (rows.length === 0) {
+    assignProperties(window.AppState, {
+      projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+      projects_filtered_count: 0,
+      projects_picker_page_index: 0,
+    });
+    return;
+  }
+  const idx = clampPageIndex(pageIndex, rows.length, pageSize);
+  const start = idx * pageSize;
+  const slice = rows.slice(start, start + pageSize);
+  assignProperties(window.AppState, {
+    projects_filtered_model: new slint.ArrayModel<SlintProjectRow>(slice),
+    projects_filtered_count: rows.length,
+    projects_picker_page_index: idx,
   });
 }
 
@@ -71,11 +126,6 @@ export async function refreshSlintUiOrgProjectsCache(): Promise<
   }
   nodesCache = res.value as ProjectV2NodeSnapshot[];
   return { ok: true, nodes: nodesCache };
-}
-
-export function buildFilteredProjectsModel(query: string): ArrayModel<SlintProjectRow> {
-  const base = nodesCache === null ? [] : mapOpenBoardsToRows(nodesCache);
-  return new ArrayModel(filterProjectRows(base, query));
 }
 
 /** Open org boards only; returns null if cache is empty or id is unknown. */

@@ -9,7 +9,8 @@ import { applyAuthUi, slintRunningCallback } from "./backend/auth/auth-ui-flow.t
 import { closeAppDb, openAppDb } from "./backend/db/app-db.ts";
 import { ghAuthLogout, spawnGhAuthLogin } from "./backend/gh/auth.ts";
 import {
-  buildFilteredProjectsModel,
+  applyProjectPickerSliceToWindow,
+  DEFAULT_PROJECT_PICKER_PAGE_SIZE,
   type SlintProjectRow,
 } from "./backend/gh/slint-ui-org-projects-ui.ts";
 import { copyTextToClipboard } from "./backend/utils/clipboard-write.ts";
@@ -67,6 +68,9 @@ const windowGeometryPersister = createMainWindowGeometryPersister(window);
 
 assignProperties(window.AppState, {
   projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+  projects_filtered_count: 0,
+  projects_picker_page_index: 0,
+  projects_picker_page_size: DEFAULT_PROJECT_PICKER_PAGE_SIZE,
   review_requests_model: new slint.ArrayModel<SlintReviewRequestRow>([]),
   security_alerts_model: new slint.ArrayModel<SlintSecurityAlertRow>([]),
 });
@@ -97,7 +101,10 @@ hydrateProjectBoardListLabelsFromKv(window);
 
 const appStateCallbacks = {
   project_search_changed: (query: string) => {
-    window.AppState.projects_filtered_model = buildFilteredProjectsModel(query);
+    applyProjectPickerSliceToWindow(window, 0, query);
+  },
+  projects_picker_page_changed: (pageIndex: number) => {
+    applyProjectPickerSliceToWindow(window, pageIndex);
   },
   open_project_url: (url: string) => {
     openUrlInBrowser(url);

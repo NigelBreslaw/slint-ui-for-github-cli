@@ -13,7 +13,7 @@ import {
 } from "../project-board/apply-project-board-list-to-window.ts";
 import { hydrateProjectBoardListLabelsFromKv } from "../project-board/hydrate-project-board-list-from-kv.ts";
 import {
-  buildFilteredProjectsModel,
+  applyProjectPickerSliceToWindow,
   findSlintUiOpenProjectRowByNodeId,
 } from "../gh/slint-ui-org-projects-ui.ts";
 import { fetchAllProjectV2ItemsGraphql } from "../gh/graphql-project-v2-items-all.ts";
@@ -333,8 +333,8 @@ export function buildTimeReportingStateCallbacks(
       closeTimeReportingDetail(window);
       assignProperties(window.AppState, {
         projects_search: "",
-        projects_filtered_model: buildFilteredProjectsModel(""),
       });
+      applyProjectPickerSliceToWindow(window, 0);
       openOptionalPicker(window);
       void refreshSlintUiOrgProjectsForWindow(window);
     },

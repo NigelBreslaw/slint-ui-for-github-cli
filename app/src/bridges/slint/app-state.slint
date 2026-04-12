@@ -90,7 +90,13 @@ export global AppState {
     in-out property <string> projects-search: "";
     in-out property <string> projects-load-status: "";
     in property <[ProjectRow]> projects-filtered-model;
+    /** Total rows matching the filter; `projects-filtered-model` holds one page. */
+    in-out property <int> projects-filtered-count: 0;
+    in-out property <int> projects-picker-page-index: 0;
+    /** Rows per page — set from the Node bridge (`main.ts`) and bound to picker `Pagination`. */
+    in property <int> projects-picker-page-size: 25;
     callback project_search_changed(string);
+    callback projects-picker-page-changed(int);
     callback window_geometry_changed(length, length);
     callback sign_in;
     callback sign-out;

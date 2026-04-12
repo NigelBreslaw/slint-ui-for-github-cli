@@ -124,6 +124,8 @@ The table should list **PRs in merge order** and include at least:
 
 Call out **dependencies** (e.g. “PR3 must follow PR2”) and **optional merges** (e.g. “PR2+PR3 may be one PR if small”). The **last row** of a plan may be a process-only PR (e.g. updating this `AGENTS.md`) when the plan itself introduces a new rule.
 
+**Long lists (app views, not only Primer):** When a view must not instantiate every row at once, use the shared **`Pagination`** component (`Pagination/pagination.slint`), expose **page size** and **page index** on the appropriate Slint global (see **`ProjectBoardListState`** / **`AppState`** in `bridges/slint/`), and keep a TypeScript **`apply…SliceToWindow`** helper that fills an **`ArrayModel`** slice from a cached or derived full list.
+
 ## Verification
 
 From the **monorepo root**:

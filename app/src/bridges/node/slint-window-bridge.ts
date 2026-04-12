@@ -1,7 +1,7 @@
 import * as slint from "slint-ui";
 import { assignProperties } from "slint-bridge-kit";
 import {
-  buildFilteredProjectsModel,
+  applyProjectPickerSliceToWindow,
   clearSlintUiOrgProjectsCache,
   refreshSlintUiOrgProjectsCache,
   type SlintProjectRow,
@@ -173,6 +173,8 @@ export function resetListsWithoutClearingProfile(window: MainWindowInstance): vo
     projects_search: "",
     projects_load_status: "",
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+    projects_filtered_count: 0,
+    projects_picker_page_index: 0,
   });
   teardownSettingsDebugPanel(window);
 }
@@ -212,6 +214,8 @@ export function clearUserIdentity(window: MainWindowInstance): void {
     projects_search: "",
     projects_load_status: "",
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+    projects_filtered_count: 0,
+    projects_picker_page_index: 0,
   });
   teardownSettingsDebugPanel(window);
 }
@@ -256,17 +260,19 @@ export async function refreshSlintUiOrgProjectsForWindow(
   assignProperties(window.AppState, {
     projects_load_status: "Loading projects…",
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+    projects_filtered_count: 0,
+    projects_picker_page_index: 0,
   });
   const res = await refreshSlintUiOrgProjectsCache();
   if (!res.ok) {
     assignProperties(window.AppState, {
       projects_load_status: res.error,
       projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+      projects_filtered_count: 0,
+      projects_picker_page_index: 0,
     });
     return;
   }
-  assignProperties(window.AppState, {
-    projects_load_status: "",
-    projects_filtered_model: buildFilteredProjectsModel(window.AppState.projects_search),
-  });
+  assignProperties(window.AppState, { projects_load_status: "" });
+  applyProjectPickerSliceToWindow(window, 0);
 }

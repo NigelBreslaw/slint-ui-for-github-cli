@@ -2,7 +2,7 @@ import { ListView } from "std-widgets.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
-import { Button, Spinner } from "../Primer/primer.slint";
+import { Button, Pagination, Spinner } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 
 export component TimeReporting {
@@ -467,45 +467,61 @@ export component TimeReporting {
                         }
                     }
 
-                    Rectangle {
-                        height: 220px;
+                    VerticalLayout {
                         width: 100%;
-                        background: PrimerColors.bgColor-neutral-muted;
-                        border-radius: 8px;
-                        border-width: 1px;
-                        border-color: PrimerColors.borderColor-muted;
+                        spacing: 0;
 
-                        ListView {
-                            width: parent.width - 2px;
-                            height: parent.height - 2px;
-                            x: 1px;
-                            y: 1px;
-                            for row[index] in AppState.projects-filtered-model: Rectangle {
-                                height: 52px;
-                                background: mod(index, 2) == 0 ? PrimerColors.bgColor-neutral-muted : PrimerColors.bgColor-canvas-subtle;
+                        Rectangle {
+                            height: 220px;
+                            width: 100%;
+                            background: PrimerColors.bgColor-neutral-muted;
+                            border-radius: 8px;
+                            border-width: 1px;
+                            border-color: PrimerColors.borderColor-muted;
 
-                                TouchArea {
-                                    clicked => {
-                                        TimeReportingState.time-reporting-project-chosen(row.id);
-                                    }
+                            ListView {
+                                width: parent.width - 2px;
+                                height: parent.height - 2px;
+                                x: 1px;
+                                y: 1px;
+                                for row[index] in AppState.projects-filtered-model: Rectangle {
+                                    height: 52px;
+                                    background: mod(index, 2) == 0 ? PrimerColors.bgColor-neutral-muted : PrimerColors.bgColor-canvas-subtle;
 
-                                    VerticalLayout {
-                                        padding: 8px;
-                                        spacing: 2px;
-                                        Text {
-                                            text: row.title;
-                                            color: PrimerColors.fgColor-default;
-                                            overflow: elide;
-                                            font-size: 14px;
+                                    TouchArea {
+                                        clicked => {
+                                            TimeReportingState.time-reporting-project-chosen(row.id);
                                         }
 
-                                        Text {
-                                            text: "#" + row.number + " · slint-ui";
-                                            font-size: 12px;
-                                            color: PrimerColors.fgColor-muted;
+                                        VerticalLayout {
+                                            padding: 8px;
+                                            spacing: 2px;
+                                            Text {
+                                                text: row.title;
+                                                color: PrimerColors.fgColor-default;
+                                                overflow: elide;
+                                                font-size: 14px;
+                                            }
+
+                                            Text {
+                                                text: "#" + row.number + " · slint-ui";
+                                                font-size: 12px;
+                                                color: PrimerColors.fgColor-muted;
+                                            }
                                         }
                                     }
                                 }
+                            }
+                        }
+
+                        if AppState.projects-filtered-count > 0: Pagination {
+                            width: 100%;
+                            vertical-stretch: 0;
+                            total-count: AppState.projects-filtered-count;
+                            page-size: AppState.projects-picker-page-size;
+                            page-index: AppState.projects-picker-page-index;
+                            page-changed(idx) => {
+                                AppState.projects-picker-page-changed(idx);
                             }
                         }
                     }
