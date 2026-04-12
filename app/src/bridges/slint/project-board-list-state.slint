@@ -51,7 +51,7 @@ export global ProjectBoardListState {
     callback project-board-import-candidates-select-all-on-page;
     /** Toggle checkbox for one candidate (`node-id`). */
     callback project-board-import-candidate-toggled(string);
-    /** Add checked candidates to the current Project V2 (`addProjectV2ItemById`, PR10). */
+    /** Add checked candidates to the current Project V2 (`addProjectV2ItemById`, PR10). Closes the dialog when every mutation succeeds (PR12). */
     callback project-board-import-add-selected-to-project;
 
     /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */

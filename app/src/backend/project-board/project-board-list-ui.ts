@@ -437,11 +437,16 @@ export function buildProjectBoardListStateCallbacks(
         importCandidateSelectedIds.clear();
         rebuildImportCandidateRowsModel(window);
         const msg = summarizeImportAddOutcomes(outcomes);
+        const fullSuccess = outcomes.length > 0 && outcomes.every((o) => o.ok);
         assignProperties(window.ProjectBoardListState, {
           import_add_selected_busy: false,
-          import_add_selected_message: msg,
+          import_add_selected_message: fullSuccess ? "" : msg,
         });
         await reloadProjectV2ItemsIntoCacheAndUi(window, stored.nodeId);
+        if (fullSuccess) {
+          clearImportReposUiState(window);
+          assignProperties(window.ProjectBoardListState, { import_dialog_open: false });
+        }
       })();
     },
 
