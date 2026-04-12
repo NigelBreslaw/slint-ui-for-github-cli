@@ -8,7 +8,7 @@ import {
     DataTableColumn,
     DataTableSortDirection,
     Pagination,
-    Select,
+    SelectPanel,
     Size,
     Spinner,
     TableContainer,
@@ -248,48 +248,27 @@ export component ProjectBoardList {
                         }
 
                         Text {
-                            text: "Filter by repository name";
+                            text: "Repository";
                             font-size: 12px;
                             font-weight: 600;
                             color: PrimerColors.fgColor-default;
                             wrap: word-wrap;
                         }
 
-                        Rectangle {
+                        SelectPanel {
                             width: 100%;
-                            height: 40px;
-                            background: PrimerColors.bgColor-neutral-muted;
-                            border-radius: 6px;
-                            border-width: 1px;
-                            border-color: PrimerColors.borderColor-muted;
-                            clip: true;
-
-                            TextInput {
-                                x: 10px;
-                                y: 0;
-                                width: parent.width - 20px;
-                                height: parent.height;
-                                read-only: ProjectBoardListState.import-repos-load-status != "";
-                                text: ProjectBoardListState.import-repos-search;
-                                font-size: 14px;
-                                color: PrimerColors.fgColor-default;
-                                edited => {
-                                    ProjectBoardListState.project-board-import-repos-search-changed(self.text);
-                                }
-                            }
-                        }
-
-                        Select {
-                            width: 100%;
-                            block: true;
-                            size: Size.medium;
-                            label-text: "Repository";
-                            placeholder: "Select a repository…";
-                            options: ProjectBoardListState.import-repo-select-options;
-                            option-count: ProjectBoardListState.import-repo-options-count;
+                            filter-text <=> ProjectBoardListState.import-repos-search;
+                            filter-placeholder: "Filter by name…";
+                            items: ProjectBoardListState.import-repo-select-options;
+                            item-count: ProjectBoardListState.import-repo-options-count;
                             selected-index <=> ProjectBoardListState.import-repo-selected-index;
+                            list-max-height: 200px;
+                            empty-message: "No repositories match your search.";
                             disabled: ProjectBoardListState.import-repos-load-status != ""
                                 || ProjectBoardListState.import-repo-options-count == 0;
+                            filter-changed(q) => {
+                                ProjectBoardListState.project-board-import-repos-search-changed(q);
+                            }
                             selected-changed(ix) => {
                                 ProjectBoardListState.project-board-import-repo-selected-changed(ix);
                             }

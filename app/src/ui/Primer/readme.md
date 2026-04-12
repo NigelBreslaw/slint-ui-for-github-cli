@@ -190,7 +190,7 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 **Imports for views:** [`primer.slint`](primer.slint) — **`Select`**, **`SelectPanel`**, **`SelectOption`**, **`ValidationStatus`**.
 
-Examples: **Primer gallery**, **Misc** tab (**Select** and **SelectPanel** subsections).
+Examples: **Primer gallery**, **Misc** tab (**Select** and **SelectPanel** subsections); **Project board** import dialog (**SelectPanel** for org repositories).
 
 ## Pagination
 
