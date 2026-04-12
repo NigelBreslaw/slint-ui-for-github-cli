@@ -1,0 +1,25 @@
+// Primer DataTable — column/row models (primer/react DataTable / column.ts; MVP: read-only, no sort UI).
+
+export enum DataTableCellPadding {
+    condensed,
+    normal,
+    spacious,
+}
+
+export enum DataTableCellAlign {
+    start,
+    end,
+}
+
+export struct DataTableColumn {
+    header: string,
+    id: string,
+    sortable: bool,
+    align: DataTableCellAlign,
+    row-header: bool,
+}
+
+export struct DataTableRow {
+    id: string,
+    cells: [string],
+}

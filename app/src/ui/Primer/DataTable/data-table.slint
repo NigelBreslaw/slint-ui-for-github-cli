@@ -1,0 +1,125 @@
+// Primer DataTable — read-only table (Table.module.css spacing/colors; sort UI deferred).
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
+import {
+    DataTableCellAlign,
+    DataTableCellPadding,
+    DataTableColumn,
+    DataTableRow,
+} from "./types.slint";
+
+export component DataTable {
+    in property <[DataTableColumn]> columns: [];
+    in property <[DataTableRow]> rows: [];
+    in property <DataTableCellPadding> cell-padding: DataTableCellPadding.normal;
+
+    private property <length> pad-block:
+        cell-padding == DataTableCellPadding.condensed ? LayoutTokens.table-cell-padding-block-condensed
+        : cell-padding == DataTableCellPadding.spacious ? LayoutTokens.table-cell-padding-block-spacious
+        : LayoutTokens.table-cell-padding-block-normal;
+
+    private property <length> pad-inline:
+        cell-padding == DataTableCellPadding.condensed ? LayoutTokens.table-cell-padding-inline-condensed
+        : cell-padding == DataTableCellPadding.spacious ? LayoutTokens.table-cell-padding-inline-spacious
+        : LayoutTokens.table-cell-padding-inline-normal;
+
+    Rectangle {
+        width: 100%;
+        clip: true;
+        border-radius: LayoutTokens.table-border-radius;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+        background: PrimerColors.bgColor-default;
+
+        VerticalLayout {
+            width: 100%;
+            spacing: 0;
+
+            // Header row
+            HorizontalLayout {
+                width: 100%;
+                spacing: 0;
+
+                for col[index] in columns: Rectangle {
+                    horizontal-stretch: 1;
+                    background: PrimerColors.bgColor-muted;
+
+                    HorizontalLayout {
+                        padding-left: pad-inline + (index == 0 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
+                        padding-right: pad-inline + (index == columns.length - 1 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
+                        padding-top: pad-block;
+                        padding-bottom: pad-block;
+                        width: 100%;
+                        min-height: 0;
+
+                        Text {
+                            width: 100%;
+                            text: col.header;
+                            font-size: LayoutTokens.text-body-size-small;
+                            color: PrimerColors.fgColor-muted;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
+                            horizontal-alignment: col.align == DataTableCellAlign.end ? right : left;
+                            vertical-alignment: center;
+                            wrap: word-wrap;
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                width: 100%;
+                height: LayoutTokens.table-border-width;
+                background: PrimerColors.borderColor-default;
+            }
+
+            for row in rows: VerticalLayout {
+                width: 100%;
+                spacing: 0;
+
+                row-ta := TouchArea {
+                    width: 100%;
+
+                    Rectangle {
+                        width: 100%;
+                        background: row-ta.has-hover ? PrimerColors.table-row-bgColor-hover : PrimerColors.bgColor-default;
+
+                        HorizontalLayout {
+                            width: 100%;
+                            spacing: 0;
+
+                            for cell[index] in row.cells: Rectangle {
+                                horizontal-stretch: 1;
+                                background: #00000000;
+
+                                HorizontalLayout {
+                                    padding-left: pad-inline + (index == 0 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
+                                    padding-right: pad-inline + (index == columns.length - 1 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
+                                    padding-top: pad-block;
+                                    padding-bottom: pad-block;
+                                    width: 100%;
+                                    min-height: 0;
+
+                                    Text {
+                                        width: 100%;
+                                        text: cell;
+                                        font-size: LayoutTokens.text-body-size-small;
+                                        color: PrimerColors.fgColor-default;
+                                        font-weight: index < columns.length && columns[index].row-header ? LayoutTokens.base-text-weight-semibold : 400;
+                                        horizontal-alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? right : left;
+                                        vertical-alignment: center;
+                                        wrap: word-wrap;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                Rectangle {
+                    width: 100%;
+                    height: LayoutTokens.table-border-width;
+                    background: PrimerColors.borderColor-default;
+                }
+            }
+        }
+    }
+}

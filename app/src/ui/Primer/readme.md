@@ -70,11 +70,11 @@ Slint port of the Primer product [**Label**](https://primer.style/product/compon
 
 **Not** [**CounterLabel**](CounterLabel/counter-label.slint): **CounterLabel** is the small **numeric** pill embedded in **Button** (filled row). **Label** is a **standalone** chip with the full Primer variant set and **`LabelSize`** (`small` / `large`).
 
-| Property   | Type            | Notes                                                                                                                                        |
-| ---------- | --------------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| `text`     | `string`        | Chip text; empty hides the control (same pattern as **CounterLabel**).                                                                      |
-| `variant`  | `LabelVariant`  | `default`, `primary`, `secondary`, `accent`, `success`, `attention`, `severe`, `danger`, `done`, `sponsors` (matches React).              |
-| `size`     | `LabelSize`     | `small` or `large` (React `small` / `large`; distinct from **Button** `Size`).                                                              |
+| Property  | Type           | Notes                                                                                                                        |
+| --------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| `text`    | `string`       | Chip text; empty hides the control (same pattern as **CounterLabel**).                                                       |
+| `variant` | `LabelVariant` | `default`, `primary`, `secondary`, `accent`, `success`, `attention`, `severe`, `danger`, `done`, `sponsors` (matches React). |
+| `size`    | `LabelSize`    | `small` or `large` (React `small` / `large`; distinct from **Button** `Size`).                                               |
 
 Colors resolve through **`LabelTokens`**; **`Label/logic.slint`** maps `variant` → token. Examples: **Primer gallery** (sidebar palette icon), **Misc** tab.
 
@@ -84,9 +84,9 @@ Slint port of Primer [**LabelGroup**](https://primer.style/product/components/la
 
 **MVP:** Model-driven row with **`LayoutTokens.label-group-gap`** and per-item min-height via **`control-small-size`**. **Not** in this port yet: React **`visibleChildCount`** (`auto` / number), **`overflowStyle`** (`inline` / `overlay`), **+N more** control, overlay, or `IntersectionObserver` truncation.
 
-| Property | Type | Notes |
-| -------- | ---- | ----- |
-| `items` | `[LabelGroupItem]` | Each entry has `text`, `variant` (**`LabelVariant`**), `size` (**`LabelSize`**). |
+| Property | Type               | Notes                                                                            |
+| -------- | ------------------ | -------------------------------------------------------------------------------- |
+| `items`  | `[LabelGroupItem]` | Each entry has `text`, `variant` (**`LabelVariant`**), `size` (**`LabelSize`**). |
 
 Examples: **Primer gallery**, **Misc** tab (**LabelGroup** subsection).
 
