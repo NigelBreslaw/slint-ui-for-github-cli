@@ -1,0 +1,10 @@
+// NavList item model — upstream: https://primer.style/product/components/nav-list/ (Item, aria-current, inactiveText).
+
+export struct NavListItem {
+    label: string,
+    /// When true, styles this row as the current location (`aria-current`-style selection).
+    current: bool,
+    /// When true, the item cannot be activated; use `inactive-text` for explanation (Primer `inactiveText`).
+    inactive: bool,
+    inactive-text: string,
+}

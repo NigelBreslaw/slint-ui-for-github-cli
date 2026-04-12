@@ -1,0 +1,63 @@
+// Primer-style NavList — flat items only (PR3). Upstream: https://primer.style/product/components/nav-list/
+// Interactive rows reuse ActionListRow; `current` maps to ActionList `selected` visuals.
+
+import { ActionListRow } from "../ActionList/action-list-row.slint";
+import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+import { NavListItem } from "./types.slint";
+
+export component NavList {
+    in property <[NavListItem]> items: [];
+    /// Invoked with the item index when a **non-inactive** row is activated.
+    callback item-activated(index: int);
+
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        spacing: 0px;
+
+        for item[index] in items: Rectangle {
+            horizontal-stretch: 1;
+
+            if item.inactive: Rectangle {
+                horizontal-stretch: 1;
+                border-radius: LayoutTokens.borderRadius-medium;
+                background: #00000000;
+
+                VerticalLayout {
+                    horizontal-stretch: 1;
+                    padding-left: LayoutTokens.action-list-item-padding-inline;
+                    padding-right: LayoutTokens.action-list-item-padding-inline;
+                    padding-top: LayoutTokens.action-list-item-padding-block;
+                    padding-bottom: LayoutTokens.action-list-item-padding-block;
+                    spacing: 4px;
+
+                    Text {
+                        horizontal-stretch: 1;
+                        text: item.label;
+                        color: ButtonTokens.control-fgColor-disabled;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-medium;
+                        wrap: word-wrap;
+                    }
+
+                    if item.inactive-text != "": Text {
+                        horizontal-stretch: 1;
+                        text: item.inactive-text;
+                        color: PrimerColors.fgColor-muted;
+                        font-size: LayoutTokens.text-body-size-small;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+
+            if !item.inactive: ActionListRow {
+                label: item.label;
+                selected: item.current;
+                disabled: false;
+                clicked => {
+                    root.item-activated(index);
+                }
+            }
+        }
+    }
+}
