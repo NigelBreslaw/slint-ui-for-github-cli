@@ -15,6 +15,7 @@ import {
     DataTableRow,
     DataTableSortDirection,
     Label,
+    TableContainer,
     LabelGroup,
     LabelGroupItem,
     LabelSize,
@@ -35,8 +36,8 @@ global PrimerGalleryState {
 }
 
 export component PrimerGallery {
-    // width: 500px;
-    // height: 500px;
+    // width: 700px;
+    // height: 700px;
     width: 100%;
     height: 100%;
 
@@ -70,7 +71,7 @@ export component PrimerGallery {
     private property <string> demo-data-table-last-row-action: "";
     private property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;
 
-    private property <int> gallery-tab-index: 0;
+    private property <int> gallery-tab-index: 3;
     private property <[UnderlineNavItem]> gallery-section-tabs: [
         { label: "Banner", enabled: true, counter: "" },
         { label: "UnderlineNav", enabled: true, counter: "" },
@@ -895,7 +896,7 @@ export component PrimerGallery {
                             }
 
                             Text {
-                                text: "Sortable headers update gallery state via sort-toggled; row order is static in this demo (app owns sorting).";
+                                text: "Sortable headers update gallery state via sort-toggled; row order is static in this demo (app owns sorting). TableContainer adds title, subtitle, and table-level actions (toolbar primary).";
                                 color: PrimerColors.fgColor-muted;
                                 font-size: 12px;
                                 wrap: word-wrap;
@@ -908,18 +909,26 @@ export component PrimerGallery {
                                 wrap: word-wrap;
                             }
 
-                            DataTable {
+                            TableContainer {
                                 width: 100%;
-                                columns: demo-data-table-columns;
-                                rows: demo-data-table-rows;
-                                sorted-column-id: demo-data-table-sorted-column;
-                                sort-direction: demo-data-table-sort-direction;
-                                sort-toggled(cid, dir) => {
-                                    demo-data-table-sorted-column = cid;
-                                    demo-data-table-sort-direction = dir;
-                                }
-                                row-action(rid, cid, aid) => {
-                                    demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
+                                title: "Repositories";
+                                subtitle: "Example rows for the gallery demo.";
+                                primary-action-label: "Export";
+                                primary-action => { }
+
+                                DataTable {
+                                    width: 100%;
+                                    columns: demo-data-table-columns;
+                                    rows: demo-data-table-rows;
+                                    sorted-column-id: demo-data-table-sorted-column;
+                                    sort-direction: demo-data-table-sort-direction;
+                                    sort-toggled(cid, dir) => {
+                                        demo-data-table-sorted-column = cid;
+                                        demo-data-table-sort-direction = dir;
+                                    }
+                                    row-action(rid, cid, aid) => {
+                                        demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
+                                    }
                                 }
                             }
                         }

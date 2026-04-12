@@ -19,7 +19,7 @@ specified in detail.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
 
-Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text); **Banner** action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`. **Label** uses **LabelTokens** and **LayoutTokens**; variant mapping is implemented in [`Label/logic.slint`](Label/logic.slint). **LabelGroup** composes **Label** + **LayoutTokens** only (see [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint)). **DataTable** composes **LayoutTokens** + **PrimerColors** for table chrome and row hover; body cells embed **Label** (**`LabelVariant`** / **`LabelSize`**) for **`label`** columns, **Image** for **`icon_text`**, and **IconButton** (**`IconButtonVariant.invisible`**, **`Size.small`**) for **`action`** columns (see [`DataTable/data-table.slint`](DataTable/data-table.slint)); sort icons use `@image-url` assets under `app/src/assets/16px/`.
+Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). **Label** uses **LabelTokens** and **LayoutTokens**; variant mapping is implemented in [`Label/logic.slint`](Label/logic.slint). **LabelGroup** composes **Label** + **LayoutTokens** only (see [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint)). **DataTable** composes **LayoutTokens** + **PrimerColors** (see [`DataTable/data-table.slint`](DataTable/data-table.slint)); sort icons use `@image-url` assets under `app/src/assets/16px/`. Action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
 
 ## UnderlineNav
 
@@ -94,7 +94,7 @@ Examples: **Primer gallery**, **Misc** tab (**LabelGroup** subsection).
 
 Slint port of Primer [**DataTable**](https://primer.style/product/components/data-table/) (tabular rows driven by a column model). Upstream: [`DataTable.tsx`](https://github.com/primer/react/blob/main/packages/react/src/DataTable/DataTable.tsx) and [`Table.module.css`](https://github.com/primer/react/blob/main/packages/react/src/DataTable/Table.module.css).
 
-**In this port:** **`DataTableCell`** per column (`text` plain body copy, **`label`** renders **Label**, **`icon_text`** renders a leading **16px** icon + body text, **`action`** renders a small **IconButton**); **`sort-toggled`** reports header activation; **`row-action(row-id, column-id, action-id)`** fires when an **`action`** cell’s button is clicked (**`action-id`** is that cell’s **`text`**). See **Misc** gallery demo. **Not** ported: `TableContainer` / title / subtitle / actions chrome, **`TableSkeleton`**, responsive column widths, rich `renderCell` content, or horizontal scroll parity.
+**In this port:** **`DataTableCell`** per column (`text` plain body copy, **`label`** renders **Label**, **`icon_text`** renders a leading **16px** icon + body text, **`action`** renders a small **IconButton**); **`sort-toggled`** reports header activation; **`row-action(row-id, column-id, action-id)`** fires when an **`action`** cell’s button is clicked (**`action-id`** is that cell’s **`text`**). See **Misc** gallery demo. **`TableContainer`** (title, subtitle, table-level actions) is in [`DataTable/table-container.slint`](DataTable/table-container.slint). **Not** ported: **`TableSkeleton`**, responsive column widths, rich `renderCell` content, or horizontal scroll parity.
 
 **Layout:** The header row and each body row are separate [`HorizontalLayout`](https://docs.slint.dev/) slices, so flex is solved **per row** unless you tie columns together. This component keeps header and body aligned by applying the **same per-column** `horizontal-stretch`, `min-width`, `preferred-width` (zero for flexible columns so width is not driven by text), and `max-width` on the cells in column _i_, following the same idea as Slint’s material [`StandardTableView`](https://github.com/slint-ui/slint/blob/master/internal/compiler/widgets/material/tableview.slint) (`TableViewColumn` / `TableViewCell`). A single [`GridLayout`](https://docs.slint.dev/) would share column tracks across all rows, but **nested repeaters inside `GridLayout`** (`for each row: Row { for each cell: … }`) have triggered an interpreter panic in `slint-ui`, so that approach is not used here until the toolchain supports it. See the Slint reference for **HorizontalLayout** and **GridLayout** behavior (stretch, min/preferred/max width).
 
@@ -111,7 +111,23 @@ Slint port of Primer [**DataTable**](https://primer.style/product/components/dat
 
 Examples: **Primer gallery**, **Misc** tab (**DataTable** subsection).
 
-**Imports for views building `columns` / `rows`:** Prefer the [`primer.slint`](primer.slint) barrel — **`DataTable`**, **`DataTableCell`**, **`DataTableCellKind`**, **`DataTableColumn`**, **`DataTableRow`**, **`DataTableCellAlign`**, **`DataTableCellPadding`**, **`DataTableSortDirection`**. For **`label`** cells you also need **`LabelVariant`** and **`LabelSize`** (same barrel). Row models use **`@image-url(...)`** for **`icon`** on **`icon_text`** and **`action`** cells (placeholder image for kinds that do not render **`icon`**). You do not import **Label** or **IconButton** in the view unless you use them outside the table; the table instantiates them internally.
+## TableContainer
+
+Wraps a **`DataTable`** (or other content) with optional **title**, **subtitle**, and up to two **table-level** actions (`primary-action` / `secondary-action`, same pattern as **Banner** actions). Upstream: Primer **DataTable** header region.
+
+| Property | Type | Notes |
+| -------- | ---- | ----- |
+| `title` | `string` | Empty hides the title line. |
+| `subtitle` | `string` | Empty hides; `text-body-size-small`, muted. |
+| `primary-action-label` | `string` | Non-empty shows a primary **Button** on the toolbar. |
+| `secondary-action-label` | `string` | Non-empty shows a secondary **Button** (`invisible`). |
+| `primary-action-variant` | **`ButtonVariant`** | Toolbar primary button variant. |
+| `action-size` | **`Size`** | Default **`small`** for table toolbar density. |
+| `primary-action` | `callback` | |
+| `secondary-action` | `callback` | |
+| `children` | `@children` | Place **`DataTable`** here. |
+
+Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there is no title, subtitle, or action labels, the header block is omitted and the **child** is laid out directly.
 
 ## Caution:
 

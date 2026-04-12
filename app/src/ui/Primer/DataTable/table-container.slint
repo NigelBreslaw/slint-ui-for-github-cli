@@ -1,0 +1,93 @@
+// Primer DataTable — TableContainer chrome (title, subtitle, table-level actions). Upstream: primer/react DataTable + Table.module.css header region.
+import { Button } from "../Buttons/buttons.slint";
+import { ButtonVariant } from "../Buttons/types.slint";
+import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+
+export component TableContainer {
+    in property <string> title: "";
+    in property <string> subtitle: "";
+    in property <string> primary-action-label: "";
+    in property <string> secondary-action-label: "";
+    in property <ButtonVariant> primary-action-variant: ButtonVariant.default;
+    in property <Size> action-size: Size.small;
+    callback primary-action();
+    callback secondary-action();
+
+    private property <bool> has-text: title != "" || subtitle != "";
+    private property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
+    private property <bool> has-header: has-text || has-actions;
+
+    width: 100%;
+
+    VerticalLayout {
+        width: 100%;
+        spacing: LayoutTokens.stack-padding-normal;
+        padding-left: has-header ? LayoutTokens.stack-padding-normal : 0px;
+        padding-right: has-header ? LayoutTokens.stack-padding-normal : 0px;
+        padding-top: has-header ? LayoutTokens.stack-padding-normal : 0px;
+        padding-bottom: 0px;
+
+        if has-header: VerticalLayout {
+            width: 100%;
+            spacing: 0px;
+
+            HorizontalLayout {
+                width: 100%;
+                spacing: LayoutTokens.stack-padding-normal;
+                alignment: space-between;
+
+                if has-text: VerticalLayout {
+                    min-width: 0px;
+                    spacing: 4px;
+
+                    if title != "": Text {
+                        text: title;
+                        color: PrimerColors.fgColor-default;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        wrap: word-wrap;
+                    }
+
+                    if subtitle != "": Text {
+                        text: subtitle;
+                        color: PrimerColors.fgColor-muted;
+                        font-size: LayoutTokens.text-body-size-small;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if !has-text && has-actions: Rectangle {
+                    horizontal-stretch: 1;
+                    height: 0px;
+                    min-width: 0px;
+                }
+
+                if has-actions: HorizontalLayout {
+                    spacing: LayoutTokens.banner-actions-gap;
+                    alignment: end;
+
+
+                    if secondary-action-label != "": Button {
+                        label: secondary-action-label;
+                        variant: ButtonVariant.invisible;
+                        size: action-size;
+                        clicked => {
+                            root.secondary-action();
+                        }
+                    }
+
+                    if primary-action-label != "": Button {
+                        label: primary-action-label;
+                        variant: primary-action-variant;
+                        size: action-size;
+                        clicked => {
+                            root.primary-action();
+                        }
+                    }
+                }
+            }
+        }
+
+        @children
+    }
+}

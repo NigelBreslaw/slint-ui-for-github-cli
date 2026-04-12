@@ -20,8 +20,8 @@ Also see the public docs: [Primer Design System](https://primer.style/design/sys
 
 ## In-repo architecture
 
-- **Barrel:** `[primer.slint](primer.slint)` re-exports Primer components plus `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `BannerTokens`, `LabelTokens`, and `Size`. **DataTable** surface types (`**DataTableCell`**, `**DataTableCellKind**`, `**DataTableColumn**`, `**DataTableRow**`, `**DataTableCellAlign**`, `**DataTableCellPadding**`, `**DataTableSortDirection**`) and `**IconButtonVariant**` are also exported for app views that build table models.
-- **Tokens:** `[tokens.slint](tokens.slint)` holds **several `export global` singletons** in one file. **Order matters:** declare `PrimerColors` before `ButtonTokens`, `**BannerTokens`**, and `**LabelTokens**`, because `**ButtonTokens**`, `**BannerTokens**`, and `**LabelTokens**` reference `PrimerColors` `out` properties only (no literals in `BannerTokens` / `LabelTokens`).
+- **Barrel:** [`primer.slint`](primer.slint) re-exports Primer components plus `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `BannerTokens`, `LabelTokens`, and `Size`.
+- **Tokens:** [`tokens.slint`](tokens.slint) holds **several `export global` singletons** in one file. **Order matters:** declare `PrimerColors` before `ButtonTokens`, **`BannerTokens`**, and **`LabelTokens`**, because **`ButtonTokens`**, **`BannerTokens`**, and **`LabelTokens`** reference `PrimerColors` `out` properties only (no literals in `BannerTokens` / `LabelTokens`).
 
 ### Token layers (current convention)
 
@@ -30,14 +30,14 @@ Also see the public docs: [Primer Design System](https://primer.style/design/sys
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **LayoutTokens** | Lengths, typography sizes, line heights, control dimensions, padding, icon sizes, border radius, **banner** padding/icon sizes, **banner** action row gap (`banner-actions-gap`) and dismiss offset when actions exist (`banner-dismiss-margin-when-actions`). **No** light/dark color scheme.                  |
 | **PrimerColors** | Semantic surfaces (fg, bg, border, link, overlay, shadows, success validation, control-trigger shadows, **banner functional colors** — accent/success/attention/danger/done-upsell muted surfaces and fg, etc.) plus **shared primitives** so each **hex / rgb / hsv** appears **once** when values are shared. |
-| **ButtonTokens** | GitHub-style `color-btn-*` and resolved `button-*` colors, action-list tints, icon-button tints, filled-button shadow colors. Composes from `**PrimerColors` `out` properties** where possible instead of repeating literals.                                                                                   |
+| **ButtonTokens** | GitHub-style `color-btn-*` and resolved `button-*` colors, action-list tints, icon-button tints, filled-button shadow colors. Composes from **`PrimerColors` `out` properties** where possible instead of repeating literals.                                                                                   |
 | **BannerTokens** | Per-variant `banner-bgColor-*`, `banner-borderColor-*`, `banner-icon-fgColor-*` aligned with `Banner.module.css` `[data-variant]`. **Composes only from `PrimerColors`** — banner surfaces must not introduce new hex in the component file.                                                                    |
 | **LabelTokens**  | Per-variant `label-fg-*`, `label-border-*` for product **Label** chips, aligned with `Label.module.css` `[data-variant]`. **Composes only from `PrimerColors`** — no literals in `LabelTokens`.                                                                                                                 |
 
 
-**Cross-global rule:** Treat other globals as exposing only their `**out`** bindings to dependents. Do not rely on reading another global’s **private** fields from outside that global.
+**Cross-global rule:** Treat other globals as exposing only their **`out`** bindings to dependents. Do not rely on reading another global’s **private** fields from outside that global.
 
-**Banner rule:** `**Banner`** (and any future banner-like chrome) should read **background, border, and icon tint** from `**BannerTokens`** (and lengths from `**LayoutTokens**`). Use `**PrimerColors**` inside `**Banner**` only for non-banner semantics (e.g. default foreground for title/description text), not for ad hoc variant colors. **Product-specific sentences** (e.g. review-request copy) belong in **views**; `**Banner`** exposes structure only (`title`, `description`, optional `**description-emphasis**` / `**subtitle**`, actions).
+**Banner rule:** **`Banner`** (and any future banner-like chrome) should read **background, border, and icon tint** from **`BannerTokens`** (and lengths from **`LayoutTokens`**). Use **`PrimerColors`** inside **`Banner`** only for non-banner semantics (e.g. default foreground for title/description text), not for ad hoc variant colors. **Product-specific sentences** (e.g. review-request copy) belong in **views**; **`Banner`** exposes structure only (`title`, `description`, optional **`description-emphasis`** / **`subtitle`**, actions).
 
 ```mermaid
 flowchart TB
@@ -61,9 +61,9 @@ flowchart TB
 ## Adding design tokens (checklist)
 
 1. **Naming** — Prefer Primer / CSS-variable families: `fgColor-*`, `bgColor-*`, `borderColor-*`, `control-*`, `button-*`, `shadow-*`, etc.
-2. **Reuse first** — Check existing `out` properties on `LayoutTokens`, `PrimerColors`, `**ButtonTokens`**, `**BannerTokens**`, and `**LabelTokens**` before adding literals (e.g. chrome: `bgColor-default`, `borderColor-default`, `fgColor-muted`; buttons: `ButtonTokens` chains; banner surfaces: `BannerTokens` → `PrimerColors`; label chips: `LabelTokens` → `PrimerColors`).
-3. **New shared color** — Add **one** private literal (or a small primitive group) under `**PrimerColors`**, expose semantics via `**out**`, then reference from `**ButtonTokens**`, `**BannerTokens**`, `**LabelTokens**`, or components. **Do not** repeat the same hex for the same meaning in multiple globals.
-4. **New length / radius / typography** — Prefer `**LayoutTokens`** unless the value is truly one-off and never reused (then a **private** on the component is acceptable).
+2. **Reuse first** — Check existing `out` properties on `LayoutTokens`, `PrimerColors`, **`ButtonTokens`**, **`BannerTokens`**, and **`LabelTokens`** before adding literals (e.g. chrome: `bgColor-default`, `borderColor-default`, `fgColor-muted`; buttons: `ButtonTokens` chains; banner surfaces: `BannerTokens` → `PrimerColors`; label chips: `LabelTokens` → `PrimerColors`).
+3. **New shared color** — Add **one** private literal (or a small primitive group) under **`PrimerColors`**, expose semantics via **`out`**, then reference from **`ButtonTokens`**, **`BannerTokens`**, **`LabelTokens`**, or components. **Do not** repeat the same hex for the same meaning in multiple globals.
+4. **New length / radius / typography** — Prefer **`LayoutTokens`** unless the value is truly one-off and never reused (then a **private** on the component is acceptable).
 5. **Scheme** — Where colors depend on theme, follow the existing pattern: `property <ColorScheme> color-scheme: Palette.color-scheme` and `color-scheme == ColorScheme.dark ? *-dark : *-light` (or equivalent) on `out` properties.
 6. **Compile** — After token edits, verify Slint loads the app entry (see [Verification](#verification)).
 
@@ -72,15 +72,16 @@ flowchart TB
 1. Find the closest **primer-ui-react** component and the matching **primer-tokens** functional/component files.
 2. Add `app/src/ui/Primer/<Name>/` with a clear root `*.slint` (and subfolders if needed).
 3. **Imports:**
-  - App views / chrome: `**PrimerColors`** and `**LayoutTokens**` (from `tokens.slint` or the `primer.slint` barrel).
-  - Controls that use the GitHub button palette or danger/success alignment: `**ButtonTokens**` + `**PrimerColors**` as needed (see `[Buttons/buttons.slint](Buttons/buttons.slint)` and `[Select/select.slint](Select/select.slint)`).
-  - **CounterLabel** (pill): `[CounterLabel/counter-label.slint](CounterLabel/counter-label.slint)` — pass explicit colors from `**Button`**, or set `**use-primer-scheme**` with `**CounterLabelVariant**` for standalone `**PrimerColors**` (`bgColor-neutral-emphasis` / `neutral-muted`, `**counter-borderColor**`).
-  - **Label** (product metadata chip): `**LabelTokens`** + `**LayoutTokens**` (see `[Label/label.slint](Label/label.slint)`, `[Label/logic.slint](Label/logic.slint)`); not the same as **CounterLabel**.
-  - **LabelGroup** (row of **Label** chips): `**Label`** + `**LayoutTokens**` only — `[LabelGroup/label-group.slint](LabelGroup/label-group.slint)`; no separate color global.
-  - **DataTable** (tabular layout + sort headers + typed body cells): `[DataTable/data-table.slint](DataTable/data-table.slint)` composes `**LayoutTokens`** + `**PrimerColors**` for table chrome and row hover; embeds `**Label**` (see `[Label/label.slint](Label/label.slint)`) with `**LabelVariant**` / `**LabelSize**` from `[Label/types.slint](Label/types.slint)` for `**label**` cells; `**Image**` for `**icon_text**`; `**IconButton**` with `**IconButtonVariant.invisible**` and `**Size.small**` from `[Buttons/buttons.slint](Buttons/buttons.slint)` / `[tokens.slint](tokens.slint)` for `**action**` cells. Row/column models: `[DataTable/types.slint](DataTable/types.slint)` (re-exported from `[primer.slint](primer.slint)`). Views that fill `**columns**` / `**rows**` import those types from the barrel plus `**LabelVariant**` / `**LabelSize**` when `**label**` cells are used; `**@image-url(...)**` supplies `**icon**` for `**icon_text**` / `**action**` (dummy `**icon**` for other kinds). Sort icons via `@image-url` (`sort-asc` / `sort-desc` under `app/src/assets/16px/`). No separate DataTable color global.
-  - **Banner** (and similar product banners): `**BannerTokens`** + `**LayoutTokens**` + `**PrimerColors**` for default text fg (see `[Banner/banner.slint](Banner/banner.slint)`).
-4. **Export** new components from `[primer.slint](primer.slint)` when they are part of the public Primer surface for this app.
-5. **Docs** — User-facing notes go in `[readme.md](readme.md)`. Process, tokens, and PR workflow stay in **this file** (`AGENTS.md`).
+   - App views / chrome: **`PrimerColors`** and **`LayoutTokens`** (from `tokens.slint` or the `primer.slint` barrel).
+   - Controls that use the GitHub button palette or danger/success alignment: **`ButtonTokens`** + **`PrimerColors`** as needed (see [`Buttons/buttons.slint`](Buttons/buttons.slint) and [`Select/select.slint`](Select/select.slint)).
+   - **CounterLabel** (pill): [`CounterLabel/counter-label.slint`](CounterLabel/counter-label.slint) — pass explicit colors from **`Button`**, or set **`use-primer-scheme`** with **`CounterLabelVariant`** for standalone **`PrimerColors`** (`bgColor-neutral-emphasis` / `neutral-muted`, **`counter-borderColor`**).
+   - **Label** (product metadata chip): **`LabelTokens`** + **`LayoutTokens`** (see [`Label/label.slint`](Label/label.slint), [`Label/logic.slint`](Label/logic.slint)); not the same as **CounterLabel**.
+   - **LabelGroup** (row of **Label** chips): **`Label`** + **`LayoutTokens`** only — [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint); no separate color global.
+   - **DataTable** (tabular layout + sort headers): **`LayoutTokens`** + **`PrimerColors`** — [`DataTable/data-table.slint`](DataTable/data-table.slint); sort icons via `@image-url` (`sort-asc` / `sort-desc` under `app/src/assets/16px/`); no separate color global.
+   - **TableContainer** (title, subtitle, table toolbar around **DataTable**): [`DataTable/table-container.slint`](DataTable/table-container.slint) — **`Button`** + **`LayoutTokens`** + **`PrimerColors`**; **`DataTable`** (or other content) via `@children`.
+   - **Banner** (and similar product banners): **`BannerTokens`** + **`LayoutTokens`** + **`PrimerColors`** for default text fg (see [`Banner/banner.slint`](Banner/banner.slint)).
+4. **Export** new components from [`primer.slint`](primer.slint) when they are part of the public Primer surface for this app.
+5. **Docs** — User-facing notes go in [`readme.md`](readme.md). Process, tokens, and PR workflow stay in **this file** (`AGENTS.md`).
 
 ## Typical PR sequence for a new component
 
