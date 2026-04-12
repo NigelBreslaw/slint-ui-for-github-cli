@@ -1,0 +1,12 @@
+[
+  {
+    "name": "ok",
+    "full_name": "slint-ui/ok",
+    "default_branch": "main"
+  },
+  {
+    "name": 42,
+    "full_name": "slint-ui/bad",
+    "default_branch": "main"
+  }
+]

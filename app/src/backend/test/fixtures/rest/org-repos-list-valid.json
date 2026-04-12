@@ -1,0 +1,12 @@
+[
+  {
+    "name": "slint",
+    "full_name": "slint-ui/slint",
+    "default_branch": "master"
+  },
+  {
+    "name": "website",
+    "full_name": "slint-ui/website",
+    "default_branch": "main"
+  }
+]
