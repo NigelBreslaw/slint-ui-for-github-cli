@@ -63,6 +63,8 @@ const window = new ui.MainWindow({
   "gh-cli-version-block-detail": "",
 });
 
+console.log("[github-app] main.ts started");
+
 restoreMainWindowGeometry(window);
 const windowGeometryPersister = createMainWindowGeometryPersister(window);
 
@@ -86,6 +88,11 @@ assignProperties(window.ProjectBoardListState, {
   board_page_index: 0,
   board_page_size: DEFAULT_PROJECT_BOARD_PAGE_SIZE,
   import_dialog_open: false,
+  import_repos_search: "",
+  import_repos_load_status: "",
+  import_repo_options_count: 0,
+  import_repo_selected_index: -1,
+  import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
 });
 
 assignProperties(window.SettingsState, {

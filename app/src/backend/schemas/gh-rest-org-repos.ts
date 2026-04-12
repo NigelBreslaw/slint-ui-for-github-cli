@@ -1,5 +1,5 @@
 /**
- * Minimal repo row from `gh api orgs/{org}/repos -f per_page=100 --paginate` (merged JSON array).
+ * Minimal repo row from `gh api orgs/{org}/repos?per_page=100 --paginate` (merged JSON array).
  * @see https://docs.github.com/en/rest/repos/repos#list-organization-repositories
  */
 import { type } from "arktype";

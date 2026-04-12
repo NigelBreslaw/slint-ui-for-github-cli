@@ -1,4 +1,5 @@
 import { DataTableRow } from "../../ui/Primer/DataTable/types.slint";
+import { SelectOption } from "../../ui/Primer/Select/select.slint";
 
 export enum ProjectBoardItemKind {
     pullRequest,
@@ -25,9 +26,21 @@ export global ProjectBoardListState {
     callback project-board-page-changed(int);
     /** Invoked when the import dialog is dismissed (backdrop, ×, Escape). Node sets `import-dialog-open` false. */
     callback project-board-import-dialog-closed;
+    /** Invoked when the import dialog is shown; Node loads slint-ui org repos (PR5). */
+    callback project-board-import-dialog-opened;
+    /** Filter text for the repo list; Node applies client-side filter to cached repos. */
+    callback project-board-import-repos-search-changed(string);
 
     /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */
     in-out property <bool> import-dialog-open: false;
+    /** Search query for repository names (`owner/name`). */
+    in-out property <string> import-repos-search: "";
+    /** Empty, `"Loading repositories…"`, or an error message from `gh`. */
+    in-out property <string> import-repos-load-status: "";
+    /** Row count for the filtered repo `Select` options (Slint cannot always read `ArrayModel` length). */
+    in-out property <int> import-repo-options-count: 0;
+    in-out property <int> import-repo-selected-index: -1;
+    in-out property <[SelectOption]> import-repo-select-options;
 
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";

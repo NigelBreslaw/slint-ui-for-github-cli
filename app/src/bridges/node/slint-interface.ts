@@ -193,7 +193,14 @@ export type ProjectBoardListStateHandle = {
   project_board_list_open_row_url: (url: string) => void;
   project_board_page_changed: (page_index: number) => void;
   project_board_import_dialog_closed: () => void;
+  project_board_import_dialog_opened: () => void;
+  project_board_import_repos_search_changed: (query: string) => void;
   import_dialog_open: boolean;
+  import_repos_search: string;
+  import_repos_load_status: string;
+  import_repo_options_count: number;
+  import_repo_selected_index: number;
+  import_repo_select_options: slint.ArrayModel<SlintSelectOption>;
   has_selected_project: boolean;
   selected_project_label: string;
   items_load_status: string;

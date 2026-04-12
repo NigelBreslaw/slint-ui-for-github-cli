@@ -1,5 +1,5 @@
 import { ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
-import { PrimerDialog } from "../components/primer-dialog.slint";
+import { PrimerDialog, PrimerDialogWidth } from "../components/primer-dialog.slint";
 import {
     DataTable,
     DataTableCellAlign,
@@ -7,6 +7,8 @@ import {
     DataTableColumn,
     DataTableSortDirection,
     Pagination,
+    Select,
+    Size,
     Spinner,
     TableContainer,
 } from "../Primer/primer.slint";
@@ -155,7 +157,7 @@ export component ProjectBoardList {
                                     subtitle: ProjectBoardListState.board-items-count == 0 ? "No items on this board." : "";
                                     secondary-action-label: "Import from repositories";
                                     secondary-action => {
-                                        ProjectBoardListState.import-dialog-open = true;
+                                        ProjectBoardListState.project-board-import-dialog-opened();
                                     }
                                     primary-action-label: "Refresh";
                                     primary-action => {
@@ -203,8 +205,8 @@ export component ProjectBoardList {
                 width: 100%;
                 height: 100%;
                 title: "Import from repositories";
-                subtitle: "Add items from slint-ui repos (coming in follow-up PRs).";
-                width-preset: large;
+                subtitle: "Organization slint-ui — pick a repository (issues/PRs next).";
+                width-preset: PrimerDialogWidth.xlarge;
                 close => {
                     ProjectBoardListState.project-board-import-dialog-closed();
                 }
@@ -212,12 +214,80 @@ export component ProjectBoardList {
                 VerticalLayout {
                     spacing: 12px;
                     width: 100%;
+                    min-height: 320px;
 
-                    Text {
-                        text: "This dialog will list org repositories and issues/PRs to add to the project. Placeholder for PR 1.";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 13px;
-                        wrap: word-wrap;
+                    if ProjectBoardListState.import-repos-load-status == "Loading repositories…": HorizontalLayout {
+                        spacing: 10px;
+                        alignment: start;
+
+                        Spinner {
+                            size: small;
+                        }
+
+                        Text {
+                            text: "Loading repositories…";
+                            font-size: 13px;
+                            color: PrimerColors.fgColor-muted;
+                            wrap: word-wrap;
+                        }
+                    }
+
+                    if ProjectBoardListState.import-repos-load-status != "Loading repositories…": VerticalLayout {
+                        spacing: 12px;
+                        width: 100%;
+                        vertical-stretch: 1;
+
+                        if ProjectBoardListState.import-repos-load-status != "": Text {
+                            text: ProjectBoardListState.import-repos-load-status;
+                            color: PrimerColors.fgColor-default;
+                            font-size: 13px;
+                            wrap: word-wrap;
+                        }
+
+                        Text {
+                            text: "Filter by repository name";
+                            font-size: 12px;
+                            font-weight: 600;
+                            color: PrimerColors.fgColor-default;
+                            wrap: word-wrap;
+                        }
+
+                        Rectangle {
+                            width: 100%;
+                            height: 40px;
+                            background: PrimerColors.bgColor-neutral-muted;
+                            border-radius: 6px;
+                            border-width: 1px;
+                            border-color: PrimerColors.borderColor-muted;
+                            clip: true;
+
+                            TextInput {
+                                x: 10px;
+                                y: 0;
+                                width: parent.width - 20px;
+                                height: parent.height;
+                                read-only: ProjectBoardListState.import-repos-load-status != "";
+                                text: ProjectBoardListState.import-repos-search;
+                                font-size: 14px;
+                                color: PrimerColors.fgColor-default;
+                                edited => {
+                                    ProjectBoardListState.project-board-import-repos-search-changed(self.text);
+                                }
+                            }
+                        }
+
+                        Select {
+                            width: 100%;
+                            block: true;
+                            size: Size.medium;
+                            label-text: "Repository";
+                            placeholder: "Select a repository…";
+                            options: ProjectBoardListState.import-repo-select-options;
+                            option-count: ProjectBoardListState.import-repo-options-count;
+                            selected-index <=> ProjectBoardListState.import-repo-selected-index;
+                            disabled: ProjectBoardListState.import-repos-load-status != ""
+                                || ProjectBoardListState.import-repo-options-count == 0;
+                        }
                     }
                 }
             }

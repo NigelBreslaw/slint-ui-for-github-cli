@@ -7,12 +7,16 @@ const SLINT_UI_ORG = "slint-ui";
 /**
  * Lists all repositories for the **slint-ui** org via `gh api` with `--paginate`
  * (`per_page=100` per request).
+ *
+ * **Do not** use `-f per_page=…` without `--method GET`: `gh api` switches to POST when
+ * any `-f` is present, so `orgs/{org}/repos` would hit “create repository” and return 422
+ * (“New repository name must not be blank”). Query params in the path keep the method GET.
  */
 export async function fetchAllSlintUiOrgReposRest(): Promise<
   { ok: true; repos: OrgRepoRow[] } | { ok: false; error: string }
 > {
-  const path = `orgs/${SLINT_UI_ORG}/repos`;
-  const raw = await ghApiJson([path, "-f", "per_page=100", "--paginate"], {
+  const path = `orgs/${SLINT_UI_ORG}/repos?per_page=100`;
+  const raw = await ghApiJson([path, "--paginate"], {
     omitDebugFileIfEmptyArray: true,
     debugStem: "org-repos--slint-ui",
   });

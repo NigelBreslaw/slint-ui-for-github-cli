@@ -161,7 +161,6 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
 /** Resets in-memory lists and org project cache; does not clear Time reporting KV (same GitHub user). */
 export function resetListsWithoutClearingProfile(window: MainWindowInstance): void {
   assignProperties(window.AppState, {
-    view: appView.dashboard,
     review_requests_data_ready: false,
     review_requests_total: 0,
     review_requests_load_status: "",

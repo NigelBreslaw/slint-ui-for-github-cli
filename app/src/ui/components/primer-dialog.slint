@@ -75,6 +75,8 @@ export component PrimerDialog {
                     drop-shadow-blur: 16px;
                     drop-shadow-color: PrimerColors.drop-shadow;
 
+                    // Single column: Rectangle does not vertically stack multiple children; without this
+                    // wrapper, the body slot was drawn on top of the header (same origin).
                     VerticalLayout {
                         spacing: 0;
                         width: 100%;
@@ -150,15 +152,15 @@ export component PrimerDialog {
                             height: 1px;
                             background: PrimerColors.borderColor-muted;
                         }
-                    }
 
-                    VerticalLayout {
-                        padding: 16px;
-                        spacing: 0;
-                        width: 100%;
-                        max-height: root.panel-max-h;
+                        VerticalLayout {
+                            padding: 16px;
+                            spacing: 0;
+                            width: 100%;
+                            vertical-stretch: 1;
 
-                        @children
+                            @children
+                        }
                     }
                 }
             }

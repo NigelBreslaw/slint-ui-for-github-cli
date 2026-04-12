@@ -37,7 +37,16 @@ export component Select {
     in property <bool> block: false;
     in property <Size> size: medium;
     in property <[SelectOption]> options;
+    /**
+     * When `>= 0`, use this instead of `options.length` for bounds and enablement.
+     * JS-backed `ArrayModel` often reports `options.length == 0` in Slint even when populated
+     * (see `import-repo-options-count` on `ProjectBoardListState`).
+     */
+    in property <int> option-count: -1;
     callback selected-changed(value_index: int);
+
+    private property <int> effective-len: option-count >= 0 ? option-count : options.length;
+    private property <bool> has-options: effective-len > 0;
 
     private property <length> trigger-height:
         size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
@@ -50,12 +59,13 @@ export component Select {
         validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : validation-status == ValidationStatus.success ? PrimerColors.borderColor-success-emphasis : PrimerColors.borderColor-default;
 
     function apply-pick-at(ix: int) {
-        if ix < 0 || ix >= options.length {
+        if ix < 0 || ix >= root.effective-len {
             return;
         }
         if !options[ix].enabled {
             return;
         }
+        root.selected-index = ix;
         root.selected-changed(ix);
     }
 
@@ -79,7 +89,9 @@ export component Select {
             select-ctx := ContextMenuArea {
                 width: 100%;
                 height: 100%;
-                enabled: !root.disabled && root.options.length > 0;
+                // Do not gate `enabled` on `has-options`: when false, Slint disables the subtree and
+                // the inner TouchArea never receives hover or clicks (ArrayModel length is unreliable).
+                enabled: !root.disabled;
 
                 Menu {
                     for opt[index] in options: MenuItem {
@@ -148,7 +160,7 @@ export component Select {
                     width: 100%;
                     height: 100%;
                     clicked => {
-                        if !root.disabled && root.options.length > 0 {
+                        if !root.disabled && root.has-options {
                             select-ctx.show({ x: 0px, y: 0px });
                         }
                     }
