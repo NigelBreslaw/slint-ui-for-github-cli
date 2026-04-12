@@ -112,7 +112,7 @@ export component GallerySidebar {
             padding-top: 12px;
             padding-bottom: 12px;
             padding-left: 8px;
-            padding-right: 8px;
+            padding-right: 12px;
             spacing: 8px;
             alignment: start;
 
@@ -131,19 +131,7 @@ export component GallerySidebar {
                 groups: [];
                 sidebar-current-indicator: true;
                 item-activated(_gi, path) => {
-                    root.group-selected(
-                        path == "0"
-                            ? 0
-                            : path == "1"
-                                ? 1
-                                : path == "2"
-                                    ? 2
-                                    : path == "3"
-                                        ? 3
-                                        : path == "4"
-                                            ? 4
-                                            : path == "5" ? 5 : root.selected-index,
-                    );
+                    root.group-selected(path.to-float().floor());
                 }
             }
         }
