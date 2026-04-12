@@ -18,12 +18,15 @@ export struct ProjectBoardListRow {
     url: string,
 }
 
-/** One row from `fetchRepoCandidatesPageGraphql` (open issues + open PRs, first page; PR6). */
+/** One row from `fetchRepoCandidatesPageGraphql` (open issues + open PRs; PR6/7). */
 export struct ImportCandidateRow {
+    /** GraphQL `node` id (ProjectV2 item content id target). */
+    node-id: string,
     kind: ProjectBoardItemKind,
     number: int,
     title: string,
     url: string,
+    selected: bool,
 }
 
 export global ProjectBoardListState {
@@ -40,6 +43,14 @@ export global ProjectBoardListState {
     callback project-board-import-repos-search-changed(string);
     /** User picked a repository in the import dialog; Node loads open issues/PRs (GraphQL, PR6). */
     callback project-board-import-repo-selected-changed(int);
+    /** Filter loaded candidates by title / number (client-side, PR7). */
+    callback project-board-import-candidates-search-changed(string);
+    /** Append next GraphQL page (issues + PR cursors, PR7). */
+    callback project-board-import-candidates-load-more;
+    /** Select every row currently shown after search filter (PR7). */
+    callback project-board-import-candidates-select-all-on-page;
+    /** Toggle checkbox for one candidate (`node-id`). */
+    callback project-board-import-candidate-toggled(string);
 
     /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */
     in-out property <bool> import-dialog-open: false;
@@ -56,6 +67,14 @@ export global ProjectBoardListState {
     /** Row count for `import-candidate-rows` (Slint cannot rely on `ArrayModel` length). */
     in-out property <int> import-candidate-count: 0;
     in-out property <[ImportCandidateRow]> import-candidate-rows;
+    /** Client-side filter on loaded candidate rows (title / #). */
+    in-out property <string> import-candidates-search: "";
+    /** More pages available from GraphQL (either connection). */
+    in-out property <bool> import-candidates-has-more: false;
+    /** True while a "Load more" request is in flight. */
+    in-out property <bool> import-candidates-load-more-busy: false;
+    /** Total issues + PRs loaded from GraphQL (before client-side search filter). */
+    in-out property <int> import-candidates-total-loaded: 0;
 
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";

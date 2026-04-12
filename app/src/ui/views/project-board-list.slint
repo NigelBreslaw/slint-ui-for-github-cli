@@ -12,6 +12,8 @@ import {
     Size,
     Spinner,
     TableContainer,
+    Button,
+    ButtonVariant,
 } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 import { ProjectBoardTableLayout } from "project-board-table-layout.slint";
@@ -331,8 +333,79 @@ export component ProjectBoardList {
                             wrap: word-wrap;
                         }
 
-                        if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status == "" && ProjectBoardListState.import-candidate-count == 0: Text {
+                        if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status != "Loading issues and pull requests…" && (ProjectBoardListState.import-candidates-load-status == "" || ProjectBoardListState.import-candidates-total-loaded > 0): VerticalLayout {
+                            spacing: 10px;
+
+                            Text {
+                                text: "Filter loaded issues and PRs";
+                                font-size: 12px;
+                                font-weight: 600;
+                                color: PrimerColors.fgColor-default;
+                                wrap: word-wrap;
+                            }
+
+                            Rectangle {
+                                width: 100%;
+                                height: 40px;
+                                background: PrimerColors.bgColor-neutral-muted;
+                                border-radius: 6px;
+                                border-width: 1px;
+                                border-color: PrimerColors.borderColor-muted;
+                                clip: true;
+
+                                TextInput {
+                                    x: 10px;
+                                    y: 0;
+                                    width: parent.width - 20px;
+                                    height: parent.height;
+                                    read-only: ProjectBoardListState.import-candidates-load-status == "Loading issues and pull requests…";
+                                    text: ProjectBoardListState.import-candidates-search;
+                                    font-size: 14px;
+                                    color: PrimerColors.fgColor-default;
+                                    edited => {
+                                        ProjectBoardListState.project-board-import-candidates-search-changed(self.text);
+                                    }
+                                }
+                            }
+
+                            HorizontalLayout {
+                                spacing: 8px;
+                                alignment: start;
+
+                                Button {
+                                    variant: ButtonVariant.default;
+                                    size: Size.small;
+                                    label: "Select all on page";
+                                    disabled: ProjectBoardListState.import-candidate-count == 0;
+                                    clicked => {
+                                        ProjectBoardListState.project-board-import-candidates-select-all-on-page();
+                                    }
+                                }
+
+                                Button {
+                                    variant: ButtonVariant.default;
+                                    size: Size.small;
+                                    label: "Load more";
+                                    loading: ProjectBoardListState.import-candidates-load-more-busy;
+                                    disabled: !ProjectBoardListState.import-candidates-has-more
+                                        || ProjectBoardListState.import-candidates-load-more-busy
+                                        || ProjectBoardListState.import-candidates-load-status == "Loading issues and pull requests…";
+                                    clicked => {
+                                        ProjectBoardListState.project-board-import-candidates-load-more();
+                                    }
+                                }
+                            }
+                        }
+
+                        if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status == "" && ProjectBoardListState.import-candidate-count == 0 && ProjectBoardListState.import-candidates-total-loaded == 0: Text {
                             text: "No open issues or pull requests on this page.";
+                            font-size: 13px;
+                            color: PrimerColors.fgColor-muted;
+                            wrap: word-wrap;
+                        }
+
+                        if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status == "" && ProjectBoardListState.import-candidate-count == 0 && ProjectBoardListState.import-candidates-total-loaded > 0 && ProjectBoardListState.import-candidates-search != "": Text {
+                            text: "No issues or pull requests match your search.";
                             font-size: 13px;
                             color: PrimerColors.fgColor-muted;
                             wrap: word-wrap;
@@ -353,28 +426,56 @@ export component ProjectBoardList {
                                 x: 1px;
                                 y: 1px;
                                 for row[index] in ProjectBoardListState.import-candidate-rows: Rectangle {
-                                    height: 52px;
+                                    height: 56px;
                                     background: mod(index, 2) == 0 ? PrimerColors.bgColor-neutral-muted : PrimerColors.bgColor-canvas-subtle;
 
-                                    TouchArea {
-                                        clicked => {
-                                            ProjectBoardListState.project-board-list-open-row-url(row.url);
-                                        }
+                                    HorizontalLayout {
+                                        padding-left: 6px;
+                                        padding-right: 8px;
+                                        spacing: 4px;
+                                        alignment: center;
 
-                                        VerticalLayout {
-                                            padding: 8px;
-                                            spacing: 2px;
-                                            Text {
-                                                text: row.title;
-                                                color: PrimerColors.fgColor-default;
-                                                overflow: elide;
-                                                font-size: 14px;
+                                        TouchArea {
+                                            width: 32px;
+                                            height: parent.height;
+
+                                            clicked => {
+                                                ProjectBoardListState.project-board-import-candidate-toggled(row.node-id);
                                             }
 
                                             Text {
-                                                text: (row.kind == ProjectBoardItemKind.issue ? "Issue" : "PR") + " #" + row.number;
-                                                font-size: 12px;
-                                                color: PrimerColors.fgColor-muted;
+                                                text: row.selected ? "☑" : "☐";
+                                                font-size: 16px;
+                                                color: PrimerColors.fgColor-default;
+                                                horizontal-alignment: center;
+                                                vertical-alignment: center;
+                                            }
+                                        }
+
+                                        TouchArea {
+                                            horizontal-stretch: 1;
+                                            height: parent.height;
+
+                                            clicked => {
+                                                ProjectBoardListState.project-board-list-open-row-url(row.url);
+                                            }
+
+                                            VerticalLayout {
+                                                padding-top: 8px;
+                                                padding-bottom: 8px;
+                                                spacing: 2px;
+                                                Text {
+                                                    text: row.title;
+                                                    color: PrimerColors.fgColor-default;
+                                                    overflow: elide;
+                                                    font-size: 14px;
+                                                }
+
+                                                Text {
+                                                    text: (row.kind == ProjectBoardItemKind.issue ? "Issue" : "PR") + " #" + row.number;
+                                                    font-size: 12px;
+                                                    color: PrimerColors.fgColor-muted;
+                                                }
                                             }
                                         }
                                     }

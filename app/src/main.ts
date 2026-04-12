@@ -95,6 +95,10 @@ assignProperties(window.ProjectBoardListState, {
   import_candidates_load_status: "",
   import_candidate_count: 0,
   import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
+  import_candidates_search: "",
+  import_candidates_has_more: false,
+  import_candidates_load_more_busy: false,
+  import_candidates_total_loaded: 0,
 });
 
 assignProperties(window.SettingsState, {
