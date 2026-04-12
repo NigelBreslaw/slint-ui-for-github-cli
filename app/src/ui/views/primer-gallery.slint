@@ -59,13 +59,15 @@ export component PrimerGallery {
         { header: "Repository", id: "name", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
         { header: "Stars", id: "stars", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
         { header: "License", id: "license", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.label, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Actions", id: "actions", sortable: false, align: DataTableCellAlign.end, row-header: false, cell-kind: DataTableCellKind.action, horizontal-stretch: 0, min-width: 40px, width: 40px, monospace: false },
     ];
     private property <[DataTableRow]> demo-data-table-rows: [
-        { id: "r1", cells: [{ kind: DataTableCellKind.icon_text, text: "Pull request", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/git-pull-request.svg") }, { kind: DataTableCellKind.text, text: "slint", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "2.4k", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "MIT", label-variant: LabelVariant.success, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }] },
-        { id: "r2", cells: [{ kind: DataTableCellKind.icon_text, text: "Draft", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/git-pull-request-draft.svg") }, { kind: DataTableCellKind.text, text: "github-app", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "120", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "Apache-2.0", label-variant: LabelVariant.accent, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }] },
-        { id: "r3", cells: [{ kind: DataTableCellKind.icon_text, text: "Issue", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/issue-opened.svg") }, { kind: DataTableCellKind.text, text: "primer-ui-react", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "890", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "GPL-3.0", label-variant: LabelVariant.danger, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }] },
+        { id: "r1", cells: [{ kind: DataTableCellKind.icon_text, text: "Pull request", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/git-pull-request.svg") }, { kind: DataTableCellKind.text, text: "slint", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "2.4k", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "MIT", label-variant: LabelVariant.success, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.action, text: "more", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/kebab-horizontal.svg") }] },
+        { id: "r2", cells: [{ kind: DataTableCellKind.icon_text, text: "Draft", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/git-pull-request-draft.svg") }, { kind: DataTableCellKind.text, text: "github-app", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "120", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "Apache-2.0", label-variant: LabelVariant.accent, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.action, text: "open-external", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/link-external.svg") }] },
+        { id: "r3", cells: [{ kind: DataTableCellKind.icon_text, text: "Issue", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/issue-opened.svg") }, { kind: DataTableCellKind.text, text: "primer-ui-react", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "890", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "GPL-3.0", label-variant: LabelVariant.danger, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.action, text: "copy-link", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/copy.svg") }] },
     ];
     private property <string> demo-data-table-sorted-column: "";
+    private property <string> demo-data-table-last-row-action: "";
     private property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;
 
     private property <int> gallery-tab-index: 0;
@@ -899,6 +901,13 @@ export component PrimerGallery {
                                 wrap: word-wrap;
                             }
 
+                            Text {
+                                text: demo-data-table-last-row-action == "" ? "Row-action: —" : "Row-action: " + demo-data-table-last-row-action;
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
                             DataTable {
                                 width: 100%;
                                 columns: demo-data-table-columns;
@@ -908,6 +917,9 @@ export component PrimerGallery {
                                 sort-toggled(cid, dir) => {
                                     demo-data-table-sorted-column = cid;
                                     demo-data-table-sort-direction = dir;
+                                }
+                                row-action(rid, cid, aid) => {
+                                    demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
                                 }
                             }
                         }

@@ -24,6 +24,7 @@ export enum DataTableCellKind {
     text,
     label,
     icon_text,
+    action,
 }
 
 export struct DataTableColumn {
@@ -32,7 +33,7 @@ export struct DataTableColumn {
     sortable: bool,
     align: DataTableCellAlign,
     row-header: bool,
-    /// What each body cell in this column carries (`text` | `label` | `icon_text`; more kinds later).
+    /// What each body cell in this column carries (`text` | `label` | `icon_text` | `action`; more kinds later).
     cell-kind: DataTableCellKind,
     /// Horizontal flex factor for this column (same as `StandardTableView` / `TableColumn`).
     horizontal-stretch: float,
@@ -46,12 +47,12 @@ export struct DataTableColumn {
 
 export struct DataTableCell {
     kind: DataTableCellKind,
-    /// Plain text when `kind == text`; chip text when `kind == label`; label next to **`icon`** when `kind == icon_text`.
+    /// Plain text when `kind == text`; chip text when `kind == label`; label next to **`icon`** when `kind == icon_text`; **action id** (opaque) when `kind == action` (passed to **`row-action`**).
     text: string,
     /// When `kind == label`, passed to **Label**; for `text` / `icon_text` cells use **`LabelVariant.default`** / **`LabelSize.small`** as placeholders.
     label-variant: LabelVariant,
     label-size: LabelSize,
-    /// When `kind == icon_text`, leading **`Image`** source; for other kinds supply any placeholder (ignored).
+    /// When `kind == icon_text` or **`action`**, **`Image`** / **IconButton** source; for `text` / `label` supply any placeholder (ignored).
     icon: image,
 }
 

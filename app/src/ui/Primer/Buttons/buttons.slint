@@ -291,11 +291,11 @@ export component Button {
 }
 
 
-enum Variant {
+export enum IconButtonVariant {
     default,
     primary,
     danger,
-    invisible
+    invisible,
 }
 
 struct ButtonStyle {
@@ -308,7 +308,7 @@ struct ButtonStyle {
 export component IconButton {
 
     in property <Size> size: Size.medium;
-    in property <Variant> variant: Variant.default;
+    in property <IconButtonVariant> variant: IconButtonVariant.default;
     in property icon-source <=> img.source;
     callback clicked <=> ta.clicked;
 
@@ -318,6 +318,14 @@ export component IconButton {
         button-default-bgColor-hover: ButtonTokens.iconButton-bgColor-hover,
         button-default-borderColor-active: ButtonTokens.color-btn-border,
     };
+
+    private property <bool> is-invisible: variant == IconButtonVariant.invisible;
+
+    private property <length> ib-border-width: is-invisible ? 0px : 1px;
+
+    private property <color> ib-border-color: is-invisible ? #00000000 : style.button-default-borderColor-active;
+
+    private property <color> ib-bg-rest: is-invisible ? #00000000 : style.button-default-bgColor-active;
 
     private property <length> icon-img-size:
         size == Size.small
@@ -329,9 +337,9 @@ export component IconButton {
 
     Rectangle {
         border-radius: LayoutTokens.borderRadius-medium;
-        border-width: 1px;
-        border-color: style.button-default-borderColor-active;
-        background: ta.has-hover ? style.button-default-bgColor-hover : style.button-default-bgColor-active;
+        border-width: ib-border-width;
+        border-color: ib-border-color;
+        background: ta.has-hover ? style.button-default-bgColor-hover : ib-bg-rest;
 
     }
 

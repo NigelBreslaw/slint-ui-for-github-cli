@@ -7,8 +7,9 @@
 // Slint docs: HorizontalLayout and GridLayout (stretch, min/preferred/max). A single GridLayout would unify column tracks,
 // but nested repeaters in GridLayout (for rows × for cells) have panicked the interpreter (dynamic_item_tree repeater lookup);
 // see Primer readme.md DataTable "Layout" paragraph.
+import { IconButton, IconButtonVariant } from "../Buttons/buttons.slint";
 import { Label } from "../Label/label.slint";
-import { LayoutTokens, PrimerColors } from "../tokens.slint";
+import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 import {
     DataTableCellAlign,
     DataTableCellKind,
@@ -28,6 +29,8 @@ export component DataTable {
     /// When true, sorting is owned outside the table (e.g. server); `sort-toggled` still fires so parent can refresh rows.
     in property <bool> external-sorting: true;
     callback sort-toggled(column-id: string, direction: DataTableSortDirection);
+    /// Fired when a body cell with `kind == action` is activated; **`action-id`** is that cell’s **`text`**.
+    callback row-action(row-id: string, column-id: string, action-id: string);
 
     private property <length> pad-block:
         cell-padding == DataTableCellPadding.condensed ? LayoutTokens.table-cell-padding-block-condensed
@@ -319,6 +322,21 @@ export component DataTable {
                                             horizontal-alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? right : left;
                                             vertical-alignment: center;
                                             wrap: word-wrap;
+                                        }
+                                    }
+
+                                    if cell.kind == DataTableCellKind.action && cell.text != "": HorizontalLayout {
+                                        width: 100%;
+                                        min-width: 0px;
+                                        alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? end : start;
+
+                                        IconButton {
+                                            variant: IconButtonVariant.invisible;
+                                            size: Size.small;
+                                            icon-source: cell.icon;
+                                            clicked => {
+                                                root.row-action(row.id, index < columns.length ? columns[index].id : "", cell.text);
+                                            }
                                         }
                                     }
                                 }
