@@ -190,7 +190,9 @@ function summarizeImportAddOutcomes(outcomes: AddProjectV2ItemOutcome[]): string
   if (fail === 0) {
     return ok === 1 ? "Added 1 item to the project." : `Added ${ok} items to the project.`;
   }
-  const firstErr = outcomes.find((o): o is { contentId: string; ok: false; error: string } => !o.ok);
+  const firstErr = outcomes.find(
+    (o): o is { contentId: string; ok: false; error: string } => !o.ok,
+  );
   const errTail = firstErr ? `: ${truncateOneLine(firstErr.error, 120)}` : "";
   return `Added ${ok} of ${outcomes.length}. ${fail} failed${errTail}`;
 }

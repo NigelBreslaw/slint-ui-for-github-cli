@@ -2,6 +2,7 @@ import { ListView } from "std-widgets.slint";
 import { ProjectBoardItemKind, ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
 import { PrimerDialog, PrimerDialogWidth } from "../components/primer-dialog.slint";
 import {
+    Checkbox,
     DataTable,
     DataTableCellAlign,
     DataTableCellKind,
@@ -435,20 +436,13 @@ export component ProjectBoardList {
                                         spacing: 4px;
                                         alignment: center;
 
-                                        TouchArea {
-                                            width: 32px;
-                                            height: parent.height;
-
-                                            clicked => {
+                                        Checkbox {
+                                            horizontal-stretch: 0;
+                                            vertical-stretch: 0;
+                                            checked: row.selected;
+                                            label: "";
+                                            toggled => {
                                                 ProjectBoardListState.project-board-import-candidate-toggled(row.node-id);
-                                            }
-
-                                            Text {
-                                                text: row.selected ? "☑" : "☐";
-                                                font-size: 16px;
-                                                color: PrimerColors.fgColor-default;
-                                                horizontal-alignment: center;
-                                                vertical-alignment: center;
                                             }
                                         }
 
