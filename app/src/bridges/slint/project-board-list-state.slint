@@ -53,6 +53,8 @@ export global ProjectBoardListState {
     callback project-board-import-candidate-toggled(string);
     /** Add checked candidates to the current Project V2 (`addProjectV2ItemById`, PR10). Closes the dialog when every mutation succeeds (PR12). */
     callback project-board-import-add-selected-to-project;
+    /** Dismiss the post-import success banner (PR13). */
+    callback project-board-import-success-dismissed;
 
     /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */
     in-out property <bool> import-dialog-open: false;
@@ -85,6 +87,8 @@ export global ProjectBoardListState {
 
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";
+    /** Shown on the board after a full import success + successful reload (PR13); empty hides. */
+    in-out property <string> board-import-success-message: "";
     in-out property <string> items-load-status: "";
     /** Row count for empty-state copy (`board-rows-model` length is not always visible in Slint). */
     in-out property <int> board-items-count: 0;

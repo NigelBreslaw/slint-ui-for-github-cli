@@ -242,6 +242,7 @@ export function buildProjectBoardListStateCallbacks(
           assignProperties(window.ProjectBoardListState, {
             has_selected_project: false,
             selected_project_label: "",
+            board_import_success_message: "",
             items_load_status: "",
             import_dialog_open: false,
             board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
@@ -269,6 +270,7 @@ export function buildProjectBoardListStateCallbacks(
     project_board_list_view_exited: () => {
       clearImportReposUiState(window);
       assignProperties(window.ProjectBoardListState, {
+        board_import_success_message: "",
         items_load_status: "",
         import_dialog_open: false,
       });
@@ -446,8 +448,20 @@ export function buildProjectBoardListStateCallbacks(
         if (fullSuccess) {
           clearImportReposUiState(window);
           assignProperties(window.ProjectBoardListState, { import_dialog_open: false });
+          if (window.ProjectBoardListState.items_load_status === "") {
+            const n = outcomes.length;
+            const successLine =
+              n === 1 ? "Added 1 item to the project." : `Added ${n} items to the project.`;
+            assignProperties(window.ProjectBoardListState, {
+              board_import_success_message: successLine,
+            });
+          }
         }
       })();
+    },
+
+    project_board_import_success_dismissed: () => {
+      assignProperties(window.ProjectBoardListState, { board_import_success_message: "" });
     },
 
     project_board_list_refresh: () => {

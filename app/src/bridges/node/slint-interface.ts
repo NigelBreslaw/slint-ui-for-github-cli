@@ -217,6 +217,7 @@ export type ProjectBoardListStateHandle = {
   project_board_import_candidates_select_all_on_page: () => void;
   project_board_import_candidate_toggled: (node_id: string) => void;
   project_board_import_add_selected_to_project: () => void;
+  project_board_import_success_dismissed: () => void;
   import_dialog_open: boolean;
   import_repos_search: string;
   import_repos_load_status: string;
@@ -235,6 +236,7 @@ export type ProjectBoardListStateHandle = {
   import_add_selected_message: string;
   has_selected_project: boolean;
   selected_project_label: string;
+  board_import_success_message: string;
   items_load_status: string;
   board_items_count: number;
   board_page_index: number;

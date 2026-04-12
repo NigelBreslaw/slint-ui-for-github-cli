@@ -102,6 +102,7 @@ assignProperties(window.ProjectBoardListState, {
   import_selected_count: 0,
   import_add_selected_busy: false,
   import_add_selected_message: "",
+  board_import_success_message: "",
 });
 
 assignProperties(window.SettingsState, {

@@ -150,6 +150,7 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
   assignProperties(window.ProjectBoardListState, {
     has_selected_project: false,
     selected_project_label: "",
+    board_import_success_message: "",
     items_load_status: "",
     board_items_count: 0,
     board_page_index: 0,

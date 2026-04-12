@@ -2,6 +2,8 @@ import { ListView } from "std-widgets.slint";
 import { ProjectBoardItemKind, ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
 import { PrimerDialog, PrimerDialogWidth } from "../components/primer-dialog.slint";
 import {
+    Banner,
+    BannerVariant,
     Checkbox,
     DataTable,
     DataTableCellAlign,
@@ -114,6 +116,19 @@ export component ProjectBoardList {
                 spacing: 10px;
                 width: 100%;
                 vertical-stretch: 1;
+
+                if ProjectBoardListState.board-import-success-message != ""
+                    && ProjectBoardListState.items-load-status != "Loading board items…"
+                    && ProjectBoardListState.items-load-status == "": Banner {
+                    width: 100%;
+                    variant: BannerVariant.success;
+                    dismissible: true;
+                    title: "Import complete";
+                    description: ProjectBoardListState.board-import-success-message;
+                    dismiss => {
+                        ProjectBoardListState.project-board-import-success-dismissed();
+                    }
+                }
 
                 if ProjectBoardListState.items-load-status == "Loading board items…": HorizontalLayout {
                     spacing: 10px;
