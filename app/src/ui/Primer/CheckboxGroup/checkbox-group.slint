@@ -1,0 +1,81 @@
+// Primer-style checkbox group (fieldset layout). Upstream: https://primer.style/product/components/checkbox-group/
+// When `disabled` is true, the group is dimmed; also set each child Checkbox's `disabled` to match so toggling is blocked.
+
+import { Icons } from "../assets/icons.slint";
+import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+import { ValidationStatus } from "../Select/select.slint";
+
+export component CheckboxGroup {
+    in property <string> label: "";
+    /** When true, the legend text is not shown (Slint has no separate a11y tree). */
+    in property <bool> label-visually-hidden: false;
+    in property <string> caption: "";
+    in property <bool> required: false;
+    /** Dims the checkbox stack. Child Checkbox components should use the same value for `disabled` (Slint has no group-level input blocking on layouts). */
+    in property <bool> disabled: false;
+    in property <ValidationStatus> validation-status: ValidationStatus.none;
+    in property <string> validation-message: "";
+
+    width: 100%;
+
+    VerticalLayout {
+        spacing: 6px;
+        width: 100%;
+
+        if label != "" && !label-visually-hidden: HorizontalLayout {
+            spacing: 4px;
+            alignment: start;
+
+            Text {
+                text: label;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: LayoutTokens.base-text-weight-semibold;
+                color: PrimerColors.fgColor-default;
+                wrap: word-wrap;
+            }
+
+            if required: Text {
+                text: "*";
+                color: PrimerColors.fgColor-danger;
+                font-size: LayoutTokens.text-body-size-medium;
+                vertical-alignment: top;
+            }
+        }
+
+        if caption != "": Text {
+            text: caption;
+            font-size: LayoutTokens.text-body-size-small;
+            color: PrimerColors.fgColor-muted;
+            wrap: word-wrap;
+        }
+
+        VerticalLayout {
+            spacing: LayoutTokens.button-content-gap;
+            width: 100%;
+            opacity: root.disabled ? 0.5 : 1.0;
+
+            @children
+        }
+
+        if validation-message != "" && validation-status != ValidationStatus.none: HorizontalLayout {
+            spacing: 6px;
+            width: 100%;
+
+            Image {
+                width: LayoutTokens.iconButton-icon-size-medium;
+                height: LayoutTokens.iconButton-icon-size-medium;
+                vertical-alignment: top;
+                source: validation-status == ValidationStatus.error ? Icons.alert : Icons.check_circle;
+                colorize: validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : PrimerColors.fgColor-success;
+            }
+
+            Text {
+                horizontal-stretch: 1;
+                text: validation-message;
+                font-size: LayoutTokens.text-body-size-medium;
+                color: validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : PrimerColors.fgColor-success;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
