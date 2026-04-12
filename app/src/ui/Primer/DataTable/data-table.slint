@@ -1,5 +1,6 @@
 // Primer DataTable — Table.module.css spacing/colors; sort headers + callback (primer/react DataTable onToggleSort).
-// Column widths align header and body like material `StandardTableView` / `TableColumn` (horizontal-stretch, min/preferred/max width).
+// Header and body use matching horizontal constraints per column (material StandardTableView pattern).
+// Nested repeaters inside GridLayout are avoided — they panic the Slint interpreter (dynamic_item_tree repeater lookup).
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     DataTableCellAlign,
@@ -42,6 +43,18 @@ export component DataTable {
         max(col.min-width, col.width);
     }
 
+    pure function body-cell-stretch(index: int) -> float {
+        index < columns.length ? columns[index].horizontal-stretch : 1;
+    }
+
+    pure function body-cell-min-w(index: int) -> length {
+        index < columns.length ? col-min-width(columns[index]) : 0px;
+    }
+
+    pure function body-cell-max-w(index: int) -> length {
+        index < columns.length ? col-max-width(columns[index]) : 100000px;
+    }
+
     Rectangle {
         width: 100%;
         clip: true;
@@ -63,7 +76,6 @@ export component DataTable {
                 for col[index] in columns: Rectangle {
                     horizontal-stretch: col.horizontal-stretch;
                     min-width: col-min-width(col);
-                    preferred-width: self.min-width;
                     max-width: col-max-width(col);
                     min-height: header-row-min-height;
                     background: PrimerColors.bgColor-muted;
@@ -90,7 +102,7 @@ export component DataTable {
                             width: 100%;
                             min-height: header-row-min-height;
                             spacing: 4px;
-                            alignment: center;
+                            alignment: col.align == DataTableCellAlign.end ? end : start;
 
                             if col.align == DataTableCellAlign.end: Image {
                                 width: LayoutTokens.iconButton-icon-size-medium;
@@ -130,6 +142,7 @@ export component DataTable {
                         padding-bottom: pad-block;
                         width: 100%;
                         min-height: header-row-min-height;
+                        alignment: col.align == DataTableCellAlign.end ? end : start;
 
                         Text {
                             width: 100%;
@@ -167,10 +180,9 @@ export component DataTable {
                             spacing: 0;
 
                             for cell[index] in row.cells: Rectangle {
-                                horizontal-stretch: index < columns.length ? columns[index].horizontal-stretch : 1;
-                                min-width: index < columns.length ? col-min-width(columns[index]) : 0px;
-                                preferred-width: self.min-width;
-                                max-width: index < columns.length ? col-max-width(columns[index]) : 100000px;
+                                horizontal-stretch: body-cell-stretch(index);
+                                min-width: body-cell-min-w(index);
+                                max-width: body-cell-max-w(index);
                                 background: #00000000;
 
                                 HorizontalLayout {
