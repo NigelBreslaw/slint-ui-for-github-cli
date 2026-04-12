@@ -12,7 +12,8 @@ description: >-
 
 ## Canonical documentation
 
-- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — architecture, **Typical PR sequence**, **Implementation plans and PR breakdown tables**, **Verification**, limitations.
+- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — compact reference (architecture, verification, limitations).
+- [`app/src/ui/Primer/component-imports.md`](../../../app/src/ui/Primer/component-imports.md) — which globals to import per component family.
 
 ## Phases (run in order)
 
@@ -23,7 +24,7 @@ description: >-
 | 3 | **Coverage matrix** | [`primer-port-variant-matrix`](../primer-port-variant-matrix/SKILL.md) | Filled checklist matrix |
 | 4 | **Token plan** | [`primer-slint-token-layers`](../primer-slint-token-layers/SKILL.md) | Token audit table; edits in `tokens.slint` per AGENTS |
 | 5 | **Interaction styling** | [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md) | `states [ ]` design; Checkbox as reference |
-| 6 | **Implementation + PRs** | AGENTS | Spike → Tokens → Visual → Integration → Docs (merge steps as appropriate) |
+| 6 | **Implementation + PRs** | AGENTS + [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) | Spike → Tokens → Visual → Integration → Docs; **one PR at a time** when executing |
 
 ## PR breakdown (from AGENTS)
 
@@ -34,6 +35,8 @@ Multi-PR work **must** include an ordered table:
 | 1 | … | … | `pnpm typecheck`, Slint loads `app/src/ui/main.slint`, … |
 
 See AGENTS **Implementation plans and PR breakdown tables** for required columns and dependencies.
+
+**Executing the plan:** follow [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) — implement only the current PR, user owns git, mandatory `pnpm autofix`, `pnpm test`, and `pnpm dev` with a clean app start between steps.
 
 ## Verification (monorepo root)
 
@@ -52,3 +55,5 @@ Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS).
 | [`primer-port-variant-matrix`](../primer-port-variant-matrix/SKILL.md) | State/variant checklist |
 | [`primer-slint-token-layers`](../primer-slint-token-layers/SKILL.md) | Deduped `tokens.slint` |
 | [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md) | `states [ ]`, mutex groups |
+| [`primer-slint-icons-registry`](../primer-slint-icons-registry/SKILL.md) | `Icons` registry, new SVG checklist |
+| [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) | One PR at a time; plan table; acceptance (autofix, test, dev) |

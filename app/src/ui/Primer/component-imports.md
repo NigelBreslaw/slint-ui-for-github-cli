@@ -1,0 +1,14 @@
+# Primer — which globals to import
+
+Quick reference when wiring a component or view. Rules and barrel exports: [`AGENTS.md`](AGENTS.md).
+
+- **App views / chrome:** `PrimerColors` and `LayoutTokens` (from `tokens.slint` or [`primer.slint`](primer.slint) barrel).
+- **Controls** (GitHub button palette, danger/success): `ButtonTokens` + `PrimerColors` as needed — see [`Buttons/buttons.slint`](Buttons/buttons.slint), [`Select/select.slint`](Select/select.slint).
+- **CounterLabel** (pill): [`CounterLabel/counter-label.slint`](CounterLabel/counter-label.slint) — pass explicit colors from `Button`, or set `use-primer-scheme` with `CounterLabelVariant` for standalone `PrimerColors` (`bgColor-neutral-emphasis` / `neutral-muted`, `counter-borderColor`).
+- **Label** (product metadata chip): `LabelTokens` + `LayoutTokens` — [`Label/label.slint`](Label/label.slint), [`Label/logic.slint`](Label/logic.slint); not the same as **CounterLabel**.
+- **LabelGroup:** `Label` + `LayoutTokens` only — [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint); no separate color global.
+- **DataTable:** [`DataTable/data-table.slint`](DataTable/data-table.slint) — `LayoutTokens` + `PrimerColors`; `Label` + `LabelVariant` / `LabelSize` from [`Label/types.slint`](Label/types.slint); `Image` for `iconText`; `IconButton` (`IconButtonVariant.invisible`, `Size.small`) for `action`. Models: [`DataTable/types.slint`](DataTable/types.slint). `Icons.*` from [`assets/icons.slint`](assets/icons.slint); sort: `Icons.sort_asc` / `Icons.sort_desc`. No separate DataTable color global.
+- **TableContainer:** [`DataTable/table-container.slint`](DataTable/table-container.slint) — `Button` + `ButtonVariant` + `LayoutTokens` + `PrimerColors` + `Size`; content via `@children`.
+- **Banner:** `BannerTokens` + `LayoutTokens` + `PrimerColors` for default text fg — [`Banner/banner.slint`](Banner/banner.slint).
+- **Checkbox:** `CheckboxTokens` + `LayoutTokens` + `PrimerColors` — [`Checkbox/checkbox.slint`](Checkbox/checkbox.slint); icons: `Icons` (`checkbox`, `checkbox_fill`).
+- **CheckboxGroup:** `LayoutTokens` + `PrimerColors` + `ButtonTokens` (validation line) — [`CheckboxGroup/checkbox-group.slint`](CheckboxGroup/checkbox-group.slint); reuse `ValidationStatus` from [`Select/select.slint`](Select/select.slint). When the group is `disabled`, mirror `disabled` on each child `Checkbox`.

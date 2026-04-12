@@ -13,9 +13,26 @@ description: >-
 
 ## Canonical rules (read first)
 
-- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — **global declaration order**, token layer table, **Adding design tokens** checklist, cross-global `out`-only rule.
+- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — **global declaration order**, token layer summary table, cross-global `out`-only rule.
 
-Do **not** repeat those tables here; follow them in `tokens.slint`.
+Follow them in `tokens.slint`. Dependency overview:
+
+```mermaid
+flowchart TB
+  LT[LayoutTokens]
+  PC[PrimerColors]
+  BT[ButtonTokens]
+  BanT[BannerTokens]
+  LabT[LabelTokens]
+  LT --> Components[Slint components]
+  PC --> Components
+  PC --> BT
+  PC --> BanT
+  PC --> LabT
+  BT --> Components
+  BanT --> Components
+  LabT --> Components
+```
 
 ## Goal
 
