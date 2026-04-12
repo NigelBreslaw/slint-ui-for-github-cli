@@ -100,7 +100,7 @@ component NavListItemRow {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: indent-depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? center : start;
+            alignment: start;
 
             // Fixed-size accent only (horizontal-stretch: 0). Nested VerticalLayout + % width was stealing row width.
             if sidebar-indicator: Rectangle {
@@ -174,7 +174,7 @@ component NavListExpandableRow3 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? center : start;
+            alignment: start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
@@ -266,7 +266,7 @@ component NavListExpandableRow2 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? center : start;
+            alignment: start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
@@ -358,7 +358,7 @@ component NavListExpandableRow1 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? center : start;
+            alignment: start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
@@ -450,7 +450,7 @@ component NavListExpandableRow0 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? center : start;
+            alignment: start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
