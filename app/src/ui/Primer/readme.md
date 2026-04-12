@@ -112,7 +112,7 @@ Slint port of Primer [**DataTable**](https://primer.style/product/components/dat
 
 **Imports for views (building `columns` / `rows`):** Prefer [`primer.slint`](primer.slint) — **`DataTable`**, **`DataTableCell`**, **`DataTableCellKind`**, **`DataTableColumn`**, **`DataTableRow`**, **`DataTableCellAlign`**, **`DataTableCellPadding`**, **`DataTableSortDirection`**, **`TableContainer`**, **`LabelVariant`**, **`LabelSize`**, **`ButtonVariant`**, **`Size`**. For **`TableContainer`** toolbar buttons, set **`primary-action-label`** / **`secondary-action-label`** and **`action-size`** as needed. Each **`DataTableCell`** needs **`icon`**: use **`@image-url(...)`** for **`iconText`** and **`action`** cells; for **`text`** / **`label`** cells pass any placeholder **`image`** (it is not drawn). **`DataTable`** instantiates **Label** and **IconButton** internally — import those only if you use them outside the table.
 
-Examples: **Primer gallery**, **Misc** tab (**DataTable** subsection).
+Examples: **Primer gallery**, **Misc** tab (**DataTable** + **Pagination** subsections).
 
 ## TableContainer
 
@@ -136,17 +136,19 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 Table footer pagination aligned with Primer **DataTable** toolbar **`Pagination`**. Upstream: [`DataTable/Pagination.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/DataTable/Pagination.tsx) and [`Pagination/model.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Pagination/model.tsx).
 
-| Property | Type | Notes |
-| -------- | ---- | ----- |
-| `total-count` | `int` | Total items (same semantics as React `totalCount`). |
-| `page-size` | `int` | Items per page (default **25**). |
-| `page-index` | `int` | **0-based** current page index (controlled; parent updates after `page-changed`). |
-| `show-pages` | `bool` | When false, only **Previous** / **Next** (no numeric page strip). |
-| `margin-page-count` | `int` | Pages fixed at the start/end of the strip (default **1**; matches React `buildPaginationModel` margin). |
-| `surrounding-page-count` | `int` | Pages on each side of the current page (default **2**). |
-| `page-changed` | `callback` | `(new-page-index)` **0-based** index to select. |
+| Property                 | Type       | Notes                                                                                                   |
+| ------------------------ | ---------- | ------------------------------------------------------------------------------------------------------- |
+| `total-count`            | `int`      | Total items (same semantics as React `totalCount`).                                                     |
+| `page-size`              | `int`      | Items per page (default **25**).                                                                        |
+| `page-index`             | `int`      | **0-based** current page index (controlled; parent updates after `page-changed`).                       |
+| `show-pages`             | `bool`     | When false, only **Previous** / **Next** (no numeric page strip).                                       |
+| `margin-page-count`      | `int`      | Pages fixed at the start/end of the strip (default **1**; matches React `buildPaginationModel` margin). |
+| `surrounding-page-count` | `int`      | Pages on each side of the current page (default **2**).                                                 |
+| `page-changed`           | `callback` | `(new-page-index)` **0-based** index to select.                                                         |
 
 **Imports for views:** Prefer [`primer.slint`](primer.slint) — **`Pagination`**. Compose it **below** **`TableContainer`** / **`DataTable`** when paging row models in the parent (parent slices **`rows`** and updates **`page-index`**).
+
+Examples: **Primer gallery**, **Misc** tab (**DataTable** with footer **Pagination**, plus standalone **Pagination** demos).
 
 ## Caution:
 

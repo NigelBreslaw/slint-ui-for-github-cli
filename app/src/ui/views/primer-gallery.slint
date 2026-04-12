@@ -16,6 +16,7 @@ import {
     DataTableSortDirection,
     Icons,
     Label,
+    Pagination,
     TableContainer,
     LabelGroup,
     LabelGroupItem,
@@ -72,6 +73,10 @@ export component PrimerGallery {
     private property <string> demo-data-table-last-row-action: "";
     private property <string> demo-data-table-last-row-click: "";
     private property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;
+
+    private property <int> demo-pagination-page-index: 0;
+    private property <int> demo-pagination-page-index-prevnext: 0;
+    private property <int> demo-pagination-page-index-short: 0;
 
     private property <int> gallery-tab-index: 3;
     private property <[UnderlineNavItem]> gallery-section-tabs: [
@@ -699,6 +704,136 @@ export component PrimerGallery {
                             width: 100%;
 
                             Text {
+                                text: "DataTable";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Sortable headers update gallery state via sort-toggled; row order is static in this demo (app owns sorting). TableContainer adds title, subtitle, and table-level actions (toolbar primary). Row-click fires for row hits; the Actions IconButton uses row-action only (nested TouchArea).";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Text {
+                                text: demo-data-table-last-row-click == "" ? "Row-click: —" : "Row-click: " + demo-data-table-last-row-click;
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Text {
+                                text: demo-data-table-last-row-action == "" ? "Row-action: —" : "Row-action: " + demo-data-table-last-row-action;
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            TableContainer {
+                                width: 100%;
+                                title: "Repositories";
+                                subtitle: "Example rows for the gallery demo.";
+                                primary-action-label: "Export";
+                                primary-action => { }
+
+                                DataTable {
+                                    width: 100%;
+                                    columns: demo-data-table-columns;
+                                    rows: demo-data-table-rows;
+                                    sorted-column-id: demo-data-table-sorted-column;
+                                    sort-direction: demo-data-table-sort-direction;
+                                    sort-toggled(cid, dir) => {
+                                        demo-data-table-sorted-column = cid;
+                                        demo-data-table-sort-direction = dir;
+                                    }
+                                    row-action(rid, cid, aid) => {
+                                        demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
+                                    }
+                                    row-clicked(rid) => {
+                                        demo-data-table-last-row-click = rid;
+                                    }
+                                }
+                            }
+
+                            Pagination {
+                                width: 100%;
+                                total-count: 100;
+                                page-size: 25;
+                                page-index: demo-pagination-page-index;
+                                show-pages: true;
+                                page-changed(idx) => {
+                                    demo-pagination-page-index = idx;
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "Pagination (Previous / Next only)";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Same totals as above; numeric page strip hidden (matches narrow-viewport behavior in Primer React).";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Pagination {
+                                width: 100%;
+                                total-count: 100;
+                                page-size: 25;
+                                page-index: demo-pagination-page-index-prevnext;
+                                show-pages: false;
+                                page-changed(idx) => {
+                                    demo-pagination-page-index-prevnext = idx;
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "Pagination (single page)";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Fewer items than page size — controls reflect one page.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Pagination {
+                                width: 100%;
+                                total-count: 8;
+                                page-size: 25;
+                                page-index: demo-pagination-page-index-short;
+                                show-pages: true;
+                                page-changed(idx) => {
+                                    demo-pagination-page-index-short = idx;
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
                                 text: "Spinner";
                                 color: PrimerColors.fgColor-default;
                                 font-size: 15px;
@@ -883,65 +1018,6 @@ export component PrimerGallery {
                             LabelGroup {
                                 width: 100%;
                                 items: demo-label-group-items;
-                            }
-                        }
-
-                        VerticalLayout {
-                            spacing: 12px;
-                            width: 100%;
-
-                            Text {
-                                text: "DataTable";
-                                color: PrimerColors.fgColor-default;
-                                font-size: 15px;
-                                font-weight: 600;
-                            }
-
-                            Text {
-                                text: "Sortable headers update gallery state via sort-toggled; row order is static in this demo (app owns sorting). TableContainer adds title, subtitle, and table-level actions (toolbar primary). Row-click fires for row hits; the Actions IconButton uses row-action only (nested TouchArea).";
-                                color: PrimerColors.fgColor-muted;
-                                font-size: 12px;
-                                wrap: word-wrap;
-                            }
-
-                            Text {
-                                text: demo-data-table-last-row-click == "" ? "Row-click: —" : "Row-click: " + demo-data-table-last-row-click;
-                                color: PrimerColors.fgColor-muted;
-                                font-size: 12px;
-                                wrap: word-wrap;
-                            }
-
-                            Text {
-                                text: demo-data-table-last-row-action == "" ? "Row-action: —" : "Row-action: " + demo-data-table-last-row-action;
-                                color: PrimerColors.fgColor-muted;
-                                font-size: 12px;
-                                wrap: word-wrap;
-                            }
-
-                            TableContainer {
-                                width: 100%;
-                                title: "Repositories";
-                                subtitle: "Example rows for the gallery demo.";
-                                primary-action-label: "Export";
-                                primary-action => { }
-
-                                DataTable {
-                                    width: 100%;
-                                    columns: demo-data-table-columns;
-                                    rows: demo-data-table-rows;
-                                    sorted-column-id: demo-data-table-sorted-column;
-                                    sort-direction: demo-data-table-sort-direction;
-                                    sort-toggled(cid, dir) => {
-                                        demo-data-table-sorted-column = cid;
-                                        demo-data-table-sort-direction = dir;
-                                    }
-                                    row-action(rid, cid, aid) => {
-                                        demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
-                                    }
-                                    row-clicked(rid) => {
-                                        demo-data-table-last-row-click = rid;
-                                    }
-                                }
                             }
                         }
                     }
