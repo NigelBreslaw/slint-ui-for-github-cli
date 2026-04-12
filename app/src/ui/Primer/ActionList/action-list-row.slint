@@ -1,0 +1,69 @@
+// Shared ActionList row chrome — upstream: Primer ActionList default item (ButtonTokens action-list hover/active/selected).
+// Used by NavList and SelectPanel; interaction via `states` (see .cursor/skills/primer-slint-interaction-states/SKILL.md).
+
+import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export component ActionListRow {
+    in property <bool> disabled: false;
+    in property <bool> selected: false;
+    in property <string> label: "";
+
+    callback clicked;
+
+    min-height: LayoutTokens.action-list-item-min-height;
+    horizontal-stretch: 1;
+
+    ta := TouchArea {
+        enabled: !root.disabled;
+        clicked => {
+            root.clicked();
+        }
+
+        row-bg := Rectangle {
+            border-radius: LayoutTokens.borderRadius-medium;
+            background: #00000000;
+
+            hl := HorizontalLayout {
+                min-height: LayoutTokens.action-list-item-min-height;
+                padding-left: LayoutTokens.action-list-item-padding-inline;
+                padding-right: LayoutTokens.action-list-item-padding-inline;
+                padding-top: LayoutTokens.action-list-item-padding-block;
+                padding-bottom: LayoutTokens.action-list-item-padding-block;
+                spacing: LayoutTokens.button-content-gap;
+
+                label-t := Text {
+                    horizontal-stretch: 1;
+                    min-width: 0px;
+                    text: root.label;
+                    color: PrimerColors.fgColor-default;
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-medium;
+                    wrap: word-wrap;
+                    vertical-alignment: center;
+                }
+            }
+
+            states [
+                disabled when root.disabled: {
+                    row-bg.background: root.selected ? ButtonTokens.color-action-list-item-default-selected-bg : #00000000;
+                    label-t.color: ButtonTokens.control-fgColor-disabled;
+                }
+                selected-pressed when !root.disabled && root.selected && ta.pressed: {
+                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                }
+                selected-hover when !root.disabled && root.selected && !ta.pressed && ta.has-hover: {
+                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                }
+                selected-rest when !root.disabled && root.selected && !ta.pressed && !ta.has-hover: {
+                    row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
+                }
+                unselected-pressed when !root.disabled && !root.selected && ta.pressed: {
+                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                }
+                unselected-hover when !root.disabled && !root.selected && !ta.pressed && ta.has-hover: {
+                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                }
+            ]
+        }
+    }
+}
