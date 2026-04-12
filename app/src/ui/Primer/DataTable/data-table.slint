@@ -10,6 +10,7 @@
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     DataTableCellAlign,
+    DataTableCellKind,
     DataTableCellPadding,
     DataTableColumn,
     DataTableRow,
@@ -243,10 +244,10 @@ export component DataTable {
                                     min-width: 0px;
                                     min-height: 0;
 
-                                    if index < columns.length && columns[index].monospace: Text {
+                                    if cell.kind == DataTableCellKind.text && index < columns.length && columns[index].monospace: Text {
                                         width: 100%;
                                         min-width: 0px;
-                                        text: cell;
+                                        text: cell.text;
                                         font-size: LayoutTokens.text-body-size-small;
                                         font-family: "Bitstream Vera Sans Mono";
                                         color: PrimerColors.fgColor-default;
@@ -256,10 +257,10 @@ export component DataTable {
                                         wrap: word-wrap;
                                     }
 
-                                    if !(index < columns.length && columns[index].monospace): Text {
+                                    if cell.kind == DataTableCellKind.text && !(index < columns.length && columns[index].monospace): Text {
                                         width: 100%;
                                         min-width: 0px;
-                                        text: cell;
+                                        text: cell.text;
                                         font-size: LayoutTokens.text-body-size-small;
                                         color: PrimerColors.fgColor-default;
                                         font-weight: index < columns.length && columns[index].row-header ? LayoutTokens.base-text-weight-semibold : 400;

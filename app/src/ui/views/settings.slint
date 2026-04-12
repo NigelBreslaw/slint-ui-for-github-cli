@@ -3,6 +3,7 @@ import { PrimerDialog } from "../components/primer-dialog.slint";
 import {
     DataTable,
     DataTableCellAlign,
+    DataTableCellKind,
     DataTableCellPadding,
     DataTableColumn,
     DataTableSortDirection,
@@ -21,6 +22,7 @@ export component Settings {
             sortable: false,
             align: DataTableCellAlign.start,
             row-header: false,
+            cell-kind: DataTableCellKind.text,
             horizontal-stretch: 1,
             min-width: 0px,
             width: 0px,
@@ -32,6 +34,7 @@ export component Settings {
             sortable: false,
             align: DataTableCellAlign.start,
             row-header: false,
+            cell-kind: DataTableCellKind.text,
             horizontal-stretch: 1,
             min-width: 0px,
             width: 0px,
@@ -62,11 +65,11 @@ export component Settings {
                         width: 100%;
                         columns: settings-debug-columns;
                         rows: [
-                            { id: "build", cells: ["Build", SettingsState.settings-debug-commit-label] },
-                            { id: "gh", cells: ["GitHub CLI", SettingsState.settings-debug-gh-version] },
-                            { id: "rate", cells: ["GraphQL rate limit", SettingsState.settings-debug-rate-limit] },
-                            { id: "reset", cells: ["Resets at (local time)", SettingsState.settings-debug-reset-at] },
-                            { id: "countdown", cells: ["Time until reset", SettingsState.settings-debug-countdown] },
+                            { id: "build", cells: [{ kind: DataTableCellKind.text, text: "Build" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-commit-label }] },
+                            { id: "gh", cells: [{ kind: DataTableCellKind.text, text: "GitHub CLI" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-gh-version }] },
+                            { id: "rate", cells: [{ kind: DataTableCellKind.text, text: "GraphQL rate limit" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-rate-limit }] },
+                            { id: "reset", cells: [{ kind: DataTableCellKind.text, text: "Resets at (local time)" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-reset-at }] },
+                            { id: "countdown", cells: [{ kind: DataTableCellKind.text, text: "Time until reset" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-countdown }] },
                         ];
                         cell-padding: DataTableCellPadding.normal;
                         sorted-column-id: "";

@@ -17,12 +17,19 @@ export enum DataTableCellAlign {
     end,
 }
 
+/// Body cell content kind; must match the column’s `cell-kind` for that index. More kinds (label, icon_text, …) in follow-up PRs.
+export enum DataTableCellKind {
+    text,
+}
+
 export struct DataTableColumn {
     header: string,
     id: string,
     sortable: bool,
     align: DataTableCellAlign,
     row-header: bool,
+    /// What each body cell in this column carries (`text` today; label/actions later).
+    cell-kind: DataTableCellKind,
     /// Horizontal flex factor for this column (same as `StandardTableView` / `TableColumn`).
     horizontal-stretch: float,
     /// Minimum width; combined with `width` for layout min (see `StandardTableView` column sizing).
@@ -33,7 +40,13 @@ export struct DataTableColumn {
     monospace: bool,
 }
 
+export struct DataTableCell {
+    kind: DataTableCellKind,
+    /// Plain text when `kind == text`.
+    text: string,
+}
+
 export struct DataTableRow {
     id: string,
-    cells: [string],
+    cells: [DataTableCell],
 }

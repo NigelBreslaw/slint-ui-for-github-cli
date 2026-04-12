@@ -10,6 +10,7 @@ import {
     CounterLabelVariant,
     DataTable,
     DataTableCellAlign,
+    DataTableCellKind,
     DataTableColumn,
     DataTableRow,
     DataTableSortDirection,
@@ -54,14 +55,14 @@ export component PrimerGallery {
     ];
 
     private property <[DataTableColumn]> demo-data-table-columns: [
-        { header: "Repository", id: "name", sortable: true, align: DataTableCellAlign.start, row-header: false, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
-        { header: "Stars", id: "stars", sortable: true, align: DataTableCellAlign.start, row-header: false, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
-        { header: "License", id: "license", sortable: false, align: DataTableCellAlign.start, row-header: false, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Repository", id: "name", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Stars", id: "stars", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "License", id: "license", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
     ];
     private property <[DataTableRow]> demo-data-table-rows: [
-        { id: "r1", cells: ["slint", "2.4k", "MIT"] },
-        { id: "r2", cells: ["github-app", "120", "MIT"] },
-        { id: "r3", cells: ["primer-ui-react", "890", "MIT"] },
+        { id: "r1", cells: [{ kind: DataTableCellKind.text, text: "slint" }, { kind: DataTableCellKind.text, text: "2.4k" }, { kind: DataTableCellKind.text, text: "MIT" }] },
+        { id: "r2", cells: [{ kind: DataTableCellKind.text, text: "github-app" }, { kind: DataTableCellKind.text, text: "120" }, { kind: DataTableCellKind.text, text: "MIT" }] },
+        { id: "r3", cells: [{ kind: DataTableCellKind.text, text: "primer-ui-react" }, { kind: DataTableCellKind.text, text: "890" }, { kind: DataTableCellKind.text, text: "MIT" }] },
     ];
     private property <string> demo-data-table-sorted-column: "";
     private property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;
