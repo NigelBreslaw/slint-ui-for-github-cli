@@ -84,6 +84,20 @@ export global LayoutTokens {
 
     // LabelGroup.module.css .Container — gap --base-size-4; .ItemWrapper min-height matches control-small-size (28px)
     out property <length> label-group-gap: 4px;
+
+    // DataTable/Table.module.css — .Table [data-cell-padding] sets --cell-padding-block / --cell-padding-inline (condensed | normal | spacious)
+    out property <length> table-cell-padding-block-condensed: 4px;
+    out property <length> table-cell-padding-inline-condensed: 8px;
+    out property <length> table-cell-padding-block-normal: 8px;
+    out property <length> table-cell-padding-inline-normal: 12px;
+    out property <length> table-cell-padding-block-spacious: 12px;
+    out property <length> table-cell-padding-inline-spacious: 16px;
+    // Table.module.css — .TableRow > *:first-child / :last-child extra padding-inline (--base-size-16)
+    out property <length> table-cell-edge-inset-inline: 16px;
+    // Table.module.css — --table-border-radius: 0.375rem (same as borderRadius-medium)
+    out property <length> table-border-radius: borderRadius-medium;
+    // Table.module.css — borders use --borderWidth-thin (1px)
+    out property <length> table-border-width: 1px;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
@@ -138,6 +152,10 @@ export global PrimerColors {
 
     property <color> actionListItem-inline-divider-dark: rgba(48, 54, 61, 0.48);
     property <color> actionListItem-inline-divider-light: rgba(208, 215, 222, 0.48);
+
+    // Table.module.css .TableRow:hover .TableCell — var(--control-transparent-bgColor-hover) (primer-tokens control); single storage for table row hover + ButtonTokens action-list hover
+    property <color> control-transparent-bgColor-hover-dark: rgba(177, 186, 196, 0.12);
+    property <color> control-transparent-bgColor-hover-light: rgba(208, 215, 222, 0.32);
 
     // Greens: primer scale / success fg + success emphasis (same hex as GitHub primary button bg in each mode).
     property <color> green-success-fg-light: #1a7f37;
@@ -231,6 +249,7 @@ export global PrimerColors {
     out property <color> overlay-scrim: color-scheme == ColorScheme.dark ? overlay-scrim-dark : overlay-scrim-light;
     out property <color> drop-shadow: color-scheme == ColorScheme.dark ? drop-shadow-dark : drop-shadow-light;
     out property <color> actionListItem-inline-divider: color-scheme == ColorScheme.dark ? actionListItem-inline-divider-dark : actionListItem-inline-divider-light;
+    out property <color> table-row-bgColor-hover: color-scheme == ColorScheme.dark ? control-transparent-bgColor-hover-dark : control-transparent-bgColor-hover-light;
     out property <color> fgColor-success: color-scheme == ColorScheme.dark ? fgColor-success-dark : fgColor-success-light;
     out property <color> borderColor-success-emphasis: color-scheme == ColorScheme.dark ? borderColor-success-emphasis-dark : borderColor-success-emphasis-light;
     out property <color> shadow-controlTrigger-back: color-scheme == ColorScheme.dark ? shadow-controlTrigger-back-dark : shadow-controlTrigger-back-light;
@@ -304,9 +323,6 @@ export global ButtonTokens {
     property <color> color-btn-danger-disabled-text-dark: rgba(248, 81, 73, 0.5);
     property <color> color-btn-danger-disabled-text-light: rgba(207, 34, 46, 0.5);
 
-    property <color> color-action-list-item-default-hover-bg-dark: rgba(177, 186, 196, 0.12);
-    property <color> color-action-list-item-default-hover-bg-light: rgba(208, 215, 222, 0.32);
-
     property <color> color-action-list-item-default-active-bg-dark: rgba(177, 186, 196, 0.2);
     property <color> color-action-list-item-default-active-bg-light: rgba(208, 215, 222, 0.48);
 
@@ -346,7 +362,7 @@ export global ButtonTokens {
     out property <color> color-btn-danger-selected-border: color-scheme == ColorScheme.dark ? color-btn-danger-selected-border-dark : color-btn-primary-border-on-light;
     out property <color> color-btn-danger-disabled-text: color-scheme == ColorScheme.dark ? color-btn-danger-disabled-text-dark : color-btn-danger-disabled-text-light;
 
-    out property <color> color-action-list-item-default-hover-bg: color-scheme == ColorScheme.dark ? color-action-list-item-default-hover-bg-dark : color-action-list-item-default-hover-bg-light;
+    out property <color> color-action-list-item-default-hover-bg: PrimerColors.table-row-bgColor-hover;
     out property <color> color-action-list-item-default-active-bg: color-scheme == ColorScheme.dark ? color-action-list-item-default-active-bg-dark : color-action-list-item-default-active-bg-light;
     out property <color> color-action-list-item-default-selected-bg: color-scheme == ColorScheme.dark ? color-action-list-item-default-selected-bg-dark : color-action-list-item-default-selected-bg-light;
 
