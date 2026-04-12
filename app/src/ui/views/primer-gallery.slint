@@ -1,4 +1,5 @@
 import {
+    ActionListRow,
     Avatar,
     Banner,
     BannerLayout,
@@ -25,6 +26,10 @@ import {
     LabelGroupItem,
     LabelSize,
     LabelVariant,
+    NavList,
+    NavListGroup,
+    NavListGroupHeadingVariant,
+    NavListItem,
     Select,
     SelectOption,
     Spinner,
@@ -34,7 +39,7 @@ import {
     UnderlineNavVariant,
     ValidationStatus,
 } from "../Primer/primer.slint";
-import { PrimerColors } from "../Primer/tokens.slint";
+import { LayoutTokens, PrimerColors } from "../Primer/tokens.slint";
 
 global PrimerGalleryState {
     in-out property <bool> show-dismiss-demo: true;
@@ -87,6 +92,94 @@ export component PrimerGallery {
     private property <bool> demo-cb-indet: true;
     private property <bool> demo-cg-opt1: false;
     private property <bool> demo-cg-opt2: true;
+
+    private property <[NavListItem]> demo-nav-flat-items: [
+        {
+            label: "Dashboard",
+            current: true,
+            inactive: false,
+            inactive-text: "",
+            description: "Overview and activity",
+            has-leading-visual: true,
+            leading-icon: Icons.layout_grid,
+            trailing-text: "New",
+        },
+        {
+            label: "Settings",
+            current: false,
+            inactive: false,
+            inactive-text: "",
+            description: "",
+            has-leading-visual: true,
+            leading-icon: Icons.gear_24,
+            trailing-text: "",
+        },
+        {
+            label: "Billing (inactive)",
+            current: false,
+            inactive: true,
+            inactive-text: "Not available on your plan.",
+            description: "Payment method",
+            has-leading-visual: true,
+            leading-icon: Icons.stop,
+            trailing-text: "Pro",
+        },
+    ];
+    private property <[NavListGroup]> demo-nav-groups: [
+        {
+            title: "Repository",
+            heading-variant: NavListGroupHeadingVariant.filled,
+            items: [
+                {
+                    label: "Code",
+                    current: true,
+                    inactive: false,
+                    inactive-text: "",
+                    description: "Browse files and folders",
+                    has-leading-visual: true,
+                    leading-icon: Icons.layout_grid,
+                    trailing-text: "",
+                },
+                {
+                    label: "Issues",
+                    current: false,
+                    inactive: false,
+                    inactive-text: "",
+                    description: "",
+                    has-leading-visual: true,
+                    leading-icon: Icons.issue_opened,
+                    trailing-text: "24",
+                },
+            ],
+        },
+        {
+            title: "Organization",
+            heading-variant: NavListGroupHeadingVariant.subtle,
+            items: [
+                {
+                    label: "People",
+                    current: false,
+                    inactive: false,
+                    inactive-text: "",
+                    description: "Members and roles",
+                    has-leading-visual: true,
+                    leading-icon: Icons.inbox,
+                    trailing-text: "8",
+                },
+                {
+                    label: "Teams",
+                    current: false,
+                    inactive: false,
+                    inactive-text: "",
+                    description: "",
+                    has-leading-visual: true,
+                    leading-icon: Icons.pull_request,
+                    trailing-text: "",
+                },
+            ],
+        },
+    ];
+    private property <string> demo-nav-last: "";
 
     private property <int> gallery-tab-index: 3;
     private property <[UnderlineNavItem]> gallery-section-tabs: [
@@ -705,6 +798,153 @@ export component PrimerGallery {
                                 validation-status: ValidationStatus.success;
                                 validation-message: "Static gallery model.";
                                 selected-changed(_idx) => {
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "ActionListRow";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Shared list-row chrome (hover / pressed / selected). NavList and SelectPanel build on this.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            VerticalLayout {
+                                spacing: 0px;
+                                width: 100%;
+                                max-width: 360px;
+
+                                ActionListRow {
+                                    width: 100%;
+                                    label: "Unselected row";
+                                    selected: false;
+                                    disabled: false;
+                                    clicked => {
+                                    }
+                                }
+
+                                ActionListRow {
+                                    width: 100%;
+                                    label: "Selected row";
+                                    selected: true;
+                                    disabled: false;
+                                    clicked => {
+                                    }
+                                }
+
+                                ActionListRow {
+                                    width: 100%;
+                                    label: "Disabled row";
+                                    selected: false;
+                                    disabled: true;
+                                    has-leading-visual: true;
+                                    leading-icon: Icons.alert;
+                                    description: "With description";
+                                    trailing-text: "·";
+                                    clicked => {
+                                    }
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "NavList (flat)";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Leading icons, optional description line, trailing text; current row, inactive row with explanation. Clicks report (group, item) — flat list uses group 0.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Text {
+                                text: demo-nav-last == "" ? "Last activation: —" : "Last activation: " + demo-nav-last;
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Rectangle {
+                                width: 100%;
+                                max-width: 360px;
+                                border-radius: LayoutTokens.borderRadius-medium;
+                                border-width: 1px;
+                                border-color: PrimerColors.borderColor-default;
+                                background: PrimerColors.bgColor-canvas-subtle;
+
+                                VerticalLayout {
+                                    padding: 8px;
+                                    width: 100%;
+
+                                    NavList {
+                                        width: 100%;
+                                        items: demo-nav-flat-items;
+                                        groups: [];
+                                        item-activated(gi, ii) => {
+                                            demo-nav-last = "flat (" + gi + ", " + ii + ")";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "NavList (grouped)";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Filled and subtle group headings, divider between groups; items may show leading icon, description, and trailing count.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Rectangle {
+                                width: 100%;
+                                max-width: 360px;
+                                border-radius: LayoutTokens.borderRadius-medium;
+                                border-width: 1px;
+                                border-color: PrimerColors.borderColor-default;
+                                background: PrimerColors.bgColor-canvas-subtle;
+
+                                VerticalLayout {
+                                    padding: 8px;
+                                    width: 100%;
+
+                                    NavList {
+                                        width: 100%;
+                                        items: [];
+                                        groups: demo-nav-groups;
+                                        item-activated(gi, ii) => {
+                                            demo-nav-last = "grouped (" + gi + ", " + ii + ")";
+                                        }
+                                    }
                                 }
                             }
                         }

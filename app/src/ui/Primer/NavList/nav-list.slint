@@ -1,34 +1,50 @@
-// Primer-style NavList — flat items only (PR3). Upstream: https://primer.style/product/components/nav-list/
+// Primer-style NavList — flat items and/or grouped sections (PR4). Upstream: https://primer.style/product/components/nav-list/
 // Interactive rows reuse ActionListRow; `current` maps to ActionList `selected` visuals.
 
 import { ActionListRow } from "../ActionList/action-list-row.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
-import { NavListItem } from "./types.slint";
+import {
+    NavListGroup,
+    NavListGroupHeadingVariant,
+    NavListItem,
+} from "./types.slint";
 
-export component NavList {
-    in property <[NavListItem]> items: [];
-    /// Invoked with the item index when a **non-inactive** row is activated.
-    callback item-activated(index: int);
-
-    horizontal-stretch: 1;
+/// Single nav row — inactive (explanation) or interactive [`ActionListRow`].
+/// One root [`VerticalLayout`] so rows stack vertically (multiple root `if` branches overlap at 0×0).
+component NavListItemRow {
+    in property <NavListItem> item;
+    callback clicked;
 
     VerticalLayout {
         spacing: 0px;
+        horizontal-stretch: 1;
 
-        for item[index] in items: Rectangle {
+        if item.inactive: Rectangle {
             horizontal-stretch: 1;
+            border-radius: LayoutTokens.borderRadius-medium;
+            background: #00000000;
 
-            if item.inactive: Rectangle {
+            HorizontalLayout {
                 horizontal-stretch: 1;
-                border-radius: LayoutTokens.borderRadius-medium;
-                background: #00000000;
+                min-height: LayoutTokens.action-list-item-min-height;
+                padding-left: LayoutTokens.action-list-item-padding-inline;
+                padding-right: LayoutTokens.action-list-item-padding-inline;
+                padding-top: LayoutTokens.action-list-item-padding-block;
+                padding-bottom: LayoutTokens.action-list-item-padding-block;
+                spacing: LayoutTokens.button-content-gap;
+                alignment: start;
+
+                if item.has-leading-visual: Image {
+                    width: LayoutTokens.iconButton-icon-size-medium;
+                    height: LayoutTokens.iconButton-icon-size-medium;
+                    vertical-alignment: top;
+                    source: item.leading-icon;
+                    colorize: ButtonTokens.control-fgColor-disabled;
+                }
 
                 VerticalLayout {
                     horizontal-stretch: 1;
-                    padding-left: LayoutTokens.action-list-item-padding-inline;
-                    padding-right: LayoutTokens.action-list-item-padding-inline;
-                    padding-top: LayoutTokens.action-list-item-padding-block;
-                    padding-bottom: LayoutTokens.action-list-item-padding-block;
+                    min-width: 0px;
                     spacing: 4px;
 
                     Text {
@@ -36,6 +52,15 @@ export component NavList {
                         text: item.label;
                         color: ButtonTokens.control-fgColor-disabled;
                         font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-medium;
+                        wrap: word-wrap;
+                    }
+
+                    if item.description != "": Text {
+                        horizontal-stretch: 1;
+                        text: item.description;
+                        color: ButtonTokens.control-fgColor-disabled;
+                        font-size: LayoutTokens.text-body-size-small;
                         font-weight: LayoutTokens.base-text-weight-medium;
                         wrap: word-wrap;
                     }
@@ -48,14 +73,139 @@ export component NavList {
                         wrap: word-wrap;
                     }
                 }
-            }
 
-            if !item.inactive: ActionListRow {
-                label: item.label;
-                selected: item.current;
-                disabled: false;
+                if item.trailing-text != "": Text {
+                    vertical-alignment: top;
+                    text: item.trailing-text;
+                    color: ButtonTokens.control-fgColor-disabled;
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-medium;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        if !item.inactive: ActionListRow {
+            horizontal-stretch: 1;
+            label: item.label;
+            selected: item.current;
+            disabled: false;
+            has-leading-visual: item.has-leading-visual;
+            leading-icon: item.leading-icon;
+            description: item.description;
+            trailing-text: item.trailing-text;
+            clicked => {
+                root.clicked();
+            }
+        }
+    }
+}
+
+component NavListGroupHeader {
+    in property <string> title;
+    in property <NavListGroupHeadingVariant> variant;
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        if variant == NavListGroupHeadingVariant.filled: Rectangle {
+            horizontal-stretch: 1;
+            border-radius: LayoutTokens.borderRadius-medium;
+            background: PrimerColors.bgColor-neutral-muted;
+
+            VerticalLayout {
+                padding-left: LayoutTokens.stack-padding-normal;
+                padding-right: LayoutTokens.stack-padding-normal;
+                padding-top: 6px;
+                padding-bottom: 6px;
+
+                Text {
+                    horizontal-stretch: 1;
+                    text: root.title;
+                    color: PrimerColors.fgColor-default;
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        if variant == NavListGroupHeadingVariant.subtle: VerticalLayout {
+            horizontal-stretch: 1;
+            padding-top: 8px;
+            padding-bottom: 4px;
+            padding-left: LayoutTokens.action-list-item-padding-inline;
+            padding-right: LayoutTokens.action-list-item-padding-inline;
+
+            Text {
+                horizontal-stretch: 1;
+                text: root.title;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                font-weight: LayoutTokens.base-text-weight-semibold;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
+
+component NavListDivider {
+    horizontal-stretch: 1;
+
+    Rectangle {
+        horizontal-stretch: 1;
+        height: LayoutTokens.nav-list-divider-height;
+        background: PrimerColors.borderColor-muted;
+    }
+}
+
+export component NavList {
+    /// Flat list (PR3). Ignored when `groups` is non-empty.
+    in property <[NavListItem]> items: [];
+    /// When non-empty, renders grouped sections with headings and inter-group dividers instead of `items`.
+    in property <[NavListGroup]> groups: [];
+    /// `group-index` is `0` for flat `items`; in grouped mode, indexes into `groups`. `item-index` indexes within that section.
+    callback item-activated(group-index: int, item-index: int);
+
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        spacing: 0px;
+
+        if groups.length > 0: VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 1;
+
+            for group[gi] in groups: VerticalLayout {
+                spacing: 0px;
+                horizontal-stretch: 1;
+
+                if group.title != "": NavListGroupHeader {
+                    title: group.title;
+                    variant: group.heading-variant;
+                }
+
+                for item[ii] in group.items: NavListItemRow {
+                    item: item;
+                    clicked => {
+                        root.item-activated(gi, ii);
+                    }
+                }
+
+                if gi + 1 < groups.length: NavListDivider {
+                }
+            }
+        }
+
+        if groups.length == 0: VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 1;
+
+            for item[index] in items: NavListItemRow {
+                item: item;
                 clicked => {
-                    root.item-activated(index);
+                    root.item-activated(0, index);
                 }
             }
         }

@@ -1,19 +1,33 @@
 // Shared ActionList row chrome — upstream: Primer ActionList default item (ButtonTokens action-list hover/active/selected).
 // Used by NavList and SelectPanel; interaction via `states` (see .cursor/skills/primer-slint-interaction-states/SKILL.md).
 
+import { Icons } from "../assets/icons.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 
 export component ActionListRow {
     in property <bool> disabled: false;
     in property <bool> selected: false;
     in property <string> label: "";
+    /// Optional leading icon (16px); omit with `has-leading-visual: false`.
+    in property <bool> has-leading-visual: false;
+    in property <image> leading-icon: Icons.dot_fill;
+    /// Optional secondary line below `label` (NavList / ActionList descriptions).
+    in property <string> description: "";
+    /// Optional trailing auxiliary text (e.g. counts); empty hides.
+    in property <string> trailing-text: "";
 
     callback clicked;
 
     min-height: LayoutTokens.action-list-item-min-height;
     horizontal-stretch: 1;
 
+    private property <color> leading-icon-tint:
+        root.disabled ? ButtonTokens.control-fgColor-disabled
+        : root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+
     ta := TouchArea {
+        width: 100%;
+        min-height: LayoutTokens.action-list-item-min-height;
         enabled: !root.disabled;
         clicked => {
             root.clicked();
@@ -30,23 +44,60 @@ export component ActionListRow {
                 padding-top: LayoutTokens.action-list-item-padding-block;
                 padding-bottom: LayoutTokens.action-list-item-padding-block;
                 spacing: LayoutTokens.button-content-gap;
+                alignment: start;
 
-                label-t := Text {
+                if root.has-leading-visual: Image {
+                    width: LayoutTokens.iconButton-icon-size-medium;
+                    height: LayoutTokens.iconButton-icon-size-medium;
+                    vertical-alignment: top;
+                    source: root.leading-icon;
+                    colorize: leading-icon-tint;
+                }
+
+                VerticalLayout {
                     horizontal-stretch: 1;
                     min-width: 0px;
-                    text: root.label;
-                    color: PrimerColors.fgColor-default;
-                    font-size: LayoutTokens.text-body-size-medium;
+                    spacing: 2px;
+
+                    primary-label := Text {
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        text: root.label;
+                        color: PrimerColors.fgColor-default;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-medium;
+                        wrap: word-wrap;
+                    }
+
+                    desc-label := Text {
+                        visible: root.description != "";
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        text: root.description;
+                        color: PrimerColors.fgColor-muted;
+                        font-size: LayoutTokens.text-body-size-small;
+                        font-weight: LayoutTokens.base-text-weight-medium;
+                        wrap: word-wrap;
+                    }
+                }
+
+                trailing-t := Text {
+                    visible: root.trailing-text != "";
+                    vertical-alignment: top;
+                    text: root.trailing-text;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: LayoutTokens.text-body-size-small;
                     font-weight: LayoutTokens.base-text-weight-medium;
                     wrap: word-wrap;
-                    vertical-alignment: center;
                 }
             }
 
             states [
                 disabled when root.disabled: {
                     row-bg.background: root.selected ? ButtonTokens.color-action-list-item-default-selected-bg : #00000000;
-                    label-t.color: ButtonTokens.control-fgColor-disabled;
+                    primary-label.color: ButtonTokens.control-fgColor-disabled;
+                    desc-label.color: ButtonTokens.control-fgColor-disabled;
+                    trailing-t.color: ButtonTokens.control-fgColor-disabled;
                 }
                 selected-pressed when !root.disabled && root.selected && ta.pressed: {
                     row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;

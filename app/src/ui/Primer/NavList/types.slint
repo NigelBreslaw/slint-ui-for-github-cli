@@ -1,4 +1,4 @@
-// NavList item model — upstream: https://primer.style/product/components/nav-list/ (Item, aria-current, inactiveText).
+// NavList models — upstream: https://primer.style/product/components/nav-list/ (Group, GroupHeading, Item, Divider).
 
 export struct NavListItem {
     label: string,
@@ -7,4 +7,24 @@ export struct NavListItem {
     /// When true, the item cannot be activated; use `inactive-text` for explanation (Primer `inactiveText`).
     inactive: bool,
     inactive-text: string,
+    /// Optional secondary copy (Primer `NavList.Description`); shown below `label` when non-empty (block layout).
+    description: string,
+    /// Leading visual (Primer `NavList.LeadingVisual`); typically a 16px icon from [`Icons`](../assets/icons.slint).
+    has-leading-visual: bool,
+    leading-icon: image,
+    /// Trailing auxiliary text (Primer `NavList.TrailingVisual`), e.g. counts; empty hides.
+    trailing-text: string,
+}
+
+/// Matches Primer `NavList.GroupHeading` `variant` (`subtle` | `filled`).
+export enum NavListGroupHeadingVariant {
+    subtle,
+    filled,
+}
+
+export struct NavListGroup {
+    /// Non-empty shows a group heading above `items`.
+    title: string,
+    heading-variant: NavListGroupHeadingVariant,
+    items: [NavListItem],
 }
