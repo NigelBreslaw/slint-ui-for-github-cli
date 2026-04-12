@@ -7,13 +7,14 @@
     "node": ">=24"
   },
   "scripts": {
-    "autofix": "pnpm dedupe --prefer-offline && pnpm --filter github-app run autofix && pnpm --filter slint-bridge-kit run autofix && pnpm knip",
+    "autofix": "pnpm dedupe --prefer-offline && pnpm --filter github-app run autofix && pnpm --filter slint-bridge-kit run autofix && pnpm --filter primer-slint run typecheck && pnpm knip",
     "start": "pnpm dev",
     "dev": "pnpm --filter github-app run dev",
+    "dev:gallery": "pnpm --filter primer-slint run dev",
     "dev:debug": "pnpm --filter github-app run dev:debug",
     "dev:debug:projects": "pnpm --filter github-app run dev:debug:projects",
     "gen-build-info": "pnpm --filter github-app run gen-build-info",
-    "typecheck": "pnpm --filter github-app run typecheck && pnpm --filter slint-bridge-kit run typecheck",
+    "typecheck": "pnpm --filter github-app run typecheck && pnpm --filter slint-bridge-kit run typecheck && pnpm --filter primer-slint run typecheck",
     "lint": "pnpm --filter github-app run lint && pnpm --filter slint-bridge-kit run lint",
     "lint:fix": "pnpm --filter github-app run lint:fix && pnpm --filter slint-bridge-kit run lint:fix",
     "format": "pnpm --filter github-app run format && pnpm --filter slint-bridge-kit run format",

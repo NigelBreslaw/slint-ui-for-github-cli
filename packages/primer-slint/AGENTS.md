@@ -4,6 +4,8 @@ This document stands alone in the repo. Past chats or Cursor plan files are not 
 
 **Location:** Library source lives in **`packages/primer-slint/`**. The **github-app** package imports it through a symlink **`app/src/ui/Primer`** → **`packages/primer-slint`** so existing Slint paths (`Primer/...`, `../Primer/...`) keep working.
 
+**Standalone gallery:** From the monorepo root, `pnpm dev:gallery` runs **`gallery-main.ts`**, which loads **`gallery/gallery-window.slint`** (header + sidebar shell; component demos are added in later PRs). Uses **`slint-bridge-kit`** for `GalleryState` wiring.
+
 ## Purpose
 
 - **Audience:** Humans and AI assistants adding **Primer-style** UI in Slint under **`packages/primer-slint/`** (same tree as `app/src/ui/Primer/` in github-app).

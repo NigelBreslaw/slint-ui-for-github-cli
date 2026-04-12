@@ -1,0 +1,45 @@
+import { Palette } from "std-widgets.slint";
+import { IconButton, Icons, PageHeader } from "../primer.slint";
+import { PrimerColors } from "../tokens.slint";
+
+export component GalleryHeader {
+    out property <length> header-height: ph.height;
+
+    width: 100%;
+    height: ph.height;
+
+    ph := PageHeader {
+        width: 100%;
+        height: 100%;
+
+        HorizontalLayout {
+            width: parent.width;
+            height: parent.height;
+            padding-left: 16px;
+            padding-right: 16px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+                text: "Primer gallery";
+                font-size: 14px;
+                font-weight: 500;
+                color: PrimerColors.fgColor-default;
+                overflow: elide;
+            }
+
+            IconButton {
+                clicked => {
+                    if (Palette.color-scheme == ColorScheme.dark) {
+                        Palette.color-scheme = ColorScheme.light;
+                    } else {
+                        Palette.color-scheme = ColorScheme.dark;
+                    }
+                }
+                icon-source: Palette.color-scheme == ColorScheme.dark ? Icons.moon : Icons.sun;
+            }
+        }
+    }
+}

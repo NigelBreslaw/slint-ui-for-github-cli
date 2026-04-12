@@ -2,6 +2,8 @@
 
 Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and verification), [`component-imports.md`](component-imports.md) (which globals to use), and [`.cursor/skills/primer-port-orchestrator/SKILL.md`](../../.cursor/skills/primer-port-orchestrator/SKILL.md) (full porting procedure).
 
+**Gallery app:** `pnpm dev:gallery` from the repository root (see [`gallery/README.md`](gallery/README.md)).
+
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.
 
