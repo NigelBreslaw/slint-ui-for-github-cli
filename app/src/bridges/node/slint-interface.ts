@@ -6,6 +6,7 @@
  * once via `slintEnumMembers` so call sites use dot access and unions stay in sync.
  */
 import * as slint from "slint-ui";
+import type { ImageData } from "slint-ui";
 import { slintEnumMembers, type SlintEnumValues } from "slint-bridge-kit";
 import type { SlintRgbaImage } from "../../backend/gh/avatar-image.ts";
 import type { SlintProjectRow } from "../../backend/gh/slint-ui-org-projects-ui.ts";
@@ -126,7 +127,7 @@ export const projectBoardItemKind = slintEnumMembers([
 export type ProjectBoardItemKind = SlintEnumValues<typeof projectBoardItemKind>;
 
 /** Maps to `DataTableCellKind` in `DataTable/types.slint`. */
-export const dataTableCellKind = slintEnumMembers(["text", "label", "icon_text", "action"] as const);
+export const dataTableCellKind = slintEnumMembers(["text", "label", "iconText", "action"] as const);
 export type DataTableCellKindWire = SlintEnumValues<typeof dataTableCellKind>;
 
 /** Maps to `LabelVariant` in `Label/types.slint` (cell placeholders). */
@@ -161,7 +162,8 @@ export type SlintDataTableCell = {
   text: string;
   label_variant: LabelVariantWire;
   label_size: LabelSizeWire;
-  icon: SlintDataTableImage;
+  /** Use **`ImageData`** from the slint-ui runtime (e.g. **`SlintImageData`**); plain `{ width, height, data }` breaks nested `ArrayModel` marshalling. */
+  icon: ImageData;
 };
 
 /** Matches `DataTableRow` in `DataTable/types.slint`. */
@@ -225,11 +227,20 @@ export type TimeReportingStateHandle = {
   detail_body: string;
 };
 
+/** Slint global from `assets/icons.slint` (bundled `@image-url` icons). */
+export type SlintIconsGlobal = {
+  pr: ImageData;
+  issue: ImageData;
+  issue_draft: ImageData;
+  cell_placeholder: ImageData;
+};
+
 export type MainWindowInstance = {
   run(): Promise<void>;
   show(): void;
   hide(): void;
   window: import("slint-ui").Window;
+  Icons: SlintIconsGlobal;
   AppState: AppStateHandle;
   SettingsState: SettingsStateHandle;
   TimeReportingState: TimeReportingStateHandle;

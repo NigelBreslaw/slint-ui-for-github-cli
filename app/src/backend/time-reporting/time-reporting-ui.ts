@@ -173,7 +173,7 @@ export async function reloadProjectV2ItemsIntoCacheAndUi(
   setTimeReportingCachedItems(nodeId, res.items, new Map());
   window.TimeReportingState.items_load_status = "";
   applyWeekRowsToWindow(window);
-  await applyProjectBoardListToWindow(window);
+  applyProjectBoardListToWindow(window);
   const stored = readTimeReportingSelectedProjectKv();
   if (stored !== null && stored.nodeId === nodeId) {
     assignProperties(window.ProjectBoardListState, {

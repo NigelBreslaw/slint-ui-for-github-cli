@@ -41,7 +41,7 @@ export function buildProjectBoardListStateCallbacks(
         const items = getTimeReportingCachedItems();
         if (cachedId === stored.nodeId && items !== null) {
           assignProperties(window.ProjectBoardListState, { items_load_status: "" });
-          await applyProjectBoardListToWindow(window);
+          applyProjectBoardListToWindow(window);
           return;
         }
         await reloadProjectV2ItemsIntoCacheAndUi(window, stored.nodeId);

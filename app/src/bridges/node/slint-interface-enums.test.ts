@@ -56,8 +56,8 @@ describe("Slint wire enum members", () => {
 
   it("data table cell kind members match DataTableCellKind in DataTable/types.slint", () => {
     const values = Object.values(dataTableCellKind);
-    for (const s of ["text", "label", "icon_text", "action"]) {
-      assert.ok(values.includes(s), `missing ${s}`);
+    for (const s of ["text", "label", "iconText", "action"] as const) {
+      assert.ok((values as string[]).includes(s), `missing ${s}`);
     }
     assert.equal(values.length, 4);
   });

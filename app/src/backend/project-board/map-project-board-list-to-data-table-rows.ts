@@ -6,9 +6,9 @@ import {
   type DataTableCellKindWire,
   type ProjectBoardItemKind,
   type SlintDataTableCell,
-  type SlintDataTableImage,
   type SlintDataTableRow,
 } from "../../bridges/node/slint-interface.ts";
+import type { ImageData } from "slint-ui";
 import type { ProjectBoardDataTableIcons } from "./project-board-datatable-icons.ts";
 
 /** Matches `ProjectBoardListRow` / `mapProjectV2ItemsToListRows` row shape. */
@@ -31,7 +31,7 @@ function kindLabel(kind: ProjectBoardItemKind): string {
   return "Draft";
 }
 
-function kindIcon(icons: ProjectBoardDataTableIcons, kind: ProjectBoardItemKind): SlintDataTableImage {
+function kindIcon(icons: ProjectBoardDataTableIcons, kind: ProjectBoardItemKind): ImageData {
   if (kind === projectBoardItemKind.pullRequest) {
     return icons.pullRequest;
   }
@@ -51,7 +51,7 @@ function metaText(row: ProjectBoardListRowTs): string {
   return "";
 }
 
-function dataTableCell(kind: DataTableCellKindWire, text: string, icon: SlintDataTableImage): SlintDataTableCell {
+function dataTableCell(kind: DataTableCellKindWire, text: string, icon: ImageData): SlintDataTableCell {
   return {
     kind,
     text,
@@ -78,7 +78,7 @@ export function mapProjectBoardListRowsToDataTableRows(
       cells: [
         dataTableCell(dataTableCellKind.text, String(i + 1), ph),
         dataTableCell(
-          dataTableCellKind.icon_text,
+          dataTableCellKind.iconText,
           kindLabel(row.kind),
           kindIcon(icons, row.kind),
         ),

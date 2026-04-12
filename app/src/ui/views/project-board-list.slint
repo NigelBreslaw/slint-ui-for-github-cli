@@ -1,14 +1,69 @@
-import { ListView } from "std-widgets.slint";
+import { ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
 import {
-    ProjectBoardItemKind,
-    ProjectBoardListState,
-} from "../../bridges/slint/project-board-list-state.slint";
-import { Button, Spinner } from "../Primer/primer.slint";
+    DataTable,
+    DataTableCellAlign,
+    DataTableCellKind,
+    DataTableColumn,
+    DataTableSortDirection,
+    Spinner,
+    TableContainer,
+} from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 
 export component ProjectBoardList {
     width: 100%;
     height: 100%;
+
+    private property <[DataTableColumn]> project-board-columns: [
+        {
+            header: "#",
+            id: "idx",
+            sortable: false,
+            align: DataTableCellAlign.end,
+            row-header: false,
+            cell-kind: DataTableCellKind.text,
+            horizontal-stretch: 0,
+            min-width: 44px,
+            width: 0px,
+            monospace: true,
+        },
+        {
+            header: "Type",
+            id: "kind",
+            sortable: false,
+            align: DataTableCellAlign.start,
+            row-header: false,
+            cell-kind: DataTableCellKind.iconText,
+            horizontal-stretch: 0,
+            min-width: 120px,
+            width: 0px,
+            monospace: false,
+        },
+        {
+            header: "Title",
+            id: "title",
+            sortable: false,
+            align: DataTableCellAlign.start,
+            row-header: false,
+            cell-kind: DataTableCellKind.text,
+            horizontal-stretch: 1,
+            min-width: 0px,
+            width: 0px,
+            monospace: false,
+        },
+        {
+            header: "Meta",
+            id: "meta",
+            sortable: false,
+            align: DataTableCellAlign.start,
+            row-header: false,
+            cell-kind: DataTableCellKind.text,
+            horizontal-stretch: 0,
+            min-width: 56px,
+            width: 0px,
+            monospace: false,
+        },
+    ];
 
     init => {
         ProjectBoardListState.project-board-list-view-init();
@@ -50,26 +105,6 @@ export component ProjectBoardList {
                 width: 100%;
                 vertical-stretch: 1;
 
-                Text {
-                    text: ProjectBoardListState.selected-project-label;
-                    font-size: 16px;
-                    font-weight: 600;
-                    color: PrimerColors.fgColor-default;
-                    wrap: word-wrap;
-                }
-
-                HorizontalLayout {
-                    spacing: 8px;
-                    alignment: start;
-
-                    Button {
-                        label: "Refresh";
-                        clicked => {
-                            ProjectBoardListState.project-board-list-refresh();
-                        }
-                    }
-                }
-
                 if ProjectBoardListState.items-load-status == "Loading board items…": HorizontalLayout {
                     spacing: 10px;
                     alignment: start;
@@ -93,130 +128,26 @@ export component ProjectBoardList {
                     wrap: word-wrap;
                 }
 
-                Rectangle {
-                    vertical-stretch: 1;
+                if ProjectBoardListState.items-load-status == "" && ProjectBoardListState.board-items-count > 0: TableContainer {
                     width: 100%;
+                    vertical-stretch: 1;
                     min-height: 120px;
-                    clip: true;
-                    background: PrimerColors.bgColor-neutral-muted;
-                    border-radius: 8px;
-                    border-width: 1px;
-                    border-color: PrimerColors.borderColor-muted;
-                    visible: ProjectBoardListState.items-load-status == "" && ProjectBoardListState.board-items-count > 0;
+                    title: ProjectBoardListState.selected-project-label;
+                    primary-action-label: "Refresh";
+                    primary-action => {
+                        ProjectBoardListState.project-board-list-refresh();
+                    }
 
-                    VerticalLayout {
-                        width: parent.width - 16px;
-                        height: parent.height - 16px;
-                        x: 8px;
-                        y: 8px;
-                        spacing: 0px;
-
-                        HorizontalLayout {
-                            height: 28px;
-                            spacing: 6px;
-                            alignment: center;
-
-                            Text {
-                                width: 32px;
-                                text: "";
-                                horizontal-alignment: left;
-                            }
-
-                            Rectangle {
-                                width: 16px;
-                                height: 16px;
-                            }
-
-                            Rectangle {
-                                width: 10px;
-                                height: 10px;
-                            }
-
-                            Text {
-                                text: "Title";
-                                font-size: 12px;
-                                font-weight: 600;
-                                color: PrimerColors.fgColor-muted;
-                                vertical-alignment: center;
-                            }
-                        }
-
-                        Rectangle {
-                            height: 1px;
-                            width: 100%;
-                            background: PrimerColors.borderColor-muted;
-                        }
-
-                        ListView {
-                            vertical-stretch: 1;
-                            width: 100%;
-                            height: 100%;
-
-                            for row[index] in ProjectBoardListState.board-rows-model: Rectangle {
-                                height: 40px;
-                                background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
-
-                                TouchArea {
-                                    clicked => {
-                                        ProjectBoardListState.project-board-list-open-row-url(row.url);
-                                    }
-
-                                    HorizontalLayout {
-                                        padding: 8px;
-                                        spacing: 6px;
-                                        width: 100%;
-                                        height: 100%;
-                                        alignment: start;
-
-                                        Text {
-                                            width: 32px;
-                                            text: index + 1;
-                                            horizontal-alignment: left;
-                                            vertical-alignment: center;
-                                            font-size: 12px;
-                                            color: PrimerColors.fgColor-muted;
-                                        }
-
-                                        Image {
-                                            width: 16px;
-                                            height: 16px;
-                                            vertical-alignment: center;
-                                            colorize: row.kind == ProjectBoardItemKind.draftIssue ? PrimerColors.fgColor-muted : row.state == "OPEN" ? PrimerColors.fgColor-success : row.kind == ProjectBoardItemKind.pullRequest && row.state == "MERGED" ? PrimerColors.fgColor-done : row.kind == ProjectBoardItemKind.pullRequest && row.state == "CLOSED" ? PrimerColors.fgColor-danger : row.state == "CLOSED" ? PrimerColors.fgColor-done : PrimerColors.fgColor-muted;
-                                            source: row.kind == ProjectBoardItemKind.pullRequest ? @image-url("../../assets/16px/git-pull-request.svg") : row.kind == ProjectBoardItemKind.issue ? @image-url("../../assets/16px/issue-opened.svg") : @image-url("../../assets/16px/issue-draft.svg");
-                                        }
-
-                                        
-
-                                        HorizontalLayout {
-                                            horizontal-stretch: 1;
-                                            spacing: 6px;
-                                            alignment: start;
-
-                                            Text {
-                                                horizontal-stretch: 1;
-                                                text: row.title;
-                                                color: PrimerColors.fgColor-default;
-                                                overflow: elide;
-                                                vertical-alignment: center;
-                                            }
-
-                                            if row.kind == ProjectBoardItemKind.draftIssue: Text {
-                                                text: "Draft";
-                                                font-size: 13px;
-                                                color: PrimerColors.fgColor-muted;
-                                                vertical-alignment: center;
-                                            }
-
-                                            if row.kind != ProjectBoardItemKind.draftIssue && row.number > 0: Text {
-                                                text: "#" + row.number;
-                                                font-size: 13px;
-                                                color: PrimerColors.fgColor-muted;
-                                                vertical-alignment: center;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                    DataTable {
+                        width: 100%;
+                        columns: project-board-columns;
+                        rows: ProjectBoardListState.board-data-table-rows;
+                        sorted-column-id: "";
+                        sort-direction: DataTableSortDirection.none;
+                        sort-toggled(_cid, _dir) => { }
+                        row-action(_rid, _cid, _aid) => { }
+                        row-clicked(rid) => {
+                            ProjectBoardListState.project-board-list-open-row-url(rid);
                         }
                     }
                 }

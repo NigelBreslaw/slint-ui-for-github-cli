@@ -6,7 +6,7 @@ import type {
   SlintProjectBoardListRow,
 } from "../../bridges/node/slint-interface.ts";
 import { getTimeReportingCachedItems } from "../time-reporting/time-reporting-items-cache.ts";
-import { getProjectBoardDataTableIcons } from "./project-board-datatable-icons.ts";
+import { getProjectBoardDataTableIconsFromWindow } from "./project-board-datatable-icons.ts";
 import { mapProjectBoardListRowsToDataTableRows } from "./map-project-board-list-to-data-table-rows.ts";
 import { mapProjectV2ItemsToListRows } from "./map-project-v2-items-to-list-rows.ts";
 
@@ -14,7 +14,7 @@ import { mapProjectV2ItemsToListRows } from "./map-project-v2-items-to-list-rows
  * Fills `ProjectBoardListState.board_rows_model` and **`board_data_table_rows`** from the time-reporting items cache
  * (full board, not week-filtered).
  */
-export async function applyProjectBoardListToWindow(window: MainWindowInstance): Promise<void> {
+export function applyProjectBoardListToWindow(window: MainWindowInstance): void {
   const items = getTimeReportingCachedItems();
   if (items === null) {
     assignProperties(window.ProjectBoardListState, {
@@ -25,7 +25,7 @@ export async function applyProjectBoardListToWindow(window: MainWindowInstance):
     return;
   }
   const rows = mapProjectV2ItemsToListRows(items);
-  const icons = await getProjectBoardDataTableIcons();
+  const icons = getProjectBoardDataTableIconsFromWindow(window);
   const dataTableRows = mapProjectBoardListRowsToDataTableRows(rows, icons);
   assignProperties(window.ProjectBoardListState, {
     board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>(rows),

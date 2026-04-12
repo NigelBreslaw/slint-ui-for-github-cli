@@ -4,11 +4,11 @@ import {
   dataTableCellKind,
   projectBoardItemKind,
 } from "../../bridges/node/slint-interface.ts";
-import type { ProjectBoardDataTableIcons } from "./project-board-datatable-icons.ts";
+import { toSlintImageData, type ProjectBoardDataTableIcons } from "./project-board-datatable-icons.ts";
 import { mapProjectBoardListRowsToDataTableRows } from "./map-project-board-list-to-data-table-rows.ts";
 
 function mockIcons(): ProjectBoardDataTableIcons {
-  const p = { width: 1, height: 1, data: Buffer.alloc(4) };
+  const p = toSlintImageData({ width: 1, height: 1, data: Buffer.alloc(4) });
   return {
     placeholder: p,
     pullRequest: p,
@@ -35,7 +35,7 @@ describe("mapProjectBoardListRowsToDataTableRows", () => {
     assert.equal(out[0]!.cells.length, 4);
     assert.equal(out[0]!.cells[0]!.kind, dataTableCellKind.text);
     assert.equal(out[0]!.cells[0]!.text, "1");
-    assert.equal(out[0]!.cells[1]!.kind, dataTableCellKind.icon_text);
+    assert.equal(out[0]!.cells[1]!.kind, dataTableCellKind.iconText);
     assert.equal(out[0]!.cells[1]!.text, "Pull request");
     assert.equal(out[0]!.cells[2]!.text, "Fix bug");
     assert.equal(out[0]!.cells[3]!.text, "#99");

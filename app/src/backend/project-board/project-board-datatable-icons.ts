@@ -1,48 +1,43 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
-import { fileURLToPath } from "node:url";
-import sharp from "sharp";
 import * as slint from "slint-ui";
-import type { SlintDataTableImage } from "../../bridges/node/slint-interface.ts";
+import type { ImageData } from "slint-ui";
+import type { MainWindowInstance, SlintDataTableImage } from "../../bridges/node/slint-interface.ts";
 
-const assetsDir = fileURLToPath(new URL("../../assets/16px", import.meta.url));
+/**
+ * Copies RGBA bytes into a slint-ui **`ImageData`** instance. Plain `{ width, height, data }` objects
+ * cannot be marshalled through **`ArrayModel`** when nested inside structs (Rust FFI error).
+ */
+export function toSlintImageData(payload: SlintDataTableImage): ImageData {
+  const w = payload.width;
+  const h = payload.height;
+  const img = new slint.private_api.SlintImageData(w, h);
+  const dest = img.data;
+  const src = Buffer.isBuffer(payload.data) ? payload.data : Buffer.from(payload.data);
+  if (src.length !== dest.length) {
+    throw new Error(
+      `toSlintImageData: expected ${dest.length} bytes for ${w}×${h} RGBA, got ${src.length}`,
+    );
+  }
+  dest.set(src);
+  return img as ImageData;
+}
 
 export type ProjectBoardDataTableIcons = {
-  placeholder: SlintDataTableImage;
-  pullRequest: SlintDataTableImage;
-  issue: SlintDataTableImage;
-  draftIssue: SlintDataTableImage;
+  placeholder: ImageData;
+  pullRequest: ImageData;
+  issue: ImageData;
+  draftIssue: ImageData;
 };
 
-async function rasterizeSvg16(name: string): Promise<SlintDataTableImage> {
-  const buf = readFileSync(join(assetsDir, name));
-  const { data, info } = await sharp(buf).resize(16, 16).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
-  return { width: info.width, height: info.height, data };
-}
-
-function placeholder1x1(): SlintDataTableImage {
-  const img = new slint.private_api.SlintImageData(1, 1);
-  return { width: img.width, height: img.height, data: img.data };
-}
-
-let cache: Promise<ProjectBoardDataTableIcons> | null = null;
-
-/** Loads SVG assets once; used when building project-board `DataTable` rows in the bridge. */
-export function getProjectBoardDataTableIcons(): Promise<ProjectBoardDataTableIcons> {
-  if (cache === null) {
-    cache = (async () => {
-      const [pullRequest, issue, draftIssue] = await Promise.all([
-        rasterizeSvg16("git-pull-request.svg"),
-        rasterizeSvg16("issue-opened.svg"),
-        rasterizeSvg16("issue-draft.svg"),
-      ]);
-      return {
-        placeholder: placeholder1x1(),
-        pullRequest,
-        issue,
-        draftIssue,
-      };
-    })();
-  }
-  return cache;
+/**
+ * Reads the bundled **`Icons`** global from the Slint runtime (`assets/icons.slint`).
+ * Icons must be declared with `@image-url` there so they are included in the app bundle.
+ */
+export function getProjectBoardDataTableIconsFromWindow(window: MainWindowInstance): ProjectBoardDataTableIcons {
+  const { Icons } = window;
+  return {
+    placeholder: Icons.cell_placeholder,
+    pullRequest: Icons.pr,
+    issue: Icons.issue,
+    draftIssue: Icons.issue_draft,
+  };
 }
