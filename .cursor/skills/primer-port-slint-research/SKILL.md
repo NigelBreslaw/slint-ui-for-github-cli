@@ -16,16 +16,16 @@ Collect **in-repo and Slint-ecosystem patterns** (file paths, idioms) to apply w
 
 ## Canonical repo rules
 
-- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — globals order, imports, icons, verification.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — globals order, imports, icons, verification.
 
 ## This repository (required)
 
 | Area | Path | Why open it |
 |------|------|-------------|
-| **Reference control** | [`app/src/ui/Primer/Checkbox/checkbox.slint`](../../../app/src/ui/Primer/Checkbox/checkbox.slint) | `states [ ]`, TouchArea, token usage |
-| **Tokens** | [`app/src/ui/Primer/tokens.slint`](../../../app/src/ui/Primer/tokens.slint) | `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, … |
-| **Barrel** | [`app/src/ui/Primer/primer.slint`](../../../app/src/ui/Primer/primer.slint) | Exports and public API |
-| **Icons** | [`app/src/ui/Primer/assets/icons.slint`](../../../app/src/ui/Primer/assets/icons.slint) | Registry pattern for SVGs |
+| **Reference control** | [`packages/primer-slint/Checkbox/checkbox.slint`](../../../packages/primer-slint/Checkbox/checkbox.slint) | `states [ ]`, TouchArea, token usage |
+| **Tokens** | [`packages/primer-slint/tokens.slint`](../../../packages/primer-slint/tokens.slint) | `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, … |
+| **Barrel** | [`packages/primer-slint/primer.slint`](../../../packages/primer-slint/primer.slint) | Exports and public API |
+| **Icons** | [`packages/primer-slint/assets/icons.slint`](../../../packages/primer-slint/assets/icons.slint) | Registry pattern for SVGs |
 
 Pick **one** existing Primer component closest to the new port (e.g. **Button**, **Select**) and skim its folder for layout and callback patterns.
 

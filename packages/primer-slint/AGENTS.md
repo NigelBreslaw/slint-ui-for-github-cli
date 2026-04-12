@@ -2,13 +2,13 @@
 
 This document stands alone in the repo. Past chats or Cursor plan files are not a reliable archive; use **local upstream clones** and the files linked below when porting or extending components.
 
-**Location:** Library source lives in **`packages/primer-slint/`**. The **github-app** package imports it through a symlink **`app/src/ui/Primer`** → **`packages/primer-slint`** so existing Slint paths (`Primer/...`, `../Primer/...`) keep working.
+**Location:** Library source lives in **`packages/primer-slint/`**. The **github-app** package imports it with **relative paths** from each `.slint` file (for example `../../../packages/primer-slint/primer.slint` from `app/src/ui/main.slint`, or `../../../../packages/primer-slint/...` from files under `app/src/ui/components/` or `app/src/bridges/slint/`).
 
 **Standalone gallery:** From the monorepo root, `pnpm dev:gallery` runs **`gallery-main.ts`**, which loads **`gallery/gallery-window.slint`** (header + sidebar; main area switches by group). **Buttons**, **Navs**, **Feedback**, **Forms**, and **Data** are implemented under **`gallery/`** (`gallery-*-page.slint`). Uses **`slint-bridge-kit`** for `GalleryState` wiring.
 
 ## Purpose
 
-- **Audience:** Humans and AI assistants adding **Primer-style** UI in Slint under **`packages/primer-slint/`** (same tree as `app/src/ui/Primer/` in github-app).
+- **Audience:** Humans and AI assistants adding **Primer-style** UI in Slint under **`packages/primer-slint/`** (consumed by github-app via relative imports).
 - **Goals:** Stay close to Primer naming and layering, avoid duplicating color literals across globals, keep `export global` declaration order valid for Slint, and ship changes in reviewable steps.
 
 ## Porting workflow
@@ -55,7 +55,7 @@ Conventions: Primer-style **names** (`fgColor-*`, `bgColor-*`, …), **reuse** e
 ## Adding a new Primer component
 
 1. Find the closest **primer-ui-react** component and matching **primer-tokens** files.
-2. Add `packages/primer-slint/<Name>/` with a clear root `*.slint` (subfolders if needed) — also `app/src/ui/Primer/<Name>/` via symlink in github-app.
+2. Add `packages/primer-slint/<Name>/` with a clear root `*.slint` (subfolders if needed).
 3. **Imports:** see [**component-imports.md**](component-imports.md) for which globals each family uses.
 4. **Export** from [`primer.slint`](primer.slint) when part of the public surface.
 5. **Docs:** user-facing notes in [`readme.md`](readme.md); process stays here.

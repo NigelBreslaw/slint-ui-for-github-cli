@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "type": "module",
-  "description": "Primer design system components for Slint (consumed by github-app via workspace symlink app/src/ui/Primer → this folder). The gallery app is run from this package.",
+  "description": "Primer design system components for Slint (github-app imports this package via relative paths from .slint files). The gallery app is run from this package.",
   "scripts": {
     "dev": "node gallery-main.ts",
     "typecheck": "tsc --noEmit"

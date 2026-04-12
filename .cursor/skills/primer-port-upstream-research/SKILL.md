@@ -16,7 +16,7 @@ Produce a **variant and token inventory** for the target component so implementa
 
 ## Canonical repo rules (do not duplicate here)
 
-- [`app/src/ui/Primer/AGENTS.md`](../../../app/src/ui/Primer/AGENTS.md) — token globals, barrel, verification.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — token globals, barrel, verification.
 
 ## Inputs (local clones)
 

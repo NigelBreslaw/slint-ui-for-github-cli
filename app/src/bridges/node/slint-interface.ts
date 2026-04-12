@@ -276,7 +276,7 @@ export type TimeReportingStateHandle = {
   detail_body: string;
 };
 
-/** Slint global from [`ui/Primer/assets/icons.slint`](../../ui/Primer/assets/icons.slint) (bundled `@image-url` icons). */
+/** Slint global from [`packages/primer-slint/assets/icons.slint`](../../../packages/primer-slint/assets/icons.slint) (bundled `@image-url` icons). */
 export type SlintIconsGlobal = {
   pull_request: ImageData;
   issue_opened: ImageData;

@@ -1,7 +1,6 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
   "tags": ["-lintignore"],
-  "ignore": ["app/src/ui/Primer/gallery-main.ts"],
   "workspaces": {
     "app": {
       "entry": ["src/**/*.test.ts"]

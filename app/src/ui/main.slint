@@ -15,10 +15,10 @@ import {
     ProjectBoardListRow,
     ProjectBoardListState,
 } from "../bridges/slint/project-board-list-state.slint";
-import { DataTableRow } from "Primer/DataTable/types.slint";
+import { DataTableRow } from "../../../packages/primer-slint/DataTable/types.slint";
 import { TimeReportingState, TimeReportingWeekRow } from "../bridges/slint/time-reporting-state.slint";
-import { Button, Spinner, Icons } from "Primer/primer.slint";
-import { PrimerColors } from "Primer/tokens.slint";
+import { Button, Spinner, Icons } from "../../../packages/primer-slint/primer.slint";
+import { PrimerColors } from "../../../packages/primer-slint/tokens.slint";
 import { Settings } from "views/settings.slint";
 import { Dashboard } from "views/dashboard.slint";
 import { SideBar } from "components/sideBar.slint";
@@ -26,9 +26,9 @@ import { ProjectBoardList } from "views/project-board-list.slint";
 import { TimeReporting } from "views/time-reporting.slint";
 
 // import fonts
-import "./Primer/assets/fonts/MonaSans-VariableFont.ttf"; // "Mona Sans"
-import "./Primer/assets/fonts/MonaSans-Italic-VariableFont.ttf"; // "Mona Sans"
-import "./Primer/assets/fonts/VeraMono.ttf"; // "Bitstream Vera Sans Mono"
+import "../../../packages/primer-slint/assets/fonts/MonaSans-VariableFont.ttf"; // "Mona Sans"
+import "../../../packages/primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf"; // "Mona Sans"
+import "../../../packages/primer-slint/assets/fonts/VeraMono.ttf"; // "Bitstream Vera Sans Mono"
 
 
 // Export so backend can access the enums and global state.

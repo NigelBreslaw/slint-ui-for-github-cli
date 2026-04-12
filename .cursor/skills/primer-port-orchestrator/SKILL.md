@@ -2,7 +2,7 @@
 name: primer-port-orchestrator
 description: >-
   End-to-end playbook for porting a Primer design system component into
-  packages/primer-slint (symlinked as app/src/ui/Primer): ordered phases (upstream research, Slint research, variant
+  packages/primer-slint: ordered phases (upstream research, Slint research, variant
   matrix, token layers, interaction states), PR breakdown per AGENTS, and
   verification. Use when starting a new Primer port, planning multi-PR component
   work, or when the user asks what order to follow for Primer-to-Slint work.
@@ -12,7 +12,7 @@ description: >-
 
 ## Canonical documentation
 
-- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — compact reference (architecture, verification, limitations). Same files as `app/src/ui/Primer/` via symlink.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — compact reference (architecture, verification, limitations).
 - [`packages/primer-slint/component-imports.md`](../../../packages/primer-slint/component-imports.md) — which globals to import per component family.
 
 ## Phases (run in order)
