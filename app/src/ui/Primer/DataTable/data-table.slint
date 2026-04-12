@@ -1,5 +1,6 @@
 // Primer DataTable — Table.module.css spacing/colors; sort headers + callback (primer/react DataTable onToggleSort).
 // Header and body use matching horizontal constraints per column (material StandardTableView pattern).
+// Flexible columns use preferred-width 0 so each row divides width evenly (not by text intrinsic size).
 // Nested repeaters inside GridLayout are avoided — they panic the Slint interpreter (dynamic_item_tree repeater lookup).
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
@@ -43,6 +44,11 @@ export component DataTable {
         max(col.min-width, col.width);
     }
 
+    /// Flexible columns use 0 preferred width so each row splits parent width evenly (avoids content-driven column widths).
+    pure function col-preferred-width(col: DataTableColumn) -> length {
+        col.width >= 1px ? max(col.min-width, col.width) : 0px;
+    }
+
     pure function body-cell-stretch(index: int) -> float {
         index < columns.length ? columns[index].horizontal-stretch : 1;
     }
@@ -53,6 +59,10 @@ export component DataTable {
 
     pure function body-cell-max-w(index: int) -> length {
         index < columns.length ? col-max-width(columns[index]) : 100000px;
+    }
+
+    pure function body-cell-preferred-w(index: int) -> length {
+        index < columns.length ? col-preferred-width(columns[index]) : 0px;
     }
 
     Rectangle {
@@ -76,9 +86,11 @@ export component DataTable {
                 for col[index] in columns: Rectangle {
                     horizontal-stretch: col.horizontal-stretch;
                     min-width: col-min-width(col);
+                    preferred-width: col-preferred-width(col);
                     max-width: col-max-width(col);
                     min-height: header-row-min-height;
                     background: PrimerColors.bgColor-muted;
+                    clip: true;
 
                     if col.sortable: header-ta := TouchArea {
                         width: 100%;
@@ -100,6 +112,7 @@ export component DataTable {
                             padding-top: pad-block;
                             padding-bottom: pad-block;
                             width: 100%;
+                            min-width: 0px;
                             min-height: header-row-min-height;
                             spacing: 4px;
                             alignment: col.align == DataTableCellAlign.end ? end : start;
@@ -115,6 +128,7 @@ export component DataTable {
 
                             Text {
                                 horizontal-stretch: 1;
+                                min-width: 0px;
                                 text: col.header;
                                 font-size: LayoutTokens.text-body-size-small;
                                 color: sort-header-fg(col.id);
@@ -141,11 +155,13 @@ export component DataTable {
                         padding-top: pad-block;
                         padding-bottom: pad-block;
                         width: 100%;
+                        min-width: 0px;
                         min-height: header-row-min-height;
                         alignment: col.align == DataTableCellAlign.end ? end : start;
 
                         Text {
                             width: 100%;
+                            min-width: 0px;
                             text: col.header;
                             font-size: LayoutTokens.text-body-size-small;
                             color: PrimerColors.fgColor-muted;
@@ -182,8 +198,10 @@ export component DataTable {
                             for cell[index] in row.cells: Rectangle {
                                 horizontal-stretch: body-cell-stretch(index);
                                 min-width: body-cell-min-w(index);
+                                preferred-width: body-cell-preferred-w(index);
                                 max-width: body-cell-max-w(index);
                                 background: #00000000;
+                                clip: true;
 
                                 HorizontalLayout {
                                     padding-left: pad-inline + (index == 0 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
@@ -191,10 +209,12 @@ export component DataTable {
                                     padding-top: pad-block;
                                     padding-bottom: pad-block;
                                     width: 100%;
+                                    min-width: 0px;
                                     min-height: 0;
 
                                     Text {
                                         width: 100%;
+                                        min-width: 0px;
                                         text: cell;
                                         font-size: LayoutTokens.text-body-size-small;
                                         color: PrimerColors.fgColor-default;
