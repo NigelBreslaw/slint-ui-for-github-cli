@@ -192,6 +192,8 @@ export type ProjectBoardListStateHandle = {
   project_board_list_refresh: () => void;
   project_board_list_open_row_url: (url: string) => void;
   project_board_page_changed: (page_index: number) => void;
+  project_board_import_dialog_closed: () => void;
+  import_dialog_open: boolean;
   has_selected_project: boolean;
   selected_project_label: string;
   items_load_status: string;

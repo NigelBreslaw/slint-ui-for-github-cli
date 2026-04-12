@@ -32,6 +32,7 @@ export function buildProjectBoardListStateCallbacks(
             has_selected_project: false,
             selected_project_label: "",
             items_load_status: "",
+            import_dialog_open: false,
             board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
             board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
             board_items_count: 0,
@@ -55,7 +56,14 @@ export function buildProjectBoardListStateCallbacks(
     },
 
     project_board_list_view_exited: () => {
-      assignProperties(window.ProjectBoardListState, { items_load_status: "" });
+      assignProperties(window.ProjectBoardListState, {
+        items_load_status: "",
+        import_dialog_open: false,
+      });
+    },
+
+    project_board_import_dialog_closed: () => {
+      assignProperties(window.ProjectBoardListState, { import_dialog_open: false });
     },
 
     project_board_list_refresh: () => {

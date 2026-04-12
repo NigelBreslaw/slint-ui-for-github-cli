@@ -23,6 +23,11 @@ export global ProjectBoardListState {
     callback project-board-list-refresh;
     callback project-board-list-open-row-url(string);
     callback project-board-page-changed(int);
+    /** Invoked when the import dialog is dismissed (backdrop, ×, Escape). Node sets `import-dialog-open` false. */
+    callback project-board-import-dialog-closed;
+
+    /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */
+    in-out property <bool> import-dialog-open: false;
 
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";

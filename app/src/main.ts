@@ -85,6 +85,7 @@ assignProperties(window.ProjectBoardListState, {
   board_items_count: 0,
   board_page_index: 0,
   board_page_size: DEFAULT_PROJECT_BOARD_PAGE_SIZE,
+  import_dialog_open: false,
 });
 
 assignProperties(window.SettingsState, {
