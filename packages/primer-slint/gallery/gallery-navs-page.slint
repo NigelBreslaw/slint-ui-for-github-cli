@@ -17,11 +17,12 @@ export component GalleryNavsPage inherits VerticalLayout {
     width: 100%;
     alignment: start;
 
+    private property <int> demo-nav-flat-selected: 0;
     private property <[NavListItem]> demo-nav-flat-items: [
         {
             data: {
                 label: "Dashboard",
-                current: true,
+                current: demo-nav-flat-selected == 0,
                 inactive: false,
                 inactive-text: "",
                 description: "Overview and activity",
@@ -35,7 +36,7 @@ export component GalleryNavsPage inherits VerticalLayout {
         {
             data: {
                 label: "Settings",
-                current: false,
+                current: demo-nav-flat-selected == 1,
                 inactive: false,
                 inactive-text: "",
                 description: "",
@@ -190,12 +191,13 @@ export component GalleryNavsPage inherits VerticalLayout {
             subnav-default-open: true,
         },
     ];
+    private property <int> demo-nav-sidebar-selected: 0;
     // Minimal labels — common Primer sidebar: blue accent bar + muted row for `current`.
     private property <[NavListItem]> demo-nav-sidebar-items: [
         {
             data: {
                 label: "Item 1",
-                current: true,
+                current: demo-nav-sidebar-selected == 0,
                 inactive: false,
                 inactive-text: "",
                 description: "",
@@ -209,7 +211,7 @@ export component GalleryNavsPage inherits VerticalLayout {
         {
             data: {
                 label: "Item 2",
-                current: false,
+                current: demo-nav-sidebar-selected == 1,
                 inactive: false,
                 inactive-text: "",
                 description: "",
@@ -223,7 +225,7 @@ export component GalleryNavsPage inherits VerticalLayout {
         {
             data: {
                 label: "Item 3",
-                current: false,
+                current: demo-nav-sidebar-selected == 2,
                 inactive: false,
                 inactive-text: "",
                 description: "",
@@ -444,6 +446,9 @@ export component GalleryNavsPage inherits VerticalLayout {
                     groups: [];
                     item-activated(gi, path) => {
                         demo-nav-last = "flat (" + gi + ", " + path + ")";
+                        demo-nav-flat-selected = path == "0"
+                            ? 0
+                            : path == "1" ? 1 : demo-nav-flat-selected;
                     }
                 }
             }
@@ -480,14 +485,17 @@ export component GalleryNavsPage inherits VerticalLayout {
             VerticalLayout {
                 padding: 8px;
                 width: 100%;
+                alignment: start;
 
                 NavList {
-                    width: 100%;
                     items: demo-nav-sidebar-items;
                     groups: [];
                     sidebar-current-indicator: true;
                     item-activated(gi, path) => {
                         demo-nav-last = "sidebar (" + gi + ", " + path + ")";
+                        demo-nav-sidebar-selected = path == "0"
+                            ? 0
+                            : path == "1" ? 1 : path == "2" ? 2 : demo-nav-sidebar-selected;
                     }
                 }
             }

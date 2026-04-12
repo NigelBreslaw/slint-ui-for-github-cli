@@ -102,8 +102,9 @@ component NavListItemRow {
             padding-left: indent-depth * LayoutTokens.nav-list-subnav-indent;
             alignment: start;
 
-            // Fixed-size accent only (horizontal-stretch: 0). Nested VerticalLayout + % width was stealing row width.
+            // Full row height (cross-axis stretch) so the bar lines up with ActionListRow’s highlight; fixed width only.
             if sidebar-indicator: Rectangle {
+                y: (parent.height - self.height) / 2;
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
                 height: LayoutTokens.nav-list-sidebar-indicator-height;
@@ -174,12 +175,11 @@ component NavListExpandableRow3 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: start;
+            alignment: sidebar-indicator ? stretch : start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
-                height: LayoutTokens.nav-list-sidebar-indicator-height;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
                 background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
             }
@@ -266,12 +266,11 @@ component NavListExpandableRow2 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: start;
+            alignment: sidebar-indicator ? stretch : start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
-                height: LayoutTokens.nav-list-sidebar-indicator-height;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
                 background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
             }
@@ -358,12 +357,11 @@ component NavListExpandableRow1 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: start;
+            alignment: sidebar-indicator ? stretch : start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
-                height: LayoutTokens.nav-list-sidebar-indicator-height;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
                 background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
             }
@@ -450,12 +448,11 @@ component NavListExpandableRow0 {
             horizontal-stretch: 1;
             spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: start;
+            alignment: sidebar-indicator ? stretch : start;
 
             if sidebar-indicator: Rectangle {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
-                height: LayoutTokens.nav-list-sidebar-indicator-height;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
                 background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
             }
