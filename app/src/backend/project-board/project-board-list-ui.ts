@@ -1,5 +1,9 @@
 import * as slint from "slint-ui";
 import { assignProperties, type ExhaustiveAllCallbacks } from "slint-bridge-kit";
+import {
+  addProjectV2ItemsByContentIdsSequential,
+  type AddProjectV2ItemOutcome,
+} from "../gh/graphql-add-project-v2-item.ts";
 import { fetchRepoCandidatesPageGraphql } from "../gh/graphql-repo-candidates.ts";
 import { fetchAllSlintUiOrgReposRest } from "../gh/fetch-slint-ui-org-repos-rest.ts";
 import {
@@ -123,6 +127,7 @@ function rebuildImportCandidateRowsModel(window: MainWindowInstance): void {
     import_candidate_count: slintRows.length,
     import_candidates_total_loaded: importCandidatesAccumulated.length,
     import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>(slintRows),
+    import_selected_count: importCandidateSelectedIds.size,
   });
   syncImportCandidatesHasMoreToWindow(window);
 }
@@ -148,6 +153,9 @@ function clearImportCandidatesUi(window: MainWindowInstance): void {
     import_candidates_has_more: false,
     import_candidates_load_more_busy: false,
     import_candidates_total_loaded: 0,
+    import_selected_count: 0,
+    import_add_selected_busy: false,
+    import_add_selected_message: "",
   });
 }
 
@@ -166,6 +174,25 @@ function applyImportRepoFilterToWindow(window: MainWindowInstance): void {
     import_repo_options_count: filtered.length,
   });
   clearImportCandidatesUi(window);
+}
+
+function truncateOneLine(s: string, max: number): string {
+  const one = s.trim().split("\n")[0] ?? s;
+  return one.length > max ? `${one.slice(0, max)}…` : one;
+}
+
+function summarizeImportAddOutcomes(outcomes: AddProjectV2ItemOutcome[]): string {
+  const ok = outcomes.filter((o) => o.ok).length;
+  const fail = outcomes.length - ok;
+  if (outcomes.length === 0) {
+    return "Nothing to add.";
+  }
+  if (fail === 0) {
+    return ok === 1 ? "Added 1 item to the project." : `Added ${ok} items to the project.`;
+  }
+  const firstErr = outcomes.find((o): o is { contentId: string; ok: false; error: string } => !o.ok);
+  const errTail = firstErr ? `: ${truncateOneLine(firstErr.error, 120)}` : "";
+  return `Added ${ok} of ${outcomes.length}. ${fail} failed${errTail}`;
 }
 
 function clearImportReposUiState(window: MainWindowInstance): void {
@@ -380,6 +407,40 @@ export function buildProjectBoardListStateCallbacks(
         importCandidateSelectedIds.add(nodeId);
       }
       rebuildImportCandidateRowsModel(window);
+    },
+
+    project_board_import_add_selected_to_project: () => {
+      void (async () => {
+        const stored = readTimeReportingSelectedProjectKv();
+        if (stored === null) {
+          assignProperties(window.ProjectBoardListState, {
+            import_add_selected_message: "No project selected.",
+          });
+          return;
+        }
+        const ids = [...importCandidateSelectedIds];
+        if (ids.length === 0) {
+          assignProperties(window.ProjectBoardListState, {
+            import_add_selected_message: "Select at least one issue or pull request.",
+          });
+          return;
+        }
+        assignProperties(window.ProjectBoardListState, {
+          import_add_selected_busy: true,
+          import_add_selected_message: "Adding to project…",
+        });
+        const outcomes = await addProjectV2ItemsByContentIdsSequential(stored.nodeId, ids, {
+          delayMsBetween: 350,
+        });
+        importCandidateSelectedIds.clear();
+        rebuildImportCandidateRowsModel(window);
+        const msg = summarizeImportAddOutcomes(outcomes);
+        assignProperties(window.ProjectBoardListState, {
+          import_add_selected_busy: false,
+          import_add_selected_message: msg,
+        });
+        await reloadProjectV2ItemsIntoCacheAndUi(window, stored.nodeId);
+      })();
     },
 
     project_board_list_refresh: () => {

@@ -216,6 +216,7 @@ export type ProjectBoardListStateHandle = {
   project_board_import_candidates_load_more: () => void;
   project_board_import_candidates_select_all_on_page: () => void;
   project_board_import_candidate_toggled: (node_id: string) => void;
+  project_board_import_add_selected_to_project: () => void;
   import_dialog_open: boolean;
   import_repos_search: string;
   import_repos_load_status: string;
@@ -229,6 +230,9 @@ export type ProjectBoardListStateHandle = {
   import_candidates_has_more: boolean;
   import_candidates_load_more_busy: boolean;
   import_candidates_total_loaded: number;
+  import_selected_count: number;
+  import_add_selected_busy: boolean;
+  import_add_selected_message: string;
   has_selected_project: boolean;
   selected_project_label: string;
   items_load_status: string;

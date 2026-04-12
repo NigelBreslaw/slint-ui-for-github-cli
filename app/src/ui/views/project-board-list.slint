@@ -373,6 +373,27 @@ export component ProjectBoardList {
                                         ProjectBoardListState.project-board-import-candidates-load-more();
                                     }
                                 }
+
+                                Button {
+                                    variant: ButtonVariant.primary;
+                                    size: Size.small;
+                                    label: "Add selected to project";
+                                    loading: ProjectBoardListState.import-add-selected-busy;
+                                    disabled: !ProjectBoardListState.has-selected-project
+                                        || ProjectBoardListState.import-selected-count == 0
+                                        || ProjectBoardListState.import-add-selected-busy
+                                        || ProjectBoardListState.import-candidates-load-status == "Loading issues and pull requests…";
+                                    clicked => {
+                                        ProjectBoardListState.project-board-import-add-selected-to-project();
+                                    }
+                                }
+                            }
+
+                            if ProjectBoardListState.import-add-selected-message != "": Text {
+                                text: ProjectBoardListState.import-add-selected-message;
+                                font-size: 12px;
+                                color: PrimerColors.fgColor-default;
+                                wrap: word-wrap;
                             }
                         }
 

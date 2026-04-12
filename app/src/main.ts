@@ -99,6 +99,9 @@ assignProperties(window.ProjectBoardListState, {
   import_candidates_has_more: false,
   import_candidates_load_more_busy: false,
   import_candidates_total_loaded: 0,
+  import_selected_count: 0,
+  import_add_selected_busy: false,
+  import_add_selected_message: "",
 });
 
 assignProperties(window.SettingsState, {
