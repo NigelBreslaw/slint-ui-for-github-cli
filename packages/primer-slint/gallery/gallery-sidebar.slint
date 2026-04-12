@@ -1,5 +1,5 @@
 import { NavList, NavListItem, Icons } from "../primer.slint";
-import { PrimerColors, LayoutTokens } from "../tokens.slint";
+import { PrimerColors } from "../tokens.slint";
 
 export component GallerySidebar {
     in property <int> selected-index: 0;
@@ -131,7 +131,19 @@ export component GallerySidebar {
                 groups: [];
                 sidebar-current-indicator: true;
                 item-activated(_gi, path) => {
-                    root.group-selected(path.to-float().floor());
+                    root.group-selected(
+                        path == "0"
+                            ? 0
+                            : path == "1"
+                                ? 1
+                                : path == "2"
+                                    ? 2
+                                    : path == "3"
+                                        ? 3
+                                        : path == "4"
+                                            ? 4
+                                            : path == "5" ? 5 : root.selected-index,
+                    );
                 }
             }
         }
