@@ -85,7 +85,7 @@ function dataTableCell(
 
 /**
  * Builds `DataTableRow` data for the project board (column order: `#`, Type, Title, Meta).
- * Row **`id`** is the issue/PR URL so `row-clicked` can open it in PR9.
+ * Row **`id`** is the issue/PR URL (empty for draft-only rows) so `DataTable` `row-clicked` can open the browser.
  * **`rowIndexStart`** — 0-based offset for the `#` column when showing a **slice** of a larger list (paging).
  */
 export function mapProjectBoardListRowsToDataTableRows(

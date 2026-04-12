@@ -144,7 +144,7 @@ export component ProjectBoardList {
                         board-flick := Flickable {
                             width: parent.width;
                             height: parent.height;
-                            viewport-width: self.width;
+                            viewport-width: max(self.width, ProjectBoardTableLayout.total-width);
                             viewport-height: self.height;
 
                             board-inner := VerticalLayout {

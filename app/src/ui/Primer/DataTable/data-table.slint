@@ -229,6 +229,7 @@ export component DataTable {
 
                 row-ta := TouchArea {
                     width: 100%;
+                    mouse-cursor: pointer;
                     clicked => {
                         root.row-clicked(row.id);
                     }
