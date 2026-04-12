@@ -3,6 +3,7 @@ import {
     Button,
     ButtonAlignContent,
     ButtonVariant,
+    Icons,
     MultiDropShadow,
 } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
@@ -110,7 +111,7 @@ export component UserMenu {
             variant: ButtonVariant.invisible;
             align-content: ButtonAlignContent.start;
             has-leading-icon: true;
-            leading-icon: @image-url("../../assets/16px/sign-out.svg");
+            leading-icon: Icons.sign_out;
             label: "Sign out";
             clicked => {
                 HeaderState.menu-visible = false;

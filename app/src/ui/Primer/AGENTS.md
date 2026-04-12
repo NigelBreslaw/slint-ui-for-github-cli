@@ -9,12 +9,10 @@ This document stands alone in the repo. Past chats or Cursor plan files are not 
 
 ## Upstream references (consult before inventing values)
 
-
 | Location                              | Role                                                                                                                                                                                                                                                                                                                                                     |
 | ------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `/Users/nigelb/slint/primer-tokens`   | **primer-tokens** — functional and component token JSON5 (e.g. `src/tokens/functional/color/control.json5`, `functional/size/size.json5`, `component/button.json5`, shadow tokens). Use for **token names**, **layering** (base → functional → component), and **hex / hsla / hsv** as the source of truth when porting.                                 |
 | `/Users/nigelb/slint/primer-ui-react` | **primer-ui-react** — how tokens become **CSS custom properties** in `*.module.css` (e.g. `internal/components/TextInputWrapper.module.css`, `Select/Select.module.css`, `Banner/Banner.module.css`, button-related styles). Use for **interaction states**, **sizes**, **validation**, and **variable names**, even when this Slint port is simplified. |
-
 
 Also see the public docs: [Primer Design System](https://primer.style/design/system).
 
@@ -25,7 +23,6 @@ Also see the public docs: [Primer Design System](https://primer.style/design/sys
 
 ### Token layers (current convention)
 
-
 | Global           | Contents                                                                                                                                                                                                                                                                                                        |
 | ---------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | **LayoutTokens** | Lengths, typography sizes, line heights, control dimensions, padding, icon sizes, border radius, **banner** padding/icon sizes, **banner** action row gap (`banner-actions-gap`) and dismiss offset when actions exist (`banner-dismiss-margin-when-actions`). **No** light/dark color scheme.                  |
@@ -33,7 +30,6 @@ Also see the public docs: [Primer Design System](https://primer.style/design/sys
 | **ButtonTokens** | GitHub-style `color-btn-*` and resolved `button-*` colors, action-list tints, icon-button tints, filled-button shadow colors. Composes from **`PrimerColors` `out` properties** where possible instead of repeating literals.                                                                                   |
 | **BannerTokens** | Per-variant `banner-bgColor-*`, `banner-borderColor-*`, `banner-icon-fgColor-*` aligned with `Banner.module.css` `[data-variant]`. **Composes only from `PrimerColors`** — banner surfaces must not introduce new hex in the component file.                                                                    |
 | **LabelTokens**  | Per-variant `label-fg-*`, `label-border-*` for product **Label** chips, aligned with `Label.module.css` `[data-variant]`. **Composes only from `PrimerColors`** — no literals in `LabelTokens`.                                                                                                                 |
-
 
 **Cross-global rule:** Treat other globals as exposing only their **`out`** bindings to dependents. Do not rely on reading another global’s **private** fields from outside that global.
 
@@ -55,8 +51,6 @@ flowchart TB
   BanT --> Components
   LabT --> Components
 ```
-
-
 
 ## Adding design tokens (checklist)
 
@@ -87,15 +81,13 @@ flowchart TB
 
 Split or merge PRs by size; small widgets can combine steps. **Stage numbers are illustrative** — large features (e.g. **DataTable**) may use a separate **Docs** PR at the end for `readme.md` + `AGENTS.md` import/architecture updates (see **DataTable** in [`readme.md`](readme.md)).
 
-
-| Stage                       | Focus                                                                                                                                                   |
-| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **PR1 — Spike / API**       | Component shell, properties, callbacks, minimal layout; must compile; PR description lists upstream paths you mirrored.                                 |
-| **PR2 — Tokens**            | New `LayoutTokens` / `PrimerColors` / `ButtonTokens` / `BannerTokens` entries; **deduplicate** literals; cite primer-tokens keys or CSS vars in the PR. |
-| **PR3 — Visual parity**     | Hover, disabled, focus, validation, sizing, shadows, typography; optional screenshots or Storybook references from primer-ui-react.                     |
-| **PR4 — Integration**       | Wire into `main.slint` or a view; TypeScript bridges if needed; avoid unrelated refactors.                                                              |
-| **Final — Docs / cleanup**  | Update [`readme.md`](readme.md) and this file when exports or imports change; remove dead code; adjust **Barrel** / **Imports** bullets if layers change. |
-
+| Stage                      | Focus                                                                                                                                                     |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **PR1 — Spike / API**      | Component shell, properties, callbacks, minimal layout; must compile; PR description lists upstream paths you mirrored.                                   |
+| **PR2 — Tokens**           | New `LayoutTokens` / `PrimerColors` / `ButtonTokens` / `BannerTokens` entries; **deduplicate** literals; cite primer-tokens keys or CSS vars in the PR.   |
+| **PR3 — Visual parity**    | Hover, disabled, focus, validation, sizing, shadows, typography; optional screenshots or Storybook references from primer-ui-react.                       |
+| **PR4 — Integration**      | Wire into `main.slint` or a view; TypeScript bridges if needed; avoid unrelated refactors.                                                                |
+| **Final — Docs / cleanup** | Update [`readme.md`](readme.md) and this file when exports or imports change; remove dead code; adjust **Barrel** / **Imports** bullets if layers change. |
 
 Trivial components may merge PR1+PR2; large or risky work may split PR3 further.
 
@@ -105,14 +97,12 @@ Any **implementation plan** for **Primer** work (or other **multi-PR** UI change
 
 The table should list **PRs in merge order** and include at least:
 
-
 | Column         | Contents                                                                                  |
 | -------------- | ----------------------------------------------------------------------------------------- |
 | **PR**         | Sequence number (1, 2, …).                                                                |
 | **Title**      | Short, descriptive name.                                                                  |
 | **Scope**      | What ships (paths, components, behavior).                                                 |
 | **Acceptance** | How to verify (e.g. `pnpm typecheck`, Slint `main.slint` load, gallery or manual checks). |
-
 
 Call out **dependencies** (e.g. “PR3 must follow PR2”) and **optional merges** (e.g. “PR2+PR3 may be one PR if small”). The **last row** of a plan may be a process-only PR (e.g. updating this `AGENTS.md`) when the plan itself introduces a new rule.
 

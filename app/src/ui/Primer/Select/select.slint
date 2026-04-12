@@ -3,6 +3,7 @@
 // When `selected-value` or `options` change from TypeScript, keep `selected-label` in sync there
 // (Slint cannot scan the options model in a `changed` handler in this toolchain).
 
+import { Icons } from "../assets/icons.slint";
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import {
     ButtonTokens,
@@ -137,7 +138,7 @@ export component Select {
 
                         Image {
                             vertical-alignment: center;
-                            source: @image-url("../../../assets/16px/select-chevron.svg");
+                            source: Icons.select_chevron;
                             colorize: PrimerColors.fgColor-muted;
                         }
                     }
@@ -170,7 +171,7 @@ export component Select {
                 width: LayoutTokens.iconButton-icon-size-medium;
                 height: LayoutTokens.iconButton-icon-size-medium;
                 vertical-alignment: top;
-                source: validation-status == ValidationStatus.error ? @image-url("../../../assets/16px/alert.svg") : @image-url("../../../assets/16px/check-circle.svg");
+                source: validation-status == ValidationStatus.error ? Icons.alert : Icons.check_circle;
                 colorize: validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : PrimerColors.fgColor-success;
             }
 

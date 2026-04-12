@@ -7,6 +7,7 @@
 // Slint docs: HorizontalLayout and GridLayout (stretch, min/preferred/max). A single GridLayout would unify column tracks,
 // but nested repeaters in GridLayout (for rows × for cells) have panicked the interpreter (dynamic_item_tree repeater lookup);
 // see Primer readme.md DataTable "Layout" paragraph.
+import { Icons } from "../assets/icons.slint";
 import { IconButton, IconButtonVariant } from "../Buttons/buttons.slint";
 import { Label } from "../Label/label.slint";
 import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
@@ -133,7 +134,7 @@ export component DataTable {
                                 height: LayoutTokens.iconButton-icon-size-medium;
                                 vertical-alignment: center;
                                 visible: sort-icon-visible(col.id, header-ta.has-hover);
-                                source: sort-icon-desc(col.id) ? @image-url("../../../assets/16px/sort-desc.svg") : @image-url("../../../assets/16px/sort-asc.svg");
+                                source: sort-icon-desc(col.id) ? Icons.sort_desc : Icons.sort_asc;
                                 colorize: sort-column-active(col.id) ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
                             }
 
@@ -167,7 +168,7 @@ export component DataTable {
                                 height: LayoutTokens.iconButton-icon-size-medium;
                                 vertical-alignment: center;
                                 visible: sort-icon-visible(col.id, header-ta.has-hover);
-                                source: sort-icon-desc(col.id) ? @image-url("../../../assets/16px/sort-desc.svg") : @image-url("../../../assets/16px/sort-asc.svg");
+                                source: sort-icon-desc(col.id) ? Icons.sort_desc : Icons.sort_asc;
                                 colorize: sort-column-active(col.id) ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
                             }
                         }

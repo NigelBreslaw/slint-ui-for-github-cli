@@ -1,8 +1,30 @@
 // Central `@image-url` registry so Slint bundles only icons we reference here.
 // Add more properties as other screens need them; map from TS via `window.Icons.*`.
+// Property names: SVG basename with `-` replaced by `_`.
 export global Icons {
     out property <image> pull_request: @image-url("16px/git-pull-request.svg");
     out property <image> issue_opened: @image-url("16px/issue-opened.svg");
     out property <image> issue_draft: @image-url("16px/issue-draft.svg");
     out property <image> dot_fill: @image-url("16px/dot-fill.svg");
+    out property <image> sort_desc: @image-url("16px/sort-desc.svg");
+    out property <image> sort_asc: @image-url("16px/sort-asc.svg");
+    out property <image> select_chevron: @image-url("16px/select-chevron.svg");
+    out property <image> alert: @image-url("16px/alert.svg");
+    out property <image> check_circle: @image-url("16px/check-circle.svg");
+    out property <image> stop: @image-url("16px/stop.svg");
+    out property <image> info: @image-url("16px/info.svg");
+    out property <image> circle_check: @image-url("16px/circle-check.svg");
+    out property <image> x: @image-url("16px/x.svg");
+    out property <image> git_pull_request_draft: @image-url("16px/git-pull-request-draft.svg");
+    out property <image> kebab_horizontal: @image-url("16px/kebab-horizontal.svg");
+    out property <image> link_external: @image-url("16px/link-external.svg");
+    out property <image> copy_icon: @image-url("16px/copy.svg");
+    out property <image> gear_24: @image-url("24px/gear.svg");
+    out property <image> moon: @image-url("16px/moon.svg");
+    out property <image> sun: @image-url("16px/sun.svg");
+    out property <image> inbox: @image-url("24px/inbox.svg");
+    out property <image> history: @image-url("24px/history.svg");
+    out property <image> layout_grid: @image-url("24px/layout-grid.svg");
+    out property <image> palette: @image-url("24px/palette.svg");
+    out property <image> sign_out: @image-url("16px/sign-out.svg");
 }

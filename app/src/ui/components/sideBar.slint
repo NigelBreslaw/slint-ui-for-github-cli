@@ -1,4 +1,5 @@
 import { AppState, AppView, Authed } from "../../bridges/slint/app-state.slint";
+import { Icons } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
 
 export component SideBar {
@@ -21,7 +22,7 @@ export component SideBar {
             width: 24px;
             height: 24px;
             colorize: PrimerColors.fgColor-muted;
-            source: @image-url("../../assets/24px/inbox.svg");
+            source: Icons.inbox;
 
             ta := TouchArea {
                 clicked => {
@@ -36,7 +37,7 @@ export component SideBar {
             width: 24px;
             height: 24px;
             colorize: PrimerColors.fgColor-muted;
-            source: @image-url("../../assets/24px/history.svg");
+            source: Icons.history;
 
             TouchArea {
                 clicked => {
@@ -51,7 +52,7 @@ export component SideBar {
             width: 24px;
             height: 24px;
             colorize: PrimerColors.fgColor-muted;
-            source: @image-url("../../assets/24px/layout-grid.svg");
+            source: Icons.layout_grid;
 
             TouchArea {
                 clicked => {
@@ -66,7 +67,7 @@ export component SideBar {
             width: 24px;
             height: 24px;
             colorize: PrimerColors.fgColor-muted;
-            source: @image-url("../../assets/24px/palette.svg");
+            source: Icons.palette;
 
             TouchArea {
                 clicked => {
@@ -81,7 +82,7 @@ export component SideBar {
             width: 24px;
             height: 24px;
             colorize: PrimerColors.fgColor-muted;
-            source: @image-url("../../assets/24px/gear.svg");
+            source: Icons.gear_24;
 
             TouchArea {
                 clicked => {

@@ -1,6 +1,9 @@
 import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
-import type { MainWindowInstance, SlintDataTableImage } from "../../bridges/node/slint-interface.ts";
+import type {
+  MainWindowInstance,
+  SlintDataTableImage,
+} from "../../bridges/node/slint-interface.ts";
 
 /**
  * Copies RGBA bytes into a slint-ui **`ImageData`** instance. Plain `{ width, height, data }` objects
@@ -32,12 +35,14 @@ export type ProjectBoardDataTableIcons = {
  * Reads the bundled **`Icons`** global from the Slint runtime (`assets/icons.slint`).
  * Icons must be declared with `@image-url` there so they are included in the app bundle.
  */
-export function getProjectBoardDataTableIconsFromWindow(window: MainWindowInstance): ProjectBoardDataTableIcons {
+export function getProjectBoardDataTableIconsFromWindow(
+  window: MainWindowInstance,
+): ProjectBoardDataTableIcons {
   const { Icons } = window;
   return {
-    placeholder: Icons.cell_placeholder,
-    pullRequest: Icons.pr,
-    issue: Icons.issue,
+    placeholder: Icons.dot_fill,
+    pullRequest: Icons.pull_request,
+    issue: Icons.issue_opened,
     draftIssue: Icons.issue_draft,
   };
 }

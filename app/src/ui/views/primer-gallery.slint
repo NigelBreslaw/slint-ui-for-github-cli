@@ -14,6 +14,7 @@ import {
     DataTableColumn,
     DataTableRow,
     DataTableSortDirection,
+    Icons,
     Label,
     TableContainer,
     LabelGroup,
@@ -63,9 +64,9 @@ export component PrimerGallery {
         { header: "Actions", id: "actions", sortable: false, align: DataTableCellAlign.end, row-header: false, cell-kind: DataTableCellKind.action, horizontal-stretch: 0, min-width: 40px, width: 40px, monospace: false },
     ];
     private property <[DataTableRow]> demo-data-table-rows: [
-        { id: "r1", cells: [{ kind: DataTableCellKind.iconText, text: "Pull request", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/git-pull-request.svg") }, { kind: DataTableCellKind.text, text: "slint", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "2.4k", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "MIT", label-variant: LabelVariant.success, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.action, text: "more", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/kebab-horizontal.svg") }] },
-        { id: "r2", cells: [{ kind: DataTableCellKind.iconText, text: "Draft", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/git-pull-request-draft.svg") }, { kind: DataTableCellKind.text, text: "github-app", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "120", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "Apache-2.0", label-variant: LabelVariant.accent, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.action, text: "open-external", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/link-external.svg") }] },
-        { id: "r3", cells: [{ kind: DataTableCellKind.iconText, text: "Issue", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/issue-opened.svg") }, { kind: DataTableCellKind.text, text: "primer-ui-react", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.text, text: "890", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.label, text: "GPL-3.0", label-variant: LabelVariant.danger, label-size: LabelSize.small, icon: @image-url("../../assets/16px/dot-fill.svg") }, { kind: DataTableCellKind.action, text: "copy-link", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: @image-url("../../assets/16px/copy.svg") }] },
+        { id: "r1", cells: [{ kind: DataTableCellKind.iconText, text: "Pull request", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.pull_request }, { kind: DataTableCellKind.text, text: "slint", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: "2.4k", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.label, text: "MIT", label-variant: LabelVariant.success, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.action, text: "more", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.kebab_horizontal }] },
+        { id: "r2", cells: [{ kind: DataTableCellKind.iconText, text: "Draft", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.git_pull_request_draft }, { kind: DataTableCellKind.text, text: "github-app", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: "120", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.label, text: "Apache-2.0", label-variant: LabelVariant.accent, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.action, text: "open-external", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.link_external }] },
+        { id: "r3", cells: [{ kind: DataTableCellKind.iconText, text: "Issue", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.issue_opened }, { kind: DataTableCellKind.text, text: "primer-ui-react", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.text, text: "890", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.label, text: "GPL-3.0", label-variant: LabelVariant.danger, label-size: LabelSize.small, icon: Icons.dot_fill }, { kind: DataTableCellKind.action, text: "copy-link", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.copy_icon }] },
     ];
     private property <string> demo-data-table-sorted-column: "";
     private property <string> demo-data-table-last-row-action: "";
@@ -210,7 +211,7 @@ export component PrimerGallery {
                             title: "Custom leading icon";
                             description: "Info variant with has-custom-leading-icon and gear asset.";
                             has-custom-leading-icon: true;
-                            leading-icon: @image-url("../../assets/24px/gear.svg");
+                            leading-icon: Icons.gear_24;
                         }
 
                         Banner {
@@ -219,7 +220,7 @@ export component PrimerGallery {
                             title: "Upsell + custom icon";
                             description: "Custom leading visual is allowed for upsell as well.";
                             has-custom-leading-icon: true;
-                            leading-icon: @image-url("../../assets/24px/gear.svg");
+                            leading-icon: Icons.gear_24;
                         }
 
                         Text {
@@ -501,7 +502,7 @@ export component PrimerGallery {
                             Button {
                                 label: "Center";
                                 has-leading-icon: true;
-                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                leading-icon: Icons.info;
                                 clicked => {
                                 }
                             }
@@ -510,7 +511,7 @@ export component PrimerGallery {
                                 label: "Start";
                                 align-content: ButtonAlignContent.start;
                                 has-leading-icon: true;
-                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                leading-icon: Icons.info;
                                 clicked => {
                                 }
                             }
@@ -528,7 +529,7 @@ export component PrimerGallery {
                             Button {
                                 label: "Icon + label";
                                 has-leading-icon: true;
-                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                leading-icon: Icons.info;
                                 clicked => {
                                 }
                             }
@@ -554,9 +555,9 @@ export component PrimerGallery {
                             Button {
                                 label: "Icon both sides";
                                 has-leading-icon: true;
-                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                leading-icon: Icons.info;
                                 has-trailing-icon: true;
-                                trailing-icon: @image-url("../../assets/16px/circle-check.svg");
+                                trailing-icon: Icons.circle_check;
                                 clicked => {
                                 }
                             }
@@ -623,7 +624,7 @@ export component PrimerGallery {
                                 label: "Downloading";
                                 loading: true;
                                 has-leading-icon: true;
-                                leading-icon: @image-url("../../assets/16px/info.svg");
+                                leading-icon: Icons.info;
                                 clicked => {
                                 }
                             }

@@ -227,12 +227,33 @@ export type TimeReportingStateHandle = {
   detail_body: string;
 };
 
-/** Slint global from `assets/icons.slint` (bundled `@image-url` icons). */
+/** Slint global from [`ui/Primer/assets/icons.slint`](../../ui/Primer/assets/icons.slint) (bundled `@image-url` icons). */
 export type SlintIconsGlobal = {
-  pr: ImageData;
-  issue: ImageData;
+  pull_request: ImageData;
+  issue_opened: ImageData;
   issue_draft: ImageData;
-  cell_placeholder: ImageData;
+  dot_fill: ImageData;
+  sort_desc: ImageData;
+  sort_asc: ImageData;
+  select_chevron: ImageData;
+  alert: ImageData;
+  check_circle: ImageData;
+  stop: ImageData;
+  info: ImageData;
+  circle_check: ImageData;
+  x: ImageData;
+  git_pull_request_draft: ImageData;
+  kebab_horizontal: ImageData;
+  link_external: ImageData;
+  copy_icon: ImageData;
+  gear_24: ImageData;
+  moon: ImageData;
+  sun: ImageData;
+  inbox: ImageData;
+  history: ImageData;
+  layout_grid: ImageData;
+  palette: ImageData;
+  sign_out: ImageData;
 };
 
 export type MainWindowInstance = {

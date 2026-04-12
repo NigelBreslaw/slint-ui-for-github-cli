@@ -51,7 +51,11 @@ function metaText(row: ProjectBoardListRowTs): string {
   return "";
 }
 
-function dataTableCell(kind: DataTableCellKindWire, text: string, icon: ImageData): SlintDataTableCell {
+function dataTableCell(
+  kind: DataTableCellKindWire,
+  text: string,
+  icon: ImageData,
+): SlintDataTableCell {
   return {
     kind,
     text,
@@ -77,11 +81,7 @@ export function mapProjectBoardListRowsToDataTableRows(
       id: row.url,
       cells: [
         dataTableCell(dataTableCellKind.text, String(i + 1), ph),
-        dataTableCell(
-          dataTableCellKind.iconText,
-          kindLabel(row.kind),
-          kindIcon(icons, row.kind),
-        ),
+        dataTableCell(dataTableCellKind.iconText, kindLabel(row.kind), kindIcon(icons, row.kind)),
         dataTableCell(dataTableCellKind.text, row.title, ph),
         dataTableCell(dataTableCellKind.text, metaText(row), ph),
       ],

@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { dataTableCellKind, projectBoardItemKind } from "../../bridges/node/slint-interface.ts";
 import {
-  dataTableCellKind,
-  projectBoardItemKind,
-} from "../../bridges/node/slint-interface.ts";
-import { toSlintImageData, type ProjectBoardDataTableIcons } from "./project-board-datatable-icons.ts";
+  toSlintImageData,
+  type ProjectBoardDataTableIcons,
+} from "./project-board-datatable-icons.ts";
 import { mapProjectBoardListRowsToDataTableRows } from "./map-project-board-list-to-data-table-rows.ts";
 
 function mockIcons(): ProjectBoardDataTableIcons {

@@ -1,5 +1,5 @@
 import { Palette } from "std-widgets.slint";
-import { Avatar, IconButton, PageHeader } from "../primer/primer.slint";
+import { Avatar, IconButton, Icons, PageHeader } from "../Primer/primer.slint";
 import { UserMenu } from "./UserMenu.slint";
 import { AppState, Authed, AppView } from "../../bridges/slint/app-state.slint";
 import {
@@ -80,7 +80,7 @@ export component AppHeader {
                         Palette.color-scheme = ColorScheme.dark;
                     }
                 }
-                icon-source: Palette.color-scheme == ColorScheme.dark ? @image-url("../../assets/16px/moon.svg") : @image-url("../../assets/16px/sun.svg");
+                icon-source: Palette.color-scheme == ColorScheme.dark ? Icons.moon : Icons.sun;
             }
 
             avatar-container := Avatar {

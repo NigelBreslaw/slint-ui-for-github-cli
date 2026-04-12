@@ -1,3 +1,4 @@
+import { Icons } from "../assets/icons.slint";
 import { ButtonVariant } from "../Buttons/types.slint";
 import { Button } from "../Buttons/buttons.slint";
 import { BannerTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
@@ -98,11 +99,11 @@ export component Banner {
         : BannerTokens.banner-icon-fgColor-warning;
 
     private property <image> default-leading-source:
-        variant == BannerVariant.critical ? @image-url("../../../assets/16px/stop.svg")
-        : variant == BannerVariant.info ? @image-url("../../../assets/16px/info.svg")
-        : variant == BannerVariant.success ? @image-url("../../../assets/16px/circle-check.svg")
-        : variant == BannerVariant.upsell ? @image-url("../../../assets/16px/info.svg")
-        : @image-url("../../../assets/16px/alert.svg");
+        variant == BannerVariant.critical ? Icons.stop
+        : variant == BannerVariant.info ? Icons.info
+        : variant == BannerVariant.success ? Icons.circle_check
+        : variant == BannerVariant.upsell ? Icons.info
+        : Icons.alert;
 
     private property <image> resolved-leading-source: use-custom-leading ? leading-icon : default-leading-source;
 
@@ -262,7 +263,7 @@ export component Banner {
                         y: dismiss-icon-y;
                         width: dismiss-icon-side;
                         height: dismiss-icon-side;
-                        source: @image-url("../../../assets/16px/x.svg");
+                        source: Icons.x;
                         colorize: banner-icon-fg;
                     }
 
