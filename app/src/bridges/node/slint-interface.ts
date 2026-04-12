@@ -236,6 +236,8 @@ export type SlintIconsGlobal = {
   sort_desc: ImageData;
   sort_asc: ImageData;
   select_chevron: ImageData;
+  chevron_left: ImageData;
+  chevron_right: ImageData;
   alert: ImageData;
   check_circle: ImageData;
   stop: ImageData;

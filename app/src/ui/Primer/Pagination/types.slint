@@ -1,0 +1,16 @@
+/// Piece kinds for the flattened pagination strip (Primer `Pagination/model.tsx` `PageType`).
+export enum PaginationPieceKind {
+    Prev,
+    Next,
+    Num,
+    Break,
+}
+
+/// One entry in the nav strip between Previous and Next (plus Prev/Next themselves when `flat_index` covers the full model).
+export struct PaginationPiece {
+    kind: PaginationPieceKind,
+    /// For Prev/Next: 1-based target page when activating (Prev uses `current - 1`, Next uses `current + 1`). For Num: page number. Unused for Break.
+    page_num: int,
+    disabled: bool,
+    selected: bool,
+}

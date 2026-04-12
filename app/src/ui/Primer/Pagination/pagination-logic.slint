@@ -1,0 +1,260 @@
+import { PaginationPiece, PaginationPieceKind } from "./types.slint";
+
+/// Port of primer-ui-react `Pagination/model.tsx` `buildPaginationModel` + flat index mapping.
+/// `page_index` is 0-based (parent); `current_1based` is `page_index + 1` for the model.
+export global PaginationLogic {
+    public pure function page_count_from_total(total_count: int, page_size: int) -> int {
+        if page_size <= 0 {
+            return 0;
+        }
+        (total_count + page_size - 1) / page_size
+    }
+
+    public pure function range_display_start(total_count: int, page_index: int, page_size: int) -> int {
+        if total_count <= 0 || page_size <= 0 {
+            return 0;
+        }
+        page_index * page_size + 1
+    }
+
+    public pure function range_display_end(total_count: int, page_index: int, page_size: int) -> int {
+        if total_count <= 0 || page_size <= 0 {
+            return 0;
+        }
+        if (page_index + 1) * page_size < total_count {
+            (page_index + 1) * page_size
+        } else {
+            total_count
+        }
+    }
+
+    public pure function max_visible_pages(margin: int, surrounding: int) -> int {
+        (surrounding + margin) + (surrounding + margin) + 3
+    }
+
+    public pure function start_gap(current_1based: int, standard_gap: int) -> int {
+        if current_1based - standard_gap - 1 <= 1 {
+            0
+        } else {
+            current_1based - standard_gap - 1
+        }
+    }
+
+    public pure function start_offset(current_1based: int, standard_gap: int) -> int {
+        if current_1based - standard_gap - 1 <= 1 {
+            current_1based - standard_gap - 2
+        } else {
+            0
+        }
+    }
+
+    public pure function end_gap(page_count: int, current_1based: int, standard_gap: int) -> int {
+        if page_count - current_1based - standard_gap <= 1 {
+            0
+        } else {
+            page_count - current_1based - standard_gap
+        }
+    }
+
+    public pure function end_offset(page_count: int, current_1based: int, standard_gap: int) -> int {
+        if page_count - current_1based - standard_gap <= 1 {
+            page_count - current_1based - standard_gap - 1
+        } else {
+            0
+        }
+    }
+
+    public pure function middle_start(
+        margin: int,
+        start_gap: int,
+        end_offset: int,
+    ) -> int {
+        margin + start_gap + end_offset + 1
+    }
+
+    public pure function middle_end(
+        page_count: int,
+        start_offset: int,
+        end_gap: int,
+        margin: int,
+    ) -> int {
+        page_count - start_offset - end_gap - margin
+    }
+
+    /// Length of the inner `pages` array in `buildPaginationModel` (between Prev and Next).
+    public pure function inner_model_len(
+        page_count: int,
+        current_1based: int,
+        show_pages: bool,
+        margin: int,
+        surrounding: int,
+    ) -> int {
+        if !show_pages {
+            return 0;
+        }
+        if page_count <= 0 {
+            return 0;
+        }
+        if page_count <= max_visible_pages(margin, surrounding) {
+            return page_count;
+        }
+        let sg = surrounding + margin;
+        let sgap = start_gap(current_1based, sg);
+        let soff = start_offset(current_1based, sg);
+        let egap = end_gap(page_count, current_1based, sg);
+        let eoff = end_offset(page_count, current_1based, sg);
+        let has_start_ellipsis = sgap > 0;
+        let has_end_ellipsis = egap > 0;
+        let m_start = middle_start(margin, sgap, eoff);
+        let m_end = middle_end(page_count, soff, egap, margin);
+        let mid_len = m_end - m_start + 1;
+        margin + (has_start_ellipsis ? 1 : 0) + mid_len + (has_end_ellipsis ? 1 : 0) + margin
+    }
+
+    public pure function model_len(
+        page_count: int,
+        current_1based: int,
+        show_pages: bool,
+        margin: int,
+        surrounding: int,
+    ) -> int {
+        2 + inner_model_len(page_count, current_1based, show_pages, margin, surrounding)
+    }
+
+    public pure function clamp_page_index(page_index: int, page_count: int) -> int {
+        if page_count <= 0 {
+            return 0;
+        }
+        if page_index < 0 {
+            return 0;
+        }
+        if page_index >= page_count {
+            page_count - 1
+        } else {
+            page_index
+        }
+    }
+
+    public pure function piece_at(
+        flat_index: int,
+        page_count: int,
+        current_1based: int,
+        show_pages: bool,
+        margin: int,
+        surrounding: int,
+    ) -> PaginationPiece {
+        if flat_index == 0 {
+            return {
+                kind: PaginationPieceKind.Prev,
+                page_num: current_1based - 1,
+                disabled: current_1based <= 1,
+                selected: false,
+            };
+        }
+        let inner_len = inner_model_len(page_count, current_1based, show_pages, margin, surrounding);
+        if flat_index == inner_len + 1 {
+            return {
+                kind: PaginationPieceKind.Next,
+                page_num: current_1based + 1,
+                disabled: page_count <= 0 || current_1based >= page_count,
+                selected: false,
+            };
+        }
+        inner_piece_at(
+            flat_index - 1,
+            page_count,
+            current_1based,
+            show_pages,
+            margin,
+            surrounding,
+        )
+    }
+
+    public pure function inner_piece_at(
+        j: int,
+        page_count: int,
+        current_1based: int,
+        show_pages: bool,
+        margin: int,
+        surrounding: int,
+    ) -> PaginationPiece {
+        if !show_pages || page_count <= 0 {
+            return {
+                kind: PaginationPieceKind.Num,
+                page_num: 0,
+                disabled: true,
+                selected: false,
+            };
+        }
+        if page_count <= max_visible_pages(margin, surrounding) {
+            return {
+                kind: PaginationPieceKind.Num,
+                page_num: j + 1,
+                disabled: false,
+                selected: j + 1 == current_1based,
+            };
+        }
+        let sg = surrounding + margin;
+        let sgap = start_gap(current_1based, sg);
+        let soff = start_offset(current_1based, sg);
+        let egap = end_gap(page_count, current_1based, sg);
+        let eoff = end_offset(page_count, current_1based, sg);
+        let has_start_ellipsis = sgap > 0;
+        let has_end_ellipsis = egap > 0;
+        let m_start = middle_start(margin, sgap, eoff);
+        let m_end = middle_end(page_count, soff, egap, margin);
+        let mid_len = m_end - m_start + 1;
+        let b1 = margin;
+        let b2 = b1 + (has_start_ellipsis ? 1 : 0);
+        let b3 = b2 + mid_len;
+        let b4 = b3 + (has_end_ellipsis ? 1 : 0);
+        if j < b1 {
+            return {
+                kind: PaginationPieceKind.Num,
+                page_num: j + 1,
+                disabled: false,
+                selected: j + 1 == current_1based,
+            };
+        }
+        if has_start_ellipsis && j == b1 {
+            return {
+                kind: PaginationPieceKind.Break,
+                page_num: 0,
+                disabled: false,
+                selected: false,
+            };
+        }
+        if j >= b2 && j < b3 {
+            let n = m_start + (j - b2);
+            return {
+                kind: PaginationPieceKind.Num,
+                page_num: n,
+                disabled: false,
+                selected: n == current_1based,
+            };
+        }
+        if has_end_ellipsis && j == b3 {
+            return {
+                kind: PaginationPieceKind.Break,
+                page_num: 0,
+                disabled: false,
+                selected: false,
+            };
+        }
+        if j >= b4 {
+            let n = (page_count - margin + 1) + (j - b4);
+            return {
+                kind: PaginationPieceKind.Num,
+                page_num: n,
+                disabled: false,
+                selected: n == current_1based,
+            };
+        }
+        {
+            kind: PaginationPieceKind.Num,
+            page_num: 0,
+            disabled: true,
+            selected: false,
+        }
+    }
+}

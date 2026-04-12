@@ -132,6 +132,22 @@ Wraps a **`DataTable`** (or other content) with optional **title**, **subtitle**
 
 Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there is no title, subtitle, or action labels, the header block is omitted and the **child** is laid out directly.
 
+## Pagination
+
+Table footer pagination aligned with Primer **DataTable** toolbar **`Pagination`**. Upstream: [`DataTable/Pagination.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/DataTable/Pagination.tsx) and [`Pagination/model.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Pagination/model.tsx).
+
+| Property | Type | Notes |
+| -------- | ---- | ----- |
+| `total-count` | `int` | Total items (same semantics as React `totalCount`). |
+| `page-size` | `int` | Items per page (default **25**). |
+| `page-index` | `int` | **0-based** current page index (controlled; parent updates after `page-changed`). |
+| `show-pages` | `bool` | When false, only **Previous** / **Next** (no numeric page strip). |
+| `margin-page-count` | `int` | Pages fixed at the start/end of the strip (default **1**; matches React `buildPaginationModel` margin). |
+| `surrounding-page-count` | `int` | Pages on each side of the current page (default **2**). |
+| `page-changed` | `callback` | `(new-page-index)` **0-based** index to select. |
+
+**Imports for views:** Prefer [`primer.slint`](primer.slint) — **`Pagination`**. Compose it **below** **`TableContainer`** / **`DataTable`** when paging row models in the parent (parent slices **`rows`** and updates **`page-index`**).
+
 ## Caution:
 
 This is a simplified version of the Primer Design System. It's incomplete, it's certainly
