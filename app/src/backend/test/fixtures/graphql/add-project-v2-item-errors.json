@@ -1,0 +1,9 @@
+{
+  "errors": [
+    {
+      "message": "Resource not accessible by personal access token",
+      "type": "FORBIDDEN"
+    }
+  ],
+  "data": null
+}
