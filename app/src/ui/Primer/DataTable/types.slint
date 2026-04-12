@@ -36,11 +36,12 @@ export struct DataTableColumn {
     row-header: bool,
     /// What each body cell in this column carries (`text` | `label` | `iconText` | `action`; more kinds later).
     cell-kind: DataTableCellKind,
-    /// Horizontal flex factor for this column (same as `StandardTableView` / `TableColumn`).
+    /// Horizontal flex factor for distributing **extra** table width after `min-width` is satisfied.
+    /// `0` = column stays at its minimum width only; `> 0` shares leftover space with other stretchy columns (Title often uses `1`).
     horizontal-stretch: float,
     /// Minimum width; combined with `width` for layout min (see `StandardTableView` column sizing).
     min-width: length,
-    /// If width is at least 1px, column uses a fixed width; otherwise flexible (large max-width).
+    /// If **≥ 1px**, column is fixed at that width; if **0px**, column is flexible (`preferred-width` 0, large max-width) and uses `horizontal-stretch` + `min-width`.
     width: length,
     /// When true, header and body cells in this column use a monospaced font (e.g. debug values).
     monospace: bool,

@@ -256,6 +256,7 @@ export component DataTable {
                                     width: 100%;
                                     min-width: 0px;
                                     min-height: 0;
+                                    alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? end : start;
 
                                     if cell.kind == DataTableCellKind.text && index < columns.length && columns[index].monospace: Text {
                                         width: 100%;

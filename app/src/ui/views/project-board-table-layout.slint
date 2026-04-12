@@ -1,0 +1,20 @@
+// Project board `DataTable`: fixed column widths + total width for horizontal `Flickable`.
+// Edit **`widths`** here only.
+export struct ProjectBoardColumnWidths {
+    idx-px: length,
+    type-px: length,
+    title-px: length,
+    meta-px: length,
+}
+
+export global ProjectBoardTableLayout {
+    in-out property <ProjectBoardColumnWidths> widths: {
+        idx-px: 70px,
+        type-px: 150px,
+        title-px: 500px,
+        meta-px: 80px,
+    };
+
+    // Sum of column widths (minimum width for horizontal Flickable content).
+    out property <length> total-width: widths.idx-px + widths.type-px + widths.title-px + widths.meta-px;
+}

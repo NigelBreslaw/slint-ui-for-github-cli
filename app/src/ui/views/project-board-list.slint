@@ -10,11 +10,13 @@ import {
     TableContainer,
 } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
+import { ProjectBoardTableLayout } from "project-board-table-layout.slint";
 
 export component ProjectBoardList {
     width: 100%;
     height: 100%;
 
+    // Column definitions: widths come from `ProjectBoardTableLayout.widths` (edit in project-board-table-layout.slint).
     private property <[DataTableColumn]> project-board-columns: [
         {
             header: "#",
@@ -24,8 +26,8 @@ export component ProjectBoardList {
             row-header: false,
             cell-kind: DataTableCellKind.text,
             horizontal-stretch: 0,
-            min-width: 44px,
-            width: 0px,
+            min-width: ProjectBoardTableLayout.widths.idx-px,
+            width: ProjectBoardTableLayout.widths.idx-px,
             monospace: true,
         },
         {
@@ -36,8 +38,8 @@ export component ProjectBoardList {
             row-header: false,
             cell-kind: DataTableCellKind.iconText,
             horizontal-stretch: 0,
-            min-width: 120px,
-            width: 0px,
+            min-width: ProjectBoardTableLayout.widths.type-px,
+            width: ProjectBoardTableLayout.widths.type-px,
             monospace: false,
         },
         {
@@ -47,9 +49,9 @@ export component ProjectBoardList {
             align: DataTableCellAlign.start,
             row-header: false,
             cell-kind: DataTableCellKind.text,
-            horizontal-stretch: 1,
-            min-width: 0px,
-            width: 0px,
+            horizontal-stretch: 0,
+            min-width: ProjectBoardTableLayout.widths.title-px,
+            width: ProjectBoardTableLayout.widths.title-px,
             monospace: false,
         },
         {
@@ -60,8 +62,8 @@ export component ProjectBoardList {
             row-header: false,
             cell-kind: DataTableCellKind.text,
             horizontal-stretch: 0,
-            min-width: 56px,
-            width: 0px,
+            min-width: ProjectBoardTableLayout.widths.meta-px,
+            width: ProjectBoardTableLayout.widths.meta-px,
             monospace: false,
         },
     ];
@@ -134,38 +136,58 @@ export component ProjectBoardList {
                     vertical-stretch: 1;
                     spacing: 0;
 
-                    TableContainer {
-                        width: 100%;
+                    Rectangle {
                         vertical-stretch: 1;
-                        min-height: 120px;
-                        title: ProjectBoardListState.selected-project-label;
-                        primary-action-label: "Refresh";
-                        primary-action => {
-                            ProjectBoardListState.project-board-list-refresh();
-                        }
-
-                        DataTable {
-                            width: 100%;
-                            columns: project-board-columns;
-                            rows: ProjectBoardListState.board-data-table-rows;
-                            sorted-column-id: "";
-                            sort-direction: DataTableSortDirection.none;
-                            sort-toggled(_cid, _dir) => { }
-                            row-action(_rid, _cid, _aid) => { }
-                            row-clicked(rid) => {
-                                ProjectBoardListState.project-board-list-open-row-url(rid);
-                            }
-                        }
-                    }
-
-                    Pagination {
                         width: 100%;
-                        vertical-stretch: 0;
-                        total-count: ProjectBoardListState.board-items-count;
-                        page-size: ProjectBoardListState.board-page-size;
-                        page-index: ProjectBoardListState.board-page-index;
-                        page-changed(idx) => {
-                            ProjectBoardListState.project-board-page-changed(idx);
+                        min-height: 120px;
+                        clip: true;
+
+                        board-flick := Flickable {
+                            width: parent.width;
+                            height: parent.height;
+                            viewport-width: self.width;
+                            viewport-height: self.height;
+
+                            board-inner := VerticalLayout {
+                                width: max(board-flick.width, ProjectBoardTableLayout.total-width);
+                                height: board-flick.height;
+                                spacing: 0;
+
+                                TableContainer {
+                                    width: 100%;
+                                    vertical-stretch: 1;
+                                    min-height: 120px;
+                                    title: ProjectBoardListState.selected-project-label;
+                                    primary-action-label: "Refresh";
+                                    primary-action => {
+                                        ProjectBoardListState.project-board-list-refresh();
+                                    }
+
+                                    DataTable {
+                                        width: 100%;
+                                        columns: project-board-columns;
+                                        rows: ProjectBoardListState.board-data-table-rows;
+                                        sorted-column-id: "";
+                                        sort-direction: DataTableSortDirection.none;
+                                        sort-toggled(_cid, _dir) => { }
+                                        row-action(_rid, _cid, _aid) => { }
+                                        row-clicked(rid) => {
+                                            ProjectBoardListState.project-board-list-open-row-url(rid);
+                                        }
+                                    }
+                                }
+
+                                Pagination {
+                                    width: 100%;
+                                    vertical-stretch: 0;
+                                    total-count: ProjectBoardListState.board-items-count;
+                                    page-size: ProjectBoardListState.board-page-size;
+                                    page-index: ProjectBoardListState.board-page-index;
+                                    page-changed(idx) => {
+                                        ProjectBoardListState.project-board-page-changed(idx);
+                                    }
+                                }
+                            }
                         }
                     }
                 }
