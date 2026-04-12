@@ -287,6 +287,7 @@ export function buildProjectBoardListStateCallbacks(
         clearImportCandidatesUi(window);
         assignProperties(window.ProjectBoardListState, {
           import_dialog_open: true,
+          board_import_success_message: "",
           import_repos_load_status: "Loading repositories…",
           import_repos_search: "",
           import_repo_selected_index: -1,
