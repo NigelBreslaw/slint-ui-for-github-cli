@@ -69,6 +69,7 @@ export component PrimerGallery {
     ];
     private property <string> demo-data-table-sorted-column: "";
     private property <string> demo-data-table-last-row-action: "";
+    private property <string> demo-data-table-last-row-click: "";
     private property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;
 
     private property <int> gallery-tab-index: 3;
@@ -896,7 +897,14 @@ export component PrimerGallery {
                             }
 
                             Text {
-                                text: "Sortable headers update gallery state via sort-toggled; row order is static in this demo (app owns sorting). TableContainer adds title, subtitle, and table-level actions (toolbar primary).";
+                                text: "Sortable headers update gallery state via sort-toggled; row order is static in this demo (app owns sorting). TableContainer adds title, subtitle, and table-level actions (toolbar primary). Row-click fires for row hits; the Actions IconButton uses row-action only (nested TouchArea).";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Text {
+                                text: demo-data-table-last-row-click == "" ? "Row-click: —" : "Row-click: " + demo-data-table-last-row-click;
                                 color: PrimerColors.fgColor-muted;
                                 font-size: 12px;
                                 wrap: word-wrap;
@@ -928,6 +936,9 @@ export component PrimerGallery {
                                     }
                                     row-action(rid, cid, aid) => {
                                         demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
+                                    }
+                                    row-clicked(rid) => {
+                                        demo-data-table-last-row-click = rid;
                                     }
                                 }
                             }

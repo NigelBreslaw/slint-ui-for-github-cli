@@ -31,6 +31,8 @@ export component DataTable {
     callback sort-toggled(column-id: string, direction: DataTableSortDirection);
     /// Fired when a body cell with `kind == action` is activated; **`action-id`** is that cell’s **`text`**.
     callback row-action(row-id: string, column-id: string, action-id: string);
+    /// Fired when the user activates a body row (e.g. open URL). Clicks on **`action`** **`IconButton`**s invoke **`row-action`** only (nested **`TouchArea`** does not also trigger this).
+    callback row-clicked(row-id: string);
 
     private property <length> pad-block:
         cell-padding == DataTableCellPadding.condensed ? LayoutTokens.table-cell-padding-block-condensed
@@ -221,6 +223,9 @@ export component DataTable {
 
                 row-ta := TouchArea {
                     width: 100%;
+                    clicked => {
+                        root.row-clicked(row.id);
+                    }
 
                     Rectangle {
                         width: 100%;
