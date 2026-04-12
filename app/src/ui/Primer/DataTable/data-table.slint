@@ -80,6 +80,7 @@ export component DataTable {
 
     Rectangle {
         width: 100%;
+        vertical-stretch: 1;
         clip: true;
         border-radius: LayoutTokens.table-border-radius;
         border-width: LayoutTokens.table-border-width;
@@ -90,9 +91,10 @@ export component DataTable {
             width: 100%;
             spacing: 0;
 
-            // Header row
+            // Header row — fixed intrinsic height; do not absorb extra vertical space from the parent.
             HorizontalLayout {
                 width: 100%;
+                vertical-stretch: 0;
                 min-height: header-row-min-height;
                 spacing: 0;
 
@@ -214,12 +216,14 @@ export component DataTable {
 
             Rectangle {
                 width: 100%;
+                vertical-stretch: 0;
                 height: LayoutTokens.table-border-width;
                 background: PrimerColors.borderColor-default;
             }
 
             for row in rows: VerticalLayout {
                 width: 100%;
+                vertical-stretch: 0;
                 spacing: 0;
 
                 row-ta := TouchArea {
@@ -353,9 +357,18 @@ export component DataTable {
 
                 Rectangle {
                     width: 100%;
+                    vertical-stretch: 0;
                     height: LayoutTokens.table-border-width;
                     background: PrimerColors.borderColor-default;
                 }
+            }
+
+            // Consume remaining height below body rows so the header row never stretches.
+            Rectangle {
+                width: 100%;
+                vertical-stretch: 1;
+                min-height: 0px;
+                background: transparent;
             }
         }
     }
