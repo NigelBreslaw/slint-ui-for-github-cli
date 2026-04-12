@@ -95,34 +95,46 @@ export component PrimerGallery {
 
     private property <[NavListItem]> demo-nav-flat-items: [
         {
-            label: "Dashboard",
-            current: true,
-            inactive: false,
-            inactive-text: "",
-            description: "Overview and activity",
-            has-leading-visual: true,
-            leading-icon: Icons.layout_grid,
-            trailing-text: "New",
+            data: {
+                label: "Dashboard",
+                current: true,
+                inactive: false,
+                inactive-text: "",
+                description: "Overview and activity",
+                has-leading-visual: true,
+                leading-icon: Icons.layout_grid,
+                trailing-text: "New",
+            },
+            children: [],
+            subnav-default-open: false,
         },
         {
-            label: "Settings",
-            current: false,
-            inactive: false,
-            inactive-text: "",
-            description: "",
-            has-leading-visual: true,
-            leading-icon: Icons.gear_24,
-            trailing-text: "",
+            data: {
+                label: "Settings",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: true,
+                leading-icon: Icons.gear_24,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
         },
         {
-            label: "Billing (inactive)",
-            current: false,
-            inactive: true,
-            inactive-text: "Not available on your plan.",
-            description: "Payment method",
-            has-leading-visual: true,
-            leading-icon: Icons.stop,
-            trailing-text: "Pro",
+            data: {
+                label: "Billing (inactive)",
+                current: false,
+                inactive: true,
+                inactive-text: "Not available on your plan.",
+                description: "Payment method",
+                has-leading-visual: true,
+                leading-icon: Icons.stop,
+                trailing-text: "Pro",
+            },
+            children: [],
+            subnav-default-open: false,
         },
     ];
     private property <[NavListGroup]> demo-nav-groups: [
@@ -131,24 +143,32 @@ export component PrimerGallery {
             heading-variant: NavListGroupHeadingVariant.filled,
             items: [
                 {
-                    label: "Code",
-                    current: true,
-                    inactive: false,
-                    inactive-text: "",
-                    description: "Browse files and folders",
-                    has-leading-visual: true,
-                    leading-icon: Icons.layout_grid,
-                    trailing-text: "",
+                    data: {
+                        label: "Code",
+                        current: true,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "Browse files and folders",
+                        has-leading-visual: true,
+                        leading-icon: Icons.layout_grid,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
                 },
                 {
-                    label: "Issues",
-                    current: false,
-                    inactive: false,
-                    inactive-text: "",
-                    description: "",
-                    has-leading-visual: true,
-                    leading-icon: Icons.issue_opened,
-                    trailing-text: "24",
+                    data: {
+                        label: "Issues",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: true,
+                        leading-icon: Icons.issue_opened,
+                        trailing-text: "24",
+                    },
+                    children: [],
+                    subnav-default-open: false,
                 },
             ],
         },
@@ -157,26 +177,138 @@ export component PrimerGallery {
             heading-variant: NavListGroupHeadingVariant.subtle,
             items: [
                 {
-                    label: "People",
-                    current: false,
-                    inactive: false,
-                    inactive-text: "",
-                    description: "Members and roles",
-                    has-leading-visual: true,
-                    leading-icon: Icons.inbox,
-                    trailing-text: "8",
+                    data: {
+                        label: "People",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "Members and roles",
+                        has-leading-visual: true,
+                        leading-icon: Icons.inbox,
+                        trailing-text: "8",
+                    },
+                    children: [],
+                    subnav-default-open: false,
                 },
                 {
-                    label: "Teams",
-                    current: false,
-                    inactive: false,
-                    inactive-text: "",
-                    description: "",
-                    has-leading-visual: true,
-                    leading-icon: Icons.pull_request,
-                    trailing-text: "",
+                    data: {
+                        label: "Teams",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: true,
+                        leading-icon: Icons.pull_request,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
                 },
             ],
+        },
+    ];
+    private property <[NavListItem]> demo-nav-subnav-items: [
+        {
+            data: {
+                label: "Overview",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: true,
+                leading-icon: Icons.layout_grid,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Pull requests",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "Nested items; parent toggles open.",
+                has-leading-visual: true,
+                leading-icon: Icons.pull_request,
+                trailing-text: "",
+            },
+            children: [
+                {
+                    data: {
+                        label: "Open",
+                        current: true,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "12",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Closed",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "240",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+            ],
+            subnav-default-open: true,
+        },
+    ];
+    /// Minimal labels — common Primer sidebar: blue accent bar + muted row for `current`.
+    private property <[NavListItem]> demo-nav-sidebar-items: [
+        {
+            data: {
+                label: "Item 1",
+                current: true,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Item 2",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Item 3",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
         },
     ];
     private property <string> demo-nav-last: "";
@@ -870,7 +1002,7 @@ export component PrimerGallery {
                             }
 
                             Text {
-                                text: "Leading icons, optional description line, trailing text; current row, inactive row with explanation. Clicks report (group, item) — flat list uses group 0.";
+                                text: "Leading icons, optional description line, trailing text; current row, inactive row with explanation. Clicks report (group-index, path) — flat list uses group 0; path is dot-separated indices for SubNav.";
                                 color: PrimerColors.fgColor-muted;
                                 font-size: 12px;
                                 wrap: word-wrap;
@@ -899,8 +1031,51 @@ export component PrimerGallery {
                                         width: 100%;
                                         items: demo-nav-flat-items;
                                         groups: [];
-                                        item-activated(gi, ii) => {
-                                            demo-nav-last = "flat (" + gi + ", " + ii + ")";
+                                        item-activated(gi, path) => {
+                                            demo-nav-last = "flat (" + gi + ", " + path + ")";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "NavList (sidebar accent)";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Typical repo sidebar: sidebar-current-indicator adds a blue vertical bar on the current row, neutral muted background, and semibold label; other rows stay plain.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Rectangle {
+                                width: 100%;
+                                max-width: 360px;
+                                border-radius: LayoutTokens.borderRadius-medium;
+                                border-width: 1px;
+                                border-color: PrimerColors.borderColor-default;
+                                background: PrimerColors.bgColor-canvas-subtle;
+
+                                VerticalLayout {
+                                    padding: 8px;
+                                    width: 100%;
+
+                                    NavList {
+                                        width: 100%;
+                                        items: demo-nav-sidebar-items;
+                                        groups: [];
+                                        sidebar-current-indicator: true;
+                                        item-activated(gi, path) => {
+                                            demo-nav-last = "sidebar (" + gi + ", " + path + ")";
                                         }
                                     }
                                 }
@@ -941,8 +1116,50 @@ export component PrimerGallery {
                                         width: 100%;
                                         items: [];
                                         groups: demo-nav-groups;
-                                        item-activated(gi, ii) => {
-                                            demo-nav-last = "grouped (" + gi + ", " + ii + ")";
+                                        item-activated(gi, path) => {
+                                            demo-nav-last = "grouped (" + gi + ", " + path + ")";
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        VerticalLayout {
+                            spacing: 12px;
+                            width: 100%;
+
+                            Text {
+                                text: "NavList (SubNav)";
+                                color: PrimerColors.fgColor-default;
+                                font-size: 15px;
+                                font-weight: 600;
+                            }
+
+                            Text {
+                                text: "Parent rows with children show a chevron and expand/collapse; activation reports a dot-separated path (e.g. 1.0 for first nested item under the second top-level row). Nesting is capped at four levels.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                wrap: word-wrap;
+                            }
+
+                            Rectangle {
+                                width: 100%;
+                                max-width: 360px;
+                                border-radius: LayoutTokens.borderRadius-medium;
+                                border-width: 1px;
+                                border-color: PrimerColors.borderColor-default;
+                                background: PrimerColors.bgColor-canvas-subtle;
+
+                                VerticalLayout {
+                                    padding: 8px;
+                                    width: 100%;
+
+                                    NavList {
+                                        width: 100%;
+                                        items: demo-nav-subnav-items;
+                                        groups: [];
+                                        item-activated(gi, path) => {
+                                            demo-nav-last = "subnav (" + gi + ", " + path + ")";
                                         }
                                     }
                                 }

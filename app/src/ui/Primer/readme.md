@@ -95,13 +95,13 @@ Examples: **Primer gallery**, **Misc** tab (**LabelGroup** subsection).
 
 Slint port of Primer [**Checkbox**](https://primer.style/product/components/checkbox/). Upstream: primer-ui-react **`Checkbox.module.css`** — 16px control, **`borderRadius-small`**, **`control-checked-bgColor-rest`** when checked or indeterminate (accent fill + on-emphasis mark).
 
-| Property           | Type            | Notes                                                                       |
-| ------------------ | --------------- | --------------------------------------------------------------------------- |
-| `checked`          | `bool` (in-out) | Checked state.                                                              |
-| `indeterminate`    | `bool` (in-out) | When true, shows a dash; first click sets checked and clears indeterminate. |
-| `disabled`         | `bool`          | Disables interaction; uses disabled palette (including checked-disabled).   |
-| `label`            | `string`        | Optional label; hit target covers the row.                                  |
-| `toggled`          | `callback`      | Fires after a click changes state.                                          |
+| Property        | Type            | Notes                                                                       |
+| --------------- | --------------- | --------------------------------------------------------------------------- |
+| `checked`       | `bool` (in-out) | Checked state.                                                              |
+| `indeterminate` | `bool` (in-out) | When true, shows a dash; first click sets checked and clears indeterminate. |
+| `disabled`      | `bool`          | Disables interaction; uses disabled palette (including checked-disabled).   |
+| `label`         | `string`        | Optional label; hit target covers the row.                                  |
+| `toggled`       | `callback`      | Fires after a click changes state.                                          |
 
 **Imports for views:** [`primer.slint`](primer.slint) — **`Checkbox`**, **`Icons`** (as needed).
 

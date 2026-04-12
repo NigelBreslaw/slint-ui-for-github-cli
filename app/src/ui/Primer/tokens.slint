@@ -108,6 +108,13 @@ export global LayoutTokens {
 
     /// Full-width hairline between NavList groups (Primer `NavList.Divider`).
     out property <length> nav-list-divider-height: 1px;
+    /// Indent per nesting level for NavList SubNav (Primer nested items).
+    out property <length> nav-list-subnav-indent: 16px;
+    /// Vertical accent bar for [`NavList`] `sidebar-current-indicator` (Primer sidebar current item).
+    out property <length> nav-list-sidebar-indicator-width: 4px;
+    out property <length> nav-list-sidebar-indicator-height: 20px;
+    out property <length> nav-list-sidebar-indicator-gap: 8px;
+    out property <length> nav-list-sidebar-indicator-radius: 2px;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).

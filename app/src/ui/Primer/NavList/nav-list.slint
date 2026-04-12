@@ -1,25 +1,35 @@
-// Primer-style NavList — flat items and/or grouped sections (PR4). Upstream: https://primer.style/product/components/nav-list/
+// Primer-style NavList — flat, grouped (PR4), SubNav expand/collapse (PR6). Upstream: https://primer.style/product/components/nav-list/
 // Interactive rows reuse ActionListRow; `current` maps to ActionList `selected` visuals.
 
+import { Icons } from "../assets/icons.slint";
 import { ActionListRow } from "../ActionList/action-list-row.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     NavListGroup,
     NavListGroupHeadingVariant,
     NavListItem,
+    NavListLeaf,
+    NavListRowData,
+    NavListSub1,
+    NavListSub2,
+    NavListSub3,
 } from "./types.slint";
 
 /// Single nav row — inactive (explanation) or interactive [`ActionListRow`].
 /// One root [`VerticalLayout`] so rows stack vertically (multiple root `if` branches overlap at 0×0).
 component NavListItemRow {
-    in property <NavListItem> item;
+    in property <NavListRowData> nav-row;
+    /// Left inset for nested SubNav rows (multiply by depth).
+    in property <int> indent-depth: 0;
+    /// Primer sidebar pattern: blue vertical bar + muted surface on current (see NavList sidebar-current-indicator).
+    in property <bool> sidebar-indicator: false;
     callback clicked;
 
     VerticalLayout {
         spacing: 0px;
         horizontal-stretch: 1;
 
-        if item.inactive: Rectangle {
+        if nav-row.inactive: Rectangle {
             horizontal-stretch: 1;
             border-radius: LayoutTokens.borderRadius-medium;
             background: #00000000;
@@ -27,18 +37,19 @@ component NavListItemRow {
             HorizontalLayout {
                 horizontal-stretch: 1;
                 min-height: LayoutTokens.action-list-item-min-height;
-                padding-left: LayoutTokens.action-list-item-padding-inline;
+                padding-left: indent-depth * LayoutTokens.nav-list-subnav-indent
+                    + LayoutTokens.action-list-item-padding-inline;
                 padding-right: LayoutTokens.action-list-item-padding-inline;
                 padding-top: LayoutTokens.action-list-item-padding-block;
                 padding-bottom: LayoutTokens.action-list-item-padding-block;
                 spacing: LayoutTokens.button-content-gap;
                 alignment: start;
 
-                if item.has-leading-visual: Image {
+                if nav-row.has-leading-visual: Image {
                     width: LayoutTokens.iconButton-icon-size-medium;
                     height: LayoutTokens.iconButton-icon-size-medium;
                     vertical-alignment: top;
-                    source: item.leading-icon;
+                    source: nav-row.leading-icon;
                     colorize: ButtonTokens.control-fgColor-disabled;
                 }
 
@@ -49,34 +60,34 @@ component NavListItemRow {
 
                     Text {
                         horizontal-stretch: 1;
-                        text: item.label;
+                        text: nav-row.label;
                         color: ButtonTokens.control-fgColor-disabled;
                         font-size: LayoutTokens.text-body-size-medium;
                         font-weight: LayoutTokens.base-text-weight-medium;
                         wrap: word-wrap;
                     }
 
-                    if item.description != "": Text {
+                    if nav-row.description != "": Text {
                         horizontal-stretch: 1;
-                        text: item.description;
+                        text: nav-row.description;
                         color: ButtonTokens.control-fgColor-disabled;
                         font-size: LayoutTokens.text-body-size-small;
                         font-weight: LayoutTokens.base-text-weight-medium;
                         wrap: word-wrap;
                     }
 
-                    if item.inactive-text != "": Text {
+                    if nav-row.inactive-text != "": Text {
                         horizontal-stretch: 1;
-                        text: item.inactive-text;
+                        text: nav-row.inactive-text;
                         color: PrimerColors.fgColor-muted;
                         font-size: LayoutTokens.text-body-size-small;
                         wrap: word-wrap;
                     }
                 }
 
-                if item.trailing-text != "": Text {
+                if nav-row.trailing-text != "": Text {
                     vertical-alignment: top;
-                    text: item.trailing-text;
+                    text: nav-row.trailing-text;
                     color: ButtonTokens.control-fgColor-disabled;
                     font-size: LayoutTokens.text-body-size-small;
                     font-weight: LayoutTokens.base-text-weight-medium;
@@ -85,17 +96,430 @@ component NavListItemRow {
             }
         }
 
-        if !item.inactive: ActionListRow {
+        if !nav-row.inactive: HorizontalLayout {
             horizontal-stretch: 1;
-            label: item.label;
-            selected: item.current;
-            disabled: false;
-            has-leading-visual: item.has-leading-visual;
-            leading-icon: item.leading-icon;
-            description: item.description;
-            trailing-text: item.trailing-text;
-            clicked => {
-                root.clicked();
+            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+            padding-left: indent-depth * LayoutTokens.nav-list-subnav-indent;
+            alignment: sidebar-indicator ? center : start;
+
+            // Fixed-size accent only (horizontal-stretch: 0). Nested VerticalLayout + % width was stealing row width.
+            if sidebar-indicator: Rectangle {
+                horizontal-stretch: 0;
+                width: LayoutTokens.nav-list-sidebar-indicator-width;
+                height: LayoutTokens.nav-list-sidebar-indicator-height;
+                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                background: nav-row.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+            }
+
+            ActionListRow {
+                horizontal-stretch: 1;
+                label: nav-row.label;
+                selected: nav-row.current;
+                disabled: false;
+                has-leading-visual: nav-row.has-leading-visual;
+                leading-icon: nav-row.leading-icon;
+                description: nav-row.description;
+                trailing-text: nav-row.trailing-text;
+                sidebar-selection-style: sidebar-indicator;
+                clicked => {
+                    root.clicked();
+                }
+            }
+        }
+    }
+}
+
+// Levels are declared innermost-first so each Expandable row can reference the next deeper level.
+component NavListLevel4 {
+    in property <[NavListLeaf]> items: [];
+    in property <int> depth: 0;
+    in property <string> path-prefix: "";
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        for item[ix] in items: VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 1;
+
+            NavListItemRow {
+                indent-depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                nav-row: item.data;
+                clicked => {
+                    root.item-activated(path-prefix == "" ? "" + ix : path-prefix + "." + ix);
+                }
+            }
+        }
+    }
+}
+
+component NavListExpandableRow3 {
+    in property <NavListSub3> item;
+    in property <string> item-path;
+    in property <int> depth: 0;
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    private property <bool> expanded: item.subnav-default-open;
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        HorizontalLayout {
+            horizontal-stretch: 1;
+            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
+            alignment: sidebar-indicator ? center : start;
+
+            if sidebar-indicator: Rectangle {
+                horizontal-stretch: 0;
+                width: LayoutTokens.nav-list-sidebar-indicator-width;
+                height: LayoutTokens.nav-list-sidebar-indicator-height;
+                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+            }
+
+            ActionListRow {
+                horizontal-stretch: 1;
+                has-leading-visual: true;
+                leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+                label: item.data.label;
+                selected: item.data.current;
+                disabled: false;
+                description: item.data.description;
+                trailing-text: item.data.trailing-text;
+                sidebar-selection-style: sidebar-indicator;
+                clicked => {
+                    expanded = !expanded;
+                }
+            }
+        }
+
+        if expanded: NavListLevel4 {
+            items: item.children;
+            depth: depth + 1;
+            path-prefix: item-path;
+            sidebar-indicator: sidebar-indicator;
+            item-activated(path) => {
+                root.item-activated(path);
+            }
+        }
+    }
+}
+
+component NavListLevel3 {
+    in property <[NavListSub3]> items: [];
+    in property <int> depth: 0;
+    in property <string> path-prefix: "";
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        for item[ix] in items: VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 1;
+
+            if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow3 {
+                item: item;
+                item-path: path-prefix == "" ? "" + ix : path-prefix + "." + ix;
+                depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                item-activated(path) => {
+                    root.item-activated(path);
+                }
+            }
+
+            if item.children.length == 0 || depth >= 4 || item.data.inactive: NavListItemRow {
+                indent-depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                nav-row: item.data;
+                clicked => {
+                    root.item-activated(path-prefix == "" ? "" + ix : path-prefix + "." + ix);
+                }
+            }
+        }
+    }
+}
+
+component NavListExpandableRow2 {
+    in property <NavListSub2> item;
+    in property <string> item-path;
+    in property <int> depth: 0;
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    private property <bool> expanded: item.subnav-default-open;
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        HorizontalLayout {
+            horizontal-stretch: 1;
+            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
+            alignment: sidebar-indicator ? center : start;
+
+            if sidebar-indicator: Rectangle {
+                horizontal-stretch: 0;
+                width: LayoutTokens.nav-list-sidebar-indicator-width;
+                height: LayoutTokens.nav-list-sidebar-indicator-height;
+                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+            }
+
+            ActionListRow {
+                horizontal-stretch: 1;
+                has-leading-visual: true;
+                leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+                label: item.data.label;
+                selected: item.data.current;
+                disabled: false;
+                description: item.data.description;
+                trailing-text: item.data.trailing-text;
+                sidebar-selection-style: sidebar-indicator;
+                clicked => {
+                    expanded = !expanded;
+                }
+            }
+        }
+
+        if expanded: NavListLevel3 {
+            items: item.children;
+            depth: depth + 1;
+            path-prefix: item-path;
+            sidebar-indicator: sidebar-indicator;
+            item-activated(path) => {
+                root.item-activated(path);
+            }
+        }
+    }
+}
+
+component NavListLevel2 {
+    in property <[NavListSub2]> items: [];
+    in property <int> depth: 0;
+    in property <string> path-prefix: "";
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        for item[ix] in items: VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 1;
+
+            if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow2 {
+                item: item;
+                item-path: path-prefix == "" ? "" + ix : path-prefix + "." + ix;
+                depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                item-activated(path) => {
+                    root.item-activated(path);
+                }
+            }
+
+            if item.children.length == 0 || depth >= 4 || item.data.inactive: NavListItemRow {
+                indent-depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                nav-row: item.data;
+                clicked => {
+                    root.item-activated(path-prefix == "" ? "" + ix : path-prefix + "." + ix);
+                }
+            }
+        }
+    }
+}
+
+component NavListExpandableRow1 {
+    in property <NavListSub1> item;
+    in property <string> item-path;
+    in property <int> depth: 0;
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    private property <bool> expanded: item.subnav-default-open;
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        HorizontalLayout {
+            horizontal-stretch: 1;
+            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
+            alignment: sidebar-indicator ? center : start;
+
+            if sidebar-indicator: Rectangle {
+                horizontal-stretch: 0;
+                width: LayoutTokens.nav-list-sidebar-indicator-width;
+                height: LayoutTokens.nav-list-sidebar-indicator-height;
+                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+            }
+
+            ActionListRow {
+                horizontal-stretch: 1;
+                has-leading-visual: true;
+                leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+                label: item.data.label;
+                selected: item.data.current;
+                disabled: false;
+                description: item.data.description;
+                trailing-text: item.data.trailing-text;
+                sidebar-selection-style: sidebar-indicator;
+                clicked => {
+                    expanded = !expanded;
+                }
+            }
+        }
+
+        if expanded: NavListLevel2 {
+            items: item.children;
+            depth: depth + 1;
+            path-prefix: item-path;
+            sidebar-indicator: sidebar-indicator;
+            item-activated(path) => {
+                root.item-activated(path);
+            }
+        }
+    }
+}
+
+component NavListLevel1 {
+    in property <[NavListSub1]> items: [];
+    in property <int> depth: 0;
+    in property <string> path-prefix: "";
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        for item[ix] in items: VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 1;
+
+            if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow1 {
+                item: item;
+                item-path: path-prefix == "" ? "" + ix : path-prefix + "." + ix;
+                depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                item-activated(path) => {
+                    root.item-activated(path);
+                }
+            }
+
+            if item.children.length == 0 || depth >= 4 || item.data.inactive: NavListItemRow {
+                indent-depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                nav-row: item.data;
+                clicked => {
+                    root.item-activated(path-prefix == "" ? "" + ix : path-prefix + "." + ix);
+                }
+            }
+        }
+    }
+}
+
+component NavListExpandableRow0 {
+    in property <NavListItem> item;
+    in property <string> item-path;
+    in property <int> depth: 0;
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    private property <bool> expanded: item.subnav-default-open;
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        HorizontalLayout {
+            horizontal-stretch: 1;
+            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
+            alignment: sidebar-indicator ? center : start;
+
+            if sidebar-indicator: Rectangle {
+                horizontal-stretch: 0;
+                width: LayoutTokens.nav-list-sidebar-indicator-width;
+                height: LayoutTokens.nav-list-sidebar-indicator-height;
+                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+            }
+
+            ActionListRow {
+                horizontal-stretch: 1;
+                has-leading-visual: true;
+                leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+                label: item.data.label;
+                selected: item.data.current;
+                disabled: false;
+                description: item.data.description;
+                trailing-text: item.data.trailing-text;
+                sidebar-selection-style: sidebar-indicator;
+                clicked => {
+                    expanded = !expanded;
+                }
+            }
+        }
+
+        if expanded: NavListLevel1 {
+            items: item.children;
+            depth: depth + 1;
+            path-prefix: item-path;
+            sidebar-indicator: sidebar-indicator;
+            item-activated(path) => {
+                root.item-activated(path);
+            }
+        }
+    }
+}
+
+component NavListLevel0 {
+    in property <[NavListItem]> items: [];
+    in property <int> depth: 0;
+    in property <string> path-prefix: "";
+    in property <bool> sidebar-indicator: false;
+    callback item-activated(path: string);
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        for item[ix] in items: VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 1;
+
+            if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow0 {
+                item: item;
+                item-path: path-prefix == "" ? "" + ix : path-prefix + "." + ix;
+                depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                item-activated(path) => {
+                    root.item-activated(path);
+                }
+            }
+
+            if item.children.length == 0 || depth >= 4 || item.data.inactive: NavListItemRow {
+                indent-depth: depth;
+                sidebar-indicator: sidebar-indicator;
+                nav-row: item.data;
+                clicked => {
+                    root.item-activated(path-prefix == "" ? "" + ix : path-prefix + "." + ix);
+                }
             }
         }
     }
@@ -165,8 +589,10 @@ export component NavList {
     in property <[NavListItem]> items: [];
     /// When non-empty, renders grouped sections with headings and inter-group dividers instead of `items`.
     in property <[NavListGroup]> groups: [];
-    /// `group-index` is `0` for flat `items`; in grouped mode, indexes into `groups`. `item-index` indexes within that section.
-    callback item-activated(group-index: int, item-index: int);
+    /// Primer sidebar pattern: blue vertical bar on the current row, muted surface, semibold label.
+    in property <bool> sidebar-current-indicator: false;
+    /// `group-index` indexes the section; `path` is a dot-separated index path (e.g. `"0"`, `"1.2"` for nested SubNav).
+    callback item-activated(group-index: int, path: string);
 
     horizontal-stretch: 1;
 
@@ -186,10 +612,13 @@ export component NavList {
                     variant: group.heading-variant;
                 }
 
-                for item[ii] in group.items: NavListItemRow {
-                    item: item;
-                    clicked => {
-                        root.item-activated(gi, ii);
+                NavListLevel0 {
+                    items: group.items;
+                    depth: 0;
+                    path-prefix: "";
+                    sidebar-indicator: sidebar-current-indicator;
+                    item-activated(path) => {
+                        root.item-activated(gi, path);
                     }
                 }
 
@@ -198,15 +627,13 @@ export component NavList {
             }
         }
 
-        if groups.length == 0: VerticalLayout {
-            spacing: 0px;
-            horizontal-stretch: 1;
-
-            for item[index] in items: NavListItemRow {
-                item: item;
-                clicked => {
-                    root.item-activated(0, index);
-                }
+        if groups.length == 0: NavListLevel0 {
+            items: items;
+            depth: 0;
+            path-prefix: "";
+            sidebar-indicator: sidebar-current-indicator;
+            item-activated(path) => {
+                root.item-activated(0, path);
             }
         }
     }

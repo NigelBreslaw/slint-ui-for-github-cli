@@ -1,6 +1,8 @@
 // NavList models — upstream: https://primer.style/product/components/nav-list/ (Group, GroupHeading, Item, Divider).
+// Slint does not support recursive structs; SubNav is modeled as four unrolled levels (max depth 4).
 
-export struct NavListItem {
+/// Shared row fields for every NavList row (leading/trailing visuals, selection, inactive).
+export struct NavListRowData {
     label: string,
     /// When true, styles this row as the current location (`aria-current`-style selection).
     current: bool,
@@ -14,6 +16,37 @@ export struct NavListItem {
     leading-icon: image,
     /// Trailing auxiliary text (Primer `NavList.TrailingVisual`), e.g. counts; empty hides.
     trailing-text: string,
+}
+
+/// Deepest leaf row (no SubNav children).
+export struct NavListLeaf {
+    data: NavListRowData,
+}
+
+export struct NavListSub3 {
+    data: NavListRowData,
+    children: [NavListLeaf],
+    /// Initial open state when `children` is non-empty (Primer `defaultOpen`).
+    subnav-default-open: bool,
+}
+
+export struct NavListSub2 {
+    data: NavListRowData,
+    children: [NavListSub3],
+    subnav-default-open: bool,
+}
+
+export struct NavListSub1 {
+    data: NavListRowData,
+    children: [NavListSub2],
+    subnav-default-open: bool,
+}
+
+/// Root-level item in a flat list or group (`children` is the next SubNav tier).
+export struct NavListItem {
+    data: NavListRowData,
+    children: [NavListSub1],
+    subnav-default-open: bool,
 }
 
 /// Matches Primer `NavList.GroupHeading` `variant` (`subtle` | `filled`).
