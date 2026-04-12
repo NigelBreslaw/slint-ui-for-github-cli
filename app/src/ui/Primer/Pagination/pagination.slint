@@ -3,7 +3,11 @@
 // Layout: do not wrap repeater cells in bare `Rectangle` under `HorizontalLayout` with
 // `alignment: center` / `end` — Slint gives `Rectangle` implicit preferred width 0, so each
 // cell stays zero-width and `Button` children overlap. Use intrinsic-sized children (`Button` /
-// `Text`) or `alignment: stretch` on the box layout. See gb-slint `internal/core/layout.rs`
+// `Text`) per step (`PaginationNavItem`). Outer row uses `alignment: stretch` with range text
+// `horizontal-stretch: 0` and the steps row `horizontal-stretch: 1`. The steps strip uses
+// `alignment: space-around` so controls space out without bunching (finer tuning than `end`
+// alone). See gb-slint `internal/core/layout.rs` (`solve_box_layout`, `implicit_layout_info_call`
+// for `Rectangle`).
 // (`solve_box_layout`, `implicit_layout_info_call` for `Rectangle`).
 import { Button } from "../Buttons/buttons.slint";
 import { ButtonVariant } from "../Buttons/types.slint";
