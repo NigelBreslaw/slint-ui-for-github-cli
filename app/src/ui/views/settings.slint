@@ -7,6 +7,8 @@ import {
     DataTableCellPadding,
     DataTableColumn,
     DataTableSortDirection,
+    LabelSize,
+    LabelVariant,
     Spinner,
 } from "../Primer/primer.slint";
 import { PrimerColors } from "../Primer/tokens.slint";
@@ -65,11 +67,11 @@ export component Settings {
                         width: 100%;
                         columns: settings-debug-columns;
                         rows: [
-                            { id: "build", cells: [{ kind: DataTableCellKind.text, text: "Build" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-commit-label }] },
-                            { id: "gh", cells: [{ kind: DataTableCellKind.text, text: "GitHub CLI" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-gh-version }] },
-                            { id: "rate", cells: [{ kind: DataTableCellKind.text, text: "GraphQL rate limit" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-rate-limit }] },
-                            { id: "reset", cells: [{ kind: DataTableCellKind.text, text: "Resets at (local time)" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-reset-at }] },
-                            { id: "countdown", cells: [{ kind: DataTableCellKind.text, text: "Time until reset" }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-countdown }] },
+                            { id: "build", cells: [{ kind: DataTableCellKind.text, text: "Build", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-commit-label, label-variant: LabelVariant.default, label-size: LabelSize.small }] },
+                            { id: "gh", cells: [{ kind: DataTableCellKind.text, text: "GitHub CLI", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-gh-version, label-variant: LabelVariant.default, label-size: LabelSize.small }] },
+                            { id: "rate", cells: [{ kind: DataTableCellKind.text, text: "GraphQL rate limit", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-rate-limit, label-variant: LabelVariant.default, label-size: LabelSize.small }] },
+                            { id: "reset", cells: [{ kind: DataTableCellKind.text, text: "Resets at (local time)", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-reset-at, label-variant: LabelVariant.default, label-size: LabelSize.small }] },
+                            { id: "countdown", cells: [{ kind: DataTableCellKind.text, text: "Time until reset", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: SettingsState.settings-debug-countdown, label-variant: LabelVariant.default, label-size: LabelSize.small }] },
                         ];
                         cell-padding: DataTableCellPadding.normal;
                         sorted-column-id: "";

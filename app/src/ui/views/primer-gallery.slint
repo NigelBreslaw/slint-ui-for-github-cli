@@ -57,12 +57,12 @@ export component PrimerGallery {
     private property <[DataTableColumn]> demo-data-table-columns: [
         { header: "Repository", id: "name", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
         { header: "Stars", id: "stars", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
-        { header: "License", id: "license", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "License", id: "license", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.label, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
     ];
     private property <[DataTableRow]> demo-data-table-rows: [
-        { id: "r1", cells: [{ kind: DataTableCellKind.text, text: "slint" }, { kind: DataTableCellKind.text, text: "2.4k" }, { kind: DataTableCellKind.text, text: "MIT" }] },
-        { id: "r2", cells: [{ kind: DataTableCellKind.text, text: "github-app" }, { kind: DataTableCellKind.text, text: "120" }, { kind: DataTableCellKind.text, text: "MIT" }] },
-        { id: "r3", cells: [{ kind: DataTableCellKind.text, text: "primer-ui-react" }, { kind: DataTableCellKind.text, text: "890" }, { kind: DataTableCellKind.text, text: "MIT" }] },
+        { id: "r1", cells: [{ kind: DataTableCellKind.text, text: "slint", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: "2.4k", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.label, text: "MIT", label-variant: LabelVariant.success, label-size: LabelSize.small }] },
+        { id: "r2", cells: [{ kind: DataTableCellKind.text, text: "github-app", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: "120", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.label, text: "Apache-2.0", label-variant: LabelVariant.accent, label-size: LabelSize.small }] },
+        { id: "r3", cells: [{ kind: DataTableCellKind.text, text: "primer-ui-react", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.text, text: "890", label-variant: LabelVariant.default, label-size: LabelSize.small }, { kind: DataTableCellKind.label, text: "GPL-3.0", label-variant: LabelVariant.danger, label-size: LabelSize.small }] },
     ];
     private property <string> demo-data-table-sorted-column: "";
     private property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;

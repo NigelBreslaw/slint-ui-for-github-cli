@@ -7,6 +7,7 @@
 // Slint docs: HorizontalLayout and GridLayout (stretch, min/preferred/max). A single GridLayout would unify column tracks,
 // but nested repeaters in GridLayout (for rows × for cells) have panicked the interpreter (dynamic_item_tree repeater lookup);
 // see Primer readme.md DataTable "Layout" paragraph.
+import { Label } from "../Label/label.slint";
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     DataTableCellAlign,
@@ -267,6 +268,18 @@ export component DataTable {
                                         horizontal-alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? right : left;
                                         vertical-alignment: center;
                                         wrap: word-wrap;
+                                    }
+
+                                    if cell.kind == DataTableCellKind.label: HorizontalLayout {
+                                        width: 100%;
+                                        min-width: 0px;
+                                        alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? end : start;
+
+                                        Label {
+                                            text: cell.text;
+                                            variant: cell.label-variant;
+                                            size: cell.label-size;
+                                        }
                                     }
                                 }
                             }

@@ -1,5 +1,7 @@
 // Primer DataTable — column/row models (primer/react DataTable / column.ts). Sort: `DataTableSortDirection` + `sort-toggled` in `data-table.slint`.
 
+import { LabelSize, LabelVariant } from "../Label/types.slint";
+
 export enum DataTableSortDirection {
     none,
     ascending,
@@ -17,9 +19,10 @@ export enum DataTableCellAlign {
     end,
 }
 
-/// Body cell content kind; must match the column’s `cell-kind` for that index. More kinds (label, icon_text, …) in follow-up PRs.
+/// Body cell content kind; must match the column’s `cell-kind` for that index. More kinds (icon_text, …) in follow-up PRs.
 export enum DataTableCellKind {
     text,
+    label,
 }
 
 export struct DataTableColumn {
@@ -28,7 +31,7 @@ export struct DataTableColumn {
     sortable: bool,
     align: DataTableCellAlign,
     row-header: bool,
-    /// What each body cell in this column carries (`text` today; label/actions later).
+    /// What each body cell in this column carries (`text` | `label`; more kinds later).
     cell-kind: DataTableCellKind,
     /// Horizontal flex factor for this column (same as `StandardTableView` / `TableColumn`).
     horizontal-stretch: float,
@@ -42,8 +45,11 @@ export struct DataTableColumn {
 
 export struct DataTableCell {
     kind: DataTableCellKind,
-    /// Plain text when `kind == text`.
+    /// Plain text when `kind == text`; chip text when `kind == label`.
     text: string,
+    /// When `kind == label`, passed to **Label**; for `text` cells use **`LabelVariant.default`** / **`LabelSize.small`**.
+    label-variant: LabelVariant,
+    label-size: LabelSize,
 }
 
 export struct DataTableRow {
