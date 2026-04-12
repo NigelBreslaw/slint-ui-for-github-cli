@@ -104,6 +104,14 @@ Use a **TouchArea** (`ta`) for `has-hover` / `pressed` when applicable.
 - **Deep nested ternaries** on every property for every combination of flags — hard to read and easy to get wrong when adding a dimension.
 - **Mixing token logic with layout** — keep dimensions in `states` or small `private property <bool>` helpers, not inline in unrelated components.
 
+## Related skills
+
+- **Port playbook (order of phases):** [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md)
+- **Upstream variants/tokens:** [`primer-port-upstream-research`](../primer-port-upstream-research/SKILL.md)
+- **Slint/Material patterns:** [`primer-port-slint-research`](../primer-port-slint-research/SKILL.md)
+- **Token deduplication in `tokens.slint`:** [`primer-slint-token-layers`](../primer-slint-token-layers/SKILL.md)
+- **Variant coverage checklist:** [`primer-port-variant-matrix`](../primer-port-variant-matrix/SKILL.md)
+
 ## Verification
 
 From monorepo root: `pnpm autofix` and ensure `app/src/ui/main.slint` loads (see AGENTS.md).

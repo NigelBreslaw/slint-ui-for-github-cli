@@ -7,6 +7,19 @@ This document stands alone in the repo. Past chats or Cursor plan files are not 
 - **Audience:** Humans and AI assistants adding **Primer-style** UI in Slint under `app/src/ui/Primer/`.
 - **Goals:** Stay close to Primer naming and layering, avoid duplicating color literals across globals, keep `export global` declaration order valid for Slint, and ship changes in reviewable steps.
 
+## Porting workflow overview
+
+Use this **order of phases** when porting or extending a Primer component. **Canonical rules** (token globals, barrel exports, verification) are defined in the sections below; this subsection only orients the process.
+
+1. **Upstream inventory** — Map variants, tokens, and CSS usage from local **primer-tokens** and **primer-ui-react** (see [Upstream references](#upstream-references-consult-before-inventing-values)) and Primer documentation.
+2. **Slint patterns** — Study existing components in this folder (e.g. **Checkbox** for interaction) and, if available, idioms in a local **gb-slint** checkout (Material examples are for patterns only; colors stay Primer-driven).
+3. **Coverage** — List variants and states (light/dark, disabled, sizes, interaction, focus/validation where relevant) so nothing is missed before coding.
+4. **Tokens** — Add or reuse entries in [`tokens.slint`](tokens.slint) per [Adding design tokens](#adding-design-tokens-checklist) and [Token layers](#token-layers-current-convention); avoid duplicate hex.
+5. **Interaction** — Model pointer and disabled behavior with clear `states [ ]` and tokens (see **Checkbox**).
+6. **PRs and verification** — Follow [Typical PR sequence for a new component](#typical-pr-sequence-for-a-new-component), [Implementation plans and PR breakdown tables](#implementation-plans-and-pr-breakdown-tables), and [Verification](#verification).
+
+**Cursor:** Step-by-step skills for the same phases live under [`.cursor/skills/`](../../../../.cursor/skills/) (project root). Entry point: [`primer-port-orchestrator/SKILL.md`](../../../../.cursor/skills/primer-port-orchestrator/SKILL.md). Other skills: `primer-port-upstream-research`, `primer-port-slint-research`, `primer-port-variant-matrix`, `primer-slint-token-layers`, `primer-slint-interaction-states`. You do not need Cursor to follow the workflow above.
+
 ## Upstream references (consult before inventing values)
 
 | Location                              | Role                                                                                                                                                                                                                                                                                                                                                     |
@@ -14,7 +27,7 @@ This document stands alone in the repo. Past chats or Cursor plan files are not 
 | `/Users/nigelb/slint/primer-tokens`   | **primer-tokens** — functional and component token JSON5 (e.g. `src/tokens/functional/color/control.json5`, `functional/size/size.json5`, `component/button.json5`, shadow tokens). Use for **token names**, **layering** (base → functional → component), and **hex / hsla / hsv** as the source of truth when porting.                                 |
 | `/Users/nigelb/slint/primer-ui-react` | **primer-ui-react** — how tokens become **CSS custom properties** in `*.module.css` (e.g. `internal/components/TextInputWrapper.module.css`, `Select/Select.module.css`, `Banner/Banner.module.css`, button-related styles). Use for **interaction states**, **sizes**, **validation**, and **variable names**, even when this Slint port is simplified. |
 
-Also see the public docs: [Primer Design System](https://primer.style/design/system).
+Also see the public docs: [Primer Design System](https://primer.style/design/system), [Product — Getting started](https://primer.style/product/getting-started/).
 
 ## In-repo architecture
 
