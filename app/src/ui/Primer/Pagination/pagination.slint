@@ -1,10 +1,66 @@
 // Primer DataTable footer pagination — upstream: primer-ui-react `DataTable/Pagination.tsx` + `Pagination/model.tsx`.
+//
+// Layout: do not wrap repeater cells in bare `Rectangle` under `HorizontalLayout` with
+// `alignment: center` / `end` — Slint gives `Rectangle` implicit preferred width 0, so each
+// cell stays zero-width and `Button` children overlap. Use intrinsic-sized children (`Button` /
+// `Text`) or `alignment: stretch` on the box layout. See gb-slint `internal/core/layout.rs`
+// (`solve_box_layout`, `implicit_layout_info_call` for `Rectangle`).
 import { Button } from "../Buttons/buttons.slint";
 import { ButtonVariant } from "../Buttons/types.slint";
 import { Icons } from "../assets/icons.slint";
 import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 import { PaginationPiece, PaginationPieceKind } from "./types.slint";
 import { PaginationLogic } from "./pagination-logic.slint";
+
+/// One nav control in the page strip (prev / next / number / ellipsis). Not exported.
+component PaginationNavItem {
+    in property <PaginationPiece> piece;
+    callback activate(int);
+
+    min-height: LayoutTokens.control-small-size;
+    horizontal-stretch: 0;
+
+    if piece.kind == PaginationPieceKind.Prev: Button {
+        variant: ButtonVariant.invisible;
+        size: Size.small;
+        disabled: piece.disabled;
+        has-leading-icon: true;
+        leading-icon: Icons.chevron_left;
+        label: "Previous";
+        clicked => {
+            activate(piece.page_num - 1);
+        }
+    }
+
+    if piece.kind == PaginationPieceKind.Next: Button {
+        variant: ButtonVariant.invisible;
+        size: Size.small;
+        disabled: piece.disabled;
+        has-trailing-icon: true;
+        trailing-icon: Icons.chevron_right;
+        label: "Next";
+        clicked => {
+            activate(piece.page_num - 1);
+        }
+    }
+
+    if piece.kind == PaginationPieceKind.Num: Button {
+        variant: piece.selected ? ButtonVariant.default : ButtonVariant.invisible;
+        size: Size.small;
+        disabled: piece.disabled;
+        label: "" + piece.page_num;
+        clicked => {
+            activate(piece.page_num - 1);
+        }
+    }
+
+    if piece.kind == PaginationPieceKind.Break: Text {
+        text: "…";
+        color: PrimerColors.fgColor-muted;
+        font-size: LayoutTokens.text-body-size-medium;
+        vertical-alignment: center;
+    }
+}
 
 export component Pagination {
     in property <int> total-count: 0;
@@ -47,9 +103,10 @@ export component Pagination {
             padding-left: LayoutTokens.stack-padding-normal;
             padding-right: LayoutTokens.stack-padding-normal;
             spacing: LayoutTokens.stack-padding-normal;
-            alignment: center;
+            alignment: stretch;
 
             Text {
+                horizontal-stretch: 0;
                 text: total-count <= 0
                     ? "0‒0 of 0"
                     : "" + range-start + "‒" + range-end + " of " + total-count;
@@ -62,10 +119,10 @@ export component Pagination {
             HorizontalLayout {
                 horizontal-stretch: 1;
                 spacing: LayoutTokens.button-content-gap;
-                alignment: end;
+                alignment: space-around;
 
-                for i in model-len: Rectangle {
-                    private property <PaginationPiece> p: PaginationLogic.piece_at(
+                for i in model-len: PaginationNavItem {
+                    piece: PaginationLogic.piece_at(
                         i,
                         page-count,
                         current-1based,
@@ -73,48 +130,8 @@ export component Pagination {
                         margin-page-count,
                         surrounding-page-count,
                     );
-
-                    min-height: LayoutTokens.control-small-size;
-
-                    if p.kind == PaginationPieceKind.Prev: Button {
-                        variant: ButtonVariant.invisible;
-                        size: Size.small;
-                        disabled: p.disabled;
-                        has-leading-icon: true;
-                        leading-icon: Icons.chevron_left;
-                        label: "Previous";
-                        clicked => {
-                            root.page-changed(p.page_num - 1);
-                        }
-                    }
-
-                    if p.kind == PaginationPieceKind.Next: Button {
-                        variant: ButtonVariant.invisible;
-                        size: Size.small;
-                        disabled: p.disabled;
-                        has-trailing-icon: true;
-                        trailing-icon: Icons.chevron_right;
-                        label: "Next";
-                        clicked => {
-                            root.page-changed(p.page_num - 1);
-                        }
-                    }
-
-                    if p.kind == PaginationPieceKind.Num: Button {
-                        variant: p.selected ? ButtonVariant.default : ButtonVariant.invisible;
-                        size: Size.small;
-                        disabled: p.disabled;
-                        label: "" + p.page_num;
-                        clicked => {
-                            root.page-changed(p.page_num - 1);
-                        }
-                    }
-
-                    if p.kind == PaginationPieceKind.Break: Text {
-                        text: "…";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: LayoutTokens.text-body-size-medium;
-                        vertical-alignment: center;
+                    activate(idx) => {
+                        root.page-changed(idx);
                     }
                 }
             }
