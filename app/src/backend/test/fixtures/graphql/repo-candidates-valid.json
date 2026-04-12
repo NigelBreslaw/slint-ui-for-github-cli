@@ -1,0 +1,43 @@
+{
+  "data": {
+    "repository": {
+      "issues": {
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": null
+        },
+        "nodes": [
+          {
+            "id": "I_kwDOABC",
+            "number": 10,
+            "title": "Older issue",
+            "updatedAt": "2026-01-01T12:00:00Z",
+            "url": "https://github.com/slint-ui/slint/issues/10"
+          },
+          {
+            "id": "I_kwDOABD",
+            "number": 11,
+            "title": "Newer issue",
+            "updatedAt": "2026-01-05T12:00:00Z",
+            "url": "https://github.com/slint-ui/slint/issues/11"
+          }
+        ]
+      },
+      "pullRequests": {
+        "pageInfo": {
+          "hasNextPage": true,
+          "endCursor": "Y3Vyc29yOnYyOpK5"
+        },
+        "nodes": [
+          {
+            "id": "PR_kwDOABC",
+            "number": 99,
+            "title": "Middle PR",
+            "updatedAt": "2026-01-03T12:00:00Z",
+            "url": "https://github.com/slint-ui/slint/pull/99"
+          }
+        ]
+      }
+    }
+  }
+}

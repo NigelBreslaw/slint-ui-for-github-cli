@@ -1,0 +1,28 @@
+{
+  "data": {
+    "repository": {
+      "issues": {
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": null
+        },
+        "nodes": [
+          {
+            "id": "I_bad",
+            "number": "not-a-number",
+            "title": "x",
+            "updatedAt": "2026-01-01T00:00:00Z",
+            "url": "https://github.com/o/r/issues/1"
+          }
+        ]
+      },
+      "pullRequests": {
+        "pageInfo": {
+          "hasNextPage": false,
+          "endCursor": null
+        },
+        "nodes": []
+      }
+    }
+  }
+}
