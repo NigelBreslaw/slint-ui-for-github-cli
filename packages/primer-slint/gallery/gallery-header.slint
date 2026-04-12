@@ -18,7 +18,7 @@ export component GalleryHeader {
             padding-left: 16px;
             padding-right: 16px;
             spacing: 16px;
-            alignment: start;
+            alignment: space-between;
 
             Text {
                 vertical-alignment: center;
@@ -31,6 +31,7 @@ export component GalleryHeader {
             }
 
             IconButton {
+                y: (parent.height - self.height) / 2;
                 clicked => {
                     if (Palette.color-scheme == ColorScheme.dark) {
                         Palette.color-scheme = ColorScheme.light;
