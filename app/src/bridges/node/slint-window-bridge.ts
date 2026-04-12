@@ -12,6 +12,7 @@ import { fetchAllReviewRequestsSearch } from "../../backend/gh/graphql-review-re
 import type {
   MainWindowInstance,
   SlintDataTableRow,
+  SlintImportCandidateRow,
   SlintProjectBoardListRow,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
@@ -154,6 +155,9 @@ export function clearTimeReportingSelection(window: MainWindowInstance): void {
     board_page_index: 0,
     board_rows_model: new slint.ArrayModel<SlintProjectBoardListRow>([]),
     board_data_table_rows: new slint.ArrayModel<SlintDataTableRow>([]),
+    import_candidates_load_status: "",
+    import_candidate_count: 0,
+    import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
   });
   resetTimeReportingItemsState();
 }

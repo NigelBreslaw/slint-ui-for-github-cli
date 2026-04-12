@@ -18,6 +18,14 @@ export struct ProjectBoardListRow {
     url: string,
 }
 
+/** One row from `fetchRepoCandidatesPageGraphql` (open issues + open PRs, first page; PR6). */
+export struct ImportCandidateRow {
+    kind: ProjectBoardItemKind,
+    number: int,
+    title: string,
+    url: string,
+}
+
 export global ProjectBoardListState {
     callback project-board-list-view-init;
     callback project-board-list-view-exited;
@@ -30,6 +38,8 @@ export global ProjectBoardListState {
     callback project-board-import-dialog-opened;
     /** Filter text for the repo list; Node applies client-side filter to cached repos. */
     callback project-board-import-repos-search-changed(string);
+    /** User picked a repository in the import dialog; Node loads open issues/PRs (GraphQL, PR6). */
+    callback project-board-import-repo-selected-changed(int);
 
     /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */
     in-out property <bool> import-dialog-open: false;
@@ -41,6 +51,11 @@ export global ProjectBoardListState {
     in-out property <int> import-repo-options-count: 0;
     in-out property <int> import-repo-selected-index: -1;
     in-out property <[SelectOption]> import-repo-select-options;
+    /** Empty, loading line, or error from GraphQL candidates fetch (PR6). */
+    in-out property <string> import-candidates-load-status: "";
+    /** Row count for `import-candidate-rows` (Slint cannot rely on `ArrayModel` length). */
+    in-out property <int> import-candidate-count: 0;
+    in-out property <[ImportCandidateRow]> import-candidate-rows;
 
     in-out property <bool> has-selected-project: false;
     in-out property <string> selected-project-label: "";

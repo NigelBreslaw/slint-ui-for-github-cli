@@ -22,6 +22,7 @@ import type {
   MainWindowModule,
   SettingsStateHandle,
   SlintDataTableRow,
+  SlintImportCandidateRow,
   SlintProjectBoardListRow,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
@@ -63,8 +64,6 @@ const window = new ui.MainWindow({
   "gh-cli-version-block-detail": "",
 });
 
-console.log("[github-app] main.ts started");
-
 restoreMainWindowGeometry(window);
 const windowGeometryPersister = createMainWindowGeometryPersister(window);
 
@@ -93,6 +92,9 @@ assignProperties(window.ProjectBoardListState, {
   import_repo_options_count: 0,
   import_repo_selected_index: -1,
   import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+  import_candidates_load_status: "",
+  import_candidate_count: 0,
+  import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
 });
 
 assignProperties(window.SettingsState, {

@@ -1,13 +1,17 @@
 import * as slint from "slint-ui";
 import { assignProperties, type ExhaustiveAllCallbacks } from "slint-bridge-kit";
+import { fetchRepoCandidatesPageGraphql } from "../gh/graphql-repo-candidates.ts";
 import { fetchAllSlintUiOrgReposRest } from "../gh/fetch-slint-ui-org-repos-rest.ts";
+import type { RepoCandidateRow } from "../schemas/gh-graphql-repo-candidates.ts";
 import type { OrgRepoRow } from "../schemas/gh-rest-org-repos.ts";
-import type {
-  MainWindowInstance,
-  ProjectBoardListStateHandle,
-  SlintDataTableRow,
-  SlintProjectBoardListRow,
-  SlintSelectOption,
+import {
+  projectBoardItemKind,
+  type MainWindowInstance,
+  type ProjectBoardListStateHandle,
+  type SlintDataTableRow,
+  type SlintImportCandidateRow,
+  type SlintProjectBoardListRow,
+  type SlintSelectOption,
 } from "../../bridges/node/slint-interface.ts";
 import { openUrlInBrowser } from "../utils/open-url.ts";
 import { reloadProjectV2ItemsIntoCacheAndUi } from "../time-reporting/time-reporting-ui.ts";
@@ -42,6 +46,35 @@ function filterOrgRepos(rows: readonly OrgRepoRow[], query: string): OrgRepoRow[
   );
 }
 
+function parseOwnerNameFromFullName(fullName: string): { owner: string; name: string } | null {
+  const i = fullName.indexOf("/");
+  if (i <= 0 || i === fullName.length - 1) {
+    return null;
+  }
+  return { owner: fullName.slice(0, i), name: fullName.slice(i + 1) };
+}
+
+function mapRepoCandidateToSlint(row: RepoCandidateRow): SlintImportCandidateRow {
+  return {
+    kind: row.kind === "issue" ? projectBoardItemKind.issue : projectBoardItemKind.pullRequest,
+    number: row.number,
+    title: row.title,
+    url: row.url,
+  };
+}
+
+function getFilteredImportRepos(window: MainWindowInstance): OrgRepoRow[] {
+  return filterOrgRepos(importReposCache, window.ProjectBoardListState.import_repos_search);
+}
+
+function clearImportCandidatesUi(window: MainWindowInstance): void {
+  assignProperties(window.ProjectBoardListState, {
+    import_candidates_load_status: "",
+    import_candidate_count: 0,
+    import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
+  });
+}
+
 function applyImportRepoFilterToWindow(window: MainWindowInstance): void {
   const q = window.ProjectBoardListState.import_repos_search;
   const filtered = filterOrgRepos(importReposCache, q);
@@ -52,6 +85,7 @@ function applyImportRepoFilterToWindow(window: MainWindowInstance): void {
     import_repo_selected_index: -1,
     import_repo_options_count: filtered.length,
   });
+  clearImportCandidatesUi(window);
 }
 
 function clearImportReposUiState(window: MainWindowInstance): void {
@@ -62,6 +96,9 @@ function clearImportReposUiState(window: MainWindowInstance): void {
     import_repo_selected_index: -1,
     import_repo_options_count: 0,
     import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+    import_candidates_load_status: "",
+    import_candidate_count: 0,
+    import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
   });
 }
 
@@ -125,16 +162,20 @@ export function buildProjectBoardListStateCallbacks(
           import_repo_selected_index: -1,
           import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
           import_repo_options_count: 0,
+          import_candidates_load_status: "",
+          import_candidate_count: 0,
+          import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
         });
         const res = await fetchAllSlintUiOrgReposRest();
-      console.log("[github-app] project_board_import_dialog_opened", res);
-
         if (!res.ok) {
           importReposCache = [];
           assignProperties(window.ProjectBoardListState, {
             import_repos_load_status: res.error,
             import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
             import_repo_options_count: 0,
+            import_candidates_load_status: "",
+            import_candidate_count: 0,
+            import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
           });
           return;
         }
@@ -147,6 +188,48 @@ export function buildProjectBoardListStateCallbacks(
     project_board_import_repos_search_changed: (query: string) => {
       assignProperties(window.ProjectBoardListState, { import_repos_search: query });
       applyImportRepoFilterToWindow(window);
+    },
+
+    project_board_import_repo_selected_changed: (index: number) => {
+      void (async () => {
+        if (index < 0) {
+          clearImportCandidatesUi(window);
+          return;
+        }
+        const filtered = getFilteredImportRepos(window);
+        const repo = filtered[index];
+        if (repo === undefined) {
+          clearImportCandidatesUi(window);
+          return;
+        }
+        const parts = parseOwnerNameFromFullName(repo.fullName);
+        if (parts === null) {
+          assignProperties(window.ProjectBoardListState, {
+            import_candidates_load_status: "Invalid repository name.",
+            import_candidate_count: 0,
+            import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
+          });
+          return;
+        }
+        assignProperties(window.ProjectBoardListState, {
+          import_candidates_load_status: "Loading issues and pull requests…",
+        });
+        const page = await fetchRepoCandidatesPageGraphql(parts.owner, parts.name, { first: 100 });
+        if (!page.ok) {
+          assignProperties(window.ProjectBoardListState, {
+            import_candidates_load_status: page.error,
+            import_candidate_count: 0,
+            import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),
+          });
+          return;
+        }
+        const slintRows = page.value.rows.map(mapRepoCandidateToSlint);
+        assignProperties(window.ProjectBoardListState, {
+          import_candidates_load_status: "",
+          import_candidate_count: slintRows.length,
+          import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>(slintRows),
+        });
+      })();
     },
 
     project_board_list_refresh: () => {

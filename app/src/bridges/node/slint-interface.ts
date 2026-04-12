@@ -186,6 +186,14 @@ export type SlintProjectBoardListRow = {
   url: string;
 };
 
+/** Matches `ImportCandidateRow` in `project-board-list-state.slint` (import dialog, PR6). */
+export type SlintImportCandidateRow = {
+  kind: ProjectBoardItemKind;
+  number: number;
+  title: string;
+  url: string;
+};
+
 export type ProjectBoardListStateHandle = {
   project_board_list_view_init: () => void;
   project_board_list_view_exited: () => void;
@@ -195,12 +203,16 @@ export type ProjectBoardListStateHandle = {
   project_board_import_dialog_closed: () => void;
   project_board_import_dialog_opened: () => void;
   project_board_import_repos_search_changed: (query: string) => void;
+  project_board_import_repo_selected_changed: (index: number) => void;
   import_dialog_open: boolean;
   import_repos_search: string;
   import_repos_load_status: string;
   import_repo_options_count: number;
   import_repo_selected_index: number;
   import_repo_select_options: slint.ArrayModel<SlintSelectOption>;
+  import_candidates_load_status: string;
+  import_candidate_count: number;
+  import_candidate_rows: slint.ArrayModel<SlintImportCandidateRow>;
   has_selected_project: boolean;
   selected_project_label: string;
   items_load_status: string;
