@@ -12,8 +12,6 @@ export component Checkbox {
     callback toggled;
 
     private property <length> box-size: LayoutTokens.iconButton-icon-size-medium;
-    private property <length> leading-icon-size: box-size;
-
     private property <bool> filled: root.checked || root.indeterminate;
 
     touch := TouchArea {
@@ -33,18 +31,9 @@ export component Checkbox {
                 height: box-size;
                 border-radius: LayoutTokens.checkbox-border-radius;
                 border-width: 1px;
-                border-color:
-                    root.disabled && root.filled ? CheckboxTokens.checkbox-borderColor-checked-disabled
-                    : root.disabled ? CheckboxTokens.checkbox-borderColor-rest
-                    : root.filled
-                    ? (touch.pressed ? CheckboxTokens.checkbox-borderColor-checked-active : touch.has-hover ? CheckboxTokens.checkbox-borderColor-checked-hover : CheckboxTokens.checkbox-borderColor-checked)
-                    : CheckboxTokens.checkbox-borderColor-rest;
-                background:
-                    root.disabled && root.filled ? CheckboxTokens.checkbox-bgColor-checked-disabled
-                    : root.disabled ? CheckboxTokens.checkbox-bgColor-rest
-                    : root.filled
-                    ? (touch.pressed ? CheckboxTokens.checkbox-bgColor-checked-active : touch.has-hover ? CheckboxTokens.checkbox-bgColor-checked-hover : CheckboxTokens.checkbox-bgColor-checked)
-                    : (touch.pressed ? CheckboxTokens.checkbox-bgColor-active : touch.has-hover ? CheckboxTokens.checkbox-bgColor-hover : CheckboxTokens.checkbox-bgColor-rest);
+                // Default: enabled, empty (unchecked), rest — no explicit state.
+                border-color: CheckboxTokens.checkbox-borderColor-rest;
+                background: CheckboxTokens.checkbox-bgColor-rest;
 
                 if root.indeterminate: Rectangle {
                     width: box-size * 0.45;
@@ -58,10 +47,36 @@ export component Checkbox {
                 if !root.indeterminate && root.checked: Image {
                     width: parent.width;
                     height: parent.height;
-                    source: Icons.checkbox_fill;
+                    source: Icons.check;
                     colorize:  root.disabled ? CheckboxTokens.checkbox-fgColor-checked-disabled : PrimerColors.fgOnEmphasis;
                 }
 
+                states [
+                    disabled when root.disabled: {
+                        check-visuals.border-color: root.filled ? CheckboxTokens.checkbox-borderColor-checked-disabled : CheckboxTokens.checkbox-borderColor-rest;
+                        check-visuals.background: root.filled ? CheckboxTokens.checkbox-bgColor-checked-disabled : CheckboxTokens.checkbox-bgColor-rest;
+                    }
+                    filled-pressed when !root.disabled && root.filled && touch.pressed: {
+                        check-visuals.border-color: CheckboxTokens.checkbox-borderColor-checked-active;
+                        check-visuals.background: CheckboxTokens.checkbox-bgColor-checked-active;
+                    }
+                    filled-hover when !root.disabled && root.filled && !touch.pressed && touch.has-hover: {
+                        check-visuals.border-color: CheckboxTokens.checkbox-borderColor-checked-hover;
+                        check-visuals.background: CheckboxTokens.checkbox-bgColor-checked-hover;
+                    }
+                    filled-rest when !root.disabled && root.filled && !touch.pressed && !touch.has-hover: {
+                        check-visuals.border-color: CheckboxTokens.checkbox-borderColor-checked;
+                        check-visuals.background: CheckboxTokens.checkbox-bgColor-checked;
+                    }
+                    empty-pressed when !root.disabled && !root.filled && touch.pressed: {
+                        check-visuals.border-color: CheckboxTokens.checkbox-borderColor-rest;
+                        check-visuals.background: CheckboxTokens.checkbox-bgColor-active;
+                    }
+                    empty-hover when !root.disabled && !root.filled && !touch.pressed && touch.has-hover: {
+                        check-visuals.border-color: CheckboxTokens.checkbox-borderColor-rest;
+                        check-visuals.background: CheckboxTokens.checkbox-bgColor-hover;
+                    }
+                ]
             }
 
             if label != "": Text {
