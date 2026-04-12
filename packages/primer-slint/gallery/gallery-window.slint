@@ -3,6 +3,7 @@ import { GalleryHeader } from "./gallery-header.slint";
 import { GallerySidebar } from "./gallery-sidebar.slint";
 import { GalleryButtonsPage } from "./gallery-buttons-page.slint";
 import { GalleryNavsPage } from "./gallery-navs-page.slint";
+import { GalleryFeedbackPage } from "./gallery-feedback-page.slint";
 
 import "../assets/fonts/MonaSans-VariableFont.ttf";
 import "../assets/fonts/MonaSans-Italic-VariableFont.ttf";
@@ -71,7 +72,11 @@ export component GalleryWindow inherits Window {
                             width: 100%;
                         }
 
-                        if GalleryState.selected-group-index != 0 && GalleryState.selected-group-index != 1: VerticalLayout {
+                        if GalleryState.selected-group-index == 2: GalleryFeedbackPage {
+                            width: 100%;
+                        }
+
+                        if GalleryState.selected-group-index != 0 && GalleryState.selected-group-index != 1 && GalleryState.selected-group-index != 2: VerticalLayout {
                             spacing: 8px;
                             width: 100%;
 

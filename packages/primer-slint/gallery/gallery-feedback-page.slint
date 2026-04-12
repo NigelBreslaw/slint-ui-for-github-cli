@@ -1,0 +1,418 @@
+import {
+    Avatar,
+    Banner,
+    BannerLayout,
+    BannerVariant,
+    Button,
+    ButtonVariant,
+    Icons,
+    Label,
+    LabelGroup,
+    LabelGroupItem,
+    LabelSize,
+    LabelVariant,
+    Size,
+    Spinner,
+} from "../primer.slint";
+import { PrimerColors } from "../tokens.slint";
+
+/// Banner, Spinner, Avatar, Label, and LabelGroup demos from `app/src/ui/views/primer-gallery.slint`.
+export component GalleryFeedbackPage inherits VerticalLayout {
+    spacing: 28px;
+    width: 100%;
+
+    private property <bool> show-dismiss-demo: true;
+
+    private property <[LabelGroupItem]> demo-label-group-items: [
+        { text: "bug", variant: LabelVariant.danger, size: LabelSize.small },
+        { text: "enhancement", variant: LabelVariant.accent, size: LabelSize.small },
+        { text: "good first issue", variant: LabelVariant.success, size: LabelSize.small },
+        { text: "documentation", variant: LabelVariant.secondary, size: LabelSize.small },
+    ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.critical;
+            title: "Critical";
+            description: "Something went wrong or needs immediate attention.";
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            title: "Info";
+            description: "Supplemental context or a non-blocking notice.";
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.success;
+            title: "Success";
+            description: "The operation completed successfully.";
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.upsell;
+            title: "Upsell";
+            description: "Upgrade or try a premium capability.";
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.warning;
+            title: "Warning";
+            description: "Review this before continuing.";
+        }
+
+        Text {
+            text: "Layout & leading visual";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            layout: BannerLayout.compact;
+            title: "Compact padding";
+            description: "Uses reduced padding (base-size-4).";
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            flush: true;
+            title: "Flush";
+            description: "Top and bottom border only, no side border or radius.";
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            hide-title: true;
+            title: "Hidden title (still in accessibility)";
+            description: "Title is not drawn; icon uses the smaller size.";
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            title: "Custom leading icon";
+            description: "Info variant with has-custom-leading-icon and gear asset.";
+            has-custom-leading-icon: true;
+            leading-icon: Icons.gear_24;
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.upsell;
+            title: "Upsell + custom icon";
+            description: "Custom leading visual is allowed for upsell as well.";
+            has-custom-leading-icon: true;
+            leading-icon: Icons.gear_24;
+        }
+
+        Text {
+            text: "Dismissible";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        if root.show-dismiss-demo: Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            title: "Dismissible banner";
+            description: "Tap the × to hide this sample; use the button below to bring it back.";
+            dismissible: true;
+            dismiss => {
+                root.show-dismiss-demo = false;
+            }
+        }
+
+        Text {
+            text: "Primary / secondary actions";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            title: "Actions (React parity)";
+            description: "Secondary uses invisible; primary uses default outline (Banner.PrimaryAction).";
+            secondary-action-label: "Secondary";
+            primary-action-label: "Primary";
+            secondary-action => {
+            }
+            primary-action => {
+            }
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            title: "Green primary CTA";
+            description: "Set primary-action-variant to primary for a GitHub-style green button (not React default).";
+            primary-action-label: "Continue";
+            primary-action-variant: ButtonVariant.primary;
+            primary-action => {
+            }
+        }
+
+        Text {
+            text: "Description emphasis + subtitle";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            title: "Rich description pattern";
+            description-emphasis: "octocat";
+            description: " filed a follow-up on this thread.";
+            subtitle: "Muted second line (Slint extension; React Banner is title + description only).";
+        }
+
+        Text {
+            text: "Trailing actions (full-width notice row)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.warning;
+            title: "Trailing layout";
+            description: "With actions-trailing, buttons sit in the top row after the text column (text stretches).";
+            actions-trailing: true;
+            secondary-action-label: "Details";
+            primary-action-label: "Primary";
+            primary-action-variant: ButtonVariant.primary;
+            secondary-action => {
+            }
+            primary-action => {
+            }
+        }
+
+        Banner {
+            width: 100%;
+            variant: BannerVariant.info;
+            title: "Dismiss + actions";
+            description: "Dismiss control gets extra top margin when actions are present.";
+            dismissible: true;
+            secondary-action-label: "Details";
+            primary-action-label: "OK";
+            dismiss => {
+            }
+            secondary-action => {
+            }
+            primary-action => {
+            }
+        }
+
+        Button {
+            label: "Show dismissible banner again";
+            clicked => {
+                root.show-dismiss-demo = true;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Spinner";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+                Text {
+                    text: "Medium";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                Spinner { }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+                Text {
+                    text: "Large";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                Spinner {
+                    size: Size.large;
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Avatar";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder (no image bound in this demo).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Avatar { }
+    }
+
+    VerticalLayout {
+        spacing: 16px;
+        width: 100%;
+
+        Text {
+            text: "Label";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Product metadata chips — see Primer Label at primer.style. Not the same as CounterLabel (numeric pills on buttons).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        VerticalLayout {
+            spacing: 8px;
+            width: 100%;
+
+            Text {
+                text: "Style variants (small)";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+
+                Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.small; }
+                Label { text: "Primary"; variant: LabelVariant.primary; size: LabelSize.small; }
+                Label { text: "Secondary"; variant: LabelVariant.secondary; size: LabelSize.small; }
+                Label { text: "Accent"; variant: LabelVariant.accent; size: LabelSize.small; }
+                Label { text: "Success"; variant: LabelVariant.success; size: LabelSize.small; }
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+
+                Label { text: "Attention"; variant: LabelVariant.attention; size: LabelSize.small; }
+                Label { text: "Severe"; variant: LabelVariant.severe; size: LabelSize.small; }
+                Label { text: "Danger"; variant: LabelVariant.danger; size: LabelSize.small; }
+                Label { text: "Done"; variant: LabelVariant.done; size: LabelSize.small; }
+                Label { text: "Sponsors"; variant: LabelVariant.sponsors; size: LabelSize.small; }
+            }
+        }
+
+        VerticalLayout {
+            spacing: 8px;
+            width: 100%;
+
+            Text {
+                text: "Size variants (default + primary)";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+            }
+
+            HorizontalLayout {
+                spacing: 16px;
+                alignment: start;
+
+                VerticalLayout {
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "Small";
+                        font-size: 12px;
+                        color: PrimerColors.fgColor-muted;
+                    }
+
+                    Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.small; }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "Large";
+                        font-size: 12px;
+                        color: PrimerColors.fgColor-muted;
+                    }
+
+                    Label { text: "Default"; variant: LabelVariant.default; size: LabelSize.large; }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "Large primary";
+                        font-size: 12px;
+                        color: PrimerColors.fgColor-muted;
+                    }
+
+                    Label { text: "Primary"; variant: LabelVariant.primary; size: LabelSize.large; }
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "LabelGroup";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Row of Label chips (MVP: no truncation or +N more).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        LabelGroup {
+            width: 100%;
+            items: demo-label-group-items;
+        }
+    }
+}
