@@ -100,7 +100,7 @@ Slint port of Primer [**DataTable**](https://primer.style/product/components/dat
 
 | Property           | Type                         | Notes                                                                         |
 | ------------------ | ---------------------------- | ----------------------------------------------------------------------------- |
-| `columns`          | `[DataTableColumn]`          | `header`, `id`, `sortable`, `align` (**`DataTableCellAlign`**), `row-header`, `horizontal-stretch`, `min-width`, `width` (fixed column when ≥ 1px). |
+| `columns`          | `[DataTableColumn]`          | `header`, `id`, `sortable`, `align` (**`DataTableCellAlign`**), `row-header`, `horizontal-stretch`, `min-width`, `width` (fixed column when ≥ 1px), `monospace` (per-column font). |
 | `rows`             | `[DataTableRow]`             | `id`, `cells` (one string per column, same order as `columns`).               |
 | `cell-padding`     | **`DataTableCellPadding`**   | `condensed` / `normal` / `spacious`.                                          |
 | `sorted-column-id` | `string`                     | Active sort column id; empty if none.                                         |

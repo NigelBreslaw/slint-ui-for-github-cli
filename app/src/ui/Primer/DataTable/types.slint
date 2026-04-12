@@ -29,6 +29,8 @@ export struct DataTableColumn {
     min-width: length,
     /// If width is at least 1px, column uses a fixed width; otherwise flexible (large max-width).
     width: length,
+    /// When true, header and body cells in this column use a monospaced font (e.g. debug values).
+    monospace: bool,
 }
 
 export struct DataTableRow {

@@ -131,7 +131,20 @@ export component DataTable {
                                 colorize: sort-column-active(col.id) ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
                             }
 
-                            Text {
+                            if col.monospace: Text {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: col.header;
+                                font-size: LayoutTokens.text-body-size-small;
+                                font-family: "Bitstream Vera Sans Mono";
+                                color: sort-header-fg(col.id);
+                                font-weight: LayoutTokens.base-text-weight-semibold;
+                                horizontal-alignment: col.align == DataTableCellAlign.end ? right : left;
+                                vertical-alignment: center;
+                                wrap: word-wrap;
+                            }
+
+                            if !col.monospace: Text {
                                 horizontal-stretch: 1;
                                 min-width: 0px;
                                 text: col.header;
@@ -164,7 +177,20 @@ export component DataTable {
                         min-height: header-row-min-height;
                         alignment: col.align == DataTableCellAlign.end ? end : start;
 
-                        Text {
+                        if col.monospace: Text {
+                            width: 100%;
+                            min-width: 0px;
+                            text: col.header;
+                            font-size: LayoutTokens.text-body-size-small;
+                            font-family: "Bitstream Vera Sans Mono";
+                            color: PrimerColors.fgColor-muted;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
+                            horizontal-alignment: col.align == DataTableCellAlign.end ? right : left;
+                            vertical-alignment: center;
+                            wrap: word-wrap;
+                        }
+
+                        if !col.monospace: Text {
                             width: 100%;
                             min-width: 0px;
                             text: col.header;
@@ -217,7 +243,20 @@ export component DataTable {
                                     min-width: 0px;
                                     min-height: 0;
 
-                                    Text {
+                                    if index < columns.length && columns[index].monospace: Text {
+                                        width: 100%;
+                                        min-width: 0px;
+                                        text: cell;
+                                        font-size: LayoutTokens.text-body-size-small;
+                                        font-family: "Bitstream Vera Sans Mono";
+                                        color: PrimerColors.fgColor-default;
+                                        font-weight: index < columns.length && columns[index].row-header ? LayoutTokens.base-text-weight-semibold : 400;
+                                        horizontal-alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? right : left;
+                                        vertical-alignment: center;
+                                        wrap: word-wrap;
+                                    }
+
+                                    if !(index < columns.length && columns[index].monospace): Text {
                                         width: 100%;
                                         min-width: 0px;
                                         text: cell;
