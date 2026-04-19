@@ -171,29 +171,15 @@ Wraps a **`DataTable`** (or other content) with optional **title**, **subtitle**
 
 Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there is no title, subtitle, or action labels, the header block is omitted and the **child** is laid out directly.
 
-## Select and SelectPanel
+## Select
 
-**Select** ([`Select/select.slint`](Select/select.slint)) is the trigger + **ContextMenu** picker pattern; **SelectPanel** ([`SelectPanel/select-panel.slint`](SelectPanel/select-panel.slint)) is a **filter field** plus **scrollable** `ActionListRow` list for **single-select** in a panel (upstream: [SelectPanel](https://primer.style/product/components/select-panel/)). Both use **`SelectOption`** (`value`, `label`, `enabled`).
+**Select** ([`Select/select.slint`](Select/select.slint)) is the trigger + **ContextMenu** picker pattern using **`SelectOption`** (`value`, `label`, `enabled`).
 
-**SelectPanel** does **not** filter `items` internally: the parent should update the **`items`** / **`item-count`** model from **`filter-text`** / **`filter-changed`** (same **`ArrayModel` length** pattern as **Select**’s **`option-count`**). The list shows a **loading** state, a **empty** message when `effective-len == 0`, or a **`Flickable`** body when there are rows.
+Primer’s product **SelectPanel** ([docs](https://primer.style/product/components/select-panel/)) is not shipped as a namesake component in primer-slint (avoid confusion with upstream). The **project board** import flow uses app-local **`FilteredOptionList`** ([`filtered-option-list.slint`](../../app/src/ui/components/filtered-option-list.slint)) — filter field + **`ActionListRow`** list with the same parent-filtered **`items`** / **`item-count`** pattern as **Select**’s **`option-count`**.
 
-| Property             | Type              | Notes                                                                   |
-| -------------------- | ----------------- | ----------------------------------------------------------------------- |
-| `filter-text`        | `string` (in-out) | Filter query; sync with parent filtering logic.                         |
-| `filter-placeholder` | `string`          | Reserved for future hint text (filter uses **TextInput**).              |
-| `items`              | `[SelectOption]`  | Row model.                                                              |
-| `item-count`         | `int`             | When `>= 0`, bounds use this instead of `items.length` (**JS** models). |
-| `selected-index`     | `int` (in-out)    | **`-1`** when none.                                                     |
-| `loading`            | `bool`            | Shows spinner in the list region.                                       |
-| `empty-message`      | `string`          | When not loading and no rows.                                           |
-| `disabled`           | `bool`            | Disables filter input and rows.                                         |
-| `list-max-height`    | `length`          | Max height of the scrollable list (default **240px**).                  |
-| `filter-changed`     | `callback`        | `(query)` when the user edits the filter field.                         |
-| `selected-changed`   | `callback`        | `(index)` when the user selects a row.                                  |
+**Imports for views:** [`primer.slint`](primer.slint) — **`DialogBase`**, **`DialogBaseSide`**, **`DialogBaseAlign`** (optional **`OverlayTokens`** for theming chrome), **`Select`**, **`SelectOption`**, **`ValidationStatus`**.
 
-**Imports for views:** [`primer.slint`](primer.slint) — **`DialogBase`**, **`DialogBaseSide`**, **`DialogBaseAlign`** (optional **`OverlayTokens`** for theming chrome), **`Select`**, **`SelectPanel`**, **`SelectOption`**, **`ValidationStatus`**.
-
-Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group); **Project board** import dialog in github-app (**SelectPanel** for org repositories).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group); **Project board** import dialog in github-app (**FilteredOptionList**).
 
 ## Pagination
 

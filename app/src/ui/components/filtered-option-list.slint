@@ -1,12 +1,12 @@
-// Primer-style SelectPanel — filter field + scrollable list of choices (single-select).
-// Upstream: https://primer.style/product/components/select-panel/ (parent filters items; this view is in-panel only).
+// Filter field + scrollable `ActionListRow` list (single-select). Used by the project-board import dialog.
+// Not named "SelectPanel" to avoid confusion with Primer React’s [SelectPanel](https://primer.style/product/components/select-panel/).
 
-import { ActionListRow } from "../ActionList/action-list-row.slint";
-import { Spinner } from "../Progress/spinner.slint";
-import { SelectOption } from "../Select/select.slint";
-import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { ActionListRow } from "../../../../packages/primer-slint/ActionList/action-list-row.slint";
+import { Spinner } from "../../../../packages/primer-slint/Progress/spinner.slint";
+import { SelectOption } from "../../../../packages/primer-slint/Select/select.slint";
+import { LayoutTokens, PrimerColors, Size } from "../../../../packages/primer-slint/tokens.slint";
 
-export component SelectPanel {
+export component FilteredOptionList {
     /// Filter query; bind from the parent and/or react to [`filter-changed`].
     in-out property <string> filter-text: "";
     in property <string> filter-placeholder: "Filter…";

@@ -1,5 +1,6 @@
 import { ListView } from "std-widgets.slint";
 import { ProjectBoardItemKind, ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
+import { FilteredOptionList } from "../components/filtered-option-list.slint";
 import { PrimerDialog, PrimerDialogWidth } from "../components/primer-dialog.slint";
 import {
     Banner,
@@ -11,7 +12,6 @@ import {
     DataTableColumn,
     DataTableSortDirection,
     Pagination,
-    SelectPanel,
     Size,
     Spinner,
     TableContainer,
@@ -271,7 +271,7 @@ export component ProjectBoardList {
                             wrap: word-wrap;
                         }
 
-                        SelectPanel {
+                        FilteredOptionList {
                             width: 100%;
                             filter-text <=> ProjectBoardListState.import-repos-search;
                             filter-placeholder: "Filter by name…";

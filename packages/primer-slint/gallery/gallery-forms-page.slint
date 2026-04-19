@@ -14,7 +14,7 @@ import {
 } from "../primer.slint";
 import { PrimerColors } from "../tokens.slint";
 
-/// Select, SelectPanel, Checkbox, and CheckboxGroup gallery demos.
+/// Select, DialogBase demo, Checkbox, and CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -61,12 +61,12 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
     }
 
-    select-panel-column := VerticalLayout {
+    dialog-base-demo-column := VerticalLayout {
         spacing: 12px;
         width: 100%;
 
         Text {
-            text: "SelectPanel";
+            text: "DialogBase (anchored popup)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
