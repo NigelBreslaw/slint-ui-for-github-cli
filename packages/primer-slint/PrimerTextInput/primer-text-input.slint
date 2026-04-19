@@ -1,4 +1,5 @@
 import { Palette } from "std-widgets.slint";
+import { IconButton, IconButtonVariant } from "../Buttons/buttons.slint";
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import { Icons } from "../assets/icons.slint";
 import { Spinner } from "../Progress/spinner.slint";
@@ -42,6 +43,8 @@ export component PrimerTextInput {
     in property <image> leading-visual;
     in property <bool> has-trailing-visual: false;
     in property <image> trailing-visual;
+    /// Trailing **clear** control ([`IconButton`] `invisible`, `Size.small`). Column stays reserved when true (no layout jump when text is empty).
+    in property <bool> has-trailing-action: false;
     /// When true, a [`Spinner`] occupies the resolved loader slot (`loader-position`) instead of that slot’s icon.
     in property <bool> loading: false;
     in property <TextInputLoaderPosition> loader-position: auto;
@@ -72,7 +75,8 @@ export component PrimerTextInput {
         );
 
     private property <bool> reserve-leading-slot: has-leading-visual || loading-spin-leading;
-    private property <bool> reserve-trailing-slot: has-trailing-visual || loading-spin-trailing;
+    private property <bool> reserve-trailing-slot:
+        has-trailing-visual || loading-spin-trailing || has-trailing-action;
 
     private property <length> field-height:
         size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
@@ -270,6 +274,26 @@ export component PrimerTextInput {
                                     height: visual-icon-size;
                                     source: trailing-visual;
                                     colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+                                }
+                            }
+
+                            if has-trailing-action: VerticalLayout {
+                                horizontal-stretch: 0;
+                                height: parent.height;
+                                alignment: center;
+
+                                IconButton {
+                                    size: Size.small;
+                                    variant: IconButtonVariant.invisible;
+                                    icon-source: Icons.x;
+                                    opacity: root.disabled ? 0.45 : root.loading ? 0.45 : root.text == "" ? 0.35 : 1.0;
+
+                                    clicked => {
+                                        if !root.disabled && !root.loading && root.text != "" {
+                                            root.text = "";
+                                            root.edited("");
+                                        }
+                                    }
                                 }
                             }
                         }

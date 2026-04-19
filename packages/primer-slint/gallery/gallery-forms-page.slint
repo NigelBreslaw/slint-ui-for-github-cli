@@ -64,6 +64,7 @@ export component GalleryFormsPage inherits VerticalLayout {
     private property <string> demo-p5-limit-caption: "Notes";
     private property <string> demo-p5-exceed: "This text exceeds the twelve-character limit.";
     private property <string> demo-p5-hidden-label: "";
+    private property <string> demo-p6-trailing-clear: "Clear me";
 
     VerticalLayout {
         spacing: 12px;
@@ -445,6 +446,32 @@ export component GalleryFormsPage inherits VerticalLayout {
             caption: "VisuallyHiddenLabel: legend text is suppressed; caption remains visible for sighted users.";
             placeholder: "Given name…";
             text <=> demo-p5-hidden-label;
+            edited(_) => {
+            }
+        }
+
+        Text {
+            text: "PrimerTextInput — PR6 (trailing action / clear)";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "WithTrailingAction: invisible IconButton + Icons.x clears `text` and fires `edited`. WithTooltipDirection: no Slint tooltip-direction prop — parity note only.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        PrimerTextInput {
+            width: 320px;
+            block: true;
+            label-text: "WithTrailingAction";
+            caption: "Tap × to clear; slot stays reserved when empty (no layout jump).";
+            has-trailing-action: true;
+            placeholder: "Type or clear…";
+            text <=> demo-p6-trailing-clear;
             edited(_) => {
             }
         }
