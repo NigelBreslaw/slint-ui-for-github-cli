@@ -1,6 +1,8 @@
 # Anchored dialogs and `PopupWindow` (Slint)
 
-Use this note when implementing Primer-style **anchored** surfaces (SelectPanel, AnchoredOverlay): a **trigger** plus a **`PopupWindow`** that aligns to the anchor and stays on screen.
+Use this note when implementing Primer-style **anchored** surfaces (SelectPanel, upstream AnchoredOverlay): a **trigger** plus a **`PopupWindow`** that aligns to the anchor and stays on screen.
+
+**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../AnchoredOverlay/anchored-overlay.slint) (exported from [`primer.slint`](../primer.slint)); gallery demo on the **Forms** page.
 
 ## Coordinate system
 

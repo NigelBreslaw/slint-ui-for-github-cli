@@ -1,9 +1,11 @@
 import {
+    AnchoredOverlay,
     Button,
     ButtonAlignContent,
     Checkbox,
     CheckboxGroup,
     Icons,
+    LayoutTokens,
     Select,
     SelectOption,
     ValidationStatus,
@@ -14,6 +16,8 @@ import { PrimerColors } from "../tokens.slint";
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
+
+    in property <length> window-inner-height: 800px;
 
     private property <[SelectOption]> demo-select-options: [
         { value: "one", label: "First option", enabled: true },
@@ -54,7 +58,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
     }
 
-    VerticalLayout {
+    select-panel-column := VerticalLayout {
         spacing: 12px;
         width: 100%;
 
@@ -66,13 +70,13 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Placeholder anchor: Button with label and trailing chevron (click is intentionally a no-op).";
+            text: "AnchoredOverlay (PR1): empty panel opens below or above the anchor; Escape closes. See gallery/anchored-popupwindow.md.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
 
-        Button {
+        btn-select-panel := Button {
             width: 100%;
             max-width: 420px;
             align-content: ButtonAlignContent.start;
@@ -80,6 +84,24 @@ export component GalleryFormsPage inherits VerticalLayout {
             has-trailing-icon: true;
             trailing-icon: Icons.triangle_down;
             clicked => {
+                anchored-select-panel.open = true;
+            }
+        }
+
+        anchored-select-panel := AnchoredOverlay {
+            window-inner-height: window-inner-height;
+            anchor-abs-x: btn-select-panel.absolute-position.x;
+            anchor-abs-y: btn-select-panel.absolute-position.y;
+            anchor-width: btn-select-panel.width;
+            anchor-height: btn-select-panel.height;
+            close-requested => {
+            }
+
+            Text {
+                text: "Panel body (empty — next PRs)";
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
             }
         }
     }
