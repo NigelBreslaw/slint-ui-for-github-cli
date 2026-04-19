@@ -191,7 +191,7 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 | `filter-changed`     | `callback`        | `(query)` when the user edits the filter field.                         |
 | `selected-changed`   | `callback`        | `(index)` when the user selects a row.                                  |
 
-**Imports for views:** [`primer.slint`](primer.slint) — **`AnchoredOverlay`** (optional **`OverlayTokens`** if you theme overlay chrome beside the component), **`Select`**, **`SelectPanel`**, **`SelectOption`**, **`ValidationStatus`**.
+**Imports for views:** [`primer.slint`](primer.slint) — **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`** (optional **`OverlayTokens`** for theming chrome), **`Select`**, **`SelectPanel`**, **`SelectOption`**, **`ValidationStatus`**.
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group); **Project board** import dialog in github-app (**SelectPanel** for org repositories).
 

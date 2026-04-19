@@ -1,31 +1,55 @@
 // Primer-style anchored overlay: floating panel only (no full-screen dimmer — matches upstream AnchoredOverlay / SelectPanel anchored).
 // Coordinate math matches [`gallery/anchored-popupwindow.md`](../gallery/anchored-popupwindow.md).
-// Place as a 0×0 sibling under the same layout parent as the anchor; bind anchor-* and window-inner-height for flip.
+// Place as a 0×0 sibling under the same layout parent as the anchor; bind anchor-*, window-inner-width / height for placement.
 // Panel chrome: OverlayTokens. If the popup closes via the platform, sync `open` from the parent if needed.
 
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
+import { AnchoredOverlayAlign, AnchoredOverlaySide } from "./types.slint";
 import { LayoutTokens, OverlayTokens } from "../tokens.slint";
 
 export component AnchoredOverlay {
     in-out property <bool> open: false;
+    /// Viewport width for horizontal clamp (root `Window` inner width).
+    in property <length> window-inner-width: 800px;
     in property <length> window-inner-height: 800px;
     in property <length> anchor-abs-x: 0px;
     in property <length> anchor-abs-y: 0px;
     in property <length> anchor-width: 0px;
     in property <length> anchor-height: 0px;
+    /// Panel content height.
     in property <length> panel-height: 240px;
+    /// When `> 0`, panel width; otherwise matches `anchor-width` (SelectPanel-style default).
+    in property <length> panel-width: 0px;
     in property <length> anchor-gap: 5px;
+    /// Vertical placement; `auto` flips above when below would overflow (Primer default for anchored menus).
+    in property <AnchoredOverlaySide> vertical-side: auto;
+    /// Horizontal alignment of the panel relative to the anchor (LTR).
+    in property <AnchoredOverlayAlign> align: start;
     callback close-requested();
 
     width: 0px;
     height: 0px;
 
-    private property <bool> place-above:
+    private property <length> effective-panel-width: panel-width > 0px ? panel-width : anchor-width;
+
+    private property <bool> flip-above:
         anchor-abs-y + anchor-height + anchor-gap + panel-height > window-inner-height
         && anchor-abs-y >= anchor-gap + panel-height;
 
     private property <length> panel-window-y:
-        place-above ? anchor-abs-y - anchor-gap - panel-height : anchor-abs-y + anchor-height + anchor-gap;
+        vertical-side == AnchoredOverlaySide.outside_top ? anchor-abs-y - anchor-gap - panel-height
+        : vertical-side == AnchoredOverlaySide.outside_bottom ? anchor-abs-y + anchor-height + anchor-gap
+        : flip-above ? anchor-abs-y - anchor-gap - panel-height
+        : anchor-abs-y + anchor-height + anchor-gap;
+
+    private property <length> panel-window-x-raw:
+        align == AnchoredOverlayAlign.start ? anchor-abs-x
+        : align == AnchoredOverlayAlign.center ? anchor-abs-x + (anchor-width - effective-panel-width) / 2
+        : anchor-abs-x + anchor-width - effective-panel-width;
+
+    private property <length> panel-window-x-max: max(0px, window-inner-width - effective-panel-width);
+
+    private property <length> panel-window-x: max(0px, min(panel-window-x-raw, panel-window-x-max));
 
     changed open => {
         if root.open {
@@ -36,9 +60,9 @@ export component AnchoredOverlay {
     }
 
     popup := PopupWindow {
-        x: anchor-abs-x - root.absolute-position.x;
+        x: panel-window-x - root.absolute-position.x;
         y: panel-window-y - root.absolute-position.y;
-        width: anchor-width;
+        width: effective-panel-width;
         height: panel-height;
 
         panel-scope := FocusScope {

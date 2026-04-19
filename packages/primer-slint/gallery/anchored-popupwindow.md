@@ -2,7 +2,7 @@
 
 Use this note when implementing Primer-style **anchored** surfaces (SelectPanel, upstream AnchoredOverlay): a **trigger** plus a **`PopupWindow`** that aligns to the anchor and stays on screen.
 
-**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../AnchoredOverlay/anchored-overlay.slint) sizes the **`PopupWindow`** to the **panel** (anchor width × body height) and positions it with parent-relative **`x`** / **`y`** — **no** full-viewport dimmer, matching Primer **anchored** surfaces (dropdown-style). Pass **`window-inner-height`** from the root **`Window`** only for **below/above** flip math. Panel chrome comes from **`OverlayTokens`** in [`tokens.slint`](../tokens.slint) (**`backdrop-scrim`** in that global is for **modal** shells such as [`primer-dialog.slint`](../../../app/src/ui/components/primer-dialog.slint), not this component). Exported from [`primer.slint`](../primer.slint); gallery demo on the **Forms** page.
+**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../AnchoredOverlay/anchored-overlay.slint) sizes the **`PopupWindow`** to the panel (**`panel-width`** or anchor width × **`panel-height`**) and positions it with parent-relative **`x`** / **`y`** — **no** full-viewport dimmer, matching Primer **anchored** surfaces (dropdown-style). Pass **`window-inner-width`** and **`window-inner-height`** from the root **`Window`** for **horizontal clamp** and **below/above** flip. **`vertical-side`** (`auto` | `outside_bottom` | `outside_top`) and **`align`** (`start` | `center` | `end`) match a Primer subset (default anchored SelectPanel: **auto** + **start**). Enums: [`types.slint`](../AnchoredOverlay/types.slint). Panel chrome: **`OverlayTokens`** (**`backdrop-scrim`** is for modals such as [`primer-dialog.slint`](../../../app/src/ui/components/primer-dialog.slint)). Exported from [`primer.slint`](../primer.slint); gallery demo on the **Forms** page.
 
 ## Coordinate system
 
@@ -30,7 +30,17 @@ Example: panel **above** the anchor:
 W_y = anchor.absolute-position.y - g - h
 ```
 
-Bind **`popup.width`** / **`height`** to match the design (often the anchor width for a dropdown).
+Bind **`popup.width`** / **`height`** to **`panel-width`** (or anchor width) × **`panel-height`**.
+
+## Horizontal align and clamp
+
+In **window space**, compute the raw panel left **`W_x`** from **`align`** (LTR):
+
+- **start:** `W_x = anchor.x`
+- **center:** `W_x = anchor.x + (anchor.width - panel.width) / 2`
+- **end:** `W_x = anchor.x + anchor.width - panel.width`
+
+Then clamp to the viewport: **`W_x = max(0, min(W_x, window.innerWidth - panel.width))`** so the panel stays on-screen (Primer **`preventOverflow`**-style). Pass **`window-inner-width`** from the **`Window`**.
 
 ## Vertical flip (below vs above)
 

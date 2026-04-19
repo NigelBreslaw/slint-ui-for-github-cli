@@ -1,5 +1,7 @@
 import {
     AnchoredOverlay,
+    AnchoredOverlayAlign,
+    AnchoredOverlaySide,
     Button,
     ButtonAlignContent,
     Checkbox,
@@ -17,6 +19,7 @@ export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
 
+    in property <length> window-inner-width: 800px;
     in property <length> window-inner-height: 800px;
 
     private property <[SelectOption]> demo-select-options: [
@@ -70,7 +73,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "AnchoredOverlay: floating panel below or above the anchor (no full-screen dimmer, like Primer Storybook); Escape closes. See gallery/anchored-popupwindow.md.";
+            text: "AnchoredOverlay: vertical-side auto (flip), align start, panel-width 280px (narrower than the button); window-inner-width clamps horizontally. Escape closes. See gallery/anchored-popupwindow.md.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -89,7 +92,11 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         anchored-select-panel := AnchoredOverlay {
+            window-inner-width: window-inner-width;
             window-inner-height: window-inner-height;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 280px;
             anchor-abs-x: btn-select-panel.absolute-position.x;
             anchor-abs-y: btn-select-panel.absolute-position.y;
             anchor-width: btn-select-panel.width;
