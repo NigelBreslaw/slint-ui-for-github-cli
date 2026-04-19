@@ -4,7 +4,7 @@ This document stands alone in the repo. Past chats or Cursor plan files are not 
 
 **Location:** Library source lives in **`packages/primer-slint/`**. The **github-app** package imports it with **relative paths** from each `.slint` file (for example `../../../packages/primer-slint/primer.slint` from `app/src/ui/main.slint`, or `../../../../packages/primer-slint/...` from files under `app/src/ui/components/` or `app/src/bridges/slint/`).
 
-**Standalone gallery:** From the monorepo root, `pnpm dev:gallery` runs **`gallery-main.ts`**, which loads **`gallery/gallery-window.slint`** (header + sidebar; main area switches by group). **Buttons**, **Navs**, **Feedback**, **Forms**, and **Data** are implemented under **`gallery/`** (`gallery-*-page.slint`). Uses **`slint-bridge-kit`** for `GalleryState` wiring.
+**Standalone gallery:** From the monorepo root, `pnpm dev:gallery` runs **`gallery-main.ts`**, which loads **`gallery/gallery-window.slint`** (header + sidebar; main area switches by group). **Buttons**, **Navs**, **Feedback**, **Forms**, and **Data** are implemented under **`gallery/`** (`gallery-*-page.slint`). Uses **`slint-bridge-kit`** for `GalleryState` wiring. Anchored overlay / dialog geometry with **`PopupWindow`**: [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md).
 
 ## Purpose
 
