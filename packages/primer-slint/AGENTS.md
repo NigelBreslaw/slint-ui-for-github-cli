@@ -41,6 +41,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **CheckboxTokens** | Unchecked/checked/indeterminate/disabled paths; composes from **`PrimerColors`** + **`ButtonTokens`**. |
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |
+| **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`AnchoredOverlay`** uses panel tokens only; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
 
 **Cross-global rule:** Dependents use other globals’ **`out`** bindings only — not their **private** fields.
 

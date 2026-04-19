@@ -2,7 +2,7 @@
 
 Use this note when implementing Primer-style **anchored** surfaces (SelectPanel, upstream AnchoredOverlay): a **trigger** plus a **`PopupWindow`** that aligns to the anchor and stays on screen.
 
-**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../AnchoredOverlay/anchored-overlay.slint) (exported from [`primer.slint`](../primer.slint)); gallery demo on the **Forms** page.
+**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../AnchoredOverlay/anchored-overlay.slint) sizes the **`PopupWindow`** to the **panel** (anchor width × body height) and positions it with parent-relative **`x`** / **`y`** — **no** full-viewport dimmer, matching Primer **anchored** surfaces (dropdown-style). Pass **`window-inner-height`** from the root **`Window`** only for **below/above** flip math. Panel chrome comes from **`OverlayTokens`** in [`tokens.slint`](../tokens.slint) (**`backdrop-scrim`** in that global is for **modal** shells such as [`primer-dialog.slint`](../../../app/src/ui/components/primer-dialog.slint), not this component). Exported from [`primer.slint`](../primer.slint); gallery demo on the **Forms** page.
 
 ## Coordinate system
 
@@ -58,4 +58,4 @@ Content inside a **`Flickable`** (e.g. gallery main area) moves when the user sc
 
 ## Primer mapping
 
-Upstream **AnchoredOverlay** + internal **Overlay** use the same ideas: anchor geometry, **`align`**, **`side`**, and viewport overflow. This Slint layer should keep the same **window-space** intent and convert to **parent-relative** `PopupWindow` **`x`** / **`y`** as above, then add scrim, border, and shadow from **`tokens.slint`** when you build the shared shell.
+Upstream **AnchoredOverlay** + internal **Overlay** use the same ideas: anchor geometry, **`align`**, **`side`**, and viewport overflow. This Slint layer converts window-space panel **`(W_x, W_y)`** to **parent-relative** **`PopupWindow`** **`x`** / **`y`** (see above). Panel border and **`shadow.floating.small`** elevation use **`OverlayTokens`**; viewport scrims are a **modal** concern, not the default anchored panel.

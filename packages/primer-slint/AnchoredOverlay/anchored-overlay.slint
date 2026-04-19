@@ -1,10 +1,10 @@
-// Primer-style anchored overlay: PopupWindow panel aligned to an anchor with below/above flip.
+// Primer-style anchored overlay: floating panel only (no full-screen dimmer — matches upstream AnchoredOverlay / SelectPanel anchored).
 // Coordinate math matches [`gallery/anchored-popupwindow.md`](../gallery/anchored-popupwindow.md).
-// Place as a 0×0 sibling under the same layout parent as the anchor; bind anchor-* and window-inner-height.
-// If the popup closes via the platform (e.g. click-outside), sync `open` from the parent if needed.
+// Place as a 0×0 sibling under the same layout parent as the anchor; bind anchor-* and window-inner-height for flip.
+// Panel chrome: OverlayTokens. If the popup closes via the platform, sync `open` from the parent if needed.
 
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
-import { LayoutTokens, PrimerColors, ShadowTokens } from "../tokens.slint";
+import { LayoutTokens, OverlayTokens } from "../tokens.slint";
 
 export component AnchoredOverlay {
     in-out property <bool> open: false;
@@ -57,22 +57,23 @@ export component AnchoredOverlay {
             panel-bg := Rectangle {
                 width: 100%;
                 height: 100%;
-                clip: true;
 
                 MultiDropShadow {
                     width: parent.width;
                     height: parent.height;
-                    border-radius: LayoutTokens.borderRadius-medium;
-                    shadows: ShadowTokens.shadow-floating-small;
+                    border-radius: OverlayTokens.panel-border-radius;
+                    shadows: OverlayTokens.panel-elevation-shadow;
                 }
 
+                // Clip only the fill + children so rounded corners hold; do not clip the wrapper or shadow blur is cut off.
                 Rectangle {
                     width: parent.width;
                     height: parent.height;
-                    background: PrimerColors.bgColor-default;
-                    border-radius: LayoutTokens.borderRadius-medium;
-                    border-width: 1px;
-                    border-color: PrimerColors.borderColor-muted;
+                    clip: true;
+                    background: OverlayTokens.panel-background;
+                    border-radius: OverlayTokens.panel-border-radius;
+                    border-width: OverlayTokens.panel-border-width;
+                    border-color: OverlayTokens.panel-border;
 
                     VerticalLayout {
                         width: 100%;
