@@ -1,9 +1,11 @@
 import {
+    Button,
+    ButtonAlignContent,
     Checkbox,
     CheckboxGroup,
+    Icons,
     Select,
     SelectOption,
-    SelectPanel,
     ValidationStatus,
 } from "../primer.slint";
 import { PrimerColors } from "../tokens.slint";
@@ -19,9 +21,6 @@ export component GalleryFormsPage inherits VerticalLayout {
         { value: "three", label: "Third option", enabled: false },
     ];
     private property <int> demo-select-index: 0;
-    private property <string> demo-select-panel-query: "";
-    private property <int> demo-select-panel-selected-index: -1;
-    private property <string> demo-select-panel-hint: "Parent filters items in real dialogs; type to see filter-changed.";
 
     private property <bool> demo-cb-off: false;
     private property <bool> demo-cb-on: true;
@@ -67,35 +66,21 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Filter field plus scrollable list (single-select). The parent filters `items` from `filter-text`; this gallery uses a static model.";
+            text: "Placeholder anchor: Button with label and trailing chevron (click is intentionally a no-op).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
 
-        SelectPanel {
+        Button {
             width: 100%;
             max-width: 420px;
-            filter-text <=> demo-select-panel-query;
-            filter-placeholder: "Filter choices…";
-            items: demo-select-options;
-            item-count: 3;
-            selected-index <=> demo-select-panel-selected-index;
-            loading: false;
-            empty-message: "No matching choices.";
-            filter-changed(q) => {
-                demo-select-panel-hint = "filter-changed: \"" + q + "\"";
+            align-content: ButtonAlignContent.start;
+            label: "bug, good first issue";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => {
             }
-            selected-changed(ix) => {
-                demo-select-panel-hint = "selected-changed: index " + ix;
-            }
-        }
-
-        Text {
-            text: demo-select-panel-hint;
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
     }
 
