@@ -8,13 +8,15 @@ import {
     CheckboxGroup,
     Icons,
     LayoutTokens,
+    PrimerTextInput,
     Select,
     SelectOption,
+    Size,
     ValidationStatus,
 } from "../primer.slint";
 import { PrimerColors } from "../tokens.slint";
 
-/// Select, DialogBase demo, Checkbox, and CheckboxGroup gallery demos.
+/// Select, PrimerTextInput (PR1 spike), DialogBase demo, Checkbox, CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -35,6 +37,15 @@ export component GalleryFormsPage inherits VerticalLayout {
     private property <bool> demo-cb-indet: true;
     private property <bool> demo-cg-opt1: false;
     private property <bool> demo-cg-opt2: true;
+
+    private property <string> demo-p1-block: "";
+    private property <string> demo-p1-small: "";
+    private property <string> demo-p1-large: "";
+    private property <string> demo-p1-disabled: "Cannot edit";
+    private property <string> demo-p1-caption: "";
+    private property <string> demo-p1-error: "";
+    private property <string> demo-p1-success: "";
+    private property <string> demo-p1-required: "";
 
     VerticalLayout {
         spacing: 12px;
@@ -57,6 +68,111 @@ export component GalleryFormsPage inherits VerticalLayout {
             validation-status: ValidationStatus.success;
             validation-message: "Static gallery model.";
             selected-changed(_idx) => {
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "PrimerTextInput";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "PR1 spike: block, sizes, disabled, caption, validation, required — further interaction polish in later PRs.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            label-text: "Block";
+            placeholder: "Placeholder…";
+            text <=> demo-p1-block;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            size: Size.small;
+            label-text: "Small";
+            placeholder: "Small height";
+            text <=> demo-p1-small;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            size: Size.large;
+            label-text: "Large";
+            placeholder: "Large height";
+            text <=> demo-p1-large;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            label-text: "Disabled";
+            text <=> demo-p1-disabled;
+            disabled: true;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            label-text: "With caption";
+            caption: "Helper text sits below the field.";
+            placeholder: "Type…";
+            text <=> demo-p1-caption;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            label-text: "Validation error";
+            validation-status: ValidationStatus.error;
+            validation-message: "Something went wrong";
+            text <=> demo-p1-error;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            label-text: "Validation success";
+            validation-status: ValidationStatus.success;
+            validation-message: "Looks good.";
+            text <=> demo-p1-success;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 150px;
+            block: true;
+            label-text: "Required label";
+            required: true;
+            placeholder: "Required field";
+            text <=> demo-p1-required;
+            edited(_) => {
             }
         }
     }
