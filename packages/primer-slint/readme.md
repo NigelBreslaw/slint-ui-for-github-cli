@@ -181,6 +181,14 @@ Primer’s product **SelectPanel** ([docs](https://primer.style/product/componen
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group); **Project board** import dialog in github-app (**FilteredOptionList**).
 
+## PrimerTextInput
+
+Slint port of Primer [**TextInput**](https://primer.style/product/components/text-input/) field chrome (label, validation, leading/trailing visuals, loading, character limit, optional trailing clear). Upstream **Features** stories are mapped in the **Forms** gallery (**PrimerTextInput** section, including a compact #1–18 checklist and an autocomplete disclaimer).
+
+**Imports for views:** [`primer.slint`](primer.slint) — **`PrimerTextInput`**, **`ValidationStatus`**, **`Size`**, **`TextInputLoaderPosition`**, **`Icons`** (when using **`leading-visual`**, **`trailing-visual`**, **`has-trailing-action`**, or loading slot visuals).
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
+
 ## Pagination
 
 Table footer pagination aligned with Primer **DataTable** toolbar **`Pagination`**. Upstream: [`DataTable/Pagination.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/DataTable/Pagination.tsx) and [`Pagination/model.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Pagination/model.tsx).

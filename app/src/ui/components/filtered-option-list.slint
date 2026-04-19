@@ -2,6 +2,7 @@
 // Not named "SelectPanel" to avoid confusion with Primer React’s [SelectPanel](https://primer.style/product/components/select-panel/).
 
 import { ActionListRow } from "../../../../packages/primer-slint/ActionList/action-list-row.slint";
+import { PrimerTextInput } from "../../../../packages/primer-slint/primer.slint";
 import { Spinner } from "../../../../packages/primer-slint/Progress/spinner.slint";
 import { SelectOption } from "../../../../packages/primer-slint/Select/select.slint";
 import { LayoutTokens, PrimerColors, Size } from "../../../../packages/primer-slint/tokens.slint";
@@ -33,28 +34,14 @@ export component FilteredOptionList {
         spacing: 8px;
         width: 100%;
 
-        Rectangle {
+        PrimerTextInput {
             width: 100%;
-            height: 40px;
-            background: PrimerColors.bgColor-neutral-muted;
-            border-radius: LayoutTokens.borderRadius-medium;
-            border-width: 1px;
-            border-color: PrimerColors.borderColor-muted;
-            clip: true;
-
-            TextInput {
-                x: 10px;
-                y: 0;
-                width: parent.width - 20px;
-                height: parent.height;
-                read-only: root.disabled;
-                text: root.filter-text;
-                font-size: LayoutTokens.text-body-size-medium;
-                color: PrimerColors.fgColor-default;
-                edited => {
-                    root.filter-text = self.text;
-                    root.filter-changed(self.text);
-                }
+            block: true;
+            placeholder: root.filter-placeholder;
+            text <=> root.filter-text;
+            disabled: root.disabled;
+            edited(t) => {
+                root.filter-changed(t);
             }
         }
 
