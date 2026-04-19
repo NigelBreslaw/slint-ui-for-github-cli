@@ -1,7 +1,3 @@
-// Primer-style single-line text field. Upstream: https://primer.style/product/components/text-input/
-// PR1: shell; PR2: TextInputTokens + states; PR3: leading/trailing visuals, monospace, contrast.
-// Root is a VerticalLayout so label / field / caption / validation stack in document order (no nested vl height bugs).
-
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import { Icons } from "../assets/icons.slint";
 import { ValidationStatus } from "../Select/select.slint";
@@ -13,7 +9,7 @@ import {
     TextInputTokens,
 } from "../tokens.slint";
 
-export component PrimerTextInput inherits VerticalLayout {
+export component PrimerTextInput {
     in property <string> label-text: "";
     in-out property <string> text: "";
     in property <string> placeholder: "";
@@ -24,9 +20,7 @@ export component PrimerTextInput inherits VerticalLayout {
     in property <bool> block: false;
     in property <Size> size: medium;
     in property <bool> required: false;
-    /// Higher-contrast field fill (`data-contrast` / `--bgColor-inset`).
     in property <bool> contrast: false;
-    /// Code-style typing (matches DataTable / gallery `Bitstream Vera Sans Mono`).
     in property <bool> monospace: false;
     in property <bool> has-leading-visual: false;
     in property <image> leading-visual;
@@ -63,199 +57,202 @@ export component PrimerTextInput inherits VerticalLayout {
     private property <string> field-font-family:
         monospace ? "Bitstream Vera Sans Mono" : "Mona Sans";
 
-    spacing: 6px;
+    height: column.preferred-height;
     vertical-stretch: 0;
     horizontal-stretch: block ? 1 : 0;
 
-    if label-text != "": HorizontalLayout {
-        spacing: 4px;
-        alignment: start;
-        vertical-stretch: 0;
+    column := VerticalLayout {
+        spacing: 6px;
+        width: block ? root.width : self.preferred-width;
 
-        Text {
-            text: label-text;
-            font-size: LayoutTokens.text-body-size-medium;
-            font-weight: 600;
-            color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
-            wrap: word-wrap;
-        }
+        if label-text != "": HorizontalLayout {
+            spacing: 4px;
+            alignment: start;
+            vertical-stretch: 0;
 
-        if required: Text {
-            text: "*";
-            color: PrimerColors.fgColor-danger;
-            font-size: LayoutTokens.text-body-size-medium;
-            vertical-alignment: top;
-        }
-    }
+            Text {
+                text: label-text;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: 600;
+                color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+                wrap: word-wrap;
+            }
 
-    Rectangle {
-        vertical-stretch: 0;
-        height: field-height;
-
-        MultiDropShadow {
-            visible: !root.disabled;
-            width: parent.width;
-            height: parent.height;
-            border-radius: LayoutTokens.borderRadius-medium;
-            shadows: [
-                {
-                    color: PrimerColors.shadow-controlTrigger-back,
-                    offset-x: 0px,
-                    offset-y: 1px,
-                    blur: 2px,
-                },
-                {
-                    color: PrimerColors.shadow-controlTrigger-front,
-                    offset-x: 0px,
-                    offset-y: 1px,
-                    blur: 1px,
-                },
-            ];
-        }
-
-        ta := TouchArea {
-            enabled: !root.disabled;
-            width: parent.width;
-            height: parent.height;
-
-            field-chrome := Rectangle {
-                width: parent.width;
-                height: parent.height;
-                background: root.chrome-bg-rest;
-                border-radius: LayoutTokens.borderRadius-medium;
-                border-width: 1px;
-                border-color: TextInputTokens.borderColor-rest;
-                clip: true;
-
-                HorizontalLayout {
-                    padding-left: pad-row-left;
-                    padding-right: pad-row-right;
-                    spacing: 8px;
-                    width: 100%;
-                    height: 100%;
-                    alignment: center;
-
-                    if has-leading-visual: Image {
-                        width: visual-icon-size;
-                        height: visual-icon-size;
-                        vertical-alignment: center;
-                        source: leading-visual;
-                        colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
-                    }
-
-                    Rectangle {
-                        horizontal-stretch: 1;
-                        height: 100%;
-
-                        if root.text == "" && root.placeholder != "": Text {
-                            x: 0px;
-                            y: (parent.height - self.height) / 2;
-                            width: parent.width;
-                            text: root.placeholder;
-                            font-size: field-font-size;
-                            font-family: field-font-family;
-                            color: PrimerColors.fgColor-muted;
-                            overflow: elide;
-                        }
-
-                        inp := TextInput {
-                            x: 0px;
-                            y: 0px;
-                            width: parent.width;
-                            height: parent.height;
-                            vertical-alignment: center;
-                            text <=> root.text;
-                            read-only: root.disabled;
-                            font-size: field-font-size;
-                            font-family: field-font-family;
-                            color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
-                            edited => {
-                                root.edited(self.text);
-                            }
-                            changed has-focus => {
-                                root.input-has-focus = self.has-focus;
-                            }
-                        }
-                    }
-
-                    if has-trailing-visual: Image {
-                        width: visual-icon-size;
-                        height: visual-icon-size;
-                        vertical-alignment: center;
-                        source: trailing-visual;
-                        colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
-                    }
-                }
-
-                states [
-                    disabled when root.disabled: {
-                        field-chrome.background: TextInputTokens.bg-disabled;
-                        field-chrome.border-color: TextInputTokens.border-disabled;
-                        field-chrome.border-width: 1px;
-                    }
-                    focused-error when !root.disabled && root.input-has-focus && root.validation-status == ValidationStatus.error: {
-                        field-chrome.background: root.chrome-bg-rest;
-                        field-chrome.border-color: TextInputTokens.borderColor-error;
-                        field-chrome.border-width: 2px;
-                    }
-                    focused-success when !root.disabled && root.input-has-focus && root.validation-status == ValidationStatus.success: {
-                        field-chrome.background: root.chrome-bg-rest;
-                        field-chrome.border-color: TextInputTokens.borderColor-success;
-                        field-chrome.border-width: 2px;
-                    }
-                    focused when !root.disabled && root.input-has-focus && root.validation-status == ValidationStatus.none: {
-                        field-chrome.background: root.chrome-bg-rest;
-                        field-chrome.border-color: TextInputTokens.borderColor-focus;
-                        field-chrome.border-width: 2px;
-                    }
-                    error when !root.disabled && !root.input-has-focus && root.validation-status == ValidationStatus.error: {
-                        field-chrome.background: root.chrome-bg-rest;
-                        field-chrome.border-color: TextInputTokens.borderColor-error;
-                        field-chrome.border-width: 1px;
-                    }
-                    success when !root.disabled && !root.input-has-focus && root.validation-status == ValidationStatus.success: {
-                        field-chrome.background: root.chrome-bg-rest;
-                        field-chrome.border-color: TextInputTokens.borderColor-success;
-                        field-chrome.border-width: 1px;
-                    }
-                    hover-none when !root.disabled && parent.has-hover && !root.input-has-focus && root.validation-status == ValidationStatus.none: {
-                        field-chrome.background: TextInputTokens.bg-hover;
-                        field-chrome.border-color: TextInputTokens.borderColor-rest;
-                        field-chrome.border-width: 1px;
-                    }
-                ]
+            if required: Text {
+                text: "*";
+                color: PrimerColors.fgColor-danger;
+                font-size: LayoutTokens.text-body-size-medium;
+                vertical-alignment: top;
             }
         }
-    }
 
-    if caption != "": Text {
-        vertical-stretch: 0;
-        horizontal-stretch: 1;
-        text: caption;
-        font-size: LayoutTokens.text-body-size-small;
-        color: PrimerColors.fgColor-muted;
-        wrap: word-wrap;
-    }
+        VerticalLayout {
+            spacing: 6px;
+            width: 100%;
+            alignment: start;
 
-    if validation-message != "" && validation-status != ValidationStatus.none: HorizontalLayout {
-        vertical-stretch: 0;
-        horizontal-stretch: 1;
-        spacing: 6px;
+            field-shell := Rectangle {
+                vertical-stretch: 0;
+                height: field-height;
 
-        Image {
-            width: LayoutTokens.iconButton-icon-size-medium;
-            height: LayoutTokens.iconButton-icon-size-medium;
-            vertical-alignment: top;
-            source: validation-status == ValidationStatus.error ? Icons.alert : Icons.check_circle;
-            colorize: validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : PrimerColors.fgColor-success;
+                MultiDropShadow {
+                    visible: !root.disabled;
+                    border-radius: LayoutTokens.borderRadius-medium;
+                    shadows: [
+                        {
+                            color: PrimerColors.shadow-controlTrigger-back,
+                            offset-x: 0px,
+                            offset-y: 1px,
+                            blur: 2px,
+                        },
+                        {
+                            color: PrimerColors.shadow-controlTrigger-front,
+                            offset-x: 0px,
+                            offset-y: 1px,
+                            blur: 1px,
+                        },
+                    ];
+                }
+
+                ta := TouchArea {
+                    enabled: !root.disabled;
+
+                    field-chrome := Rectangle {
+                        background: root.chrome-bg-rest;
+                        border-radius: LayoutTokens.borderRadius-medium;
+                        border-width: 1px;
+                        border-color: TextInputTokens.borderColor-rest;
+                        clip: true;
+
+                        HorizontalLayout {
+                            padding-left: pad-row-left;
+                            padding-right: pad-row-right;
+                            spacing: 8px;
+                            width: 100%;
+                            height: 100%;
+                            alignment: center;
+
+                            if has-leading-visual: Image {
+                                width: visual-icon-size;
+                                height: visual-icon-size;
+                                vertical-alignment: center;
+                                source: leading-visual;
+                                colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+                            }
+
+                            Rectangle {
+                                horizontal-stretch: 1;
+                                height: 100%;
+
+                                if root.text == "" && root.placeholder != "": Text {
+                                    x: 0px;
+                                    y: (parent.height - self.height) / 2;
+                                    width: parent.width;
+                                    text: root.placeholder;
+                                    font-size: field-font-size;
+                                    font-family: field-font-family;
+                                    color: PrimerColors.fgColor-muted;
+                                    overflow: elide;
+                                }
+
+                                inp := TextInput {
+                                    x: 0px;
+                                    y: 0px;
+                                    width: parent.width;
+                                    height: parent.height;
+                                    vertical-alignment: center;
+                                    text <=> root.text;
+                                    read-only: root.disabled;
+                                    font-size: field-font-size;
+                                    font-family: field-font-family;
+                                    color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+                                    edited => {
+                                        root.edited(self.text);
+                                    }
+                                    changed has-focus => {
+                                        root.input-has-focus = self.has-focus;
+                                    }
+                                }
+                            }
+
+                            if has-trailing-visual: Image {
+                                width: visual-icon-size;
+                                height: visual-icon-size;
+                                vertical-alignment: center;
+                                source: trailing-visual;
+                                colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+                            }
+                        }
+
+                        states [
+                            disabled when root.disabled: {
+                                field-chrome.background: TextInputTokens.bg-disabled;
+                                field-chrome.border-color: TextInputTokens.border-disabled;
+                                field-chrome.border-width: 1px;
+                            }
+                            focused-error when !root.disabled && root.input-has-focus && root.validation-status == ValidationStatus.error: {
+                                field-chrome.background: root.chrome-bg-rest;
+                                field-chrome.border-color: TextInputTokens.borderColor-error;
+                                field-chrome.border-width: 2px;
+                            }
+                            focused-success when !root.disabled && root.input-has-focus && root.validation-status == ValidationStatus.success: {
+                                field-chrome.background: root.chrome-bg-rest;
+                                field-chrome.border-color: TextInputTokens.borderColor-success;
+                                field-chrome.border-width: 2px;
+                            }
+                            focused when !root.disabled && root.input-has-focus && root.validation-status == ValidationStatus.none: {
+                                field-chrome.background: root.chrome-bg-rest;
+                                field-chrome.border-color: TextInputTokens.borderColor-focus;
+                                field-chrome.border-width: 2px;
+                            }
+                            error when !root.disabled && !root.input-has-focus && root.validation-status == ValidationStatus.error: {
+                                field-chrome.background: root.chrome-bg-rest;
+                                field-chrome.border-color: TextInputTokens.borderColor-error;
+                                field-chrome.border-width: 1px;
+                            }
+                            success when !root.disabled && !root.input-has-focus && root.validation-status == ValidationStatus.success: {
+                                field-chrome.background: root.chrome-bg-rest;
+                                field-chrome.border-color: TextInputTokens.borderColor-success;
+                                field-chrome.border-width: 1px;
+                            }
+                            hover-none when !root.disabled && parent.has-hover && !root.input-has-focus && root.validation-status == ValidationStatus.none: {
+                                field-chrome.background: TextInputTokens.bg-hover;
+                                field-chrome.border-color: TextInputTokens.borderColor-rest;
+                                field-chrome.border-width: 1px;
+                            }
+                        ]
+                    }
+                }
+            }
         }
 
-        Text {
-            horizontal-stretch: 1;
-            text: validation-message;
-            font-size: LayoutTokens.text-body-size-medium;
-            color: validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : PrimerColors.fgColor-success;
+        if caption != "": Text {
+            text: caption;
+            font-size: LayoutTokens.text-body-size-small;
+            color: PrimerColors.fgColor-muted;
             wrap: word-wrap;
+        }
+
+        if validation-message != "" && validation-status != ValidationStatus.none: HorizontalLayout {
+            vertical-stretch: 0;
+            horizontal-stretch: 1;
+            spacing: 6px;
+
+            Image {
+                y: (parent.height - self.height) / 2;
+                width: LayoutTokens.iconButton-icon-size-medium;
+                height: LayoutTokens.iconButton-icon-size-medium;
+                source: validation-status == ValidationStatus.error ? Icons.alert : Icons.check_circle;
+                colorize: validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : PrimerColors.fgColor-success;
+            }
+
+            Text {
+                y: (parent.height - self.height) / 2;
+                text: validation-message;
+                font-size: LayoutTokens.text-body-size-medium;
+                color: validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : PrimerColors.fgColor-success;
+                width: self.preferred-width;
+            }
         }
     }
 }
