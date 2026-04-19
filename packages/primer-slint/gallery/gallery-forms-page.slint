@@ -1,7 +1,7 @@
 import {
-    AnchoredOverlay,
-    AnchoredOverlayAlign,
-    AnchoredOverlaySide,
+    DialogBase,
+    DialogBaseAlign,
+    DialogBaseSide,
     Button,
     ButtonAlignContent,
     Checkbox,
@@ -73,7 +73,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "AnchoredOverlay: vertical-side auto (flip), align start, panel-width 280px (narrower than the button); window-inner-width clamps horizontally. Escape closes. See gallery/anchored-popupwindow.md.";
+            text: "DialogBase: vertical-side auto (flip), align start, panel-width 280px (narrower than the button); window-inner-width clamps horizontally. Escape closes. See gallery/anchored-popupwindow.md.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -87,15 +87,15 @@ export component GalleryFormsPage inherits VerticalLayout {
             has-trailing-icon: true;
             trailing-icon: Icons.triangle_down;
             clicked => {
-                anchored-select-panel.open = true;
+                dialog-base-select-panel.open = true;
             }
         }
 
-        anchored-select-panel := AnchoredOverlay {
+        dialog-base-select-panel := DialogBase {
             window-inner-width: window-inner-width;
             window-inner-height: window-inner-height;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
+            vertical-side: DialogBaseSide.auto;
+            align: DialogBaseAlign.start;
             panel-width: 280px;
             anchor-abs-x: btn-select-panel.absolute-position.x;
             anchor-abs-y: btn-select-panel.absolute-position.y;

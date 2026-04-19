@@ -2,7 +2,7 @@
 
 Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and verification), [`component-imports.md`](component-imports.md) (which globals to use), and [`.cursor/skills/primer-port-orchestrator/SKILL.md`](../../.cursor/skills/primer-port-orchestrator/SKILL.md) (full porting procedure).
 
-**Gallery app:** `pnpm dev:gallery` from the repository root (see [`gallery/README.md`](gallery/README.md)). **Anchored dialogs / `PopupWindow`:** [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
+**Gallery app:** `pnpm dev:gallery` from the repository root (see [`gallery/README.md`](gallery/README.md)). **`DialogBase` / `PopupWindow`:** [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
 
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.
@@ -21,7 +21,7 @@ specified in detail.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
 - **CheckboxTokens** — unchecked rest/hover/pressed, checked/indeterminate accent fill + hover/active, and disabled colors; composes from **PrimerColors** and **ButtonTokens**. **`LayoutTokens.checkbox-border-radius`** matches Primer **`borderRadius-small`** (2px).
-- **OverlayTokens** — **`backdrop-scrim`** for modal-style dimmers; **`panel-background`** / **`panel-border`** / **`panel-border-width`** / **`panel-border-radius`**, **`panel-elevation-shadow`** (`shadow.floating.small` via **ShadowTokens**) for floating panels (**AnchoredOverlay** uses the panel tokens only). **No literals** — composes **PrimerColors**, **LayoutTokens**, **ShadowTokens**.
+- **OverlayTokens** — **`backdrop-scrim`** for modal-style dimmers; **`panel-background`** / **`panel-border`** / **`panel-border-width`** / **`panel-border-radius`**, **`panel-elevation-shadow`** (`shadow.floating.small` via **ShadowTokens**) for floating panels (**DialogBase** uses the panel tokens only). **No literals** — composes **PrimerColors**, **LayoutTokens**, **ShadowTokens**.
 
 Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). **Label** uses **LabelTokens** and **LayoutTokens**; variant mapping is implemented in [`Label/logic.slint`](Label/logic.slint). **LabelGroup** composes **Label** + **LayoutTokens** only (see [`LabelGroup/label-group.slint`](LabelGroup/label-group.slint)). **DataTable** composes **LayoutTokens** + **PrimerColors** (see [`DataTable/data-table.slint`](DataTable/data-table.slint)); body cells use **Label**, **Image**, and **IconButton** for **`label`** / **`iconText`** / **`action`** kinds. **`TableContainer`** composes **Button** for the title/toolbar (see [`DataTable/table-container.slint`](DataTable/table-container.slint)). Sort icons use `@image-url` assets under `app/src/assets/16px/`. **Banner** action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
 
@@ -191,7 +191,7 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 | `filter-changed`     | `callback`        | `(query)` when the user edits the filter field.                         |
 | `selected-changed`   | `callback`        | `(index)` when the user selects a row.                                  |
 
-**Imports for views:** [`primer.slint`](primer.slint) — **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`** (optional **`OverlayTokens`** for theming chrome), **`Select`**, **`SelectPanel`**, **`SelectOption`**, **`ValidationStatus`**.
+**Imports for views:** [`primer.slint`](primer.slint) — **`DialogBase`**, **`DialogBaseSide`**, **`DialogBaseAlign`** (optional **`OverlayTokens`** for theming chrome), **`Select`**, **`SelectPanel`**, **`SelectOption`**, **`ValidationStatus`**.
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group); **Project board** import dialog in github-app (**SelectPanel** for org repositories).
 

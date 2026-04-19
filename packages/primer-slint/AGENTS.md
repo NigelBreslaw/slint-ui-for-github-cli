@@ -4,7 +4,7 @@ This document stands alone in the repo. Past chats or Cursor plan files are not 
 
 **Location:** Library source lives in **`packages/primer-slint/`**. The **github-app** package imports it with **relative paths** from each `.slint` file (for example `../../../packages/primer-slint/primer.slint` from `app/src/ui/main.slint`, or `../../../../packages/primer-slint/...` from files under `app/src/ui/components/` or `app/src/bridges/slint/`).
 
-**Standalone gallery:** From the monorepo root, `pnpm dev:gallery` runs **`gallery-main.ts`**, which loads **`gallery/gallery-window.slint`** (header + sidebar; main area switches by group). **Buttons**, **Navs**, **Feedback**, **Forms**, and **Data** are implemented under **`gallery/`** (`gallery-*-page.slint`). Uses **`slint-bridge-kit`** for `GalleryState` wiring. Anchored overlay / dialog geometry with **`PopupWindow`**: [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md).
+**Standalone gallery:** From the monorepo root, `pnpm dev:gallery` runs **`gallery-main.ts`**, which loads **`gallery/gallery-window.slint`** (header + sidebar; main area switches by group). **Buttons**, **Navs**, **Feedback**, **Forms**, and **Data** are implemented under **`gallery/`** (`gallery-*-page.slint`). Uses **`slint-bridge-kit`** for `GalleryState` wiring. **`DialogBase`** / anchored geometry with **`PopupWindow`**: [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md).
 
 ## Purpose
 
@@ -41,7 +41,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **CheckboxTokens** | Unchecked/checked/indeterminate/disabled paths; composes from **`PrimerColors`** + **`ButtonTokens`**. |
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |
-| **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`AnchoredOverlay`** uses panel tokens only; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
+| **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`DialogBase`** uses panel tokens only; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
 
 **Cross-global rule:** Dependents use other globals’ **`out`** bindings only — not their **private** fields.
 

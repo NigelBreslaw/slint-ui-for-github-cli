@@ -1,6 +1,6 @@
-// Primer AnchoredOverlay-style placement (subset). Default anchored SelectPanel: outside-bottom + start.
+// Placement for anchored floating panels (Primer-style subset). Default anchored SelectPanel: outside-bottom + start.
 
-export enum AnchoredOverlaySide {
+export enum DialogBaseSide {
     /// Prefer below the anchor; flip above when below would overflow the viewport (see `window-inner-height`).
     auto,
     /// Always place below the anchor (may clip at the bottom of the window).
@@ -9,7 +9,7 @@ export enum AnchoredOverlaySide {
     outside_top,
 }
 
-export enum AnchoredOverlayAlign {
+export enum DialogBaseAlign {
     /// Align panel start edge with anchor start (LTR); use with `panel-width` for wider panels.
     start,
     center,
