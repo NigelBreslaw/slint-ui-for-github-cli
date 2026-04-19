@@ -480,7 +480,6 @@ export global ButtonTokens {
     out property <color> buttonCounter-invisible-fgColor-rest: button-invisible-fgColor-rest;
 }
 
-// Banner.module.css --banner-* per variant; values are PrimerColors functional tokens only (no literals here).
 export global BannerTokens {
     out property <color> banner-bgColor-critical: PrimerColors.bgColor-danger-muted;
     out property <color> banner-borderColor-critical: PrimerColors.borderColor-danger-muted;
@@ -503,7 +502,6 @@ export global BannerTokens {
     out property <color> banner-icon-fgColor-warning: PrimerColors.fgColor-attention;
 }
 
-// Label.module.css [data-variant] — fg + border-color (transparent background); composes from PrimerColors only.
 export global LabelTokens {
     out property <color> label-fg-default: PrimerColors.fgColor-default;
     out property <color> label-border-default: PrimerColors.borderColor-default;
@@ -536,11 +534,9 @@ export global LabelTokens {
     out property <color> label-border-sponsors: PrimerColors.bgColor-sponsors-emphasis;
 }
 
-// Checkbox.module.css — unchecked: control border/bg; checked/indeterminate: --control-checked-bgColor-rest (accent emphasis) + fgOnEmphasis mark; composes from PrimerColors and ButtonTokens.
 export global CheckboxTokens {
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
-    // Unchecked pressed overlay (matches prior control parity).
     property <color> checkbox-bgColor-active-light: rgba(208, 215, 222, 0.48);
     property <color> checkbox-bgColor-active-dark: rgba(177, 186, 196, 0.2);
 
@@ -550,7 +546,6 @@ export global CheckboxTokens {
 
     out property <color> checkbox-borderColor-rest: PrimerColors.borderColor-default;
 
-    // &:checked, &:indeterminate — background + border match (Primer uses control-checked-bgColor-rest for both).
     out property <color> checkbox-bgColor-checked: PrimerColors.bgColor-accent-emphasis;
     out property <color> checkbox-borderColor-checked: PrimerColors.bgColor-accent-emphasis;
 
@@ -581,7 +576,17 @@ export global CheckboxTokens {
     out property <color> checkbox-iconColor-disabled: ButtonTokens.control-fgColor-disabled;
 }
 
-// **`backdrop-scrim`**: modal dimmers; **`panel-*`**: **`DialogBase`** floating panel chrome.
+export global TextInputTokens {
+    out property <color> borderColor-rest: PrimerColors.borderColor-default;
+    out property <color> borderColor-focus: PrimerColors.fgColor-link;
+    out property <color> borderColor-error: PrimerColors.borderColor-danger-emphasis;
+    out property <color> borderColor-success: PrimerColors.borderColor-success-emphasis;
+    out property <color> bg-rest: PrimerColors.bgColor-default;
+    out property <color> bg-hover: PrimerColors.bgColor-canvas-subtle;
+    out property <color> bg-disabled: ButtonTokens.button-default-bgColor-disabled;
+    out property <color> border-disabled: ButtonTokens.button-default-borderColor-disabled;
+}
+
 export global OverlayTokens {
     out property <color> backdrop-scrim: PrimerColors.overlay-scrim;
     out property <color> panel-background: PrimerColors.bgColor-default;
