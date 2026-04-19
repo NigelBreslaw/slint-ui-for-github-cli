@@ -9,6 +9,7 @@ import {
     Icons,
     LayoutTokens,
     PrimerTextInput,
+    TextInputLoaderPosition,
     Select,
     SelectOption,
     Size,
@@ -51,6 +52,14 @@ export component GalleryFormsPage inherits VerticalLayout {
     private property <string> demo-p3-mono: "repo/pkg@v1";
     private property <string> demo-p3-default-fill: "";
     private property <string> demo-p3-contrast-fill: "";
+    private property <string> demo-p4-plain: "";
+    private property <string> demo-p4-lead-auto: "";
+    private property <string> demo-p4-trail-auto: "";
+    private property <string> demo-p4-both-auto: "";
+    private property <string> demo-p4-force-lead: "";
+    private property <string> demo-p4-force-trail: "";
+    private property <string> demo-p4-both-force-lead: "";
+    private property <string> demo-p4-both-force-trail: "";
 
     VerticalLayout {
         spacing: 12px;
@@ -240,6 +249,137 @@ export component GalleryFormsPage inherits VerticalLayout {
             caption: "data-contrast / bgColor-inset.";
             contrast: true;
             text <=> demo-p3-contrast-fill;
+            edited(_) => {
+            }
+        }
+
+        Text {
+            text: "PrimerTextInput — PR4 (loading / loader-position)";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "`auto`: spinner in leading slot when `has-leading-visual`; otherwise trailing slot (reserved width, no jump). Explicit `leading` / `trailing` force that column.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · no visuals · auto";
+            caption: "Spinner trailing (no icons).";
+            loading: true;
+            loader-position: TextInputLoaderPosition.auto;
+            placeholder: "Loading…";
+            text <=> demo-p4-plain;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · leading visual · auto";
+            caption: "Spinner replaces leading.";
+            loading: true;
+            loader-position: TextInputLoaderPosition.auto;
+            has-leading-visual: true;
+            leading-visual: Icons.check_circle;
+            placeholder: "Search…";
+            text <=> demo-p4-lead-auto;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · trailing visual · auto";
+            caption: "Spinner replaces trailing.";
+            loading: true;
+            loader-position: TextInputLoaderPosition.auto;
+            has-trailing-visual: true;
+            trailing-visual: Icons.info;
+            placeholder: "Amount…";
+            text <=> demo-p4-trail-auto;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · both visuals · auto";
+            caption: "Spinner replaces leading; trailing icon stays.";
+            loading: true;
+            loader-position: TextInputLoaderPosition.auto;
+            has-leading-visual: true;
+            leading-visual: Icons.check_circle;
+            has-trailing-visual: true;
+            trailing-visual: Icons.info;
+            text <=> demo-p4-both-auto;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · no visuals · loader leading";
+            caption: "Explicit leading column.";
+            loading: true;
+            loader-position: TextInputLoaderPosition.leading;
+            placeholder: "Forced leading…";
+            text <=> demo-p4-force-lead;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · no visuals · loader trailing";
+            caption: "Explicit trailing column.";
+            loading: true;
+            loader-position: TextInputLoaderPosition.trailing;
+            placeholder: "Forced trailing…";
+            text <=> demo-p4-force-trail;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · both visuals · loader leading";
+            caption: "Spinner leading; trailing icon unchanged.";
+            loading: true;
+            loader-position: TextInputLoaderPosition.leading;
+            has-leading-visual: true;
+            leading-visual: Icons.check_circle;
+            has-trailing-visual: true;
+            trailing-visual: Icons.info;
+            text <=> demo-p4-both-force-lead;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Loading · both visuals · loader trailing";
+            caption: "Leading icon unchanged; spinner trailing.";
+            loading: true;
+            loader-position: TextInputLoaderPosition.trailing;
+            has-leading-visual: true;
+            leading-visual: Icons.check_circle;
+            has-trailing-visual: true;
+            trailing-visual: Icons.info;
+            text <=> demo-p4-both-force-trail;
             edited(_) => {
             }
         }

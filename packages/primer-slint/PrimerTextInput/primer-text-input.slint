@@ -1,5 +1,7 @@
+import { Palette } from "std-widgets.slint";
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import { Icons } from "../assets/icons.slint";
+import { Spinner } from "../Progress/spinner.slint";
 import { ValidationStatus } from "../Select/select.slint";
 import {
     ButtonTokens,
@@ -8,6 +10,14 @@ import {
     Size,
     TextInputTokens,
 } from "../tokens.slint";
+
+/// Mirrors Primer React `loaderPosition`: `auto` replaces the leading slot when `has-leading-visual`,
+/// otherwise uses the trailing slot (when empty, trailing column is reserved so layout does not jump).
+export enum TextInputLoaderPosition {
+    auto,
+    leading,
+    trailing,
+}
 
 export component PrimerTextInput {
     in property <string> label-text: "";
@@ -26,10 +36,37 @@ export component PrimerTextInput {
     in property <image> leading-visual;
     in property <bool> has-trailing-visual: false;
     in property <image> trailing-visual;
+    /// When true, a [`Spinner`] occupies the resolved loader slot (`loader-position`) instead of that slot’s icon.
+    in property <bool> loading: false;
+    in property <TextInputLoaderPosition> loader-position: auto;
 
     callback edited(text: string);
 
     private property <bool> input-has-focus: false;
+
+    private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
+
+    /// Match [`Button`] spinner sizing: large control uses medium spinner; small spinner for small/medium controls.
+    private property <Size> field-spinner-component-size:
+        size == Size.large ? Size.medium : Size.small;
+
+    private property <color> spinner-track-color: is-dark ? #ffffff30 : #1f232830;
+
+    /// `auto`: leading visual slot when present; otherwise trailing (aligned with Primer React TextInput).
+    private property <bool> loading-spin-leading:
+        loading && (
+            loader-position == TextInputLoaderPosition.leading
+            || (loader-position == TextInputLoaderPosition.auto && has-leading-visual)
+        );
+
+    private property <bool> loading-spin-trailing:
+        loading && (
+            loader-position == TextInputLoaderPosition.trailing
+            || (loader-position == TextInputLoaderPosition.auto && !has-leading-visual)
+        );
+
+    private property <bool> reserve-leading-slot: has-leading-visual || loading-spin-leading;
+    private property <bool> reserve-trailing-slot: has-trailing-visual || loading-spin-trailing;
 
     private property <length> field-height:
         size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
@@ -37,20 +74,13 @@ export component PrimerTextInput {
     private property <length> field-font-size:
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
-    /// Inner padding when there are no leading/trailing visuals (TextInputWrapper — base-size-12).
-    private property <length> field-pad-inline:
-        size == Size.small ? 8px : size == Size.large ? 12px : 12px;
+    /// Same inline padding as [`Button`] `btn-padding-inline` — edges stay flush; icons/spinner sit in fixed slots after this inset.
+    private property <length> field-padding-inline:
+        size == Size.small ? LayoutTokens.control-small-paddingInline-condensed : size == Size.large ? LayoutTokens.control-large-paddingInline-spacious : LayoutTokens.control-medium-paddingInline-normal;
 
     /// Icon column — TextInputInnerVisualSlot uses 16px glyphs for medium controls.
     private property <length> visual-icon-size:
         size == Size.small ? LayoutTokens.iconButton-icon-size-small : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
-
-    /// Wrapper padding when visuals exist — base-size-8 (large: 12px).
-    private property <length> outer-pad-with-visual:
-        size == Size.large ? 12px : 8px;
-
-    private property <length> pad-row-left: has-leading-visual ? outer-pad-with-visual : field-pad-inline;
-    private property <length> pad-row-right: has-trailing-visual ? outer-pad-with-visual : field-pad-inline;
 
     private property <color> chrome-bg-rest: contrast ? TextInputTokens.bg-contrast : TextInputTokens.bg-rest;
 
@@ -124,20 +154,39 @@ export component PrimerTextInput {
                         border-color: TextInputTokens.borderColor-rest;
                         clip: true;
 
+                        // `alignment` must be `stretch` (flex): fixed slots hug the padded edges; middle takes `horizontal-stretch`.
+                        // `center` distributes free space before/after the row and pulls icons inward — unlike [`Button`] `filled-row`.
                         HorizontalLayout {
-                            padding-left: pad-row-left;
-                            padding-right: pad-row-right;
-                            spacing: 8px;
+                            padding-left: field-padding-inline;
+                            padding-right: field-padding-inline;
+                            spacing: LayoutTokens.button-content-gap;
                             width: 100%;
                             height: 100%;
-                            alignment: center;
+                            alignment: stretch;
 
-                            if has-leading-visual: Image {
-                                width: visual-icon-size;
-                                height: visual-icon-size;
-                                vertical-alignment: center;
-                                source: leading-visual;
-                                colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+                            if loading-spin-leading: VerticalLayout {
+                                horizontal-stretch: 0;
+                                height: parent.height;
+                                alignment: center;
+
+                                Spinner {
+                                    size: field-spinner-component-size;
+                                    segment-color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+                                    track-color: spinner-track-color;
+                                }
+                            }
+
+                            if !loading-spin-leading && has-leading-visual: VerticalLayout {
+                                horizontal-stretch: 0;
+                                height: parent.height;
+                                alignment: center;
+
+                                Image {
+                                    width: visual-icon-size;
+                                    height: visual-icon-size;
+                                    source: leading-visual;
+                                    colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+                                }
                             }
 
                             Rectangle {
@@ -175,12 +224,29 @@ export component PrimerTextInput {
                                 }
                             }
 
-                            if has-trailing-visual: Image {
-                                width: visual-icon-size;
-                                height: visual-icon-size;
-                                vertical-alignment: center;
-                                source: trailing-visual;
-                                colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+                            if loading-spin-trailing: VerticalLayout {
+                                horizontal-stretch: 0;
+                                height: parent.height;
+                                alignment: center;
+
+                                Spinner {
+                                    size: field-spinner-component-size;
+                                    segment-color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+                                    track-color: spinner-track-color;
+                                }
+                            }
+
+                            if !loading-spin-trailing && has-trailing-visual: VerticalLayout {
+                                horizontal-stretch: 0;
+                                height: parent.height;
+                                alignment: center;
+
+                                Image {
+                                    width: visual-icon-size;
+                                    height: visual-icon-size;
+                                    source: trailing-visual;
+                                    colorize: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+                                }
                             }
                         }
 
