@@ -37,8 +37,8 @@ export component GalleryWindow inherits Window {
         }
 
         HorizontalLayout {
-            vertical-stretch: 1;
             spacing: 0px;
+            alignment: start;
 
             GallerySidebar {
                 width: 240px;
@@ -50,6 +50,8 @@ export component GalleryWindow inherits Window {
             }
 
             Rectangle {
+                width: 100%;
+                height: 100%;
                 vertical-stretch: 1;
                 horizontal-stretch: 1;
                 background: PrimerColors.bgColor-default;
