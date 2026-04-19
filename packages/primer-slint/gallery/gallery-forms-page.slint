@@ -60,6 +60,10 @@ export component GalleryFormsPage inherits VerticalLayout {
     private property <string> demo-p4-force-trail: "";
     private property <string> demo-p4-both-force-lead: "";
     private property <string> demo-p4-both-force-trail: "";
+    private property <string> demo-p5-limit-only: "Hello";
+    private property <string> demo-p5-limit-caption: "Notes";
+    private property <string> demo-p5-exceed: "This text exceeds the twelve-character limit.";
+    private property <string> demo-p5-hidden-label: "";
 
     VerticalLayout {
         spacing: 12px;
@@ -380,6 +384,67 @@ export component GalleryFormsPage inherits VerticalLayout {
             has-trailing-visual: true;
             trailing-visual: Icons.info;
             text <=> demo-p4-both-force-trail;
+            edited(_) => {
+            }
+        }
+
+        Text {
+            text: "PrimerTextInput — PR5 (character limit / visually hidden label)";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Counter uses `string.character-count` / `character-limit`; over-limit chrome matches validation danger. `label-visually-hidden` hides the label row like CheckboxGroup.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        PrimerTextInput {
+            width: 320px;
+            block: true;
+            label-text: "WithCharacterLimit";
+            character-limit: 20;
+            placeholder: "Up to 20 characters…";
+            text <=> demo-p5-limit-only;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 320px;
+            block: true;
+            label-text: "WithCharacterLimitAndCaption";
+            caption: "Caption stacks above the counter row (same as other fields).";
+            character-limit: 24;
+            placeholder: "Type…";
+            text <=> demo-p5-limit-caption;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 320px;
+            block: true;
+            label-text: "WithCharacterLimitExceeded";
+            caption: "Border + counter turn danger when over limit; feedback uses editable `text` only (caption/placeholder are separate).";
+            character-limit: 12;
+            character-limit-exceeded-message: "Reduce length to continue.";
+            text <=> demo-p5-exceed;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 320px;
+            block: true;
+            label-text: "Given name";
+            label-visually-hidden: true;
+            caption: "VisuallyHiddenLabel: legend text is suppressed; caption remains visible for sighted users.";
+            placeholder: "Given name…";
+            text <=> demo-p5-hidden-label;
             edited(_) => {
             }
         }
