@@ -39,7 +39,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **PrimerColors** | Semantic surfaces, shared primitives — each shared **hex** appears **once**. |
 | **ButtonTokens** | `color-btn-*`, `button-*`, action-list / icon-button tints; composes from **`PrimerColors`**. |
 | **CheckboxTokens** | Unchecked/checked/indeterminate/disabled paths; composes from **`PrimerColors`** + **`ButtonTokens`**. |
-| **TextInputTokens** | **`PrimerTextInput`** field chrome (rest / hover / focus / validation / disabled borders + fills); composes **`PrimerColors`** + **`ButtonTokens`** only. |
+| **TextInputTokens** | **`PrimerTextInput`** field chrome (rest / hover / contrast inset / focus / validation / disabled borders + fills); composes **`PrimerColors`** + **`ButtonTokens`** only. |
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |
 | **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`DialogBase`** uses panel tokens only; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |

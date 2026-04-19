@@ -46,6 +46,11 @@ export component GalleryFormsPage inherits VerticalLayout {
     private property <string> demo-p1-error: "";
     private property <string> demo-p1-success: "";
     private property <string> demo-p1-required: "";
+    private property <string> demo-p3-lead: "";
+    private property <string> demo-p3-trail: "value";
+    private property <string> demo-p3-mono: "repo/pkg@v1";
+    private property <string> demo-p3-default-fill: "";
+    private property <string> demo-p3-contrast-fill: "";
 
     VerticalLayout {
         spacing: 12px;
@@ -84,7 +89,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "PR1 spike: block, sizes, disabled, caption, validation, required — further interaction polish in later PRs.";
+            text: "PR1–2: layout + tokens/states; PR3: leading/trailing visuals, monospace, contrast.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -172,6 +177,69 @@ export component GalleryFormsPage inherits VerticalLayout {
             required: true;
             placeholder: "Required field";
             text <=> demo-p1-required;
+            edited(_) => {
+            }
+        }
+
+        Text {
+            text: "PrimerTextInput — PR3 (visuals / monospace / contrast)";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Leading visual";
+            placeholder: "Search…";
+            has-leading-visual: true;
+            leading-visual: Icons.check_circle;
+            text <=> demo-p3-lead;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Trailing visual";
+            placeholder: "Enter monies";
+            has-trailing-visual: true;
+            trailing-visual: Icons.info;
+            text <=> demo-p3-trail;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Monospace";
+            monospace: true;
+            placeholder: "package/name";
+            text <=> demo-p3-mono;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Default fill";
+            caption: "canvas default (PR2 rest token).";
+            text <=> demo-p3-default-fill;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 220px;
+            block: true;
+            label-text: "Contrast fill";
+            caption: "data-contrast / bgColor-inset.";
+            contrast: true;
+            text <=> demo-p3-contrast-fill;
             edited(_) => {
             }
         }
