@@ -4,6 +4,7 @@ import {
     DialogBaseSide,
     Button,
     ButtonAlignContent,
+    ButtonVariant,
     Checkbox,
     CheckboxGroup,
     Icons,
@@ -504,7 +505,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "DialogBase: vertical-side auto (flip), align start; SelectPanel multi mode with `multi-checked-mask` bits. Escape closes the popup. See gallery/anchored-popupwindow.md.";
+            text: "DialogBase: vertical-side auto (flip), align start; SelectPanel multi mode (`multi-checked-mask`, `show-footer` + children, `focused-index` accent). Escape closes the popup. See gallery/anchored-popupwindow.md.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -537,7 +538,7 @@ export component GalleryFormsPage inherits VerticalLayout {
             vertical-side: DialogBaseSide.auto;
             align: DialogBaseAlign.start;
             panel-width: 360px;
-            panel-height: 420px;
+            panel-height: 480px;
             anchor-abs-x: btn-select-panel.absolute-position.x;
             anchor-abs-y: btn-select-panel.absolute-position.y;
             anchor-width: btn-select-panel.width;
@@ -555,10 +556,32 @@ export component GalleryFormsPage inherits VerticalLayout {
                 multi-items: demo-sp-items;
                 multi-checked-mask <=> demo-sp-mask;
                 focused-index: demo-sp-focused;
-                list-max-height: 220px;
+                list-max-height: 200px;
+                show-footer: true;
                 filter-changed(_t) => {
                 }
                 single-selected-changed(_i) => {
+                }
+
+                HorizontalLayout {
+                    spacing: LayoutTokens.button-content-gap;
+                    width: 100%;
+                    alignment: end;
+
+                    Button {
+                        label: "Cancel";
+                        clicked => {
+                            demo-select-panel-open = false;
+                        }
+                    }
+
+                    Button {
+                        label: "Apply";
+                        variant: ButtonVariant.primary;
+                        clicked => {
+                            demo-select-panel-open = false;
+                        }
+                    }
                 }
             }
         }

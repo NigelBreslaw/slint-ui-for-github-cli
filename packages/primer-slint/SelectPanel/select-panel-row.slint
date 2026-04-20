@@ -10,7 +10,7 @@ export component SelectPanelRow {
     in property <bool> show-focus-accent: false;
     in property <string> label: "";
     in property <string> description: "";
-    in property <color> swatch: #808080;
+    in property <color> swatch: PrimerColors.borderColor-muted;
     callback clicked;
 
     min-height: LayoutTokens.action-list-item-min-height;
@@ -54,11 +54,11 @@ export component SelectPanelRow {
 
                 Rectangle {
                     horizontal-stretch: 0;
-                    width: 14px;
-                    height: 14px;
-                    border-radius: 7px;
+                    width: LayoutTokens.iconButton-icon-size-small;
+                    height: LayoutTokens.iconButton-icon-size-small;
+                    border-radius: LayoutTokens.iconButton-icon-size-small / 2;
                     background: root.swatch;
-                    border-width: 1px;
+                    border-width: LayoutTokens.label-border-width;
                     border-color: PrimerColors.borderColor-muted;
                 }
 

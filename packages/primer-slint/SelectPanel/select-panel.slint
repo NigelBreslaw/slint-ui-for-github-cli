@@ -19,10 +19,15 @@ export component SelectPanel {
     in property <string> filter-placeholder: "Filter items";
     in property <bool> disabled: false;
     in property <bool> loading: false;
+    in property <string> loading-message: "Loading…";
     in property <string> empty-message: "No results";
+    /// When non-empty, shown above `empty-message` (Primer **SelectPanelMessage**-style title).
+    in property <string> empty-title: "";
     in property <length> list-max-height: 240px;
     /// Row with keyboard/list focus (multi mode accent); `-1` hides the accent.
     in property <int> focused-index: -1;
+    /// When true, shows a top border and padded slot below the list; place footer actions as **direct children** of `SelectPanel`.
+    in property <bool> show-footer: false;
 
     in property <[SelectOption]> single-items: [];
     in-out property <int> selected-index: -1;
@@ -47,13 +52,8 @@ export component SelectPanel {
         i < 0 || i > 30 ? 0 : Math.round(pow(2.0, i * 1.0))
     }
 
-    /// Parity of `b` (equivalent to `b % 2` without `%` on length types).
-    function low-bit(b: int) -> int {
-        b - (b / 2) * 2
-    }
-
     function mask-bit-set(mask: int, ix: int) -> bool {
-        ix < 0 || ix > 30 ? false : low-bit(mask / pow2(ix)) != 0
+        ix < 0 || ix > 30 ? false : mod(mask / pow2(ix), 2) != 0
     }
 
     function toggle-multi-mask-bit(mask: int, ix: int) -> int {
@@ -115,7 +115,7 @@ export component SelectPanel {
                 alignment: stretch;
 
                 if root.loading: VerticalLayout {
-                    padding: 16px;
+                    padding: LayoutTokens.stack-padding-normal;
                     spacing: 10px;
                     alignment: center;
 
@@ -128,7 +128,7 @@ export component SelectPanel {
                         }
 
                         Text {
-                            text: "Loading…";
+                            text: root.loading-message;
                             font-size: LayoutTokens.text-body-size-small;
                             color: PrimerColors.fgColor-muted;
                             wrap: word-wrap;
@@ -137,14 +137,25 @@ export component SelectPanel {
                 }
 
                 if !root.loading && root.effective-len == 0: VerticalLayout {
-                    padding: 16px;
+                    padding: 24px;
+                    spacing: 4px;
                     alignment: center;
+
+                    if root.empty-title != "": Text {
+                        horizontal-alignment: center;
+                        text: root.empty-title;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                        wrap: word-wrap;
+                    }
 
                     Text {
                         horizontal-alignment: center;
                         text: root.empty-message;
                         font-size: LayoutTokens.text-body-size-small;
                         color: PrimerColors.fgColor-muted;
+                        font-weight: root.empty-title != "" ? LayoutTokens.base-text-weight-medium : LayoutTokens.base-text-weight-semibold;
                         wrap: word-wrap;
                     }
                 }
@@ -159,18 +170,33 @@ export component SelectPanel {
                         width: parent.width;
                         spacing: 0px;
 
-                        for ix in root.effective-len: ActionListRow {
+                        for ix in root.effective-len: HorizontalLayout {
                             width: 100%;
-                            label: root.single-items[ix].label;
-                            description: "";
-                            selected: ix == root.selected-index;
-                            disabled: root.disabled || !root.single-items[ix].enabled;
-                            clicked => {
-                                if !root.single-items[ix].enabled || root.disabled {
-                                    return;
+                            spacing: ix == root.focused-index && root.focused-index >= 0 ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+                            alignment: stretch;
+
+                            if ix == root.focused-index && root.focused-index >= 0: Rectangle {
+                                horizontal-stretch: 0;
+                                y: (parent.height - self.height) / 2;
+                                width: LayoutTokens.nav-list-sidebar-indicator-width;
+                                height: LayoutTokens.nav-list-sidebar-indicator-height;
+                                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                                background: PrimerColors.bgColor-accent-emphasis;
+                            }
+
+                            ActionListRow {
+                                horizontal-stretch: 1;
+                                label: root.single-items[ix].label;
+                                description: "";
+                                selected: ix == root.selected-index;
+                                disabled: root.disabled || !root.single-items[ix].enabled;
+                                clicked => {
+                                    if !root.single-items[ix].enabled || root.disabled {
+                                        return;
+                                    }
+                                    root.selected-index = ix;
+                                    root.single-selected-changed(ix);
                                 }
-                                root.selected-index = ix;
-                                root.single-selected-changed(ix);
                             }
                         }
                     }
@@ -203,6 +229,28 @@ export component SelectPanel {
                         }
                     }
                 }
+            }
+        }
+
+        // Primer SelectPanel `.Footer` (`show-footer` hides chrome; `@children` cannot live inside `if`).
+        VerticalLayout {
+            width: 100%;
+            spacing: 0px;
+            visible: root.show-footer;
+
+            Rectangle {
+                width: 100%;
+                height: LayoutTokens.nav-list-divider-height;
+                background: PrimerColors.borderColor-default;
+            }
+
+            VerticalLayout {
+                width: 100%;
+                padding: LayoutTokens.banner-padding-default;
+                spacing: LayoutTokens.button-content-gap;
+                alignment: start;
+
+                @children
             }
         }
     }

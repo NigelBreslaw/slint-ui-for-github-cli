@@ -175,13 +175,13 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 **Select** ([`Select/select.slint`](Select/select.slint)) is the trigger + **ContextMenu** picker pattern using **`SelectOption`** (`value`, `label`, `enabled`).
 
-**SelectPanel** ([`SelectPanel/select-panel.slint`](SelectPanel/select-panel.slint)) matches Primer’s product [**SelectPanel**](https://primer.style/product/components/select-panel/) as panel **body** content: title, subtitle, filter (**`PrimerTextInput`** + **`Icons.search`**), divider, scrollable list. **`SelectPanelMode.single`** uses **`SelectOption`** + **`ActionListRow`**; **`SelectPanelMode.multi`** uses **`SelectPanelItem`** (label, description, swatch, `enabled`) + **`SelectPanelRow`** (non-interactive **`Checkbox`**, optional focus accent) and an integer **`multi-checked-mask`** (bit `ix` = row checked, up to row 30). Parent-filtered **`items`** / **`item-count`** mirror **Select**’s **`option-count`**. Compose with **`DialogBase`** for anchored overlays (see [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md)).
+**SelectPanel** ([`SelectPanel/select-panel.slint`](SelectPanel/select-panel.slint)) matches Primer’s product [**SelectPanel**](https://primer.style/product/components/select-panel/) as panel **body** content: title, subtitle, filter (**`PrimerTextInput`** + **`Icons.search`**), divider, scrollable list, optional **footer** (`show-footer` + **`@children`** below the list, Primer **`.Footer`** top border + padding). **`loading-message`**, empty **`empty-title`** + **`empty-message`**, and **`focused-index`** (accent in **single** and **multi** rows) mirror upstream states. **`SelectPanelMode.single`** uses **`SelectOption`** + **`ActionListRow`**; **`SelectPanelMode.multi`** uses **`SelectPanelItem`** + **`SelectPanelRow`** and **`multi-checked-mask`** (bit `ix` checked, rows `0..30`). Parent-filtered **`item-count`** matches **Select**’s **`option-count`**. Compose with **`DialogBase`** (see [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md)).
 
 The **project board** import dialog still uses app-local **`FilteredOptionList`** until a follow-up migrates it to **`SelectPanel`** (`single` mode).
 
 **Imports for views:** [`primer.slint`](primer.slint) — **`DialogBase`**, **`DialogBaseSide`**, **`DialogBaseAlign`**, **`SelectPanel`**, **`SelectPanelMode`**, **`SelectPanelItem`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`** (optional **`OverlayTokens`** for dialog chrome).
 
-Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group, DialogBase + SelectPanel multi demo); **Project board** import dialog (**FilteredOptionList** for now).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group, DialogBase + SelectPanel multi demo with footer); **Project board** import dialog (**FilteredOptionList** for now).
 
 ## PrimerTextInput
 
