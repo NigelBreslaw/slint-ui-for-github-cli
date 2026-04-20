@@ -116,6 +116,9 @@ export global LayoutTokens {
     /// ActionList leading **Avatar** (20px — compact row; large rows use **`action-list-avatar-diameter-large`**).
     out property <length> action-list-avatar-diameter: 20px;
     out property <length> action-list-avatar-diameter-large: 24px;
+    // ActionList.module.css `.Divider` — margin-block-start: calc(var(--base-size-8) - var(--borderWidth-thin)); margin-block-end: var(--base-size-8). [`button-content-gap`] is `--base-size-8`; [`table-border-width`] is `--borderWidth-thin`.
+    out property <length> action-list-item-divider-margin-block-start: button-content-gap - table-border-width;
+    out property <length> action-list-item-divider-margin-block-end: button-content-gap;
 
     /// Full-width hairline between NavList groups (Primer `NavList.Divider`).
     out property <length> nav-list-divider-height: 1px;

@@ -135,13 +135,13 @@ export component ActionList {
 
             if line.kind == ActionListLineKind.divider: VerticalLayout {
                 width: 100%;
-                padding-top: 4px;
-                padding-bottom: 4px;
+                padding-top: LayoutTokens.action-list-item-divider-margin-block-start;
+                padding-bottom: LayoutTokens.action-list-item-divider-margin-block-end;
                 alignment: start;
 
                 Rectangle {
                     width: 100%;
-                    height: 1px;
+                    height: LayoutTokens.table-border-width;
                     background: ActionListTokens.item-divider-borderColor;
                 }
             }

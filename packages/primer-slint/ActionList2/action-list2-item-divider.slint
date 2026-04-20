@@ -1,7 +1,8 @@
 // Primer ActionList **item** divider — hairline between rows (not section divider).
-// Uses **`ActionListTokens.item-divider-borderColor`** (see audit in [`tokens.slint`](../tokens.slint)).
+// Spacing from [`ActionList.module.css`](https://github.com/primer/react/blob/main/packages/react/src/ActionList/ActionList.module.css) `.Divider` (margin-block via [`LayoutTokens`] `action-list-item-divider-margin-block-*`).
+// Line: [`ActionListTokens.item-divider-borderColor`](../tokens.slint) (product list hairline; module uses `--borderColor-muted` for standalone `Divider` — list lines stay on audit).
 
-import { ActionListTokens } from "../tokens.slint";
+import { ActionListTokens, LayoutTokens } from "../tokens.slint";
 
 export component ActionList2ItemDivider {
     min-width: 0px;
@@ -9,13 +10,13 @@ export component ActionList2ItemDivider {
 
     VerticalLayout {
         width: 100%;
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding-top: LayoutTokens.action-list-item-divider-margin-block-start;
+        padding-bottom: LayoutTokens.action-list-item-divider-margin-block-end;
         alignment: start;
 
         Rectangle {
             width: 100%;
-            height: 1px;
+            height: LayoutTokens.table-border-width;
             background: ActionListTokens.item-divider-borderColor;
         }
     }
