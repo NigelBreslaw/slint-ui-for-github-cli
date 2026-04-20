@@ -1,16 +1,22 @@
 // Shared ActionList row chrome — upstream: Primer ActionList default item (ButtonTokens action-list hover/active/selected).
-// PR3: danger / inactive / loading, block vs inline description, large density. Interaction via `states`
-// (see .cursor/skills/primer-slint-interaction-states/SKILL.md).
+// PR3: danger / inactive / loading, block vs inline description, large density. PR4: listbox chrome, link label,
+// leading Avatar, trailing IconButton (outside row hit-target). Multi-select uses a 16px lead cell styled like
+// upstream **ActionList.module.css** `.MultiSelectCheckbox` (not the **Checkbox** component).
+// Interaction via `states` (see .cursor/skills/primer-slint-interaction-states/SKILL.md).
 
+import { Avatar } from "../Avatar/avatar.slint";
+import { IconButton, IconButtonVariant } from "../Buttons/buttons.slint";
 import { Icons } from "../assets/icons.slint";
 import { Spinner } from "../Progress/spinner.slint";
 import {
     ActionListDescriptionLayout,
+    ActionListListboxMode,
     ActionListRowVariant,
 } from "./types.slint";
 import {
     ActionListTokens,
     ButtonTokens,
+    CheckboxTokens,
     LayoutTokens,
     PrimerColors,
     Size,
@@ -32,17 +38,50 @@ export component ActionListRow {
     in property <bool> large: false;
     /// Primer sidebar NavList selection: muted surface + semibold label; NavList draws the blue accent bar beside the row.
     in property <bool> sidebar-selection-style: false;
+    /// Listbox: multi-select lead affordance (upstream `.MultiSelectCheckbox`, not **Checkbox**); accent bar when **single** and focused (unless parent draws it).
+    in property <ActionListListboxMode> listbox-mode: ActionListListboxMode.none;
+    in property <bool> listbox-focused: false;
+    in property <bool> checked: false;
+    /// When **single** listbox and focused, draws the left accent bar inside this row (set false when **ActionList** or **SelectPanel** draws it outside).
+    in property <bool> show-listbox-focus-bar: false;
+    /// Primary label uses link color (default variant only).
+    in property <bool> label-link-style: false;
+    in property <bool> has-leading-avatar: false;
+    in property <image> avatar-source: Icons.dot_fill;
+    in property <bool> has-trailing-action: false;
+    in property <image> trailing-action-icon: Icons.dot_fill;
 
     callback clicked;
+    callback trailing-action-clicked;
 
     private property <length> cell-min-height:
         root.large ? LayoutTokens.action-list-item-min-height-large : LayoutTokens.action-list-item-min-height;
     private property <length> cell-padding-block:
         root.large ? LayoutTokens.action-list-item-padding-block-large : LayoutTokens.action-list-item-padding-block;
+    private property <length> avatar-diameter:
+        root.large ? LayoutTokens.action-list-avatar-diameter-large : LayoutTokens.action-list-avatar-diameter;
     private property <bool> is-interactive:
         !root.disabled && root.row-variant != ActionListRowVariant.inactive && root.row-variant != ActionListRowVariant.loading;
     private property <bool> show-inline-desc:
         root.description != "" && root.description-layout == ActionListDescriptionLayout.inline;
+    private property <bool> has-listbox-lead:
+        root.listbox-mode == ActionListListboxMode.multi
+        || (root.show-listbox-focus-bar && root.listbox-mode == ActionListListboxMode.single && root.listbox-focused);
+    private property <color> primary-label-color:
+        root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-rest
+        : root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-label-fgColor
+        : root.row-variant == ActionListRowVariant.loading ? ActionListTokens.item-loading-label-fgColor
+        : root.label-link-style && root.row-variant == ActionListRowVariant.default ? ActionListTokens.item-link-fgColor-rest
+        : PrimerColors.fgColor-default;
+    /// Primer **ActionList.Selection** multi column — same token family as upstream `.MultiSelectCheckbox` (not **`Checkbox`**).
+    private property <color> multi-select-lead-bg:
+        root.disabled
+        ? (root.checked ? CheckboxTokens.checkbox-bgColor-checked-disabled : CheckboxTokens.checkbox-bgColor-rest)
+        : (root.checked ? CheckboxTokens.checkbox-bgColor-checked : CheckboxTokens.checkbox-bgColor-rest);
+    private property <color> multi-select-lead-border:
+        root.disabled
+        ? (root.checked ? CheckboxTokens.checkbox-borderColor-checked-disabled : CheckboxTokens.checkbox-borderColor-rest)
+        : (root.checked ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
 
     min-height: root.cell-min-height;
     width: 100%;
@@ -50,217 +89,285 @@ export component ActionListRow {
     private property <color> leading-icon-tint:
         root.disabled ? ButtonTokens.control-fgColor-disabled : root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-rest : root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-label-fgColor : root.row-variant == ActionListRowVariant.loading ? ActionListTokens.item-loading-label-fgColor : root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
 
-    ta := TouchArea {
+    HorizontalLayout {
         width: 100%;
         min-height: root.cell-min-height;
-        enabled: root.is-interactive;
-        clicked => {
-            root.clicked();
-        }
+        spacing: LayoutTokens.nav-list-sidebar-indicator-gap;
+        alignment: stretch;
 
-        row-bg := Rectangle {
-            border-radius: LayoutTokens.borderRadius-medium;
-            background: #00000000;
+        if root.has-listbox-lead: HorizontalLayout {
+            horizontal-stretch: 0;
+            spacing: LayoutTokens.nav-list-sidebar-indicator-gap;
+            alignment: center;
 
-            hl := HorizontalLayout {
-                min-height: root.cell-min-height;
-                padding-left: LayoutTokens.action-list-item-padding-inline;
-                padding-right: LayoutTokens.action-list-item-padding-block;
-                padding-top: root.cell-padding-block;
-                padding-bottom: root.cell-padding-block;
-                spacing: LayoutTokens.button-content-gap;
-                alignment: start;
-
-                if root.row-variant == ActionListRowVariant.loading: Spinner {
-                    horizontal-stretch: 0;
-                    size: Size.small;
-                    segment-color: ActionListTokens.item-loading-label-fgColor;
-                }
-
-                if root.row-variant != ActionListRowVariant.loading && root.has-leading-visual: Image {
-                    width: LayoutTokens.iconButton-icon-size-medium;
-                    height: LayoutTokens.iconButton-icon-size-medium;
-                    vertical-alignment: top;
-                    source: root.leading-icon;
-                    colorize: leading-icon-tint;
-                }
-
-                VerticalLayout {
-                    horizontal-stretch: 1;
-                    min-width: 0px;
-                    spacing: 0px;
-
-                    if root.show-inline-desc: HorizontalLayout {
-                        spacing: 8px;
-                        alignment: center;
-                        horizontal-stretch: 1;
-                        min-width: 0px;
-
-                        if root.label != "": primary-inline := Text {
-                            horizontal-stretch: 1;
-                            min-width: 0px;
-                            text: root.label;
-                            color: root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-rest : root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-label-fgColor : root.row-variant == ActionListRowVariant.loading ? ActionListTokens.item-loading-label-fgColor : PrimerColors.fgColor-default;
-                            font-size: LayoutTokens.text-body-size-medium;
-                            font-weight: root.disabled ? LayoutTokens.base-text-weight-medium : root.sidebar-selection-style ? (root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium) : LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
-                            states [
-                                disabled when root.disabled: {
-                                    primary-inline.color: root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled;
-                                }
-                                inactive when root.row-variant == ActionListRowVariant.inactive: {
-                                    primary-inline.color: ActionListTokens.item-inactive-label-fgColor;
-                                }
-                                loading when root.row-variant == ActionListRowVariant.loading: {
-                                    primary-inline.color: ActionListTokens.item-loading-label-fgColor;
-                                }
-                            ]
-                        }
-
-                        if root.description != "": desc-inline := Text {
-                            horizontal-stretch: 0;
-                            text: root.description;
-                            color: root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-description-fgColor : PrimerColors.fgColor-muted;
-                            font-size: LayoutTokens.text-body-size-small;
-                            font-weight: LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
-                            states [
-                                disabled when root.disabled: {
-                                    desc-inline.color: ButtonTokens.control-fgColor-disabled;
-                                }
-                                inactive when root.row-variant == ActionListRowVariant.inactive: {
-                                    desc-inline.color: ActionListTokens.item-inactive-description-fgColor;
-                                }
-                                loading when root.row-variant == ActionListRowVariant.loading: {
-                                    desc-inline.color: ActionListTokens.item-loading-label-fgColor;
-                                }
-                            ]
-                        }
-                    }
-
-                    if !root.show-inline-desc: VerticalLayout {
-                        horizontal-stretch: 1;
-                        min-width: 0px;
-                        spacing: 2px;
-
-                        if root.label != "": primary-label := Text {
-                            horizontal-stretch: 1;
-                            min-width: 0px;
-                            text: root.label;
-                            color: root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-rest : root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-label-fgColor : root.row-variant == ActionListRowVariant.loading ? ActionListTokens.item-loading-label-fgColor : PrimerColors.fgColor-default;
-                            font-size: LayoutTokens.text-body-size-medium;
-                            font-weight: root.disabled ? LayoutTokens.base-text-weight-medium : root.sidebar-selection-style ? (root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium) : LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
-                            states [
-                                disabled when root.disabled: {
-                                    primary-label.color: root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled;
-                                }
-                                inactive when root.row-variant == ActionListRowVariant.inactive: {
-                                    primary-label.color: ActionListTokens.item-inactive-label-fgColor;
-                                }
-                                loading when root.row-variant == ActionListRowVariant.loading: {
-                                    primary-label.color: ActionListTokens.item-loading-label-fgColor;
-                                }
-                            ]
-                        }
-
-                        if root.description != "": desc-label := Text {
-                            horizontal-stretch: 1;
-                            min-width: 0px;
-                            text: root.description;
-                            color: root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-description-fgColor : PrimerColors.fgColor-muted;
-                            font-size: LayoutTokens.text-body-size-small;
-                            font-weight: LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
-
-                            states [
-                                disabled when root.disabled: {
-                                    desc-label.color: ButtonTokens.control-fgColor-disabled;
-                                }
-                                inactive when root.row-variant == ActionListRowVariant.inactive: {
-                                    desc-label.color: ActionListTokens.item-inactive-description-fgColor;
-                                }
-                                loading when root.row-variant == ActionListRowVariant.loading: {
-                                    desc-label.color: ActionListTokens.item-loading-label-fgColor;
-                                }
-                            ]
-                        }
-                    }
-                }
-
-                trailing-t := Text {
-                    visible: root.trailing-text != "";
-                    vertical-alignment: top;
-                    text: root.trailing-text;
-                    color: root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-trailing-fgColor : PrimerColors.fgColor-muted;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-medium;
-                    wrap: word-wrap;
-                }
+            if root.show-listbox-focus-bar && root.listbox-mode == ActionListListboxMode.single && root.listbox-focused: Rectangle {
+                horizontal-stretch: 0;
+                y: (parent.height - self.height) / 2;
+                width: LayoutTokens.nav-list-sidebar-indicator-width;
+                height: LayoutTokens.nav-list-sidebar-indicator-height;
+                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                background: PrimerColors.bgColor-accent-emphasis;
             }
 
-            states [
-                disabled when root.disabled: {
-                    row-bg.background: root.selected ? ButtonTokens.color-action-list-item-default-selected-bg : #00000000;
-                    trailing-t.color: ButtonTokens.control-fgColor-disabled;
+            if root.listbox-mode == ActionListListboxMode.multi: Rectangle {
+                horizontal-stretch: 0;
+                width: LayoutTokens.iconButton-icon-size-medium;
+                height: self.width;
+                border-radius: LayoutTokens.checkbox-border-radius;
+                border-width: 1px;
+                border-color: root.multi-select-lead-border;
+                background: root.multi-select-lead-bg;
+                clip: true;
+
+                if root.checked: Image {
+                    width: 12px;
+                    height: 12px;
+                    x: (parent.width - self.width) / 2;
+                    y: (parent.height - self.height) / 2;
+                    source: Icons.check;
+                    colorize: root.disabled ? CheckboxTokens.checkbox-fgColor-checked-disabled : PrimerColors.fgOnEmphasis;
                 }
-                inactive when root.row-variant == ActionListRowVariant.inactive: {
-                    row-bg.background: ActionListTokens.item-inactive-bgColor-hover;
-                    trailing-t.color: ActionListTokens.item-inactive-trailing-fgColor;
+            }
+        }
+
+        ta := TouchArea {
+            horizontal-stretch: 1;
+            min-width: 0px;
+            min-height: root.cell-min-height;
+            enabled: root.is-interactive;
+            clicked => {
+                root.clicked();
+            }
+
+            row-bg := Rectangle {
+                border-radius: LayoutTokens.borderRadius-medium;
+                background: #00000000;
+
+                hl := HorizontalLayout {
+                    min-height: root.cell-min-height;
+                    padding-left: LayoutTokens.action-list-item-padding-inline;
+                    padding-right: LayoutTokens.action-list-item-padding-block;
+                    padding-top: root.cell-padding-block;
+                    padding-bottom: root.cell-padding-block;
+                    spacing: LayoutTokens.button-content-gap;
+                    alignment: start;
+
+                    if root.has-leading-avatar: Avatar {
+                        horizontal-stretch: 0;
+                        diameter: root.avatar-diameter;
+                        source: root.avatar-source;
+                    }
+
+                    if root.row-variant == ActionListRowVariant.loading: Spinner {
+                        horizontal-stretch: 0;
+                        size: Size.small;
+                        segment-color: ActionListTokens.item-loading-label-fgColor;
+                    }
+
+                    if root.row-variant != ActionListRowVariant.loading && root.has-leading-visual: Image {
+                        width: LayoutTokens.iconButton-icon-size-medium;
+                        height: LayoutTokens.iconButton-icon-size-medium;
+                        vertical-alignment: top;
+                        source: root.leading-icon;
+                        colorize: leading-icon-tint;
+                    }
+
+                    VerticalLayout {
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        spacing: 0px;
+
+                        if root.show-inline-desc: HorizontalLayout {
+                            spacing: 8px;
+                            alignment: center;
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+
+                            if root.label != "": primary-inline := Text {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: root.label;
+                                color: root.primary-label-color;
+                                font-size: LayoutTokens.text-body-size-medium;
+                                font-weight: root.disabled ? LayoutTokens.base-text-weight-medium : root.sidebar-selection-style ? (root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium) : LayoutTokens.base-text-weight-medium;
+                                wrap: word-wrap;
+                                states [
+                                    disabled when root.disabled: {
+                                        primary-inline.color: root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled;
+                                    }
+                                    inactive when root.row-variant == ActionListRowVariant.inactive: {
+                                        primary-inline.color: ActionListTokens.item-inactive-label-fgColor;
+                                    }
+                                    loading when root.row-variant == ActionListRowVariant.loading: {
+                                        primary-inline.color: ActionListTokens.item-loading-label-fgColor;
+                                    }
+                                ]
+                            }
+
+                            if root.description != "": desc-inline := Text {
+                                horizontal-stretch: 0;
+                                text: root.description;
+                                color: root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-description-fgColor : PrimerColors.fgColor-muted;
+                                font-size: LayoutTokens.text-body-size-small;
+                                font-weight: LayoutTokens.base-text-weight-medium;
+                                wrap: word-wrap;
+                                states [
+                                    disabled when root.disabled: {
+                                        desc-inline.color: ButtonTokens.control-fgColor-disabled;
+                                    }
+                                    inactive when root.row-variant == ActionListRowVariant.inactive: {
+                                        desc-inline.color: ActionListTokens.item-inactive-description-fgColor;
+                                    }
+                                    loading when root.row-variant == ActionListRowVariant.loading: {
+                                        desc-inline.color: ActionListTokens.item-loading-label-fgColor;
+                                    }
+                                ]
+                            }
+                        }
+
+                        if !root.show-inline-desc: VerticalLayout {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            spacing: 2px;
+
+                            if root.label != "": primary-label := Text {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: root.label;
+                                color: root.primary-label-color;
+                                font-size: LayoutTokens.text-body-size-medium;
+                                font-weight: root.disabled ? LayoutTokens.base-text-weight-medium : root.sidebar-selection-style ? (root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium) : LayoutTokens.base-text-weight-medium;
+                                wrap: word-wrap;
+                                states [
+                                    disabled when root.disabled: {
+                                        primary-label.color: root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled;
+                                    }
+                                    inactive when root.row-variant == ActionListRowVariant.inactive: {
+                                        primary-label.color: ActionListTokens.item-inactive-label-fgColor;
+                                    }
+                                    loading when root.row-variant == ActionListRowVariant.loading: {
+                                        primary-label.color: ActionListTokens.item-loading-label-fgColor;
+                                    }
+                                ]
+                            }
+
+                            if root.description != "": desc-label := Text {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: root.description;
+                                color: root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-description-fgColor : PrimerColors.fgColor-muted;
+                                font-size: LayoutTokens.text-body-size-small;
+                                font-weight: LayoutTokens.base-text-weight-medium;
+                                wrap: word-wrap;
+
+                                states [
+                                    disabled when root.disabled: {
+                                        desc-label.color: ButtonTokens.control-fgColor-disabled;
+                                    }
+                                    inactive when root.row-variant == ActionListRowVariant.inactive: {
+                                        desc-label.color: ActionListTokens.item-inactive-description-fgColor;
+                                    }
+                                    loading when root.row-variant == ActionListRowVariant.loading: {
+                                        desc-label.color: ActionListTokens.item-loading-label-fgColor;
+                                    }
+                                ]
+                            }
+                        }
+                    }
+
+                    trailing-t := Text {
+                        visible: root.trailing-text != "";
+                        vertical-alignment: top;
+                        text: root.trailing-text;
+                        color: root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-trailing-fgColor : PrimerColors.fgColor-muted;
+                        font-size: LayoutTokens.text-body-size-small;
+                        font-weight: LayoutTokens.base-text-weight-medium;
+                        wrap: word-wrap;
+                    }
                 }
-                loading when root.row-variant == ActionListRowVariant.loading: {
-                    row-bg.background: #00000000;
-                    trailing-t.color: ActionListTokens.item-loading-label-fgColor;
+
+                states [
+                    disabled when root.disabled: {
+                        row-bg.background: root.selected ? ButtonTokens.color-action-list-item-default-selected-bg : #00000000;
+                        trailing-t.color: ButtonTokens.control-fgColor-disabled;
+                    }
+                    inactive when root.row-variant == ActionListRowVariant.inactive: {
+                        row-bg.background: ActionListTokens.item-inactive-bgColor-hover;
+                        trailing-t.color: ActionListTokens.item-inactive-trailing-fgColor;
+                    }
+                    loading when root.row-variant == ActionListRowVariant.loading: {
+                        row-bg.background: #00000000;
+                        trailing-t.color: ActionListTokens.item-loading-label-fgColor;
+                    }
+                    danger-selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && !root.sidebar-selection-style && ta.pressed: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-active;
+                    }
+                    danger-selected-pressed-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && root.sidebar-selection-style && ta.pressed: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-active;
+                    }
+                    danger-selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && !root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-hover;
+                    }
+                    danger-selected-hover-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-hover;
+                    }
+                    danger-selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && !root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-selected;
+                    }
+                    danger-selected-rest-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-selected;
+                    }
+                    danger-unselected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.selected && ta.pressed: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-active;
+                    }
+                    danger-unselected-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.selected && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-hover;
+                    }
+                    selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && !root.sidebar-selection-style && ta.pressed: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                    }
+                    selected-pressed-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && root.sidebar-selection-style && ta.pressed: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                    }
+                    selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && !root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                    }
+                    selected-hover-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                    }
+                    selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && !root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
+                    }
+                    selected-rest-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
+                        row-bg.background: PrimerColors.bgColor-neutral-muted;
+                    }
+                    unselected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && !root.selected && ta.pressed: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                    }
+                    unselected-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && !root.selected && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                    }
+                ]
+            }
+        }
+
+        if root.has-trailing-action: TouchArea {
+            horizontal-stretch: 0;
+            enabled:
+                !root.disabled && root.row-variant != ActionListRowVariant.inactive && root.row-variant != ActionListRowVariant.loading;
+
+            VerticalLayout {
+                alignment: center;
+
+                IconButton {
+                    size: Size.small;
+                    variant: IconButtonVariant.invisible;
+                    icon-source: root.trailing-action-icon;
+                    clicked => {
+                        root.trailing-action-clicked();
+                    }
                 }
-                danger-selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && !root.sidebar-selection-style && ta.pressed: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-active;
-                }
-                danger-selected-pressed-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && root.sidebar-selection-style && ta.pressed: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-active;
-                }
-                danger-selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && !root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-hover;
-                }
-                danger-selected-hover-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-hover;
-                }
-                danger-selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && !root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-selected;
-                }
-                danger-selected-rest-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.selected && root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-selected;
-                }
-                danger-unselected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.selected && ta.pressed: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-active;
-                }
-                danger-unselected-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.selected && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-hover;
-                }
-                selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && !root.sidebar-selection-style && ta.pressed: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
-                }
-                selected-pressed-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && root.sidebar-selection-style && ta.pressed: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
-                }
-                selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && !root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
-                }
-                selected-hover-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && root.sidebar-selection-style && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
-                }
-                selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && !root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
-                }
-                selected-rest-sidebar when !root.disabled && root.row-variant == ActionListRowVariant.default && root.selected && root.sidebar-selection-style && !ta.pressed && !ta.has-hover: {
-                    row-bg.background: PrimerColors.bgColor-neutral-muted;
-                }
-                unselected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && !root.selected && ta.pressed: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
-                }
-                unselected-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && !root.selected && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
-                }
-            ]
+            }
         }
     }
 }

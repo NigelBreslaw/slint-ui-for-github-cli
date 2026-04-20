@@ -3,8 +3,10 @@ import { Palette } from "std-widgets.slint";
 export component Avatar {
 
     in-out property source <=> avatar.source;
+    /// Defaults to **34px** (profile); ActionList uses **`LayoutTokens.action-list-avatar-diameter`**.
+    in property <length> diameter: 34px;
 
-    width: 34px;
+    width: root.diameter;
     height: self.width;
 
     Rectangle {

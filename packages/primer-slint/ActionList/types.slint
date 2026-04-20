@@ -20,6 +20,13 @@ export enum ActionListSectionHeadingVariant {
     filled,
 }
 
+/// Listbox affordances on a row (Primer selection / multi-select appearance).
+export enum ActionListListboxMode {
+    none,
+    single,
+    multi,
+}
+
 /// Discriminator for each entry in [`ActionList`](action-list.slint).
 export enum ActionListLineKind {
     row,
@@ -45,4 +52,18 @@ export struct ActionListLine {
     row-variant: ActionListRowVariant,
     large: bool,
     section-heading-variant: ActionListSectionHeadingVariant,
+    /// Row-only: listbox chrome (ignored when `kind` is not **row**).
+    listbox-mode: ActionListListboxMode,
+    /// Row-only: keyboard focus for **single** listbox (blue accent when `listbox-mode` is **single**).
+    listbox-focused: bool,
+    /// Row-only: checked state for **multi** listbox (non-interactive checkbox).
+    checked: bool,
+    /// Row-only: primary label uses link foreground (default variant only).
+    label-link-style: bool,
+    /// Row-only: trailing **IconButton** (outside row hit-target; **invisible** small).
+    has-trailing-action: bool,
+    trailing-action-icon: image,
+    /// Row-only: leading **Avatar** (density via **`LayoutTokens.action-list-avatar-diameter`**).
+    has-leading-avatar: bool,
+    avatar-source: image,
 }

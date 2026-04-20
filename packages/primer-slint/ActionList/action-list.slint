@@ -1,10 +1,12 @@
 // Primer-style ActionList shell — upstream: https://primer.style/product/components/action-list/
 // PR3: row variants, block/inline description, section headings, item + section dividers, large rows.
+// PR4: listbox row chrome (`listbox-focus-bar-outside`), `trailing-action-clicked`, line fields for link / avatar / trailing IconButton / multi checkbox.
 
 import { ActionListRow } from "./action-list-row.slint";
 import {
     ActionListLine,
     ActionListLineKind,
+    ActionListListboxMode,
     ActionListRowVariant,
     ActionListSectionHeadingVariant,
 } from "./types.slint";
@@ -63,8 +65,12 @@ component ActionListSectionHeader {
 export component ActionList {
     /// Flat list: rows, item dividers, section dividers, and section headings.
     in property <[ActionListLine]> lines: [];
+    /// When true, **single**-mode listbox focus draws the blue accent **left of** each row (Primer **SelectPanel**-style); rows use `show-listbox-focus-bar: false` so the bar is not duplicated.
+    in property <bool> listbox-focus-bar-outside: false;
     /// Index into `lines` for the activated row; not fired for non-rows, `disabled`, **inactive**, or **loading** rows.
     callback item-activated(int);
+    /// Index into `lines` when a row’s trailing **IconButton** is pressed (`has-trailing-action` on that line).
+    callback trailing-action-clicked(int);
 
     min-width: 0px;
     width: 100%;
@@ -79,23 +85,51 @@ export component ActionList {
             spacing: 0px;
             alignment: start;
 
-            if line.kind == ActionListLineKind.row: ActionListRow {
+            if line.kind == ActionListLineKind.row: HorizontalLayout {
                 width: 100%;
-                label: line.label;
-                description: line.description;
-                description-layout: line.description-layout;
-                trailing-text: line.trailing-text;
-                has-leading-visual: line.has-leading-visual;
-                leading-icon: line.leading-icon;
-                row-variant: line.row-variant;
-                large: line.large;
-                selected: line.selected;
-                disabled: line.disabled;
-                clicked => {
-                    if line.disabled || line.row-variant == ActionListRowVariant.inactive || line.row-variant == ActionListRowVariant.loading {
-                        return;
+                spacing: LayoutTokens.nav-list-sidebar-indicator-gap;
+                alignment: stretch;
+
+                if root.listbox-focus-bar-outside && line.listbox-mode == ActionListListboxMode.single && line.listbox-focused: Rectangle {
+                    horizontal-stretch: 0;
+                    y: (parent.height - self.height) / 2;
+                    width: LayoutTokens.nav-list-sidebar-indicator-width;
+                    height: LayoutTokens.nav-list-sidebar-indicator-height;
+                    border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+                    background: PrimerColors.bgColor-accent-emphasis;
+                }
+
+                ActionListRow {
+                    horizontal-stretch: 1;
+                    min-width: 0px;
+                    label: line.label;
+                    description: line.description;
+                    description-layout: line.description-layout;
+                    trailing-text: line.trailing-text;
+                    has-leading-visual: line.has-leading-visual;
+                    leading-icon: line.leading-icon;
+                    row-variant: line.row-variant;
+                    large: line.large;
+                    selected: line.selected;
+                    disabled: line.disabled;
+                    listbox-mode: line.listbox-mode;
+                    listbox-focused: line.listbox-focused;
+                    checked: line.checked;
+                    show-listbox-focus-bar: line.listbox-mode == ActionListListboxMode.single && line.listbox-focused && !root.listbox-focus-bar-outside;
+                    label-link-style: line.label-link-style;
+                    has-leading-avatar: line.has-leading-avatar;
+                    avatar-source: line.avatar-source;
+                    has-trailing-action: line.has-trailing-action;
+                    trailing-action-icon: line.trailing-action-icon;
+                    clicked => {
+                        if line.disabled || line.row-variant == ActionListRowVariant.inactive || line.row-variant == ActionListRowVariant.loading {
+                            return;
+                        }
+                        root.item-activated(ix);
                     }
-                    root.item-activated(ix);
+                    trailing-action-clicked => {
+                        root.trailing-action-clicked(ix);
+                    }
                 }
             }
 
