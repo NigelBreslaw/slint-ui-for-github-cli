@@ -2,18 +2,5 @@
   "name": "primer-slint",
   "version": "0.0.1",
   "private": true,
-  "type": "module",
-  "description": "Primer design system components for Slint (github-app imports this package via relative paths from .slint files). The gallery app is run from this package.",
-  "scripts": {
-    "dev": "node gallery-main.ts",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "slint-bridge-kit": "workspace:*",
-    "slint-ui": "1.16.0-nightly.2026040720"
-  },
-  "devDependencies": {
-    "@types/node": "catalog:",
-    "typescript": "catalog:"
-  }
+  "description": "Primer design system components for Slint (github-app imports this package via relative paths from .slint files)."
 }

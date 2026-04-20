@@ -7,3 +7,4 @@ catalog:
   oxfmt: "0.42.0"
   oxlint: "1.57.0"
   typescript: "6.0.2"
+  slint-ui: "1.17.0-nightly.2026041914"

@@ -18,8 +18,8 @@ import {
     SelectPanelMode,
     Size,
     ValidationStatus,
-} from "../primer.slint";
-import { PrimerColors } from "../tokens.slint";
+} from "../../primer-slint/primer.slint";
+import { PrimerColors } from "../../primer-slint/tokens.slint";
 
 /// Select, PrimerTextInput (PR1 spike), DialogBase demo, Checkbox, CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
@@ -550,7 +550,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "DialogBase: vertical-side auto (flip), align start; SelectPanel multi mode (`multi-checked-mask`, `show-footer` + children, `focused-index` accent). Escape closes the popup. See gallery/anchored-popupwindow.md.";
+            text: "DialogBase: vertical-side auto (flip), align start; SelectPanel multi mode (`multi-checked-mask`, `show-footer` + children, `focused-index` accent). Escape closes the popup. See anchored-popupwindow.md in this folder.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;

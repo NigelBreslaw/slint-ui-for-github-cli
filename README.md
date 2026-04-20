@@ -44,7 +44,7 @@ To open a separate window that demos Primer components (Storybook-style groups; 
 pnpm dev:gallery
 ```
 
-That runs [`packages/primer-slint/gallery-main.ts`](packages/primer-slint/gallery-main.ts). See [`packages/primer-slint/gallery/README.md`](packages/primer-slint/gallery/README.md) and [`packages/primer-slint/AGENTS.md`](packages/primer-slint/AGENTS.md).
+That runs [`packages/slint-gallery/gallery-main.ts`](packages/slint-gallery/gallery-main.ts). See [`packages/slint-gallery/gallery/README.md`](packages/slint-gallery/gallery/README.md) and [`packages/primer-slint/AGENTS.md`](packages/primer-slint/AGENTS.md).
 
 **Login from a terminal:** The app starts **Login** as `gh auth login --web --git-protocol ssh --skip-ssh-key --scopes read:org,read:project,notifications` (scopes match `[REQUIRED_GH_OAUTH_SCOPES](app/src/backend/gh/required-scopes.ts)`) with inherited stdio so the browser OAuth flow runs with fewer prompts. That sets GitHub **git** protocol to **SSH** for this login; switch to HTTPS afterward with `gh config set git_protocol https -h github.com` if you prefer. Run `**pnpm start`** from a terminal session (not only from a GUI launcher that does not attach a TTY), or sign in with `gh` yourself first. Purely GUI launches without a usable stdin/stdout may need a different approach later.
 

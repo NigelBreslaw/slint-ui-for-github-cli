@@ -67,21 +67,7 @@ importers:
         specifier: 'catalog:'
         version: 6.0.2
 
-  packages/primer-slint:
-    dependencies:
-      slint-bridge-kit:
-        specifier: workspace:*
-        version: link:../slint-bridge-kit
-      slint-ui:
-        specifier: 1.16.0-nightly.2026040720
-        version: 1.16.0-nightly.2026040720(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
-    devDependencies:
-      '@types/node':
-        specifier: 'catalog:'
-        version: 25.5.0
-      typescript:
-        specifier: 'catalog:'
-        version: 6.0.2
+  packages/primer-slint: {}
 
   packages/slint-bridge-kit:
     devDependencies:
@@ -94,6 +80,22 @@ importers:
       oxlint:
         specifier: 'catalog:'
         version: 1.57.0
+      typescript:
+        specifier: 'catalog:'
+        version: 6.0.2
+
+  packages/slint-gallery:
+    dependencies:
+      slint-bridge-kit:
+        specifier: workspace:*
+        version: link:../slint-bridge-kit
+      slint-ui:
+        specifier: 1.17.0-nightly.2026041914
+        version: 1.17.0-nightly.2026041914(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
+    devDependencies:
+      '@types/node':
+        specifier: 'catalog:'
+        version: 25.5.0
       typescript:
         specifier: 'catalog:'
         version: 6.0.2
@@ -403,16 +405,6 @@ packages:
       '@types/node': '>=18'
     peerDependenciesMeta:
       '@types/node':
-        optional: true
-
-  '@napi-rs/cli@3.6.0':
-    resolution: {integrity: sha512-aA8m4+9XxnK1+0sr4GplZP0Ze90gkzO8sMKaplOK0zXbLnzsLl6O2BQQt6rTCcTRzIN24wrrByakr/imM+CxhA==}
-    engines: {node: '>= 16'}
-    hasBin: true
-    peerDependencies:
-      '@emnapi/runtime': ^1.7.1
-    peerDependenciesMeta:
-      '@emnapi/runtime':
         optional: true
 
   '@napi-rs/cli@3.6.2':
@@ -1321,36 +1313,16 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
-  '@slint-ui/slint-ui-binary-darwin-arm64@1.16.0-nightly.2026040720':
-    resolution: {integrity: sha512-EIuxCb5ivTYw0wvdInjk4JpZr36Pg2uH0pclDmefUtnyLS3YAB1vOp0suIEZa8rdRBGrAhRrv7MQlA/Bj5Q0SA==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [darwin]
-
   '@slint-ui/slint-ui-binary-darwin-arm64@1.17.0-nightly.2026041914':
     resolution: {integrity: sha512-ObpQBTncD7ZppqO8Q8tAOlnKZvkNtWMOWK0nKRlzi5+rr/EFz9N1wzHfJr0twtKwVWwDD2FgiVEPLhkOpJzlMg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
 
-  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040720':
-    resolution: {integrity: sha512-oRbUhr67sNHfz8zmBI/Q0DUDFUnSf5m8jGnZiZXB896oL+vt4LwnJrcivT7kILgVt13wMgGk3T3NNfWK1sg+2A==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
-
   '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.17.0-nightly.2026041914':
     resolution: {integrity: sha512-JQO+sfiJdyFDfWX1eHfgRjCYT6WFOdyYm+yv7Pb48tWAKRvlluvzpYBhLuIrBgmVjhkVdT4Yvcp3NAV35MU7HQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
-    os: [linux]
-    libc: [glibc]
-
-  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.16.0-nightly.2026040720':
-    resolution: {integrity: sha512-2HxoCP4Nn2zMB8kc0tzRZF1qwYCIZCa65Uo698/vjmjC0uWZl7QVHT0zsCzpX37zO5j7++BMDG+4c+JGQ0V7XA==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
     os: [linux]
     libc: [glibc]
 
@@ -1361,22 +1333,10 @@ packages:
     os: [linux]
     libc: [glibc]
 
-  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040720':
-    resolution: {integrity: sha512-Sumnb3X/mrg2r8ILD8Yj+JOcdUw63DhLEofm48PsNqTBARpziNKjv2F3voPf6NhkHgOgTrMgu5Ku5uEZqRmiQQ==}
-    engines: {node: '>= 10'}
-    cpu: [arm64]
-    os: [win32]
-
   '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.17.0-nightly.2026041914':
     resolution: {integrity: sha512-BZjdS7KQb5un2PD+zjpnZ6OWWG2/vLK6+r3YKZIxqwmq1zrIccf2lLPYUvXVAhE8xCNoAYmN5oUtg8hBJDX6fA==}
     engines: {node: '>= 10'}
     cpu: [arm64]
-    os: [win32]
-
-  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040720':
-    resolution: {integrity: sha512-TqAyceS+VEtvlI/APWK1S0AhRywKcQzNQe+pb7bm4chW+n4qu3p+17izUjbi1qqxMn809rvFwF2Ic8NGyGF3Pg==}
-    engines: {node: '>= 10'}
-    cpu: [x64]
     os: [win32]
 
   '@slint-ui/slint-ui-binary-win32-x64-msvc@1.17.0-nightly.2026041914':
@@ -1850,10 +1810,6 @@ packages:
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
 
-  slint-ui@1.16.0-nightly.2026040720:
-    resolution: {integrity: sha512-ubKZ10oSSoxtMVP1Hjufzv1LYg/M1TqPNbOM1DhIOkOD5bg4NKxiZHUKBMdyO9nGIWb5m+nlqUmN1xXVR3LYug==}
-    engines: {node: '>= 10'}
-
   slint-ui@1.17.0-nightly.2026041914:
     resolution: {integrity: sha512-PeIFt8zQRgdBKd70qasz/A81mYbtVbJ8h8rv1Uj1SiwInilFuVnKLecc9sRWRXKpwEuCpy/K5pBhXveXlahwmw==}
     engines: {node: '>= 10'}
@@ -2211,38 +2167,6 @@ snapshots:
   '@inquirer/type@4.0.4(@types/node@25.5.0)':
     optionalDependencies:
       '@types/node': 25.5.0
-
-  '@napi-rs/cli@3.6.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)':
-    dependencies:
-      '@inquirer/prompts': 8.3.2(@types/node@25.5.0)
-      '@napi-rs/cross-toolchain': 1.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)
-      '@napi-rs/wasm-tools': 1.0.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)
-      '@octokit/rest': 22.0.1
-      clipanion: 4.0.0-rc.4(typanion@3.14.0)
-      colorette: 2.0.20
-      emnapi: 1.9.2
-      es-toolkit: 1.45.1
-      js-yaml: 4.1.1
-      obug: 2.1.1
-      semver: 7.7.4
-      typanion: 3.14.0
-    optionalDependencies:
-      '@emnapi/runtime': 1.9.2
-    transitivePeerDependencies:
-      - '@emnapi/core'
-      - '@napi-rs/cross-toolchain-arm64-target-aarch64'
-      - '@napi-rs/cross-toolchain-arm64-target-armv7'
-      - '@napi-rs/cross-toolchain-arm64-target-ppc64le'
-      - '@napi-rs/cross-toolchain-arm64-target-s390x'
-      - '@napi-rs/cross-toolchain-arm64-target-x86_64'
-      - '@napi-rs/cross-toolchain-x64-target-aarch64'
-      - '@napi-rs/cross-toolchain-x64-target-armv7'
-      - '@napi-rs/cross-toolchain-x64-target-ppc64le'
-      - '@napi-rs/cross-toolchain-x64-target-s390x'
-      - '@napi-rs/cross-toolchain-x64-target-x86_64'
-      - '@types/node'
-      - node-addon-api
-      - supports-color
 
   '@napi-rs/cli@3.6.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)':
     dependencies:
@@ -2835,31 +2759,16 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
-  '@slint-ui/slint-ui-binary-darwin-arm64@1.16.0-nightly.2026040720':
-    optional: true
-
   '@slint-ui/slint-ui-binary-darwin-arm64@1.17.0-nightly.2026041914':
-    optional: true
-
-  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040720':
     optional: true
 
   '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.17.0-nightly.2026041914':
     optional: true
 
-  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.16.0-nightly.2026040720':
-    optional: true
-
   '@slint-ui/slint-ui-binary-linux-x64-gnu@1.17.0-nightly.2026041914':
     optional: true
 
-  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040720':
-    optional: true
-
   '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.17.0-nightly.2026041914':
-    optional: true
-
-  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040720':
     optional: true
 
   '@slint-ui/slint-ui-binary-win32-x64-msvc@1.17.0-nightly.2026041914':
@@ -3419,32 +3328,6 @@ snapshots:
       decompress-response: 6.0.0
       once: 1.4.0
       simple-concat: 1.0.1
-
-  slint-ui@1.16.0-nightly.2026040720(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0):
-    dependencies:
-      '@napi-rs/cli': 3.6.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
-    optionalDependencies:
-      '@slint-ui/slint-ui-binary-darwin-arm64': 1.16.0-nightly.2026040720
-      '@slint-ui/slint-ui-binary-linux-arm64-gnu': 1.16.0-nightly.2026040720
-      '@slint-ui/slint-ui-binary-linux-x64-gnu': 1.16.0-nightly.2026040720
-      '@slint-ui/slint-ui-binary-win32-arm64-msvc': 1.16.0-nightly.2026040720
-      '@slint-ui/slint-ui-binary-win32-x64-msvc': 1.16.0-nightly.2026040720
-    transitivePeerDependencies:
-      - '@emnapi/core'
-      - '@emnapi/runtime'
-      - '@napi-rs/cross-toolchain-arm64-target-aarch64'
-      - '@napi-rs/cross-toolchain-arm64-target-armv7'
-      - '@napi-rs/cross-toolchain-arm64-target-ppc64le'
-      - '@napi-rs/cross-toolchain-arm64-target-s390x'
-      - '@napi-rs/cross-toolchain-arm64-target-x86_64'
-      - '@napi-rs/cross-toolchain-x64-target-aarch64'
-      - '@napi-rs/cross-toolchain-x64-target-armv7'
-      - '@napi-rs/cross-toolchain-x64-target-ppc64le'
-      - '@napi-rs/cross-toolchain-x64-target-s390x'
-      - '@napi-rs/cross-toolchain-x64-target-x86_64'
-      - '@types/node'
-      - node-addon-api
-      - supports-color
 
   slint-ui@1.17.0-nightly.2026041914(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0):
     dependencies:

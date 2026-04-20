@@ -44,7 +44,7 @@ See AGENTS **Implementation plans and PR breakdown tables** for required columns
 pnpm typecheck && pnpm autofix && pnpm test
 ```
 
-Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS). For Primer UI demos without running the full app, `pnpm dev:gallery` loads [`packages/primer-slint/gallery/gallery-window.slint`](../../../packages/primer-slint/gallery/gallery-window.slint).
+Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS). For Primer UI demos without running the full app, `pnpm dev:gallery` loads [`packages/slint-gallery/gallery/gallery-window.slint`](../../../packages/slint-gallery/gallery/gallery-window.slint).
 
 ## Skill index
 

@@ -1,0 +1,19 @@
+{
+  "name": "slint-gallery",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Standalone Slint gallery for Primer components (Node + slint-ui entry).",
+  "scripts": {
+    "dev": "node gallery-main.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "slint-bridge-kit": "workspace:*",
+    "slint-ui": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:"
+  }
+}

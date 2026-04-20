@@ -2,7 +2,7 @@
 
 Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and verification), [`component-imports.md`](component-imports.md) (which globals to use), and [`.cursor/skills/primer-port-orchestrator/SKILL.md`](../../.cursor/skills/primer-port-orchestrator/SKILL.md) (full porting procedure).
 
-**Gallery app:** `pnpm dev:gallery` from the repository root (see [`gallery/README.md`](gallery/README.md)). **`DialogBase` / `PopupWindow`:** [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
+**Gallery app:** `pnpm dev:gallery` from the repository root (see [`slint-gallery/gallery/README.md`](../slint-gallery/gallery/README.md)). **`DialogBase` / `PopupWindow`:** [`anchored-popupwindow.md`](../slint-gallery/gallery/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
 
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.
@@ -175,7 +175,7 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 **Select** ([`Select/select.slint`](Select/select.slint)) is the trigger + **ContextMenu** picker pattern using **`SelectOption`** (`value`, `label`, `enabled`).
 
-**SelectPanel** ([`SelectPanel/select-panel.slint`](SelectPanel/select-panel.slint)) matches Primer’s product [**SelectPanel**](https://primer.style/product/components/select-panel/) as panel **body** content: title, subtitle, filter (**`PrimerTextInput`** + **`Icons.search`**), divider, scrollable list, optional **footer** (`show-footer` + **`@children`** below the list, Primer **`.Footer`** top border + padding). **`loading-message`**, empty **`empty-title`** + **`empty-message`**, and **`focused-index`** (accent in **single** and **multi** rows) mirror upstream states. **`SelectPanelMode.single`** uses **`SelectOption`** + **`ActionListRow`**; **`SelectPanelMode.multi`** uses **`SelectPanelItem`** + **`SelectPanelRow`** and **`multi-checked-mask`** (bit `ix` checked, rows `0..30`). Parent-filtered **`item-count`** matches **Select**’s **`option-count`**. Compose with **`DialogBase`** (see [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md)).
+**SelectPanel** ([`SelectPanel/select-panel.slint`](SelectPanel/select-panel.slint)) matches Primer’s product [**SelectPanel**](https://primer.style/product/components/select-panel/) as panel **body** content: title, subtitle, filter (**`PrimerTextInput`** + **`Icons.search`**), divider, scrollable list, optional **footer** (`show-footer` + **`@children`** below the list, Primer **`.Footer`** top border + padding). **`loading-message`**, empty **`empty-title`** + **`empty-message`**, and **`focused-index`** (accent in **single** and **multi** rows) mirror upstream states. **`SelectPanelMode.single`** uses **`SelectOption`** + **`ActionListRow`**; **`SelectPanelMode.multi`** uses **`SelectPanelItem`** + **`SelectPanelRow`** and **`multi-checked-mask`** (bit `ix` checked, rows `0..30`). Parent-filtered **`item-count`** matches **Select**’s **`option-count`**. Compose with **`DialogBase`** (see [`anchored-popupwindow.md`](../slint-gallery/gallery/anchored-popupwindow.md)).
 
 The **project board** import dialog uses **`SelectPanel`** in **`SelectPanelMode.single`** ([`project-board-list.slint`](../../app/src/ui/views/project-board-list.slint)) for repository search + pick.
 

@@ -8,7 +8,7 @@
     "slint-bridge-kit": {
       "entry": ["src/index.ts", "src/**/*.test.ts"]
     },
-    "primer-slint": {
+    "slint-gallery": {
       "entry": ["gallery-main.ts"]
     }
   }
