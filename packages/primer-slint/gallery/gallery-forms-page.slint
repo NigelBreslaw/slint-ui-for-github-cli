@@ -125,89 +125,104 @@ export component GalleryFormsPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            label-text: "Block";
-            placeholder: "Placeholder…";
-            text <=> demo-p1-block;
-            edited(_) => {
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                label-text: "Block";
+                placeholder: "Placeholder…";
+                text <=> demo-p1-block;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                size: Size.small;
+                label-text: "Small";
+                placeholder: "Small height";
+                text <=> demo-p1-small;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                size: Size.large;
+                label-text: "Large";
+                placeholder: "Large height";
+                text <=> demo-p1-large;
+                edited(_) => {
+                }
             }
         }
 
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            size: Size.small;
-            label-text: "Small";
-            placeholder: "Small height";
-            text <=> demo-p1-small;
-            edited(_) => {
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                label-text: "Disabled";
+                text <=> demo-p1-disabled;
+                disabled: true;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                label-text: "With caption";
+                caption: "Helper text sits below the field.";
+                placeholder: "Type…";
+                text <=> demo-p1-caption;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                label-text: "Required label";
+                required: true;
+                placeholder: "Required field";
+                text <=> demo-p1-required;
+                edited(_) => {
+                }
             }
         }
 
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            size: Size.large;
-            label-text: "Large";
-            placeholder: "Large height";
-            text <=> demo-p1-large;
-            edited(_) => {
-            }
-        }
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
 
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            label-text: "Disabled";
-            text <=> demo-p1-disabled;
-            disabled: true;
-            edited(_) => {
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                label-text: "Validation error";
+                validation-status: ValidationStatus.error;
+                validation-message: "Something went wrong";
+                text <=> demo-p1-error;
+                edited(_) => {
+                }
             }
-        }
 
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            label-text: "With caption";
-            caption: "Helper text sits below the field.";
-            placeholder: "Type…";
-            text <=> demo-p1-caption;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            label-text: "Validation error";
-            validation-status: ValidationStatus.error;
-            validation-message: "Something went wrong";
-            text <=> demo-p1-error;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            label-text: "Validation success";
-            validation-status: ValidationStatus.success;
-            validation-message: "Looks good.";
-            text <=> demo-p1-success;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 150px;
-            block: true;
-            label-text: "Required label";
-            required: true;
-            placeholder: "Required field";
-            text <=> demo-p1-required;
-            edited(_) => {
+            PrimerTextInput {
+                width: 150px;
+                block: true;
+                label-text: "Validation success";
+                validation-status: ValidationStatus.success;
+                validation-message: "Looks good.";
+                text <=> demo-p1-success;
+                edited(_) => {
+                }
             }
         }
 
@@ -218,59 +233,69 @@ export component GalleryFormsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Leading visual";
-            placeholder: "Search…";
-            has-leading-visual: true;
-            leading-visual: Icons.check_circle;
-            text <=> demo-p3-lead;
-            edited(_) => {
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Leading visual";
+                placeholder: "Search…";
+                has-leading-visual: true;
+                leading-visual: Icons.check_circle;
+                text <=> demo-p3-lead;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Trailing visual";
+                placeholder: "Enter monies";
+                has-trailing-visual: true;
+                trailing-visual: Icons.info;
+                text <=> demo-p3-trail;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Monospace";
+                monospace: true;
+                placeholder: "package/name";
+                text <=> demo-p3-mono;
+                edited(_) => {
+                }
             }
         }
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Trailing visual";
-            placeholder: "Enter monies";
-            has-trailing-visual: true;
-            trailing-visual: Icons.info;
-            text <=> demo-p3-trail;
-            edited(_) => {
-            }
-        }
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Monospace";
-            monospace: true;
-            placeholder: "package/name";
-            text <=> demo-p3-mono;
-            edited(_) => {
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Default fill";
+                caption: "canvas default (PR2 rest token).";
+                text <=> demo-p3-default-fill;
+                edited(_) => {
+                }
             }
-        }
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Default fill";
-            caption: "canvas default (PR2 rest token).";
-            text <=> demo-p3-default-fill;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Contrast fill";
-            caption: "data-contrast / bgColor-inset.";
-            contrast: true;
-            text <=> demo-p3-contrast-fill;
-            edited(_) => {
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Contrast fill";
+                caption: "data-contrast / bgColor-inset.";
+                contrast: true;
+                text <=> demo-p3-contrast-fill;
+                edited(_) => {
+                }
             }
         }
 
@@ -288,125 +313,140 @@ export component GalleryFormsPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · no visuals · auto";
-            caption: "Spinner trailing (no icons).";
-            loading: true;
-            loader-position: TextInputLoaderPosition.auto;
-            placeholder: "Loading…";
-            text <=> demo-p4-plain;
-            edited(_) => {
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · no visuals · auto";
+                caption: "Spinner trailing (no icons).";
+                loading: true;
+                loader-position: TextInputLoaderPosition.auto;
+                placeholder: "Loading…";
+                text <=> demo-p4-plain;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · leading visual · auto";
+                caption: "Spinner replaces leading.";
+                loading: true;
+                loader-position: TextInputLoaderPosition.auto;
+                has-leading-visual: true;
+                leading-visual: Icons.check_circle;
+                placeholder: "Search…";
+                text <=> demo-p4-lead-auto;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · trailing visual · auto";
+                caption: "Spinner replaces trailing.";
+                loading: true;
+                loader-position: TextInputLoaderPosition.auto;
+                has-trailing-visual: true;
+                trailing-visual: Icons.info;
+                placeholder: "Amount…";
+                text <=> demo-p4-trail-auto;
+                edited(_) => {
+                }
             }
         }
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · leading visual · auto";
-            caption: "Spinner replaces leading.";
-            loading: true;
-            loader-position: TextInputLoaderPosition.auto;
-            has-leading-visual: true;
-            leading-visual: Icons.check_circle;
-            placeholder: "Search…";
-            text <=> demo-p4-lead-auto;
-            edited(_) => {
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · both visuals · auto";
+                caption: "Spinner replaces leading; trailing icon stays.";
+                loading: true;
+                loader-position: TextInputLoaderPosition.auto;
+                has-leading-visual: true;
+                leading-visual: Icons.check_circle;
+                has-trailing-visual: true;
+                trailing-visual: Icons.info;
+                text <=> demo-p4-both-auto;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · no visuals · loader leading";
+                caption: "Explicit leading column.";
+                loading: true;
+                loader-position: TextInputLoaderPosition.leading;
+                placeholder: "Forced leading…";
+                text <=> demo-p4-force-lead;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · no visuals · loader trailing";
+                caption: "Explicit trailing column.";
+                loading: true;
+                loader-position: TextInputLoaderPosition.trailing;
+                placeholder: "Forced trailing…";
+                text <=> demo-p4-force-trail;
+                edited(_) => {
+                }
             }
         }
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · trailing visual · auto";
-            caption: "Spinner replaces trailing.";
-            loading: true;
-            loader-position: TextInputLoaderPosition.auto;
-            has-trailing-visual: true;
-            trailing-visual: Icons.info;
-            placeholder: "Amount…";
-            text <=> demo-p4-trail-auto;
-            edited(_) => {
-            }
-        }
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · both visuals · auto";
-            caption: "Spinner replaces leading; trailing icon stays.";
-            loading: true;
-            loader-position: TextInputLoaderPosition.auto;
-            has-leading-visual: true;
-            leading-visual: Icons.check_circle;
-            has-trailing-visual: true;
-            trailing-visual: Icons.info;
-            text <=> demo-p4-both-auto;
-            edited(_) => {
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · both visuals · loader leading";
+                caption: "Spinner leading; trailing icon unchanged.";
+                loading: true;
+                loader-position: TextInputLoaderPosition.leading;
+                has-leading-visual: true;
+                leading-visual: Icons.check_circle;
+                has-trailing-visual: true;
+                trailing-visual: Icons.info;
+                text <=> demo-p4-both-force-lead;
+                edited(_) => {
+                }
             }
-        }
 
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · no visuals · loader leading";
-            caption: "Explicit leading column.";
-            loading: true;
-            loader-position: TextInputLoaderPosition.leading;
-            placeholder: "Forced leading…";
-            text <=> demo-p4-force-lead;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · no visuals · loader trailing";
-            caption: "Explicit trailing column.";
-            loading: true;
-            loader-position: TextInputLoaderPosition.trailing;
-            placeholder: "Forced trailing…";
-            text <=> demo-p4-force-trail;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · both visuals · loader leading";
-            caption: "Spinner leading; trailing icon unchanged.";
-            loading: true;
-            loader-position: TextInputLoaderPosition.leading;
-            has-leading-visual: true;
-            leading-visual: Icons.check_circle;
-            has-trailing-visual: true;
-            trailing-visual: Icons.info;
-            text <=> demo-p4-both-force-lead;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 220px;
-            block: true;
-            label-text: "Loading · both visuals · loader trailing";
-            caption: "Leading icon unchanged; spinner trailing.";
-            loading: true;
-            loader-position: TextInputLoaderPosition.trailing;
-            has-leading-visual: true;
-            leading-visual: Icons.check_circle;
-            has-trailing-visual: true;
-            trailing-visual: Icons.info;
-            text <=> demo-p4-both-force-trail;
-            edited(_) => {
+            PrimerTextInput {
+                width: 220px;
+                block: true;
+                label-text: "Loading · both visuals · loader trailing";
+                caption: "Leading icon unchanged; spinner trailing.";
+                loading: true;
+                loader-position: TextInputLoaderPosition.trailing;
+                has-leading-visual: true;
+                leading-visual: Icons.check_circle;
+                has-trailing-visual: true;
+                trailing-visual: Icons.info;
+                text <=> demo-p4-both-force-trail;
+                edited(_) => {
+                }
             }
         }
 
         Text {
-            text: "PrimerTextInput — PR5 (character limit / visually hidden label)";
+            text: "(character limit / visually hidden label)";
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             font-weight: 600;
@@ -419,38 +459,43 @@ export component GalleryFormsPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        PrimerTextInput {
-            width: 320px;
-            block: true;
-            label-text: "WithCharacterLimit";
-            character-limit: 20;
-            placeholder: "Up to 20 characters…";
-            text <=> demo-p5-limit-only;
-            edited(_) => {
-            }
-        }
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
 
-        PrimerTextInput {
-            width: 320px;
-            block: true;
-            label-text: "WithCharacterLimitAndCaption";
-            caption: "Caption stacks above the counter row (same as other fields).";
-            character-limit: 24;
-            placeholder: "Type…";
-            text <=> demo-p5-limit-caption;
-            edited(_) => {
+            PrimerTextInput {
+                width: 320px;
+                block: true;
+                label-text: "WithCharacterLimit";
+                character-limit: 20;
+                placeholder: "Up to 20 characters…";
+                text <=> demo-p5-limit-only;
+                edited(_) => {
+                }
             }
-        }
 
-        PrimerTextInput {
-            width: 320px;
-            block: true;
-            label-text: "WithCharacterLimitExceeded";
-            caption: "Border + counter turn danger when over limit; feedback uses editable `text` only (caption/placeholder are separate).";
-            character-limit: 12;
-            character-limit-exceeded-message: "Reduce length to continue.";
-            text <=> demo-p5-exceed;
-            edited(_) => {
+            PrimerTextInput {
+                width: 320px;
+                block: true;
+                label-text: "WithCharacterLimitAndCaption";
+                caption: "Caption stacks above the counter row (same as other fields).";
+                character-limit: 24;
+                placeholder: "Type…";
+                text <=> demo-p5-limit-caption;
+                edited(_) => {
+                }
+            }
+
+            PrimerTextInput {
+                width: 320px;
+                block: true;
+                label-text: "WithCharacterLimitExceeded";
+                caption: "Border + counter turn danger when over limit; feedback uses editable `text` only (caption/placeholder are separate).";
+                character-limit: 12;
+                character-limit-exceeded-message: "Reduce length to continue.";
+                text <=> demo-p5-exceed;
+                edited(_) => {
+                }
             }
         }
 
@@ -467,7 +512,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "PrimerTextInput — PR6 (trailing action / clear)";
+            text: "(trailing action / clear)";
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             font-weight: 600;
