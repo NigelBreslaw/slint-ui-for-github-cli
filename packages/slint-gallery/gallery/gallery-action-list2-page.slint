@@ -1,4 +1,9 @@
-import { ActionList2 } from "../../primer-slint/primer.slint";
+import {
+    ActionList2,
+    ActionList2Line,
+    ActionList2LineKind,
+    ActionList2RowVariant,
+} from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
 /// ActionList2 demos — one section per upstream Storybook **Features** story (PR1: Simple List only).
@@ -9,11 +14,37 @@ export component GalleryActionList2Page inherits VerticalLayout {
 
     private property <string> simple-list-last: "";
 
-    private property <[string]> simple-list-items: [
-        "Copy link",
-        "Quote reply",
-        "Edit comment",
-        "Delete file",
+    private property <[ActionList2Line]> simple-list-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Copy link",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Quote reply",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Edit comment",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+        },
+        {
+            kind: ActionList2LineKind.item_divider,
+            label: "",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Delete file",
+            row-variant: ActionList2RowVariant.danger,
+            disabled: false,
+        },
     ];
 
     VerticalLayout {
@@ -29,7 +60,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
         }
 
         Text {
-            text: "Matches Storybook Features → Simple List (plain action rows).";
+            text: "Matches Storybook Features → Simple List (divider before danger row).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -49,9 +80,9 @@ export component GalleryActionList2Page inherits VerticalLayout {
 
                 ActionList2 {
                     width: 100%;
-                    items: root.simple-list-items;
+                    lines: root.simple-list-lines;
                     item-activated(ix) => {
-                        root.simple-list-last = root.simple-list-items[ix];
+                        root.simple-list-last = root.simple-list-lines[ix].label;
                     }
                 }
 

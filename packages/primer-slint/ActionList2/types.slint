@@ -1,0 +1,22 @@
+// ActionList2 models — aligned with Primer ActionList Item / Divider.
+
+/// Row visual variant (default action vs danger).
+export enum ActionList2RowVariant {
+    default,
+    danger,
+}
+
+/// Line in [`ActionList2`](action-list2.slint): interactive row or item divider hairline.
+export enum ActionList2LineKind {
+    row,
+    /// Hairline between items (Primer item divider); other fields ignored.
+    item_divider,
+}
+
+/// One entry: row or [`ActionList2LineKind.item_divider`]. Unused fields ignored per `kind`.
+export struct ActionList2Line {
+    kind: ActionList2LineKind,
+    label: string,
+    row-variant: ActionList2RowVariant,
+    disabled: bool,
+}

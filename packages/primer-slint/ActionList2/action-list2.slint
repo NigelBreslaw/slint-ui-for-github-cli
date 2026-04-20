@@ -1,12 +1,13 @@
-// ActionList2 — vertical list of default action rows (upstream: Primer ActionList).
-// PR1: `items` + `item-activated` for SimpleList; more line kinds later.
+// ActionList2 — vertical list of rows and item dividers (upstream: Primer ActionList).
 
+import { ActionList2ItemDivider } from "./action-list2-item-divider.slint";
 import { ActionList2Row } from "./action-list2-row.slint";
+import { ActionList2Line, ActionList2LineKind } from "./types.slint";
 
 export component ActionList2 {
-    /// Primary labels, top to bottom (Storybook **SimpleList**: Copy link, Quote reply, …).
-    in property <[string]> items: [];
-    /// Fired with index into `items` when a non-disabled row is activated.
+    /// Lines top to bottom: **[`ActionList2LineKind.row`]** and/or **[`ActionList2LineKind.item_divider`]**.
+    in property <[ActionList2Line]> lines: [];
+    /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers).
     callback item-activated(int);
 
     min-width: 0px;
@@ -17,12 +18,23 @@ export component ActionList2 {
         width: 100%;
         alignment: start;
 
-        for label[ix] in root.items: ActionList2Row {
+        for line[ix] in root.lines: VerticalLayout {
             width: 100%;
-            label: label;
-            disabled: false;
-            clicked => {
-                root.item-activated(ix);
+            spacing: 0px;
+            alignment: start;
+
+            if line.kind == ActionList2LineKind.row: ActionList2Row {
+                width: 100%;
+                label: line.label;
+                disabled: line.disabled;
+                row-variant: line.row-variant;
+                clicked => {
+                    root.item-activated(ix);
+                }
+            }
+
+            if line.kind == ActionList2LineKind.item_divider: ActionList2ItemDivider {
+                width: 100%;
             }
         }
     }

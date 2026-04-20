@@ -180,6 +180,14 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group).
 
+## ActionList2
+
+**ActionList2** ([`ActionList2/action-list2.slint`](ActionList2/action-list2.slint)) is a fresh vertical list API built story-by-story against Primer Storybook **ActionList → Features**. **`[ActionList2Line] lines`** holds rows (**`ActionList2RowVariant`** default | danger — **`ActionListTokens`** + **`ButtonTokens`**) and optional **`ActionList2LineKind.item_divider`** hairlines (**`ActionList2ItemDivider`**, **`ActionListTokens.item-divider-borderColor`**). **`item-activated(int)`** passes an index into **`lines`** (rows only).
+
+**Imports for views:** [`primer.slint`](primer.slint) — **`ActionList2`**, **`ActionList2Line`**, **`ActionList2LineKind`**, **`ActionList2RowVariant`**, optional **`ActionList2ItemDivider`** for standalone dividers.
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list 2** group).
+
 ## Select
 
 **Select** ([`Select/select.slint`](Select/select.slint)) is the trigger + **ContextMenu** picker pattern using **`SelectOption`** (`value`, `label`, `enabled`).
