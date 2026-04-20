@@ -58,7 +58,7 @@ export global ProjectBoardListState {
 
     /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */
     in-out property <bool> import-dialog-open: false;
-    /** Search query for repository names (`owner/name`); bound to import dialog **FilteredOptionList** filter. */
+    /** Search query for repository names (`owner/name`); bound to import dialog **SelectPanel** filter (`single` mode). */
     in-out property <string> import-repos-search: "";
     /** Empty, `"Loading repositories…"`, or an error message from `gh`. */
     in-out property <string> import-repos-load-status: "";

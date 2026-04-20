@@ -177,11 +177,11 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 **SelectPanel** ([`SelectPanel/select-panel.slint`](SelectPanel/select-panel.slint)) matches Primer’s product [**SelectPanel**](https://primer.style/product/components/select-panel/) as panel **body** content: title, subtitle, filter (**`PrimerTextInput`** + **`Icons.search`**), divider, scrollable list, optional **footer** (`show-footer` + **`@children`** below the list, Primer **`.Footer`** top border + padding). **`loading-message`**, empty **`empty-title`** + **`empty-message`**, and **`focused-index`** (accent in **single** and **multi** rows) mirror upstream states. **`SelectPanelMode.single`** uses **`SelectOption`** + **`ActionListRow`**; **`SelectPanelMode.multi`** uses **`SelectPanelItem`** + **`SelectPanelRow`** and **`multi-checked-mask`** (bit `ix` checked, rows `0..30`). Parent-filtered **`item-count`** matches **Select**’s **`option-count`**. Compose with **`DialogBase`** (see [`gallery/anchored-popupwindow.md`](gallery/anchored-popupwindow.md)).
 
-The **project board** import dialog still uses app-local **`FilteredOptionList`** until a follow-up migrates it to **`SelectPanel`** (`single` mode).
+The **project board** import dialog uses **`SelectPanel`** in **`SelectPanelMode.single`** ([`project-board-list.slint`](../../app/src/ui/views/project-board-list.slint)) for repository search + pick.
 
 **Imports for views:** [`primer.slint`](primer.slint) — **`DialogBase`**, **`DialogBaseSide`**, **`DialogBaseAlign`**, **`SelectPanel`**, **`SelectPanelMode`**, **`SelectPanelItem`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`** (optional **`OverlayTokens`** for dialog chrome).
 
-Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group, DialogBase + SelectPanel multi demo with footer); **Project board** import dialog (**FilteredOptionList** for now).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group, DialogBase + SelectPanel multi demo with footer); **Project board** import dialog (**`SelectPanel`** `single`).
 
 ## PrimerTextInput
 

@@ -1,6 +1,5 @@
 import { ListView } from "std-widgets.slint";
 import { ProjectBoardItemKind, ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
-import { FilteredOptionList } from "../components/filtered-option-list.slint";
 import { PrimerDialog, PrimerDialogWidth } from "../components/primer-dialog.slint";
 import {
     Banner,
@@ -13,6 +12,8 @@ import {
     DataTableSortDirection,
     Pagination,
     PrimerTextInput,
+    SelectPanel,
+    SelectPanelMode,
     Size,
     Spinner,
     TableContainer,
@@ -272,11 +273,12 @@ export component ProjectBoardList {
                             wrap: word-wrap;
                         }
 
-                        FilteredOptionList {
+                        SelectPanel {
                             width: 100%;
+                            mode: SelectPanelMode.single;
                             filter-text <=> ProjectBoardListState.import-repos-search;
                             filter-placeholder: "Filter by name…";
-                            items: ProjectBoardListState.import-repo-select-options;
+                            single-items: ProjectBoardListState.import-repo-select-options;
                             item-count: ProjectBoardListState.import-repo-options-count;
                             selected-index <=> ProjectBoardListState.import-repo-selected-index;
                             list-max-height: 200px;
@@ -286,7 +288,7 @@ export component ProjectBoardList {
                             filter-changed(q) => {
                                 ProjectBoardListState.project-board-import-repos-search-changed(q);
                             }
-                            selected-changed(ix) => {
+                            single-selected-changed(ix) => {
                                 ProjectBoardListState.project-board-import-repo-selected-changed(ix);
                             }
                         }
