@@ -171,6 +171,14 @@ Wraps a **`DataTable`** (or other content) with optional **title**, **subtitle**
 
 Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there is no title, subtitle, or action labels, the header block is omitted and the **child** is laid out directly.
 
+## ActionList
+
+**ActionList** ([`ActionList/action-list.slint`](ActionList/action-list.slint)) is a vertical list shell aligned with Primer [**ActionList**](https://primer.style/product/components/action-list/). **PR1 (current):** `lines` is a flat `[ActionListLine]` — each entry is either **`ActionListLineKind.row`** (renders **`ActionListRow`**: `label`, `selected`, `disabled`) or **`ActionListLineKind.divider`** (horizontal rule). **`item-activated(index)`** passes the index into `lines` for clickable, non-disabled rows only. Section headings, danger/inactive/loading items, selection modes, and richer trailing visuals are **not** in PR1; see the port plan in the repo.
+
+**Imports for views:** [`primer.slint`](primer.slint) — **`ActionList`**, **`ActionListLine`**, **`ActionListLineKind`**, **`ActionListRow`** (if embedding rows without the shell).
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group).
+
 ## Select
 
 **Select** ([`Select/select.slint`](Select/select.slint)) is the trigger + **ContextMenu** picker pattern using **`SelectOption`** (`value`, `label`, `enabled`).

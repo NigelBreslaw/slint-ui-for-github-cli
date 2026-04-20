@@ -2,7 +2,7 @@
 
 Standalone Slint window for browsing Primer components. This folder holds gallery-only UI; the **`primer-slint`** library lives in the sibling package [`primer-slint`](../../primer-slint/). Component demos are not embedded in the main github-app window; use this app (or browse `gallery/*-page.slint` in this package).
 
-**Content:** **Buttons** (`gallery-buttons-page.slint`), **Navs** (`gallery-navs-page.slint`), **Feedback** (`gallery-feedback-page.slint`), **Forms** (`gallery-forms-page.slint`), **Data** (`gallery-data-page.slint` — DataTable, Pagination). **Layout** still shows a placeholder until migrated.
+**Content:** **Buttons** (`gallery-buttons-page.slint`), **Navs** (`gallery-navs-page.slint`), **Feedback** (`gallery-feedback-page.slint`), **Forms** (`gallery-forms-page.slint`), **Data** (`gallery-data-page.slint` — DataTable, Pagination), **Action list** (`gallery-action-list-page.slint` — ActionList / ActionListRow).
 
 **`DialogBase` / `PopupWindow`:** [`anchored-popupwindow.md`](anchored-popupwindow.md) — parent-relative coordinates, vertical flip, and references to app patterns.
 

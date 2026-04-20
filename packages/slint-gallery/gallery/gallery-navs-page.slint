@@ -1,5 +1,4 @@
 import {
-    ActionListRow,
     Icons,
     NavList,
     NavListGroup,
@@ -11,7 +10,7 @@ import {
 } from "../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// UnderlineNav, ActionListRow, and NavList gallery demos.
+/// UnderlineNav and NavList gallery demos.
 export component GalleryNavsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -340,63 +339,6 @@ export component GalleryNavsPage inherits VerticalLayout {
                 accessible-name: "Demo overflow tabs";
                 item-activated(idx) => {
                     demo-underline-scroll-selected = idx;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "ActionListRow";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Shared list-row chrome (hover / pressed / selected). NavList and app pickers (e.g. SelectPanel single mode) build on this.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
-        VerticalLayout {
-            spacing: 0px;
-            horizontal-stretch: 0;
-            width: 360px;
-
-            ActionListRow {
-                width: 100%;
-                label: "Unselected row";
-                selected: false;
-                disabled: false;
-                clicked => {
-                }
-            }
-
-            ActionListRow {
-                width: 100%;
-                label: "Selected row";
-                selected: true;
-                disabled: false;
-                clicked => {
-                }
-            }
-
-            ActionListRow {
-                width: 100%;
-                label: "Disabled row";
-                selected: false;
-                disabled: true;
-                has-leading-visual: true;
-                leading-icon: Icons.alert;
-                description: "With description";
-                trailing-text: "·";
-                clicked => {
                 }
             }
         }

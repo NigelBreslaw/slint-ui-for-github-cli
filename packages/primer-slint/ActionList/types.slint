@@ -1,0 +1,19 @@
+// ActionList models — upstream: https://primer.style/product/components/action-list/ (Item, Divider).
+// PR1: `row` + `divider` only; more line kinds and fields arrive in later PRs.
+
+/// Discriminator for each entry in [`ActionList`](action-list.slint).
+export enum ActionListLineKind {
+    row,
+    divider,
+}
+
+/// One interactive row (maps to [`ActionListRow`](action-list-row.slint)) or a divider line.
+export struct ActionListLine {
+    kind: ActionListLineKind,
+    /// Used when `kind == ActionListLineKind.row`; ignored for dividers.
+    label: string,
+    /// Used when `kind == ActionListLineKind.row`.
+    selected: bool,
+    /// Used when `kind == ActionListLineKind.row`.
+    disabled: bool,
+}
