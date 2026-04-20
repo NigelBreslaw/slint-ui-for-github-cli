@@ -172,16 +172,16 @@ export component SelectPanel {
 
                         for ix in root.effective-len: HorizontalLayout {
                             width: 100%;
-                            spacing: ix == root.focused-index && root.focused-index >= 0 ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+                            spacing: LayoutTokens.nav-list-sidebar-indicator-gap;
                             alignment: stretch;
 
-                            if ix == root.focused-index && root.focused-index >= 0: Rectangle {
+                            Rectangle {
                                 horizontal-stretch: 0;
                                 y: (parent.height - self.height) / 2;
                                 width: LayoutTokens.nav-list-sidebar-indicator-width;
                                 height: LayoutTokens.nav-list-sidebar-indicator-height;
                                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                                background: PrimerColors.bgColor-accent-emphasis;
+                                background: ix == root.focused-index && root.focused-index >= 0 ? PrimerColors.bgColor-accent-emphasis : #00000000;
                             }
 
                             ActionListRow {

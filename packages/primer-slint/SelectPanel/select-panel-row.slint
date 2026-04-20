@@ -34,18 +34,21 @@ export component SelectPanelRow {
                 padding-right: LayoutTokens.action-list-item-padding-inline;
                 padding-top: LayoutTokens.action-list-item-padding-block;
                 padding-bottom: LayoutTokens.action-list-item-padding-block;
-                spacing: LayoutTokens.button-content-gap;
-                alignment: center;
+                spacing: LayoutTokens.nav-list-sidebar-indicator-gap;
+                alignment: start;
 
-                if root.show-focus-accent: Rectangle {
+
+                Rectangle {
                     horizontal-stretch: 0;
+                    y: (parent.height - self.height) / 2;
                     width: LayoutTokens.nav-list-sidebar-indicator-width;
                     height: LayoutTokens.nav-list-sidebar-indicator-height;
                     border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                    background: PrimerColors.bgColor-accent-emphasis;
+                    background: root.show-focus-accent ? PrimerColors.bgColor-accent-emphasis : #00000000;
                 }
 
                 Checkbox {
+                    horizontal-stretch: 0;
                     interactive: false;
                     checked: root.checked;
                     disabled: root.disabled;
