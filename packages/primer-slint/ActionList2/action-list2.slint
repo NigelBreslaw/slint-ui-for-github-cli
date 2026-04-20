@@ -10,6 +10,8 @@ import { ActionList2Line, ActionList2LineKind } from "./types.slint";
 export component ActionList2 {
     /// Lines top to bottom: rows, item dividers, list/custom visual headings, and subtle section headings.
     in property <[ActionList2Line]> lines: [];
+    /// Primer `ActionList` **`showDividers`**: draw a **seam** hairline (`borderColor-muted`) between consecutive **rows** only — not after the last row, and no block margins (unlike explicit [`item_divider`](ActionList2LineKind.item_divider) / [`ActionList2ItemDivider`]).
+    in property <bool> show-dividers: false;
     /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers).
     callback item-activated(int);
 
@@ -37,6 +39,7 @@ export component ActionList2 {
                 avatar-source: line.avatar-source;
                 has-leading-visual: line.has-leading-visual;
                 leading-icon: line.leading-icon;
+                show-top-seam: root.show-dividers && ix > 0 && root.lines[ix - 1].kind == ActionList2LineKind.row;
                 clicked => {
                     root.item-activated(ix);
                 }

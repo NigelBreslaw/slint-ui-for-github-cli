@@ -21,6 +21,8 @@ export component ActionList2Row {
     in property <image> avatar-source: Icons.dot_fill;
     in property <bool> has-leading-visual: false;
     in property <image> leading-icon: Icons.dot_fill;
+    /// Primer `ActionList` `showDividers`: hairline between consecutive rows (`borderColor-muted`), no block margins (unlike [`ActionList2ItemDivider`]).
+    in property <bool> show-top-seam: false;
 
     callback clicked;
 
@@ -40,84 +42,96 @@ export component ActionList2Row {
         ? ActionListTokens.item-danger-fgColor-rest
         : PrimerColors.fgColor-muted;
 
-    min-height: root.cell-min-height;
+    min-height: root.cell-min-height + (root.show-top-seam ? LayoutTokens.table-border-width : 0px);
     width: 100%;
 
-    ta := TouchArea {
-        horizontal-stretch: 1;
-        min-width: 0px;
-        min-height: root.cell-min-height;
-        enabled: !root.disabled;
-        clicked => {
-            root.clicked();
+    VerticalLayout {
+        spacing: 0px;
+        width: 100%;
+        alignment: start;
+
+        if root.show-top-seam: Rectangle {
+            width: 100%;
+            height: LayoutTokens.table-border-width;
+            background: PrimerColors.borderColor-muted;
         }
 
-        row-bg := Rectangle {
-            border-radius: LayoutTokens.borderRadius-medium;
-            background: #00000000;
-
-            hl := HorizontalLayout {
-                min-height: root.cell-min-height;
-                padding-left: LayoutTokens.action-list-item-padding-inline;
-                padding-right: LayoutTokens.action-list-item-padding-inline;
-                padding-top: root.cell-padding-block;
-                padding-bottom: root.cell-padding-block;
-                spacing: LayoutTokens.button-content-gap;
-                alignment: start;
-                align-items: center;
-
-                if root.has-leading-avatar: Avatar {
-                    horizontal-stretch: 0;
-                    diameter: root.avatar-diameter;
-                    source: root.avatar-source;
-                }
-
-                if !root.has-leading-avatar && root.has-leading-visual: Image {
-                    horizontal-stretch: 0;
-                    width: LayoutTokens.iconButton-icon-size-medium;
-                    height: LayoutTokens.iconButton-icon-size-medium;
-                    vertical-alignment: center;
-                    source: root.leading-icon;
-                    colorize: leading-icon-tint;
-                }
-
-                if !root.has-markdown: Text {
-                    horizontal-stretch: 1;
-                    min-width: 0px;
-                    text: root.label;
-                    color: root.label-color;
-                    font-size: LayoutTokens.text-body-size-medium;
-                    font-weight: LayoutTokens.base-text-weight-medium;
-                    vertical-alignment: center;
-                }
-
-                if root.has-markdown: StyledText {
-                    horizontal-stretch: 1;
-                    min-width: 0px;
-                    text: root.label-markdown;
-                    default-color: root.label-color;
-                    default-font-size: LayoutTokens.text-body-size-medium;
-                    vertical-alignment: center;
-                }
+        ta := TouchArea {
+            horizontal-stretch: 1;
+            min-width: 0px;
+            min-height: root.cell-min-height;
+            enabled: !root.disabled;
+            clicked => {
+                root.clicked();
             }
 
-            states [
-                disabled when root.disabled: {
-                    row-bg.background: #00000000;
+            row-bg := Rectangle {
+                border-radius: LayoutTokens.borderRadius-medium;
+                background: #00000000;
+
+                hl := HorizontalLayout {
+                    min-height: root.cell-min-height;
+                    padding-left: LayoutTokens.action-list-item-padding-inline;
+                    padding-right: LayoutTokens.action-list-item-padding-inline;
+                    padding-top: root.cell-padding-block;
+                    padding-bottom: root.cell-padding-block;
+                    spacing: LayoutTokens.button-content-gap;
+                    alignment: start;
+                    align-items: center;
+
+                    if root.has-leading-avatar: Avatar {
+                        horizontal-stretch: 0;
+                        diameter: root.avatar-diameter;
+                        source: root.avatar-source;
+                    }
+
+                    if !root.has-leading-avatar && root.has-leading-visual: Image {
+                        horizontal-stretch: 0;
+                        width: LayoutTokens.iconButton-icon-size-medium;
+                        height: LayoutTokens.iconButton-icon-size-medium;
+                        vertical-alignment: center;
+                        source: root.leading-icon;
+                        colorize: leading-icon-tint;
+                    }
+
+                    if !root.has-markdown: Text {
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        text: root.label;
+                        color: root.label-color;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-medium;
+                        vertical-alignment: center;
+                    }
+
+                    if root.has-markdown: StyledText {
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        text: root.label-markdown;
+                        default-color: root.label-color;
+                        default-font-size: LayoutTokens.text-body-size-medium;
+                        vertical-alignment: center;
+                    }
                 }
-                danger-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.danger && ta.pressed: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-active;
-                }
-                danger-hover when !root.disabled && root.row-variant == ActionList2RowVariant.danger && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ActionListTokens.item-danger-bgColor-hover;
-                }
-                default-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.default && ta.pressed: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
-                }
-                default-hover when !root.disabled && root.row-variant == ActionList2RowVariant.default && !ta.pressed && ta.has-hover: {
-                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
-                }
-            ]
+
+                states [
+                    disabled when root.disabled: {
+                        row-bg.background: #00000000;
+                    }
+                    danger-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.danger && ta.pressed: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-active;
+                    }
+                    danger-hover when !root.disabled && root.row-variant == ActionList2RowVariant.danger && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-hover;
+                    }
+                    default-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.default && ta.pressed: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                    }
+                    default-hover when !root.disabled && root.row-variant == ActionList2RowVariant.default && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                    }
+                ]
+            }
         }
     }
 }

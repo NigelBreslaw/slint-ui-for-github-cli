@@ -7,17 +7,57 @@ import {
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Item Dividers, With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
 
+    private property <string> item-dividers-last: "";
     private property <string> with-avatars-last: "";
     private property <string> with-icons-last: "";
     private property <string> custom-heading-last: "";
     private property <string> simple-list-last: "";
     private property <string> visual-heading-last: "";
+
+    private property <[ActionList2Line]> item-dividers-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Copy link",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Quote reply",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Edit comment",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+    ];
 
     private property <[ActionList2Line]> with-avatars-lines: [
         {
@@ -429,6 +469,57 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label-markdown: @markdown(""),
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "Item Dividers";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → Item Dividers (`showDividers`: seam hairlines between consecutive rows, not after the last row).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    show-dividers: true;
+                    lines: root.item-dividers-lines;
+                    item-activated(ix) => {
+                        root.item-dividers-last = root.item-dividers-lines[ix].label;
+                    }
+                }
+
+                Text {
+                    visible: root.item-dividers-last != "";
+                    text: "Last activated: " + root.item-dividers-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;

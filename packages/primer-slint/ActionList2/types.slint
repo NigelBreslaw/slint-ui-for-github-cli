@@ -9,7 +9,7 @@ export enum ActionList2RowVariant {
 /// Line in [`ActionList2`](action-list2.slint): interactive row or item divider hairline.
 export enum ActionList2LineKind {
     row,
-    /// Hairline between items (Primer item divider); other fields ignored.
+    /// Explicit [`ActionList.Divider`] (block margins + hairline). For Primer `showDividers` seam lines instead, set **`show-dividers`** on [`ActionList2`](action-list2.slint); other fields ignored.
     item_divider,
     /// Strong list title above groups and rows (Primer list visual heading); only **`label`** is used.
     list_visual_heading,

@@ -15,7 +15,7 @@ import "../../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/VeraMono.ttf";
 
 export global GalleryState {
-    in-out property <int> selected-group-index: 5;
+    in-out property <int> selected-group-index: 6;
 }
 
 export component GalleryWindow inherits Window {
@@ -32,7 +32,7 @@ export component GalleryWindow inherits Window {
         AppWindow.window-height = root.height;
     }
 
-    preferred-width: 1280px;
+    preferred-width: 1000px;
     preferred-height: 800px;
     min-width: 640px;
     min-height: 480px;
