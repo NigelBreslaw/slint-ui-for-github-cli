@@ -308,6 +308,8 @@ export type SlintIconsGlobal = {
   palette: ImageData;
   sign_out: ImageData;
   checkbox: ImageData;
+  check: ImageData;
+  search: ImageData;
   checkbox_fill: ImageData;
 };
 

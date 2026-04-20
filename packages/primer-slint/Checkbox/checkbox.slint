@@ -7,6 +7,8 @@ export component Checkbox {
     in-out property <bool> checked: false;
     in-out property <bool> indeterminate: false;
     in property <bool> disabled: false;
+    /// When false, the control is display-only; use a parent `TouchArea` for row activation (e.g. multi-select list rows).
+    in property <bool> interactive: true;
     in property <string> label: "";
 
     callback toggled;
@@ -15,7 +17,7 @@ export component Checkbox {
     private property <bool> filled: root.checked || root.indeterminate;
 
     touch := TouchArea {
-        enabled: !root.disabled;
+        enabled: !root.disabled && root.interactive;
         clicked => {
             root.checked = root.indeterminate ? true : !root.checked;
             root.indeterminate = false;

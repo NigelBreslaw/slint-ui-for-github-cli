@@ -1,0 +1,14 @@
+// SelectPanel — selection mode and multi-select row model (upstream: Primer SelectPanel + FilteredActionList).
+
+export enum SelectPanelMode {
+    single,
+    multi,
+}
+
+export struct SelectPanelItem {
+    value: string,
+    label: string,
+    description: string,
+    swatch: color,
+    enabled: bool,
+}

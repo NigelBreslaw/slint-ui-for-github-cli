@@ -1,0 +1,209 @@
+// Primer-style SelectPanel body (anchored shell is [`DialogBase`](../DialogBase/dialog-base.slint)).
+// Single mode: [`SelectOption`](../Select/select.slint) + [`ActionListRow`](../ActionList/action-list-row.slint).
+// Multi mode: [`SelectPanelItem`] + checkbox row + in-out bit mask (bit `ix` == row `ix` checked; up to 31 rows).
+
+import { ActionListRow } from "../ActionList/action-list-row.slint";
+import { Icons } from "../assets/icons.slint";
+import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
+import { Spinner } from "../Progress/spinner.slint";
+import { SelectOption } from "../Select/select.slint";
+import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { SelectPanelRow } from "./select-panel-row.slint";
+import { SelectPanelItem, SelectPanelMode } from "./types.slint";
+
+export component SelectPanel {
+    in property <SelectPanelMode> mode: SelectPanelMode.multi;
+    in property <string> title: "";
+    in property <string> subtitle: "";
+    in-out property <string> filter-text: "";
+    in property <string> filter-placeholder: "Filter items";
+    in property <bool> disabled: false;
+    in property <bool> loading: false;
+    in property <string> empty-message: "No results";
+    in property <length> list-max-height: 240px;
+    /// Row with keyboard/list focus (multi mode accent); `-1` hides the accent.
+    in property <int> focused-index: -1;
+
+    in property <[SelectOption]> single-items: [];
+    in-out property <int> selected-index: -1;
+
+    in property <[SelectPanelItem]> multi-items: [];
+    /// Bit `ix` set means row `ix` is checked (`ix` in `0..31`).
+    in-out property <int> multi-checked-mask: 0;
+
+    in property <int> item-count: -1;
+
+    callback filter-changed(string);
+    callback single-selected-changed(int);
+
+    horizontal-stretch: 1;
+    min-width: 0px;
+
+    private property <int> effective-len: item-count >= 0 ? item-count
+        : mode == SelectPanelMode.single ? single-items.length : multi-items.length;
+
+    /// 2^`i` for `i` in `0..30` (Slint global `pow` + `Math.round` to `int`; exponent via `i * 1.0`).
+    function pow2(i: int) -> int {
+        i < 0 || i > 30 ? 0 : Math.round(pow(2.0, i * 1.0))
+    }
+
+    /// Parity of `b` (equivalent to `b % 2` without `%` on length types).
+    function low-bit(b: int) -> int {
+        b - (b / 2) * 2
+    }
+
+    function mask-bit-set(mask: int, ix: int) -> bool {
+        ix < 0 || ix > 30 ? false : low-bit(mask / pow2(ix)) != 0
+    }
+
+    function toggle-multi-mask-bit(mask: int, ix: int) -> int {
+        ix < 0 || ix > 30 ? mask : mask-bit-set(mask, ix) ? mask - pow2(ix) : mask + pow2(ix)
+    }
+
+    VerticalLayout {
+        spacing: 10px;
+        width: 100%;
+        alignment: start;
+
+        if root.title != "": Text {
+            text: root.title;
+            color: PrimerColors.fgColor-default;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: 600;
+            wrap: word-wrap;
+        }
+
+        if root.subtitle != "": Text {
+            text: root.subtitle;
+            color: PrimerColors.fgColor-muted;
+            font-size: LayoutTokens.text-body-size-small;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            wrap: word-wrap;
+        }
+
+        PrimerTextInput {
+            width: 100%;
+            block: true;
+            placeholder: root.filter-placeholder;
+            text <=> root.filter-text;
+            disabled: root.disabled;
+            has-leading-visual: true;
+            leading-visual: Icons.search;
+            edited(t) => {
+                root.filter-changed(t);
+            }
+        }
+
+        Rectangle {
+            width: 100%;
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Rectangle {
+            width: 100%;
+            height: root.list-max-height;
+            background: PrimerColors.bgColor-canvas-subtle;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: 1px;
+            border-color: PrimerColors.borderColor-muted;
+            clip: true;
+
+            VerticalLayout {
+                width: 100%;
+                height: 100%;
+                alignment: stretch;
+
+                if root.loading: VerticalLayout {
+                    padding: 16px;
+                    spacing: 10px;
+                    alignment: center;
+
+                    HorizontalLayout {
+                        spacing: 10px;
+                        alignment: center;
+
+                        Spinner {
+                            size: Size.small;
+                        }
+
+                        Text {
+                            text: "Loading…";
+                            font-size: LayoutTokens.text-body-size-small;
+                            color: PrimerColors.fgColor-muted;
+                            wrap: word-wrap;
+                        }
+                    }
+                }
+
+                if !root.loading && root.effective-len == 0: VerticalLayout {
+                    padding: 16px;
+                    alignment: center;
+
+                    Text {
+                        horizontal-alignment: center;
+                        text: root.empty-message;
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if !root.loading && root.effective-len > 0 && root.mode == SelectPanelMode.single: Flickable {
+                    width: 100%;
+                    height: parent.height;
+                    viewport-width: parent.width;
+                    viewport-height: single-vl.preferred-height;
+
+                    single-vl := VerticalLayout {
+                        width: parent.width;
+                        spacing: 0px;
+
+                        for ix in root.effective-len: ActionListRow {
+                            width: 100%;
+                            label: root.single-items[ix].label;
+                            description: "";
+                            selected: ix == root.selected-index;
+                            disabled: root.disabled || !root.single-items[ix].enabled;
+                            clicked => {
+                                if !root.single-items[ix].enabled || root.disabled {
+                                    return;
+                                }
+                                root.selected-index = ix;
+                                root.single-selected-changed(ix);
+                            }
+                        }
+                    }
+                }
+
+                if !root.loading && root.effective-len > 0 && root.mode == SelectPanelMode.multi: Flickable {
+                    width: 100%;
+                    height: parent.height;
+                    viewport-width: parent.width;
+                    viewport-height: multi-vl.preferred-height;
+
+                    multi-vl := VerticalLayout {
+                        width: parent.width;
+                        spacing: 0px;
+
+                        for ix in root.effective-len: SelectPanelRow {
+                            width: 100%;
+                            label: root.multi-items[ix].label;
+                            description: root.multi-items[ix].description;
+                            swatch: root.multi-items[ix].swatch;
+                            disabled: root.disabled || !root.multi-items[ix].enabled;
+                            show-focus-accent: ix == root.focused-index;
+                            checked: root.mask-bit-set(root.multi-checked-mask, ix);
+                            clicked => {
+                                if !root.multi-items[ix].enabled || root.disabled {
+                                    return;
+                                }
+                                root.multi-checked-mask = root.toggle-multi-mask-bit(root.multi-checked-mask, ix);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
