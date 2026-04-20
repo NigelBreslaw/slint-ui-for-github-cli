@@ -1,14 +1,69 @@
 // Primer-style ActionList shell — upstream: https://primer.style/product/components/action-list/
-// PR1: flat `[ActionListLine]` with `row` (default [`ActionListRow`]) and `divider` only.
+// PR3: row variants, block/inline description, section headings, item + section dividers, large rows.
 
 import { ActionListRow } from "./action-list-row.slint";
-import { ActionListTokens, LayoutTokens } from "../tokens.slint";
-import { ActionListLine, ActionListLineKind } from "./types.slint";
+import {
+    ActionListLine,
+    ActionListLineKind,
+    ActionListRowVariant,
+    ActionListSectionHeadingVariant,
+} from "./types.slint";
+import { ActionListTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+
+/// Primer `GroupHeading` (subtle | filled) for [`ActionListLineKind.section_heading`].
+component ActionListSectionHeader {
+    in property <string> title;
+    in property <ActionListSectionHeadingVariant> variant;
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+
+        if root.variant == ActionListSectionHeadingVariant.filled: Rectangle {
+            horizontal-stretch: 1;
+            border-radius: LayoutTokens.borderRadius-medium;
+            background: ActionListTokens.section-heading-filled-bgColor;
+
+            VerticalLayout {
+                padding-left: LayoutTokens.stack-padding-normal;
+                padding-right: LayoutTokens.stack-padding-normal;
+                padding-top: 6px;
+                padding-bottom: 6px;
+
+                Text {
+                    horizontal-stretch: 1;
+                    text: root.title;
+                    color: ActionListTokens.section-heading-filled-title-fgColor;
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        if root.variant == ActionListSectionHeadingVariant.subtle: VerticalLayout {
+            horizontal-stretch: 1;
+            padding-top: 8px;
+            padding-bottom: 4px;
+            padding-left: LayoutTokens.action-list-item-padding-inline;
+            padding-right: LayoutTokens.action-list-item-padding-inline;
+
+            Text {
+                horizontal-stretch: 1;
+                text: root.title;
+                color: ActionListTokens.section-heading-subtle-fgColor;
+                font-size: LayoutTokens.text-body-size-small;
+                font-weight: LayoutTokens.base-text-weight-semibold;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
 
 export component ActionList {
-    /// Flat list: each entry is a [`ActionListRow`] or a horizontal divider.
+    /// Flat list: rows, item dividers, section dividers, and section headings.
     in property <[ActionListLine]> lines: [];
-    /// Index into `lines` for the activated row; not fired for dividers or `disabled` rows.
+    /// Index into `lines` for the activated row; not fired for non-rows, `disabled`, **inactive**, or **loading** rows.
     callback item-activated(int);
 
     min-width: 0px;
@@ -27,10 +82,17 @@ export component ActionList {
             if line.kind == ActionListLineKind.row: ActionListRow {
                 width: 100%;
                 label: line.label;
+                description: line.description;
+                description-layout: line.description-layout;
+                trailing-text: line.trailing-text;
+                has-leading-visual: line.has-leading-visual;
+                leading-icon: line.leading-icon;
+                row-variant: line.row-variant;
+                large: line.large;
                 selected: line.selected;
                 disabled: line.disabled;
                 clicked => {
-                    if line.disabled {
+                    if line.disabled || line.row-variant == ActionListRowVariant.inactive || line.row-variant == ActionListRowVariant.loading {
                         return;
                     }
                     root.item-activated(ix);
@@ -48,6 +110,24 @@ export component ActionList {
                     height: 1px;
                     background: ActionListTokens.item-divider-borderColor;
                 }
+            }
+
+            if line.kind == ActionListLineKind.section_divider: VerticalLayout {
+                width: 100%;
+                padding-top: 8px;
+                padding-bottom: 8px;
+                alignment: start;
+
+                Rectangle {
+                    width: 100%;
+                    height: LayoutTokens.nav-list-divider-height;
+                    background: PrimerColors.borderColor-muted;
+                }
+            }
+
+            if line.kind == ActionListLineKind.section_heading: ActionListSectionHeader {
+                title: line.label;
+                variant: line.section-heading-variant;
             }
         }
     }

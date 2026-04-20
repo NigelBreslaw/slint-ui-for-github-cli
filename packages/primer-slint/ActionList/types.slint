@@ -1,19 +1,48 @@
-// ActionList models — upstream: https://primer.style/product/components/action-list/ (Item, Divider).
-// PR1: `row` + `divider` only; more line kinds and fields arrive in later PRs.
+// ActionList models — upstream: https://primer.style/product/components/action-list/ (Item, Divider, Group, GroupHeading).
+
+/// Visual variant for a [`ActionListLineKind.row`] line (default / danger / inactive / loading).
+export enum ActionListRowVariant {
+    default,
+    danger,
+    inactive,
+    loading,
+}
+
+/// Block: description under title. Inline: description after title on one line (upstream inline description).
+export enum ActionListDescriptionLayout {
+    block,
+    inline,
+}
+
+/// [`ActionListLineKind.section_heading`] style (Primer `GroupHeading` subtle vs filled).
+export enum ActionListSectionHeadingVariant {
+    subtle,
+    filled,
+}
 
 /// Discriminator for each entry in [`ActionList`](action-list.slint).
 export enum ActionListLineKind {
     row,
+    /// Hairline between items (Primer item divider).
     divider,
+    /// Full-width rule between sections (Primer section divider).
+    section_divider,
+    /// Non-interactive section title (Primer `GroupHeading`).
+    section_heading,
 }
 
-/// One interactive row (maps to [`ActionListRow`](action-list-row.slint)) or a divider line.
+/// One list line: interactive row, dividers, or section heading. Unused fields are ignored per `kind`.
 export struct ActionListLine {
     kind: ActionListLineKind,
-    /// Used when `kind == ActionListLineKind.row`; ignored for dividers.
     label: string,
-    /// Used when `kind == ActionListLineKind.row`.
+    description: string,
+    description-layout: ActionListDescriptionLayout,
+    trailing-text: string,
+    has-leading-visual: bool,
+    leading-icon: image,
     selected: bool,
-    /// Used when `kind == ActionListLineKind.row`.
     disabled: bool,
+    row-variant: ActionListRowVariant,
+    large: bool,
+    section-heading-variant: ActionListSectionHeadingVariant,
 }

@@ -1,8 +1,11 @@
 import {
     ActionList,
+    ActionListDescriptionLayout,
     ActionListLine,
     ActionListLineKind,
     ActionListRow,
+    ActionListRowVariant,
+    ActionListSectionHeadingVariant,
     Icons,
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
@@ -15,10 +18,220 @@ export component GalleryActionListPage inherits VerticalLayout {
 
     private property <string> demo-action-list-shell-last: "";
     private property <[ActionListLine]> demo-action-list-shell-lines: [
-        { kind: ActionListLineKind.row, label: "First action", selected: true, disabled: false },
-        { kind: ActionListLineKind.divider, label: "", selected: false, disabled: false },
-        { kind: ActionListLineKind.row, label: "Second action", selected: false, disabled: false },
-        { kind: ActionListLineKind.row, label: "Disabled action", selected: false, disabled: true },
+        {
+            kind: ActionListLineKind.row,
+            label: "First action",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: true,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.divider,
+            label: "",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Second action",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Disabled action",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: true,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+    ];
+
+    private property <string> demo-action-list-pr3-last: "";
+    private property <[ActionListLine]> demo-action-list-pr3-lines: [
+        {
+            kind: ActionListLineKind.section_heading,
+            label: "Workflow",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Default row",
+            description: "Block description under the title.",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "12",
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Inline copy",
+            description: "Secondary on the same line",
+            description-layout: ActionListDescriptionLayout.inline,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Large density row",
+            description: "Taller row (LayoutTokens large metrics).",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: true,
+            leading-icon: Icons.gear_24,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: true,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.divider,
+            label: "",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Delete permanently",
+            description: "Uses ActionListTokens danger surfaces.",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: true,
+            leading-icon: Icons.alert,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.danger,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Inactive item",
+            description: "Not available on your plan.",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "Pro",
+            has-leading-visual: true,
+            leading-icon: Icons.stop,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.inactive,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Loading item",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.loading,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.section_divider,
+            label: "",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionListLineKind.section_heading,
+            label: "Team",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: false,
+            disabled: false,
+            row-variant: ActionListRowVariant.default,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.filled,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Danger + selected",
+            description: "",
+            description-layout: ActionListDescriptionLayout.block,
+            trailing-text: "",
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            selected: true,
+            disabled: false,
+            row-variant: ActionListRowVariant.danger,
+            large: false,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
+        },
     ];
 
     Text {
@@ -29,7 +242,7 @@ export component GalleryActionListPage inherits VerticalLayout {
     }
 
     Text {
-        text: "Primer ActionList port — PR1 shell and shared row chrome.";
+        text: "Primer ActionList port — ActionList shell (PR1) + tokens (PR2) + item variants and sections (PR3).";
         color: PrimerColors.fgColor-muted;
         font-size: 13px;
         wrap: word-wrap;
@@ -48,7 +261,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Shared list-row chrome (hover / pressed / selected). NavList and pickers (e.g. SelectPanel single mode) build on this.";
+            text: "Shared row chrome; pass `row-variant`, `description-layout`, and `large` for ActionList parity demos.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -89,6 +302,57 @@ export component GalleryActionListPage inherits VerticalLayout {
                 clicked => {
                 }
             }
+
+            ActionListRow {
+                width: 100%;
+                label: "Danger row";
+                description: "Hover / pressed use danger-muted surfaces.";
+                row-variant: ActionListRowVariant.danger;
+                has-leading-visual: true;
+                leading-icon: Icons.alert;
+                clicked => {
+                }
+            }
+
+            ActionListRow {
+                width: 100%;
+                label: "Inactive row";
+                description: "Cannot be activated.";
+                trailing-text: "Pro";
+                row-variant: ActionListRowVariant.inactive;
+                has-leading-visual: true;
+                leading-icon: Icons.stop;
+                clicked => {
+                }
+            }
+
+            ActionListRow {
+                width: 100%;
+                label: "Loading row";
+                row-variant: ActionListRowVariant.loading;
+                clicked => {
+                }
+            }
+
+            ActionListRow {
+                width: 100%;
+                label: "Large + block description";
+                description: "Uses `LayoutTokens.action-list-item-min-height-large` and larger block padding.";
+                large: true;
+                has-leading-visual: true;
+                leading-icon: Icons.gear_24;
+                clicked => {
+                }
+            }
+
+            ActionListRow {
+                width: 100%;
+                label: "Inline description";
+                description: "Secondary on the same line";
+                description-layout: ActionListDescriptionLayout.inline;
+                clicked => {
+                }
+            }
         }
     }
 
@@ -98,14 +362,14 @@ export component GalleryActionListPage inherits VerticalLayout {
         alignment: start;
 
         Text {
-            text: "ActionList (PR1 shell)";
+            text: "ActionList (basic shell)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "Flat `lines`: default rows plus a divider. Later PRs add section headings and item variants.";
+            text: "Flat `lines`: default rows and an item divider.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -128,6 +392,47 @@ export component GalleryActionListPage inherits VerticalLayout {
                 lines: demo-action-list-shell-lines;
                 item-activated(idx) => {
                     demo-action-list-shell-last = "\{idx}";
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "ActionList (PR3 — sections + variants)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Section headings (subtle + filled), item divider, section divider, default / danger / inactive / loading rows, large row, inline description.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: demo-action-list-pr3-last == "" ? "Last item-activated index: —" : "Last item-activated index: " + demo-action-list-pr3-last;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            horizontal-stretch: 0;
+            width: 400px;
+
+            ActionList {
+                width: 100%;
+                lines: demo-action-list-pr3-lines;
+                item-activated(idx) => {
+                    demo-action-list-pr3-last = "\{idx}";
                 }
             }
         }
