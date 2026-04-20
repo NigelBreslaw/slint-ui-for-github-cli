@@ -297,6 +297,7 @@ export type SlintIconsGlobal = {
   x: ImageData;
   git_pull_request_draft: ImageData;
   kebab_horizontal: ImageData;
+  link: ImageData;
   link_external: ImageData;
   copy_icon: ImageData;
   gear_24: ImageData;
