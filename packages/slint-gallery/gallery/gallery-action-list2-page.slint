@@ -7,14 +7,72 @@ import {
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (PR1: Simple List; PR2: With Visual List Heading).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (PR1: Simple List; PR2: With Visual List Heading; PR3: With Custom Heading).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
 
+    private property <string> custom-heading-last: "";
     private property <string> simple-list-last: "";
     private property <string> visual-heading-last: "";
+
+    private property <[ActionList2Line]> custom-heading-lines: [
+        {
+            kind: ActionList2LineKind.custom_heading,
+            label: "Details",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            label-emphasis: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Readme",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.book,
+            label-emphasis: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "MIT License",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.law,
+            label-emphasis: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "stars",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.star,
+            label-emphasis: "1.5k",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "watching",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.eye,
+            label-emphasis: "21",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "forks",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.repo_forked,
+            label-emphasis: "225",
+        },
+    ];
 
     private property <[ActionList2Line]> simple-list-lines: [
         {
@@ -24,6 +82,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -32,6 +91,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -40,6 +100,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.item_divider,
@@ -48,6 +109,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -56,6 +118,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
     ];
 
@@ -67,6 +130,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.section_heading,
@@ -75,6 +139,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -83,6 +148,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -91,6 +157,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -99,6 +166,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -107,6 +175,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.section_heading,
@@ -115,6 +184,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -123,6 +193,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -131,6 +202,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
+            label-emphasis: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -139,8 +211,62 @@ export component GalleryActionList2Page inherits VerticalLayout {
             disabled: false,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
+            label-emphasis: "",
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "With Custom Heading";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → With Custom Heading (custom title, leading icons, optional bold count + label).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    lines: root.custom-heading-lines;
+                    item-activated(ix) => {
+                        root.custom-heading-last =
+                            root.custom-heading-lines[ix].label-emphasis != ""
+                            ? root.custom-heading-lines[ix].label-emphasis + " " + root.custom-heading-lines[ix].label
+                            : root.custom-heading-lines[ix].label;
+                    }
+                }
+
+                Text {
+                    visible: root.custom-heading-last != "";
+                    text: "Last activated: " + root.custom-heading-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;

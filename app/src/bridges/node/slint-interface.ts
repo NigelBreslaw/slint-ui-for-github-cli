@@ -313,6 +313,11 @@ export type SlintIconsGlobal = {
   checkbox_fill: ImageData;
   file_directory_fill: ImageData;
   plus_circle: ImageData;
+  book: ImageData;
+  law: ImageData;
+  star: ImageData;
+  eye: ImageData;
+  repo_forked: ImageData;
 };
 
 export type MainWindowInstance = {

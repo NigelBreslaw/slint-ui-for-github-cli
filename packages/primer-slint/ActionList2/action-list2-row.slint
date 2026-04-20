@@ -16,8 +16,11 @@ export component ActionList2Row {
     in property <ActionList2RowVariant> row-variant: ActionList2RowVariant.default;
     in property <bool> has-leading-visual: false;
     in property <image> leading-icon: Icons.dot_fill;
+    in property <string> label-emphasis: "";
 
     callback clicked;
+
+    private property <bool> show-label-split: root.label-emphasis != "";
 
     private property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
     private property <length> cell-padding-block: LayoutTokens.action-list-item-padding-block;
@@ -69,7 +72,7 @@ export component ActionList2Row {
                     colorize: leading-icon-tint;
                 }
 
-                primary-label := Text {
+                if !root.show-label-split: primary-label := Text {
                     horizontal-stretch: 1;
                     min-width: 0px;
                     text: root.label;
@@ -77,6 +80,33 @@ export component ActionList2Row {
                     font-size: LayoutTokens.text-body-size-medium;
                     font-weight: LayoutTokens.base-text-weight-medium;
                     wrap: word-wrap;
+                }
+
+                if root.show-label-split: HorizontalLayout {
+                    horizontal-stretch: 1;
+                    min-width: 0px;
+                    spacing: 4px;
+                    alignment: start;
+                    align-items: center;
+
+                    Text {
+                        horizontal-stretch: 0;
+                        text: root.label-emphasis;
+                        color: root.label-color;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        wrap: word-wrap;
+                    }
+
+                    Text {
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        text: root.label;
+                        color: root.label-color;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-medium;
+                        wrap: word-wrap;
+                    }
                 }
             }
 

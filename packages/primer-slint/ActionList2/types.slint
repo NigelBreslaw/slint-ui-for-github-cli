@@ -13,6 +13,8 @@ export enum ActionList2LineKind {
     item_divider,
     /// Strong list title above groups and rows (Primer list visual heading); only **`label`** is used.
     list_visual_heading,
+    /// Custom list title (body emphasis — e.g. **Details**); only **`label`** is used.
+    custom_heading,
     /// Group label (**`GroupHeading`** subtle); only **`label`** is used.
     section_heading,
 }
@@ -27,4 +29,6 @@ export struct ActionList2Line {
     has-leading-visual: bool,
     /// Row-only: icon source when **`has-leading-visual`** is true.
     leading-icon: image,
+    /// Row-only: when non-empty, shown semibold before **`label`** (regular weight) for mixed emphasis (e.g. counts).
+    label-emphasis: string,
 }

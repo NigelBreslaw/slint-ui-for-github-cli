@@ -1,0 +1,28 @@
+// List title for **With Custom Heading** — Primer ActionList custom heading (Storybook Features → With Custom Heading).
+// Typography differs from [`ActionList2ListVisualHeading`](action-list2-list-visual-heading.slint) (e.g. repo **Details** sidebar).
+
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export component ActionList2CustomHeading {
+    in property <string> title: "";
+
+    min-width: 0px;
+    width: 100%;
+
+    VerticalLayout {
+        spacing: 0px;
+        horizontal-stretch: 1;
+        padding-left: LayoutTokens.action-list-item-padding-inline;
+        padding-right: LayoutTokens.action-list-item-padding-inline;
+        padding-bottom: LayoutTokens.button-content-gap;
+
+        Text {
+            horizontal-stretch: 1;
+            text: root.title;
+            color: PrimerColors.fgColor-default;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: LayoutTokens.base-text-weight-semibold;
+            wrap: word-wrap;
+        }
+    }
+}
