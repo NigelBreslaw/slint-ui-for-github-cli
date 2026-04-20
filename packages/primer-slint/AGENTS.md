@@ -28,8 +28,8 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 
 ## In-repo architecture
 
-- **Barrel:** [`primer.slint`](primer.slint) re-exports components, `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, `TextInputTokens`, `BannerTokens`, `LabelTokens`, **`Icons`**, `Size`, and shared types (**DataTable**, **Select**, **SelectPanel**, **Label**, etc.). When adding exports or model fields, update [`readme.md`](readme.md) where noted (e.g. DataTable **Imports for views**).
-- **Tokens:** [`tokens.slint`](tokens.slint) — several `export global` singletons in **one file**. **Order matters:** `PrimerColors` → `ButtonTokens` → `CheckboxTokens` (uses `ButtonTokens`) → `TextInputTokens` (uses `PrimerColors` + `ButtonTokens`) → `BannerTokens` → `LabelTokens` (`BannerTokens` / `LabelTokens`: `PrimerColors` `out` only; no literals in those globals).
+- **Barrel:** [`primer.slint`](primer.slint) re-exports components, `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, `TextInputTokens`, `BannerTokens`, `LabelTokens`, **`ActionListTokens`**, **`Icons`**, `Size`, and shared types (**DataTable**, **Select**, **SelectPanel**, **Label**, etc.). When adding exports or model fields, update [`readme.md`](readme.md) where noted (e.g. DataTable **Imports for views**).
+- **Tokens:** [`tokens.slint`](tokens.slint) — several `export global` singletons in **one file**. **Order matters:** `PrimerColors` → `ButtonTokens` → `CheckboxTokens` (uses `ButtonTokens`) → `TextInputTokens` (uses `PrimerColors` + `ButtonTokens`) → `BannerTokens` → `LabelTokens` → **`ActionListTokens`** (uses `PrimerColors` + `ButtonTokens` `out` only) (`BannerTokens` / `LabelTokens` / `ActionListTokens`: no literals in those globals).
 
 ### Token layers (current convention)
 
@@ -42,6 +42,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **TextInputTokens** | **`PrimerTextInput`** field chrome (rest / hover / contrast inset / focus / validation / disabled borders + fills); composes **`PrimerColors`** + **`ButtonTokens`** only. |
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |
+| **ActionListTokens** | **ActionList** row/heading semantics (danger, inactive, link, section headings, divider, loading label fg); **only** from **`PrimerColors`** + **`ButtonTokens`** `out`. |
 | **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`DialogBase`** uses panel tokens only; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
 
 **Cross-global rule:** Dependents use other globals’ **`out`** bindings only — not their **private** fields.
