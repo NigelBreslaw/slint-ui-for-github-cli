@@ -14,7 +14,7 @@ import "../../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/VeraMono.ttf";
 
 export global GalleryState {
-    in-out property <int> selected-group-index: 3;
+    in-out property <int> selected-group-index: 5;
 }
 
 export component GalleryWindow inherits Window {
@@ -42,97 +42,78 @@ export component GalleryWindow inherits Window {
     background: PrimerColors.bgColor-default;
 
     VerticalLayout {
-        width: 100%;
-        height: 100%;
-        spacing: 0px;
-
         GalleryHeader {
-            width: 100%;
             height: 64px;
         }
 
         HorizontalLayout {
-            spacing: 0px;
-            alignment: start;
-
             GallerySidebar {
-                width: 240px;
-                vertical-stretch: 1;
                 selected-index: GalleryState.selected-group-index;
                 group-selected(idx) => {
                     GalleryState.selected-group-index = idx;
                 }
             }
 
-            Rectangle {
-                width: 100%;
-                height: 100%;
-                vertical-stretch: 1;
-                horizontal-stretch: 1;
-                background: PrimerColors.bgColor-default;
+            gallery-flick := Flickable {
 
-                gallery-flick := Flickable {
-                    width: 100%;
-                    height: 100%;
-                    viewport-width: self.width;
-                    viewport-height: gallery-main.preferred-height;
+                viewport-width: self.width;
+                viewport-height: gallery-main.preferred-height;
 
-                    gallery-main := VerticalLayout {
-                        width: gallery-flick.width;
-                        height: self.preferred-height;
-                        padding: 24px;
+                gallery-main := VerticalLayout {
+                    width: gallery-flick.width;
+                    padding: 24px;
+                    spacing: 8px;
+                    alignment: start;
+
+                    if GalleryState.selected-group-index == 0: GalleryButtonsPage {
+                        width: 100%;
+                    }
+
+                    if GalleryState.selected-group-index == 1: GalleryNavsPage {
+                        width: 100%;
+                    }
+
+                    if GalleryState.selected-group-index == 2: GalleryFeedbackPage {
+                        width: 100%;
+                    }
+
+                    if GalleryState.selected-group-index == 3: GalleryFormsPage {
+                        width: 100%;
+                        window-inner-width: root.width;
+                        window-inner-height: root.height;
+                    }
+
+                    if GalleryState.selected-group-index == 4: GalleryDataPage {
+                        width: 100%;
+                    }
+
+                    if GalleryState.selected-group-index == 5: GalleryActionListPage {
+                        width: 100%;
+                        height: 100%;
+                    }
+
+                    if GalleryState.selected-group-index != 0 && GalleryState.selected-group-index != 1 && GalleryState.selected-group-index != 2 && GalleryState.selected-group-index != 3 && GalleryState.selected-group-index != 4 && GalleryState.selected-group-index != 5: VerticalLayout {
                         spacing: 8px;
-                        alignment: start;
+                        width: 100%;
 
-                        if GalleryState.selected-group-index == 0: GalleryButtonsPage {
-                            width: 100%;
+                        Text {
+                            text: "Storybook-style catalog";
+                            font-size: 16px;
+                            font-weight: 600;
+                            color: PrimerColors.fgColor-default;
                         }
 
-                        if GalleryState.selected-group-index == 1: GalleryNavsPage {
-                            width: 100%;
+                        Text {
+                            text: "Component demos for this group will appear in a later PR. Use the sidebar to switch groups.";
+                            font-size: 14px;
+                            color: PrimerColors.fgColor-muted;
+                            wrap: word-wrap;
                         }
 
-                        if GalleryState.selected-group-index == 2: GalleryFeedbackPage {
-                            width: 100%;
-                        }
-
-                        if GalleryState.selected-group-index == 3: GalleryFormsPage {
-                            width: 100%;
-                            window-inner-width: root.width;
-                            window-inner-height: root.height;
-                        }
-
-                        if GalleryState.selected-group-index == 4: GalleryDataPage {
-                            width: 100%;
-                        }
-
-                        if GalleryState.selected-group-index == 5: GalleryActionListPage {
-                            width: 100%;
-                        }
-
-                        if GalleryState.selected-group-index != 0 && GalleryState.selected-group-index != 1 && GalleryState.selected-group-index != 2 && GalleryState.selected-group-index != 3 && GalleryState.selected-group-index != 4 && GalleryState.selected-group-index != 5: VerticalLayout {
-                            spacing: 8px;
-                            width: 100%;
-
-                            Text {
-                                text: "Storybook-style catalog";
-                                font-size: 16px;
-                                font-weight: 600;
-                                color: PrimerColors.fgColor-default;
-                            }
-
-                            Text {
-                                text: "Component demos for this group will appear in a later PR. Use the sidebar to switch groups.";
-                                font-size: 14px;
-                                color: PrimerColors.fgColor-muted;
-                                wrap: word-wrap;
-                            }
-
-                            Text {
-                                text: "Selected group index: \{GalleryState.selected-group-index}";
-                                font-size: 12px;
-                                color: PrimerColors.fgColor-muted;
-                            }
+                        Text {
+                            text: "Selected group index: \{GalleryState.selected-group-index}";
+                            font-size: 12px;
+                            color: PrimerColors.fgColor-muted;
                         }
                     }
                 }
