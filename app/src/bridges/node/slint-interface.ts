@@ -311,6 +311,8 @@ export type SlintIconsGlobal = {
   check: ImageData;
   search: ImageData;
   checkbox_fill: ImageData;
+  file_directory_fill: ImageData;
+  plus_circle: ImageData;
 };
 
 export type MainWindowInstance = {

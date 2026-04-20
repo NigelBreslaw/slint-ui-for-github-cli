@@ -3,16 +3,18 @@ import {
     ActionList2Line,
     ActionList2LineKind,
     ActionList2RowVariant,
+    Icons,
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (PR1: Simple List only).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (PR1: Simple List; PR2: With Visual List Heading).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
 
     private property <string> simple-list-last: "";
+    private property <string> visual-heading-last: "";
 
     private property <[ActionList2Line]> simple-list-lines: [
         {
@@ -20,30 +22,123 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Copy link",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
         },
         {
             kind: ActionList2LineKind.row,
             label: "Quote reply",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
         },
         {
             kind: ActionList2LineKind.row,
             label: "Edit comment",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
         },
         {
             kind: ActionList2LineKind.item_divider,
             label: "",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
         },
         {
             kind: ActionList2LineKind.row,
             label: "Delete file",
             row-variant: ActionList2RowVariant.danger,
             disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+        },
+    ];
+
+    private property <[ActionList2Line]> visual-heading-lines: [
+        {
+            kind: ActionList2LineKind.list_visual_heading,
+            label: "Filter by",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionList2LineKind.section_heading,
+            label: "Repositories",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "app/assets/modules",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.file_directory_fill,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "app/components",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.file_directory_fill,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "app/hooks",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.file_directory_fill,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "app/utility-types",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.file_directory_fill,
+        },
+        {
+            kind: ActionList2LineKind.section_heading,
+            label: "Advanced",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Owner",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.plus_circle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Symbol",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.plus_circle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Exclude archived",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.plus_circle,
         },
     ];
 
@@ -89,6 +184,56 @@ export component GalleryActionList2Page inherits VerticalLayout {
                 Text {
                     visible: root.simple-list-last != "";
                     text: "Last activated: " + root.simple-list-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "With Visual List Heading";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → With Visual List Heading (list title, subtle group headings, leading icons).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    lines: root.visual-heading-lines;
+                    item-activated(ix) => {
+                        root.visual-heading-last = root.visual-heading-lines[ix].label;
+                    }
+                }
+
+                Text {
+                    visible: root.visual-heading-last != "";
+                    text: "Last activated: " + root.visual-heading-last;
                     color: PrimerColors.fgColor-muted;
                     font-size: 12px;
                     wrap: word-wrap;

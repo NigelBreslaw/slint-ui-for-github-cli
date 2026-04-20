@@ -1,5 +1,6 @@
 // ActionList2 row — Primer ActionList item (default | danger); ButtonTokens + ActionListTokens.
 
+import { Icons } from "../assets/icons.slint";
 import {
     ActionListTokens,
     ButtonTokens,
@@ -13,6 +14,8 @@ export component ActionList2Row {
     in property <string> label: "";
     in property <bool> disabled: false;
     in property <ActionList2RowVariant> row-variant: ActionList2RowVariant.default;
+    in property <bool> has-leading-visual: false;
+    in property <image> leading-icon: Icons.dot_fill;
 
     callback clicked;
 
@@ -23,6 +26,13 @@ export component ActionList2Row {
         root.row-variant == ActionList2RowVariant.danger
         ? (root.disabled ? ActionListTokens.item-danger-fgColor-disabled : ActionListTokens.item-danger-fgColor-rest)
         : (root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default);
+
+    private property <color> leading-icon-tint:
+        root.disabled
+        ? ButtonTokens.control-fgColor-disabled
+        : root.row-variant == ActionList2RowVariant.danger
+        ? ActionListTokens.item-danger-fgColor-rest
+        : PrimerColors.fgColor-muted;
 
     min-height: root.cell-min-height;
     width: 100%;
@@ -48,6 +58,16 @@ export component ActionList2Row {
                 padding-bottom: root.cell-padding-block;
                 spacing: LayoutTokens.button-content-gap;
                 alignment: start;
+                align-items: center;
+
+                if root.has-leading-visual: Image {
+                    horizontal-stretch: 0;
+                    width: LayoutTokens.iconButton-icon-size-medium;
+                    height: LayoutTokens.iconButton-icon-size-medium;
+                    vertical-alignment: center;
+                    source: root.leading-icon;
+                    colorize: leading-icon-tint;
+                }
 
                 primary-label := Text {
                     horizontal-stretch: 1;

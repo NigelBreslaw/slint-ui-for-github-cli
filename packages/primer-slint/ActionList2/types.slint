@@ -11,12 +11,20 @@ export enum ActionList2LineKind {
     row,
     /// Hairline between items (Primer item divider); other fields ignored.
     item_divider,
+    /// Strong list title above groups and rows (Primer list visual heading); only **`label`** is used.
+    list_visual_heading,
+    /// Group label (**`GroupHeading`** subtle); only **`label`** is used.
+    section_heading,
 }
 
-/// One entry: row or [`ActionList2LineKind.item_divider`]. Unused fields ignored per `kind`.
+/// One entry: row, divider, or headings. Unused fields ignored per `kind`.
 export struct ActionList2Line {
     kind: ActionList2LineKind,
     label: string,
     row-variant: ActionList2RowVariant,
     disabled: bool,
+    /// Row-only: show leading 16px icon (**`leading-icon`**).
+    has-leading-visual: bool,
+    /// Row-only: icon source when **`has-leading-visual`** is true.
+    leading-icon: image,
 }
