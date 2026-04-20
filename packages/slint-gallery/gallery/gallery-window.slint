@@ -6,6 +6,7 @@ import { GalleryNavsPage } from "./gallery-navs-page.slint";
 import { GalleryFeedbackPage } from "./gallery-feedback-page.slint";
 import { GalleryFormsPage } from "./gallery-forms-page.slint";
 import { GalleryDataPage } from "./gallery-data-page.slint";
+import { AppWindow } from "../../primer-slint/tokens.slint";
 
 import "../../primer-slint/assets/fonts/MonaSans-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
@@ -15,13 +16,7 @@ export global GalleryState {
     in-out property <int> selected-group-index: 3;
 }
 
-export global AppWindow {
-    in-out property <length> window-width;
-    in-out property <length> window-height;
-}
-
 export component GalleryWindow inherits Window {
-
 
     changed width => {
         AppWindow.window-width = root.width;

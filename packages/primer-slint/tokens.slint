@@ -7,6 +7,11 @@ export enum Size {
     large,
 }
 
+export global AppWindow {
+    in-out property <length> window-width;
+    in-out property <length> window-height;
+}
+
 export global ShadowTokens {
 
     property <[DropShadowLayer]> shadow-floating-small-light: [
