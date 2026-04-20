@@ -47,6 +47,9 @@ export component ActionList2Row {
     private property <bool> show-inline-description:
         root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
 
+    private property <bool> show-block-description:
+        root.description != "" && root.description-layout == ActionList2DescriptionLayout.block;
+
     private property <color> inline-description-color:
         root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
 
@@ -85,7 +88,7 @@ export component ActionList2Row {
                     padding-bottom: root.cell-padding-block;
                     spacing: LayoutTokens.button-content-gap;
                     alignment: start;
-                    align-items: center;
+                    align-items: root.show-block-description ? start : center;
 
                     if root.has-leading-avatar: Avatar {
                         horizontal-stretch: 0;
@@ -140,7 +143,42 @@ export component ActionList2Row {
                         }
                     }
 
-                    if !root.show-inline-description && !root.has-markdown: Text {
+                    if root.show-block-description: VerticalLayout {
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        spacing: 2px;
+                        alignment: start;
+
+                        if !root.has-markdown: Text {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            text: root.label;
+                            color: root.label-color;
+                            font-size: LayoutTokens.text-body-size-medium;
+                            font-weight: LayoutTokens.base-text-weight-medium;
+                            wrap: word-wrap;
+                        }
+
+                        if root.has-markdown: StyledText {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            text: root.label-markdown;
+                            default-color: root.label-color;
+                            default-font-size: LayoutTokens.text-body-size-medium;
+                        }
+
+                        Text {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            text: root.description;
+                            color: root.inline-description-color;
+                            font-size: LayoutTokens.text-body-size-small;
+                            font-weight: LayoutTokens.base-text-weight-medium;
+                            wrap: word-wrap;
+                        }
+                    }
+
+                    if !root.show-inline-description && !root.show-block-description && !root.has-markdown: Text {
                         horizontal-stretch: 1;
                         min-width: 0px;
                         text: root.label;
@@ -150,7 +188,7 @@ export component ActionList2Row {
                         vertical-alignment: center;
                     }
 
-                    if !root.show-inline-description && root.has-markdown: StyledText {
+                    if !root.show-inline-description && !root.show-block-description && root.has-markdown: StyledText {
                         horizontal-stretch: 1;
                         min-width: 0px;
                         text: root.label-markdown;

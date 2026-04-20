@@ -11,6 +11,8 @@ export enum ActionList2DescriptionLayout {
     none,
     /// Label and description on one row (`data-description-variant='inline'`).
     inline,
+    /// Description below the label (`variant="block"` / `data-description-variant='block'`).
+    block,
 }
 
 /// Line in [`ActionList2`](action-list2.slint): interactive row or item divider hairline.
@@ -38,7 +40,7 @@ export struct ActionList2Line {
     avatar-source: image,
     has-leading-visual: bool,
     leading-icon: image,
-    /// Row-only: secondary line when **`description-layout`** is **inline** or (future) **block**.
+    /// Row-only: secondary line when **`description-layout`** is **inline** or **block**.
     description: string,
     description-layout: ActionList2DescriptionLayout,
     label-markdown: styled-text,

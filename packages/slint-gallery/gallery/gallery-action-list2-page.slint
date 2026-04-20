@@ -8,12 +8,13 @@ import {
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Inline Description, Item Dividers, With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Block Description, Inline Description, Item Dividers, With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
 
+    private property <string> block-description-last: "";
     private property <string> inline-description-last: "";
     private property <string> item-dividers-last: "";
     private property <string> with-avatars-last: "";
@@ -21,6 +22,107 @@ export component GalleryActionList2Page inherits VerticalLayout {
     private property <string> custom-heading-last: "";
     private property <string> simple-list-last: "";
     private property <string> visual-heading-last: "";
+
+    private property <[ActionList2Line]> block-description-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "pksjce",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/person-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Pavithra Kodmad",
+            description-layout: ActionList2DescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "jfuchs",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/hubot.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Jonathan Fuchs",
+            description-layout: ActionList2DescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "colebemis",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/beaker.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Cole Bemis",
+            description-layout: ActionList2DescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "mperrotti",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/smiley.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Mike Perrotti",
+            description-layout: ActionList2DescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "dgreif",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/heart-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Dusty Greif",
+            description-layout: ActionList2DescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "smockle",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/star-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Clay Miller",
+            description-layout: ActionList2DescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "siddharthkp",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/flame.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Siddharth Kshetrapal",
+            description-layout: ActionList2DescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+    ];
 
     private property <[ActionList2Line]> inline-description-lines: [
         {
@@ -644,6 +746,56 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label-markdown: @markdown(""),
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "Block description";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → Block Description (leading Avatar, primary label + block description).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    lines: root.block-description-lines;
+                    item-activated(ix) => {
+                        root.block-description-last = root.block-description-lines[ix].label;
+                    }
+                }
+
+                Text {
+                    visible: root.block-description-last != "";
+                    text: "Last activated: " + root.block-description-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;
