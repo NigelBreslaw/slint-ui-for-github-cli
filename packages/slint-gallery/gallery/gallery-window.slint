@@ -7,6 +7,7 @@ import { GalleryFeedbackPage } from "./gallery-feedback-page.slint";
 import { GalleryFormsPage } from "./gallery-forms-page.slint";
 import { GalleryDataPage } from "./gallery-data-page.slint";
 import { GalleryActionListPage } from "./gallery-action-list-page.slint";
+import { GalleryActionList2Page } from "./gallery-action-list2-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
 
 import "../../primer-slint/assets/fonts/MonaSans-VariableFont.ttf";
@@ -84,6 +85,8 @@ export component GalleryWindow inherits Window {
                         if GalleryState.selected-group-index == 4: GalleryDataPage { }
 
                         if GalleryState.selected-group-index == 5: GalleryActionListPage { }
+
+                        if GalleryState.selected-group-index == 6: GalleryActionList2Page { }
                     }
                 }
             }

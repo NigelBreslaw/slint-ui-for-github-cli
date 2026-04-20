@@ -1,0 +1,68 @@
+import { ActionList2 } from "../../primer-slint/primer.slint";
+import { PrimerColors } from "../../primer-slint/tokens.slint";
+
+/// ActionList2 demos — one section per upstream Storybook **Features** story (PR1: Simple List only).
+export component GalleryActionList2Page inherits VerticalLayout {
+    spacing: 28px;
+    width: 100%;
+    alignment: start;
+
+    private property <string> simple-list-last: "";
+
+    private property <[string]> simple-list-items: [
+        "Copy link",
+        "Quote reply",
+        "Edit comment",
+        "Delete file",
+    ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "Simple List";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → Simple List (plain action rows).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    items: root.simple-list-items;
+                    item-activated(ix) => {
+                        root.simple-list-last = root.simple-list-items[ix];
+                    }
+                }
+
+                Text {
+                    visible: root.simple-list-last != "";
+                    text: "Last activated: " + root.simple-list-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,29 @@
+// ActionList2 — vertical list of default action rows (upstream: Primer ActionList).
+// PR1: `items` + `item-activated` for SimpleList; more line kinds later.
+
+import { ActionList2Row } from "./action-list2-row.slint";
+
+export component ActionList2 {
+    /// Primary labels, top to bottom (Storybook **SimpleList**: Copy link, Quote reply, …).
+    in property <[string]> items: [];
+    /// Fired with index into `items` when a non-disabled row is activated.
+    callback item-activated(int);
+
+    min-width: 0px;
+    width: 100%;
+
+    VerticalLayout {
+        spacing: 0px;
+        width: 100%;
+        alignment: start;
+
+        for label[ix] in root.items: ActionList2Row {
+            width: 100%;
+            label: label;
+            disabled: false;
+            clicked => {
+                root.item-activated(ix);
+            }
+        }
+    }
+}

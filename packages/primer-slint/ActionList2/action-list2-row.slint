@@ -1,0 +1,70 @@
+// ActionList2 row — default item chrome only (Primer ActionList item; ButtonTokens action-list hover/active).
+// PR1: SimpleList parity; extend with variants in later PRs.
+
+import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export component ActionList2Row {
+    min-width: 0px;
+    in property <string> label: "";
+    in property <bool> disabled: false;
+
+    callback clicked;
+
+    private property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
+    private property <length> cell-padding-block: LayoutTokens.action-list-item-padding-block;
+
+    min-height: root.cell-min-height;
+    width: 100%;
+
+    ta := TouchArea {
+        horizontal-stretch: 1;
+        min-width: 0px;
+        min-height: root.cell-min-height;
+        enabled: !root.disabled;
+        clicked => {
+            root.clicked();
+        }
+
+        row-bg := Rectangle {
+            border-radius: LayoutTokens.borderRadius-medium;
+            background: #00000000;
+
+            hl := HorizontalLayout {
+                min-height: root.cell-min-height;
+                padding-left: LayoutTokens.action-list-item-padding-inline;
+                padding-right: LayoutTokens.action-list-item-padding-inline;
+                padding-top: root.cell-padding-block;
+                padding-bottom: root.cell-padding-block;
+                spacing: LayoutTokens.button-content-gap;
+                alignment: start;
+
+                primary-label := Text {
+                    horizontal-stretch: 1;
+                    min-width: 0px;
+                    text: root.label;
+                    color: PrimerColors.fgColor-default;
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-medium;
+                    wrap: word-wrap;
+                    states [
+                        disabled when root.disabled: {
+                            primary-label.color: ButtonTokens.control-fgColor-disabled;
+                        }
+                    ]
+                }
+            }
+
+            states [
+                disabled when root.disabled: {
+                    row-bg.background: #00000000;
+                }
+                pressed when !root.disabled && ta.pressed: {
+                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                }
+                hover when !root.disabled && !ta.pressed && ta.has-hover: {
+                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                }
+            ]
+        }
+    }
+}
