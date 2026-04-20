@@ -45,8 +45,8 @@ importers:
         specifier: workspace:*
         version: link:../packages/slint-bridge-kit
       slint-ui:
-        specifier: 1.16.0-nightly.2026040720
-        version: 1.16.0-nightly.2026040720(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
+        specifier: 1.17.0-nightly.2026041914
+        version: 1.17.0-nightly.2026041914(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
     devDependencies:
       '@types/better-sqlite3':
         specifier: 7.6.13
@@ -407,6 +407,16 @@ packages:
 
   '@napi-rs/cli@3.6.0':
     resolution: {integrity: sha512-aA8m4+9XxnK1+0sr4GplZP0Ze90gkzO8sMKaplOK0zXbLnzsLl6O2BQQt6rTCcTRzIN24wrrByakr/imM+CxhA==}
+    engines: {node: '>= 16'}
+    hasBin: true
+    peerDependencies:
+      '@emnapi/runtime': ^1.7.1
+    peerDependenciesMeta:
+      '@emnapi/runtime':
+        optional: true
+
+  '@napi-rs/cli@3.6.2':
+    resolution: {integrity: sha512-jy5rABUh9tbE/vPRzw9kGzGuqZiVslyDQUV8LkvjzqVX/oJMN7g0U1uhtr9L3W1H+iRM/urXHXUf+CE4n8FvLA==}
     engines: {node: '>= 16'}
     hasBin: true
     peerDependencies:
@@ -1317,8 +1327,21 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@slint-ui/slint-ui-binary-darwin-arm64@1.17.0-nightly.2026041914':
+    resolution: {integrity: sha512-ObpQBTncD7ZppqO8Q8tAOlnKZvkNtWMOWK0nKRlzi5+rr/EFz9N1wzHfJr0twtKwVWwDD2FgiVEPLhkOpJzlMg==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [darwin]
+
   '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040720':
     resolution: {integrity: sha512-oRbUhr67sNHfz8zmBI/Q0DUDFUnSf5m8jGnZiZXB896oL+vt4LwnJrcivT7kILgVt13wMgGk3T3NNfWK1sg+2A==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [linux]
+    libc: [glibc]
+
+  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.17.0-nightly.2026041914':
+    resolution: {integrity: sha512-JQO+sfiJdyFDfWX1eHfgRjCYT6WFOdyYm+yv7Pb48tWAKRvlluvzpYBhLuIrBgmVjhkVdT4Yvcp3NAV35MU7HQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -1331,14 +1354,33 @@ packages:
     os: [linux]
     libc: [glibc]
 
+  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.17.0-nightly.2026041914':
+    resolution: {integrity: sha512-3KmbOUZKUwKjBsK2cNeZj2OIlfD9v6hn8YKdSCRd6PV4WgJdlxa6ZfixqqDWdx16m1/1g2zi92ABC5AqNZCfqQ==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [linux]
+    libc: [glibc]
+
   '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040720':
     resolution: {integrity: sha512-Sumnb3X/mrg2r8ILD8Yj+JOcdUw63DhLEofm48PsNqTBARpziNKjv2F3voPf6NhkHgOgTrMgu5Ku5uEZqRmiQQ==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
 
+  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.17.0-nightly.2026041914':
+    resolution: {integrity: sha512-BZjdS7KQb5un2PD+zjpnZ6OWWG2/vLK6+r3YKZIxqwmq1zrIccf2lLPYUvXVAhE8xCNoAYmN5oUtg8hBJDX6fA==}
+    engines: {node: '>= 10'}
+    cpu: [arm64]
+    os: [win32]
+
   '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040720':
     resolution: {integrity: sha512-TqAyceS+VEtvlI/APWK1S0AhRywKcQzNQe+pb7bm4chW+n4qu3p+17izUjbi1qqxMn809rvFwF2Ic8NGyGF3Pg==}
+    engines: {node: '>= 10'}
+    cpu: [x64]
+    os: [win32]
+
+  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.17.0-nightly.2026041914':
+    resolution: {integrity: sha512-gpOQmCFJGQVkJaZ8ObwPTPHM3fiwifYsuywI5D/jkC1SLUQ4LgyzgxHNggmjCOHn1zzXwxomJiSs3PZx8loSZg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -1812,6 +1854,10 @@ packages:
     resolution: {integrity: sha512-ubKZ10oSSoxtMVP1Hjufzv1LYg/M1TqPNbOM1DhIOkOD5bg4NKxiZHUKBMdyO9nGIWb5m+nlqUmN1xXVR3LYug==}
     engines: {node: '>= 10'}
 
+  slint-ui@1.17.0-nightly.2026041914:
+    resolution: {integrity: sha512-PeIFt8zQRgdBKd70qasz/A81mYbtVbJ8h8rv1Uj1SiwInilFuVnKLecc9sRWRXKpwEuCpy/K5pBhXveXlahwmw==}
+    engines: {node: '>= 10'}
+
   smol-toml@1.6.1:
     resolution: {integrity: sha512-dWUG8F5sIIARXih1DTaQAX4SsiTXhInKf1buxdY9DIg4ZYPZK5nGM1VRIYmEbDbsHt7USo99xSLFu5Q1IqTmsg==}
     engines: {node: '>= 18'}
@@ -2167,6 +2213,38 @@ snapshots:
       '@types/node': 25.5.0
 
   '@napi-rs/cli@3.6.0(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)':
+    dependencies:
+      '@inquirer/prompts': 8.3.2(@types/node@25.5.0)
+      '@napi-rs/cross-toolchain': 1.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)
+      '@napi-rs/wasm-tools': 1.0.1(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)
+      '@octokit/rest': 22.0.1
+      clipanion: 4.0.0-rc.4(typanion@3.14.0)
+      colorette: 2.0.20
+      emnapi: 1.9.2
+      es-toolkit: 1.45.1
+      js-yaml: 4.1.1
+      obug: 2.1.1
+      semver: 7.7.4
+      typanion: 3.14.0
+    optionalDependencies:
+      '@emnapi/runtime': 1.9.2
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@napi-rs/cross-toolchain-arm64-target-aarch64'
+      - '@napi-rs/cross-toolchain-arm64-target-armv7'
+      - '@napi-rs/cross-toolchain-arm64-target-ppc64le'
+      - '@napi-rs/cross-toolchain-arm64-target-s390x'
+      - '@napi-rs/cross-toolchain-arm64-target-x86_64'
+      - '@napi-rs/cross-toolchain-x64-target-aarch64'
+      - '@napi-rs/cross-toolchain-x64-target-armv7'
+      - '@napi-rs/cross-toolchain-x64-target-ppc64le'
+      - '@napi-rs/cross-toolchain-x64-target-s390x'
+      - '@napi-rs/cross-toolchain-x64-target-x86_64'
+      - '@types/node'
+      - node-addon-api
+      - supports-color
+
+  '@napi-rs/cli@3.6.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)':
     dependencies:
       '@inquirer/prompts': 8.3.2(@types/node@25.5.0)
       '@napi-rs/cross-toolchain': 1.0.3(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)
@@ -2760,16 +2838,31 @@ snapshots:
   '@slint-ui/slint-ui-binary-darwin-arm64@1.16.0-nightly.2026040720':
     optional: true
 
+  '@slint-ui/slint-ui-binary-darwin-arm64@1.17.0-nightly.2026041914':
+    optional: true
+
   '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.16.0-nightly.2026040720':
+    optional: true
+
+  '@slint-ui/slint-ui-binary-linux-arm64-gnu@1.17.0-nightly.2026041914':
     optional: true
 
   '@slint-ui/slint-ui-binary-linux-x64-gnu@1.16.0-nightly.2026040720':
     optional: true
 
+  '@slint-ui/slint-ui-binary-linux-x64-gnu@1.17.0-nightly.2026041914':
+    optional: true
+
   '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.16.0-nightly.2026040720':
     optional: true
 
+  '@slint-ui/slint-ui-binary-win32-arm64-msvc@1.17.0-nightly.2026041914':
+    optional: true
+
   '@slint-ui/slint-ui-binary-win32-x64-msvc@1.16.0-nightly.2026040720':
+    optional: true
+
+  '@slint-ui/slint-ui-binary-win32-x64-msvc@1.17.0-nightly.2026041914':
     optional: true
 
   '@tybys/wasm-util@0.10.1':
@@ -3336,6 +3429,32 @@ snapshots:
       '@slint-ui/slint-ui-binary-linux-x64-gnu': 1.16.0-nightly.2026040720
       '@slint-ui/slint-ui-binary-win32-arm64-msvc': 1.16.0-nightly.2026040720
       '@slint-ui/slint-ui-binary-win32-x64-msvc': 1.16.0-nightly.2026040720
+    transitivePeerDependencies:
+      - '@emnapi/core'
+      - '@emnapi/runtime'
+      - '@napi-rs/cross-toolchain-arm64-target-aarch64'
+      - '@napi-rs/cross-toolchain-arm64-target-armv7'
+      - '@napi-rs/cross-toolchain-arm64-target-ppc64le'
+      - '@napi-rs/cross-toolchain-arm64-target-s390x'
+      - '@napi-rs/cross-toolchain-arm64-target-x86_64'
+      - '@napi-rs/cross-toolchain-x64-target-aarch64'
+      - '@napi-rs/cross-toolchain-x64-target-armv7'
+      - '@napi-rs/cross-toolchain-x64-target-ppc64le'
+      - '@napi-rs/cross-toolchain-x64-target-s390x'
+      - '@napi-rs/cross-toolchain-x64-target-x86_64'
+      - '@types/node'
+      - node-addon-api
+      - supports-color
+
+  slint-ui@1.17.0-nightly.2026041914(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0):
+    dependencies:
+      '@napi-rs/cli': 3.6.2(@emnapi/core@1.9.1)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)
+    optionalDependencies:
+      '@slint-ui/slint-ui-binary-darwin-arm64': 1.17.0-nightly.2026041914
+      '@slint-ui/slint-ui-binary-linux-arm64-gnu': 1.17.0-nightly.2026041914
+      '@slint-ui/slint-ui-binary-linux-x64-gnu': 1.17.0-nightly.2026041914
+      '@slint-ui/slint-ui-binary-win32-arm64-msvc': 1.17.0-nightly.2026041914
+      '@slint-ui/slint-ui-binary-win32-x64-msvc': 1.17.0-nightly.2026041914
     transitivePeerDependencies:
       - '@emnapi/core'
       - '@emnapi/runtime'
