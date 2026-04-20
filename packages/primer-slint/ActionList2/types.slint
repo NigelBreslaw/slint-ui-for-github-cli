@@ -6,6 +6,13 @@ export enum ActionList2RowVariant {
     danger,
 }
 
+/// Primary label vs optional **Description** (Primer `ActionList.Description` — inline vs block).
+export enum ActionList2DescriptionLayout {
+    none,
+    /// Label and description on one row (`data-description-variant='inline'`).
+    inline,
+}
+
 /// Line in [`ActionList2`](action-list2.slint): interactive row or item divider hairline.
 export enum ActionList2LineKind {
     row,
@@ -31,6 +38,9 @@ export struct ActionList2Line {
     avatar-source: image,
     has-leading-visual: bool,
     leading-icon: image,
+    /// Row-only: secondary line when **`description-layout`** is **inline** or (future) **block**.
+    description: string,
+    description-layout: ActionList2DescriptionLayout,
     label-markdown: styled-text,
     has-markdown: bool,
 }

@@ -1,5 +1,6 @@
 import {
     ActionList2,
+    ActionList2DescriptionLayout,
     ActionList2Line,
     ActionList2LineKind,
     ActionList2RowVariant,
@@ -7,18 +8,120 @@ import {
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Item Dividers, With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Inline Description, Item Dividers, With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
 
+    private property <string> inline-description-last: "";
     private property <string> item-dividers-last: "";
     private property <string> with-avatars-last: "";
     private property <string> with-icons-last: "";
     private property <string> custom-heading-last: "";
     private property <string> simple-list-last: "";
     private property <string> visual-heading-last: "";
+
+    private property <[ActionList2Line]> inline-description-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "pksjce",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/person-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Pavithra Kodmad",
+            description-layout: ActionList2DescriptionLayout.inline,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "jfuchs",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/hubot.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Jonathan Fuchs",
+            description-layout: ActionList2DescriptionLayout.inline,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "colebemis",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/beaker.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Cole Bemis",
+            description-layout: ActionList2DescriptionLayout.inline,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "mperrotti",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/smiley.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Mike Perrotti",
+            description-layout: ActionList2DescriptionLayout.inline,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "dgreif",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/heart-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Dusty Greif",
+            description-layout: ActionList2DescriptionLayout.inline,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "smockle",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/star-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Clay Miller",
+            description-layout: ActionList2DescriptionLayout.inline,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "siddharthkp",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/flame.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "Siddharth Kshetrapal",
+            description-layout: ActionList2DescriptionLayout.inline,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+    ];
 
     private property <[ActionList2Line]> item-dividers-lines: [
         {
@@ -30,6 +133,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -42,6 +147,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -54,6 +161,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -69,6 +178,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: @image-url("../../primer-slint/assets/16px/person-fill.svg"),
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -81,6 +192,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: @image-url("../../primer-slint/assets/16px/hubot.svg"),
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -93,6 +206,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: @image-url("../../primer-slint/assets/16px/beaker.svg"),
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -105,6 +220,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: @image-url("../../primer-slint/assets/16px/smiley.svg"),
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -117,6 +234,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: @image-url("../../primer-slint/assets/16px/heart-fill.svg"),
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -129,6 +248,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: @image-url("../../primer-slint/assets/16px/star-fill.svg"),
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -141,6 +262,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: @image-url("../../primer-slint/assets/16px/flame.svg"),
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -156,6 +279,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.link,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -168,6 +293,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.law,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -180,6 +307,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.star,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -192,6 +321,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.repo_forked,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -204,6 +335,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.alert,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -219,6 +352,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -231,6 +366,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.book,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -243,6 +380,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.law,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -255,6 +394,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.star,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: true,
             label-markdown: @markdown("**1.5k** stars"),
         },
@@ -267,6 +408,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.eye,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: true,
             label-markdown: @markdown("**21** watching"),
         },
@@ -279,6 +422,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             has-leading-visual: true,
             leading-icon: Icons.repo_forked,
             label: "225 forks",
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: true,
             label-markdown: @markdown("**225** forks"),
         },
@@ -294,6 +439,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -306,6 +453,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -318,6 +467,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -330,6 +481,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -342,6 +495,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -357,6 +512,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -369,6 +526,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -381,6 +540,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -393,6 +554,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -405,6 +568,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -417,6 +582,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -429,6 +596,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -441,6 +610,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -453,6 +624,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
@@ -465,10 +638,62 @@ export component GalleryActionList2Page inherits VerticalLayout {
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "Inline description";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → Inline Description (leading Avatar, primary label + inline description).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    lines: root.inline-description-lines;
+                    item-activated(ix) => {
+                        root.inline-description-last = root.inline-description-lines[ix].label;
+                    }
+                }
+
+                Text {
+                    visible: root.inline-description-last != "";
+                    text: "Last activated: " + root.inline-description-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;
@@ -677,14 +902,14 @@ export component GalleryActionList2Page inherits VerticalLayout {
         alignment: start;
 
         Text {
-            text: "Simple List";
+            text: "Single Divider";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "Matches Storybook Features → Simple List (divider before danger row).";
+            text: "Matches Storybook Features → Simple Divider";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;

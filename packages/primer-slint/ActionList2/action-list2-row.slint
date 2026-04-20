@@ -8,7 +8,7 @@ import {
     LayoutTokens,
     PrimerColors,
 } from "../tokens.slint";
-import { ActionList2RowVariant } from "./types.slint";
+import { ActionList2DescriptionLayout, ActionList2RowVariant } from "./types.slint";
 
 export component ActionList2Row {
     min-width: 0px;
@@ -23,6 +23,8 @@ export component ActionList2Row {
     in property <image> leading-icon: Icons.dot_fill;
     /// Primer `ActionList` `showDividers`: hairline between consecutive rows (`borderColor-muted`), no block margins (unlike [`ActionList2ItemDivider`]).
     in property <bool> show-top-seam: false;
+    in property <string> description: "";
+    in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
 
     callback clicked;
 
@@ -41,6 +43,12 @@ export component ActionList2Row {
         : root.row-variant == ActionList2RowVariant.danger
         ? ActionListTokens.item-danger-fgColor-rest
         : PrimerColors.fgColor-muted;
+
+    private property <bool> show-inline-description:
+        root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
+
+    private property <color> inline-description-color:
+        root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
 
     min-height: root.cell-min-height + (root.show-top-seam ? LayoutTokens.table-border-width : 0px);
     width: 100%;
@@ -94,7 +102,45 @@ export component ActionList2Row {
                         colorize: leading-icon-tint;
                     }
 
-                    if !root.has-markdown: Text {
+                    if root.show-inline-description: HorizontalLayout {
+                        horizontal-stretch: 1;
+                        min-width: 0px;
+                        spacing: LayoutTokens.button-content-gap;
+                        alignment: center;
+                        align-items: center;
+
+                        if !root.has-markdown: Text {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            text: root.label;
+                            color: root.label-color;
+                            font-size: LayoutTokens.text-body-size-medium;
+                            font-weight: LayoutTokens.base-text-weight-medium;
+                            wrap: word-wrap;
+                            vertical-alignment: center;
+                        }
+
+                        if root.has-markdown: StyledText {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            text: root.label-markdown;
+                            default-color: root.label-color;
+                            default-font-size: LayoutTokens.text-body-size-medium;
+                            vertical-alignment: center;
+                        }
+
+                        if root.description != "": Text {
+                            horizontal-stretch: 0;
+                            text: root.description;
+                            color: root.inline-description-color;
+                            font-size: LayoutTokens.text-body-size-small;
+                            font-weight: LayoutTokens.base-text-weight-medium;
+                            wrap: word-wrap;
+                            vertical-alignment: center;
+                        }
+                    }
+
+                    if !root.show-inline-description && !root.has-markdown: Text {
                         horizontal-stretch: 1;
                         min-width: 0px;
                         text: root.label;
@@ -104,7 +150,7 @@ export component ActionList2Row {
                         vertical-alignment: center;
                     }
 
-                    if root.has-markdown: StyledText {
+                    if !root.show-inline-description && root.has-markdown: StyledText {
                         horizontal-stretch: 1;
                         min-width: 0px;
                         text: root.label-markdown;

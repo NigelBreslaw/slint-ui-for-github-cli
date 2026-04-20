@@ -39,6 +39,8 @@ export component ActionList2 {
                 avatar-source: line.avatar-source;
                 has-leading-visual: line.has-leading-visual;
                 leading-icon: line.leading-icon;
+                description: line.description;
+                description-layout: line.description-layout;
                 show-top-seam: root.show-dividers && ix > 0 && root.lines[ix - 1].kind == ActionList2LineKind.row;
                 clicked => {
                     root.item-activated(ix);
