@@ -25,10 +25,8 @@ export struct ActionList2Line {
     label: string,
     row-variant: ActionList2RowVariant,
     disabled: bool,
-    /// Row-only: show leading 16px icon (**`leading-icon`**).
     has-leading-visual: bool,
-    /// Row-only: icon source when **`has-leading-visual`** is true.
     leading-icon: image,
-    /// Row-only: when non-empty, shown semibold before **`label`** (regular weight) for mixed emphasis (e.g. counts).
-    label-emphasis: string,
+    label-markdown: styled-text,
+    has-markdown: bool,
 }

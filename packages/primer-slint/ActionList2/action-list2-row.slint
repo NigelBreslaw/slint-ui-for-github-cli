@@ -11,16 +11,15 @@ import { ActionList2RowVariant } from "./types.slint";
 
 export component ActionList2Row {
     min-width: 0px;
-    in property <string> label: "";
+    in property <styled-text> label-markdown;
+    in property <string> label;
+    in property <bool> has-markdown: false;
     in property <bool> disabled: false;
     in property <ActionList2RowVariant> row-variant: ActionList2RowVariant.default;
     in property <bool> has-leading-visual: false;
     in property <image> leading-icon: Icons.dot_fill;
-    in property <string> label-emphasis: "";
 
     callback clicked;
-
-    private property <bool> show-label-split: root.label-emphasis != "";
 
     private property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
     private property <length> cell-padding-block: LayoutTokens.action-list-item-padding-block;
@@ -72,41 +71,23 @@ export component ActionList2Row {
                     colorize: leading-icon-tint;
                 }
 
-                if !root.show-label-split: primary-label := Text {
+                if !root.has-markdown: Text {
                     horizontal-stretch: 1;
                     min-width: 0px;
                     text: root.label;
                     color: root.label-color;
                     font-size: LayoutTokens.text-body-size-medium;
                     font-weight: LayoutTokens.base-text-weight-medium;
-                    wrap: word-wrap;
+                    vertical-alignment: center;
                 }
 
-                if root.show-label-split: HorizontalLayout {
+                if root.has-markdown: StyledText {
                     horizontal-stretch: 1;
                     min-width: 0px;
-                    spacing: 4px;
-                    alignment: start;
-                    align-items: center;
-
-                    Text {
-                        horizontal-stretch: 0;
-                        text: root.label-emphasis;
-                        color: root.label-color;
-                        font-size: LayoutTokens.text-body-size-medium;
-                        font-weight: LayoutTokens.base-text-weight-semibold;
-                        wrap: word-wrap;
-                    }
-
-                    Text {
-                        horizontal-stretch: 1;
-                        min-width: 0px;
-                        text: root.label;
-                        color: root.label-color;
-                        font-size: LayoutTokens.text-body-size-medium;
-                        font-weight: LayoutTokens.base-text-weight-medium;
-                        wrap: word-wrap;
-                    }
+                    text: root.label-markdown;
+                    default-color: root.label-color;
+                    default-font-size: LayoutTokens.text-body-size-medium;
+                    vertical-alignment: center;
                 }
             }
 

@@ -28,12 +28,13 @@ export component ActionList2 {
 
             if line.kind == ActionList2LineKind.row: ActionList2Row {
                 width: 100%;
+                label-markdown: line.label-markdown;
                 label: line.label;
+                has-markdown: line.has-markdown;
                 disabled: line.disabled;
                 row-variant: line.row-variant;
                 has-leading-visual: line.has-leading-visual;
                 leading-icon: line.leading-icon;
-                label-emphasis: line.label-emphasis;
                 clicked => {
                     root.item-activated(ix);
                 }
