@@ -7,16 +7,104 @@ import {
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. With Icons, With Custom Heading, Simple List, With Visual List Heading).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
 
+    private property <string> with-avatars-last: "";
     private property <string> with-icons-last: "";
     private property <string> custom-heading-last: "";
     private property <string> simple-list-last: "";
     private property <string> visual-heading-last: "";
+
+    private property <[ActionList2Line]> with-avatars-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "pksjce",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/person-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "jfuchs",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/hubot.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "colebemis",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/beaker.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "mperrotti",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/smiley.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "dgreif",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/heart-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "smockle",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/star-fill.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "siddharthkp",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: true,
+            avatar-source: @image-url("../../primer-slint/assets/16px/flame.svg"),
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+        },
+    ];
 
     private property <[ActionList2Line]> with-icons-lines: [
         {
@@ -24,6 +112,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "github.com/primer",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.link,
             has-markdown: false,
@@ -34,6 +124,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "MIT License",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.law,
             has-markdown: false,
@@ -44,6 +136,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "256 stars",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.star,
             has-markdown: false,
@@ -54,6 +148,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "3 forks",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.repo_forked,
             has-markdown: false,
@@ -64,6 +160,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "4 vulnerabilities",
             row-variant: ActionList2RowVariant.danger,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.alert,
             has-markdown: false,
@@ -77,6 +175,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Details",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -87,6 +187,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Readme",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.book,
             has-markdown: false,
@@ -97,6 +199,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "MIT License",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.law,
             has-markdown: false,
@@ -107,6 +211,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "1.5k stars",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.star,
             has-markdown: true,
@@ -117,6 +223,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "21 watching",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.eye,
             has-markdown: true,
@@ -126,6 +234,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             kind: ActionList2LineKind.row,
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.repo_forked,
             label: "225 forks",
@@ -140,6 +250,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Copy link",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -150,6 +262,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Quote reply",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -160,6 +274,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Edit comment",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -170,6 +286,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -180,6 +298,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Delete file",
             row-variant: ActionList2RowVariant.danger,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -193,6 +313,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Filter by",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -203,6 +325,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Repositories",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -213,6 +337,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "app/assets/modules",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
             has-markdown: false,
@@ -223,6 +349,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "app/components",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
             has-markdown: false,
@@ -233,6 +361,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "app/hooks",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
             has-markdown: false,
@@ -243,6 +373,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "app/utility-types",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.file_directory_fill,
             has-markdown: false,
@@ -253,6 +385,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Advanced",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             has-markdown: false,
@@ -263,6 +397,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Owner",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
             has-markdown: false,
@@ -273,6 +409,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Symbol",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
             has-markdown: false,
@@ -283,12 +421,64 @@ export component GalleryActionList2Page inherits VerticalLayout {
             label: "Exclude archived",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.plus_circle,
             has-markdown: false,
             label-markdown: @markdown(""),
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "With Avatars";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → With Avatars (leading Avatar per row; usernames from upstream story).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    lines: root.with-avatars-lines;
+                    item-activated(ix) => {
+                        root.with-avatars-last = root.with-avatars-lines[ix].label;
+                    }
+                }
+
+                Text {
+                    visible: root.with-avatars-last != "";
+                    text: "Last activated: " + root.with-avatars-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;
