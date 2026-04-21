@@ -8,7 +8,7 @@ export type ActionListGalleryMultiSelectHandle = {
     row_activated: (ix: number) => void;
 };
 
-/** Row labels — same order as `multi-select-lines` and `listbox-multi-select-lines` in `gallery-action-list2-page.slint`. */
+/** Row labels — same order as `multi-select-lines` and `listbox-multi-select-lines` in `gallery-action-list-page.slint`. */
 const ACTION_LIST_GALLERY_MULTI_ROW_LABELS = [
     "Primer Backlog",
     "Accessibility",
@@ -32,7 +32,7 @@ function formatSelectionSummary(
 }
 
 /**
- * Wires `row_activated` to toggle membership in a `Set`; mirrors a bool[] into Slint for `ActionList2.multi-selected`.
+ * Wires `row_activated` to toggle membership in a `Set`; mirrors a bool[] into Slint for `ActionList.multi-selected`.
  * Call once per global handle — each call owns its own selection state.
  */
 export function wireActionListGalleryMultiSelect(

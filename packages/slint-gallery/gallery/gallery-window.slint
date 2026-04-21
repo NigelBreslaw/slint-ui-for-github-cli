@@ -6,7 +6,7 @@ import { GalleryNavsPage } from "./views/gallery-navs-page.slint";
 import { GalleryFeedbackPage } from "./views/gallery-feedback-page.slint";
 import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
-import { GalleryActionList2Page } from "./views/gallery-action-list2-page.slint";
+import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
 
 import "../../primer-slint/assets/fonts/MonaSans-VariableFont.ttf";
@@ -14,8 +14,8 @@ import "../../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/VeraMono.ttf";
 
 /// Re-export so **slint-ui** (Node) attaches this global to the **GalleryWindow** handle — globals only in imported `.slint` files are otherwise unreachable from `gallery-main.ts`.
-export { GalleryActionListMultiSelect } from "./gallery-action-list2-multi-select-state.slint";
-export { GalleryActionListListboxMultiSelect } from "./gallery-action-list2-listbox-multi-select-state.slint";
+export { GalleryActionListMultiSelect } from "./gallery-action-list-multi-select-state.slint";
+export { GalleryActionListListboxMultiSelect } from "./gallery-action-list-listbox-multi-select-state.slint";
 
 
 export global GalleryState {
@@ -85,7 +85,7 @@ export component GalleryWindow inherits Window {
 
                         if GalleryState.selected-group-index == 4: GalleryDataPage { }
 
-                        if GalleryState.selected-group-index == 5: GalleryActionList2Page { }
+                        if GalleryState.selected-group-index == 5: GalleryActionListPage { }
                     }
                 }
             }

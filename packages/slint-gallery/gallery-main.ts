@@ -3,7 +3,7 @@ import { assignProperties } from "slint-bridge-kit";
 import {
   wireActionListGalleryMultiSelect,
   type ActionListGalleryMultiSelectHandle,
-} from "./gallery/gallery-action-list2-multi-select-bridge-shared.ts";
+} from "./gallery/gallery-action-list-multi-select-bridge-shared.ts";
 
 type GalleryWindowModule = {
   GalleryWindow: new () => {

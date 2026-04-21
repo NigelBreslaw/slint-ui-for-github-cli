@@ -1,21 +1,22 @@
-// Main list title above items — Primer ActionList **list visual heading** (Storybook Features → With Visual List Heading).
+// Primer `GroupHeading` **subtle** — upstream subtle group label (see **ActionList** shell + tokens).
 
-import { LayoutTokens, PrimerColors } from "../tokens.slint";
+import { ActionListTokens, LayoutTokens } from "../tokens.slint";
 
-export component ActionList2ListVisualHeading {
+export component ActionListSectionHeading {
     in property <string> title: "";
 
     VerticalLayout {
         horizontal-stretch: 1;
+        padding-top: 8px;
+        padding-bottom: 4px;
         padding-left: LayoutTokens.action-list-item-padding-inline;
         padding-right: LayoutTokens.action-list-item-padding-inline;
-        padding-bottom: LayoutTokens.button-content-gap;
 
         Text {
             horizontal-stretch: 1;
             text: root.title;
-            color: PrimerColors.fgColor-default;
-            font-size: LayoutTokens.text-body-size-large;
+            color: ActionListTokens.section-heading-subtle-fgColor;
+            font-size: LayoutTokens.text-body-size-small;
             font-weight: LayoutTokens.base-text-weight-semibold;
             wrap: word-wrap;
         }

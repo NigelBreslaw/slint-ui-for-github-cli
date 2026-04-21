@@ -1,9 +1,9 @@
 // Primer-style NavList — flat, grouped (PR4), SubNav expand/collapse (PR6). Upstream: https://primer.style/product/components/nav-list/
-// Interactive rows reuse [`ActionList2Row`](../ActionList2/action-list2-row.slint); `current` maps to `selected`.
+// Interactive rows reuse [`ActionListRow`](../ActionList/action-list-row.slint); `current` maps to `selected`.
 
 import { Icons } from "../assets/icons.slint";
-import { ActionList2Row } from "../ActionList2/action-list2-row.slint";
-import { ActionList2DescriptionLayout } from "../ActionList2/types.slint";
+import { ActionListRow } from "../ActionList/action-list-row.slint";
+import { ActionListDescriptionLayout } from "../ActionList/types.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     NavListGroup,
@@ -16,7 +16,7 @@ import {
     NavListSub3,
 } from "./types.slint";
 
-/// Single nav row — inactive (explanation) or interactive [`ActionList2Row`].
+/// Single nav row — inactive (explanation) or interactive [`ActionListRow`].
 /// One root [`VerticalLayout`] so rows stack vertically (multiple root `if` branches overlap at 0×0).
 component NavListItemRow {
     in property <NavListRowData> nav-row;
@@ -116,7 +116,7 @@ component NavListItemRow {
                 spacing: LayoutTokens.button-content-gap;
                 alignment: stretch;
 
-                ActionList2Row {
+                ActionListRow {
                     horizontal-stretch: 1;
                     label-markdown: @markdown("");
                     label: nav-row.label;
@@ -126,7 +126,7 @@ component NavListItemRow {
                     has-leading-visual: nav-row.has-leading-visual;
                     leading-icon: nav-row.leading-icon;
                     description: nav-row.description;
-                    description-layout: nav-row.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+                    description-layout: nav-row.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
                     clicked => {
                         root.clicked();
                     }
@@ -202,7 +202,7 @@ component NavListExpandableRow3 {
                 spacing: LayoutTokens.button-content-gap;
                 alignment: stretch;
 
-                ActionList2Row {
+                ActionListRow {
                     horizontal-stretch: 1;
                     label-markdown: @markdown("");
                     has-leading-visual: true;
@@ -212,7 +212,7 @@ component NavListExpandableRow3 {
                     selected: item.data.current;
                     disabled: false;
                     description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
                     clicked => {
                         expanded = !expanded;
                     }
@@ -307,7 +307,7 @@ component NavListExpandableRow2 {
                 spacing: LayoutTokens.button-content-gap;
                 alignment: stretch;
 
-                ActionList2Row {
+                ActionListRow {
                     horizontal-stretch: 1;
                     label-markdown: @markdown("");
                     has-leading-visual: true;
@@ -317,7 +317,7 @@ component NavListExpandableRow2 {
                     selected: item.data.current;
                     disabled: false;
                     description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
                     clicked => {
                         expanded = !expanded;
                     }
@@ -412,7 +412,7 @@ component NavListExpandableRow1 {
                 spacing: LayoutTokens.button-content-gap;
                 alignment: stretch;
 
-                ActionList2Row {
+                ActionListRow {
                     horizontal-stretch: 1;
                     label-markdown: @markdown("");
                     has-leading-visual: true;
@@ -422,7 +422,7 @@ component NavListExpandableRow1 {
                     selected: item.data.current;
                     disabled: false;
                     description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
                     clicked => {
                         expanded = !expanded;
                     }
@@ -517,7 +517,7 @@ component NavListExpandableRow0 {
                 spacing: LayoutTokens.button-content-gap;
                 alignment: stretch;
 
-                ActionList2Row {
+                ActionListRow {
                     horizontal-stretch: 1;
                     label-markdown: @markdown("");
                     has-leading-visual: true;
@@ -527,7 +527,7 @@ component NavListExpandableRow0 {
                     selected: item.data.current;
                     disabled: false;
                     description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
                     clicked => {
                         expanded = !expanded;
                     }
