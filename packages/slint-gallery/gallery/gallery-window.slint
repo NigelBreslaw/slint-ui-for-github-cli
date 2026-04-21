@@ -8,6 +8,7 @@ import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
+import { Icons } from "../../primer-slint/primer.slint";
 
 import "../../primer-slint/assets/fonts/MonaSans-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
@@ -42,7 +43,7 @@ export component GalleryWindow inherits Window {
     min-height: 480px;
     title: "Primer gallery";
     default-font-family: "Mona Sans";
-    icon: @image-url("../../primer-slint/assets/24px/palette.svg");
+    icon: Icons.palette;
 
     background: PrimerColors.bgColor-default;
 
