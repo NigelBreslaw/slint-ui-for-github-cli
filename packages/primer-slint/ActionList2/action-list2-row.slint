@@ -27,6 +27,8 @@ export component ActionList2Row {
     in property <bool> show-top-seam: false;
     in property <string> description: "";
     in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
+    /// Primer **`active`** / **`[data-active]`** — left accent bar + surface (orthogonal to **`selected`** / listbox selection).
+    in property <bool> active: false;
     /// Primer **`[data-active]`** / `selected` on **Item** (single listbox / `selectionVariant="single"`).
     in property <bool> selected: false;
     /// Primer **ActionList.Selection** + **CheckIcon** (`.SingleSelectCheckmark` in **ActionList.module.css**): tick only, not the multi-select checkbox; column width reserved when unselected.
@@ -45,6 +47,9 @@ export component ActionList2Row {
 
     private property <bool> is-inactive: root.inactive-text != "";
     private property <bool> is-loading-row: root.show-trailing-loading;
+    /// Primer **`[data-active]`** visuals (bar + surface + label override); not combined with **inactive** / **loading** / **disabled**.
+    private property <bool> show-active-chrome:
+        root.active && !root.disabled && !root.is-inactive && !root.is-loading-row;
 
     private property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
     private property <length> avatar-diameter: LayoutTokens.action-list-avatar-diameter;
@@ -61,6 +66,8 @@ export component ActionList2Row {
           )
         : root.is-inactive
         ? PrimerColors.fgColor-muted
+        : root.show-active-chrome
+        ? ActionListTokens.item-active-label-fgColor-rest
         : root.row-variant == ActionList2RowVariant.danger
         ? ActionListTokens.item-danger-fgColor-rest
         : PrimerColors.fgColor-default;
@@ -118,7 +125,7 @@ export component ActionList2Row {
     private property <int> label-font-weight:
         root.is-loading-row
         ? LayoutTokens.base-text-weight-medium
-        : !root.disabled && root.use-selected-surface
+        : !root.disabled && (root.use-selected-surface || root.show-active-chrome)
         ? LayoutTokens.base-text-weight-semibold
         : LayoutTokens.base-text-weight-medium;
 
@@ -148,7 +155,20 @@ export component ActionList2Row {
             }
         }
 
-        ta := TouchArea {
+        row-chrome-shell := Rectangle {
+            width: 100%;
+            clip: false;
+
+            if root.show-active-chrome: Rectangle {
+                x: -LayoutTokens.button-content-gap;
+                y: LayoutTokens.base-size-4;
+                width: LayoutTokens.base-size-4;
+                height: parent.height - LayoutTokens.button-content-gap;
+                background: ActionListTokens.item-active-indicator-bgColor;
+                border-radius: LayoutTokens.borderRadius-medium;
+            }
+
+            ta := TouchArea {
             min-height: root.cell-min-height;
             enabled: !root.disabled && !root.is-inactive && !root.is-loading-row;
             clicked => {
@@ -398,6 +418,15 @@ export component ActionList2Row {
                     inactive when !root.disabled && root.is-inactive: {
                         row-bg.background: #00000000;
                     }
+                    active-pressed when !root.disabled && root.show-active-chrome && ta.pressed: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                    }
+                    active-hover when !root.disabled && root.show-active-chrome && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-active-bgColor-hover;
+                    }
+                    active-rest when !root.disabled && root.show-active-chrome && !ta.pressed && !ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-active-bgColor-rest;
+                    }
                     danger-selected-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.danger && root.use-selected-surface && ta.pressed: {
                         row-bg.background: ActionListTokens.item-danger-bgColor-active;
                     }
@@ -430,6 +459,7 @@ export component ActionList2Row {
                     }
                 ]
             }
+        }
         }
     }
 }

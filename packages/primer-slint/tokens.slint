@@ -58,6 +58,8 @@ export global LayoutTokens {
     out property <length> iconButton-icon-size-large: 18px;
 
     out property <length> borderRadius-medium: 6px;
+    /// primer-tokens functional size **`base-size-4`** (used by ActionList **`activeIndicatorLine`** mixin top/width).
+    out property <length> base-size-4: 4px;
     /// primer-tokens `functional/size/radius.json5` — **`borderRadius.large`** (12px): dialogs, modals, larger containers.
     out property <length> borderRadius-large: 12px;
 
@@ -215,6 +217,9 @@ export global PrimerColors {
     property <color> bgColor-accent-muted-dark: rgba(56, 139, 253, 0.1);
     property <color> borderColor-accent-muted-light: rgba(84, 174, 255, 0.4);
     property <color> borderColor-accent-muted-dark: rgba(56, 139, 253, 0.4);
+    // borderColor.accent.emphasis — primer-tokens `functional/color/borderColor.json5` (`{base.color.blue.5}` + mode).
+    property <color> borderColor-accent-emphasis-light: #0969da;
+    property <color> borderColor-accent-emphasis-dark: #388bfd;
 
     property <color> bgColor-success-muted-light: #dafbe1;
     property <color> bgColor-success-muted-dark: rgba(46, 160, 67, 0.15);
@@ -295,6 +300,7 @@ export global PrimerColors {
     out property <color> fgColor-accent: fgColor-link;
     out property <color> bgColor-accent-muted: color-scheme == ColorScheme.dark ? bgColor-accent-muted-dark : bgColor-accent-muted-light;
     out property <color> borderColor-accent-muted: color-scheme == ColorScheme.dark ? borderColor-accent-muted-dark : borderColor-accent-muted-light;
+    out property <color> borderColor-accent-emphasis: color-scheme == ColorScheme.dark ? borderColor-accent-emphasis-dark : borderColor-accent-emphasis-light;
     out property <color> bgColor-success-muted: color-scheme == ColorScheme.dark ? bgColor-success-muted-dark : bgColor-success-muted-light;
     out property <color> borderColor-success-muted: color-scheme == ColorScheme.dark ? borderColor-success-muted-dark : borderColor-success-muted-light;
     out property <color> bgColor-attention-muted: color-scheme == ColorScheme.dark ? bgColor-attention-muted-dark : bgColor-attention-muted-light;
@@ -587,6 +593,15 @@ export global ActionListTokens {
 
     out property <color> item-divider-borderColor: PrimerColors.borderColor-default;
     out property <color> item-loading-label-fgColor: PrimerColors.fgColor-muted;
+
+    /// Primer **`[data-active]`** accent bar (`activeIndicatorLine` mixin) — `borderColor.accent.emphasis`.
+    out property <color> item-active-indicator-bgColor: PrimerColors.borderColor-accent-emphasis;
+    /// Primer **`[data-active]`** row rest bg — `control.transparent.bgColor.selected` (matches **`ButtonTokens.color-action-list-item-default-selected-bg`**).
+    out property <color> item-active-bgColor-rest: ButtonTokens.color-action-list-item-default-selected-bg;
+    /// Primer **`[data-active]:hover`** — `control.transparent.bgColor.hover`.
+    out property <color> item-active-bgColor-hover: PrimerColors.table-row-bgColor-hover;
+    /// Primer **`[data-active]`** `.ItemLabel` — `control-fgColor-rest` (default canvas fg).
+    out property <color> item-active-label-fgColor-rest: PrimerColors.fgColor-default;
 }
 
 export global CheckboxTokens {
