@@ -17,7 +17,7 @@ export component ActionList2 {
     in property <int> selected-index: -1;
     /// **`selection-mode`** **`multiple`**: row **`ix`** is checked when **`multi-selected[ix]`** is true. Ignored for **`single`** / **`none`**.
     in property <[bool]> multi-selected: [];
-    /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers).
+    /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers, **inactive**, or **`show-trailing-loading`** rows).
     callback item-activated(int);
 
     min-width: 0px;
@@ -36,6 +36,7 @@ export component ActionList2 {
             if line.kind == ActionList2LineKind.row: ActionList2Row {
                 width: 100%;
                 inactive-text: line.inactive-text;
+                show-trailing-loading: line.show-trailing-loading;
                 label-markdown: line.label-markdown;
                 label: line.label;
                 has-markdown: line.has-markdown;
@@ -60,7 +61,7 @@ export component ActionList2 {
                 show-single-select-check: root.selection-mode == ActionList2SelectionMode.single;
                 show-multi-select-checkbox: root.selection-mode == ActionList2SelectionMode.multiple;
                 clicked => {
-                    if line.inactive-text == "" {
+                    if line.inactive-text == "" && !line.show-trailing-loading {
                         root.item-activated(ix);
                     }
                 }

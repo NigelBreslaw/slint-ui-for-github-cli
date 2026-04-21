@@ -54,4 +54,6 @@ export struct ActionList2Line {
     has-markdown: bool,
     /// Non-empty → Primer **`inactiveText`**: row is not activatable; shows **`.InactiveWarning`** (attention) under the label in menu single-select.
     inactive-text: string,
+    /// Row-only: Primer **LoadingItem** — trailing **`Spinner`**; row is not activatable; label and description use loading foreground tokens.
+    show-trailing-loading: bool,
 }
