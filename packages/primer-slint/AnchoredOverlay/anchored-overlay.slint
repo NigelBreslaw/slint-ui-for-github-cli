@@ -1,13 +1,13 @@
-// Shared floating panel host: `PopupWindow` aligned to an anchor (no full-viewport dimmer — matches Primer anchored overlays / upstream AnchoredOverlay).
+// Shared floating panel host: `PopupWindow` aligned to an anchor (no full-viewport dimmer — matches Primer AnchoredOverlay).
 // Coordinate math matches [`anchored-popupwindow.md`](../../slint-gallery/gallery/anchored-popupwindow.md).
 // Place as a 0×0 sibling under the same layout parent as the anchor; bind anchor-*, window-inner-width / height for placement.
 // Panel chrome: OverlayTokens. If the popup closes via the platform, sync `open` from the parent if needed.
 
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
-import { DialogBaseAlign, DialogBaseSide } from "./types.slint";
+import { AnchoredOverlayAlign, AnchoredOverlaySide } from "./types.slint";
 import { LayoutTokens, OverlayTokens } from "../tokens.slint";
 
-export component DialogBase {
+export component AnchoredOverlay {
     in-out property <bool> open: false;
     /// Viewport width for horizontal clamp (root `Window` inner width).
     in property <length> window-inner-width: 800px;
@@ -22,9 +22,9 @@ export component DialogBase {
     in property <length> panel-width: 0px;
     in property <length> anchor-gap: 5px;
     /// Vertical placement; `auto` flips above when below would overflow (Primer default for anchored menus).
-    in property <DialogBaseSide> vertical-side: auto;
+    in property <AnchoredOverlaySide> vertical-side: auto;
     /// Horizontal alignment of the panel relative to the anchor (LTR).
-    in property <DialogBaseAlign> align: start;
+    in property <AnchoredOverlayAlign> align: start;
     callback close-requested();
 
     width: 0px;
@@ -37,14 +37,14 @@ export component DialogBase {
         && anchor-abs-y >= anchor-gap + panel-height;
 
     private property <length> panel-window-y:
-        vertical-side == DialogBaseSide.outside_top ? anchor-abs-y - anchor-gap - panel-height
-        : vertical-side == DialogBaseSide.outside_bottom ? anchor-abs-y + anchor-height + anchor-gap
+        vertical-side == AnchoredOverlaySide.outside_top ? anchor-abs-y - anchor-gap - panel-height
+        : vertical-side == AnchoredOverlaySide.outside_bottom ? anchor-abs-y + anchor-height + anchor-gap
         : flip-above ? anchor-abs-y - anchor-gap - panel-height
         : anchor-abs-y + anchor-height + anchor-gap;
 
     private property <length> panel-window-x-raw:
-        align == DialogBaseAlign.start ? anchor-abs-x
-        : align == DialogBaseAlign.center ? anchor-abs-x + (anchor-width - effective-panel-width) / 2
+        align == AnchoredOverlayAlign.start ? anchor-abs-x
+        : align == AnchoredOverlayAlign.center ? anchor-abs-x + (anchor-width - effective-panel-width) / 2
         : anchor-abs-x + anchor-width - effective-panel-width;
 
     private property <length> panel-window-x-max: max(0px, window-inner-width - effective-panel-width);

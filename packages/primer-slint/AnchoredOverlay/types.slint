@@ -1,6 +1,6 @@
 // Placement for anchored floating panels (Primer-style subset). Default anchored menus: outside-bottom + start.
 
-export enum DialogBaseSide {
+export enum AnchoredOverlaySide {
     /// Prefer below the anchor; flip above when below would overflow the viewport (see `window-inner-height`).
     auto,
     /// Always place below the anchor (may clip at the bottom of the window).
@@ -9,7 +9,7 @@ export enum DialogBaseSide {
     outside_top,
 }
 
-export enum DialogBaseAlign {
+export enum AnchoredOverlayAlign {
     /// Align panel start edge with anchor start (LTR); use with `panel-width` for wider panels.
     start,
     center,

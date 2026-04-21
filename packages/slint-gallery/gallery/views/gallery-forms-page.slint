@@ -1,7 +1,7 @@
 import {
-    DialogBase,
-    DialogBaseAlign,
-    DialogBaseSide,
+    AnchoredOverlay,
+    AnchoredOverlayAlign,
+    AnchoredOverlaySide,
     Button,
     ButtonAlignContent,
     ButtonVariant,
@@ -21,7 +21,7 @@ import {
 } from "../../../primer-slint/primer.slint";
 import { PrimerColors } from "../../../primer-slint/tokens.slint";
 
-/// Select, PrimerTextInput (PR1 spike), DialogBase demo, Checkbox, CheckboxGroup gallery demos.
+/// Select, PrimerTextInput (PR1 spike), AnchoredOverlay demo, Checkbox, CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -538,19 +538,19 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
     }
 
-    dialog-base-demo-column := VerticalLayout {
+    anchored-overlay-demo-column := VerticalLayout {
         spacing: 12px;
         width: 100%;
 
         Text {
-            text: "DialogBase + SelectPanel (anchored)";
+            text: "AnchoredOverlay + SelectPanel (anchored)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "DialogBase: vertical-side auto (flip), align start; SelectPanel multi mode (`multi-checked-mask`, `show-footer` + children, `focused-index` accent). Escape closes the popup. See anchored-popupwindow.md in this folder.";
+            text: "AnchoredOverlay: vertical-side auto (flip), align start; SelectPanel multi mode (`multi-checked-mask`, `show-footer` + children, `focused-index` accent). Escape closes the popup. See anchored-popupwindow.md in this folder.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -576,12 +576,12 @@ export component GalleryFormsPage inherits VerticalLayout {
             }
         }
 
-        dialog-base-select-panel := DialogBase {
+        anchored-overlay-select-panel := AnchoredOverlay {
             open <=> demo-select-panel-open;
             window-inner-width: window-inner-width;
             window-inner-height: window-inner-height;
-            vertical-side: DialogBaseSide.auto;
-            align: DialogBaseAlign.start;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
             panel-width: 360px;
             panel-height: 480px;
             anchor-abs-x: btn-select-panel.absolute-position.x;
