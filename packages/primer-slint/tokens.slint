@@ -60,6 +60,12 @@ export global LayoutTokens {
     out property <length> borderRadius-medium: 6px;
     /// primer-tokens functional size **`base-size-4`** (used by ActionList **`activeIndicatorLine`** mixin top/width).
     out property <length> base-size-4: 4px;
+    /// primer-tokens functional size **`base-size-6`** (`Dialog.module.css` header content block padding).
+    out property <length> base-size-6: 6px;
+    /// primer-tokens functional size **`base-size-8`** (`Dialog.module.css` header outer / content inline padding).
+    out property <length> base-size-8: 8px;
+    /// primer-tokens functional size **`base-size-16`** (`Dialog.module.css` body + footer padding).
+    out property <length> base-size-16: 16px;
     /// primer-tokens `functional/size/radius.json5` — **`borderRadius.large`** (12px): dialogs, modals, larger containers.
     out property <length> borderRadius-large: 12px;
 
@@ -646,4 +652,21 @@ export global OverlayTokens {
     out property <length> panel-border-width: LayoutTokens.table-border-width;
     out property <length> panel-border-radius: LayoutTokens.borderRadius-large;
     out property <[DropShadowLayer]> panel-elevation-shadow: ShadowTokens.shadow-floating-small;
+}
+
+// primer-ui-react `Dialog.module.css` (`.Header`, `.HeaderContent`, `.Body`, `.Footer`) + primer-tokens `functional/size/size.json5` base sizes. Composes **`LayoutTokens`** only (no literals). Surfaces use **`OverlayTokens`** / **`PrimerColors`** at shell level.
+//
+// Token audit (PR2): | Intent | primer-tokens / upstream | Owner | `out` / source | Consumers |
+// |--------|---------------------------|-------|----------------|-----------|
+// | Dialog header outer padding | base-size-8 | LayoutTokens | `base-size-8` | DialogTokens.header-padding |
+// | Header content inline / block | base-size-8, base-size-6 | LayoutTokens | `base-size-8`, `base-size-6` | DialogTokens.header-content-* |
+// | Body + footer inset | base-size-16 | LayoutTokens | `base-size-16` | DialogTokens.body-padding, footer-padding |
+// | Footer button row gap | base-size-8 | LayoutTokens | `button-content-gap` | DialogTokens.footer-actions-gap |
+export global DialogTokens {
+    out property <length> header-padding: LayoutTokens.base-size-8;
+    out property <length> header-content-padding-inline: LayoutTokens.base-size-8;
+    out property <length> header-content-padding-block: LayoutTokens.base-size-6;
+    out property <length> body-padding: LayoutTokens.base-size-16;
+    out property <length> footer-padding: LayoutTokens.base-size-16;
+    out property <length> footer-actions-gap: LayoutTokens.button-content-gap;
 }

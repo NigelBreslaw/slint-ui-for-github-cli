@@ -1,5 +1,10 @@
-import { Button, ButtonAlignContent } from "../../primer-slint/primer.slint";
-import { PrimerColors } from "../../primer-slint/tokens.slint";
+import {
+    Button,
+    ButtonAlignContent,
+    DialogTokens,
+    ModalOverlay,
+} from "../../primer-slint/primer.slint";
+import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
 
 /// One Storybook-aligned block (title + meta + stub open control).
 component DialogStoryStub inherits VerticalLayout {
@@ -50,6 +55,8 @@ component DialogStoryStub inherits VerticalLayout {
 export component GalleryDialogsPage inherits VerticalLayout {
     spacing: 32px;
     width: 100%;
+
+    private property <bool> pr2-modal-shell-open: false;
 
     Text {
         text: "Dialog";
@@ -159,5 +166,69 @@ export component GalleryDialogsPage inherits VerticalLayout {
         story-title: "AlignBottom";
         story-path: "Components/Dialog/Features — [Align] Bottom";
         story-note: "align bottom with centered regular position.";
+    }
+
+    VerticalLayout {
+        spacing: 10px;
+        width: 100%;
+        padding-top: 24px;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "PR2 — ModalOverlay shell";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Smoke test: viewport scrim + centered OverlayPanelChrome (DialogTokens padding on body text).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Button {
+            max-width: 220px;
+            align-content: ButtonAlignContent.start;
+            label: "Open modal shell";
+            clicked => {
+                root.pr2-modal-shell-open = true;
+            }
+        }
+    }
+
+    pr2-modal-smoke := ModalOverlay {
+        open <=> root.pr2-modal-shell-open;
+        window-inner-width: AppWindow.window-width;
+        window-inner-height: AppWindow.window-height;
+        panel-width: 420px;
+        panel-max-height: 320px;
+        close-requested => {
+        }
+
+        VerticalLayout {
+            padding: DialogTokens.body-padding;
+            spacing: 8px;
+            alignment: start;
+
+            Text {
+                text: "ModalOverlay (PR2): Escape or backdrop closes; DialogTokens.body-padding wraps this block.";
+                color: PrimerColors.fgColor-default;
+                font-size: 14px;
+                wrap: word-wrap;
+            }
+
+            Button {
+                label: "Close";
+                clicked => {
+                    root.pr2-modal-shell-open = false;
+                }
+            }
+        }
     }
 }

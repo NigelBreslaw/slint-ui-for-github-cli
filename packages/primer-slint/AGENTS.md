@@ -43,7 +43,8 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |
 | **ActionListTokens** | **ActionList** row/heading semantics (danger, inactive, link, section headings, divider, loading label fg); **only** from **`PrimerColors`** + **`ButtonTokens`** `out`. |
-| **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`AnchoredOverlay`** uses panel tokens only; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
+| **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`AnchoredOverlay`** / **`ModalOverlay`** use panel tokens; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
+| **DialogTokens** | Primer **`Dialog`** region padding (header / body / footer / footer gap); **only** **`LayoutTokens`** `out` bindings — see audit comment in [`tokens.slint`](tokens.slint) above **`DialogTokens`**. |
 
 **Cross-global rule:** Dependents use other globals’ **`out`** bindings only — not their **private** fields.
 

@@ -1,0 +1,52 @@
+// Shared floating **panel** chrome: elevation shadow + rounded fill + border + padded content slot.
+// Used by **`AnchoredOverlay`** (anchored menus) and **`ModalOverlay`** (viewport modal shell). Pass token-backed colors, radii, and shadow from **`OverlayTokens`** or overrides.
+
+import { DropShadowLayer, MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
+
+export component OverlayPanelChrome {
+    in property <color> surface-background;
+    in property <color> surface-border;
+    in property <length> surface-border-width;
+    in property <length> surface-border-radius;
+    in property <[DropShadowLayer]> surface-shadow;
+    /// Inset around **`@children`** (menus: **`LayoutTokens.stack-padding-normal`**; modal dialog shell: **`0px`** so header/body/footer control padding).
+    in property <length> slot-padding;
+    /// When false, the slot does not vertically stretch (**`AnchoredOverlay`** **`shrink-wrap`**).
+    in property <bool> slot-fill-height: true;
+
+    /// For **`AnchoredOverlay`** popup width/height (`shrink-wrap` height) — forwarded from the padded slot.
+    out property <length> slot-preferred-width: inner-slot.preferred-width;
+    out property <length> slot-preferred-height: inner-slot.preferred-height;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+
+        MultiDropShadow {
+            width: parent.width;
+            height: parent.height;
+            border-radius: root.surface-border-radius;
+            shadows: root.surface-shadow;
+        }
+
+        Rectangle {
+            clip: true;
+            width: 100%;
+            height: 100%;
+            background: root.surface-background;
+            border-radius: root.surface-border-radius;
+            border-width: root.surface-border-width;
+            border-color: root.surface-border;
+
+            // Do not set width/height here — same as pre-refactor `panel-slot`: intrinsic **`preferred-*`**
+            // must drive **`AnchoredOverlay`** `PopupWindow` geometry (`body-width` / `body-height`).
+            inner-slot := VerticalLayout {
+                vertical-stretch: root.slot-fill-height ? 1 : 0;
+                padding: root.slot-padding;
+                alignment: start;
+
+                @children
+            }
+        }
+    }
+}

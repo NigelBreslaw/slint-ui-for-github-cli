@@ -1,0 +1,127 @@
+// Viewport modal: fullscreen `PopupWindow` with **`OverlayTokens.backdrop-scrim`**, backdrop segments for dismiss, and centered **`OverlayPanelChrome`**. Parent-relative **`x`** / **`y`** match **`AnchoredOverlay`** (window origin minus `absolute-position`).
+
+import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
+import { OverlayTokens } from "../tokens.slint";
+
+export component ModalOverlay {
+    in-out property <bool> open: false;
+    in property <length> window-inner-width: 800px;
+    in property <length> window-inner-height: 600px;
+    in property <bool> allow-dismiss: true;
+    /// Target panel width (clamped to viewport − 64px, min 120px — Primer **`Dialog`**).
+    in property <length> panel-width: 640px;
+    /// Requested max panel body height (clamped to viewport − 64px, min 120px).
+    in property <length> panel-max-height: 640px;
+    /// Padding inside **`OverlayPanelChrome`** around **`@children`** (dialog shell uses **`0px`**).
+    in property <length> slot-padding: 0px;
+    callback close-requested();
+
+    width: 0px;
+    height: 0px;
+
+    private property <length> panel-max-w: max(root.window-inner-width - 64px, 120px);
+    private property <length> panel-max-h: max(root.window-inner-height - 64px, 120px);
+    private property <length> panel-w: min(root.panel-width, root.panel-max-w);
+    private property <length> panel-h: min(root.panel-max-height, root.panel-max-h);
+
+    changed open => {
+        if root.open {
+            popup.show();
+        } else {
+            popup.close();
+        }
+    }
+
+    popup := PopupWindow {
+        close-policy: no-auto-close;
+        x: 0px - root.absolute-position.x;
+        y: 0px - root.absolute-position.y;
+        width: root.window-inner-width;
+        height: root.window-inner-height;
+
+        modal-scope := FocusScope {
+            width: 100%;
+            height: 100%;
+
+            key-pressed(event) => {
+                if root.allow-dismiss && event.text == Key.Escape {
+                    root.open = false;
+                    root.close-requested();
+                    return accept;
+                }
+                return reject;
+            }
+
+            Rectangle {
+                width: 100%;
+                height: 100%;
+                background: OverlayTokens.backdrop-scrim;
+
+                VerticalLayout {
+                    width: 100%;
+                    height: 100%;
+                    spacing: 0px;
+
+                    TouchArea {
+                        vertical-stretch: 1;
+                        width: 100%;
+                        enabled: root.allow-dismiss;
+                        clicked => {
+                            root.open = false;
+                            root.close-requested();
+                        }
+                    }
+
+                    HorizontalLayout {
+                        width: 100%;
+                        height: root.panel-h;
+
+                        TouchArea {
+                            horizontal-stretch: 1;
+                            height: 100%;
+                            enabled: root.allow-dismiss;
+                            clicked => {
+                                root.open = false;
+                                root.close-requested();
+                            }
+                        }
+
+                        panel-chrome := OverlayPanelChrome {
+                            width: root.panel-w;
+                            height: root.panel-h;
+                            surface-background: OverlayTokens.panel-background;
+                            surface-border: OverlayTokens.panel-border;
+                            surface-border-width: OverlayTokens.panel-border-width;
+                            surface-border-radius: OverlayTokens.panel-border-radius;
+                            surface-shadow: OverlayTokens.panel-elevation-shadow;
+                            slot-padding: root.slot-padding;
+                            slot-fill-height: true;
+
+                            @children
+                        }
+
+                        TouchArea {
+                            horizontal-stretch: 1;
+                            height: 100%;
+                            enabled: root.allow-dismiss;
+                            clicked => {
+                                root.open = false;
+                                root.close-requested();
+                            }
+                        }
+                    }
+
+                    TouchArea {
+                        vertical-stretch: 1;
+                        width: 100%;
+                        enabled: root.allow-dismiss;
+                        clicked => {
+                            root.open = false;
+                            root.close-requested();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
