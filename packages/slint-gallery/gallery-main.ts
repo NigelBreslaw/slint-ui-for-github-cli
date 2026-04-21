@@ -3,7 +3,7 @@ import { assignProperties } from "slint-bridge-kit";
 import {
   wireActionListGalleryMultiSelect,
   type ActionListGalleryMultiSelectHandle,
-} from "./gallery/gallery-action-list-multi-select-bridge-shared.ts";
+} from "./gallery-action-list-multi-select-bridge-shared.ts";
 
 type GalleryWindowModule = {
   GalleryWindow: new () => {
@@ -18,7 +18,7 @@ type GalleryWindowModule = {
 };
 
 const ui = slint.loadFile(
-  new URL("./gallery/gallery-window.slint", import.meta.url),
+  new URL("./gallery-window.slint", import.meta.url),
 ) as GalleryWindowModule;
 
 const window = new ui.GalleryWindow();
