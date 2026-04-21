@@ -1,7 +1,7 @@
 import { assignProperties } from "slint-bridge-kit";
 
 /** Slint global handle: `row_checked` / `last_activated_label` / `selection_summary` / `row_activated`. */
-export type ActionList2GalleryMultiSelectHandle = {
+export type ActionListGalleryMultiSelectHandle = {
     row_checked: boolean[];
     last_activated_label: string;
     selection_summary: string;
@@ -9,7 +9,7 @@ export type ActionList2GalleryMultiSelectHandle = {
 };
 
 /** Row labels — same order as `multi-select-lines` and `listbox-multi-select-lines` in `gallery-action-list2-page.slint`. */
-const ACTION_LIST_2_GALLERY_MULTI_ROW_LABELS = [
+const ACTION_LIST_GALLERY_MULTI_ROW_LABELS = [
     "Primer Backlog",
     "Accessibility",
     "Octicons",
@@ -35,10 +35,10 @@ function formatSelectionSummary(
  * Wires `row_activated` to toggle membership in a `Set`; mirrors a bool[] into Slint for `ActionList2.multi-selected`.
  * Call once per global handle — each call owns its own selection state.
  */
-export function wireActionList2GalleryMultiSelect(
-    g: ActionList2GalleryMultiSelectHandle,
+export function wireActionListGalleryMultiSelect(
+    g: ActionListGalleryMultiSelectHandle,
 ): void {
-    const rowLabels = ACTION_LIST_2_GALLERY_MULTI_ROW_LABELS;
+    const rowLabels = ACTION_LIST_GALLERY_MULTI_ROW_LABELS;
     const rowCount = rowLabels.length;
     let selected = new Set<number>([0]);
 

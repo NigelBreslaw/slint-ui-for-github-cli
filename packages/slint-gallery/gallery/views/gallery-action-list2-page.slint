@@ -12,8 +12,8 @@ import {
     ButtonAlignContent,
     Icons,
 } from "../../../primer-slint/primer.slint";
-import { GalleryActionList2ListboxMultiSelect } from "../gallery-action-list2-listbox-multi-select-state.slint";
-import { GalleryActionList2MultiSelect } from "../gallery-action-list2-multi-select-state.slint";
+import { GalleryActionListListboxMultiSelect } from "../gallery-action-list2-listbox-multi-select-state.slint";
+import { GalleryActionListMultiSelect } from "../gallery-action-list2-multi-select-state.slint";
 import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 
 export component GalleryActionList2Page inherits VerticalLayout {
@@ -1851,15 +1851,15 @@ export component GalleryActionList2Page inherits VerticalLayout {
                     width: 100%;
                     show-dividers: false;
                     selection-mode: ActionList2SelectionMode.multiple;
-                    multi-selected: GalleryActionList2ListboxMultiSelect.row-checked;
+                    multi-selected: GalleryActionListListboxMultiSelect.row-checked;
                     lines: root.listbox-multi-select-lines;
                     item-activated(ix) => {
-                        GalleryActionList2ListboxMultiSelect.row-activated(ix);
+                        GalleryActionListListboxMultiSelect.row-activated(ix);
                     }
                 }
 
                 Text {
-                    text: "Last row: \{GalleryActionList2ListboxMultiSelect.last-activated-label} — selected: \{GalleryActionList2ListboxMultiSelect.selection-summary}";
+                    text: "Last row: \{GalleryActionListListboxMultiSelect.last-activated-label} — selected: \{GalleryActionListListboxMultiSelect.selection-summary}";
                     color: PrimerColors.fgColor-muted;
                     font-size: 12px;
                     wrap: word-wrap;
@@ -1943,15 +1943,15 @@ export component GalleryActionList2Page inherits VerticalLayout {
                     width: 100%;
                     show-dividers: true;
                     selection-mode: ActionList2SelectionMode.multiple;
-                    multi-selected: GalleryActionList2MultiSelect.row-checked;
+                    multi-selected: GalleryActionListMultiSelect.row-checked;
                     lines: root.multi-select-lines;
                     item-activated(ix) => {
-                        GalleryActionList2MultiSelect.row-activated(ix);
+                        GalleryActionListMultiSelect.row-activated(ix);
                     }
                 }
 
                 Text {
-                    text: "Last row: \{GalleryActionList2MultiSelect.last-activated-label} — selected: \{GalleryActionList2MultiSelect.selection-summary}";
+                    text: "Last row: \{GalleryActionListMultiSelect.last-activated-label} — selected: \{GalleryActionListMultiSelect.selection-summary}";
                     color: PrimerColors.fgColor-muted;
                     font-size: 12px;
                     wrap: word-wrap;
