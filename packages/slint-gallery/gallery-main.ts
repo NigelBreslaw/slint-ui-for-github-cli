@@ -1,9 +1,9 @@
 import * as slint from "slint-ui";
 import { assignProperties } from "slint-bridge-kit";
 import {
-  wireGalleryActionList2MultiSelect,
-  type GalleryActionList2MultiSelectHandle,
-} from "./gallery/gallery-action-list2-multi-select-bridge.ts";
+  wireActionList2GalleryMultiSelect,
+  type ActionList2GalleryMultiSelectHandle,
+} from "./gallery/gallery-action-list2-multi-select-bridge-shared.ts";
 
 type GalleryWindowModule = {
   GalleryWindow: new () => {
@@ -12,7 +12,8 @@ type GalleryWindowModule = {
     GalleryState: {
       selected_group_index: number;
     };
-    GalleryActionList2MultiSelect: GalleryActionList2MultiSelectHandle;
+    GalleryActionList2MultiSelect: ActionList2GalleryMultiSelectHandle;
+    GalleryActionList2ListboxMultiSelect: ActionList2GalleryMultiSelectHandle;
   };
 };
 
@@ -26,7 +27,10 @@ assignProperties(window.GalleryState, {
   selected_group_index: 0,
 });
 
-wireGalleryActionList2MultiSelect(window.GalleryActionList2MultiSelect);
+wireActionList2GalleryMultiSelect(window.GalleryActionList2MultiSelect);
+wireActionList2GalleryMultiSelect(
+  window.GalleryActionList2ListboxMultiSelect,
+);
 
 window.show();
 await slint.runEventLoop();

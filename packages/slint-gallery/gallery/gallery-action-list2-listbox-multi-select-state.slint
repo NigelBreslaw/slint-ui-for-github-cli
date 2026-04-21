@@ -1,0 +1,8 @@
+/// Listbox **multi-select** demo for **Action list 2** — same Node pattern as **`GalleryActionList2MultiSelect`** (`gallery-action-list2-multi-select-bridge-shared.ts`, `gallery-main.ts`). Storybook **Listbox Multi Select**: no row seam dividers, last row **`disabled`**.
+export global GalleryActionList2ListboxMultiSelect {
+    /// One bool per **`lines`** index (four rows); checked rows are true.
+    in-out property <[bool]> row-checked: [true, false, false, false];
+    in-out property <string> last-activated-label: "";
+    in-out property <string> selection-summary: "";
+    callback row-activated(int);
+}
