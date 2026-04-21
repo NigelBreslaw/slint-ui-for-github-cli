@@ -26,7 +26,6 @@ component NavListItemRow {
     callback clicked;
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         if nav-row.inactive: Rectangle {
@@ -55,7 +54,6 @@ component NavListItemRow {
 
                 VerticalLayout {
                     horizontal-stretch: 1;
-                    min-width: 0px;
                     spacing: 4px;
 
                     Text {
@@ -139,11 +137,9 @@ component NavListLevel4 {
     callback item-activated(path: string);
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         for item[ix] in items: VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 1;
 
             NavListItemRow {
@@ -168,7 +164,6 @@ component NavListExpandableRow3 {
     private property <bool> expanded: item.subnav-default-open;
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         HorizontalLayout {
@@ -220,11 +215,9 @@ component NavListLevel3 {
     callback item-activated(path: string);
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         for item[ix] in items: VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 1;
 
             if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow3 {
@@ -259,7 +252,6 @@ component NavListExpandableRow2 {
     private property <bool> expanded: item.subnav-default-open;
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         HorizontalLayout {
@@ -311,11 +303,9 @@ component NavListLevel2 {
     callback item-activated(path: string);
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         for item[ix] in items: VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 1;
 
             if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow2 {
@@ -350,7 +340,6 @@ component NavListExpandableRow1 {
     private property <bool> expanded: item.subnav-default-open;
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         HorizontalLayout {
@@ -402,11 +391,9 @@ component NavListLevel1 {
     callback item-activated(path: string);
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         for item[ix] in items: VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 1;
 
             if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow1 {
@@ -441,7 +428,6 @@ component NavListExpandableRow0 {
     private property <bool> expanded: item.subnav-default-open;
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         HorizontalLayout {
@@ -493,11 +479,9 @@ component NavListLevel0 {
     callback item-activated(path: string);
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         for item[ix] in items: VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 1;
 
             if item.children.length > 0 && depth < 4 && !item.data.inactive: NavListExpandableRow0 {
@@ -527,7 +511,6 @@ component NavListGroupHeader {
     in property <NavListGroupHeadingVariant> variant;
 
     VerticalLayout {
-        spacing: 0px;
         horizontal-stretch: 1;
 
         if variant == NavListGroupHeadingVariant.filled: Rectangle {
@@ -594,14 +577,11 @@ export component NavList {
     horizontal-stretch: 1;
 
     VerticalLayout {
-        spacing: 0px;
 
         if groups.length > 0: VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 1;
 
             for group[gi] in groups: VerticalLayout {
-                spacing: 0px;
                 horizontal-stretch: 1;
 
                 if group.title != "": NavListGroupHeader {

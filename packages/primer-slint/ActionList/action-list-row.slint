@@ -23,8 +23,6 @@ import {
 } from "../tokens.slint";
 
 export component ActionListRow {
-    /// Lets this row shrink inside flex parents so labels stay visible (Slint flex default min-width).
-    min-width: 0px;
     in property <bool> disabled: false;
     in property <bool> selected: false;
     in property <string> label: "";
@@ -132,7 +130,6 @@ export component ActionListRow {
 
         ta := TouchArea {
             horizontal-stretch: 1;
-            min-width: 0px;
             min-height: root.cell-min-height;
             enabled: root.is-interactive;
             clicked => {
@@ -174,18 +171,14 @@ export component ActionListRow {
 
                     VerticalLayout {
                         horizontal-stretch: 1;
-                        min-width: 0px;
-                        spacing: 0px;
 
                         if root.show-inline-desc: HorizontalLayout {
                             spacing: 8px;
                             alignment: center;
                             horizontal-stretch: 1;
-                            min-width: 0px;
 
                             if root.label != "": primary-inline := Text {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: root.label;
                                 color: root.primary-label-color;
                                 font-size: LayoutTokens.text-body-size-medium;
@@ -227,12 +220,10 @@ export component ActionListRow {
 
                         if !root.show-inline-desc: VerticalLayout {
                             horizontal-stretch: 1;
-                            min-width: 0px;
                             spacing: 2px;
 
                             if root.label != "": primary-label := Text {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: root.label;
                                 color: root.primary-label-color;
                                 font-size: LayoutTokens.text-body-size-medium;
@@ -253,7 +244,6 @@ export component ActionListRow {
 
                             if root.description != "": desc-label := Text {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: root.description;
                                 color: root.row-variant == ActionListRowVariant.inactive ? ActionListTokens.item-inactive-description-fgColor : PrimerColors.fgColor-muted;
                                 font-size: LayoutTokens.text-body-size-small;

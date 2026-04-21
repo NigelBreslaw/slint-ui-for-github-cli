@@ -1,16 +1,11 @@
-// Placement for anchored floating panels (Primer-style subset). Default anchored menus: outside-bottom + start.
 
 export enum AnchoredOverlaySide {
-    /// Prefer below the anchor; flip above when below would overflow the viewport (see `window-inner-height`).
     auto,
-    /// Always place below the anchor (may clip at the bottom of the window).
     outside_bottom,
-    /// Always place above the anchor (may clip at the top).
     outside_top,
 }
 
 export enum AnchoredOverlayAlign {
-    /// Align panel start edge with anchor start (LTR); use with `panel-width` for wider panels.
     start,
     center,
     end,

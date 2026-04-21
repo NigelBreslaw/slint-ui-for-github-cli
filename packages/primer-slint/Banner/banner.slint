@@ -166,9 +166,6 @@ export component Banner {
                     }
 
                     if description-emphasis != "": HorizontalLayout {
-                        width: 100%;
-                        min-width: 0px;
-                        spacing: 0px;
 
                         StyledText {
                             text: @markdown("**\{description-emphasis}**");
@@ -180,7 +177,6 @@ export component Banner {
 
                         Text {
                             horizontal-stretch: 1;
-                            min-width: 0px;
                             text: description;
                             color: PrimerColors.fgColor-default;
                             font-size: LayoutTokens.text-body-size-medium;

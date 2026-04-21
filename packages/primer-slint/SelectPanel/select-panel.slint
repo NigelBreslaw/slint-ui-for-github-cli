@@ -42,7 +42,6 @@ export component SelectPanel {
     callback single-selected-changed(int);
 
     horizontal-stretch: 1;
-    min-width: 0px;
 
     private property <int> effective-len: item-count >= 0 ? item-count
         : mode == SelectPanelMode.single ? single-items.length : multi-items.length;
@@ -161,17 +160,14 @@ export component SelectPanel {
                 }
 
                 if !root.loading && root.effective-len > 0 && root.mode == SelectPanelMode.single: Flickable {
-                    width: 100%;
                     height: parent.height;
                     viewport-width: parent.width;
                     viewport-height: single-vl.preferred-height;
 
                     single-vl := VerticalLayout {
                         width: parent.width;
-                        spacing: 0px;
 
                         for ix in root.effective-len: HorizontalLayout {
-                            width: 100%;
                             spacing: LayoutTokens.nav-list-sidebar-indicator-gap;
                             alignment: stretch;
 
@@ -203,17 +199,14 @@ export component SelectPanel {
                 }
 
                 if !root.loading && root.effective-len > 0 && root.mode == SelectPanelMode.multi: Flickable {
-                    width: 100%;
                     height: parent.height;
                     viewport-width: parent.width;
                     viewport-height: multi-vl.preferred-height;
 
                     multi-vl := VerticalLayout {
                         width: parent.width;
-                        spacing: 0px;
 
                         for ix in root.effective-len: SelectPanelRow {
-                            width: 100%;
                             label: root.multi-items[ix].label;
                             description: root.multi-items[ix].description;
                             swatch: root.multi-items[ix].swatch;
@@ -234,18 +227,14 @@ export component SelectPanel {
 
         // Primer SelectPanel `.Footer` (`show-footer` hides chrome; `@children` cannot live inside `if`).
         VerticalLayout {
-            width: 100%;
-            spacing: 0px;
             visible: root.show-footer;
 
             Rectangle {
-                width: 100%;
                 height: LayoutTokens.nav-list-divider-height;
                 background: PrimerColors.borderColor-default;
             }
 
             VerticalLayout {
-                width: 100%;
                 padding: LayoutTokens.banner-padding-default;
                 spacing: LayoutTokens.button-content-gap;
                 alignment: start;

@@ -20,21 +20,13 @@ export component ActionList2 {
     /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers, **inactive**, or **`show-trailing-loading`** rows).
     callback item-activated(int);
 
-    min-width: 0px;
-    width: 100%;
-
     VerticalLayout {
-        spacing: 0px;
-        width: 100%;
         alignment: start;
 
         for line[ix] in root.lines: VerticalLayout {
-            width: 100%;
-            spacing: 0px;
             alignment: start;
 
             if line.kind == ActionList2LineKind.row: ActionList2Row {
-                width: 100%;
                 inactive-text: line.inactive-text;
                 show-trailing-loading: line.show-trailing-loading;
                 has-trailing-visual: line.has-trailing-visual;

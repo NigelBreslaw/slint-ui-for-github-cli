@@ -67,12 +67,10 @@ export component SelectPanelRow {
 
                 VerticalLayout {
                     horizontal-stretch: 1;
-                    min-width: 0px;
                     spacing: 2px;
 
                     primary-label := Text {
                         horizontal-stretch: 1;
-                        min-width: 0px;
                         text: root.label;
                         color: PrimerColors.fgColor-default;
                         font-size: LayoutTokens.text-body-size-medium;
@@ -83,7 +81,6 @@ export component SelectPanelRow {
                     desc-label := Text {
                         visible: root.description != "";
                         horizontal-stretch: 1;
-                        min-width: 0px;
                         text: root.description;
                         color: PrimerColors.fgColor-muted;
                         font-size: LayoutTokens.text-body-size-small;

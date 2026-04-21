@@ -16,7 +16,6 @@ import { GalleryActionList2ListboxMultiSelect } from "../gallery-action-list2-li
 import { GalleryActionList2MultiSelect } from "../gallery-action-list2-multi-select-state.slint";
 import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Inside overlay, Loading item, With Dynamic Content, Listbox Multi Select, Listbox Single Select, Multi Select, Inactive Single Select, Single Select, …).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -38,7 +37,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
     private property <bool> inside-overlay-open: false;
     private property <string> inside-overlay-last: "";
 
-    /// PR27 — Storybook **Features → Inside overlay** ([storybook](https://primer.style/react/storybook/?path=/story/components-actionlist-features--inside-overlay)): **`AnchoredOverlay`** + **`ActionList2`** with the upstream labels, trailing **arrow** icons, **`item_divider`**, and a **danger** last row (viewport via **`AppWindow`**).
     private property <[ActionList2Line]> inside-overlay-lines: [
         {
             kind: ActionList2LineKind.row,
@@ -134,7 +132,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
 
     private property <string> loading-item-last: "";
 
-    /// PR21 — Storybook **Features → Loading item** (`reference/actionlist-features/loading-item.png`): four plain rows with block descriptions; second row **`show-trailing-loading`** (trailing **`Spinner`**, not activatable).
     private property <[ActionList2Line]> loading-item-lines: [
         {
             kind: ActionList2LineKind.row,
@@ -213,7 +210,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
     private property <int> listbox-single-select-index: 0;
     private property <string> listbox-single-select-last: "";
 
-    /// PR15 — Storybook **With dynamic content**: `onSelect` → **`item-activated`** toggles label **`Activated? Yes` / `Activated? No`**.
     private property <bool> with-dynamic-is-true: false;
     private property <string> with-dynamic-item-label: root.with-dynamic-is-true ? "Activated? Yes" : "Activated? No";
     private property <[ActionList2Line]> with-dynamic-content-lines: [
@@ -1513,13 +1509,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Primer Storybook **Features → Inside overlay** ([primer.style/react/storybook](https://primer.style/react/storybook/?path=/story/components-actionlist-features--inside-overlay)): **`toggle overlay`** opens **`AnchoredOverlay`** with **`shrink-wrap`** so the popup hugs **`ActionList2`**; **`panel-width: 0`** matches the trigger width. Trailing **arrow** icons, an **`item_divider`**, then a **danger** row. Viewport clamp/flip uses **`AppWindow`**. Choosing a row fires **`item-activated`** and closes the overlay; **Escape** closes too.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         btn-inside-overlay := Button {
             width: 100%;
             max-width: 320px;
@@ -1581,13 +1570,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Primer Storybook **Features → Loading item** ([primer.style/react/storybook](https://primer.style/react/storybook/?path=/story/components-actionlist-features--loading-item)) and **`reference/actionlist-features/loading-item.png`**: four rows, no leading visuals, block descriptions; the second row (**Accessibility**) shows a trailing **`Spinner`** and does not fire **`item-activated`**.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -1632,13 +1614,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Same pattern as React: **`ActionList.Item`** **`onSelect={() => setIsTrue(!isTrue)}`** with children **`Activated? {isTrue ? 'Yes' : 'No'}`** — here one row, **`item-activated`** flips **`with-dynamic-is-true`**, label is a bound **`with-dynamic-item-label`**.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -1676,13 +1651,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
-        }
-
-        Text {
-            text: "Same as **Multi select** (`selectionVariant=\"multiple\"`, checkbox lead, fourth row **`disabled`**) with the Storybook **Listbox Multi Select** difference: **`show-dividers`** false (no row seam hairlines). Checked rows are **`GalleryActionList2ListboxMultiSelect.row-checked`**, toggled from Node (`gallery-action-list2-multi-select-bridge-shared.ts`).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
 
         Rectangle {
@@ -1728,13 +1696,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
-        }
-
-        Text {
-            text: "Same as **Single select** (`selectionVariant=\"single\"`, block rows, checkmark column, first row selected) with two Storybook **Listbox Single Select** differences: **`show-dividers`** false (no row seam hairlines) and the last row (**Primer React**) **`disabled`**.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
 
         Rectangle {
@@ -1784,13 +1745,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Storybook Features → Multi Select (multiple + showDividers, block rows, multi checkbox lead, fourth row disabled). Checked rows are a bool[] on the GalleryActionList2MultiSelect global, toggled from Node (`gallery-action-list2-multi-select-bridge-shared.ts`, `gallery-main.ts`).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -1834,13 +1788,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
-        }
-
-        Text {
-            text: "Matches Storybook Features → Inactive Single Select: first row **`inactiveText`** (not disabled) — muted label, attention warning, no activation; second row **`menuitemradio`** with check, **`selected-index` 1**.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
 
         Rectangle {
@@ -1890,13 +1837,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Storybook Features → Single Select (`selectionVariant=\"single\"`, `showDividers`, block description, `CheckIcon` / `.SingleSelectCheckmark` before leading visual, first row selected).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -1944,13 +1884,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Storybook Features → Block Description (leading Avatar, primary label + block description).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -1994,13 +1927,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Storybook Features → Inline Description (leading Avatar, primary label + inline description).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -2042,13 +1968,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
-        }
-
-        Text {
-            text: "Matches Storybook Features → Item Dividers (`showDividers`: seam hairlines between consecutive rows, not after the last row).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
 
         Rectangle {
@@ -2095,13 +2014,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Storybook Features → With Avatars (leading Avatar per row; usernames from upstream story).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -2143,13 +2055,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
-        }
-
-        Text {
-            text: "Matches Storybook Features → With Icons (leading icons per row; last row danger).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
 
         Rectangle {
@@ -2195,13 +2100,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Storybook Features → With Custom Heading (plain `label`, `label-markdown` as styled-text from `@markdown`).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -2245,13 +2143,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Matches Storybook Features → Simple Divider";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         Rectangle {
             horizontal-stretch: 0;
             width: 320px;
@@ -2293,13 +2184,6 @@ export component GalleryActionList2Page inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
-        }
-
-        Text {
-            text: "Matches Storybook Features → With Visual List Heading (list title, subtle group headings, leading icons).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
 
         Rectangle {

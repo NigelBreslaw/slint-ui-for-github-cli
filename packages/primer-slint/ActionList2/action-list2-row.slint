@@ -14,7 +14,6 @@ import {
 import { ActionList2DescriptionLayout, ActionList2RowVariant } from "./types.slint";
 
 export component ActionList2Row {
-    min-width: 0px;
     in property <styled-text> label-markdown;
     in property <string> label;
     in property <bool> has-markdown: false;
@@ -229,14 +228,12 @@ export component ActionList2Row {
 
                         if root.show-inline-description: HorizontalLayout {
                             horizontal-stretch: 1;
-                            min-width: 0px;
                             spacing: LayoutTokens.button-content-gap;
                             alignment: center;
                             align-items: center;
 
                             if !root.has-markdown: Text {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: root.label;
                                 color: root.label-color;
                                 font-size: LayoutTokens.text-body-size-medium;
@@ -247,7 +244,6 @@ export component ActionList2Row {
 
                             if root.has-markdown: StyledText {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: root.label-markdown;
                                 default-color: root.label-color;
                                 default-font-size: LayoutTokens.text-body-size-medium;
@@ -267,13 +263,11 @@ export component ActionList2Row {
 
                         if root.show-block-description: VerticalLayout {
                             horizontal-stretch: 1;
-                            min-width: 0px;
                             spacing: 2px;
                             alignment: center;
 
                             if !root.has-markdown: Text {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: root.label;
                                 color: root.label-color;
                                 font-size: LayoutTokens.text-body-size-medium;
@@ -283,7 +277,6 @@ export component ActionList2Row {
 
                             if root.has-markdown: StyledText {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: root.label-markdown;
                                 default-color: root.label-color;
                                 default-font-size: LayoutTokens.text-body-size-medium;
@@ -292,7 +285,6 @@ export component ActionList2Row {
 
                         if !root.show-inline-description && !root.show-block-description && !root.has-markdown: Text {
                             horizontal-stretch: 1;
-                            min-width: 0px;
                             text: root.label;
                             color: root.label-color;
                             font-size: LayoutTokens.text-body-size-medium;
@@ -302,7 +294,6 @@ export component ActionList2Row {
 
                         if !root.show-inline-description && !root.show-block-description && root.has-markdown: StyledText {
                             horizontal-stretch: 1;
-                            min-width: 0px;
                             text: root.label-markdown;
                             default-color: root.label-color;
                             default-font-size: LayoutTokens.text-body-size-medium;
@@ -342,7 +333,6 @@ export component ActionList2Row {
                         }
                         Text {
                             horizontal-stretch: 1;
-                            min-width: 0px;
                             text: root.description;
                             color: root.inline-description-color;
                             font-size: LayoutTokens.text-body-size-small;

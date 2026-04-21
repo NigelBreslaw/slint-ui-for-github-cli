@@ -42,21 +42,18 @@ export struct NavListSub1 {
     subnav-default-open: bool,
 }
 
-/// Root-level item in a flat list or group (`children` is the next SubNav tier).
 export struct NavListItem {
     data: NavListRowData,
     children: [NavListSub1],
     subnav-default-open: bool,
 }
 
-/// Matches Primer `NavList.GroupHeading` `variant` (`subtle` | `filled`).
 export enum NavListGroupHeadingVariant {
     subtle,
     filled,
 }
 
 export struct NavListGroup {
-    /// Non-empty shows a group heading above `items`.
     title: string,
     heading-variant: NavListGroupHeadingVariant,
     items: [NavListItem],

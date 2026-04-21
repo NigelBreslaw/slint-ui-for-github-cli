@@ -5,17 +5,13 @@
 import { ActionListTokens, LayoutTokens } from "../tokens.slint";
 
 export component ActionList2ItemDivider {
-    min-width: 0px;
-    width: 100%;
 
     VerticalLayout {
-        width: 100%;
         padding-top: LayoutTokens.action-list-item-divider-margin-block-start;
         padding-bottom: LayoutTokens.action-list-item-divider-margin-block-end;
         alignment: start;
 
         Rectangle {
-            width: 100%;
             height: LayoutTokens.table-border-width;
             background: ActionListTokens.item-divider-borderColor;
         }

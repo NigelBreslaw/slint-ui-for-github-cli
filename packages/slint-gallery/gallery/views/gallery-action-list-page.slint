@@ -584,20 +584,11 @@ export component GalleryActionListPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Shared row chrome; pass `row-variant`, `description-layout`, and `large` for ActionList parity demos.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 0;
             width: 360px;
 
             ActionListRow {
-                width: 100%;
                 label: "Unselected row";
                 selected: false;
                 disabled: false;
@@ -606,7 +597,6 @@ export component GalleryActionListPage inherits VerticalLayout {
             }
 
             ActionListRow {
-                width: 100%;
                 label: "Selected row";
                 selected: true;
                 disabled: false;
@@ -615,7 +605,6 @@ export component GalleryActionListPage inherits VerticalLayout {
             }
 
             ActionListRow {
-                width: 100%;
                 label: "Disabled row";
                 selected: false;
                 disabled: true;
@@ -628,7 +617,6 @@ export component GalleryActionListPage inherits VerticalLayout {
             }
 
             ActionListRow {
-                width: 100%;
                 label: "Danger row";
                 description: "Hover / pressed use danger-muted surfaces.";
                 row-variant: ActionListRowVariant.danger;
@@ -728,7 +716,6 @@ export component GalleryActionListPage inherits VerticalLayout {
         }
 
         VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 0;
             width: 360px;
 
@@ -771,7 +758,6 @@ export component GalleryActionListPage inherits VerticalLayout {
         }
 
         VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 0;
             width: 400px;
 
@@ -821,7 +807,6 @@ export component GalleryActionListPage inherits VerticalLayout {
         }
 
         VerticalLayout {
-            spacing: 0px;
             horizontal-stretch: 0;
             width: 420px;
 

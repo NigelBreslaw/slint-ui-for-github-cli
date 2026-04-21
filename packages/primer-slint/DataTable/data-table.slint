@@ -126,8 +126,6 @@ export component DataTable {
                             padding-right: pad-inline + (index == columns.length - 1 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
                             padding-top: pad-block;
                             padding-bottom: pad-block;
-                            width: 100%;
-                            min-width: 0px;
                             min-height: header-row-min-height;
                             spacing: 4px;
                             alignment: col.align == DataTableCellAlign.end ? end : start;
@@ -143,7 +141,6 @@ export component DataTable {
 
                             if col.monospace: Text {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: col.header;
                                 font-size: LayoutTokens.text-body-size-small;
                                 font-family: "Bitstream Vera Sans Mono";
@@ -156,7 +153,6 @@ export component DataTable {
 
                             if !col.monospace: Text {
                                 horizontal-stretch: 1;
-                                min-width: 0px;
                                 text: col.header;
                                 font-size: LayoutTokens.text-body-size-small;
                                 color: sort-header-fg(col.id);
@@ -182,14 +178,10 @@ export component DataTable {
                         padding-right: pad-inline + (index == columns.length - 1 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
                         padding-top: pad-block;
                         padding-bottom: pad-block;
-                        width: 100%;
-                        min-width: 0px;
                         min-height: header-row-min-height;
                         alignment: col.align == DataTableCellAlign.end ? end : start;
 
                         if col.monospace: Text {
-                            width: 100%;
-                            min-width: 0px;
                             text: col.header;
                             font-size: LayoutTokens.text-body-size-small;
                             font-family: "Bitstream Vera Sans Mono";
@@ -201,8 +193,6 @@ export component DataTable {
                         }
 
                         if !col.monospace: Text {
-                            width: 100%;
-                            min-width: 0px;
                             text: col.header;
                             font-size: LayoutTokens.text-body-size-small;
                             color: PrimerColors.fgColor-muted;
@@ -255,14 +245,9 @@ export component DataTable {
                                     padding-right: pad-inline + (index == columns.length - 1 ? LayoutTokens.table-cell-edge-inset-inline : 0px);
                                     padding-top: pad-block;
                                     padding-bottom: pad-block;
-                                    width: 100%;
-                                    min-width: 0px;
-                                    min-height: 0;
                                     alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? end : start;
 
                                     if cell.kind == DataTableCellKind.text && index < columns.length && columns[index].monospace: Text {
-                                        width: 100%;
-                                        min-width: 0px;
                                         text: cell.text;
                                         font-size: LayoutTokens.text-body-size-small;
                                         font-family: "Bitstream Vera Sans Mono";
@@ -274,8 +259,6 @@ export component DataTable {
                                     }
 
                                     if cell.kind == DataTableCellKind.text && !(index < columns.length && columns[index].monospace): Text {
-                                        width: 100%;
-                                        min-width: 0px;
                                         text: cell.text;
                                         font-size: LayoutTokens.text-body-size-small;
                                         color: PrimerColors.fgColor-default;
@@ -286,8 +269,6 @@ export component DataTable {
                                     }
 
                                     if cell.kind == DataTableCellKind.label: HorizontalLayout {
-                                        width: 100%;
-                                        min-width: 0px;
                                         alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? end : start;
 
                                         Label {
@@ -298,8 +279,6 @@ export component DataTable {
                                     }
 
                                     if cell.kind == DataTableCellKind.iconText: HorizontalLayout {
-                                        width: 100%;
-                                        min-width: 0px;
                                         spacing: 6px;
                                         alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? end : start;
 
@@ -314,7 +293,6 @@ export component DataTable {
 
                                         if index < columns.length && columns[index].monospace: Text {
                                             horizontal-stretch: index < columns.length && columns[index].align == DataTableCellAlign.end ? 0 : 1;
-                                            min-width: 0px;
                                             text: cell.text;
                                             font-size: LayoutTokens.text-body-size-small;
                                             font-family: "Bitstream Vera Sans Mono";
@@ -327,7 +305,6 @@ export component DataTable {
 
                                         if index < columns.length && !(columns[index].monospace): Text {
                                             horizontal-stretch: index < columns.length && columns[index].align == DataTableCellAlign.end ? 0 : 1;
-                                            min-width: 0px;
                                             text: cell.text;
                                             font-size: LayoutTokens.text-body-size-small;
                                             color: PrimerColors.fgColor-default;
@@ -339,8 +316,6 @@ export component DataTable {
                                     }
 
                                     if cell.kind == DataTableCellKind.action && cell.text != "": HorizontalLayout {
-                                        width: 100%;
-                                        min-width: 0px;
                                         alignment: index < columns.length && columns[index].align == DataTableCellAlign.end ? end : start;
 
                                         IconButton {
@@ -359,7 +334,6 @@ export component DataTable {
                 }
 
                 Rectangle {
-                    width: 100%;
                     vertical-stretch: 0;
                     height: LayoutTokens.table-border-width;
                     background: PrimerColors.borderColor-default;
@@ -368,9 +342,7 @@ export component DataTable {
 
             // Consume remaining height below body rows so the header row never stretches.
             Rectangle {
-                width: 100%;
                 vertical-stretch: 1;
-                min-height: 0px;
                 background: transparent;
             }
         }

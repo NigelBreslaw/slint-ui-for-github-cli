@@ -28,16 +28,12 @@ export component TableContainer {
         padding-bottom: 0px;
 
         if has-header: VerticalLayout {
-            width: 100%;
-            spacing: 0px;
 
             HorizontalLayout {
-                width: 100%;
                 spacing: LayoutTokens.stack-padding-normal;
                 alignment: space-between;
 
                 if has-text: VerticalLayout {
-                    min-width: 0px;
                     spacing: 4px;
 
                     if title != "": Text {
@@ -56,11 +52,10 @@ export component TableContainer {
                     }
                 }
 
-                if !has-text && has-actions: Rectangle {
-                    horizontal-stretch: 1;
-                    height: 0px;
-                    min-width: 0px;
-                }
+                // if !has-text && has-actions: Rectangle {
+                //     horizontal-stretch: 1;
+                //     height: 0px;
+                // }
 
                 if has-actions: HorizontalLayout {
                     spacing: LayoutTokens.banner-actions-gap;
