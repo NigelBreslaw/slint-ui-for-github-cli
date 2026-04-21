@@ -1,0 +1,163 @@
+import { Button, ButtonAlignContent } from "../../primer-slint/primer.slint";
+import { PrimerColors } from "../../primer-slint/tokens.slint";
+
+/// One Storybook-aligned block (title + meta + stub open control).
+component DialogStoryStub inherits VerticalLayout {
+    in property <string> story-title;
+    in property <string> story-path;
+    in property <string> story-note;
+
+    spacing: 10px;
+    width: 100%;
+    padding-top: 16px;
+
+    Rectangle {
+        height: 1px;
+        background: PrimerColors.borderColor-default;
+    }
+
+    Text {
+        text: root.story-title;
+        color: PrimerColors.fgColor-default;
+        font-size: 15px;
+        font-weight: 600;
+    }
+
+    Text {
+        text: root.story-path;
+        color: PrimerColors.fgColor-muted;
+        font-size: 11px;
+        wrap: word-wrap;
+    }
+
+    Text {
+        text: root.story-note;
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+        wrap: word-wrap;
+    }
+
+    Button {
+        max-width: 200px;
+        align-content: ButtonAlignContent.start;
+        label: "Open dialog (soon)";
+        clicked => {
+        }
+    }
+}
+
+/// Scaffold for Primer **Dialog** parity demos (Storybook: `Components/Dialog` and `Components/Dialog/Features`). Each section is filled in by later PRs.
+export component GalleryDialogsPage inherits VerticalLayout {
+    spacing: 32px;
+    width: 100%;
+
+    Text {
+        text: "Dialog";
+        color: PrimerColors.fgColor-default;
+        font-size: 22px;
+        font-weight: 600;
+    }
+
+    Text {
+        text: "Upstream: primer-ui-react `Dialog/` stories. Sections below map 1:1 to Storybook stories; open buttons are placeholders until the Dialog port lands.";
+        color: PrimerColors.fgColor-muted;
+        font-size: 12px;
+        wrap: word-wrap;
+    }
+
+    DialogStoryStub {
+        story-title: "Default";
+        story-path: "Components/Dialog — Default";
+        story-note: "Nested dialog, mixed footer buttons, scroll body.";
+    }
+
+    DialogStoryStub {
+        story-title: "Playground";
+        story-path: "Components/Dialog — Playground";
+        story-note: "Storybook controls matrix only; width/height/position props exercised in other sections.";
+    }
+
+    DialogStoryStub {
+        story-title: "WithCustomRenderers";
+        story-path: "Components/Dialog/Features — WithCustomRenderers";
+        story-note: "Custom renderHeader / renderBody / renderFooter.";
+    }
+
+    DialogStoryStub {
+        story-title: "WithDirectSubcomponents";
+        story-path: "Components/Dialog/Features — WithDirectSubcomponents";
+        story-note: "Dialog.Header / Body / Footer / Dialog.Buttons.";
+    }
+
+    DialogStoryStub {
+        story-title: "StressTest";
+        story-path: "Components/Dialog/Features — StressTest";
+        story-note: "Long title and subtitle; many footer buttons; narrow fullscreen + inner dialog.";
+    }
+
+    DialogStoryStub {
+        story-title: "ReproMultistepDialogWithConditionalFooter";
+        story-path: "Components/Dialog/Features — ReproMultistepDialogWithConditionalFooter";
+        story-note: "Conditional footer by step; focus close button on step change.";
+    }
+
+    DialogStoryStub {
+        story-title: "BottomSheetNarrow";
+        story-path: "Components/Dialog/Features — [Position] Bottom sheet (narrow)";
+        story-note: "position.narrow bottom, regular center.";
+    }
+
+    DialogStoryStub {
+        story-title: "FullScreenNarrow";
+        story-path: "Components/Dialog/Features — [Position] Fullscreen (narrow)";
+        story-note: "position.narrow fullscreen, regular center.";
+    }
+
+    DialogStoryStub {
+        story-title: "SideSheet";
+        story-path: "Components/Dialog/Features — [Position] Side sheet";
+        story-note: "position right; full viewport height.";
+    }
+
+    DialogStoryStub {
+        story-title: "ReturnFocusRef";
+        story-path: "Components/Dialog/Features — ReturnFocusRef";
+        story-note: "Return focus to trigger on close (Slint parity may be partial).";
+    }
+
+    DialogStoryStub {
+        story-title: "NewIssues";
+        story-path: "Components/Dialog/Features — NewIssues";
+        story-note: "ActionList in body; initialFocusRef.";
+    }
+
+    DialogStoryStub {
+        story-title: "RetainsFocusTrapWithDynamicContent";
+        story-path: "Components/Dialog/Features — RetainsFocusTrapWithDynamicContent";
+        story-note: "Dynamic body/footer and stacked inner dialog.";
+    }
+
+    DialogStoryStub {
+        story-title: "LoadingFooterButtons";
+        story-path: "Components/Dialog/Features — LoadingFooterButtons";
+        story-note: "Footer buttons with loading and autoFocus.";
+    }
+
+    DialogStoryStub {
+        story-title: "LoadingCustomFooterButtonsCould";
+        story-path: "Components/Dialog/Features — LoadingCustomFooterButtonsCould";
+        story-note: "renderFooter + loading on secondary actions.";
+    }
+
+    DialogStoryStub {
+        story-title: "AlignTop";
+        story-path: "Components/Dialog/Features — [Align] Top";
+        story-note: "align top with centered regular position.";
+    }
+
+    DialogStoryStub {
+        story-title: "AlignBottom";
+        story-path: "Components/Dialog/Features — [Align] Bottom";
+        story-note: "align bottom with centered regular position.";
+    }
+}
