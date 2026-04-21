@@ -12,9 +12,11 @@ export component ActionList2 {
     in property <[ActionList2Line]> lines: [];
     /// Primer `ActionList` **`showDividers`**: draw a **seam** hairline (`borderColor-muted`) between consecutive **rows** only — not after the last row, and no block margins (unlike explicit [`item_divider`](ActionList2LineKind.item_divider) / [`ActionList2ItemDivider`]).
     in property <bool> show-dividers: false;
-    /// Primer `selectionVariant="single"`: one selected line; set **`selected-index`** to the matching **`for ix`** list index. Ignored for non-row lines.
+    /// Primer `selectionVariant`: **`single`** uses **`selected-index`**; **`multiple`** uses **`multi-selected`** (index **`ix`** into **`lines`**; treat out-of-range / missing entries as unchecked).
     in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.none;
     in property <int> selected-index: -1;
+    /// **`selection-mode`** **`multiple`**: row **`ix`** is checked when **`multi-selected[ix]`** is true. Ignored for **`single`** / **`none`**.
+    in property <[bool]> multi-selected: [];
     /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers).
     callback item-activated(int);
 
@@ -46,10 +48,17 @@ export component ActionList2 {
                 description: line.description;
                 description-layout: line.description-layout;
                 show-top-seam: root.show-dividers && ix > 0 && root.lines[ix - 1].kind == ActionList2LineKind.row;
-                selected: root.selection-mode == ActionList2SelectionMode.single
-                    && root.selected-index == ix
-                    && line.inactive-text == "";
+                selected: line.inactive-text == ""
+                    && (
+                        (root.selection-mode == ActionList2SelectionMode.single && root.selected-index == ix)
+                        || (
+                            root.selection-mode == ActionList2SelectionMode.multiple
+                            && ix < root.multi-selected.length
+                            && root.multi-selected[ix]
+                        )
+                    );
                 show-single-select-check: root.selection-mode == ActionList2SelectionMode.single;
+                show-multi-select-checkbox: root.selection-mode == ActionList2SelectionMode.multiple;
                 clicked => {
                     if line.inactive-text == "" {
                         root.item-activated(ix);

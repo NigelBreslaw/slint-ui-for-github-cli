@@ -1,0 +1,8 @@
+/// Multi-select demo state for **Action list 2** — toggled from **Node** (`gallery-action-list2-multi-select-bridge.ts`, wired in `gallery-main.ts`).
+export global GalleryActionList2MultiSelect {
+    /// One bool per **`lines`** index (demo: four rows); checked rows are true.
+    in-out property <[bool]> row-checked: [true, false, false, false];
+    in-out property <string> last-activated-label: "";
+    in-out property <string> selection-summary: "";
+    callback row-activated(int);
+}

@@ -15,10 +15,11 @@ export enum ActionList2DescriptionLayout {
     block,
 }
 
-/// Primer `ActionList` **`selectionVariant`**: one selected row in the list.
+/// Primer `ActionList` **`selectionVariant`**: none, one **radio** row, or **multiple** checkboxes (`menuitemcheckbox`).
 export enum ActionList2SelectionMode {
     none,
     single,
+    multiple,
 }
 
 /// Line in [`ActionList2`](action-list2.slint): interactive row or item divider hairline.

@@ -5,6 +5,7 @@ import { Icons } from "../assets/icons.slint";
 import {
     ActionListTokens,
     ButtonTokens,
+    CheckboxTokens,
     LayoutTokens,
     PrimerColors,
 } from "../tokens.slint";
@@ -29,6 +30,8 @@ export component ActionList2Row {
     in property <bool> selected: false;
     /// Primer **ActionList.Selection** + **CheckIcon** (`.SingleSelectCheckmark` in **ActionList.module.css**): tick only, not the multi-select checkbox; column width reserved when unselected.
     in property <bool> show-single-select-check: false;
+    /// Primer **`.MultiSelectCheckbox`** lead cell (same token family as **ActionList** row, not **`Checkbox`** component).
+    in property <bool> show-multi-select-checkbox: false;
     /// Primer **`inactiveText`** — non-empty marks **`data-inactive`**: no activation, muted label, **`.InactiveWarning`** copy (attention).
     in property <string> inactive-text: "";
 
@@ -69,6 +72,15 @@ export component ActionList2Row {
         ? PrimerColors.fgColor-muted
         : PrimerColors.fgColor-default;
 
+    private property <color> multi-select-lead-bg:
+        root.disabled
+        ? (root.selected ? CheckboxTokens.checkbox-bgColor-checked-disabled : CheckboxTokens.checkbox-bgColor-rest)
+        : (root.selected ? CheckboxTokens.checkbox-bgColor-checked : CheckboxTokens.checkbox-bgColor-rest);
+    private property <color> multi-select-lead-border:
+        root.disabled
+        ? (root.selected ? CheckboxTokens.checkbox-borderColor-checked-disabled : CheckboxTokens.checkbox-borderColor-rest)
+        : (root.selected ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
+
     private property <bool> show-inline-description:
         root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
 
@@ -82,8 +94,9 @@ export component ActionList2Row {
         ? ActionListTokens.item-inactive-description-fgColor
         : PrimerColors.fgColor-muted;
 
-    /// Selected “chip” + semibold only when not in single-check mode (Primer ties that surface to `data-active`, not `aria-checked`).
-    private property <bool> use-selected-surface: root.selected && !root.show-single-select-check;
+    /// Selected “chip” + semibold only when not using lead-only selection affordance (single check / multi checkbox).
+    private property <bool> use-selected-surface:
+        root.selected && !root.show-single-select-check && !root.show-multi-select-checkbox;
 
     private property <int> label-font-weight:
         !root.disabled && root.use-selected-surface
@@ -104,7 +117,11 @@ export component ActionList2Row {
                 horizontal-stretch: 0;
                 min-height: LayoutTokens.iconButton-icon-size-medium;
                 width: LayoutTokens.iconButton-icon-size-medium;
-
+            }
+            if root.show-multi-select-checkbox: Rectangle {
+                horizontal-stretch: 0;
+                min-height: LayoutTokens.iconButton-icon-size-medium;
+                width: LayoutTokens.iconButton-icon-size-medium;
             }
             Rectangle {
                 height: LayoutTokens.table-border-width;
@@ -147,6 +164,26 @@ export component ActionList2Row {
                                 vertical-alignment: center;
                                 source: Icons.check;
                                 colorize: root.single-select-check-tint;
+                            }
+                        }
+
+                        if root.show-multi-select-checkbox: Rectangle {
+                            horizontal-stretch: 0;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            height: self.width;
+                            border-radius: LayoutTokens.checkbox-border-radius;
+                            border-width: 1px;
+                            border-color: root.multi-select-lead-border;
+                            background: root.multi-select-lead-bg;
+                            clip: true;
+
+                            if root.selected: Image {
+                                width: 12px;
+                                height: 12px;
+                                x: (parent.width - self.width) / 2;
+                                y: (parent.height - self.height) / 2;
+                                source: Icons.check;
+                                colorize: root.disabled ? CheckboxTokens.checkbox-fgColor-checked-disabled : PrimerColors.fgOnEmphasis;
                             }
                         }
 
@@ -262,6 +299,11 @@ export component ActionList2Row {
                             width: LayoutTokens.iconButton-icon-size-medium;
                             alignment: center;
                         }
+                        if root.show-multi-select-checkbox: Rectangle {
+                            horizontal-stretch: 0;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            height: LayoutTokens.iconButton-icon-size-medium;
+                        }
                         if root.has-leading-avatar: Avatar {
                             horizontal-stretch: 0;
                             diameter: root.avatar-diameter;
@@ -292,7 +334,11 @@ export component ActionList2Row {
                             horizontal-stretch: 0;
                             min-height: LayoutTokens.iconButton-icon-size-medium;
                             width: LayoutTokens.iconButton-icon-size-medium;
-
+                        }
+                        if root.show-multi-select-checkbox: Rectangle {
+                            horizontal-stretch: 0;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            height: LayoutTokens.iconButton-icon-size-medium;
                         }
                         Text {
                             text: root.inactive-text;
@@ -337,10 +383,10 @@ export component ActionList2Row {
                     default-selected-rest when !root.disabled && root.row-variant == ActionList2RowVariant.default && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
                         row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
                     }
-                    default-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.default && (!root.selected || root.show-single-select-check) && ta.pressed: {
+                    default-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.default && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && ta.pressed: {
                         row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                     }
-                    default-hover when !root.disabled && root.row-variant == ActionList2RowVariant.default && (!root.selected || root.show-single-select-check) && !ta.pressed && ta.has-hover: {
+                    default-hover when !root.disabled && root.row-variant == ActionList2RowVariant.default && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && !ta.pressed && ta.has-hover: {
                         row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                     }
                 ]
