@@ -9,7 +9,7 @@ import {
 } from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Single Select, Block Description, Inline Description, Item Dividers, With Avatars, With Icons, With Custom Heading, Simple List, With Visual List Heading).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Inactive Single Select, Single Select, Block Description, …).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -25,6 +25,8 @@ export component GalleryActionList2Page inherits VerticalLayout {
     private property <string> custom-heading-last: "";
     private property <string> simple-list-last: "";
     private property <string> visual-heading-last: "";
+    private property <int> inactive-single-select-index: 1;
+    private property <string> inactive-single-select-last: "";
 
     private property <[ActionList2Line]> single-select-lines: [
         {
@@ -40,6 +42,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -54,6 +57,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -68,6 +72,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -82,6 +87,40 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
+        },
+    ];
+
+    private property <[ActionList2Line]> inactive-single-select-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Inactive item",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "Unavailable due to an outage",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Item 2",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
 
@@ -99,6 +138,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -113,6 +153,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -127,6 +168,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -141,6 +183,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -155,6 +198,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -169,6 +213,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -183,6 +228,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.block,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
 
@@ -200,6 +246,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.inline,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -214,6 +261,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.inline,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -228,6 +276,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.inline,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -242,6 +291,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.inline,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -256,6 +306,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.inline,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -270,6 +321,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.inline,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -284,6 +336,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.inline,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
 
@@ -301,6 +354,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -315,6 +369,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -329,6 +384,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
 
@@ -346,6 +402,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -360,6 +417,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -374,6 +432,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -388,6 +447,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -402,6 +462,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -416,6 +477,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -430,6 +492,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
 
@@ -447,6 +510,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -461,6 +525,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -475,6 +540,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -489,6 +555,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -503,6 +570,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
 
@@ -520,6 +588,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -534,6 +603,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -548,6 +618,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -562,6 +633,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: true,
             label-markdown: @markdown("**1.5k** stars"),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -576,6 +648,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: true,
             label-markdown: @markdown("**21** watching"),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -590,6 +663,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: true,
             label-markdown: @markdown("**225** forks"),
+            inactive-text: "",
         },
     ];
 
@@ -607,6 +681,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -621,6 +696,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -635,6 +711,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.item_divider,
@@ -649,6 +726,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -663,6 +741,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
 
@@ -680,6 +759,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.section_heading,
@@ -694,6 +774,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -708,6 +789,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -722,6 +804,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -736,6 +819,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -750,6 +834,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.section_heading,
@@ -764,6 +849,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -778,6 +864,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -792,6 +879,7 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
         {
             kind: ActionList2LineKind.row,
@@ -806,8 +894,63 @@ export component GalleryActionList2Page inherits VerticalLayout {
             description-layout: ActionList2DescriptionLayout.none,
             has-markdown: false,
             label-markdown: @markdown(""),
+            inactive-text: "",
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "Inactive single select";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Matches Storybook Features → Inactive Single Select: first row **`inactiveText`** (not disabled) — muted label, attention warning, no activation; second row **`menuitemradio`** with check, **`selected-index` 1**.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    show-dividers: true;
+                    selection-mode: ActionList2SelectionMode.single;
+                    selected-index: root.inactive-single-select-index;
+                    lines: root.inactive-single-select-lines;
+                    item-activated(ix) => {
+                        root.inactive-single-select-index = ix;
+                        root.inactive-single-select-last = root.inactive-single-select-lines[ix].label;
+                    }
+                }
+
+                Text {
+                    visible: root.inactive-single-select-last != "";
+                    text: "Last activated: " + root.inactive-single-select-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;

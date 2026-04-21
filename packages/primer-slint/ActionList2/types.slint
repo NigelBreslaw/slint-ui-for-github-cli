@@ -51,4 +51,6 @@ export struct ActionList2Line {
     description-layout: ActionList2DescriptionLayout,
     label-markdown: styled-text,
     has-markdown: bool,
+    /// Non-empty → Primer **`inactiveText`**: row is not activatable; shows **`.InactiveWarning`** (attention) under the label in menu single-select.
+    inactive-text: string,
 }

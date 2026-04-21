@@ -29,21 +29,35 @@ export component ActionList2Row {
     in property <bool> selected: false;
     /// Primer **ActionList.Selection** + **CheckIcon** (`.SingleSelectCheckmark` in **ActionList.module.css**): tick only, not the multi-select checkbox; column width reserved when unselected.
     in property <bool> show-single-select-check: false;
+    /// Primer **`inactiveText`** — non-empty marks **`data-inactive`**: no activation, muted label, **`.InactiveWarning`** copy (attention).
+    in property <string> inactive-text: "";
 
     callback clicked;
+
+    private property <bool> is-inactive: root.inactive-text != "";
 
     private property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
     private property <length> avatar-diameter: LayoutTokens.action-list-avatar-diameter;
     private property <length> cell-padding-block: LayoutTokens.action-list-item-padding-block;
 
     private property <color> label-color:
-        root.row-variant == ActionList2RowVariant.danger
-        ? (root.disabled ? ActionListTokens.item-danger-fgColor-disabled : ActionListTokens.item-danger-fgColor-rest)
-        : (root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default);
+        root.disabled
+        ? (
+              root.row-variant == ActionList2RowVariant.danger
+              ? ActionListTokens.item-danger-fgColor-disabled
+              : ButtonTokens.control-fgColor-disabled
+          )
+        : root.is-inactive
+        ? PrimerColors.fgColor-muted
+        : root.row-variant == ActionList2RowVariant.danger
+        ? ActionListTokens.item-danger-fgColor-rest
+        : PrimerColors.fgColor-default;
 
     private property <color> leading-icon-tint:
         root.disabled
         ? ButtonTokens.control-fgColor-disabled
+        : root.is-inactive
+        ? PrimerColors.fgColor-muted
         : root.row-variant == ActionList2RowVariant.danger
         ? ActionListTokens.item-danger-fgColor-rest
         : PrimerColors.fgColor-muted;
@@ -51,6 +65,8 @@ export component ActionList2Row {
     private property <color> single-select-check-tint:
         root.disabled
         ? ButtonTokens.control-fgColor-disabled
+        : root.is-inactive
+        ? PrimerColors.fgColor-muted
         : PrimerColors.fgColor-default;
 
     private property <bool> show-inline-description:
@@ -60,7 +76,11 @@ export component ActionList2Row {
         root.description != "" && root.description-layout == ActionList2DescriptionLayout.block;
 
     private property <color> inline-description-color:
-        root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+        root.disabled
+        ? ButtonTokens.control-fgColor-disabled
+        : root.is-inactive
+        ? ActionListTokens.item-inactive-description-fgColor
+        : PrimerColors.fgColor-muted;
 
     /// Selected “chip” + semibold only when not in single-check mode (Primer ties that surface to `data-active`, not `aria-checked`).
     private property <bool> use-selected-surface: root.selected && !root.show-single-select-check;
@@ -76,15 +96,25 @@ export component ActionList2Row {
     VerticalLayout {
         alignment: start;
 
-        if root.show-top-seam: Rectangle {
-            width: 100%;
-            height: LayoutTokens.table-border-width;
-            background: PrimerColors.borderColor-muted;
+        if root.show-top-seam: HorizontalLayout {
+            padding-left: LayoutTokens.action-list-item-padding-inline;
+            padding-right: LayoutTokens.action-list-item-padding-inline;
+            spacing: LayoutTokens.button-content-gap;
+            if root.show-single-select-check: Rectangle {
+                horizontal-stretch: 0;
+                min-height: LayoutTokens.iconButton-icon-size-medium;
+                width: LayoutTokens.iconButton-icon-size-medium;
+
+            }
+            Rectangle {
+                height: LayoutTokens.table-border-width;
+                background: PrimerColors.borderColor-muted;
+            }
         }
 
         ta := TouchArea {
             min-height: root.cell-min-height;
-            enabled: !root.disabled;
+            enabled: !root.disabled && !root.is-inactive;
             clicked => {
                 root.clicked();
             }
@@ -253,6 +283,25 @@ export component ActionList2Row {
                             wrap: word-wrap;
                         }
                     }
+
+                    if root.inactive-text != "": HorizontalLayout {
+                        padding-left: LayoutTokens.action-list-item-padding-inline;
+                        padding-right: LayoutTokens.action-list-item-padding-inline;
+                        spacing: LayoutTokens.button-content-gap;
+                        if root.show-single-select-check: Rectangle {
+                            horizontal-stretch: 0;
+                            min-height: LayoutTokens.iconButton-icon-size-medium;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+
+                        }
+                        Text {
+                            text: root.inactive-text;
+                            color: PrimerColors.fgColor-attention;
+                            font-size: LayoutTokens.text-body-size-small;
+                            font-weight: LayoutTokens.base-text-weight-medium;
+                            wrap: word-wrap;
+                        }
+                    }
                 }
 
                 states [
@@ -260,6 +309,9 @@ export component ActionList2Row {
                         row-bg.background: root.use-selected-surface
                             ? ButtonTokens.color-action-list-item-default-selected-bg
                             : #00000000;
+                    }
+                    inactive when !root.disabled && root.is-inactive: {
+                        row-bg.background: #00000000;
                     }
                     danger-selected-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.danger && root.use-selected-surface && ta.pressed: {
                         row-bg.background: ActionListTokens.item-danger-bgColor-active;
