@@ -25,6 +25,10 @@ export component ActionList2Row {
     in property <bool> show-top-seam: false;
     in property <string> description: "";
     in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
+    /// Primer **`[data-active]`** / `selected` on **Item** (single listbox / `selectionVariant="single"`).
+    in property <bool> selected: false;
+    /// Primer **ActionList.Selection** + **CheckIcon** (`.SingleSelectCheckmark` in **ActionList.module.css**): tick only, not the multi-select checkbox; column width reserved when unselected.
+    in property <bool> show-single-select-check: false;
 
     callback clicked;
 
@@ -44,6 +48,11 @@ export component ActionList2Row {
         ? ActionListTokens.item-danger-fgColor-rest
         : PrimerColors.fgColor-muted;
 
+    private property <color> single-select-check-tint:
+        root.disabled
+        ? ButtonTokens.control-fgColor-disabled
+        : PrimerColors.fgColor-default;
+
     private property <bool> show-inline-description:
         root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
 
@@ -53,12 +62,18 @@ export component ActionList2Row {
     private property <color> inline-description-color:
         root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
 
+    /// Selected “chip” + semibold only when not in single-check mode (Primer ties that surface to `data-active`, not `aria-checked`).
+    private property <bool> use-selected-surface: root.selected && !root.show-single-select-check;
+
+    private property <int> label-font-weight:
+        !root.disabled && root.use-selected-surface
+        ? LayoutTokens.base-text-weight-semibold
+        : LayoutTokens.base-text-weight-medium;
+
     min-height: root.cell-min-height + (root.show-top-seam ? LayoutTokens.table-border-width : 0px);
     width: 100%;
 
     VerticalLayout {
-        spacing: 0px;
-        width: 100%;
         alignment: start;
 
         if root.show-top-seam: Rectangle {
@@ -68,8 +83,6 @@ export component ActionList2Row {
         }
 
         ta := TouchArea {
-            horizontal-stretch: 1;
-            min-width: 0px;
             min-height: root.cell-min-height;
             enabled: !root.disabled;
             clicked => {
@@ -80,93 +93,156 @@ export component ActionList2Row {
                 border-radius: LayoutTokens.borderRadius-medium;
                 background: #00000000;
 
-                hl := HorizontalLayout {
-                    min-height: root.cell-min-height;
-                    padding-left: LayoutTokens.action-list-item-padding-inline;
-                    padding-right: LayoutTokens.action-list-item-padding-inline;
+                VerticalLayout {
                     padding-top: root.cell-padding-block;
                     padding-bottom: root.cell-padding-block;
-                    spacing: LayoutTokens.button-content-gap;
-                    alignment: start;
-                    align-items: root.show-block-description ? start : center;
-
-                    if root.has-leading-avatar: Avatar {
-                        horizontal-stretch: 0;
-                        diameter: root.avatar-diameter;
-                        source: root.avatar-source;
-                    }
-
-                    if !root.has-leading-avatar && root.has-leading-visual: Image {
-                        horizontal-stretch: 0;
-                        width: LayoutTokens.iconButton-icon-size-medium;
-                        height: LayoutTokens.iconButton-icon-size-medium;
-                        vertical-alignment: center;
-                        source: root.leading-icon;
-                        colorize: leading-icon-tint;
-                    }
-
-                    if root.show-inline-description: HorizontalLayout {
-                        horizontal-stretch: 1;
-                        min-width: 0px;
+                    spacing: 2px;
+                    hl := HorizontalLayout {
+                        // min-height: root.cell-min-height;
+                        padding-left: LayoutTokens.action-list-item-padding-inline;
+                        padding-right: LayoutTokens.action-list-item-padding-inline;
                         spacing: LayoutTokens.button-content-gap;
-                        alignment: center;
+                        alignment: start;
                         align-items: center;
 
-                        if !root.has-markdown: Text {
+                        if root.show-single-select-check: HorizontalLayout {
+                            horizontal-stretch: 0;
+                            min-height: LayoutTokens.iconButton-icon-size-medium;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            alignment: center;
+                            if root.selected: Image {
+                                horizontal-stretch: 0;
+                                width: 16px;
+                                height: 16px;
+                                vertical-alignment: center;
+                                source: Icons.check;
+                                colorize: root.single-select-check-tint;
+                            }
+                        }
+
+                        if root.has-leading-avatar: Avatar {
+                            horizontal-stretch: 0;
+                            diameter: root.avatar-diameter;
+                            source: root.avatar-source;
+                        }
+
+                        if !root.has-leading-avatar && root.has-leading-visual: Image {
+                            horizontal-stretch: 0;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            height: LayoutTokens.iconButton-icon-size-medium;
+                            vertical-alignment: center;
+                            source: root.leading-icon;
+                            colorize: leading-icon-tint;
+                        }
+
+                        if root.show-inline-description: HorizontalLayout {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            spacing: LayoutTokens.button-content-gap;
+                            alignment: center;
+                            align-items: center;
+
+                            if !root.has-markdown: Text {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: root.label;
+                                color: root.label-color;
+                                font-size: LayoutTokens.text-body-size-medium;
+                                font-weight: root.label-font-weight;
+                                wrap: word-wrap;
+                                vertical-alignment: center;
+                            }
+
+                            if root.has-markdown: StyledText {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: root.label-markdown;
+                                default-color: root.label-color;
+                                default-font-size: LayoutTokens.text-body-size-medium;
+                                vertical-alignment: center;
+                            }
+
+                            if root.description != "": Text {
+                                horizontal-stretch: 0;
+                                text: root.description;
+                                color: root.inline-description-color;
+                                font-size: LayoutTokens.text-body-size-small;
+                                font-weight: LayoutTokens.base-text-weight-medium;
+                                wrap: word-wrap;
+                                vertical-alignment: center;
+                            }
+                        }
+
+                        if root.show-block-description: VerticalLayout {
+                            horizontal-stretch: 1;
+                            min-width: 0px;
+                            spacing: 2px;
+                            alignment: center;
+
+                            if !root.has-markdown: Text {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: root.label;
+                                color: root.label-color;
+                                font-size: LayoutTokens.text-body-size-medium;
+                                font-weight: root.label-font-weight;
+                                wrap: word-wrap;
+                            }
+
+                            if root.has-markdown: StyledText {
+                                horizontal-stretch: 1;
+                                min-width: 0px;
+                                text: root.label-markdown;
+                                default-color: root.label-color;
+                                default-font-size: LayoutTokens.text-body-size-medium;
+                            }
+                        }
+
+                        if !root.show-inline-description && !root.show-block-description && !root.has-markdown: Text {
                             horizontal-stretch: 1;
                             min-width: 0px;
                             text: root.label;
                             color: root.label-color;
                             font-size: LayoutTokens.text-body-size-medium;
-                            font-weight: LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
+                            font-weight: root.label-font-weight;
                             vertical-alignment: center;
                         }
 
-                        if root.has-markdown: StyledText {
+                        if !root.show-inline-description && !root.show-block-description && root.has-markdown: StyledText {
                             horizontal-stretch: 1;
                             min-width: 0px;
                             text: root.label-markdown;
                             default-color: root.label-color;
                             default-font-size: LayoutTokens.text-body-size-medium;
-                            vertical-alignment: center;
-                        }
-
-                        if root.description != "": Text {
-                            horizontal-stretch: 0;
-                            text: root.description;
-                            color: root.inline-description-color;
-                            font-size: LayoutTokens.text-body-size-small;
-                            font-weight: LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
                             vertical-alignment: center;
                         }
                     }
-
-                    if root.show-block-description: VerticalLayout {
-                        horizontal-stretch: 1;
-                        min-width: 0px;
-                        spacing: 2px;
+                    if root.show-block-description: HorizontalLayout {
+                        // min-height: root.cell-min-height;
+                        padding-left: LayoutTokens.action-list-item-padding-inline;
+                        padding-right: LayoutTokens.action-list-item-padding-inline;
+                        // padding-top: root.cell-padding-block;
+                        // padding-bottom: root.cell-padding-block;
+                        spacing: LayoutTokens.button-content-gap;
                         alignment: start;
-
-                        if !root.has-markdown: Text {
-                            horizontal-stretch: 1;
-                            min-width: 0px;
-                            text: root.label;
-                            color: root.label-color;
-                            font-size: LayoutTokens.text-body-size-medium;
-                            font-weight: LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
+                        align-items: center;
+                        if root.show-single-select-check: HorizontalLayout {
+                            horizontal-stretch: 0;
+                            min-height: LayoutTokens.iconButton-icon-size-medium;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            alignment: center;
+                        }
+                        if root.has-leading-avatar: Avatar {
+                            horizontal-stretch: 0;
+                            diameter: root.avatar-diameter;
+                            visible: false;
                         }
 
-                        if root.has-markdown: StyledText {
-                            horizontal-stretch: 1;
-                            min-width: 0px;
-                            text: root.label-markdown;
-                            default-color: root.label-color;
-                            default-font-size: LayoutTokens.text-body-size-medium;
+                        if !root.has-leading-avatar && root.has-leading-visual: Rectangle {
+                            horizontal-stretch: 0;
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            height: LayoutTokens.iconButton-icon-size-medium;
                         }
-
                         Text {
                             horizontal-stretch: 1;
                             min-width: 0px;
@@ -177,41 +253,42 @@ export component ActionList2Row {
                             wrap: word-wrap;
                         }
                     }
-
-                    if !root.show-inline-description && !root.show-block-description && !root.has-markdown: Text {
-                        horizontal-stretch: 1;
-                        min-width: 0px;
-                        text: root.label;
-                        color: root.label-color;
-                        font-size: LayoutTokens.text-body-size-medium;
-                        font-weight: LayoutTokens.base-text-weight-medium;
-                        vertical-alignment: center;
-                    }
-
-                    if !root.show-inline-description && !root.show-block-description && root.has-markdown: StyledText {
-                        horizontal-stretch: 1;
-                        min-width: 0px;
-                        text: root.label-markdown;
-                        default-color: root.label-color;
-                        default-font-size: LayoutTokens.text-body-size-medium;
-                        vertical-alignment: center;
-                    }
                 }
 
                 states [
                     disabled when root.disabled: {
-                        row-bg.background: #00000000;
+                        row-bg.background: root.use-selected-surface
+                            ? ButtonTokens.color-action-list-item-default-selected-bg
+                            : #00000000;
                     }
-                    danger-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.danger && ta.pressed: {
+                    danger-selected-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.danger && root.use-selected-surface && ta.pressed: {
                         row-bg.background: ActionListTokens.item-danger-bgColor-active;
                     }
-                    danger-hover when !root.disabled && root.row-variant == ActionList2RowVariant.danger && !ta.pressed && ta.has-hover: {
+                    danger-selected-hover when !root.disabled && root.row-variant == ActionList2RowVariant.danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
                         row-bg.background: ActionListTokens.item-danger-bgColor-hover;
                     }
-                    default-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.default && ta.pressed: {
+                    danger-selected-rest when !root.disabled && root.row-variant == ActionList2RowVariant.danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-selected;
+                    }
+                    danger-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.danger && !root.use-selected-surface && ta.pressed: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-active;
+                    }
+                    danger-hover when !root.disabled && root.row-variant == ActionList2RowVariant.danger && !root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ActionListTokens.item-danger-bgColor-hover;
+                    }
+                    default-selected-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.default && root.use-selected-surface && ta.pressed: {
                         row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                     }
-                    default-hover when !root.disabled && root.row-variant == ActionList2RowVariant.default && !ta.pressed && ta.has-hover: {
+                    default-selected-hover when !root.disabled && root.row-variant == ActionList2RowVariant.default && root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                    }
+                    default-selected-rest when !root.disabled && root.row-variant == ActionList2RowVariant.default && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
+                    }
+                    default-pressed when !root.disabled && root.row-variant == ActionList2RowVariant.default && (!root.selected || root.show-single-select-check) && ta.pressed: {
+                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                    }
+                    default-hover when !root.disabled && root.row-variant == ActionList2RowVariant.default && (!root.selected || root.show-single-select-check) && !ta.pressed && ta.has-hover: {
                         row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                     }
                 ]
