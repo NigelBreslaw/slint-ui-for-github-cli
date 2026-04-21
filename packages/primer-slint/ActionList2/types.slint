@@ -56,4 +56,7 @@ export struct ActionList2Line {
     inactive-text: string,
     /// Row-only: Primer **LoadingItem** — trailing **`Spinner`**; row is not activatable; label and description use loading foreground tokens.
     show-trailing-loading: bool,
+    /// Row-only: trailing **visual** (e.g. chevron). Ignored when **`show-trailing-loading`**.
+    has-trailing-visual: bool,
+    trailing-icon: image,
 }

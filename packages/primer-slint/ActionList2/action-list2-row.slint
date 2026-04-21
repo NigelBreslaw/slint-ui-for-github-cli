@@ -38,6 +38,9 @@ export component ActionList2Row {
     in property <string> inactive-text: "";
     /// Primer **LoadingItem**: trailing **`Spinner`**; row is not activatable; label and description use **`item-loading-label-fgColor`**.
     in property <bool> show-trailing-loading: false;
+    /// Trailing **icon** (e.g. chevron). Not shown when **`show-trailing-loading`**.
+    in property <bool> has-trailing-visual: false;
+    in property <image> trailing-icon: Icons.dot_fill;
 
     callback clicked;
 
@@ -70,6 +73,12 @@ export component ActionList2Row {
         ? PrimerColors.fgColor-muted
         : root.row-variant == ActionList2RowVariant.danger
         ? ActionListTokens.item-danger-fgColor-rest
+        : PrimerColors.fgColor-muted;
+
+    /// Trailing affordance stays **muted** (including danger rows — label carries danger color).
+    private property <color> trailing-icon-tint:
+        root.disabled
+        ? ButtonTokens.control-fgColor-disabled
         : PrimerColors.fgColor-muted;
 
     private property <color> single-select-check-tint:
@@ -364,6 +373,19 @@ export component ActionList2Row {
                             wrap: word-wrap;
                         }
                     }
+                    }
+
+                    if root.has-trailing-visual && !root.show-trailing-loading: HorizontalLayout {
+                        horizontal-stretch: 0;
+                        padding-right: LayoutTokens.action-list-item-padding-inline;
+                        alignment: center;
+                        Image {
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            height: LayoutTokens.iconButton-icon-size-medium;
+                            vertical-alignment: center;
+                            source: root.trailing-icon;
+                            colorize: root.trailing-icon-tint;
+                        }
                     }
 
                     if root.show-trailing-loading: HorizontalLayout {

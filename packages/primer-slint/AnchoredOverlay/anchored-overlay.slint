@@ -16,10 +16,12 @@ export component AnchoredOverlay {
     in property <length> anchor-abs-y: 0px;
     in property <length> anchor-width: 0px;
     in property <length> anchor-height: 0px;
-    /// Panel content height.
+    /// Panel content height (ignored for popup geometry when **`shrink-wrap`** — height follows **`panel-slot`** preferred height).
     in property <length> panel-height: 240px;
     /// When `> 0`, panel width; otherwise matches `anchor-width` (dropdown-style default).
     in property <length> panel-width: 0px;
+    /// When true, popup **`height`** follows slot content (**`panel-slot.preferred-height`**) instead of **`panel-height`**; slot does not stretch vertically. Use for compact menus (e.g. **`ActionList2`** only).
+    in property <bool> shrink-wrap: false;
     in property <length> anchor-gap: 5px;
     /// Vertical placement; `auto` flips above when below would overflow (Primer default for anchored menus).
     in property <AnchoredOverlaySide> vertical-side: auto;
@@ -32,25 +34,6 @@ export component AnchoredOverlay {
 
     private property <length> effective-panel-width: panel-width > 0px ? panel-width : anchor-width;
 
-    private property <bool> flip-above:
-        anchor-abs-y + anchor-height + anchor-gap + panel-height > window-inner-height
-        && anchor-abs-y >= anchor-gap + panel-height;
-
-    private property <length> panel-window-y:
-        vertical-side == AnchoredOverlaySide.outside_top ? anchor-abs-y - anchor-gap - panel-height
-        : vertical-side == AnchoredOverlaySide.outside_bottom ? anchor-abs-y + anchor-height + anchor-gap
-        : flip-above ? anchor-abs-y - anchor-gap - panel-height
-        : anchor-abs-y + anchor-height + anchor-gap;
-
-    private property <length> panel-window-x-raw:
-        align == AnchoredOverlayAlign.start ? anchor-abs-x
-        : align == AnchoredOverlayAlign.center ? anchor-abs-x + (anchor-width - effective-panel-width) / 2
-        : anchor-abs-x + anchor-width - effective-panel-width;
-
-    private property <length> panel-window-x-max: max(0px, window-inner-width - effective-panel-width);
-
-    private property <length> panel-window-x: max(0px, min(panel-window-x-raw, panel-window-x-max));
-
     changed open => {
         if root.open {
             popup.show();
@@ -60,10 +43,34 @@ export component AnchoredOverlay {
     }
 
     popup := PopupWindow {
+        // Placement + popup height must be computed here: Slint forbids reading `PopupWindow` internals
+        // (e.g. `panel-slot.preferred-height`) from the enclosing `AnchoredOverlay`.
+        private property <length> body-height: root.shrink-wrap ? panel-slot.preferred-height : root.panel-height;
+        private property <length> body-width: panel-slot.preferred-width;
+
+        private property <bool> flip-above:
+            root.anchor-abs-y + root.anchor-height + root.anchor-gap + body-height > root.window-inner-height
+            && root.anchor-abs-y >= root.anchor-gap + body-height;
+
+        private property <length> panel-window-y:
+            root.vertical-side == AnchoredOverlaySide.outside_top ? root.anchor-abs-y - root.anchor-gap - body-height
+            : root.vertical-side == AnchoredOverlaySide.outside_bottom ? root.anchor-abs-y + root.anchor-height + root.anchor-gap
+            : flip-above ? root.anchor-abs-y - root.anchor-gap - body-height
+            : root.anchor-abs-y + root.anchor-height + root.anchor-gap;
+
+        private property <length> panel-window-x-raw:
+            root.align == AnchoredOverlayAlign.start ? root.anchor-abs-x
+            : root.align == AnchoredOverlayAlign.center ? root.anchor-abs-x + (root.anchor-width - root.effective-panel-width) / 2
+            : root.anchor-abs-x + root.anchor-width - root.effective-panel-width;
+
+        private property <length> panel-window-x-max: max(0px, root.window-inner-width - root.effective-panel-width);
+
+        private property <length> panel-window-x: max(0px, min(panel-window-x-raw, panel-window-x-max));
+
         x: panel-window-x - root.absolute-position.x;
         y: panel-window-y - root.absolute-position.y;
-        width: effective-panel-width;
-        height: panel-height;
+        width: body-width;
+        height: body-height;
 
         panel-scope := FocusScope {
             width: 100%;
@@ -91,17 +98,17 @@ export component AnchoredOverlay {
 
                 // Clip only the fill + children so rounded corners hold; do not clip the wrapper or shadow blur is cut off.
                 Rectangle {
-                    width: parent.width;
-                    height: parent.height;
+                    // width: parent.width;
+                    // height: parent.height;
                     clip: true;
                     background: OverlayTokens.panel-background;
                     border-radius: OverlayTokens.panel-border-radius;
                     border-width: OverlayTokens.panel-border-width;
                     border-color: OverlayTokens.panel-border;
 
-                    VerticalLayout {
-                        width: 100%;
-                        height: 100%;
+                    panel-slot := VerticalLayout {
+                        // width: 100%;
+                        vertical-stretch: root.shrink-wrap ? 0 : 1;
                         padding: LayoutTokens.stack-padding-normal;
                         alignment: start;
 

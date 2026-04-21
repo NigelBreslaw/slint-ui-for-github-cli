@@ -58,6 +58,8 @@ export global LayoutTokens {
     out property <length> iconButton-icon-size-large: 18px;
 
     out property <length> borderRadius-medium: 6px;
+    /// primer-tokens `functional/size/radius.json5` — **`borderRadius.large`** (12px): dialogs, modals, larger containers.
+    out property <length> borderRadius-large: 12px;
 
     out property <length> checkbox-border-radius: 3px;
 
@@ -647,6 +649,6 @@ export global OverlayTokens {
     out property <color> panel-background: PrimerColors.bgColor-default;
     out property <color> panel-border: PrimerColors.borderColor-muted;
     out property <length> panel-border-width: LayoutTokens.table-border-width;
-    out property <length> panel-border-radius: LayoutTokens.borderRadius-medium;
+    out property <length> panel-border-radius: LayoutTokens.borderRadius-large;
     out property <[DropShadowLayer]> panel-elevation-shadow: ShadowTokens.shadow-floating-small;
 }

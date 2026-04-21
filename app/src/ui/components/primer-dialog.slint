@@ -3,7 +3,7 @@
 // In-window overlay (Rectangle). For a floating layer, wrap this component in a PopupWindow
 // and call show()/close() on that window from the parent — do not use PopupWindow + init { show() } here.
 
-import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export enum PrimerDialogWidth {
     small,
@@ -66,7 +66,7 @@ export component PrimerDialog {
                     width: root.panel-w;
                     max-height: root.panel-max-h;
                     background: PrimerColors.bgColor-canvas-subtle;
-                    border-radius: 12px;
+                    border-radius: LayoutTokens.borderRadius-large;
                     border-width: 1px;
                     border-color: PrimerColors.borderColor-muted;
                     clip: true;
