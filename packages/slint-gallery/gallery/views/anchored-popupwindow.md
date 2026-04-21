@@ -2,7 +2,7 @@
 
 Use this note when implementing Primer-style **anchored** surfaces (SelectPanel, upstream Primer **AnchoredOverlay**). In this repo the shared shell is **`AnchoredOverlay`**: a **trigger** plus a **`PopupWindow`** that aligns to the anchor and stays on screen.
 
-**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../../primer-slint/AnchoredOverlay/anchored-overlay.slint) (**`AnchoredOverlay`**) sizes the **`PopupWindow`** to the panel (**`panel-width`** or anchor width × **`panel-height`**) and positions it with parent-relative **`x`** / **`y`** — **no** full-viewport dimmer, matching Primer **anchored** surfaces (dropdown-style). Pass **`window-inner-width`** and **`window-inner-height`** from the root **`Window`** for **horizontal clamp** and **below/above** flip. **`vertical-side`** (`auto` | `outside_bottom` | `outside_top`) and **`align`** (`start` | `center` | `end`) match a Primer subset (default: **auto** + **start**). Enums: [`types.slint`](../../primer-slint/AnchoredOverlay/types.slint). Panel chrome: **`OverlayTokens`** (**`backdrop-scrim`** is for modals such as [`primer-dialog.slint`](../../../app/src/ui/components/primer-dialog.slint)). **`SelectPanel`** ([`SelectPanel/select-panel.slint`](../../primer-slint/SelectPanel/select-panel.slint)) is the panel **body** (filter + list + optional footer); compose it inside **`AnchoredOverlay`** (gallery **Forms** page; github-app project board import dialog uses **`SelectPanel`** in **`SelectPanelMode.single`**). Exported from [`primer.slint`](../../primer-slint/primer.slint).
+**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../../primer-slint/AnchoredOverlay/anchored-overlay.slint) (**`AnchoredOverlay`**) sizes the **`PopupWindow`** to the panel (**`panel-width`** or anchor width × **`panel-height`**) and positions it with parent-relative **`x`** / **`y`** — **no** full-viewport dimmer, matching Primer **anchored** surfaces (dropdown-style). Bind **`window-inner-width`** / **`window-inner-height`** to the viewport size for **horizontal clamp** and **below/above** flip. **Standalone gallery:** [`GalleryWindow`](../../slint-gallery/gallery/gallery-window.slint) keeps the global **`AppWindow`** ([`tokens.slint`](../../primer-slint/tokens.slint)) in sync with the root window **`width`** / **`height`** — use **`AppWindow.window-width`** / **`AppWindow.window-height`** on **`AnchoredOverlay`** (see **Forms** page) instead of threading **`in property`** viewport values through child pages. **`vertical-side`** (`auto` | `outside_bottom` | `outside_top`) and **`align`** (`start` | `center` | `end`) match a Primer subset (default: **auto** + **start**). Enums: [`types.slint`](../../primer-slint/AnchoredOverlay/types.slint). Panel chrome: **`OverlayTokens`** (**`backdrop-scrim`** is for modals such as [`primer-dialog.slint`](../../../app/src/ui/components/primer-dialog.slint)). **`SelectPanel`** ([`SelectPanel/select-panel.slint`](../../primer-slint/SelectPanel/select-panel.slint)) is the panel **body** (filter + list + optional footer); compose it inside **`AnchoredOverlay`** (gallery **Forms** page; github-app project board import dialog uses **`SelectPanel`** in **`SelectPanelMode.single`**). Exported from [`primer.slint`](../../primer-slint/primer.slint).
 
 ## Coordinate system
 
@@ -40,11 +40,11 @@ In **window space**, compute the raw panel left **`W_x`** from **`align`** (LTR)
 - **center:** `W_x = anchor.x + (anchor.width - panel.width) / 2`
 - **end:** `W_x = anchor.x + anchor.width - panel.width`
 
-Then clamp to the viewport: **`W_x = max(0, min(W_x, window.innerWidth - panel.width))`** so the panel stays on-screen (Primer **`preventOverflow`**-style). Pass **`window-inner-width`** from the **`Window`**.
+Then clamp to the viewport: **`W_x = max(0, min(W_x, window.innerWidth - panel.width))`** so the panel stays on-screen (Primer **`preventOverflow`**-style). Bind **`AnchoredOverlay`** **`window-inner-width`** to that viewport width (gallery: **`AppWindow.window-width`**).
 
 ## Vertical flip (below vs above)
 
-Pass the **window** inner height from the root **`Window`** (e.g. `in property <length> window-inner-height` set from `GalleryWindow` as `root.height`) and compare in **window space**:
+Bind **`window-inner-height`** to the viewport height (gallery: **`AppWindow.window-height`**) and compare in **window space**:
 
 - Let **`below_bottom = anchor.y + anchor.height + gap + body_height`** (using **`absolute-position`**-style coordinates).
 - Prefer **below** by default.

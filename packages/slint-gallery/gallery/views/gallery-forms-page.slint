@@ -19,15 +19,12 @@ import {
     Size,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
-import { PrimerColors } from "../../../primer-slint/tokens.slint";
+import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 
 /// Select, PrimerTextInput (PR1 spike), AnchoredOverlay demo, Checkbox, CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
-
-    in property <length> window-inner-width: 800px;
-    in property <length> window-inner-height: 800px;
 
     private property <[SelectOption]> demo-select-options: [
         { value: "one", label: "First option", enabled: true },
@@ -578,8 +575,8 @@ export component GalleryFormsPage inherits VerticalLayout {
 
         anchored-overlay-select-panel := AnchoredOverlay {
             open <=> demo-select-panel-open;
-            window-inner-width: window-inner-width;
-            window-inner-height: window-inner-height;
+            window-inner-width: AppWindow.window-width;
+            window-inner-height: AppWindow.window-height;
             vertical-side: AnchoredOverlaySide.auto;
             align: AnchoredOverlayAlign.start;
             panel-width: 360px;
