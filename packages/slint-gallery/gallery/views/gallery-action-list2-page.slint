@@ -11,7 +11,7 @@ import { GalleryActionList2ListboxMultiSelect } from "../gallery-action-list2-li
 import { GalleryActionList2MultiSelect } from "../gallery-action-list2-multi-select-state.slint";
 import { PrimerColors } from "../../../primer-slint/tokens.slint";
 
-/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. Listbox Multi Select, Listbox Single Select, Multi Select, Inactive Single Select, Single Select, …).
+/// ActionList2 demos — one section per upstream Storybook **Features** story (incl. With Dynamic Content, Listbox Multi Select, Listbox Single Select, Multi Select, Inactive Single Select, Single Select, …).
 export component GalleryActionList2Page inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -32,6 +32,27 @@ export component GalleryActionList2Page inherits VerticalLayout {
 
     private property <int> listbox-single-select-index: 0;
     private property <string> listbox-single-select-last: "";
+
+    /// PR15 — Storybook **With dynamic content**: `onSelect` → **`item-activated`** toggles label **`Activated? Yes` / `Activated? No`**.
+    private property <bool> with-dynamic-is-true: false;
+    private property <string> with-dynamic-item-label: root.with-dynamic-is-true ? "Activated? Yes" : "Activated? No";
+    private property <[ActionList2Line]> with-dynamic-content-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: root.with-dynamic-item-label,
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+        },
+    ];
 
     private property <[ActionList2Line]> single-select-lines: [
         {
@@ -1092,6 +1113,52 @@ export component GalleryActionList2Page inherits VerticalLayout {
             inactive-text: "",
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "With dynamic content";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Same pattern as React: **`ActionList.Item`** **`onSelect={() => setIsTrue(!isTrue)}`** with children **`Activated? {isTrue ? 'Yes' : 'No'}`** — here one row, **`item-activated`** flips **`with-dynamic-is-true`**, label is a bound **`with-dynamic-item-label`**.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                ActionList2 {
+                    width: 100%;
+                    show-dividers: false;
+                    selection-mode: ActionList2SelectionMode.none;
+                    lines: root.with-dynamic-content-lines;
+                    item-activated(ix) => {
+                        if ix == 0 {
+                            root.with-dynamic-is-true = !root.with-dynamic-is-true;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;
