@@ -8,8 +8,8 @@ import {
     ActionListRowVariant,
     ActionListSectionHeadingVariant,
     Icons,
-} from "../../primer-slint/primer.slint";
-import { PrimerColors } from "../../primer-slint/tokens.slint";
+} from "../../../primer-slint/primer.slint";
+import { PrimerColors } from "../../../primer-slint/tokens.slint";
 
 /// ActionList and ActionListRow gallery demos (Action list sidebar group).
 export component GalleryActionListPage inherits VerticalLayout {
@@ -466,7 +466,7 @@ export component GalleryActionListPage inherits VerticalLayout {
             has-trailing-action: true,
             trailing-action-icon: Icons.gear_24,
             has-leading-avatar: true,
-            avatar-source: @image-url("../../primer-slint/assets/24px/palette.svg"),
+            avatar-source: @image-url("../../../primer-slint/assets/24px/palette.svg"),
         },
         {
             kind: ActionListLineKind.divider,
@@ -690,7 +690,7 @@ export component GalleryActionListPage inherits VerticalLayout {
                 width: 100%;
                 label: "Avatar + trailing gear";
                 has-leading-avatar: true;
-                avatar-source: @image-url("../../primer-slint/assets/24px/palette.svg");
+                avatar-source: @image-url("../../../primer-slint/assets/24px/palette.svg");
                 has-trailing-action: true;
                 trailing-action-icon: Icons.gear_24;
                 clicked => {
