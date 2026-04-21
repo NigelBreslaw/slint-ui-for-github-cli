@@ -1,8 +1,9 @@
 // Primer-style SelectPanel body (anchored shell is [`AnchoredOverlay`](../AnchoredOverlay/anchored-overlay.slint)).
-// Single mode: [`SelectOption`](../Select/select.slint) + [`ActionListRow`](../ActionList/action-list-row.slint).
+// Single mode: [`SelectOption`](../Select/select.slint) + [`ActionList2Row`](../ActionList2/action-list2-row.slint).
 // Multi mode: [`SelectPanelItem`] + checkbox row + in-out bit mask (bit `ix` == row `ix` checked; up to 31 rows).
 
-import { ActionListRow } from "../ActionList/action-list-row.slint";
+import { ActionList2Row } from "../ActionList2/action-list2-row.slint";
+import { ActionList2DescriptionLayout } from "../ActionList2/types.slint";
 import { Icons } from "../assets/icons.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
 import { Spinner } from "../Progress/spinner.slint";
@@ -180,10 +181,13 @@ export component SelectPanel {
                                 background: ix == root.focused-index && root.focused-index >= 0 ? PrimerColors.bgColor-accent-emphasis : #00000000;
                             }
 
-                            ActionListRow {
+                            ActionList2Row {
                                 horizontal-stretch: 1;
+                                label-markdown: @markdown("");
                                 label: root.single-items[ix].label;
+                                has-markdown: false;
                                 description: "";
+                                description-layout: ActionList2DescriptionLayout.none;
                                 selected: ix == root.selected-index;
                                 disabled: root.disabled || !root.single-items[ix].enabled;
                                 clicked => {
