@@ -1,34 +1,44 @@
 // Shared floating panel host: `PopupWindow` aligned to an anchor (no full-viewport dimmer — matches Primer AnchoredOverlay).
 // Coordinate math matches [`anchored-popupwindow.md`](../../slint-gallery/gallery/anchored-popupwindow.md).
-// Place as a 0×0 sibling under the same layout parent as the anchor; bind anchor-*, window-inner-width / height for placement.
-// Panel chrome: [`OverlayPanelChrome`](overlay-panel-chrome.slint) + **`OverlayTokens`**. If the popup closes via the platform, sync `open` from the parent if needed.
+// Place as a 0×0 sibling under the same layout parent as the anchor; bind **`anchor-*`** from the trigger.
+// Placement uses **`AppWindow.window-width`** / **`AppWindow.window-height`** for viewport clamp and flip (**standalone gallery**: drive **`AppWindow`** from the host **`Window`** — see **`tokens.slint`**).
+// Panel chrome: [`OverlayPanelChrome`](overlay-panel-chrome.slint); defaults match **`OverlayTokens`** (**`AnchoredOverlay`** overrides are optional PR4 knobs — **`SelectPanel`** demos leave defaults).
 
 import { AnchoredOverlayAlign, AnchoredOverlaySide } from "./types.slint";
 import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
+import { DropShadowLayer } from "../Effects/multi-drop-shadow.slint";
 import { LayoutTokens, OverlayTokens } from "../tokens.slint";
 import { AppWindow } from "../tokens.slint";
 
 export component AnchoredOverlay {
     in-out property <bool> open: false;
-    /// Viewport width for horizontal clamp (root `Window` inner width).
 
     in property <length> anchor-abs-x: 0px;
     in property <length> anchor-abs-y: 0px;
     in property <length> anchor-width: 0px;
     in property <length> anchor-height: 0px;
-    /// Panel content height (ignored for popup geometry when **`shrink-wrap`** — height follows slot preferred height).
+    /// Panel content height (ignored when **`shrink-wrap`** — height follows slot preferred height).
     in property <length> panel-height: 240px;
-    /// When `> 0`, panel width; otherwise matches `anchor-width` (dropdown-style default).
+    /// When `> 0`, panel width; otherwise matches **`anchor-width`** (dropdown-style default).
     in property <length> panel-width: 0px;
-    /// When true, popup **`height`** follows slot content (**`slot-preferred-height`**) instead of **`panel-height`**; slot does not stretch vertically. Use for compact menus (e.g. **`ActionList`** only).
+    /// When true, popup **`height`** follows slot content (**`slot-preferred-height`**) instead of **`panel-height`**.
     in property <bool> shrink-wrap: false;
     in property <length> anchor-gap: 5px;
-    /// Vertical placement; `auto` flips above when below would overflow (Primer default for anchored menus).
+    /// Vertical placement; **`auto`** flips above when below would overflow (Primer default).
     in property <AnchoredOverlaySide> vertical-side: auto;
     /// Horizontal alignment of the panel relative to the anchor (LTR).
     in property <AnchoredOverlayAlign> align: start;
-    /// Padding inside the panel shell around **`@children`** (default matches Primer stack padding / anchored menus).
+
+    /// Padding inside **`OverlayPanelChrome`** around **`@children`** (anchored menus / **`SelectPanel`**).
     in property <length> slot-padding: LayoutTokens.stack-padding-normal;
+
+    /// Optional shell overrides — defaults match **`OverlayPanelChrome`** / **`OverlayTokens`** (unset leaves anchored-menu visuals unchanged).
+    in property <length> panel-border-radius: OverlayTokens.panel-border-radius;
+    in property <length> panel-border-width: OverlayTokens.panel-border-width;
+    in property <color> panel-border-color: OverlayTokens.panel-border;
+    in property <color> panel-fill: OverlayTokens.panel-background;
+    in property <[DropShadowLayer]> panel-elevation-shadow: OverlayTokens.panel-elevation-shadow;
+
     callback close-requested();
 
     width: 0px;
@@ -45,10 +55,9 @@ export component AnchoredOverlay {
     }
 
     popup := PopupWindow {
-        // Placement + popup height must be computed here: Slint forbids reading `PopupWindow` internals
-        // from the enclosing `AnchoredOverlay`.
+        /// Shrink-wrap height follows slot; width is **`max(slot, anchor)`** when **`panel-width == 0`** so **`width: 100%`** menus get a stable host width on first layout.
         private property <length> body-height: root.shrink-wrap ? panel-chrome.slot-preferred-height : root.panel-height;
-        private property <length> body-width: panel-chrome.slot-preferred-width;
+        private property <length> body-width: max(panel-chrome.slot-preferred-width, root.effective-panel-width);
 
         private property <bool> flip-above:
             root.anchor-abs-y + root.anchor-height + root.anchor-gap + body-height > AppWindow.window-height
@@ -90,11 +99,11 @@ export component AnchoredOverlay {
             panel-chrome := OverlayPanelChrome {
                 width: 100%;
                 height: 100%;
-                surface-background: OverlayTokens.panel-background;
-                surface-border: OverlayTokens.panel-border;
-                surface-border-width: OverlayTokens.panel-border-width;
-                surface-border-radius: OverlayTokens.panel-border-radius;
-                surface-shadow: OverlayTokens.panel-elevation-shadow;
+                surface-background: root.panel-fill;
+                surface-border: root.panel-border-color;
+                surface-border-width: root.panel-border-width;
+                surface-border-radius: root.panel-border-radius;
+                surface-shadow: root.panel-elevation-shadow;
                 slot-padding: root.slot-padding;
                 slot-fill-height: !root.shrink-wrap;
 

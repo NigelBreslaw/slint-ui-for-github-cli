@@ -43,7 +43,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |
 | **ActionListTokens** | **ActionList** row/heading semantics (danger, inactive, link, section headings, divider, loading label fg); **only** from **`PrimerColors`** + **`ButtonTokens`** `out`. |
-| **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`AnchoredOverlay`** / **`ModalOverlay`** use panel tokens; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
+| **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`AnchoredOverlay`** (optional **`panel-*`** override `in` properties, default **`OverlayTokens`**) / **`ModalOverlay`** use panel tokens; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
 | **DialogTokens** | Primer **`Dialog`** spacing + typography (**`LayoutTokens`**), **`width-*`** (**React **`widthMap`** literals vs **`overlay.width`** elsewhere), **`overlay-enter-duration`** / **`overlay-sheet-enter-duration`**. Audit table in [`tokens.slint`](tokens.slint). |
 
 **Cross-global rule:** Dependents use other globals’ **`out`** bindings only — not their **private** fields.
