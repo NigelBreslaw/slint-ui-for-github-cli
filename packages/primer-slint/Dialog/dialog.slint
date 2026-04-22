@@ -15,7 +15,7 @@ import {
     Size,
 } from "../tokens.slint";
 import { Icons } from "../assets/icons.slint";
-import { DialogHeightPreset, DialogWidthPreset } from "./types.slint";
+import { DialogAlignPreset, DialogHeightPreset, DialogWidthPreset } from "./types.slint";
 
 export component Dialog {
     in-out property <bool> open: false;
@@ -24,6 +24,8 @@ export component Dialog {
     in property <DialogWidthPreset> width-preset: DialogWidthPreset.xlarge;
     /// Matches React **`Dialog`** **`height`** (**`heightMap`**: **small** = **480px**, **large** = **640px**, **auto** = content up to viewport).
     in property <DialogHeightPreset> height-preset: DialogHeightPreset.auto;
+    /// Matches React **`Dialog`** **`align`** for the default centered viewport modal (**`position`** **center** only in this port).
+    in property <DialogAlignPreset> align-preset: DialogAlignPreset.center;
     in property <bool> allow-dismiss: true;
     /// When false, no footer row (matches React **`Dialog`** with no **`footerButtons`**).
     in property <bool> show-footer: true;
@@ -73,6 +75,7 @@ export component Dialog {
         open <=> root.open;
         panel-width: root.panel-w;
         panel-max-height: root.dialog-panel-max-height;
+        panel-vertical-align: root.align-preset;
         allow-dismiss: root.allow-dismiss;
         slot-padding: 0px;
         close-requested => {
@@ -160,10 +163,12 @@ export component Dialog {
                         background: PrimerColors.borderColor-default;
                     }
 
-                    HorizontalLayout {
+                    FlexboxLayout {
+                        flex-direction: row;
+                        flex-wrap: wrap;
+                        alignment: end;
                         padding: DialogTokens.footer-padding;
                         spacing: DialogTokens.footer-actions-gap;
-                        alignment: end;
 
                         Button {
                             label: root.footer-default-label;

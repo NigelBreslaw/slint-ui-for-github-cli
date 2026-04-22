@@ -4,6 +4,7 @@
 // Enter motion uses a **`Timer`** arm step: while the popup is closed, Slint does not keep a stable “from” value for animated props on first paint after **`show()`**, so binding **`presented`** directly to **`open`** snaps. We set **`presented := 0`**, **`show()`**, then **`presented := 1`** on the next tick so **`animate presented`** runs **0→1**.
 
 import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
+import { DialogAlignPreset } from "../Dialog/types.slint";
 import { DialogTokens, OverlayTokens, AppWindow } from "../tokens.slint";
 
 export component ModalOverlay {
@@ -15,6 +16,8 @@ export component ModalOverlay {
     in property <length> panel-max-height: 640px;
     /// Padding inside **`OverlayPanelChrome`** around **`@children`** (dialog shell uses **`0px`**).
     in property <length> slot-padding: 0px;
+    /// Vertical placement of the panel in the viewport (**Primer **`Dialog`** **`align`** when **`position`** is center). Ignored by callers that position the shell themselves.
+    in property <DialogAlignPreset> panel-vertical-align: DialogAlignPreset.center;
     callback close-requested();
 
     private property <length> panel-w: min(root.panel-width, OverlayTokens.modal-viewport-max-width);
@@ -102,7 +105,10 @@ export component ModalOverlay {
                 // Top: viewport-centered shell (tight bounds — not a fullscreen layout) + enter motion.
                 panel-shell := Rectangle {
                     x: (AppWindow.window-width - root.panel-w) / 2;
-                    y: max(0px, (AppWindow.window-height - self.height) / 2);
+                    y:
+                        root.panel-vertical-align == DialogAlignPreset.top ? DialogTokens.align-viewport-edge-inset
+                        : root.panel-vertical-align == DialogAlignPreset.bottom ? max(0px, AppWindow.window-height - self.height - DialogTokens.align-viewport-edge-inset)
+                        : max(0px, (AppWindow.window-height - self.height) / 2);
                     width: root.panel-w;
                     height: min(panel-chrome.slot-preferred-height, root.viewport-cap-h);
                     opacity: root.presented;

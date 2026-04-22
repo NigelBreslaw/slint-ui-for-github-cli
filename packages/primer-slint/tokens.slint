@@ -685,6 +685,7 @@ export global OverlayTokens {
 // | Body stack gap (blocks) | **base-size-12** | LayoutTokens | **`base-size-12`** | **`body-block-spacing`** |
 // | Body + footer inset | **base-size-16** | LayoutTokens | **`base-size-16`** | **`body-padding`**, **`footer-padding`** |
 // | Footer button row gap | **base-size-8** | LayoutTokens | **`button-content-gap`** | **`footer-actions-gap`** |
+// | **`align`** top/bottom viewport inset | React docs **~4rem** from edge (**`base-size-16` × 4**) | DialogTokens | **`align-viewport-edge-inset`** | **`ModalOverlay`** `panel-shell` **`y`** |
 // | Enter motion (center / scaleFade) | **base.duration.200** | LayoutTokens **`duration-200`** | **`overlay-enter-duration`** | **`ModalOverlay`** |
 // | Enter motion (side / bottom sheet) | **250ms** CSS — no **`timing.json5`** step | LayoutTokens **`duration-250`** | **`overlay-sheet-enter-duration`** | future side/bottom PRs |
 // | Easing curve | React **`cubic-bezier(0.33, 1, 0.68, 1)`** — not **`base.easing.easeOut`** | — | inlined in **`modal-overlay.slint`** `animate` | **`ModalOverlay`** |
@@ -716,6 +717,9 @@ export global DialogTokens {
     out property <length> height-small: 480px;
     /// React **`Dialog.tsx`** **`heightMap.large`**.
     out property <length> height-large: 640px;
+
+    /// React **`Dialog`** **`align`** top / bottom: inset from viewport edge (**4rem** — **`base-size-16` × 4**).
+    out property <length> align-viewport-edge-inset: 4 * LayoutTokens.base-size-16;
 
     /// React **`Dialog.module.css`** — `.Backdrop` + default dialog **`Overlay--motion-scaleFade`** enter.
     out property <duration> overlay-enter-duration: LayoutTokens.duration-200;
