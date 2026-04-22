@@ -30,11 +30,16 @@ export component ToggleSwitch {
     private property <bool> accepts-interaction: !root.disabled && !root.loading;
     private property <length> track-width: root.size == ToggleSwitchSize.small ? 48px : 64px;
     private property <length> track-height: root.size == ToggleSwitchSize.small ? 24px : 32px;
-    private property <length> track-half-w: root.track-width / 2;
+    /// Matches React **`.SwitchButton`** / **`.ToggleKnob`**: thin border on the track; knob **`width: 50%`** and **`top`/`bottom`/`left: 1px`** of the **padding box** (inner area inside the track border).
+    private property <length> track-border-w: 1px;
+    private property <length> track-inner-w: root.track-width - 2 * root.track-border-w;
+    private property <length> track-inner-h: root.track-height - 2 * root.track-border-w;
+    private property <length> track-half-w: root.track-inner-w / 2;
     private property <length> icon-diameter: root.size == ToggleSwitchSize.small ? 12px : 16px;
-    private property <length> knob-w: root.track-width / 2 - 2px;
-    private property <length> knob-h: root.track-height - 2px;
-    private property <length> knob-x: root.checked ? root.track-width - root.knob-w - 1px : 1px;
+    private property <length> knob-w: root.track-inner-w / 2;
+    private property <length> knob-h: root.track-inner-h - 2 * root.track-border-w;
+    private property <length> knob-x: root.track-border-w + (root.checked ? root.track-inner-w - root.knob-w - 1px : 1px);
+    private property <length> knob-y: root.track-border-w + 1px;
     private property <length> line-icon-x: (root.track-half-w - root.icon-diameter) / 2 + (root.checked ? 0px : -root.track-half-w);
     private property <length> circle-icon-x: (root.track-half-w - root.icon-diameter) / 2 + (root.checked ? root.track-half-w : 0px);
     private property <length> knob-corner-radius: LayoutTokens.borderRadius-medium - 2px;
@@ -169,15 +174,15 @@ export component ToggleSwitch {
                             }
 
                             HorizontalLayout {
-                                x: 0px;
-                                y: 0px;
-                                width: parent.width;
-                                height: parent.height;
+                                x: root.track-border-w;
+                                y: root.track-border-w;
+                                width: root.track-inner-w;
+                                height: root.track-inner-h;
                                 spacing: 0px;
 
                                 Rectangle {
                                     width: root.track-half-w;
-                                    height: root.track-height;
+                                    height: root.track-inner-h;
                                     background: transparent;
                                     clip: true;
 
@@ -193,7 +198,7 @@ export component ToggleSwitch {
 
                                 Rectangle {
                                     width: root.track-half-w;
-                                    height: root.track-height;
+                                    height: root.track-inner-h;
                                     background: transparent;
                                     clip: true;
 
@@ -210,7 +215,7 @@ export component ToggleSwitch {
 
                             Rectangle {
                                 x: root.knob-x;
-                                y: 1px;
+                                y: root.knob-y;
                                 width: root.knob-w;
                                 height: root.knob-h;
                                 border-radius: root.knob-corner-radius;

@@ -660,16 +660,17 @@ export global CheckboxTokens {
 export global ToggleSwitchTokens {
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
-    property <color> track-bg-rest-light: #eaeef2;
-    property <color> track-bg-rest-dark: #21262d;
+    // `controlTrack.bgColor.*` → `base.color.neutral.*` (light/dark.json5 hex)
+    property <color> track-bg-rest-light: #e6eaef;
+    property <color> track-bg-rest-dark: #010409;
     out property <color> track-bgColor-rest: color-scheme == ColorScheme.dark ? track-bg-rest-dark : track-bg-rest-light;
 
-    property <color> track-bg-hover-light: #d0d7de;
-    property <color> track-bg-hover-dark: #656d76;
+    property <color> track-bg-hover-light: #e0e6eb;
+    property <color> track-bg-hover-dark: #2a313c;
     out property <color> track-bgColor-hover: color-scheme == ColorScheme.dark ? track-bg-hover-dark : track-bg-hover-light;
 
-    property <color> track-bg-active-light: #c8d1da;
-    property <color> track-bg-active-dark: #656d76;
+    property <color> track-bg-active-light: #dae0e7;
+    property <color> track-bg-active-dark: #2f3742;
     out property <color> track-bgColor-active: color-scheme == ColorScheme.dark ? track-bg-active-dark : track-bg-active-light;
 
     out property <color> track-bgColor-disabled: CheckboxTokens.checkbox-bgColor-checked-disabled;
