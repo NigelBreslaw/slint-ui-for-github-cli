@@ -1,5 +1,5 @@
-import { AppState, AppView, Authed } from "../../bridges/slint/app-state.slint";
-import { Icons } from "../../../../packages/primer-slint/primer.slint";
+import { AppState, AppView } from "../../bridges/slint/app-state.slint";
+import { IconButton, IconButtonVariant, Icons, Size } from "../../../../packages/primer-slint/primer.slint";
 import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component SideBar {
@@ -16,60 +16,51 @@ export component SideBar {
             background: PrimerColors.borderColor-default;
         }
 
-        Image {
-            x: 16px;
-            y: 16px;
-            width: 24px;
-            height: 24px;
-            colorize: PrimerColors.fgColor-muted;
-            source: Icons.inbox;
+        VerticalLayout {
+            width: parent.width;
+            height: parent.height;
+            padding-top: 16px;
+            padding-bottom: 16px;
+            padding-left: 14px;
+            spacing: 12px;
+            alignment: start;
 
-            ta := TouchArea {
+            IconButton {
+                size: Size.small;
+                variant: IconButtonVariant.invisible;
+                icon-source: Icons.inbox;
                 clicked => {
                     AppState.set-view(AppView.dashboard);
                 }
             }
-        }
 
-        Image {
-            x: 16px;
-            y: 56px;
-            width: 24px;
-            height: 24px;
-            colorize: PrimerColors.fgColor-muted;
-            source: Icons.history;
-
-            TouchArea {
+            IconButton {
+                size: Size.small;
+                variant: IconButtonVariant.invisible;
+                icon-source: Icons.history;
                 clicked => {
                     AppState.set-view(AppView.timeReporting);
                 }
             }
-        }
 
-        Image {
-            x: 16px;
-            y: 96px;
-            width: 24px;
-            height: 24px;
-            colorize: PrimerColors.fgColor-muted;
-            source: Icons.layout_grid;
-
-            TouchArea {
+            IconButton {
+                size: Size.small;
+                variant: IconButtonVariant.invisible;
+                icon-source: Icons.layout_grid;
                 clicked => {
                     AppState.set-view(AppView.projectBoardList);
                 }
             }
-        }
 
-        Image {
-            x: 16px;
-            y: parent.height - self.height - 16px;
-            width: 24px;
-            height: 24px;
-            colorize: PrimerColors.fgColor-muted;
-            source: Icons.gear_24;
+            Rectangle {
+                vertical-stretch: 1;
+                width: 1px;
+            }
 
-            TouchArea {
+            IconButton {
+                size: Size.small;
+                variant: IconButtonVariant.invisible;
+                icon-source: Icons.gear_24;
                 clicked => {
                     AppState.set-view(AppView.settings);
                 }

@@ -8,7 +8,7 @@ import {
     UnderlineNav,
     UnderlineNavItem,
 } from "../../../../packages/primer-slint/primer.slint";
-import { PrimerColors, Size } from "../../../../packages/primer-slint/tokens.slint";
+import { LayoutTokens, PrimerColors, Size } from "../../../../packages/primer-slint/tokens.slint";
 
 export component Dashboard {
     width: 100%;
@@ -58,8 +58,8 @@ export component Dashboard {
 
             Text {
                 text: "Review requests";
-                font-size: 14px;
-                font-weight: 600;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: LayoutTokens.base-text-weight-semibold;
                 color: PrimerColors.fgColor-subtle;
             }
 
@@ -132,8 +132,8 @@ export component Dashboard {
 
             Text {
                 text: "Dependabot alerts";
-                font-size: 14px;
-                font-weight: 600;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: LayoutTokens.base-text-weight-semibold;
                 color: PrimerColors.fgColor-subtle;
             }
 

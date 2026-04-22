@@ -6,7 +6,7 @@ import {
     Icons,
     MultiDropShadow,
 } from "../../../../packages/primer-slint/primer.slint";
-import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { ShadowTokens } from "../../../../packages/primer-slint/tokens.slint";
 
@@ -75,8 +75,8 @@ export component UserMenu {
                         width: 120px;
                         text: AppState.user_login;
                         visible: AppState.user_login != "";
-                        font-size: 14px;
-                        font-weight: 600;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
                         color: PrimerColors.fgColor-default;
                         overflow: elide;
                     }
@@ -85,9 +85,9 @@ export component UserMenu {
                         width: 120px;
                         text: AppState.user_name;
                         visible: AppState.user_name != "";
-                        font-size: 14px;
+                        font-size: LayoutTokens.text-body-size-medium;
                         color: PrimerColors.fgColor-muted;
-                        font-weight: 400;
+                        font-weight: LayoutTokens.base-text-weight-normal;
                         overflow: elide;
                     }
                 }

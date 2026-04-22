@@ -1,8 +1,3 @@
-// Primer-style Select trigger (theme-aware via PrimerColors / ButtonTokens). Reference: https://primer.style/product/components/select/
-// Options open via Slint ContextMenuArea (native menu).
-// When `selected-value` or `options` change from TypeScript, keep `selected-label` in sync there
-// (Slint cannot scan the options model in a `changed` handler in this toolchain).
-
 import { Icons } from "../assets/icons.slint";
 import { MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
 import {
@@ -36,11 +31,7 @@ export component Select {
     in property <bool> disabled: false;
     in property <Size> size: medium;
     in property <[SelectOption]> options;
-    /**
-     * When `>= 0`, use this instead of `options.length` for bounds and enablement.
-     * JS-backed `ArrayModel` often reports `options.length == 0` in Slint even when populated
-     * (see `import-repo-options-count` on `ProjectBoardListState`).
-     */
+
     in property <int> option-count: -1;
     callback selected-changed(value_index: int);
 
@@ -50,7 +41,6 @@ export component Select {
     private property <length> trigger-height:
         size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
 
-    // Match Button filled label sizing; large uses medium body (Primer TextInputBaseWrapper).
     private property <length> trigger-font:
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
@@ -165,7 +155,6 @@ export component Select {
 
         if validation-message != "" && validation-status != ValidationStatus.none: HorizontalLayout {
             spacing: 6px;
-            // horizontal-stretch: block ? 1 : 0;
 
             Image {
                 width: LayoutTokens.iconButton-icon-size-medium;

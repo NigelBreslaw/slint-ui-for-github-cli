@@ -2,9 +2,7 @@ import { PrimerColors, Size } from "../tokens.slint";
 
 export component Spinner {
     in property <Size> size: medium;
-    /** Override stroke for segment arc; default matches standalone Spinner (fg default). */
     in property <color> segment-color: PrimerColors.fgColor-default;
-    /** Override track arc color; default matches prior hard-coded track. */
     in property <color> track-color: #f0f6fc40;
 
     private property <length> box: size == Size.small ? 16px : size == Size.large ? 64px : 32px;

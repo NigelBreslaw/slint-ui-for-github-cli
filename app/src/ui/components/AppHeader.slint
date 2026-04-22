@@ -1,13 +1,11 @@
 import { Palette } from "std-widgets.slint";
-import { Avatar, IconButton, Icons, PageHeader } from "../../../../packages/primer-slint/primer.slint";
+import { Avatar, Button, ButtonVariant, IconButton, Icons, PageHeader } from "../../../../packages/primer-slint/primer.slint";
 import { UserMenu } from "./UserMenu.slint";
 import { AppState, Authed, AppView } from "../../bridges/slint/app-state.slint";
 import {
     TimeReportingState,
 } from "../../bridges/slint/time-reporting-state.slint";
-import { Button } from "../../../../packages/primer-slint/Buttons/buttons.slint";
-import { ButtonVariant } from "../../../../packages/primer-slint/Buttons/types.slint";
-import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 global HeaderState {
     in-out property <bool> menu-visible: false;
@@ -34,8 +32,8 @@ export component AppHeader {
 
             Text {
                 text: AppState.view == AppView.dashboard ? "Dashboard" : AppState.view == AppView.settings ? "Settings" : AppState.view == AppView.timeReporting ? "Time reporting" : AppState.view == AppView.projectBoardList ? "Project board" : "";
-                font-size: 14px;
-                font-weight: 500;
+                font-size: LayoutTokens.text-body-size-medium;
+                font-weight: LayoutTokens.base-text-weight-medium;
                 color: PrimerColors.fgColor-default;
                 overflow: elide;
             }

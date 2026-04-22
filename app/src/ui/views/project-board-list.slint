@@ -20,7 +20,7 @@ import {
     Button,
     ButtonVariant,
 } from "../../../../packages/primer-slint/primer.slint";
-import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 import { ProjectBoardTableLayout } from "project-board-table-layout.slint";
 
 export component ProjectBoardList {
@@ -100,8 +100,8 @@ export component ProjectBoardList {
 
                 Text {
                     text: "No project selected";
-                    font-size: 16px;
-                    font-weight: 600;
+                    font-size: LayoutTokens.text-body-size-large;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
                     color: PrimerColors.fgColor-default;
                     wrap: word-wrap;
                 }
@@ -267,8 +267,8 @@ export component ProjectBoardList {
 
                         Text {
                             text: "Repository";
-                            font-size: 12px;
-                            font-weight: 600;
+                            font-size: LayoutTokens.text-body-size-small;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
                             color: PrimerColors.fgColor-default;
                             wrap: word-wrap;
                         }
@@ -295,8 +295,8 @@ export component ProjectBoardList {
 
                         Text {
                             text: "Open issues and pull requests";
-                            font-size: 12px;
-                            font-weight: 600;
+                            font-size: LayoutTokens.text-body-size-small;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
                             color: PrimerColors.fgColor-default;
                             wrap: word-wrap;
                         }

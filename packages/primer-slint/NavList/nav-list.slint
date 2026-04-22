@@ -651,13 +651,9 @@ component NavListDivider {
 }
 
 export component NavList {
-    /// Flat list (PR3). Ignored when `groups` is non-empty.
     in property <[NavListItem]> items: [];
-    /// When non-empty, renders grouped sections with headings and inter-group dividers instead of `items`.
     in property <[NavListGroup]> groups: [];
-    /// Primer sidebar pattern: blue vertical bar on the current row, muted surface, semibold label.
     in property <bool> sidebar-current-indicator: false;
-    /// `group-index` indexes the section; `path` is a dot-separated index path (e.g. `"0"`, `"1.2"` for nested SubNav).
     callback item-activated(group-index: int, path: string);
 
     horizontal-stretch: 1;

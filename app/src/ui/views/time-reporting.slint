@@ -2,8 +2,17 @@ import { ListView } from "std-widgets.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
 import { PrimerDialog } from "../components/primer-dialog.slint";
-import { Button, Pagination, PrimerTextInput, Spinner } from "../../../../packages/primer-slint/primer.slint";
-import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import {
+    Button,
+    IconButton,
+    IconButtonVariant,
+    Icons,
+    Pagination,
+    PrimerTextInput,
+    Size,
+    Spinner,
+} from "../../../../packages/primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component TimeReporting {
     width: 100%;
@@ -30,8 +39,8 @@ export component TimeReporting {
 
                 Text {
                     text: TimeReportingState.selected-project-label;
-                    font-size: 16px;
-                    font-weight: 600;
+                    font-size: LayoutTokens.text-body-size-large;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
                     color: PrimerColors.fgColor-default;
                     wrap: word-wrap;
                 }
@@ -42,8 +51,10 @@ export component TimeReporting {
                     spacing: 8px;
                     alignment: center;
 
-                    Button {
-                        label: "←";
+                    IconButton {
+                        size: Size.small;
+                        variant: IconButtonVariant.invisible;
+                        icon-source: Icons.chevron_left;
                         clicked => {
                             TimeReportingState.time-reporting-week-prev();
                         }
@@ -55,22 +66,24 @@ export component TimeReporting {
 
                         Text {
                             text: TimeReportingState.week-label;
-                            font-size: 15px;
-                            font-weight: 600;
+                            font-size: LayoutTokens.text-body-size-large;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
                             color: PrimerColors.fgColor-default;
                             horizontal-alignment: center;
                         }
 
                         if TimeReportingState.week-range-subtitle != "": Text {
                             text: TimeReportingState.week-range-subtitle;
-                            font-size: 12px;
+                            font-size: LayoutTokens.text-body-size-small;
                             color: PrimerColors.fgColor-muted;
                             horizontal-alignment: center;
                         }
                     }
 
-                    Button {
-                        label: "→";
+                    IconButton {
+                        size: Size.small;
+                        variant: IconButtonVariant.invisible;
+                        icon-source: Icons.chevron_right;
                         clicked => {
                             TimeReportingState.time-reporting-week-next();
                         }
@@ -130,7 +143,7 @@ export component TimeReporting {
                                 horizontal-stretch: 1;
                                 text: "Task";
                                 font-size: 11px;
-                                font-weight: 600;
+                                font-weight: LayoutTokens.base-text-weight-semibold;
                                 color: PrimerColors.fgColor-muted;
                             }
 
@@ -138,7 +151,7 @@ export component TimeReporting {
                                 width: 44px;
                                 text: "Mo";
                                 font-size: 11px;
-                                font-weight: 600;
+                                font-weight: LayoutTokens.base-text-weight-semibold;
                                 color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
@@ -147,7 +160,7 @@ export component TimeReporting {
                                 width: 44px;
                                 text: "Tu";
                                 font-size: 11px;
-                                font-weight: 600;
+                                font-weight: LayoutTokens.base-text-weight-semibold;
                                 color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
@@ -156,7 +169,7 @@ export component TimeReporting {
                                 width: 44px;
                                 text: "We";
                                 font-size: 11px;
-                                font-weight: 600;
+                                font-weight: LayoutTokens.base-text-weight-semibold;
                                 color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
@@ -165,7 +178,7 @@ export component TimeReporting {
                                 width: 44px;
                                 text: "Th";
                                 font-size: 11px;
-                                font-weight: 600;
+                                font-weight: LayoutTokens.base-text-weight-semibold;
                                 color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
@@ -174,7 +187,7 @@ export component TimeReporting {
                                 width: 44px;
                                 text: "Fr";
                                 font-size: 11px;
-                                font-weight: 600;
+                                font-weight: LayoutTokens.base-text-weight-semibold;
                                 color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
@@ -183,7 +196,7 @@ export component TimeReporting {
                                 width: 52px;
                                 text: "Total";
                                 font-size: 11px;
-                                font-weight: 600;
+                                font-weight: LayoutTokens.base-text-weight-semibold;
                                 color: PrimerColors.fgColor-muted;
                                 horizontal-alignment: right;
                             }
@@ -401,7 +414,7 @@ export component TimeReporting {
 
             if !TimeReportingState.has-selected-project: Text {
                 text: "Choose a GitHub Project (classic board) for time entries. Open the dialog when prompted.";
-                font-size: 14px;
+                font-size: LayoutTokens.text-body-size-medium;
                 color: PrimerColors.fgColor-muted;
                 wrap: word-wrap;
             }
@@ -487,7 +500,7 @@ export component TimeReporting {
                                                 text: row.title;
                                                 color: PrimerColors.fgColor-default;
                                                 overflow: elide;
-                                                font-size: 14px;
+                                                font-size: LayoutTokens.text-body-size-medium;
                                             }
 
                                             Text {
@@ -573,8 +586,8 @@ export component TimeReporting {
 
                         Text {
                             text: TimeReportingState.detail-title;
-                            font-size: 17px;
-                            font-weight: 600;
+                            font-size: LayoutTokens.text-body-size-large;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
                             color: PrimerColors.fgColor-default;
                             wrap: word-wrap;
                         }
