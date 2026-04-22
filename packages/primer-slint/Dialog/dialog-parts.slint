@@ -1,4 +1,4 @@
-// Storybook **`Dialog.Header`** / **`Dialog.Body`** / **`Dialog.Footer`**-style building blocks for **`DialogCompose`** (`PR9`) — footer layout / visibility aligned with **`Dialog`** (`PR10`).
+// Storybook **`Dialog.Header`** / **`Dialog.Body`** / **`Dialog.Footer`**-style building blocks for **`DialogCompose`** (`PR9`) — footer layout / visibility (`PR10`) / loading (`PR11`) aligned with **`Dialog`**.
 
 import {
     Button,
@@ -88,6 +88,11 @@ export component DialogFooter {
     in property <bool> footer-has-primary-button: true;
     in property <string> footer-extra-1-label: "";
     in property <string> footer-extra-2-label: "";
+    in property <bool> footer-default-loading: false;
+    in property <bool> footer-danger-loading: false;
+    in property <bool> footer-primary-loading: false;
+    in property <bool> footer-extra-1-loading: false;
+    in property <bool> footer-extra-2-loading: false;
 
     callback default-clicked();
     callback danger-clicked();
@@ -127,6 +132,7 @@ export component DialogFooter {
                 if root.footer-has-default-button: Button {
                     label: root.default-label;
                     variant: ButtonVariant.default;
+                    loading: root.footer-default-loading;
                     clicked => {
                         root.default-clicked();
                     }
@@ -135,6 +141,7 @@ export component DialogFooter {
                 if root.footer-extra-1-label != "": Button {
                     label: root.footer-extra-1-label;
                     variant: ButtonVariant.default;
+                    loading: root.footer-extra-1-loading;
                     clicked => {
                         root.footer-extra-1-clicked();
                     }
@@ -143,6 +150,7 @@ export component DialogFooter {
                 if root.footer-extra-2-label != "": Button {
                     label: root.footer-extra-2-label;
                     variant: ButtonVariant.default;
+                    loading: root.footer-extra-2-loading;
                     clicked => {
                         root.footer-extra-2-clicked();
                     }
@@ -151,6 +159,7 @@ export component DialogFooter {
                 if root.footer-has-danger-button: Button {
                     label: root.danger-label;
                     variant: ButtonVariant.danger;
+                    loading: root.footer-danger-loading;
                     clicked => {
                         root.danger-clicked();
                     }
@@ -159,6 +168,7 @@ export component DialogFooter {
                 if root.footer-has-primary-button: Button {
                     label: root.primary-label;
                     variant: ButtonVariant.primary;
+                    loading: root.footer-primary-loading;
                     clicked => {
                         root.primary-clicked();
                     }
@@ -176,6 +186,7 @@ export component DialogFooter {
             if root.footer-has-default-button: Button {
                 label: root.default-label;
                 variant: ButtonVariant.default;
+                loading: root.footer-default-loading;
                 clicked => {
                     root.default-clicked();
                 }
@@ -184,6 +195,7 @@ export component DialogFooter {
             if root.footer-extra-1-label != "": Button {
                 label: root.footer-extra-1-label;
                 variant: ButtonVariant.default;
+                loading: root.footer-extra-1-loading;
                 clicked => {
                     root.footer-extra-1-clicked();
                 }
@@ -192,6 +204,7 @@ export component DialogFooter {
             if root.footer-extra-2-label != "": Button {
                 label: root.footer-extra-2-label;
                 variant: ButtonVariant.default;
+                loading: root.footer-extra-2-loading;
                 clicked => {
                     root.footer-extra-2-clicked();
                 }
@@ -200,6 +213,7 @@ export component DialogFooter {
             if root.footer-has-danger-button: Button {
                 label: root.danger-label;
                 variant: ButtonVariant.danger;
+                loading: root.footer-danger-loading;
                 clicked => {
                     root.danger-clicked();
                 }
@@ -208,6 +222,7 @@ export component DialogFooter {
             if root.footer-has-primary-button: Button {
                 label: root.primary-label;
                 variant: ButtonVariant.primary;
+                loading: root.footer-primary-loading;
                 clicked => {
                     root.primary-clicked();
                 }
@@ -215,11 +230,10 @@ export component DialogFooter {
         }
 
         HorizontalLayout {
-            visible: !root.use-default-actions;
-            width: 100%;
             padding: DialogTokens.footer-padding;
             spacing: DialogTokens.footer-actions-gap;
             alignment: end;
+            
 
             @children
         }

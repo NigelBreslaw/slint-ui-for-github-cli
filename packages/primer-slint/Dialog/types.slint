@@ -39,3 +39,13 @@ export enum DialogFooterButtonLayout {
     wrap,
     scroll,
 }
+
+/// Which default footer **`Button`** should receive initial keyboard focus (React **`footerButtons` `autoFocus`**, `PR11`). Until footer actions use key-focusable hosts, this is **API parity** only (see **`Dialog`** README).
+export enum DialogFooterAutoFocus {
+    none,
+    default-action,
+    danger-action,
+    primary-action,
+    extra-1,
+    extra-2,
+}
