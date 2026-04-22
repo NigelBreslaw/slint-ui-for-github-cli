@@ -245,20 +245,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Components/Dialog — Playground";
-            color: PrimerColors.fgColor-muted;
-            font-size: 11px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Pick **width** / **height** (**React `widthMap` / `heightMap`**), toggle **Show header** / **Show footer**, edit **Title** / **Subtitle**, then open the dialog and scroll the body inside the shell cap. With the header off, the × close control is hidden — use **Escape**, backdrop click, or footer **Danger** to dismiss (**`allow-dismiss`** stays true).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
         HorizontalLayout {
             spacing: 16px;
 
@@ -398,13 +384,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Components/Dialog — Features — [Align] Top · [Align] Bottom";
-            color: PrimerColors.fgColor-muted;
-            font-size: 11px;
-            wrap: word-wrap;
-        }
-
         Select {
             label-text: "Vertical align";
             placeholder: "Choose top or bottom…";
@@ -443,7 +422,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Resize the gallery window and switch **Vertical align** (close and reopen) to compare **`ModalOverlay.panel-shell`** **`y`** for **top** vs **bottom**.";
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             wrap: word-wrap;
@@ -501,19 +480,12 @@ export component GalleryDialogsPage inherits VerticalLayout {
         position-preset: root.side-sheet-position-preset;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;
-        footer-default-clicked => {
-        }
-        footer-danger-clicked => {
-            root.side-sheet-open = false;
-        }
-        footer-primary-clicked => {
-        }
         on-close(_gesture) => {
             root.side-sheet-open = false;
         }
 
         Text {
-            text: "**`position-preset`** **left** / **right** uses **`DialogTokens.overlay-sheet-enter-duration`** slide-in motion, full viewport height, flush inner edge (**`OverlayPanelChrome`** asymmetric radii). Compare with **Align** for centered **`ModalOverlay`** motion.";
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             wrap: word-wrap;

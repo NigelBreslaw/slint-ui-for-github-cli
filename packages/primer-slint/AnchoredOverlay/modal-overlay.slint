@@ -2,6 +2,8 @@
 // Parent-relative **`x`** / **`y`** match **`AnchoredOverlay`** (window origin minus **`absolute-position`**).
 //
 // Enter motion uses a **`Timer`** arm step: while the popup is closed, Slint does not keep a stable “from” value for animated props on first paint after **`show()`**, so binding **`presented`** directly to **`open`** snaps. We set **`presented := 0`**, **`show()`**, then **`presented := 1`** on the next tick so **`animate presented`** runs **0→1**.
+//
+// **`PopupWindow.close()`** must not run until **`presented`** finishes animating **1→0** on dismiss; closing immediately can strand the animator so the **next** **`show()`** does not run **0→1** enter motion reliably.
 
 import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
 import { DialogAlignPreset, DialogPositionPreset } from "../Dialog/types.slint";
@@ -76,15 +78,28 @@ export component ModalOverlay {
         }
     }
 
+    /// After **`open`** becomes false, wait for **`presented`** exit animation (**duration** matches **`animate presented`**) before **`popup.close()`** — see file header.
+    popup-close-after-exit := Timer {
+        interval: root.presented-enter-duration;
+        running: false;
+        triggered() => {
+            if !root.open {
+                popup.close();
+            }
+            self.running = false;
+        }
+    }
+
     changed open => {
         if root.open {
+            popup-close-after-exit.running = false;
             root.presented = 0.0;
             popup.show();
             presented-enter-arm.running = true;
         } else {
             presented-enter-arm.running = false;
             root.presented = 0.0;
-            popup.close();
+            popup-close-after-exit.running = true;
         }
     }
 
