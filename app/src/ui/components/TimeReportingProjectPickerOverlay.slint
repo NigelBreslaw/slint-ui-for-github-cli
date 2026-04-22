@@ -1,0 +1,92 @@
+import { AppState } from "../../bridges/slint/app-state.slint";
+import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
+import {
+    Button,
+    DialogAlignPreset,
+    DialogNarrowPositionPreset,
+    DialogPositionPreset,
+    ModalOverlay,
+    Pagination,
+    SelectPanel,
+    SelectPanelMode,
+} from "../../../../packages/primer-slint/primer.slint";
+import { AppWindow, DialogTokens, OverlayTokens } from "../../../../packages/primer-slint/tokens.slint";
+
+export component TimeReportingProjectPickerOverlay {
+    ModalOverlay {
+        open <=> TimeReportingState.picker-open;
+        allow-dismiss: TimeReportingState.picker-allow-cancel;
+        panel-width: DialogTokens.width-large;
+        panel-max-height: OverlayTokens.modal-viewport-max-height;
+        panel-vertical-align: DialogAlignPreset.center;
+        panel-position: DialogPositionPreset.center;
+        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
+        narrow-position: DialogNarrowPositionPreset.center;
+        slot-padding: DialogTokens.body-padding;
+        close-requested => {
+            TimeReportingState.time-reporting-picker-cancel();
+        }
+
+        VerticalLayout {
+            width: 100%;
+            spacing: 16px;
+
+            SelectPanel {
+                width: 100%;
+                title: "Select time keeping project";
+                subtitle: "Search by title, number, or URL";
+                mode: SelectPanelMode.single;
+                filter-text <=> AppState.projects-search;
+                filter-placeholder: "Search by title, number, or URL…";
+                single-items: AppState.projects-picker-select-options;
+                item-count: AppState.projects-picker-options-count;
+                selected-index <=> AppState.projects-picker-selected-index;
+                list-max-height: 220px;
+                empty-message: "No projects match your search.";
+                loading: AppState.projects-load-status == "Loading projects…";
+                disabled: AppState.projects-load-status != ""
+                    && AppState.projects-load-status != "Loading projects…";
+                filter-changed(q) => {
+                    AppState.project_search_changed(q);
+                }
+                single-selected-changed(ix) => {
+                    if ix < 0 || ix >= AppState.projects-picker-options-count {
+                        return;
+                    }
+                    TimeReportingState.time-reporting-project-chosen(
+                        AppState.projects-picker-select-options[ix].value,
+                    );
+                }
+            }
+
+            if AppState.projects-filtered-count > 0: Pagination {
+                width: 100%;
+                vertical-stretch: 0;
+                total-count: AppState.projects-filtered-count;
+                page-size: AppState.projects-picker-page-size;
+                page-index: AppState.projects-picker-page-index;
+                page-changed(idx) => {
+                    AppState.projects-picker-page-changed(idx);
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 8px;
+                width: 100%;
+
+                Rectangle {
+                    horizontal-stretch: 1;
+                    height: 1px;
+                }
+
+                Button {
+                    visible: TimeReportingState.picker-allow-cancel;
+                    label: "Cancel";
+                    clicked => {
+                        TimeReportingState.time-reporting-picker-cancel();
+                    }
+                }
+            }
+        }
+    }
+}
