@@ -30,10 +30,10 @@ export component Dialog {
     height: 0px;
 
     private property <length> panel-w:
-        width-preset == DialogWidthPreset.small ? 296px
-        : width-preset == DialogWidthPreset.medium ? 320px
-        : width-preset == DialogWidthPreset.large ? 480px
-        : 640px;
+        width-preset == DialogWidthPreset.small ? DialogTokens.width-small
+        : width-preset == DialogWidthPreset.medium ? DialogTokens.width-medium
+        : width-preset == DialogWidthPreset.large ? DialogTokens.width-large
+        : DialogTokens.width-xlarge;
 
     modal-layer := ModalOverlay {
         open <=> root.open;
@@ -63,21 +63,21 @@ export component Dialog {
                         padding-right: DialogTokens.header-content-padding-inline;
                         padding-top: DialogTokens.header-content-padding-block;
                         padding-bottom: DialogTokens.header-content-padding-block;
-                        spacing: root.subtitle != "" ? LayoutTokens.base-size-4 : 0px;
+                        spacing: root.subtitle != "" ? DialogTokens.header-title-subtitle-gap : 0px;
 
                         Text {
                             text: root.title;
                             color: PrimerColors.fgColor-default;
-                            font-size: LayoutTokens.text-body-size-medium;
-                            font-weight: LayoutTokens.base-text-weight-semibold;
+                            font-size: DialogTokens.title-font-size;
+                            font-weight: DialogTokens.title-font-weight;
                             wrap: word-wrap;
                         }
 
                         if root.subtitle != "": Text {
                             text: root.subtitle;
                             color: PrimerColors.fgColor-muted;
-                            font-size: LayoutTokens.text-body-size-small;
-                            font-weight: LayoutTokens.base-text-weight-normal;
+                            font-size: DialogTokens.subtitle-font-size;
+                            font-weight: DialogTokens.subtitle-font-weight;
                             wrap: word-wrap;
                         }
                     }
@@ -105,7 +105,7 @@ export component Dialog {
                 body-inner := VerticalLayout {
                     width: parent.width;
                     padding: DialogTokens.body-padding;
-                    spacing: 12px;
+                    spacing: DialogTokens.body-block-spacing;
                     alignment: start;
 
                     @children

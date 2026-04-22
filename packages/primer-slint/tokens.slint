@@ -66,6 +66,8 @@ export global LayoutTokens {
     out property <length> base-size-6: 6px;
     /// primer-tokens functional size **`base-size-8`** (`Dialog.module.css` header outer / content inline padding).
     out property <length> base-size-8: 8px;
+    /// primer-tokens functional size **`base-size-12`** (dialog body block gap, banner gaps, tables).
+    out property <length> base-size-12: 12px;
     /// primer-tokens functional size **`base-size-16`** (`Dialog.module.css` body + footer padding).
     out property <length> base-size-16: 16px;
     /// primer-tokens `functional/size/radius.json5` — **`borderRadius.large`** (12px): dialogs, modals, larger containers.
@@ -144,6 +146,8 @@ export global LayoutTokens {
 
     /// primer-tokens **`base/motion/timing.json5`** — **`base.duration.200`** (React **`Dialog.module.css`** backdrop + **`Overlay--motion-scaleFade`** enter).
     out property <duration> duration-200: 200ms;
+    /// React **`Dialog.module.css`** side-sheet + bottom-sheet enter — **250ms** (no named **250** step in **`timing.json5`**; literal tied to upstream CSS).
+    out property <duration> duration-250: 250ms;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
@@ -662,15 +666,25 @@ export global OverlayTokens {
     out property <length> modal-viewport-max-height: max(AppWindow.window-height - 64px, 120px);
 }
 
-// primer-ui-react `Dialog.module.css` (`.Header`, `.HeaderContent`, `.Body`, `.Footer`) + motion enter duration + primer-tokens `functional/size/size.json5` base sizes. Composes **`LayoutTokens`** only (no literals except motion cites **`LayoutTokens.duration-200`**). Surfaces use **`OverlayTokens`** / **`PrimerColors`** at shell level.
+// primer-ui-react `Dialog.module.css` + `Dialog.tsx` **`widthMap`**, plus primer-tokens **`functional/size`**. Composes **`LayoutTokens`** `out` only (width literals below are **React-shipped** exceptions vs **`overlay.size`** in JSON5 — see audit).
 //
-// Token audit (PR2): | Intent | primer-tokens / upstream | Owner | `out` / source | Consumers |
+// Token audit (PR3): | Intent | primer-tokens / upstream | Owner | `out` / source | Consumers |
 // |--------|---------------------------|-------|----------------|-----------|
-// | Dialog header outer padding | base-size-8 | LayoutTokens | `base-size-8` | DialogTokens.header-padding |
-// | Header content inline / block | base-size-8, base-size-6 | LayoutTokens | `base-size-8`, `base-size-6` | DialogTokens.header-content-* |
-// | Body + footer inset | base-size-16 | LayoutTokens | `base-size-16` | DialogTokens.body-padding, footer-padding |
-// | Footer button row gap | base-size-8 | LayoutTokens | `button-content-gap` | DialogTokens.footer-actions-gap |
-// | Enter motion duration | base.duration.200 | LayoutTokens **`duration-200`** | DialogTokens.overlay-enter-duration |
+// | Panel width **small** | React **`widthMap.small`** **296px** — *not* **`overlay.width.small`** (320px in tokens) | DialogTokens | **`width-small`** literal | **`Dialog`** `panel-w` |
+// | Panel width **medium** | React **320px** — tokens **`overlay.width.medium`** often 480px: **parity = React** | DialogTokens | **`width-medium`** literal | **`Dialog`** |
+// | Panel width **large** | React **480px** | DialogTokens | **`width-large`** literal | **`Dialog`** |
+// | Panel width **xlarge** | React **640px** — aligns tokens **`overlay.width.xlarge`** | DialogTokens | **`width-xlarge`** literal | **`Dialog`** |
+// | Viewport margin (max panel) | `--overlay-height-[breakpoint]` math → **64px** inset | OverlayTokens | **`modal-viewport-max-*`** | **`ModalOverlay`**, **`Dialog`** |
+// | Dialog header outer padding | **base-size-8** | LayoutTokens | **`base-size-8`** | **`header-padding`** |
+// | Header content inline / block | **base-size-8**, **base-size-6** | LayoutTokens | same | **`header-content-*`** |
+// | Title / subtitle typography | **`text-body-size-*`**, weights | LayoutTokens | composed | **`title-font-size`**, **`subtitle-*`** |
+// | Title ↔ subtitle gap | **base-size-4** | LayoutTokens | **`base-size-4`** | **`header-title-subtitle-gap`** |
+// | Body stack gap (blocks) | **base-size-12** | LayoutTokens | **`base-size-12`** | **`body-block-spacing`** |
+// | Body + footer inset | **base-size-16** | LayoutTokens | **`base-size-16`** | **`body-padding`**, **`footer-padding`** |
+// | Footer button row gap | **base-size-8** | LayoutTokens | **`button-content-gap`** | **`footer-actions-gap`** |
+// | Enter motion (center / scaleFade) | **base.duration.200** | LayoutTokens **`duration-200`** | **`overlay-enter-duration`** | **`ModalOverlay`** |
+// | Enter motion (side / bottom sheet) | **250ms** CSS — no **`timing.json5`** step | LayoutTokens **`duration-250`** | **`overlay-sheet-enter-duration`** | future side/bottom PRs |
+// | Easing curve | React **`cubic-bezier(0.33, 1, 0.68, 1)`** — not **`base.easing.easeOut`** | — | inlined in **`modal-overlay.slint`** `animate` | **`ModalOverlay`** |
 export global DialogTokens {
     out property <length> header-padding: LayoutTokens.base-size-8;
     out property <length> header-content-padding-inline: LayoutTokens.base-size-8;
@@ -678,6 +692,25 @@ export global DialogTokens {
     out property <length> body-padding: LayoutTokens.base-size-16;
     out property <length> footer-padding: LayoutTokens.base-size-16;
     out property <length> footer-actions-gap: LayoutTokens.button-content-gap;
+    /// Vertical gap between title and subtitle (**`base-size-4`**).
+    out property <length> header-title-subtitle-gap: LayoutTokens.base-size-4;
+    /// Vertical spacing between stacked blocks in the scroll body (**`base-size-12`**).
+    out property <length> body-block-spacing: LayoutTokens.base-size-12;
+    /// Header title — matches **`.Header`** primary line.
+    out property <length> title-font-size: LayoutTokens.text-body-size-medium;
+    /// Subtitle — matches **`.Header`** secondary line.
+    out property <length> subtitle-font-size: LayoutTokens.text-body-size-small;
+    out property <int> title-font-weight: LayoutTokens.base-text-weight-semibold;
+    out property <int> subtitle-font-weight: LayoutTokens.base-text-weight-normal;
+
+    /// React **`Dialog.tsx`** **`widthMap`** — use these instead of **`overlay.width.*`** where JSON5 differs (see audit table).
+    out property <length> width-small: 296px;
+    out property <length> width-medium: 320px;
+    out property <length> width-large: 480px;
+    out property <length> width-xlarge: 640px;
+
     /// React **`Dialog.module.css`** — `.Backdrop` + default dialog **`Overlay--motion-scaleFade`** enter.
     out property <duration> overlay-enter-duration: LayoutTokens.duration-200;
+    /// Side sheet + bottom sheet panel enter (**250ms** in upstream CSS) — consumers in position PRs.
+    out property <duration> overlay-sheet-enter-duration: LayoutTokens.duration-250;
 }
