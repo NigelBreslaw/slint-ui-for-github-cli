@@ -1,5 +1,7 @@
 // Viewport modal: fullscreen `PopupWindow` with **`OverlayTokens.backdrop-scrim`**, backdrop dismiss, centered **`OverlayPanelChrome`**, and **`Dialog.module.css`** enter motion (backdrop fade + **`Overlay--motion-scaleFade`**).
 // Parent-relative **`x`** / **`y`** match **`AnchoredOverlay`** (window origin minus **`absolute-position`**).
+//
+// Enter motion uses a **`Timer`** arm step: while the popup is closed, Slint does not keep a stable “from” value for animated props on first paint after **`show()`**, so binding **`presented`** directly to **`open`** snaps. We set **`presented := 0`**, **`show()`**, then **`presented := 1`** on the next tick so **`animate presented`** runs **0→1**.
 
 import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
 import { DialogTokens, OverlayTokens, AppWindow } from "../tokens.slint";
@@ -19,8 +21,8 @@ export component ModalOverlay {
     /// Height cap for the modal shell (`panel-max-height` ∩ viewport overlay max).
     private property <length> viewport-cap-h: min(root.panel-max-height, OverlayTokens.modal-viewport-max-height);
 
-    /// Shared **0–1** for backdrop opacity + panel **`Overlay--motion-scaleFade`** (React curve in **`animate`** below).
-    private property <float> presented: root.open ? 1.0 : 0.0;
+    /// Shared **0–1** for backdrop opacity + panel **`Overlay--motion-scaleFade`** — driven by **`Timer`**, not **`open`**, so **`animate`** has a real previous value after **`PopupWindow.show()`**.
+    private property <float> presented: 0.0;
 
     animate presented {
         duration: DialogTokens.overlay-enter-duration;
@@ -30,10 +32,26 @@ export component ModalOverlay {
     /// Shell scale **0.5 → 1** (`Overlay--motion-scaleFade`).
     private property <float> shell-scale: 0.5 + 0.5 * presented;
 
+    /// One tick after **`show()`**, bump **`presented`** to **1** so enter animation runs (see file comment).
+    presented-enter-arm := Timer {
+        interval: 1ms;
+        running: false;
+        triggered() => {
+            if root.open {
+                root.presented = 1.0;
+            }
+            self.running = false;
+        }
+    }
+
     changed open => {
         if root.open {
+            root.presented = 0.0;
             popup.show();
+            presented-enter-arm.running = true;
         } else {
+            presented-enter-arm.running = false;
+            root.presented = 0.0;
             popup.close();
         }
     }
@@ -67,7 +85,7 @@ export component ModalOverlay {
                     width: 100%;
                     height: 100%;
                     background: OverlayTokens.backdrop-scrim;
-                    opacity: presented;
+                    opacity: root.presented;
                 }
 
                 // Middle: backdrop dismiss — must stay **below** the panel shell so clicks outside the card hit here.
@@ -87,8 +105,8 @@ export component ModalOverlay {
                     y: max(0px, (AppWindow.window-height - self.height) / 2);
                     width: root.panel-w;
                     height: min(panel-chrome.slot-preferred-height, root.viewport-cap-h);
-                    opacity: presented;
-                    transform-scale: shell-scale;
+                    opacity: root.presented;
+                    transform-scale: root.shell-scale;
                     clip: false;
 
                     panel-chrome := OverlayPanelChrome {
