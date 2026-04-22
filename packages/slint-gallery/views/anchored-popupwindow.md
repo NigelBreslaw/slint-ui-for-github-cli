@@ -54,7 +54,7 @@ Implement flip by setting the boolean **before** `show()`, then bind **`popup.y`
 
 ## API habits
 
-- Call **`show()`** / **`close()`** from gestures; avoid **`init { show(); }`** before layout is stable (see [`app/src/ui/components/primer-dialog.slint`](../../../app/src/ui/components/primer-dialog.slint)).
+- Call **`show()`** / **`close()`** from gestures; avoid **`init { show(); }`** before layout is stable (packaged **`Dialog`** uses **`ModalOverlay`**’s deferred enter animation — see [`packages/primer-slint/AnchoredOverlay/modal-overlay.slint`](../../primer-slint/AnchoredOverlay/modal-overlay.slint)).
 - **`width`** / **`height`** on `PopupWindow` size the popup’s client area; inner content typically uses **`100%`** fill.
 - **`close-policy`**: fullscreen modals in the app often use **`no-auto-close`**; anchored popups may use the default—see existing usage in [`app/src/ui/main.slint`](../../../app/src/ui/main.slint) and [`app/src/ui/views/settings.slint`](../../../app/src/ui/views/settings.slint).
 

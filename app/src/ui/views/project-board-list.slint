@@ -1,6 +1,5 @@
 import { ListView } from "std-widgets.slint";
 import { ProjectBoardItemKind, ProjectBoardListState } from "../../bridges/slint/project-board-list-state.slint";
-import { PrimerDialog, PrimerDialogWidth } from "../components/primer-dialog.slint";
 import {
     Banner,
     BannerVariant,
@@ -19,6 +18,9 @@ import {
     TableContainer,
     Button,
     ButtonVariant,
+    Dialog,
+    DialogHeightPreset,
+    DialogWidthPreset,
 } from "../../../../packages/primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 import { ProjectBoardTableLayout } from "project-board-table-layout.slint";
@@ -216,23 +218,19 @@ export component ProjectBoardList {
             }
         }
 
-        if ProjectBoardListState.import-dialog-open: Rectangle {
-            width: parent.width;
-            height: parent.height;
-            y: 0;
-            x: 0;
+        Dialog {
+            open <=> ProjectBoardListState.import-dialog-open;
+            title: "Import from repositories";
+            subtitle: "Organization slint-ui — pick a repository, then review open issues and PRs (first page).";
+            width-preset: DialogWidthPreset.xlarge;
+            height-preset: DialogHeightPreset.auto;
+            show-footer: false;
+            allow-dismiss: true;
+            on-close(_gesture) => {
+                ProjectBoardListState.project-board-import-dialog-closed();
+            }
 
-            PrimerDialog {
-                width: 100%;
-                height: 100%;
-                title: "Import from repositories";
-                subtitle: "Organization slint-ui — pick a repository, then review open issues and PRs (first page).";
-                width-preset: PrimerDialogWidth.xlarge;
-                close => {
-                    ProjectBoardListState.project-board-import-dialog-closed();
-                }
-
-                VerticalLayout {
+            VerticalLayout {
                     spacing: 12px;
                     width: 100%;
                     min-height: 320px;
@@ -476,7 +474,6 @@ export component ProjectBoardList {
                         }
                     }
                 }
-            }
         }
     }
 }

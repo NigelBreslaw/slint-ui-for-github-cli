@@ -107,6 +107,7 @@ export type SettingsStateHandle = {
   settings_debug_countdown: string;
   settings_debug_commit_label: string;
   settings_debug_error: string;
+  settings_debug_panel_loading: boolean;
 };
 
 /** Matches `TimeReportingWeekRow` in `time-reporting-state.slint` (Slint `item-id` → `item_id`). */

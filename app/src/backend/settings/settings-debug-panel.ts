@@ -48,6 +48,9 @@ function resetSettingsDebugPanelState(window: MainWindowInstance): void {
 export function teardownSettingsDebugPanel(window: MainWindowInstance): void {
   invalidateInFlightSettingsDebugLoads();
   resetSettingsDebugPanelState(window);
+  assignProperties(window.SettingsState, {
+    settings_debug_panel_loading: false,
+  });
 }
 
 function applySettingsDebugRateLimitFetchResult(
@@ -124,23 +127,34 @@ export async function loadSettingsDebugPanel(window: MainWindowInstance): Promis
   invalidateInFlightSettingsDebugLoads();
   const epoch = settingsDebugEpoch;
   resetSettingsDebugPanelState(window);
-  hydrateSecurityAlertsRepo(window);
-  window.SettingsState.settings_debug_commit_label = buildCommitLabel(GIT_COMMIT_COUNT);
+  assignProperties(window.SettingsState, {
+    settings_debug_panel_loading: true,
+  });
+  try {
+    hydrateSecurityAlertsRepo(window);
+    window.SettingsState.settings_debug_commit_label = buildCommitLabel(GIT_COMMIT_COUNT);
 
-  const errors: string[] = [];
-  const [ghVer, rl] = await Promise.all([getGhCliVersionLine(), fetchGraphqlRateLimit()]);
-  if (epoch !== settingsDebugEpoch) {
-    return;
+    const errors: string[] = [];
+    const [ghVer, rl] = await Promise.all([getGhCliVersionLine(), fetchGraphqlRateLimit()]);
+    if (epoch !== settingsDebugEpoch) {
+      return;
+    }
+
+    if (ghVer.ok) {
+      window.SettingsState.settings_debug_gh_version = ghVer.line;
+    } else {
+      window.SettingsState.settings_debug_gh_version = "—";
+      errors.push(ghVer.error);
+    }
+
+    applySettingsDebugRateLimitFetchResult(window, rl, errors, epoch);
+
+    window.SettingsState.settings_debug_error = errors.join(" · ");
+  } finally {
+    if (epoch === settingsDebugEpoch) {
+      assignProperties(window.SettingsState, {
+        settings_debug_panel_loading: false,
+      });
+    }
   }
-
-  if (ghVer.ok) {
-    window.SettingsState.settings_debug_gh_version = ghVer.line;
-  } else {
-    window.SettingsState.settings_debug_gh_version = "—";
-    errors.push(ghVer.error);
-  }
-
-  applySettingsDebugRateLimitFetchResult(window, rl, errors, epoch);
-
-  window.SettingsState.settings_debug_error = errors.join(" · ");
 }

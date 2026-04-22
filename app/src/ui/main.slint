@@ -24,6 +24,7 @@ import { Dashboard } from "views/dashboard.slint";
 import { SideBar } from "components/sideBar.slint";
 import { ProjectBoardList } from "views/project-board-list.slint";
 import { TimeReporting } from "views/time-reporting.slint";
+import { TimeReportingProjectPickerDialog } from "components/time-reporting-project-picker-dialog.slint";
 
 // import fonts
 import "../../../packages/primer-slint/assets/fonts/MonaSans-VariableFont.ttf"; // "Mona Sans"
@@ -292,4 +293,6 @@ export component MainWindow inherits Window {
             }
         }
     }
+
+    time-reporting-project-picker-dialog := TimeReportingProjectPickerDialog { }
 }

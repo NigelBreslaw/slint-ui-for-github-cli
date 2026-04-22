@@ -1,5 +1,4 @@
 import { SettingsState } from "../../bridges/slint/settings-state.slint";
-import { PrimerDialog } from "../components/primer-dialog.slint";
 import {
     DataTable,
     DataTableCellAlign,
@@ -8,6 +7,9 @@ import {
     DataTableColumn,
     DataTableIconTint,
     DataTableSortDirection,
+    Dialog,
+    DialogHeightPreset,
+    DialogWidthPreset,
     Icons,
     LabelSize,
     LabelVariant,
@@ -93,31 +95,31 @@ export component Settings {
             }
         }
 
-        primer-demo-popup := PopupWindow {
-            x: 0;
-            y: 0;
-            width: root.width;
-            height: root.height;
-            close-policy: no-auto-close;
+        // Packaged **`Dialog`** (**`ModalOverlay`**) pilots **`AppWindow`** — do not wrap in another **`PopupWindow`**.
+        Dialog {
+            open <=> SettingsState.settings-debug-panel-loading;
+            title: "Loading";
+            show-header: false;
+            show-footer: false;
+            allow-dismiss: false;
+            width-preset: DialogWidthPreset.medium;
+            height-preset: DialogHeightPreset.auto;
 
-            PrimerDialog {
-                x: 0;
-                y: 0;
+            VerticalLayout {
+                alignment: center;
+                spacing: 12px;
                 width: 100%;
-                height: 100%;
-                title: "Loading";
-                allow-dismiss: true;
-                close => {
-                    primer-demo-popup.close();
+
+                Text {
+                    text: "Loading";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 16px;
+                    font-weight: 600;
+                    horizontal-alignment: center;
                 }
 
-                VerticalLayout {
-                    alignment: center;
-                    width: 100%;
-
-                    Spinner {
-                        size: medium;
-                    }
+                Spinner {
+                    size: medium;
                 }
             }
         }
