@@ -1,5 +1,5 @@
 /**
- * Slint probe: dialog-style card (optional header/footer + intrinsic body text; Flickable TBD).
+ * Slint probe: dialog card (experimental FlexboxLayout column) + Flickable body. Uses SLINT_ENABLE_EXPERIMENTAL_FEATURES=1.
  * Debug toggles and body density are in the .slint window. No Primer imports.
  * Run: `pnpm --filter slint-gallery run probe`
  */
