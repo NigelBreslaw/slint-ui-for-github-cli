@@ -1,4 +1,4 @@
-// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`**; PR3 icons + knob; PR4 track **`states [ ]`** + **`FocusScope`**; PR5 inline **`Spinner`** when **`loading`** + DOM-order row (**`status-label-position`** spinner inset).
+// Primer ToggleSwitch — PR1–PR5 as before; motion: **`LayoutTokens.duration-80`** + upstream easing on knob, icons, track chrome (**`ToggleSwitch.module.css`**; disabled uses **0ms** like `transition-property: none`).
 // Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
 
 import { Icons } from "../assets/icons.slint";
@@ -35,7 +35,11 @@ export component ToggleSwitch {
     private property <length> knob-w: root.track-width / 2 - 2px;
     private property <length> knob-h: root.track-height - 2px;
     private property <length> knob-x: root.checked ? root.track-width - root.knob-w - 1px : 1px;
+    private property <length> line-icon-x: (root.track-half-w - root.icon-diameter) / 2 + (root.checked ? 0px : -root.track-half-w);
+    private property <length> circle-icon-x: (root.track-half-w - root.icon-diameter) / 2 + (root.checked ? root.track-half-w : 0px);
     private property <length> knob-corner-radius: LayoutTokens.borderRadius-medium - 2px;
+
+    private property <duration> motion-duration: root.disabled ? 0ms : LayoutTokens.duration-80;
 
     private property <length> status-font-size: root.size == ToggleSwitchSize.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
     private property <length> focus-ring-padding: 5px;
@@ -46,6 +50,26 @@ export component ToggleSwitch {
     private property <color> circle-icon-fg: root.disabled ? ToggleSwitchTokens.circle-icon-fgColor-disabled : ToggleSwitchTokens.circle-icon-fgColor-rest;
     private property <color> knob-fill: root.disabled ? ToggleSwitchTokens.knob-bgColor-disabled : ToggleSwitchTokens.knob-bgColor-rest;
     private property <color> knob-stroke: root.disabled ? ToggleSwitchTokens.knob-borderColor-disabled : (root.checked ? ToggleSwitchTokens.knob-borderColor-checked : ToggleSwitchTokens.knob-borderColor-rest);
+
+    animate knob-x {
+        duration: root.motion-duration;
+        easing: cubic-bezier(0.5, 1, 0.89, 1);
+    }
+
+    animate line-icon-x {
+        duration: root.motion-duration;
+        easing: cubic-bezier(0.5, 1, 0.89, 1);
+    }
+
+    animate circle-icon-x {
+        duration: root.motion-duration;
+        easing: cubic-bezier(0.5, 1, 0.89, 1);
+    }
+
+    animate knob-stroke {
+        duration: root.motion-duration;
+        easing: cubic-bezier(0.5, 1, 0.89, 1);
+    }
 
     HorizontalLayout {
         spacing: LayoutTokens.button-content-gap;
@@ -134,6 +158,16 @@ export component ToggleSwitch {
                             background: root.disabled ? ToggleSwitchTokens.track-bgColor-disabled : (root.checked ? ToggleSwitchTokens.track-bgColor-checked-rest : ToggleSwitchTokens.track-bgColor-rest);
                             border-color: root.disabled ? ToggleSwitchTokens.track-borderColor-disabled : (root.checked ? ToggleSwitchTokens.track-borderColor-checked : ToggleSwitchTokens.track-borderColor-rest);
 
+                            animate background {
+                                duration: root.motion-duration;
+                                easing: cubic-bezier(0.5, 1, 0.89, 1);
+                            }
+
+                            animate border-color {
+                                duration: root.motion-duration;
+                                easing: cubic-bezier(0.5, 1, 0.89, 1);
+                            }
+
                             HorizontalLayout {
                                 x: 0px;
                                 y: 0px;
@@ -151,7 +185,7 @@ export component ToggleSwitch {
                                         source: Icons.toggle_switch_line;
                                         width: root.icon-diameter;
                                         height: root.icon-diameter;
-                                        x: (parent.width - self.width) / 2 + (root.checked ? 0px : -parent.width);
+                                        x: root.line-icon-x;
                                         y: (parent.height - self.height) / 2;
                                         colorize: root.line-icon-fg;
                                     }
@@ -167,7 +201,7 @@ export component ToggleSwitch {
                                         source: Icons.toggle_switch_circle;
                                         width: root.icon-diameter;
                                         height: root.icon-diameter;
-                                        x: (parent.width - self.width) / 2 + (root.checked ? parent.width : 0px);
+                                        x: root.circle-icon-x;
                                         y: (parent.height - self.height) / 2;
                                         colorize: root.circle-icon-fg;
                                     }

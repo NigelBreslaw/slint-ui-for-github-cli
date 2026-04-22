@@ -96,6 +96,38 @@ Slint port of Primer [**LabelGroup**](https://primer.style/product/components/la
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Feedback** group).
 
+## ToggleSwitch
+
+Slint port of Primer [**ToggleSwitch**](https://primer.style/product/components/toggle-switch/). Upstream: primer-ui-react **`ToggleSwitch.tsx`** + **`ToggleSwitch.module.css`** — track/knob/icons, **`Spinner`** when **`loading`**, row order matches React DOM (**loading → status → switch** for `start`, reversed visual for `end`). Motion: **`LayoutTokens.duration-80`** (**80ms**) + **`cubic-bezier(0.5, 1, 0.89, 1)`** on knob **`x`**, icon **`x`**, track **`background`** / **`border-color`**, knob **`border-color`**; **`0ms`** when **`disabled`** (upstream switches transitions off). **`prefers-reduced-motion`** is not wired yet.
+
+| Property | Type | Notes |
+| -------- | ---- | ----- |
+| `checked` | `bool` (in-out) | On/off state. |
+| `disabled` | `bool` | Disables interaction and dims status text. |
+| `loading` | `bool` | Shows **`Spinner`** (`Size.small`); toggling is blocked (**`accepts-interaction`**). |
+| `size` | **`ToggleSwitchSize`** | **`small`** (48×24) or **`medium`** (64×32). |
+| `status-label-position` | **`ToggleSwitchStatusLabelPosition`** | **`start`** \| **`end`** — On/Off text before or after the switch. |
+| `button-label-on` / `button-label-off` | `string` | Default **On** / **Off**. |
+| `changed` | `callback (bool)` | New **`checked`** after a toggle. |
+| `clicked` | `callback` | Fires after each successful toggle (same click as **`changed`**). |
+
+**Imports for views:** [`primer.slint`](primer.slint) — **`ToggleSwitch`**, **`ToggleSwitchSize`**, **`ToggleSwitchStatusLabelPosition`**.
+
+### Storybook vs gallery (features)
+
+| Upstream story (`ToggleSwitch.features`) | Gallery (`Forms` → ToggleSwitch) |
+| -------------------------------------- | -------------------------------- |
+| `Default` / `Playground` | Default row + **Checked** / **Disabled** rows |
+| `Small` | **Label end** column uses **`ToggleSwitchSize.small`** |
+| `WithCaption` | Compose label/caption in the view (not built into **`ToggleSwitch`**). |
+| `Loading` | **Loading** column |
+| `LabelEnd` | **Label end** column |
+| `WithCustomLabels` | **Custom labels** row (**Active** / **Inactive**) |
+| `Loading` + `LabelEnd` | **Loading, label end** row |
+| `Controlled` | Bind **`checked <=>`** in the host (gallery **Default**). |
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
+
 ## Checkbox
 
 Slint port of Primer [**Checkbox**](https://primer.style/product/components/checkbox/). Upstream: primer-ui-react **`Checkbox.module.css`** — 16px control, **`borderRadius-small`**, **`control-checked-bgColor-rest`** when checked or indeterminate (accent fill + on-emphasis mark).

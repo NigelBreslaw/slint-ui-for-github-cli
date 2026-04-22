@@ -24,7 +24,7 @@ import {
 } from "../../primer-slint/primer.slint";
 import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// Select, PrimerTextInput (PR1 spike), AnchoredOverlay demo, ToggleSwitch (track + knob PR3), Checkbox, CheckboxGroup gallery demos.
+/// Select, PrimerTextInput (PR1 spike), AnchoredOverlay demo, ToggleSwitch (PR5 Spinner + gallery matrix), Checkbox, CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -45,6 +45,7 @@ export component GalleryFormsPage inherits VerticalLayout {
 
     private property <bool> demo-ts-spike: false;
     private property <bool> demo-ts-end: false;
+    private property <bool> demo-ts-custom: false;
 
     private property <string> demo-p1-block: "";
     private property <string> demo-p1-small: "";
@@ -644,7 +645,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "PR4: track-only hover/pressed (states on track plate); FocusScope + focus ring; Enter/Space toggles.";
+            text: "PR5: inline Spinner when loading; custom On/Off labels; loading + label-end inset (React ToggleSwitch.features).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -763,6 +764,45 @@ export component GalleryFormsPage inherits VerticalLayout {
                 ToggleSwitch {
                     disabled: true;
                     checked: true;
+                }
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Custom labels";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                ToggleSwitch {
+                    button-label-on: "Active";
+                    button-label-off: "Inactive";
+                    checked <=> demo-ts-custom;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Loading, label end";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                ToggleSwitch {
+                    loading: true;
+                    status-label-position: ToggleSwitchStatusLabelPosition.end;
+                    checked: false;
                 }
             }
         }

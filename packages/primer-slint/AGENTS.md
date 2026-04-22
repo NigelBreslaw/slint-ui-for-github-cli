@@ -28,14 +28,14 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 
 ## In-repo architecture
 
-- **Barrel:** [`primer.slint`](primer.slint) re-exports components, `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, **`ToggleSwitchTokens`**, `TextInputTokens`, `BannerTokens`, `LabelTokens`, **`ActionListTokens`**, **`Dialog`**, **`DialogCompose`**, **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`DialogFooterButtonLayout`**, **`DialogFooterAutoFocus`**, **`Icons`**, `Size`, and shared types (**DataTable**, **Select**, **SelectPanel**, **Label**, etc.). When adding exports or model fields, update [`readme.md`](readme.md) where noted (e.g. DataTable **Imports for views**).
+- **Barrel:** [`primer.slint`](primer.slint) re-exports components, `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, **`ToggleSwitch`**, **`ToggleSwitchTokens`**, `TextInputTokens`, `BannerTokens`, `LabelTokens`, **`ActionListTokens`**, **`Dialog`**, **`DialogCompose`**, **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`DialogFooterButtonLayout`**, **`DialogFooterAutoFocus`**, **`Icons`**, `Size`, and shared types (**DataTable**, **Select**, **SelectPanel**, **Label**, etc.). When adding exports or model fields, update [`readme.md`](readme.md) where noted (e.g. DataTable **Imports for views**).
 - **Tokens:** [`tokens.slint`](tokens.slint) — several `export global` singletons in **one file**. **Order matters:** `PrimerColors` → `ButtonTokens` → `CheckboxTokens` (uses `ButtonTokens`) → **`ToggleSwitchTokens`** (uses `PrimerColors` + `CheckboxTokens` `out` only) → `TextInputTokens` (uses `PrimerColors` + `ButtonTokens`) → `BannerTokens` → `LabelTokens` → **`ActionListTokens`** (uses `PrimerColors` + `ButtonTokens` `out` only) (`BannerTokens` / `LabelTokens` / `ActionListTokens`: no literals in those globals).
 
 ### Token layers (current convention)
 
 | Global | Contents |
 | ------ | -------- |
-| **LayoutTokens** | Lengths, typography, motion **`duration`** steps (**`duration-200`**, **`duration-250`**, …), control dimensions, padding, radii, icon sizes, banner spacing. **No** light/dark colors. |
+| **LayoutTokens** | Lengths, typography, motion **`duration`** steps (**`duration-80`** ToggleSwitch, **`duration-200`**, **`duration-250`**, …), control dimensions, padding, radii, icon sizes, banner spacing. **No** light/dark colors. |
 | **PrimerColors** | Semantic surfaces, shared primitives — each shared **hex** appears **once**. |
 | **ButtonTokens** | `color-btn-*`, `button-*`, action-list / icon-button tints; composes from **`PrimerColors`**. |
 | **CheckboxTokens** | Unchecked/checked/indeterminate/disabled paths; composes from **`PrimerColors`** + **`ButtonTokens`**. |
