@@ -1,8 +1,9 @@
-// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`**; PR3 icons + knob; PR4 track-only hover/pressed (**`states [ ]`**), **`FocusScope`** + **`Key.Return`** / **`Key.Space`**. Focus ring uses **`FocusScope.has-focus`** (e.g. Tab); pointer clicks do not call **`focus()`** on the scope.
+// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`**; PR3 icons + knob; PR4 track **`states [ ]`** + **`FocusScope`**; PR5 inline **`Spinner`** when **`loading`** + DOM-order row (**`status-label-position`** spinner inset).
 // Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
 
 import { Icons } from "../assets/icons.slint";
-import { LayoutTokens, PrimerColors, ToggleSwitchTokens } from "../tokens.slint";
+import { Spinner } from "../Progress/spinner.slint";
+import { LayoutTokens, PrimerColors, Size, ToggleSwitchTokens } from "../tokens.slint";
 
 export enum ToggleSwitchSize {
     small,
@@ -47,8 +48,21 @@ export component ToggleSwitch {
     private property <color> knob-stroke: root.disabled ? ToggleSwitchTokens.knob-borderColor-disabled : (root.checked ? ToggleSwitchTokens.knob-borderColor-checked : ToggleSwitchTokens.knob-borderColor-rest);
 
     HorizontalLayout {
-        spacing: 8px;
+        spacing: LayoutTokens.button-content-gap;
         alignment: center;
+
+        if root.status-label-position == ToggleSwitchStatusLabelPosition.start && root.loading: HorizontalLayout {
+            padding-left: 0px;
+            padding-right: 0px;
+            alignment: center;
+            align-items: center;
+
+            Spinner {
+                size: Size.small;
+                segment-color: PrimerColors.fgColor-muted;
+                track-color: #f0f6fc40;
+            }
+        }
 
         if root.status-label-position == ToggleSwitchStatusLabelPosition.start: status-touch-start := TouchArea {
             enabled: root.accepts-interaction;
@@ -59,7 +73,7 @@ export component ToggleSwitch {
             }
 
             VerticalLayout {
-                alignment: start;
+                alignment: center;
                 min-width: 32px;
 
                 Text {
@@ -73,12 +87,6 @@ export component ToggleSwitch {
 
         VerticalLayout {
             alignment: center;
-            if root.loading: Rectangle {
-                width: 16px;
-                height: 16px;
-                background: PrimerColors.fgColor-muted;
-                border-radius: 2px;
-            }
 
             track-focus-host := Rectangle {
                 width: root.focus-host-width;
@@ -218,7 +226,7 @@ export component ToggleSwitch {
             }
 
             VerticalLayout {
-                alignment: start;
+                alignment: center;
                 min-width: 32px;
 
                 Text {
@@ -227,6 +235,19 @@ export component ToggleSwitch {
                     font-size: root.status-font-size;
                     horizontal-alignment: right;
                 }
+            }
+        }
+
+        if root.status-label-position == ToggleSwitchStatusLabelPosition.end && root.loading: HorizontalLayout {
+            padding-left: LayoutTokens.button-content-gap;
+            padding-right: 0px;
+            alignment: center;
+            align-items: center;
+
+            Spinner {
+                size: Size.small;
+                segment-color: PrimerColors.fgColor-muted;
+                track-color: #f0f6fc40;
             }
         }
     }
