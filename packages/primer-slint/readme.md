@@ -189,15 +189,15 @@ Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group).
 
 The **project board** import dialog uses **`SelectPanel`** in **`SelectPanelMode.single`** ([`project-board-list.slint`](../../app/src/ui/views/project-board-list.slint)) for repository search + pick.
 
-**Imports for views:** [`primer.slint`](primer.slint) — **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`**, **`ModalOverlay`**, **`OverlayPanelChrome`**, **`Dialog`**, **`DialogWidthPreset`**, **`SelectPanel`**, **`SelectPanelMode`**, **`SelectPanelItem`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`**, **`DialogTokens`** (optional **`OverlayTokens`** for overrides).
+**Imports for views:** [`primer.slint`](primer.slint) — **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`**, **`ModalOverlay`**, **`OverlayPanelChrome`**, **`Dialog`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`SelectPanel`**, **`SelectPanelMode`**, **`SelectPanelItem`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`**, **`DialogTokens`** (optional **`OverlayTokens`** for overrides).
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group, AnchoredOverlay + SelectPanel multi demo with footer); **Project board** import dialog (**`SelectPanel`** `single`).
 
 ## Dialog
 
-Primer [**Dialog**](https://primer.style/react/storybook/?path=/story/components-dialog--default) default shell: **`ModalOverlay`** full-viewport **`PopupWindow`** with backdrop scrim + **`OverlayPanelChrome`** (viewport-centered panel), **enter motion** aligned with **`Dialog.module.css`** (backdrop fade + **`Overlay--motion-scaleFade`** via **`DialogTokens.overlay-enter-duration`** and the React easing curve), header (title, optional subtitle, **`Icons.x`** close), scrollable body (**`@children`**), optional footer with three **`Button`** actions (Storybook **Default** labels). Width presets match React **`widthMap`**. See **Dialogs** gallery — **Default** story.
+Primer [**Dialog**](https://primer.style/react/storybook/?path=/story/components-dialog--default) default shell: **`ModalOverlay`** full-viewport **`PopupWindow`** with backdrop scrim + **`OverlayPanelChrome`** (viewport-centered panel), **enter motion** aligned with **`Dialog.module.css`** (backdrop fade + **`Overlay--motion-scaleFade`** via **`DialogTokens.overlay-enter-duration`** and the React easing curve), header (title, optional subtitle, **`Icons.x`** close), scrollable body (**`@children`**), optional footer with three **`Button`** actions (Storybook **Default** labels). Width presets match React **`widthMap`**; **`height-preset`** (**`DialogHeightPreset`**) matches **`heightMap`** (**small** / **large** max panel height vs **`AppWindow`**, **auto** = content up to viewport). See **Dialogs** gallery — **Default** + **Playground**.
 
-**Imports for views:** [`primer.slint`](primer.slint) — **`Dialog`**, **`DialogWidthPreset`**, **`AppWindow`** (from [`tokens.slint`](tokens.slint)) for viewport size, **`DialogTokens`** / **`PrimerColors`** only if building custom regions outside **`Dialog`**.
+**Imports for views:** [`primer.slint`](primer.slint) — **`Dialog`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`AppWindow`** (from [`tokens.slint`](tokens.slint)) for viewport size, **`DialogTokens`** / **`PrimerColors`** only if building custom regions outside **`Dialog`**.
 
 ## PrimerTextInput
 

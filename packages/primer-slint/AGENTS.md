@@ -28,7 +28,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 
 ## In-repo architecture
 
-- **Barrel:** [`primer.slint`](primer.slint) re-exports components, `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, `TextInputTokens`, `BannerTokens`, `LabelTokens`, **`ActionListTokens`**, **`Dialog`**, **`DialogWidthPreset`**, **`Icons`**, `Size`, and shared types (**DataTable**, **Select**, **SelectPanel**, **Label**, etc.). When adding exports or model fields, update [`readme.md`](readme.md) where noted (e.g. DataTable **Imports for views**).
+- **Barrel:** [`primer.slint`](primer.slint) re-exports components, `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, `TextInputTokens`, `BannerTokens`, `LabelTokens`, **`ActionListTokens`**, **`Dialog`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`Icons`**, `Size`, and shared types (**DataTable**, **Select**, **SelectPanel**, **Label**, etc.). When adding exports or model fields, update [`readme.md`](readme.md) where noted (e.g. DataTable **Imports for views**).
 - **Tokens:** [`tokens.slint`](tokens.slint) — several `export global` singletons in **one file**. **Order matters:** `PrimerColors` → `ButtonTokens` → `CheckboxTokens` (uses `ButtonTokens`) → `TextInputTokens` (uses `PrimerColors` + `ButtonTokens`) → `BannerTokens` → `LabelTokens` → **`ActionListTokens`** (uses `PrimerColors` + `ButtonTokens` `out` only) (`BannerTokens` / `LabelTokens` / `ActionListTokens`: no literals in those globals).
 
 ### Token layers (current convention)

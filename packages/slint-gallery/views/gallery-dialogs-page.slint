@@ -2,6 +2,7 @@ import {
     Button,
     ButtonAlignContent,
     Dialog,
+    DialogHeightPreset,
     DialogWidthPreset,
 } from "../../primer-slint/primer.slint";
 import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
@@ -51,13 +52,39 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Primer **Dialog** gallery (Storybook parity sections). **Default** is live (PR2); other stories are stubs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default** + **Playground** are live; other stories are stubs.
 export component GalleryDialogsPage inherits VerticalLayout {
     spacing: 32px;
     width: 100%;
 
     private property <bool> default-outer-open: false;
     private property <bool> default-inner-open: false;
+
+    private property <bool> playground-open: false;
+    private property <int> playground-wi: 1;
+    private property <int> playground-hi: 0;
+
+    private property <DialogWidthPreset> playground-width-enum:
+        playground-wi == 0 ? DialogWidthPreset.small
+        : playground-wi == 1 ? DialogWidthPreset.medium
+        : playground-wi == 2 ? DialogWidthPreset.large
+        : DialogWidthPreset.xlarge;
+
+    private property <DialogHeightPreset> playground-height-enum:
+        playground-hi == 0 ? DialogHeightPreset.auto
+        : playground-hi == 1 ? DialogHeightPreset.small
+        : DialogHeightPreset.large;
+
+    private property <string> playground-width-label:
+        playground-wi == 0 ? "small"
+        : playground-wi == 1 ? "medium"
+        : playground-wi == 2 ? "large"
+        : "xlarge";
+
+    private property <string> playground-height-label:
+        playground-hi == 0 ? "auto"
+        : playground-hi == 1 ? "small (480px)"
+        : "large (640px)";
 
     Text {
         text: "Dialog";
@@ -67,7 +94,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     }
 
     Text {
-        text: "Upstream: primer-ui-react `Dialog/` stories. Sections below map 1:1 to Storybook. **PR2** delivers the modal spike (backdrop fade + scaleFade enter motion, centered shell) and a live **Default** demo; other rows stay stubs until later PRs.";
+        text: "Upstream: primer-ui-react `Dialog/` stories. Sections below map 1:1 to Storybook. **PR2** modal shell + live **Default**; **PR5** adds **`height-preset`** (scroll body inside capped height) + live **Playground**; other rows stay stubs until later PRs.";
         color: PrimerColors.fgColor-muted;
         font-size: 12px;
         wrap: word-wrap;
@@ -186,10 +213,119 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
-    DialogStoryStub {
-        story-title: "Playground";
-        story-path: "Components/Dialog — Playground";
-        story-note: "Storybook controls matrix only; width/height/position props exercised in other sections.";
+    VerticalLayout {
+        spacing: 10px;
+        width: 100%;
+        padding-top: 16px;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "Playground";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog — Playground";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Cycle width / height (**React `widthMap` / `heightMap`**), open the dialog, and scroll the body inside the shell cap.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Width: " + root.playground-width-label + " · Height: " + root.playground-height-label;
+            color: PrimerColors.fgColor-default;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        HorizontalLayout {
+            spacing: 8px;
+
+            Button {
+                max-width: 200px;
+                align-content: ButtonAlignContent.start;
+                label: "Cycle width";
+                clicked => {
+                    root.playground-wi = root.playground-wi == 3 ? 0 : root.playground-wi + 1;
+                }
+            }
+
+            Button {
+                max-width: 200px;
+                align-content: ButtonAlignContent.start;
+                label: "Cycle height";
+                clicked => {
+                    root.playground-hi = root.playground-hi == 2 ? 0 : root.playground-hi + 1;
+                }
+            }
+        }
+
+        Button {
+            max-width: 200px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.playground-open = true;
+            }
+        }
+    }
+
+    playground-dialog := Dialog {
+        open <=> root.playground-open;
+        title: "Playground";
+        width-preset: root.playground-width-enum;
+        height-preset: root.playground-height-enum;
+        footer-default-clicked => {
+        }
+        footer-danger-clicked => {
+            root.playground-open = false;
+        }
+        footer-primary-clicked => {
+        }
+        on-close(_gesture) => {
+            root.playground-open = false;
+        }
+
+        Text {
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
     }
 
     DialogStoryStub {

@@ -674,6 +674,9 @@ export global OverlayTokens {
 // | Panel width **medium** | React **320px** — tokens **`overlay.width.medium`** often 480px: **parity = React** | DialogTokens | **`width-medium`** literal | **`Dialog`** |
 // | Panel width **large** | React **480px** | DialogTokens | **`width-large`** literal | **`Dialog`** |
 // | Panel width **xlarge** | React **640px** — aligns tokens **`overlay.width.xlarge`** | DialogTokens | **`width-xlarge`** literal | **`Dialog`** |
+// | Panel height **small** | React **`heightMap.small`** **480px** | DialogTokens | **`height-small`** literal | **`Dialog`** `panel-max-height` |
+// | Panel height **large** | React **`heightMap.large`** **640px** | DialogTokens | **`height-large`** literal | **`Dialog`** |
+// | Panel height **auto** | React **`heightMap.auto`** — max = viewport overlay cap | OverlayTokens | **`modal-viewport-max-height`** | **`ModalOverlay`** |
 // | Viewport margin (max panel) | `--overlay-height-[breakpoint]` math → **64px** inset | OverlayTokens | **`modal-viewport-max-*`** | **`ModalOverlay`**, **`Dialog`** |
 // | Dialog header outer padding | **base-size-8** | LayoutTokens | **`base-size-8`** | **`header-padding`** |
 // | Header content inline / block | **base-size-8**, **base-size-6** | LayoutTokens | same | **`header-content-*`** |
@@ -708,6 +711,11 @@ export global DialogTokens {
     out property <length> width-medium: 320px;
     out property <length> width-large: 480px;
     out property <length> width-xlarge: 640px;
+
+    /// React **`Dialog.tsx`** **`heightMap.small`** (**not** tied to **`width`** — upstream comment “296×480” is illustrative).
+    out property <length> height-small: 480px;
+    /// React **`Dialog.tsx`** **`heightMap.large`**.
+    out property <length> height-large: 640px;
 
     /// React **`Dialog.module.css`** — `.Backdrop` + default dialog **`Overlay--motion-scaleFade`** enter.
     out property <duration> overlay-enter-duration: LayoutTokens.duration-200;
