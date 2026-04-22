@@ -43,7 +43,8 @@ export component ProbeWindow inherits Window {
     in-out property <bool> show-footer: true;
     in-out property <BodyDensity> body-density: short;
 
-    private property <length> max-dialog-h: max(min(root.height - 40px, 520px), 240px);
+    // preferred-height (not height) avoids a layout binding loop: card max-height must not depend on final window height.
+    private property <length> max-dialog-h: max(min(root.preferred-height - 40px, 520px), 240px);
     private property <length> header-h: 52px;
     private property <length> footer-h: 56px;
 
@@ -55,19 +56,14 @@ export component ProbeWindow inherits Window {
         root.body-density == BodyDensity.minimal ? "Minimal" : root.body-density == BodyDensity.short ? root.short-text : root.long-text;
 
     VerticalLayout {
-        width: 100%;
-        height: 100%;
         alignment: start;
 
         // Debug bar
         Rectangle {
-            width: 100%;
             min-height: 48px;
             background: #eaeef2;
 
             HorizontalLayout {
-                width: 100%;
-                height: 100%;
                 padding-top: 6px;
                 padding-bottom: 6px;
                 padding-left: 8px;
@@ -125,14 +121,11 @@ export component ProbeWindow inherits Window {
         }
 
         Rectangle {
-            width: 100%;
             height: 1px;
             background: #d0d7de;
         }
 
         VerticalLayout {
-            width: 100%;
-            height: 100%;
             vertical-stretch: 1;
             alignment: center;
 
@@ -147,7 +140,6 @@ export component ProbeWindow inherits Window {
                 clip: true;
 
                 VerticalLayout {
-                    width: 100%;
                     spacing: 0px;
                     alignment: start;
 
@@ -203,19 +195,20 @@ export component ProbeWindow inherits Window {
                     }
 
                     // Body: intrinsic height (no Flickable wrapper for now)
-                    VerticalLayout {
-                        width: 100%;
-                        padding-top: 16px;
-                        padding-bottom: 16px;
-                        padding-left: 16px;
-                        padding-right: 16px;
-                        spacing: 0px;
-                        alignment: start;
-                        Text {
-                            text: root.body-str;
-                            color: #1f2328;
-                            font-size: 14px;
-                            wrap: word-wrap;
+                    Flickable {
+                        body-content := VerticalLayout {
+                            padding-top: 16px;
+                            padding-bottom: 16px;
+                            padding-left: 16px;
+                            padding-right: 16px;
+                            spacing: 0px;
+                            alignment: start;
+                            Text {
+                                text: root.body-str;
+                                color: #1f2328;
+                                font-size: 14px;
+                                wrap: word-wrap;
+                            }
                         }
                     }
 
