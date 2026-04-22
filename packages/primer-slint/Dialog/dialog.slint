@@ -15,6 +15,7 @@ export component Dialog {
     in property <bool> allow-dismiss: true;
     /// When false, no footer row (matches React **`Dialog`** with no **`footerButtons`**).
     in property <bool> show-footer: true;
+    in property <bool> show-header: true;
 
     in property <string> footer-default-label: "Open Second Dialog";
     in property <string> footer-danger-label: "Delete the universe";
@@ -48,18 +49,12 @@ export component Dialog {
         }
 
         VerticalLayout {
-            width: 100%;
-            height: 100%;
-            spacing: 0px;
-
-            // `.Header` — padding + bottom rule (`Dialog.module.css`).
-            VerticalLayout {
-                width: 100%;
+            alignment: start;
+            if root.show-header: VerticalLayout {
                 padding-left: DialogTokens.header-padding;
                 padding-right: DialogTokens.header-padding;
                 padding-top: DialogTokens.header-padding;
                 padding-bottom: DialogTokens.header-padding;
-                spacing: 0px;
 
                 HorizontalLayout {
                     width: 100%;
@@ -108,41 +103,25 @@ export component Dialog {
                 }
             }
 
-            body-clip := Rectangle {
-                vertical-stretch: 1;
-                width: 100%;
-                clip: true;
-                background: ButtonTokens.button-invisible-bgColor-rest;
+            body-flick := Flickable {
 
-                body-flick := Flickable {
-                    width: 100%;
-                    height: 100%;
-                    viewport-width: self.width;
-                    viewport-height: body-inner.preferred-height;
+                body-inner := VerticalLayout {
+                    width: parent.width;
+                    padding: DialogTokens.body-padding;
+                    spacing: 12px;
+                    alignment: start;
 
-                    body-inner := VerticalLayout {
-                        width: parent.width;
-                        padding: DialogTokens.body-padding;
-                        spacing: 12px;
-                        alignment: start;
-
-                        @children
-                    }
+                    @children
                 }
             }
 
             if root.show-footer: VerticalLayout {
-                width: 100%;
-                spacing: 0px;
-
                 Rectangle {
-                    width: 100%;
                     height: 1px;
                     background: PrimerColors.borderColor-default;
                 }
 
                 HorizontalLayout {
-                    width: 100%;
                     padding: DialogTokens.footer-padding;
                     spacing: DialogTokens.footer-actions-gap;
                     alignment: end;

@@ -15,9 +15,6 @@ export component ModalOverlay {
     in property <length> slot-padding: 0px;
     callback close-requested();
 
-    width: 0px;
-    height: 0px;
-
     private property <length> panel-max-w: max(AppWindow.window-width - 64px, 120px);
     private property <length> panel-max-h: max(AppWindow.window-height - 64px, 120px);
     private property <length> panel-w: min(root.panel-width, root.panel-max-w);
@@ -66,7 +63,6 @@ export component ModalOverlay {
                         height: self.preferred-height;
                         panel-chrome := OverlayPanelChrome {
                             width: root.panel-w;
-                            height: root.panel-h;
                             surface-background: OverlayTokens.panel-background;
                             surface-border: OverlayTokens.panel-border;
                             surface-border-width: OverlayTokens.panel-border-width;

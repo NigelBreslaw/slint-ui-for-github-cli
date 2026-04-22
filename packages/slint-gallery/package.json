@@ -6,6 +6,7 @@
   "description": "Standalone Slint gallery for Primer components (Node + slint-ui entry).",
   "scripts": {
     "dev": "cross-env SLINT_ENABLE_EXPERIMENTAL_FEATURES=1 node gallery-main.ts",
+    "probe": "cross-env SLINT_ENABLE_EXPERIMENTAL_FEATURES=1 node probe-main.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
