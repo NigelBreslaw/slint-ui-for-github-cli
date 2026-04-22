@@ -1,4 +1,4 @@
-// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`**; PR3 icons + knob; PR4 track-only hover/pressed (**`states [ ]`**), **`FocusScope`** + focus ring + **`Key.Return`** / **`Key.Space`**.
+// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`**; PR3 icons + knob; PR4 track-only hover/pressed (**`states [ ]`**), **`FocusScope`** + **`Key.Return`** / **`Key.Space`**. Focus ring uses **`FocusScope.has-focus`** (e.g. Tab); pointer clicks do not call **`focus()`** on the scope.
 // Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
 
 import { Icons } from "../assets/icons.slint";
@@ -115,7 +115,6 @@ export component ToggleSwitch {
                             root.checked = !root.checked;
                             root.changed(root.checked);
                             root.clicked();
-                            track-fs.focus();
                         }
 
                         track-plate := Rectangle {
