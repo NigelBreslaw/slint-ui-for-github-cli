@@ -8,6 +8,9 @@ import {
     SecurityAlertRow,
 } from "../bridges/slint/app-state.slint";
 import { AppHeader } from "components/AppHeader.slint";
+import { DeviceFlowAuthWindow } from "components/DeviceFlowAuthWindow.slint";
+import { GhCliVersionTooOldWindow } from "components/GhCliVersionTooOldWindow.slint";
+import { NoGhCliInstalledWindow } from "components/NoGhCliInstalledWindow.slint";
 import { ProjectBoardImportOverlay } from "components/ProjectBoardImportOverlay.slint";
 import { TimeReportingProjectPickerOverlay } from "components/TimeReportingProjectPickerOverlay.slint";
 import { SettingsState } from "../bridges/slint/settings-state.slint";
@@ -19,7 +22,7 @@ import {
 import { DataTableRow } from "../../../packages/primer-slint/DataTable/types.slint";
 import { TimeReportingState, TimeReportingWeekRow } from "../bridges/slint/time-reporting-state.slint";
 import { Button, Icons, Spinner } from "../../../packages/primer-slint/primer.slint";
-import { AppWindow, PrimerColors } from "../../../packages/primer-slint/tokens.slint";
+import { AppWindow } from "../../../packages/primer-slint/tokens.slint";
 import { Settings } from "views/settings.slint";
 import { Dashboard } from "views/dashboard.slint";
 import { SideBar } from "components/sideBar.slint";
@@ -141,155 +144,29 @@ export component MainWindow inherits Window {
 
     header := AppHeader { }
 
-    no_gh_cli_installed_window := PopupWindow {
+    no_gh_cli_installed_window := NoGhCliInstalledWindow {
         width: root.width;
         height: root.height;
-
-        Rectangle {
-            x: 0;
-            y: 0;
-            width: root.width;
-            height: root.height;
-            background: black;
+        open_cli_install_page => {
+            root.open_cli_install_page();
         }
-
-        VerticalLayout {
-            x: (root.width - self.preferred-width) / 2;
-            y: (root.height - self.preferred-height) / 2;
-            width: self.preferred-width;
-            height: self.preferred-height;
-            spacing: 20px;
-            Text {
-                text: "GitHub CLI is not installed";
-                font-size: 18px;
-                horizontal-alignment: center;
-                wrap: word-wrap;
-            }
-
-            Button {
-                label: "Open CLI install page";
-                clicked => {
-                    root.open_cli_install_page();
-                }
-            }
-        }
-
-        close-policy: no-auto-close;
     }
 
-    gh_cli_version_too_old_window := PopupWindow {
+    gh_cli_version_too_old_window := GhCliVersionTooOldWindow {
         width: root.width;
         height: root.height;
-
-        Rectangle {
-            x: 0;
-            y: 0;
-            width: root.width;
-            height: root.height;
-            background: black;
+        gh-cli-version-block-detail: root.gh-cli-version-block-detail;
+        open_cli_install_page => {
+            root.open_cli_install_page();
         }
-
-        VerticalLayout {
-            x: (root.width - self.preferred-width) / 2;
-            y: (root.height - self.preferred-height) / 2;
-            width: self.preferred-width;
-            height: self.preferred-height;
-            spacing: 16px;
-            Text {
-                text: "GitHub CLI must be updated to at least version 2.89.0";
-                font-size: 18px;
-                horizontal-alignment: center;
-                wrap: word-wrap;
-            }
-
-            Text {
-                visible: root.gh-cli-version-block-detail != "";
-                text: root.gh-cli-version-block-detail;
-                font-size: 14px;
-                horizontal-alignment: center;
-                color: PrimerColors.fgColor-muted;
-                wrap: word-wrap;
-            }
-
-            Button {
-                label: "Open GitHub CLI install page";
-                clicked => {
-                    root.open_cli_install_page();
-                }
-            }
-        }
-
-        close-policy: no-auto-close;
     }
 
-    auth_window := PopupWindow {
+    auth_window := DeviceFlowAuthWindow {
         width: root.width;
         height: root.height;
-        x: 0;
-        y: 0;
-
-        close-policy: no-auto-close;
-
-        Rectangle {
-            x: 0;
-            y: 0;
-            width: root.width;
-            height: root.height;
-            background: black.with-alpha(0.9);
-
-            TouchArea {
-                width: 100%;
-                height: 100%;
-            }
-
-            vl := VerticalLayout {
-                alignment: center;
-                spacing: 16px;
-                width: self.preferred-width;
-                height: 100%;
-
-                Text {
-                    text: "Finish in the terminal (browser or device flow)";
-                    font-size: 16px;
-                    horizontal-alignment: center;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    visible: root.auth-device-code != "";
-                    text: "Your code: ";
-                    font-size: 18px;
-                    horizontal-alignment: center;
-                    wrap: word-wrap;
-                }
-
-                TextInput {
-                    visible: root.auth-device-code != "";
-                    text: root.auth-device-code;
-                    font-size: 22px;
-                    font-weight: 700;
-                    horizontal-alignment: center;
-                    wrap: word-wrap;
-                    read-only: true;
-                    changed has-focus => {
-                        if (self.has-focus) {
-                            self.select-all();
-                        }
-                    }
-                }
-
-                Button {
-                    visible: root.auth-device-code != "";
-                    label: "Copy code to clipboard and open web login";
-                    clicked => {
-                        root.open-github-device-clicked();
-                    }
-                }
-
-                Spinner {
-                    size: medium;
-                }
-            }
+        auth-device-code: root.auth-device-code;
+        open-github-device-clicked => {
+            root.open-github-device-clicked();
         }
     }
 
