@@ -641,6 +641,44 @@ export global CheckboxTokens {
     out property <color> checkbox-iconColor-disabled: ButtonTokens.control-fgColor-disabled;
 }
 
+// primer-tokens `functional/color/control.json5` — **`controlTrack`**, **`control.checked`**, **`controlKnob`** (knob/icon wiring in PR3+). React: **`ToggleSwitch.module.css`**. Composes **`PrimerColors`**, **`CheckboxTokens`** (checked hover/active = **`control.checked.bgColor`**, same as checkbox fill), **`ButtonTokens`** (`control-fgColor-disabled` ↔ disabled fg family).
+//
+// Token audit (PR2): | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
+// |--------|---------------------------|-------|-------|-----------|
+// | Track bg unchecked rest | **`controlTrack.bgColor.rest`** | ToggleSwitchTokens | **`track-bgColor-rest`** | **`ToggleSwitch`** |
+// | Track bg unchecked hover | **`controlTrack.bgColor.hover`** | ToggleSwitchTokens | **`track-bgColor-hover`** | PR3+ |
+// | Track bg unchecked active | **`controlTrack.bgColor.active`** | ToggleSwitchTokens | **`track-bgColor-active`** | PR3+ |
+// | Track bg disabled | **`controlTrack.bgColor.disabled`** → **`fgColor.disabled`** | ToggleSwitchTokens | **`track-bgColor-disabled`** | **`ToggleSwitch`** |
+// | Track border rest | **`controlTrack.borderColor.rest`** | ToggleSwitchTokens | **`track-borderColor-rest`** | **`ToggleSwitch`** |
+// | Track border checked rest | **`control.checked.borderColor.rest`** (transparent) | ToggleSwitchTokens | **`track-borderColor-checked`** | PR3+ |
+// | Checked track rest | **`control.checked.bgColor.rest`** | ToggleSwitchTokens | **`track-bgColor-checked-rest`** | **`ToggleSwitch`** |
+// | Checked track hover/active | **`control.checked.bgColor.hover/active`** | ToggleSwitchTokens | **`track-bgColor-checked-hover`** / **`track-bgColor-checked-active`** | PR3+ |
+export global ToggleSwitchTokens {
+    property <ColorScheme> color-scheme: Palette.color-scheme;
+
+    property <color> track-bg-rest-light: #eaeef2;
+    property <color> track-bg-rest-dark: #21262d;
+    out property <color> track-bgColor-rest: color-scheme == ColorScheme.dark ? track-bg-rest-dark : track-bg-rest-light;
+
+    property <color> track-bg-hover-light: #d0d7de;
+    property <color> track-bg-hover-dark: #656d76;
+    out property <color> track-bgColor-hover: color-scheme == ColorScheme.dark ? track-bg-hover-dark : track-bg-hover-light;
+
+    property <color> track-bg-active-light: #c8d1da;
+    property <color> track-bg-active-dark: #656d76;
+    out property <color> track-bgColor-active: color-scheme == ColorScheme.dark ? track-bg-active-dark : track-bg-active-light;
+
+    out property <color> track-bgColor-disabled: CheckboxTokens.checkbox-bgColor-checked-disabled;
+
+    out property <color> track-borderColor-rest: PrimerColors.borderColor-default;
+    out property <color> track-borderColor-checked: #00000000;
+    out property <color> track-borderColor-disabled: #00000000;
+
+    out property <color> track-bgColor-checked-rest: PrimerColors.bgColor-accent-emphasis;
+    out property <color> track-bgColor-checked-hover: CheckboxTokens.checkbox-bgColor-checked-hover;
+    out property <color> track-bgColor-checked-active: CheckboxTokens.checkbox-bgColor-checked-active;
+}
+
 export global TextInputTokens {
     out property <color> borderColor-rest: PrimerColors.borderColor-default;
     out property <color> borderColor-focus: PrimerColors.fgColor-link;

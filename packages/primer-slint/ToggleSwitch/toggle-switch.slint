@@ -1,7 +1,7 @@
-// Primer ToggleSwitch — PR1 spike: layout + public API + placeholder chrome (tokens / parity in later PRs).
+// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`** for track colors (knob/icons/interaction in later PRs).
 // Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
 
-import { LayoutTokens, PrimerColors } from "../tokens.slint";
+import { LayoutTokens, PrimerColors, ToggleSwitchTokens } from "../tokens.slint";
 
 export enum ToggleSwitchSize {
     small,
@@ -29,6 +29,8 @@ export component ToggleSwitch {
     private property <length> track-width: root.size == ToggleSwitchSize.small ? 48px : 64px;
     private property <length> track-height: root.size == ToggleSwitchSize.small ? 24px : 32px;
     private property <length> status-font-size: root.size == ToggleSwitchSize.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
+    private property <color> track-background: root.disabled ? ToggleSwitchTokens.track-bgColor-disabled : (root.checked ? ToggleSwitchTokens.track-bgColor-checked-rest : ToggleSwitchTokens.track-bgColor-rest);
+    private property <color> track-border-color: root.disabled ? ToggleSwitchTokens.track-borderColor-disabled : (root.checked ? ToggleSwitchTokens.track-borderColor-checked : ToggleSwitchTokens.track-borderColor-rest);
 
     touch := TouchArea {
         enabled: root.accepts-interaction;
@@ -68,8 +70,8 @@ export component ToggleSwitch {
                     height: root.track-height;
                     border-radius: LayoutTokens.borderRadius-medium;
                     border-width: 1px;
-                    border-color: PrimerColors.borderColor-default;
-                    background: root.checked ? #0969da : #eaeef2;
+                    border-color: root.track-border-color;
+                    background: root.track-background;
                 }
             }
 
