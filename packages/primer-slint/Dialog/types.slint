@@ -26,3 +26,10 @@ export enum DialogPositionPreset {
     left,
     right,
 }
+
+/// Matches **`Dialog`** **`position.narrow`** when viewport **`≤ DialogTokens.narrow-max-width`** (**slideUp** bottom sheet, **`scaleFade`** fullscreen — PR8 **`ModalOverlay`**).
+export enum DialogNarrowPositionPreset {
+    center,
+    bottom,
+    fullscreen,
+}

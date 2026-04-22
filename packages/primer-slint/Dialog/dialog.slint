@@ -19,6 +19,7 @@ import { Icons } from "../assets/icons.slint";
 import {
     DialogAlignPreset,
     DialogHeightPreset,
+    DialogNarrowPositionPreset,
     DialogPositionPreset,
     DialogWidthPreset,
 } from "./types.slint";
@@ -32,19 +33,35 @@ export component Dialog {
     in property <DialogHeightPreset> height-preset: DialogHeightPreset.auto;
     /// Matches React **`Dialog`** **`align`** when **`position-preset`** is **`center`** (ignored for side sheets **left** / **right**).
     in property <DialogAlignPreset> align-preset: DialogAlignPreset.center;
-    /// Matches React **`Dialog`** **`position`** (**regular** breakpoint): **`center`** (default **`ModalOverlay`**) or side sheet **`left`** / **`right`** (**slideIn** motion, full viewport height).
+    /// Matches React **`Dialog`** **`position`** (**regular** breakpoint): **`center`** (default **`ModalOverlay`**) or side sheet **`left`** / **`right`** (**slideIn** motion, full viewport height). When **`narrow-active`** (**`narrow-layout`** or **`AppWindow.window-width ≤ DialogTokens.narrow-max-width`**), **`narrow-position-preset`** wins over **`left`** / **`right`** (**PR8** narrow **`bottom`** / **`fullscreen`**).
     in property <DialogPositionPreset> position-preset: DialogPositionPreset.center;
+    /// Matches React **`Dialog`** **`position.narrow`** (**≤767px**): **`center`** (**scaleFade**), **`bottom`** (**slideUp**), **`fullscreen`** (**scaleFade**, full viewport).
+    in property <DialogNarrowPositionPreset> narrow-position-preset: DialogNarrowPositionPreset.center;
+    /// When **`true`**, **`ModalOverlay`** uses **`narrow-position-preset`** as if the viewport were narrow (gallery / tests). When **`false`**, narrow layout applies when **`AppWindow.window-width ≤ DialogTokens.narrow-max-width`**.
+    in property <bool> narrow-layout: false;
     in property <bool> allow-dismiss: true;
     /// When false, no footer row (matches React **`Dialog`** with no **`footerButtons`**). Side sheets (**`left`** / **`right`**) never show a footer regardless of this flag (Primer **Side sheet**).
     in property <bool> show-footer: true;
     in property <bool> show-header: true;
 
-    /// **`show-footer`** for **`position-preset`** **center** only — side sheets omit the footer row.
-    private property <bool> footer-visible:
-        root.show-footer && root.position-preset == DialogPositionPreset.center;
+    /// Regular breakpoint **left** / **right** side sheet (not active when **`narrow-active`** — narrow **`bottom`** / **`fullscreen`** use the footer like Storybook).
+    private property <bool> regular-side-sheet:
+        !root.narrow-active && (root.position-preset == DialogPositionPreset.left || root.position-preset == DialogPositionPreset.right);
 
-    private property <bool> is-side-sheet:
-        root.position-preset != DialogPositionPreset.center;
+    private property <bool> footer-visible:
+        root.show-footer && !root.regular-side-sheet;
+
+    /// **`AppWindow`** ≤ **`DialogTokens.narrow-max-width`** or **`narrow-layout`** override.
+    private property <bool> narrow-active:
+        root.narrow-layout || AppWindow.window-width <= DialogTokens.narrow-max-width;
+
+    /// Regular **left** / **right** side sheet shell (**`narrow-active`** uses **`narrow-position-preset`** instead).
+    private property <bool> is-side-sheet-layout:
+        !root.narrow-active && root.position-preset != DialogPositionPreset.center;
+
+    /// Full viewport height shell: side sheet or **narrow fullscreen**.
+    private property <bool> is-tall-shell:
+        root.is-side-sheet-layout || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen);
 
     in property <string> footer-default-label: "Open Second Dialog";
     in property <string> footer-danger-label: "Delete the universe";
@@ -71,9 +88,9 @@ export component Dialog {
         : root.height-preset == DialogHeightPreset.large ? min(DialogTokens.height-large, OverlayTokens.modal-viewport-max-height)
         : OverlayTokens.modal-viewport-max-height;
 
-    /// Passed to **`ModalOverlay.panel-max-height`** — side sheets use **`AppWindow.window-height`** (**`Dialog.module.css`** **`100dvh`** semantics).
+    /// Passed to **`ModalOverlay.panel-max-height`** — side sheets and **narrow fullscreen** use **`AppWindow.window-height`**; otherwise **`height-preset`** cap (**narrow bottom** uses the same cap as centered modals).
     private property <length> dialog-overlay-max-height:
-        root.position-preset != DialogPositionPreset.center ? AppWindow.window-height : root.dialog-panel-max-height;
+        root.is-side-sheet-layout || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen) ? AppWindow.window-height : root.dialog-panel-max-height;
 
     /// Upper bound for the body **`Flickable`** viewport (**`shell max`** − header/footer estimates). Uses tokens only — avoids **`height: parent.height`** ↔ **`OverlayPanelChrome`** preferred-height cycles.
     private property <length> dialog-header-region-est:
@@ -96,6 +113,8 @@ export component Dialog {
         panel-max-height: root.dialog-overlay-max-height;
         panel-vertical-align: root.align-preset;
         panel-position: root.position-preset;
+        narrow-viewport: root.narrow-active;
+        narrow-position: root.narrow-position-preset;
         allow-dismiss: root.allow-dismiss;
         slot-padding: 0px;
         close-requested => {
@@ -104,12 +123,12 @@ export component Dialog {
 
         Rectangle {
             max-height: root.dialog-overlay-max-height;
-            vertical-stretch: root.is-side-sheet ? 1 : 0;
+            vertical-stretch: root.is-tall-shell ? 1 : 0;
             clip: true;
 
             VerticalLayout {
                 alignment: start;
-                vertical-stretch: root.is-side-sheet ? 1 : 0;
+                vertical-stretch: root.is-tall-shell ? 1 : 0;
 
                 if root.show-header: VerticalLayout {
                     padding-left: DialogTokens.header-padding;
@@ -165,7 +184,7 @@ export component Dialog {
                 }
 
                 body-flick := Flickable {
-                    height: root.is-side-sheet ? root.body-flick-max-h : min(body-inner.preferred-height, root.body-flick-max-h);
+                    height: root.is-tall-shell ? root.body-flick-max-h : min(body-inner.preferred-height, root.body-flick-max-h);
                     viewport-width: self.width;
                     viewport-height: body-inner.preferred-height;
 

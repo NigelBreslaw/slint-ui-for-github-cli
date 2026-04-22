@@ -5,6 +5,7 @@ import {
     Dialog,
     DialogAlignPreset,
     DialogHeightPreset,
+    DialogNarrowPositionPreset,
     DialogPositionPreset,
     DialogWidthPreset,
     PrimerTextInput,
@@ -59,10 +60,8 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align (top/bottom)** (**PR6** **`align-preset`**), **Side sheet (left/right)** (**PR7** **`position-preset`**) are live; other stories are stubs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align**, **Side sheet**, **Narrow viewport** (**PR8** **`narrow-position-preset`** + **`narrow-layout`**) are live; other stories are stubs.
 export component GalleryDialogsPage inherits VerticalLayout {
-    spacing: 32px;
-    width: 100%;
 
     private property <bool> default-outer-open: false;
     private property <bool> default-inner-open: false;
@@ -70,6 +69,18 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> playground-open: false;
     private property <bool> align-demo-open: false;
     private property <bool> side-sheet-open: false;
+    private property <bool> narrow-demo-open: false;
+
+    private property <[SelectOption]> narrow-viewport-options: [
+        { value: "bottom", label: "bottom — slideUp (narrow)", enabled: true },
+        { value: "fullscreen", label: "fullscreen — scaleFade", enabled: true },
+        { value: "center", label: "center — scaleFade", enabled: true },
+    ];
+
+    private property <int> narrow-viewport-index: 0;
+
+    private property <DialogNarrowPositionPreset> narrow-viewport-position:
+        narrow-viewport-index == 0 ? DialogNarrowPositionPreset.bottom : narrow-viewport-index == 1 ? DialogNarrowPositionPreset.fullscreen : DialogNarrowPositionPreset.center;
 
     private property <[SelectOption]> playground-width-options: [
         { value: "small", label: "small (296px)", enabled: true },
@@ -93,15 +104,10 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <string> playground-subtitle-text: "";
 
     private property <DialogWidthPreset> playground-width-enum:
-        playground-width-index == 0 ? DialogWidthPreset.small
-        : playground-width-index == 1 ? DialogWidthPreset.medium
-        : playground-width-index == 2 ? DialogWidthPreset.large
-        : DialogWidthPreset.xlarge;
+        playground-width-index == 0 ? DialogWidthPreset.small : playground-width-index == 1 ? DialogWidthPreset.medium : playground-width-index == 2 ? DialogWidthPreset.large : DialogWidthPreset.xlarge;
 
     private property <DialogHeightPreset> playground-height-enum:
-        playground-height-index == 0 ? DialogHeightPreset.auto
-        : playground-height-index == 1 ? DialogHeightPreset.small
-        : DialogHeightPreset.large;
+        playground-height-index == 0 ? DialogHeightPreset.auto : playground-height-index == 1 ? DialogHeightPreset.small : DialogHeightPreset.large;
 
     private property <[SelectOption]> align-vertical-options: [
         { value: "top", label: "top", enabled: true },
@@ -123,6 +129,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <DialogPositionPreset> side-sheet-position-preset:
         side-sheet-edge-index == 0 ? DialogPositionPreset.left : DialogPositionPreset.right;
 
+
     Text {
         text: "Dialog";
         color: PrimerColors.fgColor-default;
@@ -132,8 +139,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 10px;
-        width: 100%;
-        padding-top: 16px;
 
         Rectangle {
             height: 1px;
@@ -156,6 +161,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
     }
+    
 
     default-outer-dialog := Dialog {
         open <=> root.default-outer-open;
@@ -230,7 +236,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 10px;
-        width: 100%;
         padding-top: 16px;
 
         Rectangle {
@@ -484,6 +489,61 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
+    VerticalLayout {
+        spacing: 10px;
+        padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "Narrow viewport — bottom · fullscreen · center";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Select {
+            label-text: "position.narrow";
+            placeholder: "Pick narrow position…";
+            options: narrow-viewport-options;
+            selected-index <=> narrow-viewport-index;
+            validation-status: ValidationStatus.none;
+            selected-changed(_idx) => {
+            }
+        }
+
+        Button {
+            max-width: 220px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.narrow-demo-open = true;
+            }
+        }
+    }
+
+    narrow-story-dialog := Dialog {
+        open <=> root.narrow-demo-open;
+        narrow-layout: true;
+        narrow-position-preset: root.narrow-viewport-position;
+        position-preset: DialogPositionPreset.center;
+        title: narrow-viewport-index == 0 ? "Bottom sheet (narrow)" : narrow-viewport-index == 1 ? "Fullscreen (narrow)" : "Narrow — center";
+        subtitle: "Sheet Subtitle";
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        footer-danger-clicked => {
+            root.narrow-demo-open = false;
+        }
+        on-close(_gesture) => {
+            root.narrow-demo-open = false;
+        }
+    }
+
     DialogStoryStub {
         story-title: "WithCustomRenderers";
         story-path: "Components/Dialog/Features — WithCustomRenderers";
@@ -506,18 +566,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
         story-title: "ReproMultistepDialogWithConditionalFooter";
         story-path: "Components/Dialog/Features — ReproMultistepDialogWithConditionalFooter";
         story-note: "Conditional footer by step; focus close button on step change.";
-    }
-
-    DialogStoryStub {
-        story-title: "BottomSheetNarrow";
-        story-path: "Components/Dialog/Features — [Position] Bottom sheet (narrow)";
-        story-note: "position.narrow bottom, regular center.";
-    }
-
-    DialogStoryStub {
-        story-title: "FullScreenNarrow";
-        story-path: "Components/Dialog/Features — [Position] Fullscreen (narrow)";
-        story-note: "position.narrow fullscreen, regular center.";
     }
 
     DialogStoryStub {
@@ -549,5 +597,4 @@ export component GalleryDialogsPage inherits VerticalLayout {
         story-path: "Components/Dialog/Features — LoadingCustomFooterButtonsCould";
         story-note: "renderFooter + loading on secondary actions.";
     }
-
 }
