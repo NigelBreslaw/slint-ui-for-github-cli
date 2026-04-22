@@ -16,6 +16,7 @@ import type {
   SlintProjectBoardListRow,
   SlintReviewRequestRow,
   SlintSecurityAlertRow,
+  SlintSelectOption,
   SlintTimeReportingWeekRow,
 } from "./slint-interface.ts";
 import { appView, dashboardTab } from "./slint-interface.ts";
@@ -184,6 +185,9 @@ export function resetListsWithoutClearingProfile(window: MainWindowInstance): vo
     projects_search: "",
     projects_load_status: "",
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+    projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+    projects_picker_options_count: 0,
+    projects_picker_selected_index: -1,
     projects_filtered_count: 0,
     projects_picker_page_index: 0,
   });
@@ -225,6 +229,9 @@ export function clearUserIdentity(window: MainWindowInstance): void {
     projects_search: "",
     projects_load_status: "",
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+    projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+    projects_picker_options_count: 0,
+    projects_picker_selected_index: -1,
     projects_filtered_count: 0,
     projects_picker_page_index: 0,
   });
@@ -271,6 +278,9 @@ export async function refreshSlintUiOrgProjectsForWindow(
   assignProperties(window.AppState, {
     projects_load_status: "Loading projects…",
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+    projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+    projects_picker_options_count: 0,
+    projects_picker_selected_index: -1,
     projects_filtered_count: 0,
     projects_picker_page_index: 0,
   });
@@ -279,6 +289,9 @@ export async function refreshSlintUiOrgProjectsForWindow(
     assignProperties(window.AppState, {
       projects_load_status: res.error,
       projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+      projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+      projects_picker_options_count: 0,
+      projects_picker_selected_index: -1,
       projects_filtered_count: 0,
       projects_picker_page_index: 0,
     });

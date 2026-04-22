@@ -71,12 +71,14 @@ export type AppStateHandle = {
   projects_search: string;
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
+  projects_picker_select_options: slint.ArrayModel<SlintSelectOption>;
+  projects_picker_options_count: number;
+  projects_picker_selected_index: number;
   projects_filtered_count: number;
   projects_picker_page_index: number;
   projects_picker_page_size: number;
   project_search_changed: (query: string) => void;
   projects_picker_page_changed: (page_index: number) => void;
-  window_geometry_changed: (width: number, height: number) => void;
   sign_out: () => void;
   sign_in: () => void;
   open_project_url: (url: string) => void;
@@ -326,12 +328,19 @@ export type SlintIconsGlobal = {
   toggle_switch_circle: ImageData;
 };
 
+/** Matches **`AppWindow`** in [`tokens.slint`](../../../packages/primer-slint/tokens.slint). */
+export type AppWindowHandle = {
+  window_width: number;
+  window_height: number;
+};
+
 export type MainWindowInstance = {
   run(): Promise<void>;
   show(): void;
   hide(): void;
   window: import("slint-ui").Window;
   Icons: SlintIconsGlobal;
+  AppWindow: AppWindowHandle;
   AppState: AppStateHandle;
   SettingsState: SettingsStateHandle;
   TimeReportingState: TimeReportingStateHandle;
@@ -343,6 +352,7 @@ export type MainWindowInstance = {
   show_no_gh_cli_installed: () => void;
   show_gh_cli_version_too_old: () => void;
   open_cli_install_page: () => void;
+  viewport_changed: () => void;
   gh_cli_version_block_detail: string;
   status_message: string;
   auth_device_code: string;

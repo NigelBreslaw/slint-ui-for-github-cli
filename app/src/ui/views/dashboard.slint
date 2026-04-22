@@ -1,6 +1,7 @@
-import { ListView } from "std-widgets.slint";
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
 import {
+    ActionListDescriptionLayout,
+    ActionListRow,
     Banner,
     BannerVariant,
     ButtonVariant,
@@ -159,31 +160,32 @@ export component Dashboard {
                 wrap: word-wrap;
             }
 
-            ListView {
+            Rectangle {
+                vertical-stretch: 1;
                 width: 100%;
-                for row[index] in AppState.security-alerts-model: Rectangle {
-                    height: 56px;
-                    background: mod(index, 2) == 0 ? PrimerColors.bgColor-default : PrimerColors.bgColor-canvas-subtle;
+                min-height: 120px;
+                clip: true;
 
-                    TouchArea {
-                        clicked => {
-                            AppState.open_project_url(row.url);
-                        }
+                security-alerts-flick := Flickable {
+                    width: parent.width;
+                    height: parent.height;
+                    viewport-width: parent.width;
+                    viewport-height: security-alerts-vl.preferred-height;
 
-                        VerticalLayout {
-                            padding: 8px;
-                            spacing: 4px;
-                            Text {
-                                text: row.title;
-                                color: PrimerColors.fgColor-default;
-                                overflow: elide;
-                            }
+                    security-alerts-vl := VerticalLayout {
+                        width: parent.width;
+                        spacing: 0;
 
-                            Text {
-                                text: row.subtitle;
-                                font-size: 12px;
-                                color: PrimerColors.fgColor-muted;
-                                overflow: elide;
+                        for row[ix] in AppState.security-alerts-model: ActionListRow {
+                            width: 100%;
+                            label-markdown: @markdown("");
+                            has-markdown: false;
+                            label: row.title;
+                            description: row.subtitle;
+                            description-layout: ActionListDescriptionLayout.block;
+                            show-top-seam: ix > 0;
+                            clicked => {
+                                AppState.open_project_url(row.url);
                             }
                         }
                     }

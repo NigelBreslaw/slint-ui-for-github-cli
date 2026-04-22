@@ -1,15 +1,12 @@
 import { Palette } from "std-widgets.slint";
 import { Avatar, Button, ButtonVariant, IconButton, Icons, PageHeader } from "../../../../packages/primer-slint/primer.slint";
+import { HeaderState } from "./header-state.slint";
 import { UserMenu } from "./UserMenu.slint";
 import { AppState, Authed, AppView } from "../../bridges/slint/app-state.slint";
 import {
     TimeReportingState,
 } from "../../bridges/slint/time-reporting-state.slint";
 import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
-
-global HeaderState {
-    in-out property <bool> menu-visible: false;
-}
 
 export component AppHeader {
 

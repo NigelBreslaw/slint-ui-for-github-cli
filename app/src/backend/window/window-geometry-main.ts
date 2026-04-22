@@ -1,3 +1,4 @@
+import { assignProperties } from "slint-bridge-kit";
 import type { MainWindowInstance } from "../../bridges/node/slint-interface.ts";
 import { debounce } from "../utils/debounce.ts";
 import { readWindowGeometryKv, writeWindowGeometryKv } from "./window-geometry-kv.ts";
@@ -11,6 +12,10 @@ export function restoreMainWindowGeometry(window: MainWindowInstance): void {
   }
   window.window.logicalSize = { width: saved.width, height: saved.height };
   window.window.maximized = saved.maximized;
+  assignProperties(window.AppWindow, {
+    window_width: saved.width,
+    window_height: saved.height,
+  });
 }
 
 type MainWindowGeometryPersister = {

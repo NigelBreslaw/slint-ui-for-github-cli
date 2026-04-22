@@ -69,6 +69,9 @@ const windowGeometryPersister = createMainWindowGeometryPersister(window);
 
 assignProperties(window.AppState, {
   projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+  projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+  projects_picker_options_count: 0,
+  projects_picker_selected_index: -1,
   projects_filtered_count: 0,
   projects_picker_page_index: 0,
   projects_picker_page_size: DEFAULT_PROJECT_PICKER_PAGE_SIZE,
@@ -156,9 +159,6 @@ const appStateCallbacks = {
     clearTimeReportingSelection(window);
     void applyAuthUi(window);
   },
-  window_geometry_changed: (_width: number, _height: number) => {
-    windowGeometryPersister.schedulePersist();
-  },
 } satisfies ExhaustiveAllCallbacks<AppStateHandle>;
 wireFunctions(window.AppState, appStateCallbacks);
 
@@ -191,9 +191,14 @@ const mainWindowHandlers = {
   open_cli_install_page: () => {
     openUrlInBrowser("https://cli.github.com/");
   },
+  viewport_changed: () => {
+    windowGeometryPersister.schedulePersist();
+  },
 } satisfies ExhaustiveCallbacks<
   MainWindowInstance,
-  "open_github_device_clicked" | "open_cli_install_page"
+  | "open_github_device_clicked"
+  | "open_cli_install_page"
+  | "viewport_changed"
 >;
 wireFunctions(window, mainWindowHandlers);
 

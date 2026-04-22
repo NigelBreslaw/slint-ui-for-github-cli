@@ -1,32 +1,18 @@
 import {
+    ActionListItemDivider,
+    ActionListRow,
     Avatar,
-    Button,
-    ButtonAlignContent,
-    ButtonVariant,
     Icons,
     MultiDropShadow,
 } from "../../../../packages/primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { ShadowTokens } from "../../../../packages/primer-slint/tokens.slint";
+import { HeaderState } from "./header-state.slint";
 
 global MenuStyle {
     out property <length> border-radius: 12px;
     out property <length> menu-width: 256px;
-}
-
-export global HeaderState {
-    in-out property <bool> menu-visible: false;
-}
-
-component MenuSeparator inherits VerticalLayout {
-    height: self.preferred-height;
-    width: 100%;
-
-    Rectangle {
-        height: 1px;
-        background: PrimerColors.actionListItem-inline-divider;
-    }
 }
 
 export component UserMenu {
@@ -94,23 +80,27 @@ export component UserMenu {
             }
         }
 
-        status-button := Button {
+        ActionListItemDivider {
+            width: 100%;
+        }
+
+        ActionListRow {
             width: parent.width - (parent.padding * 2);
-            variant: ButtonVariant.invisible;
-            align-content: ButtonAlignContent.start;
-            leading-text: root.user_status_emoji;
-            label: root.user_status_message;
+            label-markdown: @markdown("");
+            has-markdown: false;
+            label:
+                root.user_status_emoji
+                + (root.user_status_emoji != "" && root.user_status_message != "" ? " " : "")
+                + root.user_status_message;
             clicked => {
             }
         }
 
-        MenuSeparator { }
-
-        Button {
+        ActionListRow {
             width: parent.width - (parent.padding * 2);
-            variant: ButtonVariant.invisible;
-            align-content: ButtonAlignContent.start;
-            has-leading-icon: true;
+            label-markdown: @markdown("");
+            has-markdown: false;
+            has-leading-visual: true;
             leading-icon: Icons.sign_out;
             label: "Sign out";
             clicked => {

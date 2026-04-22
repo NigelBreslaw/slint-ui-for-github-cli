@@ -1,6 +1,7 @@
 import { ProjectBoardListState } from "project-board-list-state.slint";
 import { SettingsState } from "settings-state.slint";
 import { TimeReportingState } from "time-reporting-state.slint";
+import { SelectOption } from "../../../../packages/primer-slint/Select/select.slint";
 
 export struct ProjectRow {
     id: string,
@@ -89,6 +90,11 @@ export global AppState {
     in-out property <string> projects-search: "";
     in-out property <string> projects-load-status: "";
     in property <[ProjectRow]> projects-filtered-model;
+    /** One page of options for **SelectPanel** (same slice as `projects-filtered-model`). */
+    in property <[SelectOption]> projects-picker-select-options;
+    /** Row count on the current picker page; mirrors `projects-picker-select-options` length. */
+    in-out property <int> projects-picker-options-count: 0;
+    in-out property <int> projects-picker-selected-index: -1;
     /** Total rows matching the filter; `projects-filtered-model` holds one page. */
     in-out property <int> projects-filtered-count: 0;
     in-out property <int> projects-picker-page-index: 0;
@@ -96,7 +102,6 @@ export global AppState {
     in property <int> projects-picker-page-size: 25;
     callback project_search_changed(string);
     callback projects-picker-page-changed(int);
-    callback window_geometry_changed(length, length);
     callback sign_in;
     callback sign-out;
     callback open_project_url(string);

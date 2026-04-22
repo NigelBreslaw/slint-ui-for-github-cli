@@ -1,6 +1,6 @@
 import * as slint from "slint-ui";
 import { assignProperties } from "slint-bridge-kit";
-import type { MainWindowInstance } from "../../bridges/node/slint-interface.ts";
+import type { MainWindowInstance, SlintSelectOption } from "../../bridges/node/slint-interface.ts";
 import type { ProjectV2NodeSnapshot } from "../schemas/gh-graphql-projectsv2-page.ts";
 import { fetchAllProjectsV2ForOrgGraphql } from "./graphql-projects-v2.ts";
 
@@ -57,6 +57,14 @@ function effectivePickerPageSize(window: MainWindowInstance): number {
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : DEFAULT_PROJECT_PICKER_PAGE_SIZE;
 }
 
+function mapProjectRowsToSelectOptions(rows: readonly SlintProjectRow[]): SlintSelectOption[] {
+  return rows.map((r) => ({
+    value: r.id,
+    label: `${r.title} (#${r.number} · ${SLINT_UI_ORG})`,
+    enabled: true,
+  }));
+}
+
 function filterProjectRows(rows: readonly SlintProjectRow[], query: string): SlintProjectRow[] {
   const q = query.trim().toLowerCase();
   if (q === "") {
@@ -95,6 +103,9 @@ export function applyProjectPickerSliceToWindow(
   if (rows.length === 0) {
     assignProperties(window.AppState, {
       projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
+      projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+      projects_picker_options_count: 0,
+      projects_picker_selected_index: -1,
       projects_filtered_count: 0,
       projects_picker_page_index: 0,
     });
@@ -105,6 +116,11 @@ export function applyProjectPickerSliceToWindow(
   const slice = rows.slice(start, start + pageSize);
   assignProperties(window.AppState, {
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>(slice),
+    projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>(
+      mapProjectRowsToSelectOptions(slice),
+    ),
+    projects_picker_options_count: slice.length,
+    projects_picker_selected_index: -1,
     projects_filtered_count: rows.length,
     projects_picker_page_index: idx,
   });
