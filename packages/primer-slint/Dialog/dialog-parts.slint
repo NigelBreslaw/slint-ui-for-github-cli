@@ -1,0 +1,137 @@
+// Storybook **`Dialog.Header`** / **`Dialog.Body`** / **`Dialog.Footer`**-style building blocks for **`DialogCompose`** (`PR9`).
+
+import {
+    Button,
+    ButtonVariant,
+    IconButton,
+    IconButtonVariant,
+} from "../Buttons/buttons.slint";
+import { DialogTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { Icons } from "../assets/icons.slint";
+
+/// Header row + optional × close + bottom divider — main region is **`@children`** (custom **`renderHeader`** body).
+export component DialogHeader {
+    in property <bool> show-close-button: true;
+    callback close-requested();
+
+    VerticalLayout {
+        padding-left: DialogTokens.header-padding;
+        padding-right: DialogTokens.header-padding;
+        padding-top: DialogTokens.header-padding;
+        padding-bottom: DialogTokens.header-padding;
+
+        HorizontalLayout {
+            width: 100%;
+            spacing: LayoutTokens.button-content-gap;
+
+            VerticalLayout {
+                horizontal-stretch: 1;
+                padding-left: DialogTokens.header-content-padding-inline;
+                padding-right: DialogTokens.header-content-padding-inline;
+                padding-top: DialogTokens.header-content-padding-block;
+                padding-bottom: DialogTokens.header-content-padding-block;
+                spacing: DialogTokens.body-block-spacing;
+                alignment: start;
+
+                @children
+            }
+
+            if root.show-close-button: IconButton {
+                variant: IconButtonVariant.invisible;
+                size: Size.medium;
+                icon-source: Icons.x;
+                clicked => {
+                    root.close-requested();
+                }
+            }
+        }
+
+        Rectangle {
+            width: 100%;
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+    }
+}
+
+/// Scrollable body — fills remaining height between **`DialogHeader`** and **`DialogFooter`** inside a stretching **`VerticalLayout`**.
+export component DialogBody {
+    vertical-stretch: 1;
+    min-height: 0px;
+
+    flick := Flickable {
+        vertical-stretch: 1;
+        viewport-width: self.width;
+        viewport-height: inner.preferred-height;
+
+        inner := VerticalLayout {
+            width: parent.width;
+            padding: DialogTokens.body-padding;
+            spacing: DialogTokens.body-block-spacing;
+            alignment: start;
+
+            @children
+        }
+    }
+}
+
+/// Footer divider + default three **`Button`** row (**`use-default-actions`**) or custom **`@children`** (**`HorizontalLayout`** slot).
+export component DialogFooter {
+    in property <bool> use-default-actions: true;
+    in property <string> default-label: "Open Second Dialog";
+    in property <string> danger-label: "Delete the universe";
+    in property <string> primary-label: "Proceed";
+    callback default-clicked();
+    callback danger-clicked();
+    callback primary-clicked();
+
+    VerticalLayout {
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        FlexboxLayout {
+            visible: root.use-default-actions;
+            flex-direction: row;
+            flex-wrap: wrap;
+            alignment: end;
+            padding: DialogTokens.footer-padding;
+            spacing: DialogTokens.footer-actions-gap;
+
+            Button {
+                label: root.default-label;
+                variant: ButtonVariant.default;
+                clicked => {
+                    root.default-clicked();
+                }
+            }
+
+            Button {
+                label: root.danger-label;
+                variant: ButtonVariant.danger;
+                clicked => {
+                    root.danger-clicked();
+                }
+            }
+
+            Button {
+                label: root.primary-label;
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.primary-clicked();
+                }
+            }
+        }
+
+        HorizontalLayout {
+            visible: !root.use-default-actions;
+            width: 100%;
+            padding: DialogTokens.footer-padding;
+            spacing: DialogTokens.footer-actions-gap;
+            alignment: end;
+
+            @children
+        }
+    }
+}

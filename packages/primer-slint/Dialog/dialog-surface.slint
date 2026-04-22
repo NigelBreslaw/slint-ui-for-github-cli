@@ -1,0 +1,46 @@
+// Shared **`ModalOverlay`** shell + clipped inner **`Rectangle`** for **`Dialog`** and **`DialogCompose`** (`PR9`).
+
+import { ModalOverlay } from "../AnchoredOverlay/modal-overlay.slint";
+import { DialogAlignPreset, DialogNarrowPositionPreset, DialogPositionPreset } from "./types.slint";
+
+export component DialogSurface {
+    in-out property <bool> open: false;
+    in property <length> panel-width;
+    in property <length> panel-max-height;
+    in property <DialogAlignPreset> panel-vertical-align;
+    in property <DialogPositionPreset> panel-position;
+    in property <bool> narrow-viewport;
+    in property <DialogNarrowPositionPreset> narrow-position;
+    in property <bool> allow-dismiss;
+    /// Inner **`Rectangle`** max height (`Dialog.dialog-overlay-max-height`).
+    in property <length> inner-max-height;
+    /// **`true`** when side sheet / narrow fullscreen tall shell.
+    in property <bool> inner-vertical-stretch-tall;
+    callback close-requested();
+
+    width: 0px;
+    height: 0px;
+
+    modal-layer := ModalOverlay {
+        open <=> root.open;
+        panel-width: root.panel-width;
+        panel-max-height: root.panel-max-height;
+        panel-vertical-align: root.panel-vertical-align;
+        panel-position: root.panel-position;
+        narrow-viewport: root.narrow-viewport;
+        narrow-position: root.narrow-position;
+        allow-dismiss: root.allow-dismiss;
+        slot-padding: 0px;
+        close-requested => {
+            root.close-requested();
+        }
+
+        Rectangle {
+            max-height: root.inner-max-height;
+            vertical-stretch: root.inner-vertical-stretch-tall ? 1 : 0;
+            clip: true;
+
+            @children
+        }
+    }
+}

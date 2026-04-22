@@ -1,9 +1,14 @@
 import {
     Button,
     ButtonAlignContent,
+    ButtonVariant,
     Checkbox,
     Dialog,
     DialogAlignPreset,
+    DialogBody,
+    DialogCompose,
+    DialogFooter,
+    DialogHeader,
     DialogHeightPreset,
     DialogNarrowPositionPreset,
     DialogPositionPreset,
@@ -13,7 +18,7 @@ import {
     SelectOption,
     ValidationStatus,
 } from "../../primer-slint/primer.slint";
-import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
+import { AppWindow, DialogTokens, PrimerColors } from "../../primer-slint/tokens.slint";
 
 /// One Storybook-aligned block (title + meta + stub open control).
 component DialogStoryStub inherits VerticalLayout {
@@ -60,7 +65,7 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align**, **Side sheet**, **Narrow viewport** (**PR8** **`narrow-position-preset`** + **`narrow-layout`**) are live; other stories are stubs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align**, **Side sheet**, **Narrow viewport**, **WithCustomRenderers** / **WithDirectSubcomponents** (**PR9** **`DialogCompose`** + **`DialogHeader`** / **`DialogBody`** / **`DialogFooter`**) are live; other stories are stubs.
 export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <bool> default-outer-open: false;
@@ -70,6 +75,8 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> align-demo-open: false;
     private property <bool> side-sheet-open: false;
     private property <bool> narrow-demo-open: false;
+    private property <bool> custom-renderers-open: false;
+    private property <bool> direct-sub-open: false;
 
     private property <[SelectOption]> narrow-viewport-options: [
         { value: "bottom", label: "bottom — slideUp (narrow)", enabled: true },
@@ -544,16 +551,199 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
-    DialogStoryStub {
-        story-title: "WithCustomRenderers";
-        story-path: "Components/Dialog/Features — WithCustomRenderers";
-        story-note: "Custom renderHeader / renderBody / renderFooter.";
+    VerticalLayout {
+        spacing: 10px;
+        padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "WithCustomRenderers";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog/Features — WithCustomRenderers";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Button {
+            max-width: 240px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.custom-renderers-open = true;
+            }
+        }
     }
 
-    DialogStoryStub {
-        story-title: "WithDirectSubcomponents";
-        story-path: "Components/Dialog/Features — WithDirectSubcomponents";
-        story-note: "Dialog.Header / Body / Footer / Dialog.Buttons.";
+    custom-renderers-dialog := DialogCompose {
+        open <=> root.custom-renderers-open;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.custom-renderers-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            DialogHeader {
+                close-requested => {
+                    root.custom-renderers-open = false;
+                }
+
+                Text {
+                    text: "Custom header title";
+                    color: PrimerColors.fgColor-default;
+                    font-size: DialogTokens.title-font-size;
+                    font-weight: 600;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "renderHeader-style subtitle";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "**`DialogCompose`** + **`DialogHeader`** / **`DialogBody`** / **`DialogFooter`** (`PR9`). Body is scrollable between header and footer.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Pretend this block is **`renderBody`** output.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                use-default-actions: true;
+                danger-clicked => {
+                    root.custom-renderers-open = false;
+                }
+                default-clicked => {
+                }
+                primary-clicked => {
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 10px;
+        padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "WithDirectSubcomponents";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog/Features — WithDirectSubcomponents";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Button {
+            max-width: 240px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.direct-sub-open = true;
+            }
+        }
+    }
+
+    direct-sub-dialog := DialogCompose {
+        open <=> root.direct-sub-open;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.direct-sub-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            DialogHeader {
+                close-requested => {
+                    root.direct-sub-open = false;
+                }
+
+                Text {
+                    text: "Direct subcomponents";
+                    color: PrimerColors.fgColor-default;
+                    font-size: DialogTokens.title-font-size;
+                    font-weight: 600;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "**`DialogFooter`** **`use-default-actions: false`** supplies a custom button row below **`DialogBody`**.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                use-default-actions: false;
+                default-clicked => {
+                }
+                danger-clicked => {
+                }
+                primary-clicked => {
+                }
+
+                Button {
+                    label: "Cancel";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                        root.direct-sub-open = false;
+                    }
+                }
+
+                Button {
+                    label: "Save";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        root.direct-sub-open = false;
+                    }
+                }
+            }
+        }
     }
 
     DialogStoryStub {

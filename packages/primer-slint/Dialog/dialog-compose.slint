@@ -1,0 +1,78 @@
+// Full-panel composition host (**`@children`** = entire inner shell). Use with **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`** for Storybook **`WithCustomRenderers`** / **`WithDirectSubcomponents`** (`PR9`).
+// Geometry matches **`Dialog`** — keep in sync when changing viewport / position rules.
+
+import { DialogSurface } from "./dialog-surface.slint";
+import {
+    AppWindow,
+    DialogTokens,
+    OverlayTokens,
+} from "../tokens.slint";
+import {
+    DialogAlignPreset,
+    DialogHeightPreset,
+    DialogNarrowPositionPreset,
+    DialogPositionPreset,
+    DialogWidthPreset,
+} from "./types.slint";
+
+export component DialogCompose {
+    in-out property <bool> open: false;
+    in property <DialogWidthPreset> width-preset: DialogWidthPreset.medium;
+    in property <DialogHeightPreset> height-preset: DialogHeightPreset.auto;
+    in property <DialogAlignPreset> align-preset: DialogAlignPreset.center;
+    in property <DialogPositionPreset> position-preset: DialogPositionPreset.center;
+    in property <DialogNarrowPositionPreset> narrow-position-preset: DialogNarrowPositionPreset.center;
+    in property <bool> narrow-layout: false;
+    in property <bool> allow-dismiss: true;
+    /// **`close-button`** (×), **`escape`**, backdrop.
+    callback on-close(gesture: string);
+
+    width: 0px;
+    height: 0px;
+
+    private property <bool> narrow-active:
+        root.narrow-layout || AppWindow.window-width <= DialogTokens.narrow-max-width;
+
+    private property <bool> is-side-sheet-layout:
+        !root.narrow-active && root.position-preset != DialogPositionPreset.center;
+
+    private property <bool> is-tall-shell:
+        root.is-side-sheet-layout || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen);
+
+    private property <length> panel-w:
+        width-preset == DialogWidthPreset.small ? DialogTokens.width-small
+        : width-preset == DialogWidthPreset.medium ? DialogTokens.width-medium
+        : width-preset == DialogWidthPreset.large ? DialogTokens.width-large
+        : DialogTokens.width-xlarge;
+
+    private property <length> dialog-panel-max-height:
+        root.height-preset == DialogHeightPreset.small ? min(DialogTokens.height-small, OverlayTokens.modal-viewport-max-height)
+        : root.height-preset == DialogHeightPreset.large ? min(DialogTokens.height-large, OverlayTokens.modal-viewport-max-height)
+        : OverlayTokens.modal-viewport-max-height;
+
+    private property <length> dialog-overlay-max-height:
+        root.is-side-sheet-layout || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen) ? AppWindow.window-height : root.dialog-panel-max-height;
+
+    surface := DialogSurface {
+        open <=> root.open;
+        panel-width: root.panel-w;
+        panel-max-height: root.dialog-overlay-max-height;
+        panel-vertical-align: root.align-preset;
+        panel-position: root.position-preset;
+        narrow-viewport: root.narrow-active;
+        narrow-position: root.narrow-position-preset;
+        allow-dismiss: root.allow-dismiss;
+        inner-max-height: root.dialog-overlay-max-height;
+        inner-vertical-stretch-tall: root.is-tall-shell;
+        close-requested => {
+            root.on-close("escape");
+        }
+
+        VerticalLayout {
+            alignment: stretch;
+            vertical-stretch: root.is-tall-shell ? 1 : 0;
+
+            @children
+        }
+    }
+}

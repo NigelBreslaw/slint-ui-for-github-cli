@@ -1,6 +1,6 @@
-// Primer **Dialog** (default chrome): viewport **`ModalOverlay`**, header + scrollable body + footer actions. Upstream: primer-ui-react `Dialog/Dialog.tsx` + `Dialog.module.css`.
+// Primer **Dialog** (default chrome): viewport **`ModalOverlay`** (**`DialogSurface`**), header + scrollable body + footer actions. Upstream: primer-ui-react `Dialog/Dialog.tsx` + `Dialog.module.css`.
 
-import { ModalOverlay } from "../AnchoredOverlay/modal-overlay.slint";
+import { DialogSurface } from "./dialog-surface.slint";
 import {
     Button,
     ButtonVariant,
@@ -107,7 +107,7 @@ export component Dialog {
 
     private property <length> body-flick-max-h: max(root.dialog-overlay-max-height - root.dialog-header-region-est - root.dialog-footer-region-est, DialogTokens.body-padding * 2 + LayoutTokens.text-body-size-small);
 
-    modal-layer := ModalOverlay {
+    surface := DialogSurface {
         open <=> root.open;
         panel-width: root.panel-w;
         panel-max-height: root.dialog-overlay-max-height;
@@ -116,17 +116,13 @@ export component Dialog {
         narrow-viewport: root.narrow-active;
         narrow-position: root.narrow-position-preset;
         allow-dismiss: root.allow-dismiss;
-        slot-padding: 0px;
+        inner-max-height: root.dialog-overlay-max-height;
+        inner-vertical-stretch-tall: root.is-tall-shell;
         close-requested => {
             root.on-close("escape");
         }
 
-        Rectangle {
-            max-height: root.dialog-overlay-max-height;
-            vertical-stretch: root.is-tall-shell ? 1 : 0;
-            clip: true;
-
-            VerticalLayout {
+        VerticalLayout {
                 alignment: start;
                 vertical-stretch: root.is-tall-shell ? 1 : 0;
 
@@ -237,6 +233,5 @@ export component Dialog {
                     }
                 }
             }
-        }
     }
 }
