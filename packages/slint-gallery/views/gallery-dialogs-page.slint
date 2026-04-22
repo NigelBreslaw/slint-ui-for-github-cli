@@ -1,8 +1,8 @@
 import {
     Button,
     ButtonAlignContent,
-    DialogTokens,
-    ModalOverlay,
+    Dialog,
+    DialogWidthPreset,
 } from "../../primer-slint/primer.slint";
 import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
 
@@ -51,12 +51,13 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Scaffold for Primer **Dialog** parity demos (Storybook: `Components/Dialog` and `Components/Dialog/Features`). Each section is filled in by later PRs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default** is wired; other stories follow in later PRs.
 export component GalleryDialogsPage inherits VerticalLayout {
     spacing: 32px;
     width: 100%;
 
-    private property <bool> pr2-modal-shell-open: false;
+    private property <bool> default-outer-open: false;
+    private property <bool> default-inner-open: false;
 
     Text {
         text: "Dialog";
@@ -66,16 +67,52 @@ export component GalleryDialogsPage inherits VerticalLayout {
     }
 
     Text {
-        text: "Upstream: primer-ui-react `Dialog/` stories. Sections below map 1:1 to Storybook stories; open buttons are placeholders until the Dialog port lands.";
+        text: "Upstream: primer-ui-react `Dialog/` stories. Sections below map 1:1 to Storybook; only **Default** is implemented in PR3.";
         color: PrimerColors.fgColor-muted;
         font-size: 12px;
         wrap: word-wrap;
     }
 
-    DialogStoryStub {
-        story-title: "Default";
-        story-path: "Components/Dialog — Default";
-        story-note: "Nested dialog, mixed footer buttons, scroll body.";
+    // --- Components/Dialog — Default (PR3) ---
+    VerticalLayout {
+        spacing: 10px;
+        width: 100%;
+        padding-top: 16px;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "Default";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog — Default";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Outer dialog with scroll body and mixed footer buttons; inner small dialog (no footer), opened from default + primary.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Button {
+            max-width: 200px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.default-outer-open = true;
+            }
+        }
     }
 
     DialogStoryStub {
@@ -168,67 +205,78 @@ export component GalleryDialogsPage inherits VerticalLayout {
         story-note: "align bottom with centered regular position.";
     }
 
-    VerticalLayout {
-        spacing: 10px;
-        width: 100%;
-        padding-top: 24px;
-
-        Rectangle {
-            height: 1px;
-            background: PrimerColors.borderColor-default;
+    default-outer-dialog := Dialog {
+        open <=> root.default-outer-open;
+        title: "My Dialog";
+        width-preset: DialogWidthPreset.xlarge;
+        window-inner-width: AppWindow.window-width;
+        window-inner-height: AppWindow.window-height;
+        footer-default-clicked => {
+            root.default-inner-open = true;
+        }
+        footer-danger-clicked => {
+            root.default-outer-open = false;
+            root.default-inner-open = false;
+        }
+        footer-primary-clicked => {
+            root.default-inner-open = true;
+        }
+        on-close(_gesture) => {
+            root.default-outer-open = false;
+            root.default-inner-open = false;
         }
 
         Text {
-            text: "PR2 — ModalOverlay shell";
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
             color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Smoke test: viewport scrim + centered OverlayPanelChrome (DialogTokens padding on body text).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
+            font-size: 14px;
             wrap: word-wrap;
         }
 
-        Button {
-            max-width: 220px;
-            align-content: ButtonAlignContent.start;
-            label: "Open modal shell";
-            clicked => {
-                root.pr2-modal-shell-open = true;
-            }
+        Text {
+            text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
         }
     }
 
-    pr2-modal-smoke := ModalOverlay {
-        open <=> root.pr2-modal-shell-open;
+    default-inner-dialog := Dialog {
+        open <=> root.default-inner-open;
+        title: "Inner dialog!";
+        width-preset: DialogWidthPreset.small;
+        show-footer: false;
         window-inner-width: AppWindow.window-width;
         window-inner-height: AppWindow.window-height;
-        panel-width: 420px;
-        panel-max-height: 320px;
-        close-requested => {
+        footer-default-clicked => {
+        }
+        footer-danger-clicked => {
+        }
+        footer-primary-clicked => {
+        }
+        on-close(_gesture) => {
+            root.default-inner-open = false;
         }
 
-        VerticalLayout {
-            padding: DialogTokens.body-padding;
-            spacing: 8px;
-            alignment: start;
-
-            Text {
-                text: "ModalOverlay (PR2): Escape or backdrop closes; DialogTokens.body-padding wraps this block.";
-                color: PrimerColors.fgColor-default;
-                font-size: 14px;
-                wrap: word-wrap;
-            }
-
-            Button {
-                label: "Close";
-                clicked => {
-                    root.pr2-modal-shell-open = false;
-                }
-            }
+        Text {
+            text: "Hello world";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
         }
     }
 }

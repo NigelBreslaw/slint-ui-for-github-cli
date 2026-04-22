@@ -1,0 +1,180 @@
+// Primer **Dialog** (default chrome): viewport **`ModalOverlay`**, header + scrollable body + footer actions. Upstream: primer-ui-react `Dialog/Dialog.tsx` + `Dialog.module.css`.
+
+import { ModalOverlay } from "../AnchoredOverlay/modal-overlay.slint";
+import { Button, ButtonVariant, IconButton, IconButtonVariant } from "../Buttons/buttons.slint";
+import { ButtonTokens, DialogTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { Icons } from "../assets/icons.slint";
+import { DialogWidthPreset } from "./types.slint";
+
+export component Dialog {
+    in-out property <bool> open: false;
+    in property <string> title: "Dialog";
+    in property <string> subtitle: "";
+    in property <DialogWidthPreset> width-preset: DialogWidthPreset.xlarge;
+    in property <length> window-inner-width: 800px;
+    in property <length> window-inner-height: 600px;
+    in property <bool> allow-dismiss: true;
+    /// When false, no footer row (matches React **`Dialog`** with no **`footerButtons`**).
+    in property <bool> show-footer: true;
+
+    in property <string> footer-default-label: "Open Second Dialog";
+    in property <string> footer-danger-label: "Delete the universe";
+    in property <string> footer-primary-label: "Proceed";
+
+    callback footer-default-clicked();
+    callback footer-danger-clicked();
+    callback footer-primary-clicked();
+    /// **`close-button`** (×), **`escape`** (Escape or backdrop — matches React `onClose` argument for backdrop).
+    callback on-close(gesture: string);
+
+    width: 0px;
+    height: 0px;
+
+    private property <length> panel-w:
+        width-preset == DialogWidthPreset.small ? 296px
+        : width-preset == DialogWidthPreset.medium ? 320px
+        : width-preset == DialogWidthPreset.large ? 480px
+        : 640px;
+
+    private property <length> panel-max-h: max(root.window-inner-height - 64px, 120px);
+
+    modal-layer := ModalOverlay {
+        open <=> root.open;
+        window-inner-width: root.window-inner-width;
+        window-inner-height: root.window-inner-height;
+        panel-width: root.panel-w;
+        panel-max-height: root.panel-max-h;
+        allow-dismiss: root.allow-dismiss;
+        slot-padding: 0px;
+        close-requested => {
+            root.on-close("escape");
+        }
+
+        VerticalLayout {
+            width: 100%;
+            height: 100%;
+            spacing: 0px;
+
+            // `.Header` — padding + bottom rule (`Dialog.module.css`).
+            VerticalLayout {
+                width: 100%;
+                padding-left: DialogTokens.header-padding;
+                padding-right: DialogTokens.header-padding;
+                padding-top: DialogTokens.header-padding;
+                padding-bottom: DialogTokens.header-padding;
+                spacing: 0px;
+
+                HorizontalLayout {
+                    width: 100%;
+                    spacing: LayoutTokens.button-content-gap;
+
+                    VerticalLayout {
+                        horizontal-stretch: 1;
+                        padding-left: DialogTokens.header-content-padding-inline;
+                        padding-right: DialogTokens.header-content-padding-inline;
+                        padding-top: DialogTokens.header-content-padding-block;
+                        padding-bottom: DialogTokens.header-content-padding-block;
+                        spacing: root.subtitle != "" ? LayoutTokens.base-size-4 : 0px;
+
+                        Text {
+                            text: root.title;
+                            color: PrimerColors.fgColor-default;
+                            font-size: LayoutTokens.text-body-size-medium;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
+                            wrap: word-wrap;
+                        }
+
+                        if root.subtitle != "": Text {
+                            text: root.subtitle;
+                            color: PrimerColors.fgColor-muted;
+                            font-size: LayoutTokens.text-body-size-small;
+                            font-weight: LayoutTokens.base-text-weight-normal;
+                            wrap: word-wrap;
+                        }
+                    }
+
+                    IconButton {
+                        variant: IconButtonVariant.invisible;
+                        size: Size.medium;
+                        icon-source: Icons.x;
+                        clicked => {
+                            root.open = false;
+                            root.on-close("close-button");
+                        }
+                    }
+                }
+
+                Rectangle {
+                    width: 100%;
+                    height: 1px;
+                    background: PrimerColors.borderColor-default;
+                }
+            }
+
+            body-clip := Rectangle {
+                vertical-stretch: 1;
+                width: 100%;
+                clip: true;
+                background: ButtonTokens.button-invisible-bgColor-rest;
+
+                body-flick := Flickable {
+                    width: 100%;
+                    height: 100%;
+                    viewport-width: self.width;
+                    viewport-height: body-inner.preferred-height;
+
+                    body-inner := VerticalLayout {
+                        width: parent.width;
+                        padding: DialogTokens.body-padding;
+                        spacing: 12px;
+                        alignment: start;
+
+                        @children
+                    }
+                }
+            }
+
+            if root.show-footer: VerticalLayout {
+                width: 100%;
+                spacing: 0px;
+
+                Rectangle {
+                    width: 100%;
+                    height: 1px;
+                    background: PrimerColors.borderColor-default;
+                }
+
+                HorizontalLayout {
+                    width: 100%;
+                    padding: DialogTokens.footer-padding;
+                    spacing: DialogTokens.footer-actions-gap;
+                    alignment: end;
+
+                    Button {
+                        label: root.footer-default-label;
+                        variant: ButtonVariant.default;
+                        clicked => {
+                            root.footer-default-clicked();
+                        }
+                    }
+
+                    Button {
+                        label: root.footer-danger-label;
+                        variant: ButtonVariant.danger;
+                        clicked => {
+                            root.footer-danger-clicked();
+                        }
+                    }
+
+                    Button {
+                        label: root.footer-primary-label;
+                        variant: ButtonVariant.primary;
+                        clicked => {
+                            root.footer-primary-clicked();
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
