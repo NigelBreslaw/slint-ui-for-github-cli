@@ -1,11 +1,13 @@
 import {
     Button,
     ButtonAlignContent,
+    Checkbox,
     Dialog,
     DialogAlignPreset,
     DialogHeightPreset,
     DialogPositionPreset,
     DialogWidthPreset,
+    PrimerTextInput,
     Select,
     SelectOption,
     ValidationStatus,
@@ -84,6 +86,11 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <int> playground-width-index: 1;
     private property <int> playground-height-index: 0;
+
+    private property <bool> playground-show-header: true;
+    private property <bool> playground-show-footer: true;
+    private property <string> playground-title-text: "Playground";
+    private property <string> playground-subtitle-text: "";
 
     private property <DialogWidthPreset> playground-width-enum:
         playground-width-index == 0 ? DialogWidthPreset.small
@@ -246,7 +253,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Pick **width** / **height** (**React `widthMap` / `heightMap`**), open the dialog, and scroll the body inside the shell cap.";
+            text: "Pick **width** / **height** (**React `widthMap` / `heightMap`**), toggle **Show header** / **Show footer**, edit **Title** / **Subtitle**, then open the dialog and scroll the body inside the shell cap. With the header off, the × close control is hidden — use **Escape**, backdrop click, or footer **Danger** to dismiss (**`allow-dismiss`** stays true).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -278,6 +285,43 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
 
+        HorizontalLayout {
+            spacing: 24px;
+            alignment: start;
+
+            Checkbox {
+                label: "Show header";
+                checked <=> playground-show-header;
+            }
+
+            Checkbox {
+                label: "Show footer";
+                checked <=> playground-show-footer;
+            }
+        }
+
+        PrimerTextInput {
+            width: 100%;
+            block: true;
+            label-text: "Title";
+            placeholder: "Dialog title…";
+            text <=> playground-title-text;
+            validation-status: ValidationStatus.none;
+            edited(_) => {
+            }
+        }
+
+        PrimerTextInput {
+            width: 100%;
+            block: true;
+            label-text: "Subtitle";
+            placeholder: "Optional subtitle…";
+            text <=> playground-subtitle-text;
+            validation-status: ValidationStatus.none;
+            edited(_) => {
+            }
+        }
+
         Button {
             max-width: 200px;
             align-content: ButtonAlignContent.start;
@@ -290,7 +334,10 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     playground-dialog := Dialog {
         open <=> root.playground-open;
-        title: "Playground";
+        title: root.playground-title-text;
+        subtitle: root.playground-subtitle-text;
+        show-header: root.playground-show-header;
+        show-footer: root.playground-show-footer;
         width-preset: root.playground-width-enum;
         height-preset: root.playground-height-enum;
         footer-default-clicked => {
