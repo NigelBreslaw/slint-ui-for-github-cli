@@ -2,7 +2,6 @@ import {
     Button,
     ButtonAlignContent,
     ButtonVariant,
-    Checkbox,
     Dialog,
     DialogAlignPreset,
     DialogBody,
@@ -18,6 +17,8 @@ import {
     PrimerTextInput,
     Select,
     SelectOption,
+    ToggleSwitch,
+    ToggleSwitchSize,
     ValidationStatus,
 } from "../../primer-slint/primer.slint";
 import {
@@ -258,14 +259,38 @@ export component GalleryDialogsPage inherits VerticalLayout {
             spacing: 24px;
             alignment: start;
 
-            Checkbox {
-                label: "Show header";
-                checked <=> playground-show-header;
+            HorizontalLayout {
+                spacing: 8px;
+                alignment: center;
+
+                Text {
+                    text: "Show header";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    vertical-alignment: center;
+                }
+
+                ToggleSwitch {
+                    size: ToggleSwitchSize.small;
+                    checked <=> playground-show-header;
+                }
             }
 
-            Checkbox {
-                label: "Show footer";
-                checked <=> playground-show-footer;
+            HorizontalLayout {
+                spacing: 8px;
+                alignment: center;
+
+                Text {
+                    text: "Show footer";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    vertical-alignment: center;
+                }
+
+                ToggleSwitch {
+                    size: ToggleSwitchSize.small;
+                    checked <=> playground-show-footer;
+                }
             }
         }
 

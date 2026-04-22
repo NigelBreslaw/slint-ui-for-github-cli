@@ -98,7 +98,7 @@ Examples: **standalone gallery** (`pnpm dev:gallery` — **Feedback** group).
 
 ## ToggleSwitch
 
-Slint port of Primer [**ToggleSwitch**](https://primer.style/product/components/toggle-switch/). Upstream: primer-ui-react **`ToggleSwitch.tsx`** + **`ToggleSwitch.module.css`** — track/knob/icons, **`Spinner`** when **`loading`**, row order matches React DOM (**loading → status → switch** for `start`, reversed visual for `end`). Motion: **`LayoutTokens.duration-80`** (**80ms**) + **`cubic-bezier(0.5, 1, 0.89, 1)`** on knob **`x`**, icon **`x`**, track **`background`** / **`border-color`**, knob **`border-color`**; **`0ms`** when **`disabled`** (upstream switches transitions off). **`prefers-reduced-motion`** is not wired yet.
+Slint port of Primer [**ToggleSwitch**](https://primer.style/product/components/toggle-switch/). Upstream: primer-ui-react **`ToggleSwitch.tsx`** + **`ToggleSwitch.module.css`** — track/knob/icons, **`Spinner`** when **`loading`**, row order matches React DOM (**loading → status → switch** for `start`, reversed visual for `end`). Motion: **`LayoutTokens.duration-80`** (**80ms**) + **`cubic-bezier(0.5, 1, 0.89, 1)`** on knob **`x`**, icon **`x`**, track **`background`** / **`border-color`**, knob **`border-color`**; **`0ms`** when **`disabled`** or **`reduce-motion`** (upstream **`@media (prefers-reduced-motion)`**). The standalone gallery wires **`reduce-motion`** from **`GalleryAccessibility.reduce-ui-motion`** (header **Full/Reduced** switch).
 
 | Property | Type | Notes |
 | -------- | ---- | ----- |
@@ -108,6 +108,7 @@ Slint port of Primer [**ToggleSwitch**](https://primer.style/product/components/
 | `size` | **`ToggleSwitchSize`** | **`small`** (48×24) or **`medium`** (64×32). |
 | `status-label-position` | **`ToggleSwitchStatusLabelPosition`** | **`start`** \| **`end`** — On/Off text before or after the switch. |
 | `button-label-on` / `button-label-off` | `string` | Default **On** / **Off**. |
+| `reduce-motion` | `bool` | When **`true`**, motion duration is **0ms** (map from host **`prefers-reduced-motion`** when exposed). |
 | `changed` | `callback (bool)` | New **`checked`** after a toggle. |
 | `clicked` | `callback` | Fires after each successful toggle (same click as **`changed`**). |
 
@@ -125,8 +126,9 @@ Slint port of Primer [**ToggleSwitch**](https://primer.style/product/components/
 | `WithCustomLabels` | **Custom labels** row (**Active** / **Inactive**) |
 | `Loading` + `LabelEnd` | **Loading, label end** row |
 | `Controlled` | Bind **`checked <=>`** in the host (gallery **Default**). |
+| `prefers-reduced-motion` (CSS) | Gallery header **Full/Reduced** → **`reduce-motion`** on **`ToggleSwitch`** demos (**Forms** + **Dialog** playground). |
 
-Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group; **Dialog** → Playground uses **`ToggleSwitchSize.small`** for header/footer toggles).
 
 ## Checkbox
 

@@ -1,4 +1,4 @@
-// Primer ToggleSwitch — PR1–PR5 as before; motion: **`LayoutTokens.duration-80`** + upstream easing on knob, icons, track chrome (**`ToggleSwitch.module.css`**; disabled uses **0ms** like `transition-property: none`).
+// Primer ToggleSwitch — PR1–PR6; motion: **`LayoutTokens.duration-80`** + upstream easing (**`ToggleSwitch.module.css`**); **0ms** when **`disabled`** or **`reduce-motion`** (React **`prefers-reduced-motion`** block).
 // Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
 
 import { Icons } from "../assets/icons.slint";
@@ -23,6 +23,7 @@ export component ToggleSwitch {
     in property <ToggleSwitchStatusLabelPosition> status-label-position: ToggleSwitchStatusLabelPosition.start;
     in property <string> button-label-on: "On";
     in property <string> button-label-off: "Off";
+    in property <bool> reduce-motion: false;
 
     callback changed(bool);
     callback clicked;
@@ -44,7 +45,7 @@ export component ToggleSwitch {
     private property <length> circle-icon-x: (root.track-half-w - root.icon-diameter) / 2 + (root.checked ? root.track-half-w : 0px);
     private property <length> knob-corner-radius: LayoutTokens.borderRadius-medium - 2px;
 
-    private property <duration> motion-duration: root.disabled ? 0ms : LayoutTokens.duration-80;
+    private property <duration> motion-duration: root.disabled || root.reduce-motion ? 0ms : LayoutTokens.duration-80;
 
     private property <length> status-font-size: root.size == ToggleSwitchSize.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
     private property <length> focus-ring-padding: 5px;
@@ -120,7 +121,6 @@ export component ToggleSwitch {
             track-focus-host := Rectangle {
                 width: root.focus-host-width;
                 height: root.focus-host-height;
-                background: transparent;
                 border-width: track-fs.has-focus && root.accepts-interaction ? 2px : 0px;
                 border-color: PrimerColors.fgColor-link;
                 border-radius: LayoutTokens.borderRadius-medium + root.focus-ring-padding;
@@ -145,8 +145,6 @@ export component ToggleSwitch {
                     }
 
                     track-ta := TouchArea {
-                        width: 100%;
-                        height: 100%;
                         enabled: root.accepts-interaction;
                         clicked => {
                             root.checked = !root.checked;
@@ -178,13 +176,10 @@ export component ToggleSwitch {
                                 y: root.track-border-w;
                                 width: root.track-inner-w;
                                 height: root.track-inner-h;
-                                spacing: 0px;
 
                                 Rectangle {
                                     width: root.track-half-w;
                                     height: root.track-inner-h;
-                                    background: transparent;
-                                    clip: true;
 
                                     Image {
                                         source: Icons.toggle_switch_line;
@@ -199,8 +194,6 @@ export component ToggleSwitch {
                                 Rectangle {
                                     width: root.track-half-w;
                                     height: root.track-inner-h;
-                                    background: transparent;
-                                    clip: true;
 
                                     Image {
                                         source: Icons.toggle_switch_circle;

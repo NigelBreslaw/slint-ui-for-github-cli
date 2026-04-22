@@ -39,7 +39,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **PrimerColors** | Semantic surfaces, shared primitives — each shared **hex** appears **once**. |
 | **ButtonTokens** | `color-btn-*`, `button-*`, action-list / icon-button tints; composes from **`PrimerColors`**. |
 | **CheckboxTokens** | Unchecked/checked/indeterminate/disabled paths; composes from **`PrimerColors`** + **`ButtonTokens`**. |
-| **ToggleSwitchTokens** | Toggle **track**, **knob**, and **half-track icons** (`controlTrack`, `control.checked`, `controlKnob`); composes **`PrimerColors`** + **`CheckboxTokens`** + **`ButtonTokens`** `out`. Hover/active track tints consumed in **`ToggleSwitch`** **`states [ ]`** (PR4). |
+| **ToggleSwitchTokens** | Toggle **track**, **knob**, and **half-track icons** (`controlTrack`, `control.checked`, `controlKnob`); composes **`PrimerColors`** + **`CheckboxTokens`** + **`ButtonTokens`** `out`. Hover/active track tints consumed in **`ToggleSwitch`** **`states [ ]`** (PR4). **`ToggleSwitch`** **`reduce-motion`** forces **0ms** motion (PR6, upstream **`prefers-reduced-motion`**). |
 | **TextInputTokens** | **`PrimerTextInput`** field chrome (rest / hover / contrast inset / focus / validation / disabled borders + fills); composes **`PrimerColors`** + **`ButtonTokens`** only. |
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |

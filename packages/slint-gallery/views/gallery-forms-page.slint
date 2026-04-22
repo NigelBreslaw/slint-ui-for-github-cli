@@ -24,7 +24,6 @@ import {
 } from "../../primer-slint/primer.slint";
 import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// Select, PrimerTextInput (PR1 spike), AnchoredOverlay demo, ToggleSwitch (PR5 Spinner + gallery matrix), Checkbox, CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -642,13 +641,6 @@ export component GalleryFormsPage inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
-        }
-
-        Text {
-            text: "PR5: inline Spinner when loading; custom On/Off labels; loading + label-end inset (React ToggleSwitch.features).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
         }
 
         HorizontalLayout {
