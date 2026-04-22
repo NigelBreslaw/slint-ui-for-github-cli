@@ -141,6 +141,9 @@ export global LayoutTokens {
     out property <length> nav-list-sidebar-indicator-height: 20px;
     out property <length> nav-list-sidebar-indicator-gap: 8px;
     out property <length> nav-list-sidebar-indicator-radius: 2px;
+
+    /// primer-tokens **`base/motion/timing.json5`** — **`base.duration.200`** (React **`Dialog.module.css`** backdrop + **`Overlay--motion-scaleFade`** enter).
+    out property <duration> duration-200: 200ms;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
@@ -659,7 +662,7 @@ export global OverlayTokens {
     out property <length> modal-viewport-max-height: max(AppWindow.window-height - 64px, 120px);
 }
 
-// primer-ui-react `Dialog.module.css` (`.Header`, `.HeaderContent`, `.Body`, `.Footer`) + primer-tokens `functional/size/size.json5` base sizes. Composes **`LayoutTokens`** only (no literals). Surfaces use **`OverlayTokens`** / **`PrimerColors`** at shell level.
+// primer-ui-react `Dialog.module.css` (`.Header`, `.HeaderContent`, `.Body`, `.Footer`) + motion enter duration + primer-tokens `functional/size/size.json5` base sizes. Composes **`LayoutTokens`** only (no literals except motion cites **`LayoutTokens.duration-200`**). Surfaces use **`OverlayTokens`** / **`PrimerColors`** at shell level.
 //
 // Token audit (PR2): | Intent | primer-tokens / upstream | Owner | `out` / source | Consumers |
 // |--------|---------------------------|-------|----------------|-----------|
@@ -667,6 +670,7 @@ export global OverlayTokens {
 // | Header content inline / block | base-size-8, base-size-6 | LayoutTokens | `base-size-8`, `base-size-6` | DialogTokens.header-content-* |
 // | Body + footer inset | base-size-16 | LayoutTokens | `base-size-16` | DialogTokens.body-padding, footer-padding |
 // | Footer button row gap | base-size-8 | LayoutTokens | `button-content-gap` | DialogTokens.footer-actions-gap |
+// | Enter motion duration | base.duration.200 | LayoutTokens **`duration-200`** | DialogTokens.overlay-enter-duration |
 export global DialogTokens {
     out property <length> header-padding: LayoutTokens.base-size-8;
     out property <length> header-content-padding-inline: LayoutTokens.base-size-8;
@@ -674,4 +678,6 @@ export global DialogTokens {
     out property <length> body-padding: LayoutTokens.base-size-16;
     out property <length> footer-padding: LayoutTokens.base-size-16;
     out property <length> footer-actions-gap: LayoutTokens.button-content-gap;
+    /// React **`Dialog.module.css`** — `.Backdrop` + default dialog **`Overlay--motion-scaleFade`** enter.
+    out property <duration> overlay-enter-duration: LayoutTokens.duration-200;
 }

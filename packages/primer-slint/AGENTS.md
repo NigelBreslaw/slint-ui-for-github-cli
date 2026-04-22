@@ -35,7 +35,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 
 | Global | Contents |
 | ------ | -------- |
-| **LayoutTokens** | Lengths, typography, control dimensions, padding, radii, icon sizes, banner spacing. **No** light/dark colors. |
+| **LayoutTokens** | Lengths, typography, motion **`duration`** steps (**`duration-200`** …), control dimensions, padding, radii, icon sizes, banner spacing. **No** light/dark colors. |
 | **PrimerColors** | Semantic surfaces, shared primitives — each shared **hex** appears **once**. |
 | **ButtonTokens** | `color-btn-*`, `button-*`, action-list / icon-button tints; composes from **`PrimerColors`**. |
 | **CheckboxTokens** | Unchecked/checked/indeterminate/disabled paths; composes from **`PrimerColors`** + **`ButtonTokens`**. |
@@ -44,7 +44,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |
 | **ActionListTokens** | **ActionList** row/heading semantics (danger, inactive, link, section headings, divider, loading label fg); **only** from **`PrimerColors`** + **`ButtonTokens`** `out`. |
 | **OverlayTokens** | **`backdrop-scrim`** (modal dimmers) + floating **panel** chrome and **`shadow.floating.small`**; **`AnchoredOverlay`** / **`ModalOverlay`** use panel tokens; composes **`PrimerColors`**, **`LayoutTokens`**, **`ShadowTokens`**. |
-| **DialogTokens** | Primer **`Dialog`** region padding (header / body / footer / footer gap); **only** **`LayoutTokens`** `out` bindings — see audit comment in [`tokens.slint`](tokens.slint) above **`DialogTokens`**. |
+| **DialogTokens** | Primer **`Dialog`** region padding (header / body / footer / footer gap) and **`overlay-enter-duration`** (**`LayoutTokens.duration-200`**); **only** **`LayoutTokens`** `out` bindings — see audit comment in [`tokens.slint`](tokens.slint) above **`DialogTokens`**. |
 
 **Cross-global rule:** Dependents use other globals’ **`out`** bindings only — not their **private** fields.
 

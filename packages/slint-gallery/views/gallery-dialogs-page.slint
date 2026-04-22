@@ -51,7 +51,7 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Primer **Dialog** gallery (Storybook parity sections). **Default** is wired; other stories follow in later PRs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default** is live (PR2); other stories are stubs.
 export component GalleryDialogsPage inherits VerticalLayout {
     spacing: 32px;
     width: 100%;
@@ -67,13 +67,13 @@ export component GalleryDialogsPage inherits VerticalLayout {
     }
 
     Text {
-        text: "Upstream: primer-ui-react `Dialog/` stories. Sections below map 1:1 to Storybook; only **Default** is implemented in PR3.";
+        text: "Upstream: primer-ui-react `Dialog/` stories. Sections below map 1:1 to Storybook. **PR2** delivers the modal spike (backdrop fade + scaleFade enter motion, centered shell) and a live **Default** demo; other rows stay stubs until later PRs.";
         color: PrimerColors.fgColor-muted;
         font-size: 12px;
         wrap: word-wrap;
     }
 
-    // --- Components/Dialog — Default (PR3) ---
+    // --- Components/Dialog — Default (PR2 live demo) ---
     VerticalLayout {
         spacing: 10px;
         width: 100%;
@@ -112,6 +112,77 @@ export component GalleryDialogsPage inherits VerticalLayout {
             clicked => {
                 root.default-outer-open = true;
             }
+        }
+    }
+
+    default-outer-dialog := Dialog {
+        open <=> root.default-outer-open;
+        title: "My Dialog";
+        width-preset: DialogWidthPreset.xlarge;
+        footer-default-clicked => {
+            root.default-inner-open = true;
+        }
+        footer-danger-clicked => {
+            root.default-outer-open = false;
+            root.default-inner-open = false;
+        }
+        footer-primary-clicked => {
+            root.default-inner-open = true;
+        }
+        on-close(_gesture) => {
+            root.default-outer-open = false;
+            root.default-inner-open = false;
+        }
+
+        Text {
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+    }
+
+    default-inner-dialog := Dialog {
+        open <=> root.default-inner-open;
+        title: "Inner dialog!";
+        width-preset: DialogWidthPreset.small;
+        show-footer: false;
+        footer-default-clicked => {
+        }
+        footer-danger-clicked => {
+        }
+        footer-primary-clicked => {
+        }
+        on-close(_gesture) => {
+            root.default-inner-open = false;
+        }
+
+        Text {
+            text: "Hello world";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
         }
     }
 
@@ -203,76 +274,5 @@ export component GalleryDialogsPage inherits VerticalLayout {
         story-title: "AlignBottom";
         story-path: "Components/Dialog/Features — [Align] Bottom";
         story-note: "align bottom with centered regular position.";
-    }
-
-    default-outer-dialog := Dialog {
-        open <=> root.default-outer-open;
-        title: "My Dialog";
-        width-preset: DialogWidthPreset.xlarge;
-        footer-default-clicked => {
-            root.default-inner-open = true;
-        }
-        footer-danger-clicked => {
-            root.default-outer-open = false;
-            root.default-inner-open = false;
-        }
-        footer-primary-clicked => {
-            root.default-inner-open = true;
-        }
-        on-close(_gesture) => {
-            root.default-outer-open = false;
-            root.default-inner-open = false;
-        }
-
-        Text {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-    }
-
-    default-inner-dialog := Dialog {
-        open <=> root.default-inner-open;
-        title: "Inner dialog!";
-        width-preset: DialogWidthPreset.small;
-        show-footer: false;
-        footer-default-clicked => {
-        }
-        footer-danger-clicked => {
-        }
-        footer-primary-clicked => {
-        }
-        on-close(_gesture) => {
-            root.default-inner-open = false;
-        }
-
-        Text {
-            text: "Hello world";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
     }
 }

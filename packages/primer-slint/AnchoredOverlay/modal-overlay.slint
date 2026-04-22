@@ -1,8 +1,8 @@
-// Viewport modal: fullscreen `PopupWindow` with **`OverlayTokens.backdrop-scrim`**, backdrop segments for dismiss, and centered **`OverlayPanelChrome`**. Parent-relative **`x`** / **`y`** match **`AnchoredOverlay`** (window origin minus `absolute-position`).
+// Viewport modal: fullscreen `PopupWindow` with **`OverlayTokens.backdrop-scrim`**, backdrop dismiss, centered **`OverlayPanelChrome`**, and **`Dialog.module.css`** enter motion (backdrop fade + **`Overlay--motion-scaleFade`**).
+// Parent-relative **`x`** / **`y`** match **`AnchoredOverlay`** (window origin minus **`absolute-position`**).
 
 import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
-import { OverlayTokens } from "../tokens.slint";
-import { AppWindow } from "../tokens.slint";
+import { DialogTokens, OverlayTokens, AppWindow } from "../tokens.slint";
 
 export component ModalOverlay {
     in-out property <bool> open: false;
@@ -16,8 +16,19 @@ export component ModalOverlay {
     callback close-requested();
 
     private property <length> panel-w: min(root.panel-width, OverlayTokens.modal-viewport-max-width);
-    /// Requested max height ∩ viewport cap (when **`OverlayPanelChrome`** height is wired again, bind here).
-    private property <length> panel-h: min(root.panel-max-height, OverlayTokens.modal-viewport-max-height);
+    /// Height cap for the modal shell (`panel-max-height` ∩ viewport overlay max).
+    private property <length> viewport-cap-h: min(root.panel-max-height, OverlayTokens.modal-viewport-max-height);
+
+    /// Shared **0–1** for backdrop opacity + panel **`Overlay--motion-scaleFade`** (React curve in **`animate`** below).
+    private property <float> presented: root.open ? 1.0 : 0.0;
+
+    animate presented {
+        duration: DialogTokens.overlay-enter-duration;
+        easing: cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    /// Shell scale **0.5 → 1** (`Overlay--motion-scaleFade`).
+    private property <float> shell-scale: 0.5 + 0.5 * presented;
 
     changed open => {
         if root.open {
@@ -33,13 +44,15 @@ export component ModalOverlay {
         y: 0px - root.absolute-position.y;
         width: AppWindow.window-width;
         height: AppWindow.window-height;
+
         Rectangle {
-            x: 0;
-            y: 0;
-            width: AppWindow.window-width;
-            height: AppWindow.window-height;
+            width: parent.width;
+            height: parent.height;
 
             modal-scope := FocusScope {
+                width: 100%;
+                height: 100%;
+
                 key-pressed(event) => {
                     if root.allow-dismiss && event.text == Key.Escape {
                         root.open = false;
@@ -48,30 +61,47 @@ export component ModalOverlay {
                     }
                     return reject;
                 }
-                Rectangle {
-                    background: OverlayTokens.backdrop-scrim;
-                    TouchArea {
-                        enabled: root.allow-dismiss;
-                        clicked => {
-                            root.open = false;
-                            root.close-requested();
-                        }
-                    }
-                    VerticalLayout {
-                        width: self.preferred-width;
-                        height: self.preferred-height;
-                        panel-chrome := OverlayPanelChrome {
-                            width: root.panel-w;
-                            surface-background: OverlayTokens.panel-background;
-                            surface-border: OverlayTokens.panel-border;
-                            surface-border-width: OverlayTokens.panel-border-width;
-                            surface-border-radius: OverlayTokens.panel-border-radius;
-                            surface-shadow: OverlayTokens.panel-elevation-shadow;
-                            slot-padding: root.slot-padding;
-                            slot-fill-height: true;
 
-                            @children
-                        }
+                // Bottom: fullscreen scrim (fade).
+                Rectangle {
+                    width: 100%;
+                    height: 100%;
+                    background: OverlayTokens.backdrop-scrim;
+                    opacity: presented;
+                }
+
+                // Middle: backdrop dismiss — must stay **below** the panel shell so clicks outside the card hit here.
+                TouchArea {
+                    enabled: root.allow-dismiss && root.open;
+                    width: 100%;
+                    height: 100%;
+                    clicked => {
+                        root.open = false;
+                        root.close-requested();
+                    }
+                }
+
+                // Top: viewport-centered shell (tight bounds — not a fullscreen layout) + enter motion.
+                panel-shell := Rectangle {
+                    x: (AppWindow.window-width - root.panel-w) / 2;
+                    y: max(0px, (AppWindow.window-height - self.height) / 2);
+                    width: root.panel-w;
+                    height: min(panel-chrome.slot-preferred-height, root.viewport-cap-h);
+                    opacity: presented;
+                    transform-scale: shell-scale;
+                    clip: false;
+
+                    panel-chrome := OverlayPanelChrome {
+                        width: root.panel-w;
+                        surface-background: OverlayTokens.panel-background;
+                        surface-border: OverlayTokens.panel-border;
+                        surface-border-width: OverlayTokens.panel-border-width;
+                        surface-border-radius: OverlayTokens.panel-border-radius;
+                        surface-shadow: OverlayTokens.panel-elevation-shadow;
+                        slot-padding: root.slot-padding;
+                        slot-fill-height: true;
+
+                        @children
                     }
                 }
             }
