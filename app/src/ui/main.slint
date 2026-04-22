@@ -1,4 +1,4 @@
-import { Palette, StyleMetrics } from "std-widgets.slint";
+import { ListView, Palette, StyleMetrics } from "std-widgets.slint";
 import {
     AppView,
     Authed,
@@ -19,17 +19,21 @@ import { DataTableRow } from "../../../packages/primer-slint/DataTable/types.sli
 import { TimeReportingState, TimeReportingWeekRow } from "../bridges/slint/time-reporting-state.slint";
 import {
     Button,
+    ButtonVariant,
+    Checkbox,
     DialogAlignPreset,
     DialogNarrowPositionPreset,
     DialogPositionPreset,
     Icons,
     ModalOverlay,
     Pagination,
+    PrimerTextInput,
     SelectPanel,
     SelectPanelMode,
+    Size,
     Spinner,
 } from "../../../packages/primer-slint/primer.slint";
-import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../packages/primer-slint/tokens.slint";
+import { AppWindow, DialogTokens, LayoutTokens, OverlayTokens, PrimerColors } from "../../../packages/primer-slint/tokens.slint";
 import { Settings } from "views/settings.slint";
 import { Dashboard } from "views/dashboard.slint";
 import { SideBar } from "components/sideBar.slint";
@@ -374,6 +378,282 @@ export component MainWindow inherits Window {
                     label: "Cancel";
                     clicked => {
                         TimeReportingState.time-reporting-picker-cancel();
+                    }
+                }
+            }
+        }
+    }
+
+    project-board-import-overlay := ModalOverlay {
+        open <=> ProjectBoardListState.import-dialog-open;
+        allow-dismiss: true;
+        panel-width: DialogTokens.width-xlarge;
+        panel-max-height: OverlayTokens.modal-viewport-max-height;
+        panel-vertical-align: DialogAlignPreset.center;
+        panel-position: DialogPositionPreset.center;
+        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
+        narrow-position: DialogNarrowPositionPreset.center;
+        slot-padding: DialogTokens.body-padding;
+        close-requested => {
+            ProjectBoardListState.project-board-import-dialog-closed();
+        }
+
+        VerticalLayout {
+            spacing: 12px;
+            width: 100%;
+            min-height: 320px;
+
+            Text {
+                text: "Import from repositories";
+                color: PrimerColors.fgColor-default;
+                font-size: DialogTokens.title-font-size;
+                font-weight: DialogTokens.title-font-weight;
+                wrap: word-wrap;
+            }
+
+            Text {
+                text: "Organization slint-ui — pick a repository, then review open issues and PRs (first page).";
+                color: PrimerColors.fgColor-muted;
+                font-size: DialogTokens.subtitle-font-size;
+                font-weight: DialogTokens.subtitle-font-weight;
+                wrap: word-wrap;
+            }
+
+            if ProjectBoardListState.import-repos-load-status == "Loading repositories…": HorizontalLayout {
+                spacing: 10px;
+                alignment: start;
+
+                Spinner {
+                    size: small;
+                }
+
+                Text {
+                    text: "Loading repositories…";
+                    font-size: 13px;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+            }
+
+            if ProjectBoardListState.import-repos-load-status != "Loading repositories…": VerticalLayout {
+                spacing: 12px;
+                width: 100%;
+                vertical-stretch: 1;
+
+                if ProjectBoardListState.import-repos-load-status != "": Text {
+                    text: ProjectBoardListState.import-repos-load-status;
+                    color: PrimerColors.fgColor-default;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Repository";
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                    wrap: word-wrap;
+                }
+
+                SelectPanel {
+                    width: 100%;
+                    mode: SelectPanelMode.single;
+                    filter-text <=> ProjectBoardListState.import-repos-search;
+                    filter-placeholder: "Filter by name…";
+                    single-items: ProjectBoardListState.import-repo-select-options;
+                    item-count: ProjectBoardListState.import-repo-options-count;
+                    selected-index <=> ProjectBoardListState.import-repo-selected-index;
+                    list-max-height: 200px;
+                    empty-message: "No repositories match your search.";
+                    disabled: ProjectBoardListState.import-repos-load-status != ""
+                        || ProjectBoardListState.import-repo-options-count == 0;
+                    filter-changed(q) => {
+                        ProjectBoardListState.project-board-import-repos-search-changed(q);
+                    }
+                    single-selected-changed(ix) => {
+                        ProjectBoardListState.project-board-import-repo-selected-changed(ix);
+                    }
+                }
+
+                Text {
+                    text: "Open issues and pull requests";
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                    wrap: word-wrap;
+                }
+
+                if ProjectBoardListState.import-repo-selected-index < 0: Text {
+                    text: "Select a repository to load open issues and pull requests.";
+                    font-size: 13px;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status == "Loading issues and pull requests…": HorizontalLayout {
+                    spacing: 10px;
+                    alignment: start;
+
+                    Spinner {
+                        size: small;
+                    }
+
+                    Text {
+                        text: "Loading issues and pull requests…";
+                        font-size: 13px;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status != "" && ProjectBoardListState.import-candidates-load-status != "Loading issues and pull requests…": Text {
+                    text: ProjectBoardListState.import-candidates-load-status;
+                    color: PrimerColors.fgColor-default;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+
+                if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status != "Loading issues and pull requests…" && (ProjectBoardListState.import-candidates-load-status == "" || ProjectBoardListState.import-candidates-total-loaded > 0): VerticalLayout {
+                    spacing: 10px;
+
+                    PrimerTextInput {
+                        width: 100%;
+                        block: true;
+                        label-text: "Filter loaded issues and PRs";
+                        placeholder: "Search issues and PRs…";
+                        disabled: ProjectBoardListState.import-candidates-load-status == "Loading issues and pull requests…";
+                        text: ProjectBoardListState.import-candidates-search;
+                        edited(t) => {
+                            ProjectBoardListState.project-board-import-candidates-search-changed(t);
+                        }
+                    }
+
+                    HorizontalLayout {
+                        spacing: 8px;
+                        alignment: start;
+
+                        Button {
+                            variant: ButtonVariant.default;
+                            size: Size.small;
+                            label: "Select all on page";
+                            disabled: ProjectBoardListState.import-candidate-count == 0;
+                            clicked => {
+                                ProjectBoardListState.project-board-import-candidates-select-all-on-page();
+                            }
+                        }
+
+                        Button {
+                            variant: ButtonVariant.default;
+                            size: Size.small;
+                            label: "Load more";
+                            loading: ProjectBoardListState.import-candidates-load-more-busy;
+                            disabled: !ProjectBoardListState.import-candidates-has-more
+                                || ProjectBoardListState.import-candidates-load-more-busy
+                                || ProjectBoardListState.import-candidates-load-status == "Loading issues and pull requests…";
+                            clicked => {
+                                ProjectBoardListState.project-board-import-candidates-load-more();
+                            }
+                        }
+
+                        Button {
+                            variant: ButtonVariant.primary;
+                            size: Size.small;
+                            label: "Add selected to project";
+                            loading: ProjectBoardListState.import-add-selected-busy;
+                            disabled: !ProjectBoardListState.has-selected-project
+                                || ProjectBoardListState.import-selected-count == 0
+                                || ProjectBoardListState.import-add-selected-busy
+                                || ProjectBoardListState.import-candidates-load-status == "Loading issues and pull requests…";
+                            clicked => {
+                                ProjectBoardListState.project-board-import-add-selected-to-project();
+                            }
+                        }
+                    }
+
+                    if ProjectBoardListState.import-add-selected-message != "": Text {
+                        text: ProjectBoardListState.import-add-selected-message;
+                        font-size: 12px;
+                        color: PrimerColors.fgColor-default;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status == "" && ProjectBoardListState.import-candidate-count == 0 && ProjectBoardListState.import-candidates-total-loaded == 0: Text {
+                    text: "No open issues or pull requests on this page.";
+                    font-size: 13px;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                if ProjectBoardListState.import-repo-selected-index >= 0 && ProjectBoardListState.import-candidates-load-status == "" && ProjectBoardListState.import-candidate-count == 0 && ProjectBoardListState.import-candidates-total-loaded > 0 && ProjectBoardListState.import-candidates-search != "": Text {
+                    text: "No issues or pull requests match your search.";
+                    font-size: 13px;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                if ProjectBoardListState.import-candidate-count > 0: Rectangle {
+                    height: 220px;
+                    width: 100%;
+                    background: PrimerColors.bgColor-neutral-muted;
+                    border-radius: 8px;
+                    border-width: 1px;
+                    border-color: PrimerColors.borderColor-muted;
+                    clip: true;
+
+                    ListView {
+                        width: parent.width - 2px;
+                        height: parent.height - 2px;
+                        x: 1px;
+                        y: 1px;
+                        for row[index] in ProjectBoardListState.import-candidate-rows: Rectangle {
+                            height: 56px;
+                            background: mod(index, 2) == 0 ? PrimerColors.bgColor-neutral-muted : PrimerColors.bgColor-canvas-subtle;
+
+                            HorizontalLayout {
+                                padding-left: 6px;
+                                padding-right: 8px;
+                                spacing: 4px;
+                                alignment: center;
+
+                                Checkbox {
+                                    horizontal-stretch: 0;
+                                    vertical-stretch: 0;
+                                    checked: row.selected;
+                                    label: "";
+                                    toggled => {
+                                        ProjectBoardListState.project-board-import-candidate-toggled(row.node-id);
+                                    }
+                                }
+
+                                TouchArea {
+                                    horizontal-stretch: 1;
+                                    height: parent.height;
+
+                                    clicked => {
+                                        ProjectBoardListState.project-board-list-open-row-url(row.url);
+                                    }
+
+                                    VerticalLayout {
+                                        padding-top: 8px;
+                                        padding-bottom: 8px;
+                                        spacing: 2px;
+                                        Text {
+                                            text: row.title;
+                                            color: PrimerColors.fgColor-default;
+                                            overflow: elide;
+                                            font-size: 14px;
+                                        }
+
+                                        Text {
+                                            text: (row.kind == ProjectBoardItemKind.issue ? "Issue" : "PR") + " #" + row.number;
+                                            font-size: 12px;
+                                            color: PrimerColors.fgColor-muted;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
