@@ -21,6 +21,7 @@ import type {
   MainWindowInstance,
   MainWindowModule,
   SettingsStateHandle,
+  ShellDialogsStateHandle,
   SlintDataTableRow,
   SlintImportCandidateRow,
   SlintProjectBoardListRow,
@@ -59,9 +60,6 @@ const ui = slint.loadFile(new URL("./ui/main.slint", import.meta.url)) as MainWi
 
 const window = new ui.MainWindow({
   status_message: "",
-  "auth-device-code": "",
-  "auth-device-url": "",
-  "gh-cli-version-block-detail": "",
 });
 
 restoreMainWindowGeometry(window);
@@ -117,6 +115,15 @@ assignProperties(window.SettingsState, {
   primer_demo_selected_index: 0,
 });
 
+assignProperties(window.ShellDialogsState, {
+  no_gh_cli_dialog_open: false,
+  gh_cli_version_dialog_open: false,
+  auth_device_flow_open: false,
+  gh_cli_version_block_detail: "",
+  auth_device_code: "",
+  auth_device_url: "",
+});
+
 hydrateTimeReportingFromKv(window);
 hydrateProjectBoardListLabelsFromKv(window);
 
@@ -141,11 +148,13 @@ const appStateCallbacks = {
   sign_in: () => {
     clearAuthDeviceFields(window);
     assignProperties(window.AppState, { auth: authed.authorizing });
-    window.show_auth_window();
+    assignProperties(window.ShellDialogsState, { auth_device_flow_open: true });
     spawnGhAuthLogin({
       onDeviceFlowInfo: (info) => {
-        window.auth_device_code = info.code;
-        window.auth_device_url = info.url;
+        assignProperties(window.ShellDialogsState, {
+          auth_device_code: info.code,
+          auth_device_url: info.url,
+        });
       },
       onClose: () => {
         clearAuthDeviceFields(window);
@@ -182,24 +191,23 @@ wireFunctions(window.TimeReportingState, buildTimeReportingStateCallbacks(window
 
 wireFunctions(window.ProjectBoardListState, buildProjectBoardListStateCallbacks(window));
 
-const mainWindowHandlers = {
-  open_github_device_clicked: () => {
-    void copyTextToClipboard(window.auth_device_code).finally(() => {
-      openUrlInBrowser(window.auth_device_url);
-    });
-  },
+const shellDialogsCallbacks = {
   open_cli_install_page: () => {
     openUrlInBrowser("https://cli.github.com/");
   },
+  open_github_device_clicked: () => {
+    void copyTextToClipboard(window.ShellDialogsState.auth_device_code).finally(() => {
+      openUrlInBrowser(window.ShellDialogsState.auth_device_url);
+    });
+  },
+} satisfies ExhaustiveAllCallbacks<ShellDialogsStateHandle>;
+wireFunctions(window.ShellDialogsState, shellDialogsCallbacks);
+
+const mainWindowHandlers = {
   viewport_changed: () => {
     windowGeometryPersister.schedulePersist();
   },
-} satisfies ExhaustiveCallbacks<
-  MainWindowInstance,
-  | "open_github_device_clicked"
-  | "open_cli_install_page"
-  | "viewport_changed"
->;
+} satisfies ExhaustiveCallbacks<MainWindowInstance, "viewport_changed">;
 wireFunctions(window, mainWindowHandlers);
 
 window.show();

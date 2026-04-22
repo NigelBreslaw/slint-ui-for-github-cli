@@ -1,0 +1,12 @@
+export global ShellDialogsState {
+    callback open-cli-install-page;
+    callback open-github-device-clicked;
+
+    in-out property <bool> no-gh-cli-dialog-open: false;
+    in-out property <bool> gh-cli-version-dialog-open: false;
+    in-out property <bool> auth-device-flow-open: false;
+
+    in-out property <string> gh-cli-version-block-detail: "";
+    in-out property <string> auth-device-code: "";
+    in-out property <string> auth-device-url: "";
+}

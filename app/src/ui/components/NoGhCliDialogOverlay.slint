@@ -1,0 +1,42 @@
+import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint";
+import {
+    Button,
+    DialogAlignPreset,
+    DialogNarrowPositionPreset,
+    DialogPositionPreset,
+    ModalOverlay,
+} from "../../../../packages/primer-slint/primer.slint";
+import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+
+export component NoGhCliDialogOverlay {
+    ModalOverlay {
+        open <=> ShellDialogsState.no-gh-cli-dialog-open;
+        allow-dismiss: false;
+        panel-width: DialogTokens.width-large;
+        panel-max-height: OverlayTokens.modal-viewport-max-height;
+        panel-vertical-align: DialogAlignPreset.center;
+        panel-position: DialogPositionPreset.center;
+        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
+        narrow-position: DialogNarrowPositionPreset.center;
+        slot-padding: DialogTokens.body-padding;
+
+        VerticalLayout {
+            width: 100%;
+            spacing: 20px;
+            Text {
+                text: "GitHub CLI is not installed";
+                font-size: 18px;
+                horizontal-alignment: center;
+                color: PrimerColors.fgColor-default;
+                wrap: word-wrap;
+            }
+
+            Button {
+                label: "Open CLI install page";
+                clicked => {
+                    ShellDialogsState.open-cli-install-page();
+                }
+            }
+        }
+    }
+}

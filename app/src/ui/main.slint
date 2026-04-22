@@ -8,12 +8,13 @@ import {
     SecurityAlertRow,
 } from "../bridges/slint/app-state.slint";
 import { AppHeader } from "components/AppHeader.slint";
-import { DeviceFlowAuthWindow } from "components/DeviceFlowAuthWindow.slint";
-import { GhCliVersionTooOldWindow } from "components/GhCliVersionTooOldWindow.slint";
-import { NoGhCliInstalledWindow } from "components/NoGhCliInstalledWindow.slint";
+import { DeviceFlowAuthOverlay } from "components/DeviceFlowAuthOverlay.slint";
+import { GhCliVersionDialogOverlay } from "components/GhCliVersionDialogOverlay.slint";
+import { NoGhCliDialogOverlay } from "components/NoGhCliDialogOverlay.slint";
 import { ProjectBoardImportOverlay } from "components/ProjectBoardImportOverlay.slint";
 import { TimeReportingProjectPickerOverlay } from "components/TimeReportingProjectPickerOverlay.slint";
 import { SettingsState } from "../bridges/slint/settings-state.slint";
+import { ShellDialogsState } from "../bridges/slint/shell-dialogs-state.slint";
 import {
     ProjectBoardItemKind,
     ProjectBoardListRow,
@@ -36,40 +37,14 @@ import "../../../packages/primer-slint/assets/fonts/VeraMono.ttf"; // "Bitstream
 
 
 // Export so backend can access the enums and global state.
-export { AppView, AppWindow, Authed, AppState, DashboardTab, DataTableRow, Icons, ProjectBoardItemKind, ProjectBoardListRow, ProjectBoardListState, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, TimeReportingState, TimeReportingWeekRow }
+export { AppView, AppWindow, Authed, AppState, DashboardTab, DataTableRow, Icons, ProjectBoardItemKind, ProjectBoardListRow, ProjectBoardListState, ProjectRow, ReviewRequestRow, SecurityAlertRow, SettingsState, ShellDialogsState, TimeReportingState, TimeReportingWeekRow }
 
 export component MainWindow inherits Window {
 
     /** Fired after **`AppWindow`** is synced (debounced persist in **`main.ts`**). */
     callback viewport-changed;
 
-    callback close-auth-window;
-    callback show_auth_window;
-    callback open-github-device-clicked;
-    callback show_no_gh_cli_installed;
-    callback show_gh_cli_version_too_old;
-    callback open_cli_install_page;
-    in property <string> gh-cli-version-block-detail: "";
-
-    close-auth-window => {
-        auth_window.close();
-    }
-
-    show_auth_window => {
-        auth_window.show();
-    }
-
-    show_no_gh_cli_installed => {
-        no_gh_cli_installed_window.show();
-    }
-
-    show_gh_cli_version_too_old => {
-        gh_cli_version_too_old_window.show();
-    }
-
     in property <string> status_message: "";
-    in property <string> auth-device-code: "";
-    in property <string> auth-device-url: "";
 
     preferred-width: 800px;
     preferred-height: 540px;
@@ -144,31 +119,11 @@ export component MainWindow inherits Window {
 
     header := AppHeader { }
 
-    no_gh_cli_installed_window := NoGhCliInstalledWindow {
-        width: root.width;
-        height: root.height;
-        open_cli_install_page => {
-            root.open_cli_install_page();
-        }
-    }
+    NoGhCliDialogOverlay { }
 
-    gh_cli_version_too_old_window := GhCliVersionTooOldWindow {
-        width: root.width;
-        height: root.height;
-        gh-cli-version-block-detail: root.gh-cli-version-block-detail;
-        open_cli_install_page => {
-            root.open_cli_install_page();
-        }
-    }
+    GhCliVersionDialogOverlay { }
 
-    auth_window := DeviceFlowAuthWindow {
-        width: root.width;
-        height: root.height;
-        auth-device-code: root.auth-device-code;
-        open-github-device-clicked => {
-            root.open-github-device-clicked();
-        }
-    }
+    DeviceFlowAuthOverlay { }
 
     TimeReportingProjectPickerOverlay { }
 

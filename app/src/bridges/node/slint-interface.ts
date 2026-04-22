@@ -1,6 +1,6 @@
 /**
  * TypeScript view of the Slint `MainWindow` and globals (`AppState`, `SettingsState`,
- * `TimeReportingState`, `ProjectBoardListState`) plus DataTable / Label wire enums in this module, wired from
+ * `TimeReportingState`, `ProjectBoardListState`, `ShellDialogsState`) plus DataTable / Label wire enums in this module, wired from
  * [`ui/main.slint`](../../ui/main.slint) / [`bridges/slint/app-state.slint`](../slint/app-state.slint).
  * Slint enum cases use the same spelling as in `.slint` (camelCase here); wire values are defined
  * once via `slintEnumMembers` so call sites use dot access and unions stay in sync.
@@ -279,6 +279,18 @@ export type TimeReportingStateHandle = {
   detail_body: string;
 };
 
+/** Matches [`shell-dialogs-state.slint`](../slint/shell-dialogs-state.slint) — install / version / device-flow modals. */
+export type ShellDialogsStateHandle = {
+  open_cli_install_page: () => void;
+  open_github_device_clicked: () => void;
+  no_gh_cli_dialog_open: boolean;
+  gh_cli_version_dialog_open: boolean;
+  auth_device_flow_open: boolean;
+  gh_cli_version_block_detail: string;
+  auth_device_code: string;
+  auth_device_url: string;
+};
+
 /** Slint global from [`packages/primer-slint/assets/icons.slint`](../../../packages/primer-slint/assets/icons.slint) (bundled `@image-url` icons). */
 export type SlintIconsGlobal = {
   pull_request: ImageData;
@@ -346,25 +358,14 @@ export type MainWindowInstance = {
   SettingsState: SettingsStateHandle;
   TimeReportingState: TimeReportingStateHandle;
   ProjectBoardListState: ProjectBoardListStateHandle;
+  ShellDialogsState: ShellDialogsStateHandle;
   login_clicked?: () => void;
-  open_github_device_clicked?: () => void;
-  show_auth_window: () => void;
-  close_auth_window: () => void;
-  show_no_gh_cli_installed: () => void;
-  show_gh_cli_version_too_old: () => void;
-  open_cli_install_page: () => void;
   viewport_changed: () => void;
-  gh_cli_version_block_detail: string;
   status_message: string;
-  auth_device_code: string;
-  auth_device_url: string;
 };
 
 export type MainWindowOpts = {
   status_message?: string;
-  "auth-device-code"?: string;
-  "auth-device-url"?: string;
-  "gh-cli-version-block-detail"?: string;
 };
 
 /** Result shape of `slint.loadFile(…/main.slint)` for the exported `MainWindow` component. */

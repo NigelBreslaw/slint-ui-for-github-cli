@@ -1,0 +1,51 @@
+import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint";
+import {
+    Button,
+    DialogAlignPreset,
+    DialogNarrowPositionPreset,
+    DialogPositionPreset,
+    ModalOverlay,
+} from "../../../../packages/primer-slint/primer.slint";
+import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+
+export component GhCliVersionDialogOverlay {
+    ModalOverlay {
+        open <=> ShellDialogsState.gh-cli-version-dialog-open;
+        allow-dismiss: false;
+        panel-width: DialogTokens.width-large;
+        panel-max-height: OverlayTokens.modal-viewport-max-height;
+        panel-vertical-align: DialogAlignPreset.center;
+        panel-position: DialogPositionPreset.center;
+        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
+        narrow-position: DialogNarrowPositionPreset.center;
+        slot-padding: DialogTokens.body-padding;
+
+        VerticalLayout {
+            width: 100%;
+            spacing: 16px;
+            Text {
+                text: "GitHub CLI must be updated to at least version 2.89.0";
+                font-size: 18px;
+                horizontal-alignment: center;
+                color: PrimerColors.fgColor-default;
+                wrap: word-wrap;
+            }
+
+            Text {
+                visible: ShellDialogsState.gh-cli-version-block-detail != "";
+                text: ShellDialogsState.gh-cli-version-block-detail;
+                font-size: 14px;
+                horizontal-alignment: center;
+                color: PrimerColors.fgColor-muted;
+                wrap: word-wrap;
+            }
+
+            Button {
+                label: "Open GitHub CLI install page";
+                clicked => {
+                    ShellDialogsState.open-cli-install-page();
+                }
+            }
+        }
+    }
+}

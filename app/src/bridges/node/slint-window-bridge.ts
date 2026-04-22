@@ -266,7 +266,7 @@ export async function refreshDashboardReviewRequests(window: MainWindowInstance)
 }
 
 export function clearAuthDeviceFields(window: MainWindowInstance): void {
-  assignProperties(window, {
+  assignProperties(window.ShellDialogsState, {
     auth_device_code: "",
     auth_device_url: "",
   });

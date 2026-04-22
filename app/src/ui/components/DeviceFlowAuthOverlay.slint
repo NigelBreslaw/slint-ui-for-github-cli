@@ -1,0 +1,77 @@
+import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint";
+import {
+    Button,
+    DialogAlignPreset,
+    DialogNarrowPositionPreset,
+    DialogPositionPreset,
+    ModalOverlay,
+    Spinner,
+} from "../../../../packages/primer-slint/primer.slint";
+import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+
+export component DeviceFlowAuthOverlay {
+    ModalOverlay {
+        open <=> ShellDialogsState.auth-device-flow-open;
+        allow-dismiss: false;
+        panel-width: DialogTokens.width-large;
+        panel-max-height: OverlayTokens.modal-viewport-max-height;
+        panel-vertical-align: DialogAlignPreset.center;
+        panel-position: DialogPositionPreset.center;
+        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
+        narrow-position: DialogNarrowPositionPreset.center;
+        slot-padding: DialogTokens.body-padding;
+
+        VerticalLayout {
+            width: 100%;
+            spacing: 16px;
+            Text {
+                text: "Finish in the terminal (browser or device flow)";
+                font-size: 16px;
+                horizontal-alignment: center;
+                color: PrimerColors.fgColor-default;
+                wrap: word-wrap;
+            }
+
+            Text {
+                visible: ShellDialogsState.auth-device-code != "";
+                text: "Your code: ";
+                font-size: 18px;
+                horizontal-alignment: center;
+                color: PrimerColors.fgColor-default;
+                wrap: word-wrap;
+            }
+
+            TextInput {
+                visible: ShellDialogsState.auth-device-code != "";
+                text: ShellDialogsState.auth-device-code;
+                font-size: 22px;
+                font-weight: 700;
+                horizontal-alignment: center;
+                color: PrimerColors.fgColor-default;
+                wrap: word-wrap;
+                read-only: true;
+                changed has-focus => {
+                    if (self.has-focus) {
+                        self.select-all();
+                    }
+                }
+            }
+
+            Button {
+                visible: ShellDialogsState.auth-device-code != "";
+                label: "Copy code to clipboard and open web login";
+                clicked => {
+                    ShellDialogsState.open-github-device-clicked();
+                }
+            }
+
+            HorizontalLayout {
+                alignment: center;
+                width: 100%;
+                Spinner {
+                    size: medium;
+                }
+            }
+        }
+    }
+}

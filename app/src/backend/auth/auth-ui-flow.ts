@@ -54,11 +54,11 @@ export function slintRunningCallback(window: MainWindowInstance): void {
   slintEventLoopHasStarted = true;
   if (pendingShowNoGhOverlay) {
     pendingShowNoGhOverlay = false;
-    window.show_no_gh_cli_installed();
+    window.ShellDialogsState.no_gh_cli_dialog_open = true;
   }
   if (pendingShowGhVersionTooOldOverlay) {
     pendingShowGhVersionTooOldOverlay = false;
-    window.show_gh_cli_version_too_old();
+    window.ShellDialogsState.gh_cli_version_dialog_open = true;
   }
   const login = initialProjectsDebugPending;
   initialProjectsDebugPending = null;
@@ -152,12 +152,19 @@ export function applyAuthUi(window: MainWindowInstance): void {
   uiPerfResetSession();
   pendingShowNoGhOverlay = false;
   pendingShowGhVersionTooOldOverlay = false;
+  assignProperties(window.ShellDialogsState, {
+    no_gh_cli_dialog_open: false,
+    gh_cli_version_dialog_open: false,
+  });
   const op = beginAuthOperation();
 
-  assignProperties(window, { gh_cli_version_block_detail: "", status_message: "Checking…" });
+  assignProperties(window, { status_message: "Checking…" });
+  assignProperties(window.ShellDialogsState, {
+    gh_cli_version_block_detail: "",
+    auth_device_flow_open: false,
+  });
   assignProperties(window.AppState, { auth: authed.loggedIn });
   clearAuthDeviceFields(window);
-  window.close_auth_window();
 
   const cached = readViewerSessionCache();
   const hadCachedSession = cached !== null;
@@ -205,14 +212,15 @@ export function applyAuthUi(window: MainWindowInstance): void {
         gh_cli_version_block_detail = versionGate.error;
       }
       assignProperties(window.AppState, { auth: authed.ghCliVersionTooOld });
-      assignProperties(window, { status_message, gh_cli_version_block_detail });
+      assignProperties(window, { status_message });
+      assignProperties(window.ShellDialogsState, { gh_cli_version_block_detail });
       if (slintEventLoopHasStarted) {
-        window.show_gh_cli_version_too_old();
+        window.ShellDialogsState.gh_cli_version_dialog_open = true;
       } else {
         pendingShowGhVersionTooOldOverlay = true;
       }
       clearAuthDeviceFields(window);
-      window.close_auth_window();
+      assignProperties(window.ShellDialogsState, { auth_device_flow_open: false });
       clearUserIdentity(window);
       clearTimeReportingSelection(window);
       return;
@@ -226,12 +234,12 @@ export function applyAuthUi(window: MainWindowInstance): void {
       assignProperties(window.AppState, { auth: authed.noGhCliInstalled });
       assignProperties(window, { status_message: "gh not found (install GitHub CLI)" });
       if (slintEventLoopHasStarted) {
-        window.show_no_gh_cli_installed();
+        window.ShellDialogsState.no_gh_cli_dialog_open = true;
       } else {
         pendingShowNoGhOverlay = true;
       }
       clearAuthDeviceFields(window);
-      window.close_auth_window();
+      assignProperties(window.ShellDialogsState, { auth_device_flow_open: false });
       clearUserIdentity(window);
       clearTimeReportingSelection(window);
       return;
@@ -242,7 +250,7 @@ export function applyAuthUi(window: MainWindowInstance): void {
         status_message: `${scopeCheck.message} Click Login to authorize with the required scopes.`,
       });
       clearAuthDeviceFields(window);
-      window.close_auth_window();
+      assignProperties(window.ShellDialogsState, { auth_device_flow_open: false });
       clearUserIdentity(window);
       clearTimeReportingSelection(window);
       return;
