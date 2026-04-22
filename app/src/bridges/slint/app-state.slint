@@ -83,7 +83,15 @@ export global AppState {
             if v == AppView.settings {
                 SettingsState.settings-init();
             }
-
+            if v == AppView.dashboard {
+                self.dashboard-init();
+            }
+            if v == AppView.timeReporting {
+                TimeReportingState.time-reporting-view-init();
+            }
+            if v == AppView.projectBoardList {
+                ProjectBoardListState.project-board-list-view-init();
+            }
         }
     }
 

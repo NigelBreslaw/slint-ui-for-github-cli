@@ -1,0 +1,42 @@
+import { SettingsState } from "../../bridges/slint/settings-state.slint";
+import { DialogAlignPreset, DialogNarrowPositionPreset, DialogPositionPreset, ModalOverlay, Spinner } from "../../../../packages/primer-slint/primer.slint";
+import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+
+/// Hosts the settings **Loading** state at the shell level so it is not a child of the
+/// conditionally-instantiated **`Settings`** view — Slint can panic with
+/// *accessing deleted parent* (#6426) when **`ModalOverlay`**/dialog chrome lives under `if` view branches.
+export component SettingsDebugLoadingOverlay {
+    ModalOverlay {
+        open <=> SettingsState.settings-debug-panel-loading;
+        allow-dismiss: false;
+        panel-width: DialogTokens.width-large;
+        panel-max-height: OverlayTokens.modal-viewport-max-height;
+        panel-vertical-align: DialogAlignPreset.center;
+        panel-position: DialogPositionPreset.center;
+        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
+        narrow-position: DialogNarrowPositionPreset.center;
+        slot-padding: 24px;
+
+        VerticalLayout {
+            alignment: center;
+            spacing: 12px;
+            width: 100%;
+
+            Text {
+                text: "Loading";
+                color: PrimerColors.fgColor-default;
+                font-size: 16px;
+                font-weight: 600;
+                horizontal-alignment: center;
+            }
+
+            HorizontalLayout {
+                width: 100%;
+                alignment: center;
+                Spinner {
+                    size: medium;
+                }
+            }
+        }
+    }
+}

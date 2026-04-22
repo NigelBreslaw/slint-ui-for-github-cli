@@ -12,6 +12,7 @@ import { DeviceFlowAuthOverlay } from "components/DeviceFlowAuthOverlay.slint";
 import { GhCliVersionDialogOverlay } from "components/GhCliVersionDialogOverlay.slint";
 import { NoGhCliDialogOverlay } from "components/NoGhCliDialogOverlay.slint";
 import { ProjectBoardImportOverlay } from "components/ProjectBoardImportOverlay.slint";
+import { SettingsDebugLoadingOverlay } from "components/SettingsDebugLoadingOverlay.slint";
 import { TimeReportingProjectPickerOverlay } from "components/TimeReportingProjectPickerOverlay.slint";
 import { SettingsState } from "../bridges/slint/settings-state.slint";
 import { ShellDialogsState } from "../bridges/slint/shell-dialogs-state.slint";
@@ -55,6 +56,16 @@ export component MainWindow inherits Window {
     init => {
         AppWindow.window-width = root.width;
         AppWindow.window-height = root.height;
+        // Default view: run the same “enter” init as `set-view` (first load does not go through `set-view`).
+        if (AppState.view == AppView.projectBoardList) {
+            ProjectBoardListState.project-board-list-view-init();
+        } else if (AppState.view == AppView.dashboard) {
+            AppState.dashboard-init();
+        } else if (AppState.view == AppView.timeReporting) {
+            TimeReportingState.time-reporting-view-init();
+        } else if (AppState.view == AppView.settings) {
+            SettingsState.settings-init();
+        }
     }
 
     changed width => {
@@ -108,13 +119,31 @@ export component MainWindow inherits Window {
         height: root.height - self.y;
         visible: AppState.auth == Authed.loggedIn;
 
-        if AppState.view == AppView.dashboard: Dashboard { }
+        // Use `visible` (not `if`) so view trees are not destroyed on tab changes — Slint can panic
+        // *accessing deleted parent* (#6426) when nested overlays/dialogs are torn down with the branch.
+        Dashboard {
+            width: 100%;
+            height: 100%;
+            visible: AppState.view == AppView.dashboard;
+        }
 
-        if AppState.view == AppView.settings: Settings { }
+        Settings {
+            width: 100%;
+            height: 100%;
+            visible: AppState.view == AppView.settings;
+        }
 
-        if AppState.view == AppView.timeReporting: TimeReporting { }
+        TimeReporting {
+            width: 100%;
+            height: 100%;
+            visible: AppState.view == AppView.timeReporting;
+        }
 
-        if AppState.view == AppView.projectBoardList: ProjectBoardList { }
+        ProjectBoardList {
+            width: 100%;
+            height: 100%;
+            visible: AppState.view == AppView.projectBoardList;
+        }
     }
 
     header := AppHeader { }
@@ -128,4 +157,6 @@ export component MainWindow inherits Window {
     TimeReportingProjectPickerOverlay { }
 
     ProjectBoardImportOverlay { }
+
+    SettingsDebugLoadingOverlay { }
 }

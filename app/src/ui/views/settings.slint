@@ -7,13 +7,9 @@ import {
     DataTableColumn,
     DataTableIconTint,
     DataTableSortDirection,
-    Dialog,
-    DialogHeightPreset,
-    DialogWidthPreset,
     Icons,
     LabelSize,
     LabelVariant,
-    Spinner,
 } from "../../../../packages/primer-slint/primer.slint";
 import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
@@ -92,35 +88,6 @@ export component Settings {
                 color: PrimerColors.fgColor-danger;
                 font-size: 13px;
                 wrap: word-wrap;
-            }
-        }
-
-        // Packaged **`Dialog`** (**`ModalOverlay`**) pilots **`AppWindow`** — do not wrap in another **`PopupWindow`**.
-        Dialog {
-            open <=> SettingsState.settings-debug-panel-loading;
-            title: "Loading";
-            show-header: false;
-            show-footer: false;
-            allow-dismiss: false;
-            width-preset: DialogWidthPreset.medium;
-            height-preset: DialogHeightPreset.auto;
-
-            VerticalLayout {
-                alignment: center;
-                spacing: 12px;
-                width: 100%;
-
-                Text {
-                    text: "Loading";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 16px;
-                    font-weight: 600;
-                    horizontal-alignment: center;
-                }
-
-                Spinner {
-                    size: medium;
-                }
             }
         }
     }
