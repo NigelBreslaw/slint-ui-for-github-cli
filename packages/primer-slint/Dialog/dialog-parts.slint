@@ -1,5 +1,3 @@
-// Storybook **`Dialog.Header`** / **`Dialog.Body`** / **`Dialog.Footer`**-style building blocks for **`DialogCompose`** (`PR9`) — footer layout / visibility (`PR10`) / loading (`PR11`) aligned with **`Dialog`**.
-
 import {
     Button,
     ButtonVariant,
@@ -10,7 +8,6 @@ import { DialogTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint"
 import { Icons } from "../assets/icons.slint";
 import { DialogFooterButtonLayout } from "./types.slint";
 
-/// Header row + optional × close + bottom divider — main region is **`@children`** (custom **`renderHeader`** body).
 export component DialogHeader {
     in property <bool> show-close-button: true;
     callback close-requested();
@@ -22,7 +19,6 @@ export component DialogHeader {
         padding-bottom: DialogTokens.header-padding;
 
         HorizontalLayout {
-            width: 100%;
             spacing: LayoutTokens.button-content-gap;
 
             VerticalLayout {
@@ -55,10 +51,8 @@ export component DialogHeader {
     }
 }
 
-/// Scrollable body — fills remaining height between **`DialogHeader`** and **`DialogFooter`** inside a stretching **`VerticalLayout`**.
 export component DialogBody {
     vertical-stretch: 1;
-    min-height: 0px;
 
     flick := Flickable {
         vertical-stretch: 1;
@@ -76,165 +70,21 @@ export component DialogBody {
     }
 }
 
-/// Footer divider + default actions (**`use-default-actions`**) or custom **`@children`** (**`HorizontalLayout`** slot).
 export component DialogFooter {
-    in property <bool> use-default-actions: true;
-    in property <string> default-label: "Open Second Dialog";
-    in property <string> danger-label: "Delete the universe";
-    in property <string> primary-label: "Proceed";
-    in property <DialogFooterButtonLayout> footer-button-layout: DialogFooterButtonLayout.wrap;
-    in property <bool> footer-has-default-button: true;
-    in property <bool> footer-has-danger-button: true;
-    in property <bool> footer-has-primary-button: true;
-    in property <string> footer-extra-1-label: "";
-    in property <string> footer-extra-2-label: "";
-    in property <bool> footer-default-loading: false;
-    in property <bool> footer-danger-loading: false;
-    in property <bool> footer-primary-loading: false;
-    in property <bool> footer-extra-1-loading: false;
-    in property <bool> footer-extra-2-loading: false;
-
-    callback default-clicked();
-    callback danger-clicked();
-    callback primary-clicked();
-    callback footer-extra-1-clicked();
-    callback footer-extra-2-clicked();
-
-    private property <length> footer-strip-height:
-        DialogTokens.footer-padding * 2 + LayoutTokens.control-medium-size;
-
-    private property <bool> default-actions-shown:
-        root.footer-has-default-button
-        || root.footer-has-danger-button
-        || root.footer-has-primary-button
-        || root.footer-extra-1-label != ""
-        || root.footer-extra-2-label != "";
 
     VerticalLayout {
-        visible: !root.use-default-actions || root.default-actions-shown;
 
         Rectangle {
             height: 1px;
             background: PrimerColors.borderColor-default;
         }
 
-        if root.use-default-actions && root.footer-button-layout == DialogFooterButtonLayout.scroll: Flickable {
-            width: 100%;
-            height: root.footer-strip-height;
-            viewport-width: footer-scroll-inner.preferred-width;
-            viewport-height: self.height;
-
-            footer-scroll-inner := HorizontalLayout {
-                spacing: DialogTokens.footer-actions-gap;
-                alignment: end;
-                padding: DialogTokens.footer-padding;
-
-                if root.footer-has-default-button: Button {
-                    label: root.default-label;
-                    variant: ButtonVariant.default;
-                    loading: root.footer-default-loading;
-                    clicked => {
-                        root.default-clicked();
-                    }
-                }
-
-                if root.footer-extra-1-label != "": Button {
-                    label: root.footer-extra-1-label;
-                    variant: ButtonVariant.default;
-                    loading: root.footer-extra-1-loading;
-                    clicked => {
-                        root.footer-extra-1-clicked();
-                    }
-                }
-
-                if root.footer-extra-2-label != "": Button {
-                    label: root.footer-extra-2-label;
-                    variant: ButtonVariant.default;
-                    loading: root.footer-extra-2-loading;
-                    clicked => {
-                        root.footer-extra-2-clicked();
-                    }
-                }
-
-                if root.footer-has-danger-button: Button {
-                    label: root.danger-label;
-                    variant: ButtonVariant.danger;
-                    loading: root.footer-danger-loading;
-                    clicked => {
-                        root.danger-clicked();
-                    }
-                }
-
-                if root.footer-has-primary-button: Button {
-                    label: root.primary-label;
-                    variant: ButtonVariant.primary;
-                    loading: root.footer-primary-loading;
-                    clicked => {
-                        root.primary-clicked();
-                    }
-                }
-            }
-        }
-
-        if root.use-default-actions && root.footer-button-layout == DialogFooterButtonLayout.wrap: FlexboxLayout {
+        FlexboxLayout {
             flex-direction: row;
             flex-wrap: wrap;
             alignment: end;
             padding: DialogTokens.footer-padding;
             spacing: DialogTokens.footer-actions-gap;
-
-            if root.footer-has-default-button: Button {
-                label: root.default-label;
-                variant: ButtonVariant.default;
-                loading: root.footer-default-loading;
-                clicked => {
-                    root.default-clicked();
-                }
-            }
-
-            if root.footer-extra-1-label != "": Button {
-                label: root.footer-extra-1-label;
-                variant: ButtonVariant.default;
-                loading: root.footer-extra-1-loading;
-                clicked => {
-                    root.footer-extra-1-clicked();
-                }
-            }
-
-            if root.footer-extra-2-label != "": Button {
-                label: root.footer-extra-2-label;
-                variant: ButtonVariant.default;
-                loading: root.footer-extra-2-loading;
-                clicked => {
-                    root.footer-extra-2-clicked();
-                }
-            }
-
-            if root.footer-has-danger-button: Button {
-                label: root.danger-label;
-                variant: ButtonVariant.danger;
-                loading: root.footer-danger-loading;
-                clicked => {
-                    root.danger-clicked();
-                }
-            }
-
-            if root.footer-has-primary-button: Button {
-                label: root.primary-label;
-                variant: ButtonVariant.primary;
-                loading: root.footer-primary-loading;
-                clicked => {
-                    root.primary-clicked();
-                }
-            }
-        }
-
-        HorizontalLayout {
-            padding: DialogTokens.footer-padding;
-            spacing: DialogTokens.footer-actions-gap;
-            alignment: end;
-            
-
             @children
         }
     }

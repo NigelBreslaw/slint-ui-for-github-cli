@@ -24,11 +24,7 @@ export component DialogCompose {
     in property <DialogNarrowPositionPreset> narrow-position-preset: DialogNarrowPositionPreset.center;
     in property <bool> narrow-layout: false;
     in property <bool> allow-dismiss: true;
-    /// **`close-button`** (×), **`escape`**, backdrop.
     callback on-close(gesture: string);
-
-    width: 0px;
-    height: 0px;
 
     private property <bool> narrow-active:
         root.narrow-layout || AppWindow.window-width <= DialogTokens.narrow-max-width;

@@ -20,52 +20,11 @@ import {
     SelectOption,
     ValidationStatus,
 } from "../../primer-slint/primer.slint";
-import { AppWindow, DialogTokens, PrimerColors } from "../../primer-slint/tokens.slint";
-
-/// One Storybook-aligned block (title + meta + stub open control).
-component DialogStoryStub inherits VerticalLayout {
-    in property <string> story-title;
-    in property <string> story-path;
-    in property <string> story-note;
-
-    spacing: 10px;
-    width: 100%;
-    padding-top: 16px;
-
-    Rectangle {
-        height: 1px;
-        background: PrimerColors.borderColor-default;
-    }
-
-    Text {
-        text: root.story-title;
-        color: PrimerColors.fgColor-default;
-        font-size: 15px;
-        font-weight: 600;
-    }
-
-    Text {
-        text: root.story-path;
-        color: PrimerColors.fgColor-muted;
-        font-size: 11px;
-        wrap: word-wrap;
-    }
-
-    Text {
-        text: root.story-note;
-        color: PrimerColors.fgColor-muted;
-        font-size: 12px;
-        wrap: word-wrap;
-    }
-
-    Button {
-        max-width: 200px;
-        align-content: ButtonAlignContent.start;
-        label: "Open dialog (soon)";
-        clicked => {
-        }
-    }
-}
+import {
+    AppWindow,
+    DialogTokens,
+    PrimerColors,
+} from "../../primer-slint/tokens.slint";
 
 export component GalleryDialogsPage inherits VerticalLayout {
 
@@ -150,7 +109,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <DialogPositionPreset> side-sheet-position-preset:
         side-sheet-edge-index == 0 ? DialogPositionPreset.left : DialogPositionPreset.right;
 
-
     Text {
         text: "Dialog";
         color: PrimerColors.fgColor-default;
@@ -182,7 +140,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
     }
-    
 
     default-outer-dialog := Dialog {
         open <=> root.default-outer-open;
@@ -643,17 +600,29 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
 
             DialogFooter {
-                use-default-actions: true;
-                danger-clicked => {
-                    root.custom-renderers-open = false;
+                Button {
+                    label: "Open Second Dialog";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
                 }
-                default-clicked => {
+                Button {
+                    label: "Delete the universe";
+                    variant: ButtonVariant.danger;
+                    clicked => {
+                        root.custom-renderers-open = false;
+                    }
                 }
-                primary-clicked => {
+                Button {
+                    label: "Proceed";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                    }
                 }
             }
         }
     }
+
 
     VerticalLayout {
         spacing: 10px;
@@ -726,13 +695,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
 
             DialogFooter {
-                use-default-actions: false;
-                default-clicked => {
-                }
-                danger-clicked => {
-                }
-                primary-clicked => {
-                }
 
                 Button {
                     label: "Cancel";
@@ -849,11 +811,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     multistep-footer-dialog := Dialog {
         open <=> root.multistep-footer-open;
         title: "Multistep";
-        subtitle: root.multistep-footer-step == 0
-            ? "Step 1 — default action only"
-            : root.multistep-footer-step == 1
-            ? "Step 2 — danger appears"
-            : "Step 3 — full footer";
+        subtitle: root.multistep-footer-step == 0 ? "Step 1 — default action only" : root.multistep-footer-step == 1 ? "Step 2 — danger appears" : "Step 3 — full footer";
         footer-has-danger-button: root.multistep-footer-step >= 1;
         footer-has-primary-button: root.multistep-footer-step >= 2;
         footer-default-label: root.multistep-footer-step < 2 ? "Next" : "Done";
@@ -916,9 +874,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     dynamic-footer-dialog := Dialog {
         open <=> root.dynamic-footer-open;
         title: "Dynamic content";
-        subtitle: root.dynamic-footer-variant == 1
-            ? "Subtitle on — press **Cycle** to change footer membership."
-            : "";
+        subtitle: root.dynamic-footer-variant == 1 ? "Subtitle on — press **Cycle** to change footer membership." : "";
         footer-has-danger-button: root.dynamic-footer-variant == 0 || root.dynamic-footer-variant == 2;
         footer-has-primary-button: root.dynamic-footer-variant == 0;
         footer-extra-1-label: root.dynamic-footer-variant == 2 ? "Extra" : "";
@@ -1115,29 +1071,29 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
 
             DialogFooter {
-                use-default-actions: true;
-                footer-has-danger-button: false;
-                default-label: "Cancel";
-                footer-extra-1-label: "Save Draft";
-                primary-label: "Process & Continue";
-                footer-extra-1-loading: root.loading-custom-saving;
-                footer-primary-loading: root.loading-custom-processing;
-                default-clicked => {
-                    root.loading-custom-footer-open = false;
-                    root.loading-custom-saving = false;
-                    root.loading-custom-processing = false;
+                Button {
+                    label: "Cancel";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                        root.loading-custom-footer-open = false;
+                        root.loading-custom-saving = false;
+                        root.loading-custom-processing = false;
+                    }
                 }
-                footer-extra-1-clicked => {
-                    root.loading-custom-saving = true;
-                    lc-save-done.running = true;
+                Button {
+                    label: "Save Draft";
+                    variant: ButtonVariant.default;
+                    loading: root.loading-custom-saving;
+                    clicked => {
+                    }
                 }
-                primary-clicked => {
-                    root.loading-custom-processing = true;
-                    lc-process-done.running = true;
-                }
-                danger-clicked => {
-                }
-                footer-extra-2-clicked => {
+                Button {
+                    label: "Process & Continue";
+                    variant: ButtonVariant.primary;
+                    loading: root.loading-custom-processing;
+                    clicked => {
+                        root.loading-custom-processing = true;
+                    }
                 }
             }
         }
@@ -1161,17 +1117,5 @@ export component GalleryDialogsPage inherits VerticalLayout {
             root.loading-custom-footer-open = false;
             self.running = false;
         }
-    }
-
-    DialogStoryStub {
-        story-title: "ReturnFocusRef";
-        story-path: "Components/Dialog/Features — ReturnFocusRef";
-        story-note: "Return focus to trigger on close (Slint parity may be partial).";
-    }
-
-    DialogStoryStub {
-        story-title: "NewIssues";
-        story-path: "Components/Dialog/Features — NewIssues";
-        story-note: "ActionList in body; initialFocusRef.";
     }
 }
