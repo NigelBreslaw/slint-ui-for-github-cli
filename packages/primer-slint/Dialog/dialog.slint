@@ -18,6 +18,7 @@ import {
 import { Icons } from "../assets/icons.slint";
 import {
     DialogAlignPreset,
+    DialogFooterButtonLayout,
     DialogHeightPreset,
     DialogNarrowPositionPreset,
     DialogPositionPreset,
@@ -51,6 +52,20 @@ export component Dialog {
     private property <bool> footer-visible:
         root.show-footer && !root.regular-side-sheet;
 
+    /// Single-row footer strip (**padding** + one **medium** control line). Region estimate stays one row (**`wrap`** may grow taller at runtime).
+    private property <length> footer-strip-height:
+        DialogTokens.footer-padding * 2 + LayoutTokens.control-medium-size;
+
+    /// **`show-footer`** shell minus side sheet, and at least one default footer action or extra label.
+    private property <bool> footer-actions-visible:
+        root.footer-visible && (
+            root.footer-has-default-button
+            || root.footer-has-danger-button
+            || root.footer-has-primary-button
+            || root.footer-extra-1-label != ""
+            || root.footer-extra-2-label != ""
+        );
+
     /// **`AppWindow`** ≤ **`DialogTokens.narrow-max-width`** or **`narrow-layout`** override.
     private property <bool> narrow-active:
         root.narrow-layout || AppWindow.window-width <= DialogTokens.narrow-max-width;
@@ -67,9 +82,21 @@ export component Dialog {
     in property <string> footer-danger-label: "Delete the universe";
     in property <string> footer-primary-label: "Proceed";
 
+    /// **`wrap`**: **`FlexboxLayout`** + **`flex-wrap`**. **`scroll`**: one row + horizontal **`Flickable`** when actions overflow.
+    in property <DialogFooterButtonLayout> footer-button-layout: DialogFooterButtonLayout.wrap;
+    /// Per-button visibility (conditional **`footerButtons`** / multistep flows).
+    in property <bool> footer-has-default-button: true;
+    in property <bool> footer-has-danger-button: true;
+    in property <bool> footer-has-primary-button: true;
+    /// Non-empty adds a fourth / fifth **default** action before danger / primary (many-button stress tests).
+    in property <string> footer-extra-1-label: "";
+    in property <string> footer-extra-2-label: "";
+
     callback footer-default-clicked();
     callback footer-danger-clicked();
     callback footer-primary-clicked();
+    callback footer-extra-1-clicked();
+    callback footer-extra-2-clicked();
     /// **`close-button`** (×), **`escape`** (Escape or backdrop — matches React `onClose` argument for backdrop).
     callback on-close(gesture: string);
 
@@ -103,7 +130,7 @@ export component Dialog {
         : 0px;
 
     private property <length> dialog-footer-region-est:
-        root.footer-visible ? 1px + DialogTokens.footer-padding * 2 + LayoutTokens.control-medium-size : 0px;
+        root.footer-actions-visible ? 1px + root.footer-strip-height : 0px;
 
     private property <length> body-flick-max-h: max(root.dialog-overlay-max-height - root.dialog-header-region-est - root.dialog-footer-region-est, DialogTokens.body-padding * 2 + LayoutTokens.text-body-size-small);
 
@@ -194,20 +221,73 @@ export component Dialog {
                     }
                 }
 
-                if root.footer-visible: VerticalLayout {
+                if root.footer-actions-visible: VerticalLayout {
                     Rectangle {
                         height: 1px;
                         background: PrimerColors.borderColor-default;
                     }
 
-                    FlexboxLayout {
+                    if root.footer-button-layout == DialogFooterButtonLayout.scroll: Flickable {
+                        width: 100%;
+                        height: root.footer-strip-height;
+                        viewport-width: footer-scroll-inner.preferred-width;
+                        viewport-height: self.height;
+
+                        footer-scroll-inner := HorizontalLayout {
+                            spacing: DialogTokens.footer-actions-gap;
+                            alignment: end;
+                            padding: DialogTokens.footer-padding;
+
+                            if root.footer-has-default-button: Button {
+                                label: root.footer-default-label;
+                                variant: ButtonVariant.default;
+                                clicked => {
+                                    root.footer-default-clicked();
+                                }
+                            }
+
+                            if root.footer-extra-1-label != "": Button {
+                                label: root.footer-extra-1-label;
+                                variant: ButtonVariant.default;
+                                clicked => {
+                                    root.footer-extra-1-clicked();
+                                }
+                            }
+
+                            if root.footer-extra-2-label != "": Button {
+                                label: root.footer-extra-2-label;
+                                variant: ButtonVariant.default;
+                                clicked => {
+                                    root.footer-extra-2-clicked();
+                                }
+                            }
+
+                            if root.footer-has-danger-button: Button {
+                                label: root.footer-danger-label;
+                                variant: ButtonVariant.danger;
+                                clicked => {
+                                    root.footer-danger-clicked();
+                                }
+                            }
+
+                            if root.footer-has-primary-button: Button {
+                                label: root.footer-primary-label;
+                                variant: ButtonVariant.primary;
+                                clicked => {
+                                    root.footer-primary-clicked();
+                                }
+                            }
+                        }
+                    }
+
+                    if root.footer-button-layout == DialogFooterButtonLayout.wrap: FlexboxLayout {
                         flex-direction: row;
                         flex-wrap: wrap;
                         alignment: end;
                         padding: DialogTokens.footer-padding;
                         spacing: DialogTokens.footer-actions-gap;
 
-                        Button {
+                        if root.footer-has-default-button: Button {
                             label: root.footer-default-label;
                             variant: ButtonVariant.default;
                             clicked => {
@@ -215,7 +295,23 @@ export component Dialog {
                             }
                         }
 
-                        Button {
+                        if root.footer-extra-1-label != "": Button {
+                            label: root.footer-extra-1-label;
+                            variant: ButtonVariant.default;
+                            clicked => {
+                                root.footer-extra-1-clicked();
+                            }
+                        }
+
+                        if root.footer-extra-2-label != "": Button {
+                            label: root.footer-extra-2-label;
+                            variant: ButtonVariant.default;
+                            clicked => {
+                                root.footer-extra-2-clicked();
+                            }
+                        }
+
+                        if root.footer-has-danger-button: Button {
                             label: root.footer-danger-label;
                             variant: ButtonVariant.danger;
                             clicked => {
@@ -223,7 +319,7 @@ export component Dialog {
                             }
                         }
 
-                        Button {
+                        if root.footer-has-primary-button: Button {
                             label: root.footer-primary-label;
                             variant: ButtonVariant.primary;
                             clicked => {

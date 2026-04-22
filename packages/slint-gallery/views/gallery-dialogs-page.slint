@@ -8,6 +8,7 @@ import {
     DialogBody,
     DialogCompose,
     DialogFooter,
+    DialogFooterButtonLayout,
     DialogHeader,
     DialogHeightPreset,
     DialogNarrowPositionPreset,
@@ -65,7 +66,7 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align**, **Side sheet**, **Narrow viewport**, **WithCustomRenderers** / **WithDirectSubcomponents** (**PR9** **`DialogCompose`** + **`DialogHeader`** / **`DialogBody`** / **`DialogFooter`**) are live; other stories are stubs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align**, **Side sheet**, **Narrow viewport**, **WithCustomRenderers** / **WithDirectSubcomponents** (**PR9**) and footer layout / conditional stories (**PR10**) are live; other stories are stubs.
 export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <bool> default-outer-open: false;
@@ -77,6 +78,12 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> narrow-demo-open: false;
     private property <bool> custom-renderers-open: false;
     private property <bool> direct-sub-open: false;
+
+    private property <bool> stress-test-open: false;
+    private property <bool> multistep-footer-open: false;
+    private property <int> multistep-footer-step: 0;
+    private property <bool> dynamic-footer-open: false;
+    private property <int> dynamic-footer-variant: 0;
 
     private property <[SelectOption]> narrow-viewport-options: [
         { value: "bottom", label: "bottom — slideUp (narrow)", enabled: true },
@@ -746,16 +753,241 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
-    DialogStoryStub {
-        story-title: "StressTest";
-        story-path: "Components/Dialog/Features — StressTest";
-        story-note: "Long title and subtitle; many footer buttons; narrow fullscreen + inner dialog.";
+    VerticalLayout {
+        spacing: 10px;
+        padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "StressTest";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog/Features — StressTest";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Long title and subtitle; five default-row actions with **`footer-button-layout: scroll`** on a narrow **`fullscreen`** shell (inner stacked dialog is PR13).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Button {
+            max-width: 220px;
+            align-content: ButtonAlignContent.start;
+            label: "Open stress dialog";
+            clicked => {
+                root.stress-test-open = true;
+            }
+        }
     }
 
-    DialogStoryStub {
-        story-title: "ReproMultistepDialogWithConditionalFooter";
-        story-path: "Components/Dialog/Features — ReproMultistepDialogWithConditionalFooter";
-        story-note: "Conditional footer by step; focus close button on step change.";
+    stress-test-dialog := Dialog {
+        open <=> root.stress-test-open;
+        narrow-layout: true;
+        narrow-position-preset: DialogNarrowPositionPreset.fullscreen;
+        width-preset: DialogWidthPreset.small;
+        footer-button-layout: DialogFooterButtonLayout.scroll;
+        title: "Very long dialog title used in stress tests — Lorem ipsum dolor sit amet, consectetur adipiscing elit";
+        subtitle: "Subtitle also runs long — Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Vestibulum dictum.";
+        footer-default-label: "Action one";
+        footer-extra-1-label: "Action two";
+        footer-extra-2-label: "Action three";
+        footer-danger-label: "Danger long label";
+        footer-primary-label: "Primary CTA";
+        footer-default-clicked => {
+        }
+        footer-extra-1-clicked => {
+        }
+        footer-extra-2-clicked => {
+        }
+        footer-danger-clicked => {
+            root.stress-test-open = false;
+        }
+        footer-primary-clicked => {
+        }
+        on-close(_gesture) => {
+            root.stress-test-open = false;
+        }
+
+        Text {
+            text: "Body copy: narrow width + **`scroll`** footer keeps a single action row; pan horizontally when the row overflows.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 10px;
+        padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "ReproMultistepDialogWithConditionalFooter";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog/Features — ReproMultistepDialogWithConditionalFooter";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Multistep flow: **`footer-has-danger-button`** / **`footer-has-primary-button`** follow **`multistep-footer-step`** (focus-on-step parity is later).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Button {
+            max-width: 240px;
+            align-content: ButtonAlignContent.start;
+            label: "Open multistep dialog";
+            clicked => {
+                root.multistep-footer-step = 0;
+                root.multistep-footer-open = true;
+            }
+        }
+    }
+
+    multistep-footer-dialog := Dialog {
+        open <=> root.multistep-footer-open;
+        title: "Multistep";
+        subtitle: root.multistep-footer-step == 0
+            ? "Step 1 — default action only"
+            : root.multistep-footer-step == 1
+            ? "Step 2 — danger appears"
+            : "Step 3 — full footer";
+        footer-has-danger-button: root.multistep-footer-step >= 1;
+        footer-has-primary-button: root.multistep-footer-step >= 2;
+        footer-default-label: root.multistep-footer-step < 2 ? "Next" : "Done";
+        footer-danger-label: "Remove";
+        footer-primary-label: "Confirm";
+        footer-default-clicked => {
+            if root.multistep-footer-step < 2 {
+                root.multistep-footer-step = root.multistep-footer-step + 1;
+            } else {
+                root.multistep-footer-open = false;
+            }
+        }
+        footer-danger-clicked => {
+            root.multistep-footer-open = false;
+        }
+        footer-primary-clicked => {
+            root.multistep-footer-open = false;
+        }
+        on-close(_gesture) => {
+            root.multistep-footer-open = false;
+        }
+
+        Text {
+            text: "Use **Next** to reveal danger, then primary. **Done** closes. Slint focus management for the close control on step change is not wired in this gallery.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 10px;
+        padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "RetainsFocusTrapWithDynamicContent";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog/Features — RetainsFocusTrapWithDynamicContent";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Toggles subtitle and which footer buttons exist while the dialog stays open (focus trap / inner dialog stacking are separate PRs).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Button {
+            max-width: 260px;
+            align-content: ButtonAlignContent.start;
+            label: "Open dynamic footer dialog";
+            clicked => {
+                root.dynamic-footer-variant = 0;
+                root.dynamic-footer-open = true;
+            }
+        }
+    }
+
+    dynamic-footer-dialog := Dialog {
+        open <=> root.dynamic-footer-open;
+        title: "Dynamic content";
+        subtitle: root.dynamic-footer-variant == 1
+            ? "Subtitle on — press **Cycle** to change footer membership."
+            : "";
+        footer-has-danger-button: root.dynamic-footer-variant == 0 || root.dynamic-footer-variant == 2;
+        footer-has-primary-button: root.dynamic-footer-variant == 0;
+        footer-extra-1-label: root.dynamic-footer-variant == 2 ? "Extra" : "";
+        footer-default-label: "Cycle layout";
+        footer-danger-label: "Close";
+        footer-primary-label: "Save";
+        footer-default-clicked => {
+            root.dynamic-footer-variant = root.dynamic-footer-variant == 0 ? 1 : root.dynamic-footer-variant == 1 ? 2 : 0;
+        }
+        footer-extra-1-clicked => {
+        }
+        footer-danger-clicked => {
+            root.dynamic-footer-open = false;
+        }
+        footer-primary-clicked => {
+            root.dynamic-footer-open = false;
+        }
+        on-close(_gesture) => {
+            root.dynamic-footer-open = false;
+        }
+
+        Text {
+            text: "Each **Cycle layout** advances: full three-button row → danger+default+extra → default-only + subtitle. **`show-footer`** stays true; visibility is per-button.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
     }
 
     DialogStoryStub {
@@ -768,12 +1000,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
         story-title: "NewIssues";
         story-path: "Components/Dialog/Features — NewIssues";
         story-note: "ActionList in body; initialFocusRef.";
-    }
-
-    DialogStoryStub {
-        story-title: "RetainsFocusTrapWithDynamicContent";
-        story-path: "Components/Dialog/Features — RetainsFocusTrapWithDynamicContent";
-        story-note: "Dynamic body/footer and stacked inner dialog.";
     }
 
     DialogStoryStub {
