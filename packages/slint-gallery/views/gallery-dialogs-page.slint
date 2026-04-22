@@ -209,8 +209,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
         open <=> root.default-outer-open;
         title: "My Dialog";
         width-preset: DialogWidthPreset.xlarge;
-        window-inner-width: AppWindow.window-width;
-        window-inner-height: AppWindow.window-height;
         footer-default-clicked => {
             root.default-inner-open = true;
         }
@@ -260,8 +258,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
         title: "Inner dialog!";
         width-preset: DialogWidthPreset.small;
         show-footer: false;
-        window-inner-width: AppWindow.window-width;
-        window-inner-height: AppWindow.window-height;
         footer-default-clicked => {
         }
         footer-danger-clicked => {

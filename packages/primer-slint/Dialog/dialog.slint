@@ -5,14 +5,13 @@ import { Button, ButtonVariant, IconButton, IconButtonVariant } from "../Buttons
 import { ButtonTokens, DialogTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 import { Icons } from "../assets/icons.slint";
 import { DialogWidthPreset } from "./types.slint";
+import { AppWindow } from "../tokens.slint";
 
 export component Dialog {
     in-out property <bool> open: false;
     in property <string> title: "Dialog";
     in property <string> subtitle: "";
     in property <DialogWidthPreset> width-preset: DialogWidthPreset.xlarge;
-    in property <length> window-inner-width: 800px;
-    in property <length> window-inner-height: 600px;
     in property <bool> allow-dismiss: true;
     /// When false, no footer row (matches React **`Dialog`** with no **`footerButtons`**).
     in property <bool> show-footer: true;
@@ -36,12 +35,10 @@ export component Dialog {
         : width-preset == DialogWidthPreset.large ? 480px
         : 640px;
 
-    private property <length> panel-max-h: max(root.window-inner-height - 64px, 120px);
+    private property <length> panel-max-h: max(AppWindow.window-height - 64px, 120px);
 
     modal-layer := ModalOverlay {
         open <=> root.open;
-        window-inner-width: root.window-inner-width;
-        window-inner-height: root.window-inner-height;
         panel-width: root.panel-w;
         panel-max-height: root.panel-max-h;
         allow-dismiss: root.allow-dismiss;

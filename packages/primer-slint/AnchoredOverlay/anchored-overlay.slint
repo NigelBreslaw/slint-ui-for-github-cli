@@ -6,12 +6,12 @@
 import { AnchoredOverlayAlign, AnchoredOverlaySide } from "./types.slint";
 import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
 import { LayoutTokens, OverlayTokens } from "../tokens.slint";
+import { AppWindow } from "../tokens.slint";
 
 export component AnchoredOverlay {
     in-out property <bool> open: false;
     /// Viewport width for horizontal clamp (root `Window` inner width).
-    in property <length> window-inner-width: 800px;
-    in property <length> window-inner-height: 800px;
+
     in property <length> anchor-abs-x: 0px;
     in property <length> anchor-abs-y: 0px;
     in property <length> anchor-width: 0px;
@@ -51,7 +51,7 @@ export component AnchoredOverlay {
         private property <length> body-width: panel-chrome.slot-preferred-width;
 
         private property <bool> flip-above:
-            root.anchor-abs-y + root.anchor-height + root.anchor-gap + body-height > root.window-inner-height
+            root.anchor-abs-y + root.anchor-height + root.anchor-gap + body-height > AppWindow.window-height
             && root.anchor-abs-y >= root.anchor-gap + body-height;
 
         private property <length> panel-window-y:
@@ -65,7 +65,7 @@ export component AnchoredOverlay {
             : root.align == AnchoredOverlayAlign.center ? root.anchor-abs-x + (root.anchor-width - root.effective-panel-width) / 2
             : root.anchor-abs-x + root.anchor-width - root.effective-panel-width;
 
-        private property <length> panel-window-x-max: max(0px, root.window-inner-width - root.effective-panel-width);
+        private property <length> panel-window-x-max: max(0px, AppWindow.window-width - root.effective-panel-width);
 
         private property <length> panel-window-x: max(0px, min(panel-window-x-raw, panel-window-x-max));
 
