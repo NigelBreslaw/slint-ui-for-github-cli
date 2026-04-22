@@ -24,7 +24,7 @@ import {
 } from "../../primer-slint/primer.slint";
 import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
 
-/// Select, PrimerTextInput (PR1 spike), AnchoredOverlay demo, ToggleSwitch (PR1 spike), Checkbox, CheckboxGroup gallery demos.
+/// Select, PrimerTextInput (PR1 spike), AnchoredOverlay demo, ToggleSwitch (track + knob PR3), Checkbox, CheckboxGroup gallery demos.
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -644,7 +644,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "PR1 spike: layout + API + placeholder track (tokens and parity in follow-up PRs).";
+            text: "PR3: track icons + sliding knob; static rest/disabled (hover/pressed in PR4).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -711,6 +711,58 @@ export component GalleryFormsPage inherits VerticalLayout {
                     size: ToggleSwitchSize.small;
                     status-label-position: ToggleSwitchStatusLabelPosition.end;
                     checked <=> demo-ts-end;
+                }
+            }
+        }
+
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Checked";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                ToggleSwitch {
+                    checked: true;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Disabled (off)";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                ToggleSwitch {
+                    disabled: true;
+                    checked: false;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Checked + disabled";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                ToggleSwitch {
+                    disabled: true;
+                    checked: true;
                 }
             }
         }

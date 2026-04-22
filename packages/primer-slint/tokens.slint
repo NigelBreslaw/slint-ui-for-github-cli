@@ -641,18 +641,20 @@ export global CheckboxTokens {
     out property <color> checkbox-iconColor-disabled: ButtonTokens.control-fgColor-disabled;
 }
 
-// primer-tokens `functional/color/control.json5` — **`controlTrack`**, **`control.checked`**, **`controlKnob`** (knob/icon wiring in PR3+). React: **`ToggleSwitch.module.css`**. Composes **`PrimerColors`**, **`CheckboxTokens`** (checked hover/active = **`control.checked.bgColor`**, same as checkbox fill), **`ButtonTokens`** (`control-fgColor-disabled` ↔ disabled fg family).
+// primer-tokens `functional/color/control.json5` — **`controlTrack`**, **`control.checked`**, **`controlKnob`**. React: **`ToggleSwitch.module.css`**. Composes **`PrimerColors`**, **`CheckboxTokens`**, **`ButtonTokens`**.
 //
-// Token audit (PR2): | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
+// Token audit: | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
 // |--------|---------------------------|-------|-------|-----------|
 // | Track bg unchecked rest | **`controlTrack.bgColor.rest`** | ToggleSwitchTokens | **`track-bgColor-rest`** | **`ToggleSwitch`** |
-// | Track bg unchecked hover | **`controlTrack.bgColor.hover`** | ToggleSwitchTokens | **`track-bgColor-hover`** | PR3+ |
-// | Track bg unchecked active | **`controlTrack.bgColor.active`** | ToggleSwitchTokens | **`track-bgColor-active`** | PR3+ |
-// | Track bg disabled | **`controlTrack.bgColor.disabled`** → **`fgColor.disabled`** | ToggleSwitchTokens | **`track-bgColor-disabled`** | **`ToggleSwitch`** |
+// | Track bg unchecked hover | **`controlTrack.bgColor.hover`** | ToggleSwitchTokens | **`track-bgColor-hover`** | PR4+ |
+// | Track bg unchecked active | **`controlTrack.bgColor.active`** | ToggleSwitchTokens | **`track-bgColor-active`** | PR4+ |
+// | Track bg disabled | **`controlTrack.bgColor.disabled`** | ToggleSwitchTokens | **`track-bgColor-disabled`** | **`ToggleSwitch`** |
 // | Track border rest | **`controlTrack.borderColor.rest`** | ToggleSwitchTokens | **`track-borderColor-rest`** | **`ToggleSwitch`** |
-// | Track border checked rest | **`control.checked.borderColor.rest`** (transparent) | ToggleSwitchTokens | **`track-borderColor-checked`** | PR3+ |
-// | Checked track rest | **`control.checked.bgColor.rest`** | ToggleSwitchTokens | **`track-bgColor-checked-rest`** | **`ToggleSwitch`** |
-// | Checked track hover/active | **`control.checked.bgColor.hover/active`** | ToggleSwitchTokens | **`track-bgColor-checked-hover`** / **`track-bgColor-checked-active`** | PR3+ |
+// | Track border checked | **`control.checked.borderColor.rest`** | ToggleSwitchTokens | **`track-borderColor-checked`** | **`ToggleSwitch`** |
+// | Checked track rest/hover/active | **`control.checked.bgColor.*`** | ToggleSwitchTokens | **`track-bgColor-checked-*`** | **`ToggleSwitch`** / PR4 |
+// | Line icon fg | **`control.checked.fgColor.rest/disabled`** | ToggleSwitchTokens | **`line-icon-fgColor-*`** | **`ToggleSwitch`** |
+// | Circle icon fg | **`controlTrack.fgColor.rest/disabled`** | ToggleSwitchTokens | **`circle-icon-fgColor-*`** | **`ToggleSwitch`** |
+// | Knob fill/border | **`controlKnob.bgColor/borderColor.*`** | ToggleSwitchTokens | **`knob-*`** | **`ToggleSwitch`** |
 export global ToggleSwitchTokens {
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
@@ -677,6 +679,25 @@ export global ToggleSwitchTokens {
     out property <color> track-bgColor-checked-rest: PrimerColors.bgColor-accent-emphasis;
     out property <color> track-bgColor-checked-hover: CheckboxTokens.checkbox-bgColor-checked-hover;
     out property <color> track-bgColor-checked-active: CheckboxTokens.checkbox-bgColor-checked-active;
+
+    out property <color> line-icon-fgColor-rest: PrimerColors.fgOnEmphasis;
+    out property <color> line-icon-fgColor-disabled: CheckboxTokens.checkbox-fgColor-checked-disabled;
+
+    out property <color> circle-icon-fgColor-rest: PrimerColors.fgColor-muted;
+    out property <color> circle-icon-fgColor-disabled: PrimerColors.fgOnEmphasis;
+
+    property <color> knob-bg-rest-light: #ffffff;
+    property <color> knob-bg-rest-dark: #343b43;
+    out property <color> knob-bgColor-rest: color-scheme == ColorScheme.dark ? knob-bg-rest-dark : knob-bg-rest-light;
+
+    out property <color> knob-bgColor-disabled: ButtonTokens.button-default-bgColor-disabled;
+
+    property <color> knob-border-rest-light: #858f99;
+    property <color> knob-border-rest-dark: #656d76;
+    out property <color> knob-borderColor-rest: color-scheme == ColorScheme.dark ? knob-border-rest-dark : knob-border-rest-light;
+
+    out property <color> knob-borderColor-checked: PrimerColors.borderColor-accent-emphasis;
+    out property <color> knob-borderColor-disabled: CheckboxTokens.checkbox-bgColor-checked-disabled;
 }
 
 export global TextInputTokens {

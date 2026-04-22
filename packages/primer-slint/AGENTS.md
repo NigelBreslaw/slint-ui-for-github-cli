@@ -39,7 +39,7 @@ Public docs: [Primer Design System](https://primer.style/design/system), [Produc
 | **PrimerColors** | Semantic surfaces, shared primitives — each shared **hex** appears **once**. |
 | **ButtonTokens** | `color-btn-*`, `button-*`, action-list / icon-button tints; composes from **`PrimerColors`**. |
 | **CheckboxTokens** | Unchecked/checked/indeterminate/disabled paths; composes from **`PrimerColors`** + **`ButtonTokens`**. |
-| **ToggleSwitchTokens** | Toggle **track** (`controlTrack` / `control.checked` from primer-tokens); composes **`PrimerColors`** + **`CheckboxTokens`** `out` (checked hover/active + disabled track). Knob/icon tokens in later PRs. |
+| **ToggleSwitchTokens** | Toggle **track**, **knob**, and **half-track icons** (`controlTrack`, `control.checked`, `controlKnob`); composes **`PrimerColors`** + **`CheckboxTokens`** + **`ButtonTokens`** `out`. Pointer hover/active tints wired in PR4. |
 | **TextInputTokens** | **`PrimerTextInput`** field chrome (rest / hover / contrast inset / focus / validation / disabled borders + fills); composes **`PrimerColors`** + **`ButtonTokens`** only. |
 | **BannerTokens** | Per-variant banner surfaces; **only** from **`PrimerColors`**. |
 | **LabelTokens** | Product **Label** chips; **only** from **`PrimerColors`**. |

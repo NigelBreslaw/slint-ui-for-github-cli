@@ -322,6 +322,8 @@ export type SlintIconsGlobal = {
   star: ImageData;
   eye: ImageData;
   repo_forked: ImageData;
+  toggle_switch_line: ImageData;
+  toggle_switch_circle: ImageData;
 };
 
 export type MainWindowInstance = {

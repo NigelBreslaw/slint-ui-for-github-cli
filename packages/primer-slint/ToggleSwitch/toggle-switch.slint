@@ -1,6 +1,7 @@
-// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`** for track colors (knob/icons/interaction in later PRs).
+// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`** track palette; PR3 track icons + sliding knob (static rest/disabled; pointer hover in PR4).
 // Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
 
+import { Icons } from "../assets/icons.slint";
 import { LayoutTokens, PrimerColors, ToggleSwitchTokens } from "../tokens.slint";
 
 export enum ToggleSwitchSize {
@@ -28,9 +29,20 @@ export component ToggleSwitch {
     private property <bool> accepts-interaction: !root.disabled && !root.loading;
     private property <length> track-width: root.size == ToggleSwitchSize.small ? 48px : 64px;
     private property <length> track-height: root.size == ToggleSwitchSize.small ? 24px : 32px;
+    private property <length> track-half-w: root.track-width / 2;
+    private property <length> icon-diameter: root.size == ToggleSwitchSize.small ? 12px : 16px;
+    private property <length> knob-w: root.track-width / 2 - 2px;
+    private property <length> knob-h: root.track-height - 2px;
+    private property <length> knob-x: root.checked ? root.track-width - root.knob-w - 1px : 1px;
+    private property <length> knob-corner-radius: LayoutTokens.borderRadius-medium - 2px;
+
     private property <length> status-font-size: root.size == ToggleSwitchSize.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
     private property <color> track-background: root.disabled ? ToggleSwitchTokens.track-bgColor-disabled : (root.checked ? ToggleSwitchTokens.track-bgColor-checked-rest : ToggleSwitchTokens.track-bgColor-rest);
     private property <color> track-border-color: root.disabled ? ToggleSwitchTokens.track-borderColor-disabled : (root.checked ? ToggleSwitchTokens.track-borderColor-checked : ToggleSwitchTokens.track-borderColor-rest);
+    private property <color> line-icon-fg: root.disabled ? ToggleSwitchTokens.line-icon-fgColor-disabled : ToggleSwitchTokens.line-icon-fgColor-rest;
+    private property <color> circle-icon-fg: root.disabled ? ToggleSwitchTokens.circle-icon-fgColor-disabled : ToggleSwitchTokens.circle-icon-fgColor-rest;
+    private property <color> knob-fill: root.disabled ? ToggleSwitchTokens.knob-bgColor-disabled : ToggleSwitchTokens.knob-bgColor-rest;
+    private property <color> knob-stroke: root.disabled ? ToggleSwitchTokens.knob-borderColor-disabled : (root.checked ? ToggleSwitchTokens.knob-borderColor-checked : ToggleSwitchTokens.knob-borderColor-rest);
 
     touch := TouchArea {
         enabled: root.accepts-interaction;
@@ -72,6 +84,58 @@ export component ToggleSwitch {
                     border-width: 1px;
                     border-color: root.track-border-color;
                     background: root.track-background;
+                    clip: true;
+
+                    HorizontalLayout {
+                        x: 0px;
+                        y: 0px;
+                        width: parent.width;
+                        height: parent.height;
+                        spacing: 0px;
+
+                        Rectangle {
+                            width: root.track-half-w;
+                            height: root.track-height;
+                            background: transparent;
+                            clip: true;
+
+                            Image {
+                                source: Icons.toggle_switch_line;
+                                width: root.icon-diameter;
+                                height: root.icon-diameter;
+                                x: (parent.width - self.width) / 2 + (root.checked ? 0px : -parent.width);
+                                y: (parent.height - self.height) / 2;
+                                colorize: root.line-icon-fg;
+                            }
+                        }
+
+                        Rectangle {
+                            width: root.track-half-w;
+                            height: root.track-height;
+                            background: transparent;
+                            clip: true;
+
+                            Image {
+                                source: Icons.toggle_switch_circle;
+                                width: root.icon-diameter;
+                                height: root.icon-diameter;
+                                x: (parent.width - self.width) / 2 + (root.checked ? parent.width : 0px);
+                                y: (parent.height - self.height) / 2;
+                                colorize: root.circle-icon-fg;
+                            }
+                        }
+                    }
+
+                    Rectangle {
+                        x: root.knob-x;
+                        y: 1px;
+                        width: root.knob-w;
+                        height: root.knob-h;
+                        border-radius: root.knob-corner-radius;
+                        border-width: 1px;
+                        border-color: root.knob-stroke;
+                        background: root.knob-fill;
+                    }
                 }
             }
 
