@@ -654,6 +654,9 @@ export global OverlayTokens {
     out property <length> panel-border-width: LayoutTokens.table-border-width;
     out property <length> panel-border-radius: LayoutTokens.borderRadius-large;
     out property <[DropShadowLayer]> panel-elevation-shadow: ShadowTokens.shadow-floating-small;
+    /// Primer modal panel max size vs host viewport (**`AppWindow`**, e.g. gallery `changed width` / `height`). Used by **`ModalOverlay`** and **`Dialog`** (single source — do not duplicate `64px` / `120px` off **`AppWindow`** here).
+    out property <length> modal-viewport-max-width: max(AppWindow.window-width - 64px, 120px);
+    out property <length> modal-viewport-max-height: max(AppWindow.window-height - 64px, 120px);
 }
 
 // primer-ui-react `Dialog.module.css` (`.Header`, `.HeaderContent`, `.Body`, `.Footer`) + primer-tokens `functional/size/size.json5` base sizes. Composes **`LayoutTokens`** only (no literals). Surfaces use **`OverlayTokens`** / **`PrimerColors`** at shell level.

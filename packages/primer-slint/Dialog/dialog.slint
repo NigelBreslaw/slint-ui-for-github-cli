@@ -2,10 +2,9 @@
 
 import { ModalOverlay } from "../AnchoredOverlay/modal-overlay.slint";
 import { Button, ButtonVariant, IconButton, IconButtonVariant } from "../Buttons/buttons.slint";
-import { ButtonTokens, DialogTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { ButtonTokens, DialogTokens, LayoutTokens, OverlayTokens, PrimerColors, Size } from "../tokens.slint";
 import { Icons } from "../assets/icons.slint";
 import { DialogWidthPreset } from "./types.slint";
-import { AppWindow } from "../tokens.slint";
 
 export component Dialog {
     in-out property <bool> open: false;
@@ -36,12 +35,10 @@ export component Dialog {
         : width-preset == DialogWidthPreset.large ? 480px
         : 640px;
 
-    private property <length> panel-max-h: max(AppWindow.window-height - 64px, 120px);
-
     modal-layer := ModalOverlay {
         open <=> root.open;
         panel-width: root.panel-w;
-        panel-max-height: root.panel-max-h;
+        panel-max-height: OverlayTokens.modal-viewport-max-height;
         allow-dismiss: root.allow-dismiss;
         slot-padding: 0px;
         close-requested => {

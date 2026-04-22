@@ -15,10 +15,9 @@ export component ModalOverlay {
     in property <length> slot-padding: 0px;
     callback close-requested();
 
-    private property <length> panel-max-w: max(AppWindow.window-width - 64px, 120px);
-    private property <length> panel-max-h: max(AppWindow.window-height - 64px, 120px);
-    private property <length> panel-w: min(root.panel-width, root.panel-max-w);
-    private property <length> panel-h: min(root.panel-max-height, root.panel-max-h);
+    private property <length> panel-w: min(root.panel-width, OverlayTokens.modal-viewport-max-width);
+    /// Requested max height ∩ viewport cap (when **`OverlayPanelChrome`** height is wired again, bind here).
+    private property <length> panel-h: min(root.panel-max-height, OverlayTokens.modal-viewport-max-height);
 
     changed open => {
         if root.open {
