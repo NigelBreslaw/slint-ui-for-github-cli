@@ -102,7 +102,11 @@ export component AnchoredOverlay {
                 surface-background: root.panel-fill;
                 surface-border: root.panel-border-color;
                 surface-border-width: root.panel-border-width;
-                surface-border-radius: root.panel-border-radius;
+                elevation-border-radius: root.panel-border-radius;
+                surface-border-top-left-radius: root.panel-border-radius;
+                surface-border-top-right-radius: root.panel-border-radius;
+                surface-border-bottom-right-radius: root.panel-border-radius;
+                surface-border-bottom-left-radius: root.panel-border-radius;
                 surface-shadow: root.panel-elevation-shadow;
                 slot-padding: root.slot-padding;
                 slot-fill-height: !root.shrink-wrap;

@@ -4,6 +4,7 @@ import {
     Dialog,
     DialogAlignPreset,
     DialogHeightPreset,
+    DialogPositionPreset,
     DialogWidthPreset,
     Select,
     SelectOption,
@@ -56,7 +57,7 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align (top/bottom)** are live (**PR6** **`align-preset`**); other stories are stubs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align (top/bottom)** (**PR6** **`align-preset`**), **Side sheet (left/right)** (**PR7** **`position-preset`**) are live; other stories are stubs.
 export component GalleryDialogsPage inherits VerticalLayout {
     spacing: 32px;
     width: 100%;
@@ -66,6 +67,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <bool> playground-open: false;
     private property <bool> align-demo-open: false;
+    private property <bool> side-sheet-open: false;
 
     private property <[SelectOption]> playground-width-options: [
         { value: "small", label: "small (296px)", enabled: true },
@@ -103,6 +105,16 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <DialogAlignPreset> align-vertical-preset:
         align-vertical-index == 0 ? DialogAlignPreset.top : DialogAlignPreset.bottom;
+
+    private property <[SelectOption]> side-sheet-edge-options: [
+        { value: "left", label: "left (slide from left)", enabled: true },
+        { value: "right", label: "right (slide from right)", enabled: true },
+    ];
+
+    private property <int> side-sheet-edge-index: 1;
+
+    private property <DialogPositionPreset> side-sheet-position-preset:
+        side-sheet-edge-index == 0 ? DialogPositionPreset.left : DialogPositionPreset.right;
 
     Text {
         text: "Dialog";
@@ -391,6 +403,76 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
+    VerticalLayout {
+        spacing: 10px;
+        padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Text {
+            text: "Side sheet";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Components/Dialog/Features — [Position] Side sheet";
+            color: PrimerColors.fgColor-muted;
+            font-size: 11px;
+            wrap: word-wrap;
+        }
+
+        Select {
+            label-text: "Edge";
+            placeholder: "Choose left or right…";
+            options: side-sheet-edge-options;
+            selected-index <=> side-sheet-edge-index;
+            validation-status: ValidationStatus.none;
+            selected-changed(_idx) => {
+            }
+        }
+
+        Button {
+            max-width: 200px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.side-sheet-open = true;
+            }
+        }
+    }
+
+    side-sheet-dialog := Dialog {
+        open <=> root.side-sheet-open;
+        title: side-sheet-edge-index == 0 ? "Side sheet (left)" : "Side sheet (right)";
+        position-preset: root.side-sheet-position-preset;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        footer-default-clicked => {
+        }
+        footer-danger-clicked => {
+            root.side-sheet-open = false;
+        }
+        footer-primary-clicked => {
+        }
+        on-close(_gesture) => {
+            root.side-sheet-open = false;
+        }
+
+        Text {
+            text: "**`position-preset`** **left** / **right** uses **`DialogTokens.overlay-sheet-enter-duration`** slide-in motion, full viewport height, flush inner edge (**`OverlayPanelChrome`** asymmetric radii). Compare with **Align** for centered **`ModalOverlay`** motion.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+    }
+
     DialogStoryStub {
         story-title: "WithCustomRenderers";
         story-path: "Components/Dialog/Features — WithCustomRenderers";
@@ -425,12 +507,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
         story-title: "FullScreenNarrow";
         story-path: "Components/Dialog/Features — [Position] Fullscreen (narrow)";
         story-note: "position.narrow fullscreen, regular center.";
-    }
-
-    DialogStoryStub {
-        story-title: "SideSheet";
-        story-path: "Components/Dialog/Features — [Position] Side sheet";
-        story-note: "position right; full viewport height.";
     }
 
     DialogStoryStub {

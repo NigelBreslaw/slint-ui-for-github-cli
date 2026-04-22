@@ -8,6 +8,7 @@ import {
     IconButtonVariant,
 } from "../Buttons/buttons.slint";
 import {
+    AppWindow,
     DialogTokens,
     LayoutTokens,
     OverlayTokens,
@@ -15,7 +16,12 @@ import {
     Size,
 } from "../tokens.slint";
 import { Icons } from "../assets/icons.slint";
-import { DialogAlignPreset, DialogHeightPreset, DialogWidthPreset } from "./types.slint";
+import {
+    DialogAlignPreset,
+    DialogHeightPreset,
+    DialogPositionPreset,
+    DialogWidthPreset,
+} from "./types.slint";
 
 export component Dialog {
     in-out property <bool> open: false;
@@ -24,8 +30,10 @@ export component Dialog {
     in property <DialogWidthPreset> width-preset: DialogWidthPreset.xlarge;
     /// Matches React **`Dialog`** **`height`** (**`heightMap`**: **small** = **480px**, **large** = **640px**, **auto** = content up to viewport).
     in property <DialogHeightPreset> height-preset: DialogHeightPreset.auto;
-    /// Matches React **`Dialog`** **`align`** for the default centered viewport modal (**`position`** **center** only in this port).
+    /// Matches React **`Dialog`** **`align`** when **`position-preset`** is **`center`** (ignored for side sheets **left** / **right**).
     in property <DialogAlignPreset> align-preset: DialogAlignPreset.center;
+    /// Matches React **`Dialog`** **`position`** (**regular** breakpoint): **`center`** (default **`ModalOverlay`**) or side sheet **`left`** / **`right`** (**slideIn** motion, full viewport height).
+    in property <DialogPositionPreset> position-preset: DialogPositionPreset.center;
     in property <bool> allow-dismiss: true;
     /// When false, no footer row (matches React **`Dialog`** with no **`footerButtons`**).
     in property <bool> show-footer: true;
@@ -50,11 +58,15 @@ export component Dialog {
         : width-preset == DialogWidthPreset.large ? DialogTokens.width-large
         : DialogTokens.width-xlarge;
 
-    /// Passed to **`ModalOverlay.panel-max-height`** (intersected again with **`OverlayTokens.modal-viewport-max-height`** there).
+    /// Center-mode cap for **`ModalOverlay.panel-max-height`** (**`height-preset`** ∩ **`OverlayTokens.modal-viewport-max-height`** in **`ModalOverlay`**).
     private property <length> dialog-panel-max-height:
         root.height-preset == DialogHeightPreset.small ? min(DialogTokens.height-small, OverlayTokens.modal-viewport-max-height)
         : root.height-preset == DialogHeightPreset.large ? min(DialogTokens.height-large, OverlayTokens.modal-viewport-max-height)
         : OverlayTokens.modal-viewport-max-height;
+
+    /// Passed to **`ModalOverlay.panel-max-height`** — side sheets use **`AppWindow.window-height`** (**`Dialog.module.css`** **`100dvh`** semantics).
+    private property <length> dialog-overlay-max-height:
+        root.position-preset != DialogPositionPreset.center ? AppWindow.window-height : root.dialog-panel-max-height;
 
     /// Upper bound for the body **`Flickable`** viewport (**`shell max`** − header/footer estimates). Uses tokens only — avoids **`height: parent.height`** ↔ **`OverlayPanelChrome`** preferred-height cycles.
     private property <length> dialog-header-region-est:
@@ -69,13 +81,14 @@ export component Dialog {
     private property <length> dialog-footer-region-est:
         root.show-footer ? 1px + DialogTokens.footer-padding * 2 + LayoutTokens.control-medium-size : 0px;
 
-    private property <length> body-flick-max-h: max(root.dialog-panel-max-height - root.dialog-header-region-est - root.dialog-footer-region-est, DialogTokens.body-padding * 2 + LayoutTokens.text-body-size-small);
+    private property <length> body-flick-max-h: max(root.dialog-overlay-max-height - root.dialog-header-region-est - root.dialog-footer-region-est, DialogTokens.body-padding * 2 + LayoutTokens.text-body-size-small);
 
     modal-layer := ModalOverlay {
         open <=> root.open;
         panel-width: root.panel-w;
-        panel-max-height: root.dialog-panel-max-height;
+        panel-max-height: root.dialog-overlay-max-height;
         panel-vertical-align: root.align-preset;
+        panel-position: root.position-preset;
         allow-dismiss: root.allow-dismiss;
         slot-padding: 0px;
         close-requested => {
@@ -83,7 +96,7 @@ export component Dialog {
         }
 
         Rectangle {
-            max-height: root.dialog-panel-max-height;
+            max-height: root.dialog-overlay-max-height;
             clip: true;
 
             VerticalLayout {
