@@ -1,4 +1,4 @@
-// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`** track palette; PR3 track icons + sliding knob (static rest/disabled; pointer hover in PR4).
+// Primer ToggleSwitch — PR1 layout/API; PR2 **`ToggleSwitchTokens`**; PR3 icons + knob; PR4 track-only hover/pressed (**`states [ ]`**), **`FocusScope`** + focus ring + **`Key.Return`** / **`Key.Space`**.
 // Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
 
 import { Icons } from "../assets/icons.slint";
@@ -37,26 +37,28 @@ export component ToggleSwitch {
     private property <length> knob-corner-radius: LayoutTokens.borderRadius-medium - 2px;
 
     private property <length> status-font-size: root.size == ToggleSwitchSize.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
-    private property <color> track-background: root.disabled ? ToggleSwitchTokens.track-bgColor-disabled : (root.checked ? ToggleSwitchTokens.track-bgColor-checked-rest : ToggleSwitchTokens.track-bgColor-rest);
-    private property <color> track-border-color: root.disabled ? ToggleSwitchTokens.track-borderColor-disabled : (root.checked ? ToggleSwitchTokens.track-borderColor-checked : ToggleSwitchTokens.track-borderColor-rest);
+    private property <length> focus-ring-padding: 5px;
+    private property <length> focus-host-width: root.track-width + 2 * root.focus-ring-padding;
+    private property <length> focus-host-height: root.track-height + 2 * root.focus-ring-padding;
+
     private property <color> line-icon-fg: root.disabled ? ToggleSwitchTokens.line-icon-fgColor-disabled : ToggleSwitchTokens.line-icon-fgColor-rest;
     private property <color> circle-icon-fg: root.disabled ? ToggleSwitchTokens.circle-icon-fgColor-disabled : ToggleSwitchTokens.circle-icon-fgColor-rest;
     private property <color> knob-fill: root.disabled ? ToggleSwitchTokens.knob-bgColor-disabled : ToggleSwitchTokens.knob-bgColor-rest;
     private property <color> knob-stroke: root.disabled ? ToggleSwitchTokens.knob-borderColor-disabled : (root.checked ? ToggleSwitchTokens.knob-borderColor-checked : ToggleSwitchTokens.knob-borderColor-rest);
 
-    touch := TouchArea {
-        enabled: root.accepts-interaction;
-        clicked => {
-            root.checked = !root.checked;
-            root.changed(root.checked);
-            root.clicked();
-        }
+    HorizontalLayout {
+        spacing: 8px;
+        alignment: center;
 
-        HorizontalLayout {
-            spacing: 8px;
-            alignment: center;
+        if root.status-label-position == ToggleSwitchStatusLabelPosition.start: status-touch-start := TouchArea {
+            enabled: root.accepts-interaction;
+            clicked => {
+                root.checked = !root.checked;
+                root.changed(root.checked);
+                root.clicked();
+            }
 
-            if root.status-label-position == ToggleSwitchStatusLabelPosition.start: VerticalLayout {
+            VerticalLayout {
                 alignment: start;
                 min-width: 32px;
 
@@ -67,79 +69,156 @@ export component ToggleSwitch {
                     horizontal-alignment: right;
                 }
             }
+        }
 
-            VerticalLayout {
-                alignment: center;
-                if root.loading: Rectangle {
-                    width: 16px;
-                    height: 16px;
-                    background: PrimerColors.fgColor-muted;
-                    border-radius: 2px;
-                }
+        VerticalLayout {
+            alignment: center;
+            if root.loading: Rectangle {
+                width: 16px;
+                height: 16px;
+                background: PrimerColors.fgColor-muted;
+                border-radius: 2px;
+            }
 
-                track := Rectangle {
+            track-focus-host := Rectangle {
+                width: root.focus-host-width;
+                height: root.focus-host-height;
+                background: transparent;
+                border-width: track-fs.has-focus && root.accepts-interaction ? 2px : 0px;
+                border-color: PrimerColors.fgColor-link;
+                border-radius: LayoutTokens.borderRadius-medium + root.focus-ring-padding;
+
+                track-fs := FocusScope {
+                    x: root.focus-ring-padding;
+                    y: root.focus-ring-padding;
                     width: root.track-width;
                     height: root.track-height;
-                    border-radius: LayoutTokens.borderRadius-medium;
-                    border-width: 1px;
-                    border-color: root.track-border-color;
-                    background: root.track-background;
-                    clip: true;
 
-                    HorizontalLayout {
-                        x: 0px;
-                        y: 0px;
-                        width: parent.width;
-                        height: parent.height;
-                        spacing: 0px;
-
-                        Rectangle {
-                            width: root.track-half-w;
-                            height: root.track-height;
-                            background: transparent;
-                            clip: true;
-
-                            Image {
-                                source: Icons.toggle_switch_line;
-                                width: root.icon-diameter;
-                                height: root.icon-diameter;
-                                x: (parent.width - self.width) / 2 + (root.checked ? 0px : -parent.width);
-                                y: (parent.height - self.height) / 2;
-                                colorize: root.line-icon-fg;
-                            }
+                    key-pressed(event) => {
+                        if !root.accepts-interaction {
+                            return reject;
                         }
-
-                        Rectangle {
-                            width: root.track-half-w;
-                            height: root.track-height;
-                            background: transparent;
-                            clip: true;
-
-                            Image {
-                                source: Icons.toggle_switch_circle;
-                                width: root.icon-diameter;
-                                height: root.icon-diameter;
-                                x: (parent.width - self.width) / 2 + (root.checked ? parent.width : 0px);
-                                y: (parent.height - self.height) / 2;
-                                colorize: root.circle-icon-fg;
-                            }
+                        if event.text == Key.Return || event.text == Key.Space {
+                            root.checked = !root.checked;
+                            root.changed(root.checked);
+                            root.clicked();
+                            return accept;
                         }
+                        return reject;
                     }
 
-                    Rectangle {
-                        x: root.knob-x;
-                        y: 1px;
-                        width: root.knob-w;
-                        height: root.knob-h;
-                        border-radius: root.knob-corner-radius;
-                        border-width: 1px;
-                        border-color: root.knob-stroke;
-                        background: root.knob-fill;
+                    track-ta := TouchArea {
+                        width: 100%;
+                        height: 100%;
+                        enabled: root.accepts-interaction;
+                        clicked => {
+                            root.checked = !root.checked;
+                            root.changed(root.checked);
+                            root.clicked();
+                            track-fs.focus();
+                        }
+
+                        track-plate := Rectangle {
+                            width: root.track-width;
+                            height: root.track-height;
+                            border-radius: LayoutTokens.borderRadius-medium;
+                            border-width: 1px;
+                            clip: true;
+                            background: root.disabled ? ToggleSwitchTokens.track-bgColor-disabled : (root.checked ? ToggleSwitchTokens.track-bgColor-checked-rest : ToggleSwitchTokens.track-bgColor-rest);
+                            border-color: root.disabled ? ToggleSwitchTokens.track-borderColor-disabled : (root.checked ? ToggleSwitchTokens.track-borderColor-checked : ToggleSwitchTokens.track-borderColor-rest);
+
+                            HorizontalLayout {
+                                x: 0px;
+                                y: 0px;
+                                width: parent.width;
+                                height: parent.height;
+                                spacing: 0px;
+
+                                Rectangle {
+                                    width: root.track-half-w;
+                                    height: root.track-height;
+                                    background: transparent;
+                                    clip: true;
+
+                                    Image {
+                                        source: Icons.toggle_switch_line;
+                                        width: root.icon-diameter;
+                                        height: root.icon-diameter;
+                                        x: (parent.width - self.width) / 2 + (root.checked ? 0px : -parent.width);
+                                        y: (parent.height - self.height) / 2;
+                                        colorize: root.line-icon-fg;
+                                    }
+                                }
+
+                                Rectangle {
+                                    width: root.track-half-w;
+                                    height: root.track-height;
+                                    background: transparent;
+                                    clip: true;
+
+                                    Image {
+                                        source: Icons.toggle_switch_circle;
+                                        width: root.icon-diameter;
+                                        height: root.icon-diameter;
+                                        x: (parent.width - self.width) / 2 + (root.checked ? parent.width : 0px);
+                                        y: (parent.height - self.height) / 2;
+                                        colorize: root.circle-icon-fg;
+                                    }
+                                }
+                            }
+
+                            Rectangle {
+                                x: root.knob-x;
+                                y: 1px;
+                                width: root.knob-w;
+                                height: root.knob-h;
+                                border-radius: root.knob-corner-radius;
+                                border-width: 1px;
+                                border-color: root.knob-stroke;
+                                background: root.knob-fill;
+                            }
+
+                            states [
+                                disabled when root.disabled: {
+                                    track-plate.background: ToggleSwitchTokens.track-bgColor-disabled;
+                                    track-plate.border-color: ToggleSwitchTokens.track-borderColor-disabled;
+                                }
+                                checked-pressed when !root.disabled && root.checked && track-ta.pressed: {
+                                    track-plate.background: ToggleSwitchTokens.track-bgColor-checked-active;
+                                    track-plate.border-color: ToggleSwitchTokens.track-borderColor-checked;
+                                }
+                                checked-hover when !root.disabled && root.checked && !track-ta.pressed && track-ta.has-hover: {
+                                    track-plate.background: ToggleSwitchTokens.track-bgColor-checked-hover;
+                                    track-plate.border-color: ToggleSwitchTokens.track-borderColor-checked;
+                                }
+                                checked-rest when !root.disabled && root.checked && !track-ta.pressed && !track-ta.has-hover: {
+                                    track-plate.background: ToggleSwitchTokens.track-bgColor-checked-rest;
+                                    track-plate.border-color: ToggleSwitchTokens.track-borderColor-checked;
+                                }
+                                unchecked-pressed when !root.disabled && !root.checked && track-ta.pressed: {
+                                    track-plate.background: ToggleSwitchTokens.track-bgColor-active;
+                                    track-plate.border-color: ToggleSwitchTokens.track-borderColor-rest;
+                                }
+                                unchecked-hover when !root.disabled && !root.checked && !track-ta.pressed && track-ta.has-hover: {
+                                    track-plate.background: ToggleSwitchTokens.track-bgColor-hover;
+                                    track-plate.border-color: ToggleSwitchTokens.track-borderColor-rest;
+                                }
+                            ]
+                        }
                     }
                 }
             }
+        }
 
-            if root.status-label-position == ToggleSwitchStatusLabelPosition.end: VerticalLayout {
+        if root.status-label-position == ToggleSwitchStatusLabelPosition.end: status-touch-end := TouchArea {
+            enabled: root.accepts-interaction;
+            clicked => {
+                root.checked = !root.checked;
+                root.changed(root.checked);
+                root.clicked();
+            }
+
+            VerticalLayout {
                 alignment: start;
                 min-width: 32px;
 
