@@ -34,7 +34,6 @@ export component Select {
     in property <ValidationStatus> validation-status: none;
     in property <string> validation-message: "";
     in property <bool> disabled: false;
-    in property <bool> block: false;
     in property <Size> size: medium;
     in property <[SelectOption]> options;
     /**
@@ -73,7 +72,7 @@ export component Select {
 
     vl := VerticalLayout {
         spacing: 6px;
-        width: block ? root.width : self.preferred-width;
+        // width: self.preferred-width;
 
         if label-text != "": Text {
             text: label-text;

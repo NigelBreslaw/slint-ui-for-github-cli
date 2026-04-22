@@ -56,7 +56,7 @@ component DialogStoryStub inherits VerticalLayout {
     }
 }
 
-/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align top**, **Align bottom** are live (**PR6** **`align-preset`**); other stories are stubs.
+/// Primer **Dialog** gallery (Storybook parity sections). **Default**, **Playground**, **Align (top/bottom)** are live (**PR6** **`align-preset`**); other stories are stubs.
 export component GalleryDialogsPage inherits VerticalLayout {
     spacing: 32px;
     width: 100%;
@@ -65,8 +65,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> default-inner-open: false;
 
     private property <bool> playground-open: false;
-    private property <bool> align-top-open: false;
-    private property <bool> align-bottom-open: false;
+    private property <bool> align-demo-open: false;
 
     private property <[SelectOption]> playground-width-options: [
         { value: "small", label: "small (296px)", enabled: true },
@@ -94,6 +93,16 @@ export component GalleryDialogsPage inherits VerticalLayout {
         playground-height-index == 0 ? DialogHeightPreset.auto
         : playground-height-index == 1 ? DialogHeightPreset.small
         : DialogHeightPreset.large;
+
+    private property <[SelectOption]> align-vertical-options: [
+        { value: "top", label: "top", enabled: true },
+        { value: "bottom", label: "bottom", enabled: true },
+    ];
+
+    private property <int> align-vertical-index: 0;
+
+    private property <DialogAlignPreset> align-vertical-preset:
+        align-vertical-index == 0 ? DialogAlignPreset.top : DialogAlignPreset.bottom;
 
     Text {
         text: "Dialog";
@@ -236,7 +245,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
             Select {
                 horizontal-stretch: 1;
-                block: true;
                 label-text: "Width";
                 placeholder: "Choose width…";
                 options: playground-width-options;
@@ -248,7 +256,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
             Select {
                 horizontal-stretch: 1;
-                block: true;
                 label-text: "Height";
                 placeholder: "Choose height…";
                 options: playground-height-options;
@@ -316,8 +323,9 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 10px;
-        width: 100%;
         padding-top: 16px;
+        alignment: start;
+        width: self.preferred-width;
 
         Rectangle {
             height: 1px;
@@ -325,24 +333,27 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Align top";
+            text: "Align top / bottom";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "Components/Dialog — Features — [Align] Top";
+            text: "Components/Dialog — Features — [Align] Top · [Align] Bottom";
             color: PrimerColors.fgColor-muted;
             font-size: 11px;
             wrap: word-wrap;
         }
 
-        Text {
-            text: "**`align-preset: top`** — panel **`y`** inset from viewport top (**`DialogTokens.align-viewport-edge-inset`**). Storybook: centered regular position.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
+        Select {
+            label-text: "Vertical align";
+            placeholder: "Choose top or bottom…";
+            options: align-vertical-options;
+            selected-index <=> align-vertical-index;
+            validation-status: ValidationStatus.none;
+            selected-changed(_idx) => {
+            }
         }
 
         Button {
@@ -350,96 +361,30 @@ export component GalleryDialogsPage inherits VerticalLayout {
             align-content: ButtonAlignContent.start;
             label: "Show dialog";
             clicked => {
-                root.align-top-open = true;
+                root.align-demo-open = true;
             }
         }
     }
 
-    align-top-dialog := Dialog {
-        open <=> root.align-top-open;
-        title: "Align top";
-        align-preset: DialogAlignPreset.top;
+    align-demo-dialog := Dialog {
+        open <=> root.align-demo-open;
+        title: align-vertical-index == 0 ? "Align top" : "Align bottom";
+        align-preset: root.align-vertical-preset;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;
         footer-default-clicked => {
         }
         footer-danger-clicked => {
-            root.align-top-open = false;
+            root.align-demo-open = false;
         }
         footer-primary-clicked => {
         }
         on-close(_gesture) => {
-            root.align-top-open = false;
+            root.align-demo-open = false;
         }
 
         Text {
-            text: "Dialog sits below the top inset; resize the window to compare with **Align bottom**.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-    }
-
-    VerticalLayout {
-        spacing: 10px;
-        width: 100%;
-        padding-top: 16px;
-
-        Rectangle {
-            height: 1px;
-            background: PrimerColors.borderColor-default;
-        }
-
-        Text {
-            text: "Align bottom";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Components/Dialog — Features — [Align] Bottom";
-            color: PrimerColors.fgColor-muted;
-            font-size: 11px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "**`align-preset: bottom`** — panel anchored above the bottom inset. Storybook: centered regular position.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
-        Button {
-            max-width: 200px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                root.align-bottom-open = true;
-            }
-        }
-    }
-
-    align-bottom-dialog := Dialog {
-        open <=> root.align-bottom-open;
-        title: "Align bottom";
-        align-preset: DialogAlignPreset.bottom;
-        width-preset: DialogWidthPreset.medium;
-        height-preset: DialogHeightPreset.auto;
-        footer-default-clicked => {
-        }
-        footer-danger-clicked => {
-            root.align-bottom-open = false;
-        }
-        footer-primary-clicked => {
-        }
-        on-close(_gesture) => {
-            root.align-bottom-open = false;
-        }
-
-        Text {
-            text: "Dialog sits above the bottom inset; pair with **Align top** to verify **`ModalOverlay.panel-shell`** **`y`**.";
+            text: "Resize the gallery window and switch **Vertical align** (close and reopen) to compare **`ModalOverlay.panel-shell`** **`y`** for **top** vs **bottom**.";
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             wrap: word-wrap;
