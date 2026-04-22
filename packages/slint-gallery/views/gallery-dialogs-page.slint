@@ -447,13 +447,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Components/Dialog/Features — [Position] Side sheet";
-            color: PrimerColors.fgColor-muted;
-            font-size: 11px;
-            wrap: word-wrap;
-        }
-
         Select {
             label-text: "Edge";
             placeholder: "Choose left or right…";
@@ -465,7 +458,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
 
         Button {
-            max-width: 200px;
             align-content: ButtonAlignContent.start;
             label: "Show dialog";
             clicked => {

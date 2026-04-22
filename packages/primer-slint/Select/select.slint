@@ -72,7 +72,6 @@ export component Select {
 
     vl := VerticalLayout {
         spacing: 6px;
-        // width: self.preferred-width;
 
         if label-text != "": Text {
             text: label-text;
@@ -86,10 +85,6 @@ export component Select {
             height: trigger-height;
 
             select-ctx := ContextMenuArea {
-                width: 100%;
-                height: 100%;
-                // Do not gate `enabled` on `has-options`: when false, Slint disables the subtree and
-                // the inner TouchArea never receives hover or clicks (ArrayModel length is unreliable).
                 enabled: !root.disabled;
 
                 Menu {
@@ -103,8 +98,6 @@ export component Select {
                 }
 
                 MultiDropShadow {
-                    width: parent.width;
-                    height: parent.height;
                     border-radius: LayoutTokens.borderRadius-medium;
                     shadows: [
                         {
@@ -123,20 +116,17 @@ export component Select {
                 }
 
                 Rectangle {
-                    width: parent.width;
-                    height: parent.height;
                     background: disabled ? PrimerColors.bgColor-default : ta.has-hover ? PrimerColors.bgColor-canvas-subtle : PrimerColors.bgColor-default;
                     border-radius: LayoutTokens.borderRadius-medium;
                     border-width: 1px;
                     border-color: trigger-border-color;
-                    clip: false;
+                    horizontal-stretch: 1;
 
                     HorizontalLayout {
                         padding-left: 10px;
                         padding-right: 8px;
                         spacing: 8px;
-                        width: 100%;
-                        height: 100%;
+                        horizontal-stretch: 1;
 
                         Text {
                             horizontal-stretch: 1;
@@ -144,7 +134,6 @@ export component Select {
                             text: selected-label != "" ? selected-label : placeholder;
                             font-size: trigger-font;
                             color: selected-label != "" ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
-                            overflow: elide;
                         }
 
                         Image {
