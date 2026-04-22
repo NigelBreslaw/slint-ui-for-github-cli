@@ -1,0 +1,89 @@
+// Primer ToggleSwitch — PR1 spike: layout + public API + placeholder chrome (tokens / parity in later PRs).
+// Upstream: primer-ui-react ToggleSwitch.tsx + ToggleSwitch.module.css
+
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export enum ToggleSwitchSize {
+    small,
+    medium,
+}
+
+export enum ToggleSwitchStatusLabelPosition {
+    start,
+    end,
+}
+
+export component ToggleSwitch {
+    in-out property <bool> checked: false;
+    in property <bool> disabled: false;
+    in property <bool> loading: false;
+    in property <ToggleSwitchSize> size: ToggleSwitchSize.medium;
+    in property <ToggleSwitchStatusLabelPosition> status-label-position: ToggleSwitchStatusLabelPosition.start;
+    in property <string> button-label-on: "On";
+    in property <string> button-label-off: "Off";
+
+    callback changed(bool);
+    callback clicked;
+
+    private property <bool> accepts-interaction: !root.disabled && !root.loading;
+    private property <length> track-width: root.size == ToggleSwitchSize.small ? 48px : 64px;
+    private property <length> track-height: root.size == ToggleSwitchSize.small ? 24px : 32px;
+    private property <length> status-font-size: root.size == ToggleSwitchSize.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
+
+    touch := TouchArea {
+        enabled: root.accepts-interaction;
+        clicked => {
+            root.checked = !root.checked;
+            root.changed(root.checked);
+            root.clicked();
+        }
+
+        HorizontalLayout {
+            spacing: 8px;
+            alignment: center;
+
+            if root.status-label-position == ToggleSwitchStatusLabelPosition.start: VerticalLayout {
+                alignment: start;
+                min-width: 32px;
+
+                Text {
+                    text: root.checked ? root.button-label-on : root.button-label-off;
+                    color: root.accepts-interaction ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+                    font-size: root.status-font-size;
+                    horizontal-alignment: right;
+                }
+            }
+
+            VerticalLayout {
+                alignment: center;
+                if root.loading: Rectangle {
+                    width: 16px;
+                    height: 16px;
+                    background: PrimerColors.fgColor-muted;
+                    border-radius: 2px;
+                }
+
+                track := Rectangle {
+                    width: root.track-width;
+                    height: root.track-height;
+                    border-radius: LayoutTokens.borderRadius-medium;
+                    border-width: 1px;
+                    border-color: PrimerColors.borderColor-default;
+                    background: root.checked ? #0969da : #eaeef2;
+                }
+            }
+
+            if root.status-label-position == ToggleSwitchStatusLabelPosition.end: VerticalLayout {
+                alignment: start;
+                min-width: 32px;
+
+                Text {
+                    text: root.checked ? root.button-label-on : root.button-label-off;
+                    color: root.accepts-interaction ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+                    font-size: root.status-font-size;
+                    horizontal-alignment: right;
+                }
+            }
+        }
+    }
+}
