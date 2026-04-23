@@ -907,26 +907,13 @@ export component GalleryDialogInstances inherits VerticalLayout {
             spacing: 0px;
             alignment: stretch;
 
-            DialogHeader {
+            StandardDialogHeader {
+                title: "Process Data";
+                subtitle: "Custom footer with loading states";
                 close-requested => {
                     root.loading-custom-footer-open = false;
                     root.loading-custom-saving = false;
                     root.loading-custom-processing = false;
-                }
-
-                Text {
-                    text: "Process Data";
-                    color: PrimerColors.fgColor-default;
-                    font-size: DialogTokens.title-font-size;
-                    font-weight: 600;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    text: "Custom footer with loading states";
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 13px;
-                    wrap: word-wrap;
                 }
             }
 

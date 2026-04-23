@@ -1,7 +1,8 @@
 // Full-panel composition host (**`@children`** = entire inner shell). Use with **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`** for Storybook **`WithCustomRenderers`** / **`WithDirectSubcomponents`** (`PR9`).
 // Geometry matches upstream Primer **Dialog** — keep in sync when changing viewport / position rules.
+// Viewport modal: **`ModalOverlay`** + clipped inner **`Rectangle`** (formerly **`DialogSurface`**, PR9).
 
-import { DialogSurface } from "./parts/dialog-surface.slint";
+import { ModalOverlay } from "../AnchoredOverlay/modal-overlay.slint";
 import {
     AppWindow,
     DialogTokens,
@@ -28,6 +29,9 @@ export component DialogCompose {
     in property <DialogFillMode> fill-mode: DialogFillMode.auto;
     callback on-close(gesture: string);
 
+    width: 0px;
+    height: 0px;
+
     private property <bool> narrow-active:
         root.narrow-layout || AppWindow.window-width <= DialogTokens.narrow-max-width;
 
@@ -51,7 +55,7 @@ export component DialogCompose {
     private property <length> dialog-overlay-max-height:
         root.is-side-sheet-layout || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen) ? AppWindow.window-height : root.dialog-panel-max-height;
 
-    surface := DialogSurface {
+    modal-layer := ModalOverlay {
         open <=> root.open;
         panel-width: root.panel-w;
         panel-max-height: root.dialog-overlay-max-height;
@@ -60,18 +64,24 @@ export component DialogCompose {
         narrow-viewport: root.narrow-active;
         narrow-position: root.narrow-position-preset;
         allow-dismiss: root.allow-dismiss;
-        inner-max-height: root.dialog-overlay-max-height;
-        inner-vertical-stretch-tall: root.is-tall-shell;
-        fill-mode <=> root.fill-mode;
+        slot-padding: 0px;
         close-requested => {
             root.on-close("escape");
         }
 
-        VerticalLayout {
-            alignment: stretch;
+        Rectangle {
+            min-height: root.fill-mode == DialogFillMode.screen-height ? AppWindow.window-height : 0px;
+            min-width: root.fill-mode == DialogFillMode.screen-width ? AppWindow.window-width : 0px;
+            max-height: root.dialog-overlay-max-height;
             vertical-stretch: root.is-tall-shell ? 1 : 0;
+            clip: true;
 
-            @children
+            VerticalLayout {
+                // alignment: stretch;
+                // vertical-stretch: root.is-tall-shell ? 1 : 0;
+
+                @children
+            }
         }
     }
 }
