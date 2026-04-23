@@ -1,4 +1,18 @@
+import {
+    AnchoredOverlay,
+    AnchoredOverlayAlign,
+    AnchoredOverlaySide,
+    Button,
+    ButtonAlignContent,
+    ButtonVariant,
+    Icons,
+    LayoutTokens,
+    SelectPanel,
+    SelectPanelItem,
+    SelectPanelMode,
+} from "../../primer-slint/primer.slint";
 import { PrimerColors } from "../../primer-slint/tokens.slint";
+import { GallerySelectPanelMulti } from "../gallery-select-panel-multi-state.slint";
 
 /// Primer **SelectPanel** gallery: Storybook-aligned demo regions will be filled in as **SelectPanelCompose** lands.
 /// **AnchoredOverlay** + trigger patterns stay in the gallery (same as Forms); this page owns the panel interior demos only.
@@ -6,6 +20,17 @@ export component GallerySelectPanelPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
+
+    private property <bool> baseline-select-panel-open: false;
+    private property <string> baseline-sp-filter: "";
+    private property <int> baseline-sp-focused: 0;
+    private property <[SelectPanelItem]> baseline-sp-items: [
+        { value: "enhancement", label: "enhancement", description: "New feature or request", swatch: #84b6eb, enabled: true },
+        { value: "bug", label: "bug", description: "Something isn't working", swatch: #d73a4a, enabled: true },
+        { value: "good-first-issue", label: "good first issue", description: "Good for newcomers", swatch: #3fb950, enabled: true },
+        { value: "documentation", label: "documentation", description: "Improvements or additions to documentation", swatch: #0075ca, enabled: true },
+        { value: "duplicate", label: "duplicate", description: "This issue or pull request already exists", swatch: #cfd3d7, enabled: true },
+    ];
 
     VerticalLayout {
         spacing: 12px;
@@ -27,7 +52,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
     }
 
     VerticalLayout {
-        spacing: 8px;
+        spacing: 12px;
         width: 100%;
 
         Text {
@@ -38,10 +63,86 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Placeholder: monolithic SelectPanel inside AnchoredOverlay (Forms-style).";
+            text: "Same pattern as Forms: AnchoredOverlay (vertical-side auto, align start), monolithic SelectPanel in multi mode with `multi-selected` / `multi-item-activated` via `GallerySelectPanelMulti`, footer Cancel/Apply. Escape closes the overlay.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
+        }
+
+        Text {
+            text: "Labels";
+            color: PrimerColors.fgColor-default;
+            font-size: 12px;
+            font-weight: 600;
+            wrap: word-wrap;
+        }
+
+        btn-baseline-select-panel := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "bug, good first issue";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => {
+                baseline-select-panel-open = true;
+            }
+        }
+
+        AnchoredOverlay {
+            open <=> baseline-select-panel-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 480px;
+            anchor-abs-x: btn-baseline-select-panel.absolute-position.x;
+            anchor-abs-y: btn-baseline-select-panel.absolute-position.y;
+            anchor-width: btn-baseline-select-panel.width;
+            anchor-height: btn-baseline-select-panel.height;
+            close-requested => {
+            }
+
+            SelectPanel {
+                width: 100%;
+                mode: SelectPanelMode.multi;
+                title: "Select labels";
+                subtitle: "Use labels to organize issues and pull requests";
+                filter-placeholder: "Filter items";
+                filter-text <=> baseline-sp-filter;
+                multi-items: baseline-sp-items;
+                multi-selected: GallerySelectPanelMulti.row-checked;
+                focused-index: baseline-sp-focused;
+                list-max-height: 200px;
+                show-footer: true;
+                filter-changed(_t) => {
+                }
+                single-selected-changed(_i) => {
+                }
+                multi-item-activated(ix) => {
+                    GallerySelectPanelMulti.row-activated(ix);
+                }
+
+                HorizontalLayout {
+                    spacing: LayoutTokens.button-content-gap;
+                    width: 100%;
+                    alignment: end;
+
+                    Button {
+                        label: "Cancel";
+                        clicked => {
+                            baseline-select-panel-open = false;
+                        }
+                    }
+
+                    Button {
+                        label: "Apply";
+                        variant: ButtonVariant.primary;
+                        clicked => {
+                            baseline-select-panel-open = false;
+                        }
+                    }
+                }
+            }
         }
     }
 
