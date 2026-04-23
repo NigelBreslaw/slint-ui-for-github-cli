@@ -39,7 +39,9 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> narrow-demo-open: false;
     private property <bool> narrow-demo-compose-open: false;
     private property <bool> custom-renderers-open: false;
+    private property <bool> custom-renderers-compose-open: false;
     private property <bool> direct-sub-open: false;
+    private property <bool> direct-sub-compose-open: false;
 
     private property <bool> stress-test-open: false;
     private property <bool> stress-test-compose-open: false;
@@ -55,9 +57,15 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> loading-footer-demo-open: false;
     private property <bool> loading-footer-submitting: false;
     private property <bool> loading-footer-deleting: false;
+    private property <bool> loading-footer-compose-open: false;
+    private property <bool> loading-footer-compose-submitting: false;
+    private property <bool> loading-footer-compose-deleting: false;
     private property <bool> loading-custom-footer-open: false;
     private property <bool> loading-custom-saving: false;
     private property <bool> loading-custom-processing: false;
+    private property <bool> loading-custom-footer-compose-open: false;
+    private property <bool> loading-custom-compose-saving: false;
+    private property <bool> loading-custom-compose-processing: false;
 
     private property <[SelectOption]> narrow-viewport-options: [
         { value: "bottom", label: "bottom — slideUp (narrow)", enabled: true },
@@ -780,12 +788,27 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Button {
-            max-width: 240px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                root.custom-renderers-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                max-width: 240px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog";
+                clicked => {
+                    root.custom-renderers-open = true;
+                }
+            }
+
+            Button {
+                max-width: 280px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.custom-renderers-compose-open = true;
+                }
             }
         }
     }
@@ -863,6 +886,78 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
+    custom-renderers-compose-dialog := DialogCompose {
+        open <=> root.custom-renderers-compose-open;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.custom-renderers-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            DialogHeader {
+                close-requested => {
+                    root.custom-renderers-compose-open = false;
+                }
+
+                Text {
+                    text: "Custom header title";
+                    color: PrimerColors.fgColor-default;
+                    font-size: DialogTokens.title-font-size;
+                    font-weight: 600;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "renderHeader-style subtitle";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "**`DialogCompose`** + **`DialogHeader`** / **`DialogBody`** / **`DialogFooter`** (`PR9`). Body is scrollable between header and footer.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Pretend this block is **`renderBody`** output.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Open Second Dialog";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+                Button {
+                    label: "Delete the universe";
+                    variant: ButtonVariant.danger;
+                    clicked => {
+                        root.custom-renderers-compose-open = false;
+                    }
+                }
+                Button {
+                    label: "Proceed";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                    }
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 10px;
@@ -889,12 +984,27 @@ export component GalleryDialogsPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        Button {
-            max-width: 240px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                root.direct-sub-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                max-width: 240px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog";
+                clicked => {
+                    root.direct-sub-open = true;
+                }
+            }
+
+            Button {
+                max-width: 280px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.direct-sub-compose-open = true;
+                }
             }
         }
     }
@@ -949,6 +1059,62 @@ export component GalleryDialogsPage inherits VerticalLayout {
                     variant: ButtonVariant.primary;
                     clicked => {
                         root.direct-sub-open = false;
+                    }
+                }
+            }
+        }
+    }
+
+    direct-sub-compose-dialog := DialogCompose {
+        open <=> root.direct-sub-compose-open;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.direct-sub-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            DialogHeader {
+                close-requested => {
+                    root.direct-sub-compose-open = false;
+                }
+
+                Text {
+                    text: "Direct subcomponents";
+                    color: PrimerColors.fgColor-default;
+                    font-size: DialogTokens.title-font-size;
+                    font-weight: 600;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "**`DialogFooter`** **`use-default-actions: false`** supplies a custom button row below **`DialogBody`**.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+
+                Button {
+                    label: "Cancel";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                        root.direct-sub-compose-open = false;
+                    }
+                }
+
+                Button {
+                    label: "Save";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        root.direct-sub-compose-open = false;
                     }
                 }
             }
@@ -1536,14 +1702,31 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Button {
-            max-width: 260px;
-            align-content: ButtonAlignContent.start;
-            label: "Open loading-footer dialog";
-            clicked => {
-                root.loading-footer-submitting = false;
-                root.loading-footer-deleting = false;
-                root.loading-footer-demo-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                max-width: 260px;
+                align-content: ButtonAlignContent.start;
+                label: "Open loading-footer dialog";
+                clicked => {
+                    root.loading-footer-submitting = false;
+                    root.loading-footer-deleting = false;
+                    root.loading-footer-demo-open = true;
+                }
+            }
+
+            Button {
+                max-width: 280px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.loading-footer-compose-submitting = false;
+                    root.loading-footer-compose-deleting = false;
+                    root.loading-footer-compose-open = true;
+                }
             }
         }
     }
@@ -1588,6 +1771,75 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
+    loading-footer-compose-dialog := DialogCompose {
+        open <=> root.loading-footer-compose-open;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.loading-footer-compose-open = false;
+            root.loading-footer-compose-submitting = false;
+            root.loading-footer-compose-deleting = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: "Dialog title";
+
+                close-requested => {
+                    loading-footer-compose-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "This is some text";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Cancel";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                        root.loading-footer-compose-open = false;
+                        root.loading-footer-compose-submitting = false;
+                        root.loading-footer-compose-deleting = false;
+                    }
+                }
+
+                Button {
+                    label: "Delete Repository";
+                    variant: ButtonVariant.danger;
+                    loading: root.loading-footer-compose-deleting;
+                    clicked => {
+                        if !root.loading-footer-compose-deleting && !root.loading-footer-compose-submitting {
+                            root.loading-footer-compose-deleting = true;
+                            lf-compose-delete-done.running = true;
+                        }
+                    }
+                }
+
+                Button {
+                    label: "Save & Delete";
+                    variant: ButtonVariant.primary;
+                    loading: root.loading-footer-compose-submitting;
+                    clicked => {
+                        if !root.loading-footer-compose-submitting && !root.loading-footer-compose-deleting {
+                            root.loading-footer-compose-submitting = true;
+                            lf-compose-submit-done.running = true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     lf-submit-done := Timer {
         interval: 2000ms;
         running: false;
@@ -1604,6 +1856,26 @@ export component GalleryDialogsPage inherits VerticalLayout {
         triggered() => {
             root.loading-footer-deleting = false;
             root.loading-footer-demo-open = false;
+            self.running = false;
+        }
+    }
+
+    lf-compose-submit-done := Timer {
+        interval: 2000ms;
+        running: false;
+        triggered() => {
+            root.loading-footer-compose-submitting = false;
+            root.loading-footer-compose-open = false;
+            self.running = false;
+        }
+    }
+
+    lf-compose-delete-done := Timer {
+        interval: 3000ms;
+        running: false;
+        triggered() => {
+            root.loading-footer-compose-deleting = false;
+            root.loading-footer-compose-open = false;
             self.running = false;
         }
     }
@@ -1626,14 +1898,31 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Button {
-            max-width: 280px;
-            align-content: ButtonAlignContent.start;
-            label: "Open custom-footer loading dialog";
-            clicked => {
-                root.loading-custom-saving = false;
-                root.loading-custom-processing = false;
-                root.loading-custom-footer-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                max-width: 280px;
+                align-content: ButtonAlignContent.start;
+                label: "Open custom-footer loading dialog";
+                clicked => {
+                    root.loading-custom-saving = false;
+                    root.loading-custom-processing = false;
+                    root.loading-custom-footer-open = true;
+                }
+            }
+
+            Button {
+                max-width: 300px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.loading-custom-compose-saving = false;
+                    root.loading-custom-compose-processing = false;
+                    root.loading-custom-footer-compose-open = true;
+                }
             }
         }
     }
@@ -1730,6 +2019,81 @@ export component GalleryDialogsPage inherits VerticalLayout {
             root.loading-custom-processing = false;
             root.loading-custom-footer-open = false;
             self.running = false;
+        }
+    }
+
+    loading-custom-footer-compose-demo := DialogCompose {
+        open <=> root.loading-custom-footer-compose-open;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.loading-custom-footer-compose-open = false;
+            root.loading-custom-compose-saving = false;
+            root.loading-custom-compose-processing = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            DialogHeader {
+                close-requested => {
+                    root.loading-custom-footer-compose-open = false;
+                    root.loading-custom-compose-saving = false;
+                    root.loading-custom-compose-processing = false;
+                }
+
+                Text {
+                    text: "Process Data";
+                    color: PrimerColors.fgColor-default;
+                    font-size: DialogTokens.title-font-size;
+                    font-weight: 600;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Custom footer with loading states";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 13px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "This is some text";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Cancel";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                        root.loading-custom-footer-compose-open = false;
+                        root.loading-custom-compose-saving = false;
+                        root.loading-custom-compose-processing = false;
+                    }
+                }
+                Button {
+                    label: "Save Draft";
+                    variant: ButtonVariant.default;
+                    loading: root.loading-custom-compose-saving;
+                    clicked => {
+                    }
+                }
+                Button {
+                    label: "Process & Continue";
+                    variant: ButtonVariant.primary;
+                    loading: root.loading-custom-compose-processing;
+                    clicked => {
+                        root.loading-custom-compose-processing = true;
+                    }
+                }
+            }
         }
     }
 }
