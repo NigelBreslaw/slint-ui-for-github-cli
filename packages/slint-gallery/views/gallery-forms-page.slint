@@ -22,6 +22,7 @@ import {
     ToggleSwitchStatusLabelPosition,
     ValidationStatus,
 } from "../../primer-slint/primer.slint";
+import { GallerySelectPanelMulti } from "../gallery-select-panel-multi-state.slint";
 import { AppWindow, PrimerColors } from "../../primer-slint/tokens.slint";
 
 export component GalleryFormsPage inherits VerticalLayout {
@@ -75,7 +76,6 @@ export component GalleryFormsPage inherits VerticalLayout {
 
     private property <bool> demo-select-panel-open: false;
     private property <string> demo-sp-filter: "";
-    private property <int> demo-sp-mask: 6;
     private property <int> demo-sp-focused: 0;
     private property <[SelectPanelItem]> demo-sp-items: [
         { value: "enhancement", label: "enhancement", description: "New feature or request", swatch: #84b6eb, enabled: true },
@@ -552,7 +552,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "AnchoredOverlay: vertical-side auto (flip), align start; SelectPanel multi mode (`multi-checked-mask`, `show-footer` + children, `focused-index` accent). Escape closes the popup. See anchored-popupwindow.md in this folder.";
+            text: "AnchoredOverlay: vertical-side auto (flip), align start; SelectPanel multi mode (`multi-selected` + `multi-item-activated`, `show-footer` + children, `focused-index` accent). Escape closes the popup. See anchored-popupwindow.md in this folder.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -599,13 +599,16 @@ export component GalleryFormsPage inherits VerticalLayout {
                 filter-placeholder: "Filter items";
                 filter-text <=> demo-sp-filter;
                 multi-items: demo-sp-items;
-                multi-checked-mask <=> demo-sp-mask;
+                multi-selected: GallerySelectPanelMulti.row-checked;
                 focused-index: demo-sp-focused;
                 list-max-height: 200px;
                 show-footer: true;
                 filter-changed(_t) => {
                 }
                 single-selected-changed(_i) => {
+                }
+                multi-item-activated(ix) => {
+                    GallerySelectPanelMulti.row-activated(ix);
                 }
 
                 HorizontalLayout {

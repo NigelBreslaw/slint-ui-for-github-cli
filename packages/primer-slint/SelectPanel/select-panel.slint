@@ -1,6 +1,6 @@
 // Primer-style SelectPanel body (anchored shell is [`AnchoredOverlay`](../AnchoredOverlay/anchored-overlay.slint)).
 // Single mode: [`SelectOption`](../Select/select.slint) + [`ActionListRow`](../ActionList/action-list-row.slint).
-// Multi mode: [`SelectPanelItem`] + checkbox row + in-out bit mask (bit `ix` == row `ix` checked; up to 31 rows).
+// Multi mode: [`SelectPanelItem`] + checkbox row + `multi-selected` (`[bool]`; row `ix` checked when `ix < multi-selected.length && multi-selected[ix]`, same as `ActionList`) + `multi-item-activated(ix)` (parent updates selection).
 
 import { ActionListRow } from "../ActionList/action-list-row.slint";
 import { ActionListDescriptionLayout } from "../ActionList/types.slint";
@@ -34,31 +34,20 @@ export component SelectPanel {
     in-out property <int> selected-index: -1;
 
     in property <[SelectPanelItem]> multi-items: [];
-    /// Bit `ix` set means row `ix` is checked (`ix` in `0..31`).
-    in-out property <int> multi-checked-mask: 0;
+    /// `SelectPanelMode.multi`: row `ix` is checked when `ix < multi-selected.length && multi-selected[ix]` (out-of-range / missing entries unchecked).
+    in property <[bool]> multi-selected: [];
 
     in property <int> item-count: -1;
 
     callback filter-changed(string);
     callback single-selected-changed(int);
+    /// Fired when an enabled row is clicked in multi mode; parent toggles `multi-selected` (this component does not mutate it).
+    callback multi-item-activated(int);
 
     horizontal-stretch: 1;
 
     private property <int> effective-len: item-count >= 0 ? item-count
         : mode == SelectPanelMode.single ? single-items.length : multi-items.length;
-
-    /// 2^`i` for `i` in `0..30` (Slint global `pow` + `Math.round` to `int`; exponent via `i * 1.0`).
-    function pow2(i: int) -> int {
-        i < 0 || i > 30 ? 0 : Math.round(pow(2.0, i * 1.0))
-    }
-
-    function mask-bit-set(mask: int, ix: int) -> bool {
-        ix < 0 || ix > 30 ? false : mod(mask / pow2(ix), 2) != 0
-    }
-
-    function toggle-multi-mask-bit(mask: int, ix: int) -> int {
-        ix < 0 || ix > 30 ? mask : mask-bit-set(mask, ix) ? mask - pow2(ix) : mask + pow2(ix)
-    }
 
     VerticalLayout {
         spacing: 10px;
@@ -216,12 +205,12 @@ export component SelectPanel {
                             swatch: root.multi-items[ix].swatch;
                             disabled: root.disabled || !root.multi-items[ix].enabled;
                             show-focus-accent: ix == root.focused-index;
-                            checked: root.mask-bit-set(root.multi-checked-mask, ix);
+                            checked: ix < root.multi-selected.length && root.multi-selected[ix];
                             clicked => {
                                 if !root.multi-items[ix].enabled || root.disabled {
                                     return;
                                 }
-                                root.multi-checked-mask = root.toggle-multi-mask-bit(root.multi-checked-mask, ix);
+                                root.multi-item-activated(ix);
                             }
                         }
                     }

@@ -1,0 +1,6 @@
+/// Multi-select demo state for **Forms** **SelectPanel** — toggled from **Node** (`gallery-select-panel-multi-bridge-shared.ts`, wired in `gallery-main.ts`).
+export global GallerySelectPanelMulti {
+    /// One bool per **SelectPanel** row (demo: five rows); matches default “bug” + “good first issue” checked.
+    in-out property <[bool]> row-checked: [false, true, true, false, false];
+    callback row-activated(int);
+}

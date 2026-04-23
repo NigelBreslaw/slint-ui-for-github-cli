@@ -4,6 +4,10 @@ import {
   wireActionListGalleryMultiSelect,
   type ActionListGalleryMultiSelectHandle,
 } from "./gallery-action-list-multi-select-bridge-shared.ts";
+import {
+  wireGallerySelectPanelMultiSelect,
+  type GallerySelectPanelMultiHandle,
+} from "./gallery-select-panel-multi-bridge-shared.ts";
 
 type GalleryWindowModule = {
   GalleryWindow: new () => {
@@ -14,6 +18,7 @@ type GalleryWindowModule = {
     };
     GalleryActionListMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
+    GallerySelectPanelMulti: GallerySelectPanelMultiHandle;
   };
 };
 
@@ -31,6 +36,7 @@ wireActionListGalleryMultiSelect(window.GalleryActionListMultiSelect);
 wireActionListGalleryMultiSelect(
   window.GalleryActionListListboxMultiSelect,
 );
+wireGallerySelectPanelMultiSelect(window.GallerySelectPanelMulti);
 
 window.show();
 await slint.runEventLoop();
