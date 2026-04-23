@@ -1,0 +1,21 @@
+import { DialogTokens, PrimerColors } from "../../tokens.slint";
+
+export component DialogFooter {
+
+    VerticalLayout {
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        FlexboxLayout {
+            flex-direction: row;
+            flex-wrap: wrap;
+            alignment: end;
+            padding: DialogTokens.footer-padding;
+            spacing: DialogTokens.footer-actions-gap;
+            @children
+        }
+    }
+}

@@ -1,12 +1,11 @@
 import {
-    Button,
-    ButtonVariant,
-    IconButton,
-    IconButtonVariant,
-} from "../Buttons/buttons.slint";
-import { DialogTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
-import { Icons } from "../assets/icons.slint";
-import { DialogFooterButtonLayout } from "./types.slint";
+    DialogTokens,
+    LayoutTokens,
+    PrimerColors,
+    Size,
+} from "../../tokens.slint";
+import { Icons } from "../../assets/icons.slint";
+import { IconButton, IconButtonVariant } from "../../Buttons/buttons.slint";
 
 export component DialogHeader {
     in property <bool> show-close-button: true;
@@ -51,41 +50,23 @@ export component DialogHeader {
     }
 }
 
-export component DialogBody {
-    vertical-stretch: 1;
+export component StandardDialogHeader {
+    in property <string> title: "";
+    in property <string> subtitle: "";
 
-    flick := Flickable {
-        vertical-stretch: 1;
-        viewport-width: self.width;
-        viewport-height: inner.preferred-height;
-
-        inner := VerticalLayout {
-            width: parent.width;
-            padding: DialogTokens.body-padding;
-            spacing: DialogTokens.body-block-spacing;
-            alignment: start;
-
-            @children
-        }
+    Text {
+        text: root.title;
+        color: PrimerColors.fgColor-default;
+        font-size: DialogTokens.title-font-size;
+        font-weight: DialogTokens.title-font-weight;
+        wrap: word-wrap;
     }
-}
 
-export component DialogFooter {
-
-    VerticalLayout {
-
-        Rectangle {
-            height: 1px;
-            background: PrimerColors.borderColor-default;
-        }
-
-        FlexboxLayout {
-            flex-direction: row;
-            flex-wrap: wrap;
-            alignment: end;
-            padding: DialogTokens.footer-padding;
-            spacing: DialogTokens.footer-actions-gap;
-            @children
-        }
+    if root.subtitle != "": Text {
+        text: root.subtitle;
+        color: PrimerColors.fgColor-muted;
+        font-size: DialogTokens.subtitle-font-size;
+        font-weight: DialogTokens.subtitle-font-weight;
+        wrap: word-wrap;
     }
 }

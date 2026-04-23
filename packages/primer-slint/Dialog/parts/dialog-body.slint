@@ -1,0 +1,20 @@
+import { DialogTokens } from "../../tokens.slint";
+
+export component DialogBody {
+    vertical-stretch: 1;
+
+    flick := Flickable {
+        vertical-stretch: 1;
+        viewport-width: self.width;
+        viewport-height: inner.preferred-height;
+
+        inner := VerticalLayout {
+            width: parent.width;
+            padding: DialogTokens.body-padding;
+            spacing: DialogTokens.body-block-spacing;
+            alignment: start;
+
+            @children
+        }
+    }
+}
