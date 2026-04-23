@@ -49,6 +49,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> multistep-footer-compose-open: false;
     private property <int> multistep-footer-step: 0;
     private property <bool> dynamic-footer-open: false;
+    private property <bool> dynamic-footer-compose-open: false;
     private property <int> dynamic-footer-variant: 0;
 
     private property <bool> loading-footer-demo-open: false;
@@ -1392,13 +1393,29 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Button {
-            max-width: 260px;
-            align-content: ButtonAlignContent.start;
-            label: "Open dynamic footer dialog";
-            clicked => {
-                root.dynamic-footer-variant = 0;
-                root.dynamic-footer-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                max-width: 260px;
+                align-content: ButtonAlignContent.start;
+                label: "Open dynamic footer dialog";
+                clicked => {
+                    root.dynamic-footer-variant = 0;
+                    root.dynamic-footer-open = true;
+                }
+            }
+
+            Button {
+                max-width: 280px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.dynamic-footer-variant = 0;
+                    root.dynamic-footer-compose-open = true;
+                }
             }
         }
     }
@@ -1433,6 +1450,71 @@ export component GalleryDialogsPage inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             wrap: word-wrap;
+        }
+    }
+
+    dynamic-footer-compose-dialog := DialogCompose {
+        open <=> root.dynamic-footer-compose-open;
+        width-preset: DialogWidthPreset.xlarge;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.dynamic-footer-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: "Dynamic content";
+                subtitle: root.dynamic-footer-variant == 1 ? "Subtitle on — press **Cycle** to change footer membership." : "";
+
+                close-requested => {
+                    dynamic-footer-compose-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Each **Cycle layout** advances: full three-button row → danger+default+extra → default-only + subtitle. **`show-footer`** stays true; visibility is per-button.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Cycle layout";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                        root.dynamic-footer-variant = root.dynamic-footer-variant == 0 ? 1 : root.dynamic-footer-variant == 1 ? 2 : 0;
+                    }
+                }
+
+                if root.dynamic-footer-variant == 2: Button {
+                    label: "Extra";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                if root.dynamic-footer-variant == 0 || root.dynamic-footer-variant == 2: Button {
+                    label: "Close";
+                    variant: ButtonVariant.danger;
+                    clicked => {
+                        root.dynamic-footer-compose-open = false;
+                    }
+                }
+
+                if root.dynamic-footer-variant == 0: Button {
+                    label: "Save";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        root.dynamic-footer-compose-open = false;
+                    }
+                }
+            }
         }
     }
 
