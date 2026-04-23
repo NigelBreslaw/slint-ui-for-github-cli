@@ -1,0 +1,32 @@
+import { LayoutTokens, PrimerColors, Size } from "../../tokens.slint";
+import { Spinner } from "../../Progress/spinner.slint";
+
+/// Centered spinner + label inside the list region — same structure as **`SelectPanel`** when **`loading`**.
+export component SelectPanelLoading {
+    in property <string> message: "Loading…";
+
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        vertical-stretch: 1;
+        padding: LayoutTokens.stack-padding-normal;
+        spacing: 10px;
+        alignment: center;
+
+        HorizontalLayout {
+            spacing: 10px;
+            alignment: center;
+
+            Spinner {
+                size: Size.small;
+            }
+
+            Text {
+                text: root.message;
+                font-size: LayoutTokens.text-body-size-small;
+                color: PrimerColors.fgColor-muted;
+                wrap: word-wrap;
+            }
+        }
+    }
+}

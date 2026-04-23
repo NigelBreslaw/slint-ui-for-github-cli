@@ -1,0 +1,15 @@
+// Composable **SelectPanel** interior (React **`SelectPanel`** inner **`div.Wrapper`** stack — title → notice → filter → list → footer).
+// **`@children`** are the full ordered column; assemble with **`SelectPanelHeading`** / **`StandardSelectPanelHeading`**, **`SelectPanelNotice`**, **`SelectPanelFilter`**, **`SelectPanelSeparator`**, **`SelectPanelListChrome`**, **`SelectPanelScrollBody`**, **`SelectPanelLoading`**, **`SelectPanelMessage`**, **`SelectPanelFooter`**, and list rows — same composition pattern as **`DialogCompose`** (**[`DialogCompose`](../Dialog/dialog-compose.slint)**) + **`Dialog/parts`**.
+
+export component SelectPanelCompose {
+    horizontal-stretch: 1;
+    width: 100%;
+
+    VerticalLayout {
+        spacing: 10px;
+        width: 100%;
+        alignment: start;
+
+        @children
+    }
+}

@@ -1,0 +1,14 @@
+import { LayoutTokens } from "../../tokens.slint";
+
+/// Horizontal inset for a notice strip; place **`Banner`** (or other callout) as **`@children`** — mirrors Primer **`.Notice`** margins.
+export component SelectPanelNotice {
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        padding-left: LayoutTokens.stack-padding-normal;
+        padding-right: LayoutTokens.stack-padding-normal;
+        width: 100%;
+
+        @children
+    }
+}

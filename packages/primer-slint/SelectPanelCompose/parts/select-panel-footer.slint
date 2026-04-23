@@ -1,0 +1,20 @@
+import { LayoutTokens, PrimerColors } from "../../tokens.slint";
+
+/// Top border + padded action column — same chrome as **`SelectPanel`** **`show-footer`** region (Primer **`.Footer`**).
+export component SelectPanelFooter {
+    VerticalLayout {
+        Rectangle {
+            width: 100%;
+            height: LayoutTokens.nav-list-divider-height;
+            background: PrimerColors.borderColor-default;
+        }
+
+        VerticalLayout {
+            padding: LayoutTokens.banner-padding-default;
+            spacing: LayoutTokens.button-content-gap;
+            alignment: start;
+
+            @children
+        }
+    }
+}

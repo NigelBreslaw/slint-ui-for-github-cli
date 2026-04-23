@@ -1,0 +1,12 @@
+import { PrimerColors } from "../../tokens.slint";
+
+/// Full-width 1px rule between filter and list (**`borderColor-default`**), matching **`SelectPanel`**.
+export component SelectPanelSeparator {
+    width: 100%;
+
+    Rectangle {
+        width: 100%;
+        height: 1px;
+        background: PrimerColors.borderColor-default;
+    }
+}

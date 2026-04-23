@@ -1,0 +1,18 @@
+/// Scrollable column for **`ActionListRow`**, **`SelectPanelRow`**, or custom rows — height comes from **`SelectPanelListChrome`**.
+export component SelectPanelScrollBody {
+    vertical-stretch: 1;
+    horizontal-stretch: 1;
+
+    Flickable {
+        width: parent.width;
+        height: parent.height;
+        viewport-width: parent.width;
+        viewport-height: inner.preferred-height;
+
+        inner := VerticalLayout {
+            width: parent.width;
+
+            @children
+        }
+    }
+}

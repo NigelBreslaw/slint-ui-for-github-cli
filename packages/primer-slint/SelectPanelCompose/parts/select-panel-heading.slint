@@ -1,0 +1,43 @@
+import { LayoutTokens, PrimerColors } from "../../tokens.slint";
+
+/// Custom header region (title row, trailing controls, etc.); prefer **`StandardSelectPanelHeading`** for plain title + subtitle.
+export component SelectPanelHeading {
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        width: 100%;
+        alignment: start;
+
+        @children
+    }
+}
+
+/// Title + subtitle typography aligned with monolithic **`SelectPanel`** (Primer **`.Title`** / **`.Subtitle`**).
+export component StandardSelectPanelHeading {
+    in property <string> title: "";
+    in property <string> subtitle: "";
+
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        width: 100%;
+        spacing: 0px;
+        alignment: start;
+
+        if root.title != "": Text {
+            text: root.title;
+            color: PrimerColors.fgColor-default;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: 600;
+            wrap: word-wrap;
+        }
+
+        if root.subtitle != "": Text {
+            text: root.subtitle;
+            color: PrimerColors.fgColor-muted;
+            font-size: LayoutTokens.text-body-size-small;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            wrap: word-wrap;
+        }
+    }
+}

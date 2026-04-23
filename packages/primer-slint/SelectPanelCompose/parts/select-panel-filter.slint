@@ -1,0 +1,25 @@
+import { Icons } from "../../assets/icons.slint";
+import { PrimerTextInput } from "../../PrimerTextInput/primer-text-input.slint";
+
+/// Search filter row (**`PrimerTextInput`** + **`Icons.search`**) — mirrors **`SelectPanel`** filter block.
+export component SelectPanelFilter {
+    in-out property <string> text: "";
+    in property <string> placeholder: "Filter items";
+    in property <bool> disabled: false;
+    callback edited(string);
+
+    width: 100%;
+
+    PrimerTextInput {
+        width: 100%;
+        block: true;
+        placeholder: root.placeholder;
+        text <=> root.text;
+        disabled: root.disabled;
+        has-leading-visual: true;
+        leading-visual: Icons.search;
+        edited(t) => {
+            root.edited(t);
+        }
+    }
+}

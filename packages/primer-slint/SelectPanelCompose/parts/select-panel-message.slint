@@ -1,0 +1,53 @@
+import { LayoutTokens, PrimerColors } from "../../tokens.slint";
+
+/// Parity with Primer **`SelectPanelMessage`**: empty / error / warning stacks; use **`@children`** for rich copy (e.g. links) under the title.
+export enum SelectPanelMessageVariant {
+    empty,
+    error,
+    warning,
+}
+
+export component SelectPanelMessage {
+    in property <SelectPanelMessageVariant> variant: SelectPanelMessageVariant.empty;
+    in property <string> title: "";
+    in property <string> body: "";
+
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        vertical-stretch: 1;
+        padding: 24px;
+        spacing: 4px;
+        alignment: center;
+
+        if root.title != "": Text {
+            horizontal-alignment: center;
+            text: root.title;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: LayoutTokens.base-text-weight-semibold;
+            color:
+                root.variant == SelectPanelMessageVariant.error ? PrimerColors.fgColor-danger
+                : root.variant == SelectPanelMessageVariant.warning ? PrimerColors.fgColor-attention
+                : PrimerColors.fgColor-default;
+            wrap: word-wrap;
+        }
+
+        VerticalLayout {
+            horizontal-stretch: 1;
+            min-height: 0px;
+            alignment: center;
+
+            @children
+        }
+
+        if root.body != "": Text {
+            horizontal-alignment: center;
+            text: root.body;
+            font-size: LayoutTokens.text-body-size-small;
+            color: PrimerColors.fgColor-muted;
+            font-weight:
+                root.title != "" ? LayoutTokens.base-text-weight-medium : LayoutTokens.base-text-weight-semibold;
+            wrap: word-wrap;
+        }
+    }
+}
