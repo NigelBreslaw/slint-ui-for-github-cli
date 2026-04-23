@@ -9,7 +9,6 @@ import {
     DialogFooter,
     DialogFillMode,
     DialogFooterAutoFocus,
-    DialogFooterButtonLayout,
     DialogHeader,
     DialogHeightPreset,
     StandardDialogHeader,
@@ -43,6 +42,9 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> direct-sub-open: false;
 
     private property <bool> stress-test-open: false;
+    private property <bool> stress-test-compose-open: false;
+    private property <bool> stress-test-inner-legacy-open: false;
+    private property <bool> stress-test-inner-compose-open: false;
     private property <bool> multistep-footer-open: false;
     private property <int> multistep-footer-step: 0;
     private property <bool> dynamic-footer-open: false;
@@ -963,35 +965,59 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "StressTest";
+            text: "StressTest (Storybook `StressTest`)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
-        Button {
-            max-width: 220px;
-            align-content: ButtonAlignContent.start;
-            label: "Open stress dialog";
-            clicked => {
-                root.stress-test-open = true;
+        Text {
+            text: "Upstream: centered modal uses **`max-width: calc(100dvw - 64px)`** (32px side inset). **`position.narrow: fullscreen`** applies only under **`@media (max-width: 767px)`**, then the shell is edge-to-edge. Resize the gallery window past **767px** to see the capped width; at **≤767px** it matches fullscreen narrow.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 13px;
+            wrap: word-wrap;
+        }
+
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                max-width: 220px;
+                align-content: ButtonAlignContent.start;
+                label: "Open stress dialog";
+                clicked => {
+                    root.stress-test-open = true;
+                }
+            }
+
+            Button {
+                max-width: 260px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.stress-test-compose-open = true;
+                }
             }
         }
     }
 
+    // Matches primer-ui-react `Dialog.features` **`StressTest`**: **`position: { narrow: fullscreen, regular: center }`**
+    // (CSS **`Dialog.module.css`**) — do **not** set **`narrow-layout: true`** here or the shell stays fullscreen at
+    // every width; React only uses fullscreen when the real viewport is **≤767px**.
     stress-test-dialog := Dialog {
         open <=> root.stress-test-open;
-        narrow-layout: true;
+        position-preset: DialogPositionPreset.center;
         narrow-position-preset: DialogNarrowPositionPreset.fullscreen;
         width-preset: DialogWidthPreset.small;
-        footer-button-layout: DialogFooterButtonLayout.scroll;
-        title: "Very long dialog title used in stress tests — Lorem ipsum dolor sit amet, consectetur adipiscing elit";
-        subtitle: "Subtitle also runs long — Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Vestibulum dictum.";
-        footer-default-label: "Action one";
-        footer-extra-1-label: "Action two";
-        footer-extra-2-label: "Action three";
-        footer-danger-label: "Danger long label";
-        footer-primary-label: "Primary CTA";
+        title: "This dialog has a really long title. So long, in fact, that it should cause wrapping, going to multiple lines!.";
+        subtitle: "It's not a common scenario, sure, but what if the subtitle is generated from a really long value? Do we just break the dialog? Or do we handle it because we are pros?";
+        footer-default-label: "Button 0";
+        footer-extra-1-label: "Button 1";
+        footer-extra-2-label: "Button 2";
+        footer-danger-label: "Delete the universe";
+        footer-primary-label: "Proceed";
         footer-default-clicked => {
         }
         footer-extra-1-clicked => {
@@ -1002,16 +1028,207 @@ export component GalleryDialogsPage inherits VerticalLayout {
             root.stress-test-open = false;
         }
         footer-primary-clicked => {
+            root.stress-test-inner-legacy-open = true;
         }
         on-close(_gesture) => {
             root.stress-test-open = false;
+            root.stress-test-inner-legacy-open = false;
         }
 
         Text {
-            text: "Body copy: narrow width + **`scroll`** footer keeps a single action row; pan horizontally when the row overflows.";
+            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis, urna nec lobortis posuere, eros urna venenatis eros, vel accumsan turpis nunc vitae enim.";
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             wrap: word-wrap;
+        }
+
+        Text {
+            text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+    }
+
+    stress-test-inner-legacy-dialog := Dialog {
+        open <=> root.stress-test-inner-legacy-open;
+        width-preset: DialogWidthPreset.small;
+        show-footer: false;
+        title: "Inner dialog!";
+        on-close(_gesture) => {
+            root.stress-test-inner-legacy-open = false;
+        }
+
+        Text {
+            text: "Hello world";
+            color: PrimerColors.fgColor-default;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+    }
+
+    stress-test-compose-dialog := DialogCompose {
+        open <=> root.stress-test-compose-open;
+        width-preset: DialogWidthPreset.xlarge;
+        on-close(_gesture) => {
+            root.stress-test-compose-open = false;
+            root.stress-test-inner-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: "This dialog has a really long title. So long, in fact, that it should cause wrapping, going to multiple lines!.";
+                subtitle: "It's not a common scenario, sure, but what if the subtitle is generated from a really long value? Do we just break the dialog? Or do we handle it because we are pros?";
+
+                close-requested => {
+                    stress-test-compose-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis, urna nec lobortis posuere, eros urna venenatis eros, vel accumsan turpis nunc vitae enim.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis, urna nec lobortis posuere, eros urna venenatis eros, vel accumsan turpis nunc vitae enim.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis, urna nec lobortis posuere, eros urna venenatis eros, vel accumsan turpis nunc vitae enim.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Button 0";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Button 1";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Button 2";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Button 3";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Button 4";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Button 5";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Button 6";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Delete the universe";
+                    variant: ButtonVariant.danger;
+                    clicked => {
+                        root.stress-test-compose-open = false;
+                        root.stress-test-inner-compose-open = false;
+                    }
+                }
+
+                Button {
+                    label: "Proceed";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        root.stress-test-inner-compose-open = true;
+                    }
+                }
+            }
+        }
+    }
+
+    stress-test-inner-compose-dialog := DialogCompose {
+        open <=> root.stress-test-inner-compose-open;
+        width-preset: DialogWidthPreset.small;
+        on-close(_gesture) => {
+            root.stress-test-inner-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: "Inner dialog!";
+
+                close-requested => {
+                    stress-test-inner-compose-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Hello world";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
         }
     }
 

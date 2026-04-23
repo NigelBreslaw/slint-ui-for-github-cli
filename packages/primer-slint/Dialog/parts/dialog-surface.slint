@@ -38,8 +38,8 @@ export component DialogSurface {
         }
 
         Rectangle {
-            min-height: fill-mode == DialogFillMode.screen-height ? AppWindow.window-height : 0px;
-            min-width: fill-mode == DialogFillMode.screen-width ? AppWindow.window-width : 0px;
+            // min-height: fill-mode == DialogFillMode.screen-height ? AppWindow.window-height : 0px;
+            // min-width: fill-mode == DialogFillMode.screen-width ? AppWindow.window-width : 0px;
             max-height: root.inner-max-height;
             vertical-stretch: root.inner-vertical-stretch-tall ? 1 : 0;
             clip: true;

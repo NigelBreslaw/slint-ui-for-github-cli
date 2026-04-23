@@ -147,8 +147,10 @@ export component ModalOverlay {
         height: AppWindow.window-height;
 
         Rectangle {
-            width: parent.width;
-            height: parent.height;
+            x: 0px;
+            y: 0px;
+            width: AppWindow.window-width;
+            height: AppWindow.window-height;
 
             modal-scope := FocusScope {
                 width: 100%;
