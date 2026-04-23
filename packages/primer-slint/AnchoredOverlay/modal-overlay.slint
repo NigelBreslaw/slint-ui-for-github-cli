@@ -165,8 +165,6 @@ export component ModalOverlay {
 
                 // Bottom: fullscreen scrim (fade).
                 Rectangle {
-                    width: 100%;
-                    height: 100%;
                     background: OverlayTokens.backdrop-scrim;
                     opacity: root.presented;
                 }
@@ -174,8 +172,6 @@ export component ModalOverlay {
                 // Middle: backdrop dismiss — must stay **below** the panel shell so clicks outside the card hit here.
                 TouchArea {
                     enabled: root.allow-dismiss && root.open;
-                    width: 100%;
-                    height: 100%;
                     clicked => {
                         root.open = false;
                         root.close-requested();
