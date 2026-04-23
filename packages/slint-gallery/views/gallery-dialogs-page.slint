@@ -36,6 +36,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> playground-open: false;
     private property <bool> align-demo-open: false;
     private property <bool> side-sheet-open: false;
+    private property <bool> side-sheet-compose-open: false;
     private property <bool> narrow-demo-open: false;
     private property <bool> custom-renderers-open: false;
     private property <bool> direct-sub-open: false;
@@ -561,11 +562,25 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
 
-        Button {
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                root.side-sheet-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog";
+                clicked => {
+                    root.side-sheet-open = true;
+                }
+            }
+
+            Button {
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.side-sheet-compose-open = true;
+                }
             }
         }
     }
@@ -585,6 +600,38 @@ export component GalleryDialogsPage inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             wrap: word-wrap;
+        }
+    }
+
+    side-sheet-compose-dialog := DialogCompose {
+        open <=> root.side-sheet-compose-open;
+        position-preset: root.side-sheet-position-preset;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.side-sheet-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: side-sheet-edge-index == 0 ? "Side sheet (left)" : "Side sheet (right)";
+
+                close-requested => {
+                    side-sheet-compose-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
         }
     }
 
