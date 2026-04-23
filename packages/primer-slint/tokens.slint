@@ -792,3 +792,10 @@ export global DialogTokens {
     /// Side sheet + bottom sheet panel enter (**250ms** in upstream CSS) — consumers in position PRs.
     out property <duration> overlay-sheet-enter-duration: LayoutTokens.duration-250;
 }
+
+export global SelectPanelTokens {
+    out property <length> wrapper-stack-gap: 10px;
+    out property <length> list-max-height-default: 240px;
+    out property <length> message-region-padding: 24px;
+    out property <length> message-stack-gap: LayoutTokens.base-size-4;
+}

@@ -8,7 +8,7 @@ import { Icons } from "../assets/icons.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
 import { Spinner } from "../Progress/spinner.slint";
 import { SelectOption } from "../Select/select.slint";
-import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { LayoutTokens, PrimerColors, SelectPanelTokens, Size } from "../tokens.slint";
 import { SelectPanelRow } from "./select-panel-row.slint";
 import { SelectPanelItem, SelectPanelMode } from "./types.slint";
 
@@ -24,7 +24,7 @@ export component SelectPanel {
     in property <string> empty-message: "No results";
     /// When non-empty, shown above `empty-message` (Primer **SelectPanelMessage**-style title).
     in property <string> empty-title: "";
-    in property <length> list-max-height: 240px;
+    in property <length> list-max-height: SelectPanelTokens.list-max-height-default;
     /// Row with keyboard/list focus (multi mode accent); `-1` hides the accent.
     in property <int> focused-index: -1;
     /// When true, shows a top border and padded slot below the list; place footer actions as **direct children** of `SelectPanel`.
@@ -50,7 +50,7 @@ export component SelectPanel {
         : mode == SelectPanelMode.single ? single-items.length : multi-items.length;
 
     VerticalLayout {
-        spacing: 10px;
+        spacing: SelectPanelTokens.wrapper-stack-gap;
         width: 100%;
         alignment: start;
 
@@ -58,7 +58,7 @@ export component SelectPanel {
             text: root.title;
             color: PrimerColors.fgColor-default;
             font-size: LayoutTokens.text-body-size-medium;
-            font-weight: 600;
+            font-weight: LayoutTokens.base-text-weight-semibold;
             wrap: word-wrap;
         }
 
@@ -105,11 +105,11 @@ export component SelectPanel {
 
                 if root.loading: VerticalLayout {
                     padding: LayoutTokens.stack-padding-normal;
-                    spacing: 10px;
+                    spacing: SelectPanelTokens.wrapper-stack-gap;
                     alignment: center;
 
                     HorizontalLayout {
-                        spacing: 10px;
+                        spacing: SelectPanelTokens.wrapper-stack-gap;
                         alignment: center;
 
                         Spinner {
@@ -126,8 +126,8 @@ export component SelectPanel {
                 }
 
                 if !root.loading && root.effective-len == 0: VerticalLayout {
-                    padding: 24px;
-                    spacing: 4px;
+                    padding: SelectPanelTokens.message-region-padding;
+                    spacing: SelectPanelTokens.message-stack-gap;
                     alignment: center;
 
                     if root.empty-title != "": Text {

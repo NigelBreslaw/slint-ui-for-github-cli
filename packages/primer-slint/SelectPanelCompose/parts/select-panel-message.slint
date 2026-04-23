@@ -1,4 +1,4 @@
-import { LayoutTokens, PrimerColors } from "../../tokens.slint";
+import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../../tokens.slint";
 
 /// Parity with Primer **`SelectPanelMessage`**: empty / error / warning stacks; use **`@children`** for rich copy (e.g. links) under the title.
 export enum SelectPanelMessageVariant {
@@ -16,8 +16,8 @@ export component SelectPanelMessage {
 
     VerticalLayout {
         vertical-stretch: 1;
-        padding: 24px;
-        spacing: 4px;
+        padding: SelectPanelTokens.message-region-padding;
+        spacing: SelectPanelTokens.message-stack-gap;
         alignment: center;
 
         if root.title != "": Text {

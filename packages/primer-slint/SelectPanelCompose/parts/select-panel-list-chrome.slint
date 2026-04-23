@@ -1,8 +1,8 @@
-import { LayoutTokens, PrimerColors } from "../../tokens.slint";
+import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../../tokens.slint";
 
 /// Bordered, clipped list viewport (**`bgColor-canvas-subtle`**, **`borderColor-muted`**) — child is usually **`SelectPanelScrollBody`**, **`SelectPanelLoading`**, or **`SelectPanelMessage`**.
 export component SelectPanelListChrome {
-    in property <length> list-max-height: 240px;
+    in property <length> list-max-height: SelectPanelTokens.list-max-height-default;
 
     horizontal-stretch: 1;
 
