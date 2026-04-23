@@ -32,11 +32,8 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <bool> default-outer-open: false;
     private property <bool> default-inner-open: false;
-    private property <bool> default-outer-compose-open: false;
-    private property <bool> default-inner-compose-open: false;
 
     private property <bool> playground-open: false;
-    private property <bool> playground-compose-open: false;
     private property <bool> align-demo-open: false;
     private property <bool> side-sheet-open: false;
     private property <bool> narrow-demo-open: false;
@@ -136,107 +133,22 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        HorizontalLayout {
-            spacing: 12px;
-
-            Button {
-                max-width: 200px;
-                align-content: ButtonAlignContent.start;
-                label: "Show dialog";
-                clicked => {
-                    root.default-outer-open = true;
-                }
-            }
-
-            Button {
-                max-width: 260px;
-                align-content: ButtonAlignContent.start;
-                label: "Show dialog (compose)";
-                variant: ButtonVariant.primary;
-                clicked => {
-                    root.default-outer-compose-open = true;
-                }
+        Button {
+            max-width: 200px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.default-outer-open = true;
             }
         }
     }
 
-    default-outer-dialog := Dialog {
+    default-outer-dialog := DialogCompose {
         open <=> root.default-outer-open;
-        title: "My Dialog";
         width-preset: DialogWidthPreset.xlarge;
-        footer-default-clicked => {
-            root.default-inner-open = true;
-        }
-        footer-danger-clicked => {
-            root.default-outer-open = false;
-            root.default-inner-open = false;
-        }
-        footer-primary-clicked => {
-            root.default-inner-open = true;
-        }
         on-close(_gesture) => {
             root.default-outer-open = false;
             root.default-inner-open = false;
-        }
-
-        Text {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-    }
-
-    default-inner-dialog := Dialog {
-        open <=> root.default-inner-open;
-        title: "Inner dialog!";
-        width-preset: DialogWidthPreset.small;
-        show-footer: false;
-        footer-default-clicked => {
-        }
-        footer-danger-clicked => {
-        }
-        footer-primary-clicked => {
-        }
-        on-close(_gesture) => {
-            root.default-inner-open = false;
-        }
-
-        Text {
-            text: "Hello world";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-    }
-
-    default-outer-compose-dialog := DialogCompose {
-        open <=> root.default-outer-compose-open;
-        width-preset: DialogWidthPreset.xlarge;
-        on-close(_gesture) => {
-            root.default-outer-compose-open = false;
-            root.default-inner-compose-open = false;
         }
 
         VerticalLayout {
@@ -246,7 +158,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
             StandardDialogHeader {
                 title: "My Dialog";
 
-                close-requested => default-outer-compose-dialog.on-close("close-button");
+                close-requested => default-outer-dialog.on-close("close-button");
             }
 
             DialogBody {
@@ -284,32 +196,32 @@ export component GalleryDialogsPage inherits VerticalLayout {
                     label: "Open Second Dialog";
                     variant: ButtonVariant.default;
                     clicked => {
-                        root.default-inner-compose-open = true;
+                        root.default-inner-open = true;
                     }
                 }
 
                 Button {
                     label: "Delete the universe";
                     variant: ButtonVariant.danger;
-                    clicked => default-outer-compose-dialog.on-close("close-button");
+                    clicked => default-outer-dialog.on-close("close-button");
                 }
 
                 Button {
                     label: "Proceed";
                     variant: ButtonVariant.primary;
                     clicked => {
-                        root.default-inner-compose-open = true;
+                        root.default-inner-open = true;
                     }
                 }
             }
         }
     }
 
-    default-inner-compose-dialog := DialogCompose {
-        open <=> root.default-inner-compose-open;
+    default-inner-dialog := DialogCompose {
+        open <=> root.default-inner-open;
         width-preset: DialogWidthPreset.small;
         on-close(_gesture) => {
-            root.default-inner-compose-open = false;
+            root.default-inner-open = false;
         }
 
         VerticalLayout {
@@ -318,7 +230,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
             DialogHeader {
                 close-requested => {
-                    root.default-inner-compose-open = false;
+                    root.default-inner-open = false;
                 }
 
                 StandardDialogHeader {
@@ -441,84 +353,22 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
 
-        HorizontalLayout {
-            spacing: 12px;
-
-            Button {
-                max-width: 200px;
-                align-content: ButtonAlignContent.start;
-                label: "Show dialog";
-                clicked => {
-                    root.playground-open = true;
-                }
-            }
-
-            Button {
-                max-width: 260px;
-                align-content: ButtonAlignContent.start;
-                label: "Show dialog (compose)";
-                variant: ButtonVariant.primary;
-                clicked => {
-                    root.playground-compose-open = true;
-                }
+        Button {
+            max-width: 200px;
+            align-content: ButtonAlignContent.start;
+            label: "Show dialog";
+            clicked => {
+                root.playground-open = true;
             }
         }
     }
 
-    playground-dialog := Dialog {
+    playground-dialog := DialogCompose {
         open <=> root.playground-open;
-        title: root.playground-title-text;
-        subtitle: root.playground-subtitle-text;
-        show-header: root.playground-show-header;
-        show-footer: root.playground-show-footer;
-        width-preset: root.playground-width-enum;
-        height-preset: root.playground-height-enum;
-        footer-default-clicked => {
-        }
-        footer-danger-clicked => {
-            root.playground-open = false;
-        }
-        footer-primary-clicked => {
-        }
-        on-close(_gesture) => {
-            root.playground-open = false;
-        }
-
-        Text {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
-        }
-    }
-
-    playground-compose-dialog := DialogCompose {
-        open <=> root.playground-compose-open;
         width-preset: root.playground-width-enum;
         height-preset: root.playground-height-enum;
         on-close(_gesture) => {
-            root.playground-compose-open = false;
+            root.playground-open = false;
         }
 
         VerticalLayout {
@@ -529,7 +379,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
                 title: root.playground-title-text;
                 subtitle: root.playground-subtitle-text;
                 close-requested => {
-                    playground-compose-dialog.on-close("close-button");
+                    playground-dialog.on-close("close-button");
                 }
             }
 
@@ -575,7 +425,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
                     label: "Delete the universe";
                     variant: ButtonVariant.danger;
                     clicked => {
-                        playground-compose-dialog.on-close("close-button");
+                        playground-dialog.on-close("close-button");
                     }
                 }
 
@@ -627,28 +477,59 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
     }
 
-    align-demo-dialog := Dialog {
+    align-demo-dialog := DialogCompose {
         open <=> root.align-demo-open;
-        title: align-vertical-index == 0 ? "Align top" : "Align bottom";
         align-preset: root.align-vertical-preset;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;
-        footer-default-clicked => {
-        }
-        footer-danger-clicked => {
-            root.align-demo-open = false;
-        }
-        footer-primary-clicked => {
-        }
         on-close(_gesture) => {
             root.align-demo-open = false;
         }
 
-        Text {
-            text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
-            color: PrimerColors.fgColor-default;
-            font-size: 14px;
-            wrap: word-wrap;
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: align-vertical-index == 0 ? "Align top" : "Align bottom";
+
+                close-requested => {
+                    align-demo-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Open Second Dialog";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Delete the universe";
+                    variant: ButtonVariant.danger;
+                    clicked => {
+                        align-demo-dialog.on-close("close-button");
+                    }
+                }
+
+                Button {
+                    label: "Proceed";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                    }
+                }
+            }
         }
     }
 
