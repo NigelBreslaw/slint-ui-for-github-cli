@@ -18,8 +18,8 @@ import {
     PrimerColors,
 } from "../../primer-slint/tokens.slint";
 
-// All gallery `DialogCompose` demos and dialog-only timers/state; page drives controls via `in` / `in-out` bindings.
-export component GalleryDialogComposeInstances inherits VerticalLayout {
+// Gallery dialog modals (`DialogCompose`), timers, and dialog-only state; the page drives fields via `in` / `in-out` bindings.
+export component GalleryDialogInstances inherits VerticalLayout {
     spacing: 0px;
 
     in-out property <bool> default-outer-open: false;
@@ -328,7 +328,7 @@ export component GalleryDialogComposeInstances inherits VerticalLayout {
         }
     }
 
-    narrow-story-dialog := DialogCompose {
+    narrow-viewport-dialog := DialogCompose {
         open <=> root.narrow-demo-open;
         narrow-layout: true;
         narrow-position-preset: root.narrow-viewport-position;
@@ -348,7 +348,7 @@ export component GalleryDialogComposeInstances inherits VerticalLayout {
                 subtitle: "Sheet Subtitle";
 
                 close-requested => {
-                    narrow-story-dialog.on-close("close-button");
+                    narrow-viewport-dialog.on-close("close-button");
                 }
             }
 
@@ -416,7 +416,7 @@ export component GalleryDialogComposeInstances inherits VerticalLayout {
 
             DialogBody {
                 Text {
-                    text: "**`DialogCompose`** + **`DialogHeader`** / **`DialogBody`** / **`DialogFooter`** (`PR9`). Body is scrollable between header and footer.";
+                    text: "Uses **`DialogHeader`**, **`DialogBody`**, and **`DialogFooter`** inside **`DialogCompose`**. The body scrolls between header and footer.";
                     color: PrimerColors.fgColor-default;
                     font-size: 14px;
                     wrap: word-wrap;
@@ -893,7 +893,7 @@ export component GalleryDialogComposeInstances inherits VerticalLayout {
         }
     }
 
-    loading-custom-footer-demo := DialogCompose {
+    loading-custom-footer-dialog := DialogCompose {
         open <=> root.loading-custom-footer-open;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;

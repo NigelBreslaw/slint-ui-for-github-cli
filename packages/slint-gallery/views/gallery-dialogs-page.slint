@@ -1,9 +1,7 @@
 import {
     Button,
     ButtonAlignContent,
-    ButtonVariant,
     DialogAlignPreset,
-    DialogFillMode,
     DialogHeightPreset,
     DialogNarrowPositionPreset,
     DialogPositionPreset,
@@ -19,8 +17,8 @@ import {
     PrimerColors,
 } from "../../primer-slint/tokens.slint";
 import {
-    GalleryDialogComposeInstances,
-} from "./gallery-dialog-compose-instances.slint";
+    GalleryDialogInstances,
+} from "./gallery-dialog-instances.slint";
 export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <bool> default-outer-open: false;
@@ -80,10 +78,15 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <string> playground-subtitle-text: "";
 
     private property <DialogWidthPreset> playground-width-enum:
-        playground-width-index == 0 ? DialogWidthPreset.small : playground-width-index == 1 ? DialogWidthPreset.medium : playground-width-index == 2 ? DialogWidthPreset.large : DialogWidthPreset.xlarge;
+        playground-width-index == 0
+        ? DialogWidthPreset.small : playground-width-index == 1
+        ? DialogWidthPreset.medium : playground-width-index == 2
+        ? DialogWidthPreset.large : DialogWidthPreset.xlarge;
 
     private property <DialogHeightPreset> playground-height-enum:
-        playground-height-index == 0 ? DialogHeightPreset.auto : playground-height-index == 1 ? DialogHeightPreset.small : DialogHeightPreset.large;
+        playground-height-index == 0
+        ? DialogHeightPreset.auto : playground-height-index == 1
+        ? DialogHeightPreset.small : DialogHeightPreset.large;
 
     private property <[SelectOption]> align-vertical-options: [
         { value: "top", label: "top", enabled: true },
@@ -105,7 +108,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <DialogPositionPreset> side-sheet-position-preset:
         side-sheet-edge-index == 0 ? DialogPositionPreset.left : DialogPositionPreset.right;
 
-    gallery-compose-demos := GalleryDialogComposeInstances {
+    dialog-instances := GalleryDialogInstances {
         default-outer-open <=> root.default-outer-open;
         default-inner-open <=> root.default-inner-open;
         playground-open <=> root.playground-open;
@@ -444,13 +447,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
             font-weight: 600;
         }
 
-        Text {
-            text: "Components/Dialog/Features — WithDirectSubcomponents";
-            color: PrimerColors.fgColor-muted;
-            font-size: 11px;
-            wrap: word-wrap;
-        }
-
         Button {
             max-width: 240px;
             align-content: ButtonAlignContent.start;
@@ -473,18 +469,13 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "StressTest (Storybook `StressTest`)";
+            text: "StressTest";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
-        Text {
-            text: "Upstream: centered modal uses **`max-width: calc(100dvw - 64px)`** (32px side inset). **`position.narrow: fullscreen`** applies only under **`@media (max-width: 767px)`**, then the shell is edge-to-edge. Resize the gallery window past **767px** to see the capped width; at **≤767px** it matches fullscreen narrow.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 13px;
-            wrap: word-wrap;
-        }
+
 
         Button {
             max-width: 220px;
@@ -495,11 +486,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
     }
-
-    // Matches primer-ui-react `Dialog.features` **`StressTest`**: **`position: { narrow: fullscreen, regular: center }`**
-    // (CSS **`Dialog.module.css`**) — do **not** set **`narrow-layout: true`** here or the shell stays fullscreen at
-    // every width; React only uses fullscreen when the real viewport is **≤767px**.
-
 
     VerticalLayout {
         spacing: 10px;
