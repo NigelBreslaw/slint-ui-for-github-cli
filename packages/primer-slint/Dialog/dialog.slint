@@ -153,8 +153,6 @@ export component Dialog {
         narrow-viewport: root.narrow-active;
         narrow-position: root.narrow-position-preset;
         allow-dismiss: root.allow-dismiss;
-        inner-max-height: root.dialog-overlay-max-height;
-        inner-vertical-stretch-tall: root.is-tall-shell;
         close-requested => {
             root.on-close("escape");
         }
