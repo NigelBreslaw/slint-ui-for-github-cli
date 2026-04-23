@@ -20,18 +20,7 @@ export component DialogHeader {
         HorizontalLayout {
             spacing: LayoutTokens.button-content-gap;
 
-            VerticalLayout {
-                horizontal-stretch: 1;
-                padding-left: DialogTokens.header-content-padding-inline;
-                padding-right: DialogTokens.header-content-padding-inline;
-                padding-top: DialogTokens.header-content-padding-block;
-                padding-bottom: DialogTokens.header-content-padding-block;
-                spacing: DialogTokens.body-block-spacing;
-                alignment: start;
-                align-items: start;
-
-                @children
-            }
+            @children
 
             if root.show-close-button: IconButton {
                 variant: IconButtonVariant.invisible;
@@ -55,19 +44,30 @@ export component StandardDialogHeader inherits DialogHeader {
     in property <string> title: "";
     in property <string> subtitle: "";
 
-    Text {
-        text: root.title;
-        color: PrimerColors.fgColor-default;
-        font-size: DialogTokens.title-font-size;
-        font-weight: DialogTokens.title-font-weight;
-        wrap: word-wrap;
-    }
+    VerticalLayout {
+        horizontal-stretch: 1;
+        padding-left: DialogTokens.header-content-padding-inline;
+        padding-right: DialogTokens.header-content-padding-inline;
+        padding-top: DialogTokens.header-content-padding-block;
+        padding-bottom: DialogTokens.header-content-padding-block;
+        spacing: root.subtitle != "" ? DialogTokens.header-title-subtitle-gap : 0px;
+        alignment: start;
+        align-items: start;
 
-    if root.subtitle != "": Text {
-        text: root.subtitle;
-        color: PrimerColors.fgColor-muted;
-        font-size: DialogTokens.subtitle-font-size;
-        font-weight: DialogTokens.subtitle-font-weight;
-        wrap: word-wrap;
+        Text {
+            text: root.title;
+            color: PrimerColors.fgColor-default;
+            font-size: DialogTokens.title-font-size;
+            font-weight: DialogTokens.title-font-weight;
+            wrap: word-wrap;
+        }
+
+        if root.subtitle != "": Text {
+            text: root.subtitle;
+            color: PrimerColors.fgColor-muted;
+            font-size: DialogTokens.subtitle-font-size;
+            font-weight: DialogTokens.subtitle-font-weight;
+            wrap: word-wrap;
+        }
     }
 }

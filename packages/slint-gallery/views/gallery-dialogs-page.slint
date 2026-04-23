@@ -36,6 +36,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> default-inner-compose-open: false;
 
     private property <bool> playground-open: false;
+    private property <bool> playground-compose-open: false;
     private property <bool> align-demo-open: false;
     private property <bool> side-sheet-open: false;
     private property <bool> narrow-demo-open: false;
@@ -440,12 +441,26 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
 
-        Button {
-            max-width: 200px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                root.playground-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+
+            Button {
+                max-width: 200px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog";
+                clicked => {
+                    root.playground-open = true;
+                }
+            }
+
+            Button {
+                max-width: 260px;
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.playground-compose-open = true;
+                }
             }
         }
     }
@@ -495,6 +510,82 @@ export component GalleryDialogsPage inherits VerticalLayout {
             color: PrimerColors.fgColor-default;
             font-size: 14px;
             wrap: word-wrap;
+        }
+    }
+
+    playground-compose-dialog := DialogCompose {
+        open <=> root.playground-compose-open;
+        width-preset: root.playground-width-enum;
+        height-preset: root.playground-height-enum;
+        on-close(_gesture) => {
+            root.playground-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            if root.playground-show-header: StandardDialogHeader {
+                title: root.playground-title-text;
+                subtitle: root.playground-subtitle-text;
+                close-requested => {
+                    playground-compose-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            if root.playground-show-footer: DialogFooter {
+                Button {
+                    label: "Open Second Dialog";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Delete the universe";
+                    variant: ButtonVariant.danger;
+                    clicked => {
+                        playground-compose-dialog.on-close("close-button");
+                    }
+                }
+
+                Button {
+                    label: "Proceed";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                    }
+                }
+            }
         }
     }
 
