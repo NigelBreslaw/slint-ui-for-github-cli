@@ -1,0 +1,275 @@
+import { PrimerColors } from "../../primer-slint/tokens.slint";
+
+/// Primer **SelectPanel** gallery: Storybook-aligned demo regions will be filled in as **SelectPanelCompose** lands.
+/// **AnchoredOverlay** + trigger patterns stay in the gallery (same as Forms); this page owns the panel interior demos only.
+export component GallerySelectPanelPage inherits VerticalLayout {
+    spacing: 28px;
+    width: 100%;
+    alignment: start;
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Select panel";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Composable **SelectPanelCompose** parts and monolithic **SelectPanel** examples mirror Primer React SelectPanel stories. Each block below reserves space for one gallery demo; implementations follow in later PRs.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "A0 — Baseline (monolithic)";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: monolithic SelectPanel inside AnchoredOverlay (Forms-style).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "1 — Default multi-select labels";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: full compose stack with filter and multi-select rows.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "2 — Custom filter placeholder";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: SelectPanelFilter with non-default placeholder.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "3 — Item dividers";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: scroll body with ActionListItemDivider between rows.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "4 — Notice under header";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: Banner between heading and filter.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "5 — Footer secondary actions";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: footer with Button / text actions.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "6 — Single selection list";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: ActionListRow single-select semantics.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "7 — Disabled / inactive rows";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: disabled and inactive row styling.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "8 — Loading in list region";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: list chrome with loading until items appear.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "9 — No results (empty message)";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: empty message when filter matches nothing.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "10 — Error / warning message";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: message part error and warning variants.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "11 — Overflowing list / max height";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: list max height with scroll inside the panel.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 8px;
+        width: 100%;
+
+        Text {
+            text: "12 — Rich empty body (optional)";
+            color: PrimerColors.fgColor-default;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Placeholder: custom body / children under empty state title.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+}

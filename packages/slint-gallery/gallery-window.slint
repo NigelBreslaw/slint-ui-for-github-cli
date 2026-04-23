@@ -8,6 +8,7 @@ import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryDialogsPage } from "./views/gallery-dialogs-page.slint";
+import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint";
 import { AppWindow } from "../primer-slint/tokens.slint";
 import { Icons } from "../primer-slint/primer.slint";
 
@@ -91,6 +92,8 @@ export component GalleryWindow inherits Window {
                         if GalleryState.selected-group-index == 5: GalleryActionListPage { }
 
                         if GalleryState.selected-group-index == 6: GalleryDialogsPage { }
+
+                        if GalleryState.selected-group-index == 7: GallerySelectPanelPage { }
                     }
                 }
             }
