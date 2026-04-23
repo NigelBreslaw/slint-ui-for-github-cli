@@ -38,6 +38,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
     private property <bool> side-sheet-open: false;
     private property <bool> side-sheet-compose-open: false;
     private property <bool> narrow-demo-open: false;
+    private property <bool> narrow-demo-compose-open: false;
     private property <bool> custom-renderers-open: false;
     private property <bool> direct-sub-open: false;
 
@@ -664,12 +665,25 @@ export component GalleryDialogsPage inherits VerticalLayout {
             }
         }
 
-        Button {
-            max-width: 220px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                root.narrow-demo-open = true;
+        HorizontalLayout {
+            spacing: 12px;
+            alignment: start;
+
+            Button {
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog";
+                clicked => {
+                    root.narrow-demo-open = true;
+                }
+            }
+
+            Button {
+                align-content: ButtonAlignContent.start;
+                label: "Show dialog (compose)";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    root.narrow-demo-compose-open = true;
+                }
             }
         }
     }
@@ -688,6 +702,59 @@ export component GalleryDialogsPage inherits VerticalLayout {
         }
         on-close(_gesture) => {
             root.narrow-demo-open = false;
+        }
+    }
+
+    narrow-story-compose-dialog := DialogCompose {
+        open <=> root.narrow-demo-compose-open;
+        narrow-layout: true;
+        narrow-position-preset: root.narrow-viewport-position;
+        position-preset: DialogPositionPreset.center;
+        width-preset: DialogWidthPreset.medium;
+        height-preset: DialogHeightPreset.auto;
+        on-close(_gesture) => {
+            root.narrow-demo-compose-open = false;
+        }
+
+        VerticalLayout {
+            spacing: 0px;
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: narrow-viewport-index == 0 ? "Bottom sheet (narrow)" : narrow-viewport-index == 1 ? "Fullscreen (narrow)" : "Narrow — center";
+                subtitle: "Sheet Subtitle";
+
+                close-requested => {
+                    narrow-story-compose-dialog.on-close("close-button");
+                }
+            }
+
+            DialogBody {
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Open Second Dialog";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                    }
+                }
+
+                Button {
+                    label: "Delete the universe";
+                    variant: ButtonVariant.danger;
+                    clicked => {
+                        root.narrow-demo-compose-open = false;
+                    }
+                }
+
+                Button {
+                    label: "Proceed";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                    }
+                }
+            }
         }
     }
 
