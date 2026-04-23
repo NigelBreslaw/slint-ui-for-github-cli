@@ -28,6 +28,7 @@ export component DialogHeader {
                 padding-bottom: DialogTokens.header-content-padding-block;
                 spacing: DialogTokens.body-block-spacing;
                 alignment: start;
+                align-items: start;
 
                 @children
             }
@@ -50,7 +51,7 @@ export component DialogHeader {
     }
 }
 
-export component StandardDialogHeader {
+export component StandardDialogHeader inherits DialogHeader {
     in property <string> title: "";
     in property <string> subtitle: "";
 
