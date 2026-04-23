@@ -1,4 +1,4 @@
-// Shared **`ModalOverlay`** shell + clipped inner **`Rectangle`** for **`Dialog`** and **`DialogCompose`** (`PR9`).
+// Shared **`ModalOverlay`** shell + clipped inner **`Rectangle`** for **`DialogCompose`** (`PR9`).
 
 import { ModalOverlay } from "../../AnchoredOverlay/modal-overlay.slint";
 import { DialogAlignPreset, DialogFillMode, DialogNarrowPositionPreset, DialogPositionPreset } from "../types.slint";
@@ -13,7 +13,7 @@ export component DialogSurface {
     in property <bool> narrow-viewport;
     in property <DialogNarrowPositionPreset> narrow-position;
     in property <bool> allow-dismiss;
-    /// Inner **`Rectangle`** max height (`Dialog.dialog-overlay-max-height`).
+    /// Inner **`Rectangle`** max height (set by **`DialogCompose`** from panel geometry).
     in property <length> inner-max-height;
     /// **`true`** when side sheet / narrow fullscreen tall shell.
     in property <bool> inner-vertical-stretch-tall;
