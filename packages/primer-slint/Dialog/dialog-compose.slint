@@ -1,5 +1,5 @@
 // Full-panel composition host (**`@children`** = entire inner shell). Use with **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`** for Storybook **`WithCustomRenderers`** / **`WithDirectSubcomponents`** (`PR9`).
-// Geometry matches upstream Primer **Dialog** — keep in sync when changing viewport / position rules.
+// Sheet-style layouts (**`ModalOverlay`** left / right / narrow bottom): set **`fill-mode`** to **`screen-height`** or **`screen-width`** and drive edge attachment with **`position-preset`** / **`narrow-position-preset`** — do not infer from position alone.
 // Viewport modal: **`ModalOverlay`** + clipped inner **`Rectangle`** (formerly **`DialogSurface`**, PR9).
 
 import { ModalOverlay } from "../AnchoredOverlay/modal-overlay.slint";
@@ -35,11 +35,9 @@ export component DialogCompose {
     private property <bool> narrow-active:
         root.narrow-layout || AppWindow.window-width <= DialogTokens.narrow-max-width;
 
-    private property <bool> is-side-sheet-layout:
-        !root.narrow-active && root.position-preset != DialogPositionPreset.center;
-
-    private property <bool> is-tall-shell:
-        root.is-side-sheet-layout || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen);
+    private property <bool> fill-viewport-height:
+        root.fill-mode == DialogFillMode.screen-height
+        || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen);
 
     private property <length> panel-w:
         width-preset == DialogWidthPreset.small ? DialogTokens.width-small
@@ -53,7 +51,7 @@ export component DialogCompose {
         : OverlayTokens.modal-viewport-max-height;
 
     private property <length> dialog-overlay-max-height:
-        root.is-side-sheet-layout || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen) ? AppWindow.window-height : root.dialog-panel-max-height;
+        root.fill-viewport-height ? AppWindow.window-height : root.dialog-panel-max-height;
 
     modal-layer := ModalOverlay {
         open <=> root.open;
@@ -73,12 +71,10 @@ export component DialogCompose {
             min-height: root.fill-mode == DialogFillMode.screen-height ? AppWindow.window-height : 0px;
             min-width: root.fill-mode == DialogFillMode.screen-width ? AppWindow.window-width : 0px;
             max-height: root.dialog-overlay-max-height;
-            vertical-stretch: root.is-tall-shell ? 1 : 0;
+            vertical-stretch: root.fill-viewport-height ? 1 : 0;
             clip: true;
 
             VerticalLayout {
-                // alignment: stretch;
-                // vertical-stretch: root.is-tall-shell ? 1 : 0;
 
                 @children
             }
