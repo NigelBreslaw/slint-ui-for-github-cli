@@ -7,6 +7,7 @@ import {
     DialogBody,
     DialogCompose,
     DialogFooter,
+    DialogFillMode,
     DialogFooterAutoFocus,
     DialogFooterButtonLayout,
     DialogHeader,
@@ -27,7 +28,6 @@ import {
     DialogTokens,
     PrimerColors,
 } from "../../primer-slint/tokens.slint";
-
 export component GalleryDialogsPage inherits VerticalLayout {
 
     private property <bool> default-outer-open: false;
@@ -608,6 +608,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
         position-preset: root.side-sheet-position-preset;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;
+        fill-mode: DialogFillMode.screen-height;
         on-close(_gesture) => {
             root.side-sheet-compose-open = false;
         }

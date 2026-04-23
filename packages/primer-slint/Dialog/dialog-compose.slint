@@ -13,6 +13,7 @@ import {
     DialogNarrowPositionPreset,
     DialogPositionPreset,
     DialogWidthPreset,
+    DialogFillMode,
 } from "./types.slint";
 
 export component DialogCompose {
@@ -24,6 +25,7 @@ export component DialogCompose {
     in property <DialogNarrowPositionPreset> narrow-position-preset: DialogNarrowPositionPreset.center;
     in property <bool> narrow-layout: false;
     in property <bool> allow-dismiss: true;
+    in property <DialogFillMode> fill-mode: DialogFillMode.auto;
     callback on-close(gesture: string);
 
     private property <bool> narrow-active:
@@ -60,6 +62,7 @@ export component DialogCompose {
         allow-dismiss: root.allow-dismiss;
         inner-max-height: root.dialog-overlay-max-height;
         inner-vertical-stretch-tall: root.is-tall-shell;
+        fill-mode <=> root.fill-mode;
         close-requested => {
             root.on-close("escape");
         }
