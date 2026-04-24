@@ -3,7 +3,7 @@ import {
     ButtonVariant,
     DialogAlignPreset,
     DialogBody,
-    DialogCompose,
+    Dialog,
     DialogFooter,
     DialogFillMode,
     DialogHeader,
@@ -18,7 +18,7 @@ import {
     PrimerColors,
 } from "../../primer-slint/tokens.slint";
 
-// Gallery dialog modals (`DialogCompose`), timers, and dialog-only state; the page drives fields via `in` / `in-out` bindings.
+// Gallery dialog modals (`Dialog`), timers, and dialog-only state; the page drives fields via `in` / `in-out` bindings.
 export component GalleryDialogInstances inherits VerticalLayout {
     spacing: 0px;
 
@@ -56,7 +56,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
     in property <DialogNarrowPositionPreset> narrow-viewport-position: DialogNarrowPositionPreset.bottom;
     in property <int> narrow-viewport-index: 0;
 
-    default-outer-dialog := DialogCompose {
+    default-outer-dialog := Dialog {
         open <=> root.default-outer-open;
         width-preset: DialogWidthPreset.xlarge;
         on-close(_gesture) => {
@@ -130,7 +130,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    default-inner-dialog := DialogCompose {
+    default-inner-dialog := Dialog {
         open <=> root.default-inner-open;
         width-preset: DialogWidthPreset.small;
         on-close(_gesture) => {
@@ -163,7 +163,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    playground-dialog := DialogCompose {
+    playground-dialog := Dialog {
         open <=> root.playground-open;
         width-preset: root.playground-width-enum;
         height-preset: root.playground-height-enum;
@@ -239,7 +239,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    align-demo-dialog := DialogCompose {
+    align-demo-dialog := Dialog {
         open <=> root.align-demo-open;
         align-preset: root.align-vertical-preset;
         width-preset: DialogWidthPreset.medium;
@@ -295,7 +295,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    side-sheet-dialog := DialogCompose {
+    side-sheet-dialog := Dialog {
         open <=> root.side-sheet-open;
         position-preset: root.side-sheet-position-preset;
         width-preset: DialogWidthPreset.medium;
@@ -328,7 +328,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    narrow-viewport-dialog := DialogCompose {
+    narrow-viewport-dialog := Dialog {
         open <=> root.narrow-demo-open;
         narrow-layout: true;
         narrow-position-preset: root.narrow-viewport-position;
@@ -381,7 +381,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    custom-renderers-dialog := DialogCompose {
+    custom-renderers-dialog := Dialog {
         open <=> root.custom-renderers-open;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;
@@ -416,7 +416,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
 
             DialogBody {
                 Text {
-                    text: "Uses **`DialogHeader`**, **`DialogBody`**, and **`DialogFooter`** inside **`DialogCompose`**. The body scrolls between header and footer.";
+                    text: "Uses **`DialogHeader`**, **`DialogBody`**, and **`DialogFooter`** inside **`Dialog`**. The body scrolls between header and footer.";
                     color: PrimerColors.fgColor-default;
                     font-size: 14px;
                     wrap: word-wrap;
@@ -454,7 +454,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    direct-sub-dialog := DialogCompose {
+    direct-sub-dialog := Dialog {
         open <=> root.direct-sub-open;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;
@@ -510,7 +510,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    stress-test-dialog := DialogCompose {
+    stress-test-dialog := Dialog {
         open <=> root.stress-test-open;
         position-preset: DialogPositionPreset.center;
         narrow-position-preset: DialogNarrowPositionPreset.fullscreen;
@@ -647,7 +647,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    stress-test-inner-dialog := DialogCompose {
+    stress-test-inner-dialog := Dialog {
         open <=> root.stress-test-inner-open;
         width-preset: DialogWidthPreset.small;
         on-close(_gesture) => {
@@ -677,7 +677,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    multistep-footer-dialog := DialogCompose {
+    multistep-footer-dialog := Dialog {
         open <=> root.multistep-footer-open;
         width-preset: DialogWidthPreset.xlarge;
         height-preset: DialogHeightPreset.auto;
@@ -739,7 +739,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    dynamic-footer-dialog := DialogCompose {
+    dynamic-footer-dialog := Dialog {
         open <=> root.dynamic-footer-open;
         width-preset: DialogWidthPreset.xlarge;
         height-preset: DialogHeightPreset.auto;
@@ -804,7 +804,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    loading-footer-dialog := DialogCompose {
+    loading-footer-dialog := Dialog {
         open <=> root.loading-footer-open;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;
@@ -893,7 +893,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    loading-custom-footer-dialog := DialogCompose {
+    loading-custom-footer-dialog := Dialog {
         open <=> root.loading-custom-footer-open;
         width-preset: DialogWidthPreset.medium;
         height-preset: DialogHeightPreset.auto;

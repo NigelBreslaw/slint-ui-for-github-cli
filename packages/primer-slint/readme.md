@@ -223,13 +223,13 @@ Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group).
 
 The **project board** import dialog uses **`SelectPanel`** in **`SelectPanelMode.single`** ([`project-board-list.slint`](../../app/src/ui/views/project-board-list.slint)) for repository search + pick.
 
-**Imports for views:** [`primer.slint`](primer.slint) — **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`**, **`ModalOverlay`**, **`OverlayPanelChrome`**, **`DialogCompose`**, **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`SelectPanel`**, **`SelectPanelMode`**, **`SelectPanelItem`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`**, **`DialogTokens`** (optional **`OverlayTokens`** for overrides).
+**Imports for views:** [`primer.slint`](primer.slint) — **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`**, **`ModalOverlay`**, **`OverlayPanelChrome`**, **`Dialog`**, **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`SelectPanel`**, **`SelectPanelMode`**, **`SelectPanelItem`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`**, **`DialogTokens`** (optional **`OverlayTokens`** for overrides).
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group, AnchoredOverlay + SelectPanel multi demo with footer); **Project board** import dialog (**`SelectPanel`** `single`).
 
-## Dialog (DialogCompose)
+## Dialog (Dialog)
 
-**Slint exports:** The public modal shell is **`DialogCompose`** ([`Dialog/dialog-compose.slint`](Dialog/dialog-compose.slint)) with composable parts **`DialogHeader`**, **`StandardDialogHeader`**, **`DialogBody`**, and **`DialogFooter`**. There is no separate all-in-one **`Dialog`** component. For parity with Primer [Dialog](https://primer.style/react/storybook/?path=/story/components-dialog--default) **Default** and **Playground** stories, assemble **`StandardDialogHeader`** (title, optional subtitle, **`Icons.x`**), **`DialogBody`**, and **`DialogFooter`** as **`@children`** of **`DialogCompose`**.
+**Slint exports:** The public modal shell is **`Dialog`** ([`Dialog/dialog-compose.slint`](Dialog/dialog-compose.slint)) with composable parts **`DialogHeader`**, **`StandardDialogHeader`**, **`DialogBody`**, and **`DialogFooter`**. There is no separate all-in-one **`Dialog`** component. For parity with Primer [Dialog](https://primer.style/react/storybook/?path=/story/components-dialog--default) **Default** and **Playground** stories, assemble **`StandardDialogHeader`** (title, optional subtitle, **`Icons.x`**), **`DialogBody`**, and **`DialogFooter`** as **`@children`** of **`Dialog`**.
 
 **Behavior and motion** follow **`Dialog.module.css`**: **`ModalOverlay`** (backdrop scrim + **`OverlayPanelChrome`**) with centered modals using **`scaleFade`** (**`DialogTokens.overlay-enter-duration`**); side sheets (**`position-preset`** **left** / **right**) use slide-in motion (**`DialogTokens.overlay-sheet-enter-duration`**); narrow viewport uses **`DialogNarrowPositionPreset`** for **bottom** / **fullscreen** / **center** paths. Presets in [`Dialog/types.slint`](Dialog/types.slint) mirror React **`widthMap`** / **`heightMap`**. **`ModalOverlay`** uses a **`FocusScope`**; **focus trap** and React ref semantics are **best-effort** in Slint. **`DialogFooterAutoFocus`** (**`PR11`**) aligns with React footer **`autoFocus`**. See **`DialogFooter`** for default vs custom actions (**`use-default-actions`**) and PR10/PR11 footer options.
 
@@ -243,7 +243,7 @@ Upstream inventory: **[`Dialog.stories.tsx`](https://github.com/primer/primer-ui
 | ----------------| ------| ----------------------------------|
 | `Default` | Components/Dialog | **Default** — nested inner dialog, long body, default footer |
 | `Playground` | Components/Dialog | **Playground** — width, height, title, subtitle, header/footer toggles |
-| `WithCustomRenderers` | Dialog/Features | **WithCustomRenderers** — **`DialogCompose`** + **`DialogHeader`** / **`DialogBody`** / **`DialogFooter`** |
+| `WithCustomRenderers` | Dialog/Features | **WithCustomRenderers** — **`Dialog`** + **`DialogHeader`** / **`DialogBody`** / **`DialogFooter`** |
 | `WithDirectSubcomponents` | Dialog/Features | **WithDirectSubcomponents** — slot-style parts; custom footer row |
 | `StressTest` | Dialog/Features | **StressTest** — long chrome, many footer actions, **`narrow-position-preset`**, nested dialog |
 | `ReproMultistepDialogWithConditionalFooter` | Dialog/Features | **ReproMultistepDialogWithConditionalFooter** — conditional footer buttons |
@@ -262,7 +262,7 @@ Upstream inventory: **[`Dialog.stories.tsx`](https://github.com/primer/primer-ui
 
 **PR10** (**`footer-button-layout`** **`wrap`** \| **`scroll`**, **`footer-has-*-button`**, **`footer-extra-*-label`**) and **PR11** (**`footer-*-loading`**) are exercised in **StressTest**, **ReproMultistep…**, **RetainsFocusTrap…**, and **Loading** blocks above.
 
-**Imports for views:** [`primer.slint`](primer.slint) — **`DialogCompose`**, **`DialogHeader`**, **`StandardDialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogFooterButtonLayout`**, **`DialogFooterAutoFocus`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`DialogFillMode`**, **`AppWindow`** (from [`tokens.slint`](tokens.slint)) for viewport size, **`DialogTokens`** / **`PrimerColors`** only if building custom regions outside **`DialogCompose`**.
+**Imports for views:** [`primer.slint`](primer.slint) — **`Dialog`**, **`DialogHeader`**, **`StandardDialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogFooterButtonLayout`**, **`DialogFooterAutoFocus`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`DialogFillMode`**, **`AppWindow`** (from [`tokens.slint`](tokens.slint)) for viewport size, **`DialogTokens`** / **`PrimerColors`** only if building custom regions outside **`Dialog`**.
 
 ## PrimerTextInput
 
