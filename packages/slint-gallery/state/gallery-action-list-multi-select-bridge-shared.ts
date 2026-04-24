@@ -1,6 +1,5 @@
 import { assignProperties } from "slint-bridge-kit";
 
-/** Slint global handle: `row_checked` / `last_activated_label` / `selection_summary` / `row_activated`. */
 export type ActionListGalleryMultiSelectHandle = {
     row_checked: boolean[];
     last_activated_label: string;
@@ -8,7 +7,6 @@ export type ActionListGalleryMultiSelectHandle = {
     row_activated: (ix: number) => void;
 };
 
-/** Row labels — same order as `multi-select-lines` and `listbox-multi-select-lines` in `gallery-action-list-page.slint`. */
 const ACTION_LIST_GALLERY_MULTI_ROW_LABELS = [
     "Primer Backlog",
     "Accessibility",
@@ -31,10 +29,7 @@ function formatSelectionSummary(
     return names.length === 0 ? "(none)" : names.join(", ");
 }
 
-/**
- * Wires `row_activated` to toggle membership in a `Set`; mirrors a bool[] into Slint for `ActionList.multi-selected`.
- * Call once per global handle — each call owns its own selection state.
- */
+
 export function wireActionListGalleryMultiSelect(
     g: ActionListGalleryMultiSelectHandle,
 ): void {

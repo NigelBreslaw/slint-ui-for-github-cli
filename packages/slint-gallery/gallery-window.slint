@@ -17,9 +17,9 @@ import "../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
 import "../primer-slint/assets/fonts/VeraMono.ttf";
 
 /// Re-export so **slint-ui** (Node) attaches this global to the **GalleryWindow** handle — globals only in imported `.slint` files are otherwise unreachable from `gallery-main.ts`.
-export { GalleryActionListMultiSelect } from "./gallery-action-list-multi-select-state.slint";
-export { GalleryActionListListboxMultiSelect } from "./gallery-action-list-listbox-multi-select-state.slint";
-export { GallerySelectPanelMulti } from "./gallery-select-panel-multi-state.slint";
+export { GalleryActionListMultiSelect } from "./state/gallery-action-list-multi-select-state.slint";
+export { GalleryActionListListboxMultiSelect } from "./state/gallery-action-list-listbox-multi-select-state.slint";
+export { GallerySelectPanelMulti } from "./state/gallery-select-panel-multi-state.slint";
 
 
 export global GalleryState {

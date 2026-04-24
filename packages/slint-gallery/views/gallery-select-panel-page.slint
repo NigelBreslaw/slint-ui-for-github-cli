@@ -1,26 +1,51 @@
+// Primer **SelectPanel** gallery: Storybook-aligned **SelectPanelCompose** + **AnchoredOverlay** per block. Monolithic **SelectPanel** only in A0.
 import {
+    ActionListItemDivider,
+    ActionListRow,
+    ActionListDescriptionLayout,
     AnchoredOverlay,
     AnchoredOverlayAlign,
     AnchoredOverlaySide,
+    Banner,
+    BannerVariant,
     Button,
     ButtonAlignContent,
     ButtonVariant,
     Icons,
     LayoutTokens,
+    PrimerColors,
     SelectPanel,
     SelectPanelItem,
     SelectPanelMode,
+    SelectPanelCompose,
+    SelectPanelFilter,
+    SelectPanelScrollBody,
+    SelectPanelListChrome,
+    SelectPanelMessage,
+    SelectPanelMessageVariant,
+    SelectPanelNotice,
+    SelectPanelSeparator,
+    SelectPanelFooter,
+    SelectPanelLoading,
+    StandardSelectPanelHeading,
 } from "../../primer-slint/primer.slint";
-import { PrimerColors } from "../../primer-slint/tokens.slint";
-import { GallerySelectPanelMulti } from "../gallery-select-panel-multi-state.slint";
+import { SelectPanelRow } from "../../primer-slint/SelectPanel/select-panel-row.slint";
+import { GallerySelectPanelMulti } from "../state/gallery-select-panel-multi-state.slint";
 
-/// Primer **SelectPanel** gallery: Storybook-aligned demo regions will be filled in as **SelectPanelCompose** lands.
-/// **AnchoredOverlay** + trigger patterns stay in the gallery (same as Forms); this page owns the panel interior demos only.
 export component GallerySelectPanelPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
     alignment: start;
 
+    private property <[SelectPanelItem]> sp_items_5: [
+        { value: "enhancement", label: "enhancement", description: "New feature or request", swatch: #84b6eb, enabled: true },
+        { value: "bug", label: "bug", description: "Something isn't working", swatch: #d73a4a, enabled: true },
+        { value: "good-first-issue", label: "good first issue", description: "Good for newcomers", swatch: #3fb950, enabled: true },
+        { value: "documentation", label: "documentation", description: "Documentation improvements", swatch: #0075ca, enabled: true },
+        { value: "duplicate", label: "duplicate", description: "Already exists", swatch: #cfd3d7, enabled: true },
+    ];
+
+    // --- A0 baseline
     private property <bool> baseline-select-panel-open: false;
     private property <string> baseline-sp-filter: "";
     private property <int> baseline-sp-focused: 0;
@@ -31,6 +56,70 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         { value: "documentation", label: "documentation", description: "Improvements or additions to documentation", swatch: #0075ca, enabled: true },
         { value: "duplicate", label: "duplicate", description: "This issue or pull request already exists", swatch: #cfd3d7, enabled: true },
     ];
+
+    // --- 1 — multi, explicit row checked state
+    private property <bool> d1-open: false;
+    private property <string> d1-filter: "";
+    private property <int> d1-focus: 0;
+    private property <bool> d1b0: false;
+    private property <bool> d1b1: true;
+    private property <bool> d1b2: true;
+    private property <bool> d1b3: false;
+    private property <bool> d1b4: false;
+
+    // --- 2
+    private property <bool> d2-open: false;
+    private property <string> d2-filter: "";
+    private property <bool> d2a0: true;
+    private property <bool> d2a1: false;
+
+    // --- 3
+    private property <bool> d3-open: false;
+
+    // --- 4
+    private property <bool> d4-open: false;
+    private property <int> d4-mode: 0; // 0 info, 1 warning, 2 critical
+    private property <string> d4-filter: "";
+
+    // --- 5
+    private property <bool> d5-open: false;
+
+    // --- 6
+    private property <bool> d6-open: false;
+    private property <int> d6-ix: 0;
+
+    // --- 7
+    private property <bool> d7-open: false;
+
+    // --- 8
+    private property <bool> d8-open: false;
+    private property <bool> d8-loading: true;
+
+    // --- 9
+    private property <bool> d9-open: false;
+    private property <string> d9-filter: "";
+    // Type the literal "none" to exercise the no-results state (no substring search in Slint).
+    private property <bool> d9-empty: d9-filter == "none";
+
+    // --- 10
+    private property <bool> d10-open: false;
+    private property <int> d10-kind: 0; // 0 error, 1 warning
+
+    // --- 11
+    private property <bool> d11-open: false;
+    private property <int> d11-rows: 22;
+
+    // --- 12
+    private property <bool> d12-open: false;
+
+    d8_fetch_done := Timer {
+        interval: 1400ms;
+        running: false;
+        triggered() => {
+            root.d8-loading = false;
+            self.running = false;
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;
@@ -44,13 +133,14 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Composable **SelectPanelCompose** parts and monolithic **SelectPanel** examples mirror Primer React SelectPanel stories. Each block below reserves space for one gallery demo; implementations follow in later PRs.";
+            text: "Each block uses **AnchoredOverlay**; **A0** is the monolithic **SelectPanel** baseline, **1–12** are **SelectPanelCompose** + parts aligned with Primer **SelectPanel** / **Features** / **Examples** stories.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
     }
 
+    // ----- A0
     VerticalLayout {
         spacing: 12px;
         width: 100%;
@@ -63,17 +153,9 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Same pattern as Forms: AnchoredOverlay (vertical-side auto, align start), monolithic SelectPanel in multi mode with `multi-selected` / `multi-item-activated` via `GallerySelectPanelMulti`, footer Cancel/Apply. Escape closes the overlay.";
+            text: "Forms-style **AnchoredOverlay** + monolithic **SelectPanel**; selection toggles via **GallerySelectPanelMulti**; Cancel/Apply in the panel footer children.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
-            wrap: word-wrap;
-        }
-
-        Text {
-            text: "Labels";
-            color: PrimerColors.fgColor-default;
-            font-size: 12px;
-            font-weight: 600;
             wrap: word-wrap;
         }
 
@@ -146,6 +228,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         }
     }
 
+    // ----- 1
     VerticalLayout {
         spacing: 8px;
         width: 100%;
@@ -158,219 +241,834 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Placeholder: full compose stack with filter and multi-select rows.";
+            text: "Compose: heading, **SelectPanelFilter**, separator, **SelectPanelListChrome** + **SelectPanelScrollBody** with **SelectPanelRow**; footer actions.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+
+        btn1 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open default multi (compose)";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => {
+                d1-open = true;
+            }
+        }
+
+        AnchoredOverlay {
+            open <=> d1-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 480px;
+            anchor-abs-x: btn1.absolute-position.x;
+            anchor-abs-y: btn1.absolute-position.y;
+            anchor-width: btn1.width;
+            anchor-height: btn1.height;
+            close-requested => {
+            }
+
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading {
+                    title: "Select labels";
+                    subtitle: "Use labels to organize issues and pull requests";
+                }
+                SelectPanelFilter {
+                    text <=> d1-filter;
+                    placeholder: "Filter items";
+                    edited(_t) => {
+                    }
+                }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    SelectPanelScrollBody {
+                        // Five rows: checked state in d1b0..d1b4 (no array index assignment in Slint)
+                        SelectPanelRow {
+                            label: sp_items_5[0].label;
+                            description: sp_items_5[0].description;
+                            swatch: sp_items_5[0].swatch;
+                            show-focus-accent: d1-focus == 0;
+                            checked: d1b0;
+                            clicked => {
+                                d1-focus = 0;
+                                d1b0 = !d1b0;
+                            }
+                        }
+                        SelectPanelRow {
+                            label: sp_items_5[1].label;
+                            description: sp_items_5[1].description;
+                            swatch: sp_items_5[1].swatch;
+                            show-focus-accent: d1-focus == 1;
+                            checked: d1b1;
+                            clicked => {
+                                d1-focus = 1;
+                                d1b1 = !d1b1;
+                            }
+                        }
+                        SelectPanelRow {
+                            label: sp_items_5[2].label;
+                            description: sp_items_5[2].description;
+                            swatch: sp_items_5[2].swatch;
+                            show-focus-accent: d1-focus == 2;
+                            checked: d1b2;
+                            clicked => {
+                                d1-focus = 2;
+                                d1b2 = !d1b2;
+                            }
+                        }
+                        SelectPanelRow {
+                            label: sp_items_5[3].label;
+                            description: sp_items_5[3].description;
+                            swatch: sp_items_5[3].swatch;
+                            show-focus-accent: d1-focus == 3;
+                            checked: d1b3;
+                            clicked => {
+                                d1-focus = 3;
+                                d1b3 = !d1b3;
+                            }
+                        }
+                        SelectPanelRow {
+                            label: sp_items_5[4].label;
+                            description: sp_items_5[4].description;
+                            swatch: sp_items_5[4].swatch;
+                            show-focus-accent: d1-focus == 4;
+                            checked: d1b4;
+                            clicked => {
+                                d1-focus = 4;
+                                d1b4 = !d1b4;
+                            }
+                        }
+                    }
+                }
+                SelectPanelFooter {
+                    HorizontalLayout {
+                        spacing: LayoutTokens.button-content-gap;
+                        width: 100%;
+                        alignment: end;
+                        Button {
+                            label: "Cancel";
+                            clicked => {
+                                d1-open = false;
+                            }
+                        }
+                        Button {
+                            label: "Apply";
+                            variant: ButtonVariant.primary;
+                            clicked => {
+                                d1-open = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 2
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "2 — Custom filter placeholder";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: SelectPanelFilter with non-default placeholder.";
+            text: "Features **WithPlaceholderForSearchInput**: `placeholder: \"Search by name…\"` on **SelectPanelFilter**.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn2 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open custom placeholder";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d2-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d2-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 400px;
+            anchor-abs-x: btn2.absolute-position.x;
+            anchor-abs-y: btn2.absolute-position.y;
+            anchor-width: btn2.width;
+            anchor-height: btn2.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading {
+                    title: "Filter by name";
+                    subtitle: "Custom placeholder on the search field";
+                }
+                SelectPanelFilter {
+                    text <=> d2-filter;
+                    placeholder: "Search by name…";
+                    edited(_t) => { }
+                }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    SelectPanelScrollBody {
+                        SelectPanelRow { label: sp_items_5[0].label; description: sp_items_5[0].description; swatch: sp_items_5[0].swatch; checked: d2a0; clicked => { d2a0 = !d2a0; } }
+                        SelectPanelRow { label: sp_items_5[1].label; description: sp_items_5[1].description; swatch: sp_items_5[1].swatch; checked: d2a1; clicked => { d2a1 = !d2a1; } }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 3
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "3 — Item dividers";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: scroll body with ActionListItemDivider between rows.";
+            text: "Features **WithItemDividers**: **ActionListItemDivider** between **ActionListRow** rows with multi checkboxes.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn3 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open list with dividers";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d3-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d3-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 400px;
+            anchor-abs-x: btn3.absolute-position.x;
+            anchor-abs-y: btn3.absolute-position.y;
+            anchor-width: btn3.width;
+            anchor-height: btn3.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Divided rows"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    SelectPanelScrollBody {
+                        ActionListRow { label: "Build"; show-multi-select-checkbox: true; selected: true; }
+                        ActionListItemDivider { }
+                        ActionListRow { label: "Test"; show-multi-select-checkbox: true; }
+                        ActionListItemDivider { }
+                        ActionListRow { label: "Release"; show-multi-select-checkbox: true; }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 4
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "4 — Notice under header";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: Banner between heading and filter.";
+            text: "Features **WithNotice**: **SelectPanelNotice** + **Banner** before the filter. In the open panel, use *Cycle banner* to change severity.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn4 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open notice strip";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d4-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d4-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 440px;
+            anchor-abs-x: btn4.absolute-position.x;
+            anchor-abs-y: btn4.absolute-position.y;
+            anchor-width: btn4.width;
+            anchor-height: btn4.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Review"; subtitle: "Notice above the list"; }
+                SelectPanelNotice {
+                    Banner {
+                        variant: d4-mode == 0 ? BannerVariant.info : d4-mode == 1 ? BannerVariant.warning : BannerVariant.critical;
+                        title: d4-mode == 0 ? "Info" : d4-mode == 1 ? "Warning" : "Critical";
+                        description: " This affects how items in the list are displayed below.";
+                    }
+                }
+                Button {
+                    width: 100%;
+                    align-content: ButtonAlignContent.start;
+                    label: d4-mode == 0 ? "Cycle banner: info" : d4-mode == 1 ? "Cycle banner: warning" : "Cycle banner: critical";
+                    variant: ButtonVariant.invisible;
+                    clicked => {
+                        d4-mode = d4-mode == 0 ? 1
+                            : d4-mode == 1 ? 2
+                            : 0;
+                    }
+                }
+                SelectPanelFilter {
+                    text <=> d4-filter;
+                    placeholder: "Filter items";
+                    edited(_t) => { }
+                }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 160px;
+                    SelectPanelScrollBody {
+                        ActionListRow { label: "Item A"; }
+                        ActionListRow { label: "Item B"; }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 5
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "5 — Footer secondary actions";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: footer with Button / text actions.";
+            text: "Features **WithSecondaryActionButton** / **WithSecondaryActionLink** style: **SelectPanelFooter** with default **Button** + a link-style **Button** + primary action.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn5 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open footer with secondary + link";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d5-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d5-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 400px;
+            anchor-abs-x: btn5.absolute-position.x;
+            anchor-abs-y: btn5.absolute-position.y;
+            anchor-width: btn5.width;
+            anchor-height: btn5.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Create"; subtitle: "Save or add another"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 120px;
+                    SelectPanelScrollBody { ActionListRow { label: "default branch"; } }
+                }
+                SelectPanelFooter {
+                    VerticalLayout {
+                        width: 100%;
+                        spacing: LayoutTokens.button-content-gap;
+                        HorizontalLayout {
+                            spacing: LayoutTokens.button-content-gap;
+                            width: 100%;
+                            Button { label: "Add another"; variant: ButtonVariant.default; clicked => { } }
+                            Button { label: "Add another as link"; variant: ButtonVariant.link; clicked => { d5-open = false; } }
+                        }
+                        HorizontalLayout {
+                            spacing: LayoutTokens.button-content-gap;
+                            width: 100%;
+                            alignment: end;
+                            Button { label: "Cancel"; clicked => { d5-open = false; } }
+                            Button { label: "Save"; variant: ButtonVariant.primary; clicked => { d5-open = false; } }
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 6
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "6 — Single selection list";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: ActionListRow single-select semantics.";
+            text: "Features **SingleSelect**: **ActionListRow** with `show-single-select-check` and `selected: ix == d6-ix` on row click.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn6 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: d6-ix == 0 ? "Inbox (open)" : d6-ix == 1 ? "Primary (open)" : "Calendar (open)";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d6-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d6-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 320px;
+            panel-height: 320px;
+            anchor-abs-x: btn6.absolute-position.x;
+            anchor-abs-y: btn6.absolute-position.y;
+            anchor-width: btn6.width;
+            anchor-height: btn6.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Inbox type"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    SelectPanelScrollBody {
+                        ActionListRow {
+                            label: "Inbox";
+                            show-single-select-check: true;
+                            selected: d6-ix == 0;
+                            description-layout: ActionListDescriptionLayout.none;
+                            label-markdown: @markdown("");
+                            clicked => { d6-ix = 0; }
+                        }
+                        ActionListRow {
+                            label: "Primary";
+                            show-single-select-check: true;
+                            selected: d6-ix == 1;
+                            description-layout: ActionListDescriptionLayout.none;
+                            label-markdown: @markdown("");
+                            clicked => { d6-ix = 1; }
+                        }
+                        ActionListRow {
+                            label: "Calendar";
+                            show-single-select-check: true;
+                            selected: d6-ix == 2;
+                            description-layout: ActionListDescriptionLayout.none;
+                            label-markdown: @markdown("");
+                            clicked => { d6-ix = 2; }
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 7
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "7 — Disabled / inactive rows";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: disabled and inactive row styling.";
+            text: "Features **WithDisabledItem** and **WithInactiveItems**: one row `disabled: true`, one with `inactive-text` (not activatable, muted + warning).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn7 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open disabled + inactive list";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d7-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d7-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 380px;
+            anchor-abs-x: btn7.absolute-position.x;
+            anchor-abs-y: btn7.absolute-position.y;
+            anchor-width: btn7.width;
+            anchor-height: btn7.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Permissions"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    SelectPanelScrollBody {
+                        ActionListRow {
+                            label: "Active";
+                            label-markdown: @markdown("");
+                            description: "Usual row";
+                            description-layout: ActionListDescriptionLayout.block;
+                        }
+                        ActionListRow {
+                            label: "Disabled";
+                            label-markdown: @markdown("");
+                            description: "Cannot be toggled";
+                            description-layout: ActionListDescriptionLayout.block;
+                            disabled: true;
+                        }
+                        ActionListRow {
+                            label: "Deprecated";
+                            label-markdown: @markdown("");
+                            description: "Will be removed";
+                            description-layout: ActionListDescriptionLayout.block;
+                            inactive-text: "Read-only: migration required";
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 8
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "8 — Loading in list region";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: list chrome with loading until items appear.";
+            text: "Examples **HeightInitialWithUnderflowingItemsAfterFetch** / **AsyncFetch**: **SelectPanelListChrome** shows **SelectPanelLoading** until a timer completes (simulated fetch), then the list body appears.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn8 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open loading → items";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => {
+                d8-open = true;
+                d8-loading = true;
+                d8_fetch_done.running = true;
+            }
+        }
+        AnchoredOverlay {
+            open <=> d8-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 360px;
+            anchor-abs-x: btn8.absolute-position.x;
+            anchor-abs-y: btn8.absolute-position.y;
+            anchor-width: btn8.width;
+            anchor-height: btn8.height;
+            close-requested => {
+                root.d8-loading = true;
+                d8_fetch_done.running = false;
+            }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Assignees"; subtitle: "Fetches in the background…"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    if d8-loading: SelectPanelLoading { message: "Loading people…"; }
+                    if !d8-loading: SelectPanelScrollBody {
+                        SelectPanelRow { label: "Fetched A"; description: "Loaded from server"; swatch: #84b6eb; checked: true; }
+                        SelectPanelRow { label: "Fetched B"; description: "Loaded from server"; swatch: #3fb950; checked: false; }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 9
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "9 — No results (empty message)";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: empty message when filter matches nothing.";
+            text: "Features **CustomisedNoResults**: set filter text to the literal `none` to get **SelectPanelMessage** (empty) while two labels exist when the field is not `none` (simulates a miss without substring search).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn9 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open filter + no-results";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d9-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d9-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 400px;
+            anchor-abs-x: btn9.absolute-position.x;
+            anchor-abs-y: btn9.absolute-position.y;
+            anchor-width: btn9.width;
+            anchor-height: btn9.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Search members"; }
+                SelectPanelFilter {
+                    text <=> d9-filter;
+                    placeholder: "Type none (literal) to clear matches";
+                    edited(_t) => { }
+                }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    if d9-empty: SelectPanelMessage {
+                        variant: SelectPanelMessageVariant.empty;
+                        title: "No results";
+                        body: "Nothing matched your filter. Clear the field or change the query.";
+                    }
+                    if !d9-empty: SelectPanelScrollBody {
+                        SelectPanelRow { label: "bug"; description: "Something isn’t working"; swatch: #d73a4a; checked: true; }
+                        SelectPanelRow { label: "documentation"; description: "Docs"; swatch: #0075ca; checked: false; }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 10
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "10 — Error / warning message";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: message part error and warning variants.";
+            text: "Features **WithMessage** / **ErrorMessage**: **SelectPanelListChrome** hosting **SelectPanelMessage** in error vs warning. Toggle in-panel.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn10 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open list message";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d10-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d10-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 400px;
+            anchor-abs-x: btn10.absolute-position.x;
+            anchor-abs-y: btn10.absolute-position.y;
+            anchor-width: btn10.width;
+            anchor-height: btn10.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Data source"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 220px;
+                    VerticalLayout {
+                        width: 100%;
+                        spacing: LayoutTokens.button-content-gap;
+                        SelectPanelMessage {
+                            variant: d10-kind == 0 ? SelectPanelMessageVariant.error : SelectPanelMessageVariant.warning;
+                            title: d10-kind == 0 ? "Error loading" : "Limited availability";
+                            body: d10-kind == 0
+                                ? "The server returned an error. Try again in a moment."
+                                : "You can still read cached items below, but they may be stale.";
+                        }
+                        Button {
+                            align-content: ButtonAlignContent.start;
+                            label: d10-kind == 0 ? "Switch to warning" : "Switch to error";
+                            variant: ButtonVariant.invisible;
+                            clicked => { d10-kind = d10-kind == 0 ? 1 : 0; }
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 11
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "11 — Overflowing list / max height";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: list max height with scroll inside the panel.";
+            text: "Examples **HeightVariationsAndScroll** / **HeightInitialWithOverflowingItemsStory**: fixed **list-max-height** and many rows; scroll is inside **SelectPanelScrollBody**.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
+        btn11 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open long scrollable list";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d11-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d11-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 360px;
+            panel-height: 500px;
+            anchor-abs-x: btn11.absolute-position.x;
+            anchor-abs-y: btn11.absolute-position.y;
+            anchor-width: btn11.width;
+            anchor-height: btn11.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "All branches"; subtitle: "Narrow `list-max-height`"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    SelectPanelScrollBody {
+                        for i in d11-rows: ActionListRow {
+                            label: "branch-\{i+1}";
+                            label-markdown: @markdown("");
+                        }
+                    }
+                }
+            }
+        }
     }
 
+    // ----- 12
     VerticalLayout {
         spacing: 8px;
         width: 100%;
-
         Text {
             text: "12 — Rich empty body (optional)";
             color: PrimerColors.fgColor-default;
             font-size: 13px;
             font-weight: 600;
         }
-
         Text {
-            text: "Placeholder: custom body / children under empty state title.";
+            text: "Features **EmptyMessage**: **SelectPanelMessage** `empty` with `title` and **`@children`** (extra copy + a link **Button**).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
+        }
+        btn12 := Button {
+            width: 100%;
+            max-width: 420px;
+            align-content: ButtonAlignContent.start;
+            label: "Open rich empty state";
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => { d12-open = true; }
+        }
+        AnchoredOverlay {
+            open <=> d12-open;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.start;
+            panel-width: 400px;
+            panel-height: 400px;
+            anchor-abs-x: btn12.absolute-position.x;
+            anchor-abs-y: btn12.absolute-position.y;
+            anchor-width: btn12.width;
+            anchor-height: btn12.height;
+            close-requested => { }
+            SelectPanelCompose {
+                width: 100%;
+                StandardSelectPanelHeading { title: "Releases"; }
+                SelectPanelSeparator { }
+                SelectPanelListChrome {
+                    list-max-height: 200px;
+                    SelectPanelMessage {
+                        variant: SelectPanelMessageVariant.empty;
+                        title: "No releases";
+                        body: "Create one from the main repository page.";
+                        VerticalLayout {
+                            spacing: LayoutTokens.button-content-gap;
+                            width: 100%;
+                            alignment: center;
+                            Text {
+                                text: "Or learn how releases work in the help center.";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: 12px;
+                                horizontal-alignment: center;
+                                wrap: word-wrap;
+                            }
+                            Button {
+                                label: "View documentation (link style)";
+                                variant: ButtonVariant.link;
+                                clicked => { d12-open = false; }
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
