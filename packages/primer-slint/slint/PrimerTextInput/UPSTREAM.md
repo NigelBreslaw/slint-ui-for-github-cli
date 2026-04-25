@@ -119,7 +119,7 @@ Pulled from `TextInputWrapper.module.css` / `TextInput.module.css` — these are
 
 ## 9. primer-tokens lookup (next step before PR2)
 
-Search the **`primer-tokens`** clone under `src/tokens/` for the functional keys backing the variables above (e.g. `borderColor`, `bgColor`, `shadow`, control scales). **No separate `text-input.json5`** is required if everything resolves through shared functional tokens — align new **`PrimerColors`** / **`LayoutTokens`** / optional **`TextInputTokens`** entries with those keys per [`AGENTS.md`](../AGENTS.md) and [`primer-slint-token-layers`](../../../.cursor/skills/primer-slint-token-layers/SKILL.md).
+Search the **`primer-tokens`** clone under `src/tokens/` for the functional keys backing the variables above (e.g. `borderColor`, `bgColor`, `shadow`, control scales). **No separate `text-input.json5`** is required if everything resolves through shared functional tokens — align new **`PrimerColors`** / **`LayoutTokens`** / optional **`TextInputTokens`** entries with those keys per [`AGENTS.md`](../../AGENTS.md) and [`primer-slint-token-layers`](../../../.cursor/skills/primer-slint-token-layers/SKILL.md).
 
 ## 10. Stories ↔ acceptance (Features)
 

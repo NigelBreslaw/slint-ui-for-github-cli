@@ -291,7 +291,7 @@ export type ShellDialogsStateHandle = {
   auth_device_url: string;
 };
 
-/** Slint global from [`packages/primer-slint/assets/icons.slint`](../../../packages/primer-slint/assets/icons.slint) (bundled `@image-url` icons). */
+/** Slint global from [`packages/primer-slint/slint/assets/icons.slint`](../../../packages/primer-slint/slint/assets/icons.slint) (bundled `@image-url` icons). */
 export type SlintIconsGlobal = {
   pull_request: ImageData;
   issue_opened: ImageData;
@@ -341,7 +341,7 @@ export type SlintIconsGlobal = {
   toggle_switch_circle: ImageData;
 };
 
-/** Matches **`AppWindow`** in [`tokens.slint`](../../../packages/primer-slint/tokens.slint). */
+/** Matches **`AppWindow`** in [`tokens.slint`](../../../packages/primer-slint/slint/tokens.slint). */
 export type AppWindowHandle = {
   window_width: number;
   window_height: number;

@@ -19,4 +19,4 @@ Optional second page for [`SKILL.md`](SKILL.md). Paths are relative to the **gb-
 
 - `internal/compiler/widgets/material/` — `styling.slint`, `checkbox.slint`, `std-widgets.slint`, etc.
 
-Use these for **Slint language patterns** only; **colors and names** must follow **primer-tokens** and [`packages/primer-slint/tokens.slint`](../../../packages/primer-slint/tokens.slint).
+Use these for **Slint language patterns** only; **colors and names** must follow **primer-tokens** and [`packages/primer-slint/slint/tokens.slint`](../../../packages/primer-slint/slint/tokens.slint).

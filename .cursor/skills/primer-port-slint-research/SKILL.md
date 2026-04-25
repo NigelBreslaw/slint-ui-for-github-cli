@@ -22,10 +22,10 @@ Collect **in-repo and Slint-ecosystem patterns** (file paths, idioms) to apply w
 
 | Area | Path | Why open it |
 |------|------|-------------|
-| **Reference control** | [`packages/primer-slint/Checkbox/checkbox.slint`](../../../packages/primer-slint/Checkbox/checkbox.slint) | `states [ ]`, TouchArea, token usage |
-| **Tokens** | [`packages/primer-slint/tokens.slint`](../../../packages/primer-slint/tokens.slint) | `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, … |
-| **Barrel** | [`packages/primer-slint/primer.slint`](../../../packages/primer-slint/primer.slint) | Exports and public API |
-| **Icons** | [`packages/primer-slint/assets/icons.slint`](../../../packages/primer-slint/assets/icons.slint) | Registry pattern for SVGs |
+| **Reference control** | [`packages/primer-slint/slint/Checkbox/checkbox.slint`](../../../packages/primer-slint/slint/Checkbox/checkbox.slint) | `states [ ]`, TouchArea, token usage |
+| **Tokens** | [`packages/primer-slint/slint/tokens.slint`](../../../packages/primer-slint/slint/tokens.slint) | `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, … |
+| **Barrel** | [`packages/primer-slint/slint/primer.slint`](../../../packages/primer-slint/slint/primer.slint) | Exports and public API |
+| **Icons** | [`packages/primer-slint/slint/assets/icons.slint`](../../../packages/primer-slint/slint/assets/icons.slint) | Registry pattern for SVGs |
 
 Pick **one** existing Primer component closest to the new port (e.g. **Button**, **Select**) and skim its folder for layout and callback patterns.
 

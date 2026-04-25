@@ -1,7 +1,7 @@
 ---
 name: primer-slint-token-layers
 description: >-
-  Maps Primer design values into packages/primer-slint/tokens.slint without
+  Maps Primer design values into packages/primer-slint/slint/tokens.slint without
   duplicating hex: assigns each shared color to one PrimerColors out property,
   composes ButtonTokens/CheckboxTokens/BannerTokens/LabelTokens and LayoutTokens
   per AGENTS, and uses an audit table before adding literals. Use when adding or

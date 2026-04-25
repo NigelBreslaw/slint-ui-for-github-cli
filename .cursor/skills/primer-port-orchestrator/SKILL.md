@@ -13,7 +13,7 @@ description: >-
 ## Canonical documentation
 
 - [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — compact reference (architecture, verification, limitations).
-- [`packages/primer-slint/component-imports.md`](../../../packages/primer-slint/component-imports.md) — which globals to import per component family.
+- [`packages/primer-slint/slint/component-imports.md`](../../../packages/primer-slint/slint/component-imports.md) — which globals to import per component family.
 
 ## Phases (run in order)
 

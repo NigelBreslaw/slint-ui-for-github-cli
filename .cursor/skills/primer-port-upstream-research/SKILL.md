@@ -75,7 +75,7 @@ Research must end with an ordered table suitable for [`primer-port-pr-sequential
 |----|-------|--------------------------|-------------|---------|
 | 1 | … | `Default` / default args | … | `gallery-…-page.slint` (or agreed page) — section showing this variant |
 
-Each row is **one PR**: implement that variant in `packages/primer-slint` and add or extend the **gallery** demo so reviewers can see parity with the matching Storybook story.
+Each row is **one PR**: implement that variant in `packages/primer-slint/slint` and add or extend the **gallery** demo so reviewers can see parity with the matching Storybook story.
 
 ## Workflow
 

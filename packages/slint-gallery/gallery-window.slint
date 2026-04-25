@@ -1,4 +1,4 @@
-import { PrimerColors } from "../primer-slint/tokens.slint";
+import { PrimerColors } from "../primer-slint/slint/tokens.slint";
 import { GalleryHeader } from "./components/gallery-header.slint";
 import { GallerySidebar } from "./components/gallery-sidebar.slint";
 import { GalleryButtonsPage } from "./views/gallery-buttons-page.slint";
@@ -9,12 +9,12 @@ import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryDialogsPage } from "./views/gallery-dialogs-page.slint";
 import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint";
-import { AppWindow } from "../primer-slint/tokens.slint";
-import { Icons } from "../primer-slint/primer.slint";
+import { AppWindow } from "../primer-slint/slint/tokens.slint";
+import { Icons } from "../primer-slint/slint/primer.slint";
 
-import "../primer-slint/assets/fonts/MonaSans-VariableFont.ttf";
-import "../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
-import "../primer-slint/assets/fonts/VeraMono.ttf";
+import "../primer-slint/slint/assets/fonts/MonaSans-VariableFont.ttf";
+import "../primer-slint/slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
+import "../primer-slint/slint/assets/fonts/VeraMono.ttf";
 
 /// Re-export so **slint-ui** (Node) attaches this global to the **GalleryWindow** handle — globals only in imported `.slint` files are otherwise unreachable from `gallery-main.ts`.
 export { GalleryActionListMultiSelect } from "./state/gallery-action-list-multi-select-state.slint";

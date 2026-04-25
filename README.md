@@ -12,7 +12,7 @@ Slint desktop UI that reads data from the [GitHub CLI](https://cli.github.com/) 
 
 ## Setup
 
-This repository is a **pnpm monorepo**: the Slint desktop app lives under [`app/`](app/) (TypeScript in `app/src/`, UI in `app/src/ui/…`), [`packages/slint-bridge-kit`](packages/slint-bridge-kit/) is the TypeScript bridge helpers package, and [`packages/primer-slint`](packages/primer-slint/) is the Primer design system Slint library. The app imports it with **relative paths** (for example `../../../packages/primer-slint/primer.slint` from `app/src/ui/main.slint`). Install and run scripts from the **repository root** unless you `cd app` explicitly.
+This repository is a **pnpm monorepo**: the Slint desktop app lives under [`app/`](app/) (TypeScript in `app/src/`, UI in `app/src/ui/…`), [`packages/slint-bridge-kit`](packages/slint-bridge-kit/) is the TypeScript bridge helpers package, and [`packages/primer-slint/slint`](packages/primer-slint/slint/) is the Primer design system Slint library. The app imports it with **relative paths** (for example `../../../packages/primer-slint/slint/primer.slint` from `app/src/ui/main.slint`). Install and run scripts from the **repository root** unless you `cd app` explicitly.
 
 From the project root:
 

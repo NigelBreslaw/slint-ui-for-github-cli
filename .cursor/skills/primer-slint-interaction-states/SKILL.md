@@ -4,7 +4,7 @@ description: >-
   Designs and implements Primer-style interaction styling in Slint using explicit
   state dimensions, mutex groups, and `states [ ]` blocks instead of nested
   ternary expressions. Use when adding or refactoring Primer components under
-  packages/primer-slint/, complex controls (hover, pressed, disabled, selected,
+  packages/primer-slint/slint/, complex controls (hover, pressed, disabled, selected,
   focus), or when the user asks for Checkbox-like state handling or token-driven
   visuals.
 ---
@@ -14,7 +14,7 @@ description: >-
 ## Repo context
 
 - **Contributor guide:** [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — token globals, barrel exports, verification commands.
-- **Reference implementation:** [`packages/primer-slint/Checkbox/checkbox.slint`](../../../packages/primer-slint/Checkbox/checkbox.slint) — uses `states [ … ]` on a named sub-element (`check-visuals`) with conditions like `filled-pressed when !root.disabled && root.filled && touch.pressed`.
+- **Reference implementation:** [`packages/primer-slint/slint/Checkbox/checkbox.slint`](../../../packages/primer-slint/slint/Checkbox/checkbox.slint) — uses `states [ … ]` on a named sub-element (`check-visuals`) with conditions like `filled-pressed when !root.disabled && root.filled && touch.pressed`.
 
 ## Workflow (do this before coding)
 
