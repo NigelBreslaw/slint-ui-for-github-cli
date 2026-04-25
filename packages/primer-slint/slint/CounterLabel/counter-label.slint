@@ -28,7 +28,7 @@ export component CounterLabel {
     private property <color> effective-border: use-primer-scheme ? PrimerColors.counter-borderColor : counter-border;
 
     Rectangle {
-        border-radius: LayoutTokens.counter-label-border-radius;
+        border-radius: Math.min(LayoutTokens.counter-label-border-radius, self.height / 2);
         border-width: LayoutTokens.counter-label-border-width;
         border-color: effective-border;
         background: effective-bg;

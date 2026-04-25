@@ -20,7 +20,7 @@ export component Label {
 
     Rectangle {
         height: effective-height;
-        border-radius: LayoutTokens.label-border-radius-pill;
+        border-radius: Math.min(LayoutTokens.label-border-radius-pill, effective-height / 2);
         border-width: LayoutTokens.label-border-width;
         border-color: effective-border;
         background: #00000000;
