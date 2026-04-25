@@ -1,4 +1,4 @@
-import { LayoutTokens, PrimerColors } from "../../tokens.slint";
+import { DialogTokens, LayoutTokens, PrimerColors } from "../../tokens.slint";
 
 /// Top border + padded action column — same chrome as **`SelectPanel`** **`show-footer`** region (Primer **`.Footer`**).
 export component SelectPanelFooter {
@@ -9,10 +9,12 @@ export component SelectPanelFooter {
             background: PrimerColors.borderColor-default;
         }
 
-        VerticalLayout {
-            padding: LayoutTokens.banner-padding-default;
-            spacing: LayoutTokens.button-content-gap;
-            alignment: start;
+        FlexboxLayout {
+            flex-direction: row;
+            flex-wrap: wrap;
+            alignment: end;
+            padding: DialogTokens.footer-padding;
+            spacing: DialogTokens.footer-actions-gap;
 
             @children
         }

@@ -273,99 +273,98 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             }
 
             SelectPanelCompose {
-                width: 100%;
                 StandardSelectPanelHeading {
                     title: "Select labels";
                     subtitle: "Use labels to organize issues and pull requests";
                 }
-                SelectPanelFilter {
-                    text <=> d1-filter;
-                    placeholder: "Filter items";
-                    edited(_t) => {
-                    }
-                }
-                SelectPanelSeparator { }
-                SelectPanelListChrome {
-                    list-max-height: 200px;
-                    SelectPanelScrollBody {
-                        // Five rows: checked state in d1b0..d1b4 (no array index assignment in Slint)
-                        SelectPanelRow {
-                            label: sp_items_5[0].label;
-                            description: sp_items_5[0].description;
-                            swatch: sp_items_5[0].swatch;
-                            show-focus-accent: d1-focus == 0;
-                            checked: d1b0;
-                            clicked => {
-                                d1-focus = 0;
-                                d1b0 = !d1b0;
-                            }
-                        }
-                        SelectPanelRow {
-                            label: sp_items_5[1].label;
-                            description: sp_items_5[1].description;
-                            swatch: sp_items_5[1].swatch;
-                            show-focus-accent: d1-focus == 1;
-                            checked: d1b1;
-                            clicked => {
-                                d1-focus = 1;
-                                d1b1 = !d1b1;
-                            }
-                        }
-                        SelectPanelRow {
-                            label: sp_items_5[2].label;
-                            description: sp_items_5[2].description;
-                            swatch: sp_items_5[2].swatch;
-                            show-focus-accent: d1-focus == 2;
-                            checked: d1b2;
-                            clicked => {
-                                d1-focus = 2;
-                                d1b2 = !d1b2;
-                            }
-                        }
-                        SelectPanelRow {
-                            label: sp_items_5[3].label;
-                            description: sp_items_5[3].description;
-                            swatch: sp_items_5[3].swatch;
-                            show-focus-accent: d1-focus == 3;
-                            checked: d1b3;
-                            clicked => {
-                                d1-focus = 3;
-                                d1b3 = !d1b3;
-                            }
-                        }
-                        SelectPanelRow {
-                            label: sp_items_5[4].label;
-                            description: sp_items_5[4].description;
-                            swatch: sp_items_5[4].swatch;
-                            show-focus-accent: d1-focus == 4;
-                            checked: d1b4;
-                            clicked => {
-                                d1-focus = 4;
-                                d1b4 = !d1b4;
-                            }
-                        }
-                    }
-                }
-                SelectPanelFooter {
-                    HorizontalLayout {
-                        spacing: LayoutTokens.button-content-gap;
-                        width: 100%;
-                        alignment: end;
-                        Button {
-                            label: "Cancel";
-                            clicked => {
-                                d1-open = false;
-                            }
-                        }
-                        Button {
-                            label: "Apply";
-                            variant: ButtonVariant.primary;
-                            clicked => {
-                                d1-open = false;
-                            }
-                        }
-                    }
-                }
+                // SelectPanelFilter {
+                //     text <=> d1-filter;
+                //     placeholder: "Filter items";
+                //     edited(_t) => {
+                //     }
+                // }
+                // SelectPanelSeparator { }
+                // SelectPanelListChrome {
+                //     list-max-height: 200px;
+                //     SelectPanelScrollBody {
+                //         // Five rows: checked state in d1b0..d1b4 (no array index assignment in Slint)
+                //         SelectPanelRow {
+                //             label: sp_items_5[0].label;
+                //             description: sp_items_5[0].description;
+                //             swatch: sp_items_5[0].swatch;
+                //             show-focus-accent: d1-focus == 0;
+                //             checked: d1b0;
+                //             clicked => {
+                //                 d1-focus = 0;
+                //                 d1b0 = !d1b0;
+                //             }
+                //         }
+                //         SelectPanelRow {
+                //             label: sp_items_5[1].label;
+                //             description: sp_items_5[1].description;
+                //             swatch: sp_items_5[1].swatch;
+                //             show-focus-accent: d1-focus == 1;
+                //             checked: d1b1;
+                //             clicked => {
+                //                 d1-focus = 1;
+                //                 d1b1 = !d1b1;
+                //             }
+                //         }
+                //         SelectPanelRow {
+                //             label: sp_items_5[2].label;
+                //             description: sp_items_5[2].description;
+                //             swatch: sp_items_5[2].swatch;
+                //             show-focus-accent: d1-focus == 2;
+                //             checked: d1b2;
+                //             clicked => {
+                //                 d1-focus = 2;
+                //                 d1b2 = !d1b2;
+                //             }
+                //         }
+                //         SelectPanelRow {
+                //             label: sp_items_5[3].label;
+                //             description: sp_items_5[3].description;
+                //             swatch: sp_items_5[3].swatch;
+                //             show-focus-accent: d1-focus == 3;
+                //             checked: d1b3;
+                //             clicked => {
+                //                 d1-focus = 3;
+                //                 d1b3 = !d1b3;
+                //             }
+                //         }
+                //         SelectPanelRow {
+                //             label: sp_items_5[4].label;
+                //             description: sp_items_5[4].description;
+                //             swatch: sp_items_5[4].swatch;
+                //             show-focus-accent: d1-focus == 4;
+                //             checked: d1b4;
+                //             clicked => {
+                //                 d1-focus = 4;
+                //                 d1b4 = !d1b4;
+                //             }
+                //         }
+                //     }
+                // }
+                // SelectPanelFooter {
+                //     HorizontalLayout {
+                //         spacing: LayoutTokens.button-content-gap;
+                //         width: 100%;
+                //         alignment: end;
+                //         Button {
+                //             label: "Cancel";
+                //             clicked => {
+                //                 d1-open = false;
+                //             }
+                //         }
+                //         Button {
+                //             label: "Apply";
+                //             variant: ButtonVariant.primary;
+                //             clicked => {
+                //                 d1-open = false;
+                //             }
+                //         }
+                //     }
+                // }
             }
         }
     }

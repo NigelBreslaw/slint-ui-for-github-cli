@@ -38,6 +38,7 @@ export component AnchoredOverlay {
     in property <color> panel-border-color: OverlayTokens.panel-border;
     in property <color> panel-fill: OverlayTokens.panel-background;
     in property <[DropShadowLayer]> panel-elevation-shadow: OverlayTokens.panel-elevation-shadow;
+    in property <bool> allow-dismiss: true;
 
     callback close-requested();
 
@@ -83,36 +84,44 @@ export component AnchoredOverlay {
         width: body-width;
         height: body-height;
 
-        panel-scope := FocusScope {
-            width: 100%;
-            height: 100%;
+        close-policy: no-auto-close;
 
-            key-pressed(event) => {
-                if event.text == Key.Escape {
+        // Full viewport in popup-local space: origin is window (panel-window-x, panel-window-y), not root.absolute-position.
+        Rectangle {
+            x: 0px - panel-window-x;
+            y: 0px - panel-window-y;
+            width: AppWindow.window-width;
+            height: AppWindow.window-height;
+            background: green;
+            TouchArea {
+                // enabled: root.allow-dismiss && root.open;
+                clicked => {
+                    debug("hello");
                     root.open = false;
                     root.close-requested();
-                    return accept;
                 }
-                return reject;
             }
+        }
 
-            panel-chrome := OverlayPanelChrome {
-                width: 100%;
-                height: 100%;
-                surface-background: root.panel-fill;
-                surface-border: root.panel-border-color;
-                surface-border-width: root.panel-border-width;
-                elevation-border-radius: root.panel-border-radius;
-                surface-border-top-left-radius: root.panel-border-radius;
-                surface-border-top-right-radius: root.panel-border-radius;
-                surface-border-bottom-right-radius: root.panel-border-radius;
-                surface-border-bottom-left-radius: root.panel-border-radius;
-                surface-shadow: root.panel-elevation-shadow;
-                slot-padding: root.slot-padding;
-                slot-fill-height: !root.shrink-wrap;
 
-                @children
-            }
+
+        panel-chrome := OverlayPanelChrome {
+            width: 100%;
+            height: 100%;
+            visible: false;
+            surface-background: root.panel-fill;
+            surface-border: root.panel-border-color;
+            surface-border-width: root.panel-border-width;
+            elevation-border-radius: root.panel-border-radius;
+            surface-border-top-left-radius: root.panel-border-radius;
+            surface-border-top-right-radius: root.panel-border-radius;
+            surface-border-bottom-right-radius: root.panel-border-radius;
+            surface-border-bottom-left-radius: root.panel-border-radius;
+            surface-shadow: root.panel-elevation-shadow;
+            slot-padding: root.slot-padding;
+            slot-fill-height: !root.shrink-wrap;
+
+            @children
         }
     }
 }
