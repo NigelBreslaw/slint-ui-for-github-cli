@@ -5,6 +5,9 @@ use std::cell::RefCell;
 use std::collections::BTreeSet;
 use std::rc::Rc;
 
+#[cfg(target_arch = "wasm32")]
+use wasm_bindgen::prelude::*;
+
 slint::include_modules!();
 
 const ACTION_LIST_ROW_LABELS: [&str; 4] = [
@@ -160,4 +163,13 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_select_panel_multi(&window);
 
     window.run()
+}
+
+/// Web entry: call from JS after loading the wasm module (see `index.html` in a later PR).
+#[cfg(target_arch = "wasm32")]
+#[wasm_bindgen]
+pub fn start() {
+    #[cfg(debug_assertions)]
+    console_error_panic_hook::set_once();
+    run_gallery().expect("Primer Slint gallery failed to start");
 }
