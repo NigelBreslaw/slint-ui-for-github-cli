@@ -25,3 +25,17 @@ console_error_panic_hook = "0.1"
 
 [build-dependencies]
 slint-build = { git = "https://github.com/slint-ui/slint", branch = "master" }
+
+# Smaller artifacts for `cargo build --release` / `wasm-pack build --release` (slower compiles, esp. with LTO).
+# Native and wasm share this profile; the dominant wasm size is still Slint + winit + renderer.
+[profile.release]
+codegen-units = 1
+lto = "thin"
+opt-level = "z"
+panic = "abort"
+strip = true
+
+# Newer rustc emits post-MVP wasm; wasm-pack's `wasm-opt -O` must allow the same feature set.
+# See https://github.com/rust-lang/rust/issues/141080
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-Oz", "--enable-bulk-memory", "--enable-nontrapping-float-to-int"]

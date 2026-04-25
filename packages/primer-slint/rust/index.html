@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+  Static shell for the wasm-pack output in pkg/.
+  Build (from this directory):
+    wasm-pack build --release --target web --out-dir pkg
+  Serve the folder that contains this file (e.g. python3 -m http.server) and open in a browser.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Primer Slint Gallery (WebAssembly)</title>
+  <link rel="stylesheet" href="https://slint.dev/css/demos-v1.css">
+  <style>
+    body { margin: 0; font-family: system-ui, sans-serif; }
+    #spinner { padding: 1.5rem; }
+    #canvas-parent { min-height: 60vh; }
+  </style>
+</head>
+<body>
+  <h1>Primer Slint Gallery</h1>
+  <p>Primer design system components in <a href="https://slint.dev">Slint</a>, compiled to WebAssembly.</p>
+
+  <div id="spinner">
+    <div class="spinner">Loading…</div>
+  </div>
+  <!-- Slint winit (wasm) uses document.getElementById("canvas"); id must be exactly "canvas". -->
+  <div id="canvas-parent">
+    <canvas id="canvas" unselectable="on" data-slint-auto-resize-to-preferred="true"></canvas>
+  </div>
+
+  <script type="module">
+    const spinner = document.getElementById("spinner");
+
+    function winitWebYieldException(err) {
+      return (
+        err != null &&
+        typeof err.message === "string" &&
+        err.message.includes("Using exceptions for control flow")
+      );
+    }
+
+    try {
+      if (!document.getElementById("canvas")) {
+        throw new Error("Missing #canvas: Slint wasm needs <canvas id=\"canvas\"> in the document.");
+      }
+
+      const { default: init, start } = await import("./pkg/primer_slint_gallery.js");
+      await init();
+      spinner.hidden = true;
+      try {
+        start();
+      } catch (err) {
+        if (winitWebYieldException(err)) {
+          // winit on the web event loop re-enters JS via a thrown value; the UI keeps running.
+        } else {
+          throw err;
+        }
+      }
+    } catch (err) {
+      console.error("Primer Slint gallery failed to start:", err);
+      spinner.hidden = false;
+      spinner.textContent = "Failed to load. See the browser console for details.";
+    }
+  </script>
+</body>
+</html>
