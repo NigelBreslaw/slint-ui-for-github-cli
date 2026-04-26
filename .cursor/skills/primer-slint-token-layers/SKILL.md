@@ -13,7 +13,7 @@ description: >-
 
 ## Canonical rules (read first)
 
-- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — **global declaration order**, token layer summary table, cross-global `out`-only rule.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — `tokens.slint` **composition rule** (use other globals’ **`out`** only). **Global order** and per-layer details: this skill (below), [`packages/primer-slint/readme.md`](../../../packages/primer-slint/readme.md) — **Design tokens**, and comment/audit blocks in `tokens.slint`.
 
 Follow them in `tokens.slint`. Dependency overview:
 
@@ -44,7 +44,7 @@ Every **shared** color exists as **one** primitive or semantic `out` in the righ
 2. For each visual, map to **primer-tokens** key(s) or justify a new semantic name.
 3. **Search existing `out` properties** in `LayoutTokens`, `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, `BannerTokens`, `LabelTokens` before adding literals.
 4. **New shared color:** add **one** private literal (or small primitive group) under `PrimerColors`, expose via `out`, reference from dependents.
-5. **New lengths/typography:** prefer `LayoutTokens` unless truly one-off (then private on the component per AGENTS).
+5. **New lengths/typography:** prefer `LayoutTokens` unless truly one-off (then private on the component per this skill / [`AGENTS.md`](../../../packages/primer-slint/AGENTS.md) composition rules).
 6. **Scheme:** follow `color-scheme == ColorScheme.dark ? …` (or existing pattern) on `out` properties.
 7. After edits, verify Slint loads (see [Verification](../../../packages/primer-slint/AGENTS.md#verification) in AGENTS).
 
@@ -61,7 +61,7 @@ If two rows would use the **same hex for the same meaning**, merge into **one** 
 ## Anti-patterns
 
 - Same hex repeated in `PrimerColors` and `ButtonTokens` for the same semantic.
-- New literals in `BannerTokens` / `LabelTokens` (AGENTS: compose only from `PrimerColors`).
+- New literals in `BannerTokens` / `LabelTokens` (compose only from `PrimerColors` `out`; see readme **Design tokens**).
 - Breaking **declaration order** in `tokens.slint` (CheckboxTokens after ButtonTokens, etc.).
 
 ## Related skills

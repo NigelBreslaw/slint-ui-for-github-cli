@@ -11,7 +11,7 @@ description: >-
 
 ## Canonical reference
 
-- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — short summary; this skill is the full procedure.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — icon registry path; this skill is the full procedure.
 
 ## Rules
 

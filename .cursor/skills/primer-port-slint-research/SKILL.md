@@ -16,7 +16,7 @@ Collect **in-repo and Slint-ecosystem patterns** (file paths, idioms) to apply w
 
 ## Canonical repo rules
 
-- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — globals order, imports, icons, verification.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — `component-imports`, `tokens.slint` rule, icons pointer, **Verification**.
 
 ## This repository (required)
 

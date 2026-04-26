@@ -1,6 +1,6 @@
 # Primer — which globals to import
 
-Quick reference when wiring a component or view. Rules and barrel exports: [`AGENTS.md`](AGENTS.md).
+Quick reference when wiring a component or view. Package rules and verification: [`AGENTS.md`](../AGENTS.md); token layers and exports: [`readme.md`](../readme.md#design-tokens) and [`primer.slint`](primer.slint).
 
 - **App views / chrome:** `PrimerColors` and `LayoutTokens` (from `tokens.slint` or [`primer.slint`](primer.slint) barrel).
 - **Controls** (GitHub button palette, danger/success): `ButtonTokens` + `PrimerColors` as needed — see [`Buttons/buttons.slint`](Buttons/buttons.slint), [`Select/select.slint`](Select/select.slint).

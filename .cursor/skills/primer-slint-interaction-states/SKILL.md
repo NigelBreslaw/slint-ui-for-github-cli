@@ -13,7 +13,7 @@ description: >-
 
 ## Repo context
 
-- **Contributor guide:** [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — token globals, barrel exports, verification commands.
+- **Contributor guide:** [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — `primer.slint` / `tokens.slint` pointers, **Verification** commands.
 - **Reference implementation:** [`packages/primer-slint/slint/Checkbox/checkbox.slint`](../../../packages/primer-slint/slint/Checkbox/checkbox.slint) — uses `states [ … ]` on a named sub-element (`check-visuals`) with conditions like `filled-pressed when !root.disabled && root.filled && touch.pressed`.
 
 ## Workflow (do this before coding)
@@ -23,7 +23,7 @@ description: >-
 3. **Draw a small statechart** (Mermaid below) so mutually exclusive branches are obvious.
 4. **Assign defaults** on the painted element for the “base” case (e.g. rest, enabled, unchecked).
 5. **Add Slint `states [ … ]`** with named states and **property overrides only** — avoid repeating full ternary trees on every `color:` / `background:` in the tree.
-6. **Compose from tokens** — read `CheckboxTokens`, `ButtonTokens`, `PrimerColors`, `LayoutTokens` per AGENTS; do not scatter new hex literals in components.
+6. **Compose from tokens** — read `CheckboxTokens`, `ButtonTokens`, `PrimerColors`, `LayoutTokens` per [`AGENTS.md`](../../../packages/primer-slint/AGENTS.md) and token layers in the readme; do not scatter new hex literals in components.
 
 ## Mutex groups (conceptual)
 

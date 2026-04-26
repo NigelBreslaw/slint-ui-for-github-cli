@@ -13,7 +13,8 @@ description: >-
 
 ## Canonical reference
 
-- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — **Implementation plans and PR breakdown tables** (required columns).
+- **This skill (§1 below)** — required **PR** / **Title** / **Scope** / **Acceptance** table for multi-PR plans.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — monorepo **verification** and package pointers.
 - Orchestrator: [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md).
 
 ## 1) Plan must include a PR table

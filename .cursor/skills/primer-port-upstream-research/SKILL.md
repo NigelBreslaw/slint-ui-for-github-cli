@@ -19,7 +19,7 @@ The inventory **must** enumerate **all Storybook-driven variants** for that comp
 
 ## Canonical repo rules (do not duplicate here)
 
-- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — token globals, barrel, verification.
+- [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — package layout, `tokens.slint` composition rule, **Verification** section.
 
 ## Mandatory local sources (always use these paths)
 

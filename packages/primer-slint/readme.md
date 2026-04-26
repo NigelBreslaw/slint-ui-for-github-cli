@@ -4,6 +4,8 @@ Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and veri
 
 **Gallery app:** `pnpm dev:gallery` from the repository root (see [`slint-gallery/README.md`](../slint-gallery/README.md)). **`AnchoredOverlay` / `PopupWindow`:** [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
 
+**Long lists in app views:** use **`Pagination`** ([`slint/Pagination/pagination.slint`](slint/Pagination/pagination.slint)), page fields on the right Slint global (`ProjectBoardListState` / `AppState` in `app/src/bridges/slint/`), and TypeScript **`apply…SliceToWindow`** helpers for **`ArrayModel`** slices.
+
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.
 
