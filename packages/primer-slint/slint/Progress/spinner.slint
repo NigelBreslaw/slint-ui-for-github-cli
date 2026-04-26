@@ -1,7 +1,7 @@
 import { PrimerColors, Size } from "../tokens.slint";
 
 export component Spinner {
-    in property <Size> size: medium;
+    in property <Size> size: large;
     in property <color> segment-color: PrimerColors.fgColor-default;
     in property <color> track-color: #f0f6fc40;
 
@@ -11,33 +11,26 @@ export component Spinner {
     height: box;
 
     Rectangle {
-        transform-rotation: animation-tick() / 1000ms * 360deg;
+        Rectangle {
+            transform-rotation: animation-tick() / 1000ms * 360deg;
+            Path {
+                viewbox-width: 16;
+                viewbox-height: 16;
+                fill: transparent;
+                stroke: segment-color;
+                stroke-width: 2px;
+                stroke-line-cap: round;
+                commands: "M 15 8 a 7.002 7.002 0 0 0 -7 -7";
+            }
+        }
 
         Path {
-            width: 100%;
-            height: 100%;
-            viewbox-x: 0;
-            viewbox-y: 0;
             viewbox-width: 16;
             viewbox-height: 16;
             fill: transparent;
             stroke: track-color;
             stroke-width: 2px;
             commands: "M 15 8 A 7 7 0 1 1 1 8 A 7 7 0 1 1 15 8";
-        }
-
-        Path {
-            width: 100%;
-            height: 100%;
-            viewbox-x: 0;
-            viewbox-y: 0;
-            viewbox-width: 16;
-            viewbox-height: 16;
-            fill: transparent;
-            stroke: segment-color;
-            stroke-width: 2px;
-            stroke-line-cap: round;
-            commands: "M 15 8 a 7.002 7.002 0 0 0 -7 -7";
         }
     }
 }
