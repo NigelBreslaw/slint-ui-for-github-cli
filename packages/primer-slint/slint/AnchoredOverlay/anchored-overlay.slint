@@ -92,9 +92,8 @@ export component AnchoredOverlay {
             y: 0px - panel-window-y;
             width: AppWindow.window-width;
             height: AppWindow.window-height;
-            background: green;
             TouchArea {
-                // enabled: root.allow-dismiss && root.open;
+                enabled: root.allow-dismiss && root.open;
                 clicked => {
                     debug("hello");
                     root.open = false;
