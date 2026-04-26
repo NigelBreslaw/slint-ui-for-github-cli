@@ -6,5 +6,5 @@ debug-json/
 generated/
 app/generated/
 **/target/**
-packages/primer-slint/rust/pkg/
-packages/primer-slint/rust/dist/
+packages/slint-gallery/rust/pkg/
+packages/slint-gallery/rust/dist/

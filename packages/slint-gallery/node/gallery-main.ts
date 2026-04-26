@@ -23,7 +23,7 @@ type GalleryWindowModule = {
 };
 
 const ui = slint.loadFile(
-  new URL("./gallery-window.slint", import.meta.url),
+  new URL("../ui/gallery-window.slint", import.meta.url),
 ) as GalleryWindowModule;
 
 const window = new ui.GalleryWindow();

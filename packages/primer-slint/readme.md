@@ -2,7 +2,7 @@
 
 Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and verification), [`component-imports.md`](slint/component-imports.md) (which globals to use), and [`.cursor/skills/primer-port-orchestrator/SKILL.md`](../../.cursor/skills/primer-port-orchestrator/SKILL.md) (full porting procedure).
 
-**Gallery app:** `pnpm dev:gallery` from the repository root (see [`slint-gallery/gallery/README.md`](../slint-gallery/gallery/README.md)). **`AnchoredOverlay` / `PopupWindow`:** [`anchored-popupwindow.md`](../slint-gallery/gallery/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
+**Gallery app:** `pnpm dev:gallery` from the repository root (see [`slint-gallery/README.md`](../slint-gallery/README.md)). **`AnchoredOverlay` / `PopupWindow`:** [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
 
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.
@@ -233,7 +233,7 @@ Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group, Anchor
 
 **Behavior and motion** follow **`Dialog.module.css`**: **`ModalOverlay`** (backdrop scrim + **`OverlayPanelChrome`**) with centered modals using **`scaleFade`** (**`DialogTokens.overlay-enter-duration`**); side sheets (**`position-preset`** **left** / **right**) use slide-in motion (**`DialogTokens.overlay-sheet-enter-duration`**); narrow viewport uses **`DialogNarrowPositionPreset`** for **bottom** / **fullscreen** / **center** paths. Presets in [`Dialog/types.slint`](slint/Dialog/types.slint) mirror React **`widthMap`** / **`heightMap`**. **`ModalOverlay`** uses a **`FocusScope`**; **focus trap** and React ref semantics are **best-effort** in Slint. **`DialogFooterAutoFocus`** (**`PR11`**) aligns with React footer **`autoFocus`**. See **`DialogFooter`** for default vs custom actions (**`use-default-actions`**) and PR10/PR11 footer options.
 
-Visual checks: **`pnpm dev:gallery`** → **Dialogs** group, **[`gallery-dialogs-page.slint`](../slint-gallery/views/gallery-dialogs-page.slint)** (see also **[`gallery-dialog-instances.slint`](../slint-gallery/views/gallery-dialog-instances.slint)** for modal trees).
+Visual checks: **`pnpm dev:gallery`** → **Dialogs** group, **[`gallery-dialogs-page.slint`](../slint-gallery/ui/views/gallery-dialogs-page.slint)** (see also **[`gallery-dialog-instances.slint`](../slint-gallery/ui/views/gallery-dialog-instances.slint)** for modal trees).
 
 ### Storybook parity (React exports → gallery)
 

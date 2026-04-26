@@ -9,7 +9,7 @@
       "entry": ["src/index.ts", "src/**/*.test.ts"]
     },
     "slint-gallery": {
-      "entry": ["gallery-main.ts"]
+      "entry": ["node/gallery-main.ts"]
     }
   }
 }

@@ -1,6 +1,7 @@
 packages:
   - "app"
   - "packages/*"
+  - "packages/slint-gallery/node"
 
 catalog:
   "@types/node": "25.5.0"
