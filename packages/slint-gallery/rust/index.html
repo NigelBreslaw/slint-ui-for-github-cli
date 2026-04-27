@@ -8,6 +8,8 @@
 -->
 <head>
   <meta charset="UTF-8">
+  <!-- Avoid stale index.html when reusing localhost:8000 after other Slint wasm demos (wrong ./pkg/*.js). -->
+  <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Primer Slint Gallery (WebAssembly)</title>
   <link rel="stylesheet" href="https://slint.dev/css/demos-v1.css">
