@@ -287,6 +287,17 @@ export component GalleryNavsPage inherits VerticalLayout {
         { label: "Stars", enabled: true, counter: "" },
         { label: "Sponsors", enabled: true, counter: "" },
     ];
+    private property <int> demo-un2-counters-selected: 0;
+    private property <[UnderlineNav2Item]> demo-un2-counters-items: [
+        { label: "Code", enabled: true, counter: "" },
+        { label: "Issues", enabled: true, counter: "12" },
+        { label: "Pull requests", enabled: true, counter: "3" },
+    ];
+    private property <int> demo-un2-loading-selected: 0;
+    private property <[UnderlineNav2Item]> demo-un2-loading-items: [
+        { label: "Open", enabled: true, counter: "8" },
+        { label: "Closed", enabled: true, counter: "24" },
+    ];
 
     VerticalLayout {
         spacing: 12px;
@@ -348,7 +359,7 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Narrow width (horizontal scroll)";
+            text: "Narrow width (clip — no horizontal scroll)";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
         }
@@ -412,7 +423,38 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Narrow width (horizontal scroll via Flickable inside UnderlineNav2)";
+            text: "Inset with CounterLabel (secondary, primer scheme)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav2 {
+            items: demo-un2-counters-items;
+            selected-index: demo-un2-counters-selected;
+            accessible-name: "Demo UnderlineNav2 with counters";
+            item-activated(idx) => {
+                demo-un2-counters-selected = idx;
+            }
+        }
+
+        Text {
+            text: "loading-counters (skeleton pills, opacity pulse)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav2 {
+            loading-counters: true;
+            items: demo-un2-loading-items;
+            selected-index: demo-un2-loading-selected;
+            accessible-name: "Demo UnderlineNav2 loading counters";
+            item-activated(idx) => {
+                demo-un2-loading-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Narrow width (clip — no horizontal scroll)";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
         }

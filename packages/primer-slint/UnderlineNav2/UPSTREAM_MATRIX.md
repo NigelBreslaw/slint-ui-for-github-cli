@@ -75,7 +75,7 @@ Sources: [`primer-ui-react`](file:///Users/nigelb/slint/primer-ui-react) (`Under
 
 | Story file | Export | Reason |
 |------------|--------|--------|
-| `UnderlineNav.features.stories.tsx` | `OverflowTemplate`, `OverflowOnNarrowScreen` | **More** menu + measurement; Slint: **Flickable** / clip / horizontal scroll |
+| `UnderlineNav.features.stories.tsx` | `OverflowTemplate`, `OverflowOnNarrowScreen` | **More** menu + measurement; Slint: **clip** / widen host (no horizontal scroll) |
 | `UnderlineNav.interactions.stories.tsx` | `KeyboardNavigation`, `SelectAMenuItem`, `KeepSelectedItemVisible` | All depend on `OverflowTemplate` / **More** |
 
 ### Deprecated package (reference only)

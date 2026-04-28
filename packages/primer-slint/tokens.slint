@@ -799,3 +799,15 @@ export global SelectPanelTokens {
     out property <length> message-region-padding: 24px;
     out property <length> message-stack-gap: LayoutTokens.base-size-4;
 }
+
+/// **`UnderlineTabbedInterface.module.css`** **`LoadingCounter`** + **`UnderlineNav2`** tab counter chrome (dedupes literals vs row component).
+export global UnderlineNavTokens {
+    /// Upstream **1.5rem** — **`base-size-8` × 3**.
+    out property <length> loading-counter-width: 3 * LayoutTokens.base-size-8;
+    /// Upstream **1rem** — **`base-size-16`** in default root sizing.
+    out property <length> loading-counter-height: LayoutTokens.base-size-16;
+    /// **`loadingCounterKeyFrames`**: **1.2s** each leg × **2** for a full ping-pong cycle.
+    out property <duration> loading-counter-animation-period: 2400ms;
+    out property <float> loading-counter-opacity-min: 0.2;
+    out property <float> loading-counter-opacity-max: 1.0;
+}
