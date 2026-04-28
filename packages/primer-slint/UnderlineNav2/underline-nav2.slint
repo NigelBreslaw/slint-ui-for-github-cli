@@ -1,4 +1,3 @@
-// UnderlineNav2 — Primer **UnderlineItem**-style rows (not **Button**). See **primer-ui-react** `UnderlineTabbedInterface.module.css`, `UnderlineNavItem.tsx`. Overflow **More** menu is intentionally not ported; excess tabs are not horizontally scrollable — clip or widen the host.
 import { CounterLabel, CounterLabelVariant } from "../CounterLabel/counter-label.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, UnderlineNavTokens } from "../tokens.slint";
 
@@ -10,11 +9,9 @@ export enum UnderlineNav2Variant {
 export struct UnderlineNav2Item {
     label: string,
     enabled: bool,
-    /// Non-empty: **`CounterLabel`** (or loading skeleton when **`UnderlineNav2.loading-counters`**).
     counter: string,
 }
 
-/// One tab: **TouchArea** + **FocusScope** (focus ring), **PrimerColors.accent-underline** bar when **selected** (mimics **::after**).
 component UnderlineNav2ItemRow {
     in property <string> label;
     in property <bool> selected;
@@ -39,25 +36,16 @@ component UnderlineNav2ItemRow {
         ? LayoutTokens.base-text-weight-semibold
         : LayoutTokens.base-text-weight-medium;
 
-    vertical-stretch: 1;
-    horizontal-stretch: 0;
-
     VerticalLayout {
         alignment: start;
-        horizontal-stretch: 0;
-        vertical-stretch: 1;
         min-height: LayoutTokens.control-xlarge-size;
 
         focus-host := Rectangle {
-            horizontal-stretch: 0;
-            vertical-stretch: 1;
             border-width: tab-fs.has-focus && root.enabled ? 2px : 0px;
             border-color: PrimerColors.fgColor-accent;
             border-radius: LayoutTokens.borderRadius-medium;
 
             tab-fs := FocusScope {
-                width: 100%;
-                height: 100%;
 
                 key-pressed(event) => {
                     if !root.enabled {
@@ -71,8 +59,6 @@ component UnderlineNav2ItemRow {
                 }
 
                 ta := TouchArea {
-                    width: 100%;
-                    height: 100%;
                     enabled: root.enabled;
                     mouse-cursor: root.enabled ? pointer : default;
                     clicked => {
@@ -81,12 +67,8 @@ component UnderlineNav2ItemRow {
 
                     VerticalLayout {
                         alignment: center;
-                        horizontal-stretch: 1;
-                        vertical-stretch: 1;
 
                         row-bg := Rectangle {
-                            horizontal-stretch: 1;
-                            vertical-stretch: 1;
                             background: #00000000;
                             border-radius: LayoutTokens.borderRadius-medium;
 
@@ -107,7 +89,6 @@ component UnderlineNav2ItemRow {
                                 }
 
                                 if show-counter-value: Rectangle {
-                                    horizontal-stretch: 0;
                                     opacity: root.enabled ? 1.0 : 0.45;
                                     CounterLabel {
                                         text: root.counter;
@@ -117,7 +98,6 @@ component UnderlineNav2ItemRow {
                                 }
 
                                 if show-counter-loading: Rectangle {
-                                    horizontal-stretch: 0;
                                     opacity: root.enabled ? root.loading-pulse-opacity : 0.45;
                                     width: UnderlineNavTokens.loading-counter-width;
                                     height: UnderlineNavTokens.loading-counter-height;
@@ -148,7 +128,6 @@ component UnderlineNav2ItemRow {
         }
 
         Rectangle {
-            width: 100%;
             height: 2px;
             background: root.selected ? PrimerColors.accent-underline : #00000000;
         }
@@ -168,21 +147,17 @@ export component UnderlineNav2 {
 
     private property <length> inset-padding-inline: variant == UnderlineNav2Variant.inset ? LayoutTokens.stack-padding-normal : 0px;
 
-    vertical-stretch: 0;
-    horizontal-stretch: 1;
 
     VerticalLayout {
-        horizontal-stretch: 1;
         accessible-role: AccessibleRole.tab-list;
         accessible-label: accessible-name;
 
         HorizontalLayout {
-            horizontal-stretch: 1;
             spacing: LayoutTokens.base-size-8;
             padding-left: inset-padding-inline;
             padding-right: inset-padding-inline;
             min-height: LayoutTokens.control-xlarge-size;
-            alignment: center;
+            alignment: start;
 
             for item[index] in items: UnderlineNav2ItemRow {
                 label: item.label;
@@ -198,7 +173,6 @@ export component UnderlineNav2 {
 
         Rectangle {
             height: 1px;
-            width: 100%;
             background: PrimerColors.borderColor-muted;
         }
     }
