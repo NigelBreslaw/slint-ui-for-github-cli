@@ -252,6 +252,7 @@ export component GalleryNavsPage inherits VerticalLayout {
     private property <[UnderlineNavItem]> demo-underline-loading-items: [
         { label: "Open", enabled: true, counter: "8", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Closed", enabled: true, counter: "24", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Draft", enabled: true, counter: "3", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-underline-scroll-selected: 0;
     private property <[UnderlineNavItem]> demo-underline-scroll-items: [
@@ -262,47 +263,40 @@ export component GalleryNavsPage inherits VerticalLayout {
         { label: "Stars", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Sponsors", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
-
-    private property <int> demo-un2-selected: 0;
-    private property <[UnderlineNavItem]> demo-un2-inset-items: [
+    private property <int> demo-underline-disabled-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-disabled-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Issues", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Pull requests", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Security", enabled: false, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
-    private property <int> demo-un2-flush-selected: 0;
-    private property <[UnderlineNavItem]> demo-un2-flush-items: [
-        { label: "Actions", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Projects", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+    private property <int> demo-underline-loading-icons-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-loading-icons-items: [
+        { label: "Open", enabled: true, counter: "128", has-leading-icon: true, leading-icon: Icons.issue_opened },
+        { label: "Closed", enabled: true, counter: "2.4k", has-leading-icon: true, leading-icon: Icons.issue_draft },
+        { label: "Drafts", enabled: true, counter: "4", has-leading-icon: true, leading-icon: Icons.git_pull_request_draft },
     ];
-    private property <int> demo-un2-scroll-selected: 0;
-    private property <[UnderlineNavItem]> demo-un2-scroll-items: [
-        { label: "Overview", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Repositories", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Projects", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Packages", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Stars", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Sponsors", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+    private property <int> demo-underline-loading-flush-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-loading-flush-items: [
+        { label: "Queued", enabled: true, counter: "6", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "In progress", enabled: true, counter: "2", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Done", enabled: true, counter: "14", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
-    private property <int> demo-un2-counters-selected: 0;
-    private property <[UnderlineNavItem]> demo-un2-counters-items: [
-        { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Issues", enabled: true, counter: "12", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: false, leading-icon: Icons.dot_fill },
+    private property <int> demo-underline-loading-mixed-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-loading-mixed-items: [
+        { label: "Summary", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Checks", enabled: true, counter: "7", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Files", enabled: true, counter: "12", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Logs (disabled)", enabled: false, counter: "99", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
-    private property <int> demo-un2-loading-selected: 0;
-    private property <[UnderlineNavItem]> demo-un2-loading-items: [
-        { label: "Open", enabled: true, counter: "8", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Closed", enabled: true, counter: "24", has-leading-icon: false, leading-icon: Icons.dot_fill },
-    ];
-    private property <int> demo-un2-with-icons-selected: 0;
-    private property <[UnderlineNavItem]> demo-un2-with-icons-items: [
+    private property <int> demo-underline-with-icons-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-with-icons-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.layout_grid },
         { label: "Issues", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.issue_opened },
         { label: "Pull requests", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.pull_request },
     ];
-    private property <int> demo-un2-with-icons-counters-selected: 0;
-    private property <[UnderlineNavItem]> demo-un2-with-icons-counters-items: [
+    private property <int> demo-underline-with-icons-counters-selected: 0;
+    private property <[UnderlineNavItem]> demo-underline-with-icons-counters-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.layout_grid },
         { label: "Issues", enabled: true, counter: "12", has-leading-icon: true, leading-icon: Icons.issue_opened },
         { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: true, leading-icon: Icons.pull_request },
@@ -321,7 +315,203 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Inset variant with counters (static).";
+            text: "Primer-style tabs (TouchArea + CounterLabel / loading skeleton). The matrix below maps each public API surface to a subsection on this page.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        VerticalLayout {
+            spacing: 4px;
+            width: 100%;
+            alignment: start;
+
+            Text {
+                text: "API → demo";
+                color: PrimerColors.fgColor-default;
+                font-size: 12px;
+                font-weight: 600;
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "Surface";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    font-weight: 600;
+                    width: 168px;
+                }
+
+                Text {
+                    text: "Where exercised";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    font-weight: 600;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "items, selected-index, item-activated";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    width: 168px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Every demo below.";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "variant (inset default)";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    width: 168px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Most rows use inset; flush only where labeled.";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "CounterLabel (static)";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    width: 168px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Inset with counters; Leading icons + counters.";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "loading-counters";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    width: 168px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Skeleton pills only when counter ≠ \"\". Opacity animates via loading-pulse-opacity (UnderlineNavItemRow) + UnderlineNavTokens period.";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "has-leading-icon, leading-icon";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    width: 168px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Leading icons; Leading icons + counters; Loading + leading icons.";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "enabled: false";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    width: 168px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Disabled tab; Loading mixed (disabled row still reserves a skeleton slot).";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "accessible-name";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    width: 168px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Set on each UnderlineNav (tab-list landmark).";
+                    horizontal-stretch: 1;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        Text {
+            text: "Inset with counters (static CounterLabel).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
         }
@@ -336,7 +526,22 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Flush variant";
+            text: "Inset with a disabled tab (no hover; muted label).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            items: demo-underline-disabled-items;
+            selected-index: demo-underline-disabled-selected;
+            accessible-name: "Demo tabs with disabled item";
+            item-activated(idx) => {
+                demo-underline-disabled-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Flush variant (no horizontal padding on the tab row).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
         }
@@ -352,7 +557,7 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "loading-counters (skeleton pills)";
+            text: "loading-counters — skeleton pills with animated opacity (loading-pulse-opacity). Three tabs keep the motion visible.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
         }
@@ -368,7 +573,86 @@ export component GalleryNavsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Narrow width (clip — no horizontal scroll)";
+            text: "loading-counters + leading icons (pulse next to icons).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            loading-counters: true;
+            items: demo-underline-loading-icons-items;
+            selected-index: demo-underline-loading-icons-selected;
+            accessible-name: "Demo loading counters with icons";
+            item-activated(idx) => {
+                demo-underline-loading-icons-selected = idx;
+            }
+        }
+
+        Text {
+            text: "loading-counters + flush (same pulse, edge-to-edge row).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            variant: UnderlineNavVariant.flush;
+            loading-counters: true;
+            items: demo-underline-loading-flush-items;
+            selected-index: demo-underline-loading-flush-selected;
+            accessible-name: "Demo flush loading counters";
+            item-activated(idx) => {
+                demo-underline-loading-flush-selected = idx;
+            }
+        }
+
+        Text {
+            text: "loading-counters + mixed counters + disabled: Summary has no pill; Checks/Files pulse; disabled row still shows a dimmed skeleton.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            loading-counters: true;
+            items: demo-underline-loading-mixed-items;
+            selected-index: demo-underline-loading-mixed-selected;
+            accessible-name: "Demo mixed loading counters";
+            item-activated(idx) => {
+                demo-underline-loading-mixed-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Leading icons only (Storybook WithIcons).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            items: demo-underline-with-icons-items;
+            selected-index: demo-underline-with-icons-selected;
+            accessible-name: "Demo tabs with icons";
+            item-activated(idx) => {
+                demo-underline-with-icons-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Leading icons + CounterLabel (Storybook WithCounterLabels).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav {
+            items: demo-underline-with-icons-counters-items;
+            selected-index: demo-underline-with-icons-counters-selected;
+            accessible-name: "Demo tabs with icons and counters";
+            item-activated(idx) => {
+                demo-underline-with-icons-counters-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Narrow width (clip — no horizontal scroll).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
         }
@@ -383,131 +667,6 @@ export component GalleryNavsPage inherits VerticalLayout {
                 accessible-name: "Demo overflow tabs";
                 item-activated(idx) => {
                     demo-underline-scroll-selected = idx;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "UnderlineNav (continued)";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Inset (custom tab row, no Button), including a disabled tab.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            items: demo-un2-inset-items;
-            selected-index: demo-un2-selected;
-            accessible-name: "Demo UnderlineNav repository tabs";
-            item-activated(idx) => {
-                demo-un2-selected = idx;
-            }
-        }
-
-        Text {
-            text: "Flush variant";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            variant: UnderlineNavVariant.flush;
-            items: demo-un2-flush-items;
-            selected-index: demo-un2-flush-selected;
-            accessible-name: "Demo UnderlineNav flush";
-            item-activated(idx) => {
-                demo-un2-flush-selected = idx;
-            }
-        }
-
-        Text {
-            text: "Inset with CounterLabel (secondary, primer scheme)";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            items: demo-un2-counters-items;
-            selected-index: demo-un2-counters-selected;
-            accessible-name: "Demo UnderlineNav with counters";
-            item-activated(idx) => {
-                demo-un2-counters-selected = idx;
-            }
-        }
-
-        Text {
-            text: "loading-counters (skeleton pills, opacity pulse)";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            loading-counters: true;
-            items: demo-un2-loading-items;
-            selected-index: demo-un2-loading-selected;
-            accessible-name: "Demo UnderlineNav loading counters";
-            item-activated(idx) => {
-                demo-un2-loading-selected = idx;
-            }
-        }
-
-        Text {
-            text: "WithIcons (leading icon, Storybook Features / WithIcons)";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            items: demo-un2-with-icons-items;
-            selected-index: demo-un2-with-icons-selected;
-            accessible-name: "Demo UnderlineNav with icons";
-            item-activated(idx) => {
-                demo-un2-with-icons-selected = idx;
-            }
-        }
-
-        Text {
-            text: "WithCounterLabels (icon + CounterLabel, Storybook WithCounterLabels)";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            items: demo-un2-with-icons-counters-items;
-            selected-index: demo-un2-with-icons-counters-selected;
-            accessible-name: "Demo UnderlineNav with icons and counters";
-            item-activated(idx) => {
-                demo-un2-with-icons-counters-selected = idx;
-            }
-        }
-
-        Text {
-            text: "Narrow width (clip — no horizontal scroll)";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        Rectangle {
-            width: 260px;
-            clip: true;
-
-            UnderlineNav {
-                items: demo-un2-scroll-items;
-                selected-index: demo-un2-scroll-selected;
-                accessible-name: "Demo UnderlineNav overflow";
-                item-activated(idx) => {
-                    demo-un2-scroll-selected = idx;
                 }
             }
         }

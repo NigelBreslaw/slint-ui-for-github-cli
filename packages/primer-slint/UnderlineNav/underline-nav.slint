@@ -1,6 +1,5 @@
-import { ButtonAlignContent, ButtonVariant } from "../Buttons/types.slint";
-import { Button } from "../Buttons/buttons.slint";
-import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { CounterLabel, CounterLabelVariant } from "../CounterLabel/counter-label.slint";
+import { ButtonTokens, LayoutTokens, PrimerColors, UnderlineNavTokens } from "../tokens.slint";
 
 export enum UnderlineNavVariant {
     inset,
@@ -10,8 +9,10 @@ export enum UnderlineNavVariant {
 export struct UnderlineNavItem {
     label: string,
     enabled: bool,
-    /// Non-empty shows a counter pill (or a loading placeholder when `UnderlineNav.loading-counters` is true).
     counter: string,
+    /// When true, shows **`leading-icon`** before the label (**`LayoutTokens.base-size-8`** gap, **`UnderlineItem`** / upstream).
+    has-leading-icon: bool,
+    leading-icon: image,
 }
 
 component UnderlineNavItemRow {
@@ -19,44 +20,123 @@ component UnderlineNavItemRow {
     in property <bool> selected;
     in property <bool> enabled: true;
     in property <string> counter: "";
+    in property <bool> has-leading-icon: false;
+    in property <image> leading-icon;
     in property <bool> loading-counters: false;
     callback clicked;
-
 
     private property <bool> show-counter-slot: counter != "";
     private property <bool> show-counter-value: show-counter-slot && !loading-counters;
     private property <bool> show-counter-loading: show-counter-slot && loading-counters;
 
+    private property <float> loading-phase: mod(animation-tick(), UnderlineNavTokens.loading-counter-animation-period) / UnderlineNavTokens.loading-counter-animation-period;
+    private property <float> loading-pulse-opacity: loading-phase < 0.5
+        ? UnderlineNavTokens.loading-counter-opacity-max - (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * (loading-phase * 2)
+        : UnderlineNavTokens.loading-counter-opacity-min + (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * ((loading-phase - 0.5) * 2);
+
+    private property <color> label-fg: !root.enabled
+        ? PrimerColors.fgColor-muted
+        : root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+    private property <int> label-weight: root.enabled && root.selected
+        ? LayoutTokens.base-text-weight-semibold
+        : LayoutTokens.base-text-weight-medium;
+
     VerticalLayout {
+        alignment: start;
+        min-height: LayoutTokens.control-xlarge-size;
 
-        HorizontalLayout {
-            spacing: LayoutTokens.button-content-gap;
-            alignment: start;
+        focus-host := Rectangle {
+            border-width: tab-fs.has-focus && root.enabled ? 2px : 0px;
+            border-color: PrimerColors.fgColor-accent;
+            border-radius: LayoutTokens.borderRadius-medium;
 
-            nav-btn := Button {
-                horizontal-stretch: 0;
-                variant: ButtonVariant.invisible;
-                size: Size.medium;
-                align-content: ButtonAlignContent.start;
-                label: root.label;
-                count: show-counter-value ? counter : "";
-                disabled: !root.enabled;
-                label-typography-override: true;
-                label-font-size-override: LayoutTokens.text-body-size-medium;
-                label-font-weight-override: root.selected ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium;
-                label-color-override: root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
-                clicked => {
-                    root.clicked();
+            tab-fs := FocusScope {
+
+                key-pressed(event) => {
+                    if !root.enabled {
+                        return reject;
+                    }
+                    if event.text == Key.Return || event.text == Key.Space {
+                        root.clicked();
+                        return accept;
+                    }
+                    return reject;
                 }
-            }
 
-            if show-counter-loading: Rectangle {
-                width: 24px;
-                height: 16px;
-                border-radius: self.height / 2;
-                border-width: 1px;
-                border-color: PrimerColors.borderColor-default;
-                background: PrimerColors.bgColor-neutral-muted;
+                ta := TouchArea {
+                    enabled: root.enabled;
+                    mouse-cursor: root.enabled ? pointer : default;
+                    clicked => {
+                        root.clicked();
+                    }
+
+                    VerticalLayout {
+                        alignment: center;
+
+                        row-bg := Rectangle {
+                            background: #00000000;
+                            border-radius: LayoutTokens.borderRadius-medium;
+
+                            HorizontalLayout {
+                                padding-left: LayoutTokens.base-size-8;
+                                padding-right: LayoutTokens.base-size-8;
+                                padding-top: LayoutTokens.base-size-6;
+                                padding-bottom: LayoutTokens.base-size-6;
+                                alignment: center;
+                                spacing: LayoutTokens.base-size-8;
+
+                                if root.has-leading-icon: Image {
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                    vertical-alignment: center;
+                                    source: root.leading-icon;
+                                    colorize: root.label-fg;
+                                }
+
+                                label-t := Text {
+                                    text: root.label;
+                                    color: root.label-fg;
+                                    font-size: LayoutTokens.text-body-size-medium;
+                                    font-weight: root.label-weight;
+                                    vertical-alignment: center;
+                                }
+
+                                if show-counter-value: Rectangle {
+                                    opacity: root.enabled ? 1.0 : 0.45;
+                                    CounterLabel {
+                                        text: root.counter;
+                                        use-primer-scheme: true;
+                                        scheme: CounterLabelVariant.secondary;
+                                    }
+                                }
+
+                                if show-counter-loading: Rectangle {
+                                    opacity: root.enabled ? root.loading-pulse-opacity : 0.45;
+                                    width: UnderlineNavTokens.loading-counter-width;
+                                    height: UnderlineNavTokens.loading-counter-height;
+                                    border-radius: self.height / 2;
+                                    border-width: LayoutTokens.counter-label-border-width;
+                                    border-color: PrimerColors.borderColor-default;
+                                    background: PrimerColors.bgColor-neutral-muted;
+                                }
+                            }
+
+                            states [
+                                disabled when !root.enabled: {
+                                    background: #00000000;
+                                    label-t.color: PrimerColors.fgColor-muted;
+                                    label-t.font-weight: LayoutTokens.base-text-weight-medium;
+                                }
+                                pressed when root.enabled && ta.pressed: {
+                                    background: ButtonTokens.color-action-list-item-default-active-bg;
+                                }
+                                hover when root.enabled && !ta.pressed && ta.has-hover: {
+                                    background: PrimerColors.bgColor-neutral-muted;
+                                }
+                            ]
+                        }
+                    }
+                }
             }
         }
 
@@ -70,35 +150,35 @@ component UnderlineNavItemRow {
 export component UnderlineNav {
     in property <[UnderlineNavItem]> items;
     in property <int> selected-index: -1;
-    /// `inset`: horizontal padding (`stack-padding-normal`). `flush`: no inline padding (matches `[data-variant='flush']`).
+    /// **`inset`**: **`LayoutTokens.stack-padding-normal`** on the tab row. **`flush`**: no horizontal padding on the row.
     in property <UnderlineNavVariant> variant: UnderlineNavVariant.inset;
-    /// When true, non-empty item `counter` values render a fixed-size skeleton instead of the numeric pill (UnderlineNav `LoadingCounter`).
+    /// When true, non-empty item **`counter`** values show the **LoadingCounter** skeleton (opacity pulse) instead of **`CounterLabel`**.
     in property <bool> loading-counters: false;
-    /// When non-empty, exposes a `tab-list` landmark for assistive tech (React `aria-label` on the list).
+    /// When non-empty, **`AccessibleRole.tab-list`** gets this landmark label.
     in property <string> accessible-name: "";
     callback item-activated(index: int);
 
     private property <length> inset-padding-inline: variant == UnderlineNavVariant.inset ? LayoutTokens.stack-padding-normal : 0px;
 
+
     VerticalLayout {
-        horizontal-stretch: 0;
         accessible-role: AccessibleRole.tab-list;
         accessible-label: accessible-name;
-        height: self.preferred-height;
 
-        tabs-row := HorizontalLayout {
-            spacing: 8px;
+        HorizontalLayout {
+            spacing: LayoutTokens.base-size-8;
             padding-left: inset-padding-inline;
             padding-right: inset-padding-inline;
+            min-height: LayoutTokens.control-xlarge-size;
             alignment: start;
-
-
 
             for item[index] in items: UnderlineNavItemRow {
                 label: item.label;
                 selected: index == root.selected-index;
                 enabled: item.enabled;
                 counter: item.counter;
+                has-leading-icon: item.has-leading-icon;
+                leading-icon: item.leading-icon;
                 loading-counters: root.loading-counters;
                 clicked => {
                     root.item-activated(index);
@@ -108,7 +188,6 @@ export component UnderlineNav {
 
         Rectangle {
             height: 1px;
-            width: 100%;
             background: PrimerColors.borderColor-muted;
         }
     }

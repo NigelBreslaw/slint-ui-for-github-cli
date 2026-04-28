@@ -1,4 +1,6 @@
-# UnderlineNav2 — upstream research + variant matrix
+# UnderlineNav — upstream research + variant matrix
+
+This document describes the **Primer-aligned** Slint port (formerly developed as UnderlineNav2); sources and parity notes below apply to that implementation.
 
 Sources: [`primer-ui-react`](file:///Users/nigelb/slint/primer-ui-react) (`UnderlineTabbedInterface.module.css`, `UnderlineNav*`), [`primer-tokens`](file:///Users/nigelb/slint/primer-tokens) `component/underlineNav.json5`, in-repo [`tokens.slint`](../tokens.slint).
 
