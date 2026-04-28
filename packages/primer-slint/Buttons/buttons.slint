@@ -319,9 +319,9 @@ export component IconButton {
 
     private property <length> ib-border-width: is-invisible ? 0px : 1px;
 
-    private property <color> ib-border-color: is-invisible ? #00000000 : style.button-default-borderColor-active;
+    private property <color> ib-border-color: is-invisible ? transparent : style.button-default-borderColor-active;
 
-    private property <color> ib-bg-rest: is-invisible ? #00000000 : style.button-default-bgColor-active;
+    private property <color> ib-bg-rest: is-invisible ? transparent : style.button-default-bgColor-active;
 
     private property <length> icon-img-size:
         size == Size.small

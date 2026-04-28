@@ -175,7 +175,7 @@ export component ActionListRow {
 
             row-bg := Rectangle {
                 border-radius: LayoutTokens.borderRadius-medium;
-                background: #00000000;
+                background: transparent;
 
                 HorizontalLayout {
                     width: 100%;
@@ -411,10 +411,10 @@ export component ActionListRow {
                     disabled when root.disabled: {
                         row-bg.background: root.use-selected-surface
                             ? ButtonTokens.color-action-list-item-default-selected-bg
-                            : #00000000;
+                            : transparent;
                     }
                     inactive when !root.disabled && root.is-inactive: {
-                        row-bg.background: #00000000;
+                        row-bg.background: transparent;
                     }
                     active-pressed when !root.disabled && root.show-active-chrome && ta.pressed: {
                         row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;

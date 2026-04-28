@@ -32,7 +32,7 @@ component NavListItemRow {
         if nav-row.inactive: Rectangle {
             horizontal-stretch: 1;
             border-radius: LayoutTokens.borderRadius-medium;
-            background: #00000000;
+            background: transparent;
 
             HorizontalLayout {
                 horizontal-stretch: 1;
@@ -108,7 +108,7 @@ component NavListItemRow {
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
                 height: LayoutTokens.nav-list-sidebar-indicator-height;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: nav-row.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+                background: nav-row.current ? PrimerColors.bgColor-accent-emphasis : transparent;
             }
 
             HorizontalLayout {
@@ -194,7 +194,7 @@ component NavListExpandableRow3 {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
             }
 
             HorizontalLayout {
@@ -299,7 +299,7 @@ component NavListExpandableRow2 {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
             }
 
             HorizontalLayout {
@@ -404,7 +404,7 @@ component NavListExpandableRow1 {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
             }
 
             HorizontalLayout {
@@ -509,7 +509,7 @@ component NavListExpandableRow0 {
                 horizontal-stretch: 0;
                 width: LayoutTokens.nav-list-sidebar-indicator-width;
                 border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : #00000000;
+                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
             }
 
             HorizontalLayout {

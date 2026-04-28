@@ -296,7 +296,7 @@ export global PrimerColors {
     out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
     out property <color> bgColor-neutral-muted: color-scheme == ColorScheme.dark ? bgColor-neutral-muted-dark : bgColor-neutral-muted-light;
     out property <color> bgColor-neutral-emphasis: color-scheme == ColorScheme.dark ? bgColor-neutral-emphasis-dark : bgColor-neutral-emphasis-light;
-    out property <color> counter-borderColor: #00000000;
+    out property <color> counter-borderColor: transparent;
     out property <color> borderColor-muted: color-scheme == ColorScheme.dark ? borderColor-muted-dark : borderColor-muted-light;
     out property <color> accent-underline: color-scheme == ColorScheme.dark ? accent-underline-dark : accent-underline-light;
     out property <color> fgColor-placeholder: color-scheme == ColorScheme.dark ? fgColor-placeholder-dark : fgColor-placeholder-light;
@@ -463,16 +463,16 @@ export global ButtonTokens {
 
     out property <color> button-invisible-fgColor-rest: color-btn-text;
     out property <color> button-invisible-fgColor-disabled: control-fgColor-disabled;
-    out property <color> button-invisible-bgColor-rest: #00000000;
+    out property <color> button-invisible-bgColor-rest: transparent;
     out property <color> button-invisible-bgColor-hover: color-action-list-item-default-hover-bg;
     out property <color> button-invisible-bgColor-active: color-action-list-item-default-active-bg;
     out property <color> button-invisible-bgColor-disabled: color-action-list-item-default-selected-bg;
-    out property <color> button-invisible-borderColor-rest: #00000000;
-    out property <color> button-invisible-borderColor-hover: #00000000;
+    out property <color> button-invisible-borderColor-rest: transparent;
+    out property <color> button-invisible-borderColor-hover: transparent;
     out property <color> button-invisible-borderColor-disabled: color-action-list-item-default-selected-bg;
 
-    out property <color> button-link-bgColor-rest: #00000000;
-    out property <color> button-link-borderColor-rest: #00000000;
+    out property <color> button-link-bgColor-rest: transparent;
+    out property <color> button-link-borderColor-rest: transparent;
 
     // Filled-button shadows (rgba; light vs dark tuned for contrast on canvas)
     out property <color> button-shadow-ambient-light: rgba(31, 35, 40, 0.04);
@@ -504,7 +504,7 @@ export global ButtonTokens {
     property <color> buttonCounter-danger-fg-disabled-light: rgba(207, 34, 46, 0.5);
     property <color> buttonCounter-danger-fg-disabled-dark: rgba(248, 81, 73, 0.5);
 
-    out property <color> buttonCounter-borderColor: #00000000;
+    out property <color> buttonCounter-borderColor: transparent;
     out property <color> buttonCounter-default-bgColor-rest: color-scheme == ColorScheme.dark ? buttonCounter-default-bg-rest-dark : buttonCounter-default-bg-rest-light;
     out property <color> buttonCounter-default-fgColor-rest: button-default-fgColor-rest;
     out property <color> buttonCounter-primary-bgColor-rest: color-scheme == ColorScheme.dark ? buttonCounter-primary-bg-rest-dark : buttonCounter-primary-bg-rest-light;
@@ -676,8 +676,8 @@ export global ToggleSwitchTokens {
     out property <color> track-bgColor-disabled: CheckboxTokens.checkbox-bgColor-checked-disabled;
 
     out property <color> track-borderColor-rest: PrimerColors.borderColor-default;
-    out property <color> track-borderColor-checked: #00000000;
-    out property <color> track-borderColor-disabled: #00000000;
+    out property <color> track-borderColor-checked: transparent;
+    out property <color> track-borderColor-disabled: transparent;
 
     out property <color> track-bgColor-checked-rest: PrimerColors.bgColor-accent-emphasis;
     out property <color> track-bgColor-checked-hover: CheckboxTokens.checkbox-bgColor-checked-hover;

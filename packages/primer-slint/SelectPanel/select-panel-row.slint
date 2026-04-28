@@ -26,7 +26,7 @@ export component SelectPanelRow {
 
         row-bg := Rectangle {
             border-radius: LayoutTokens.borderRadius-medium;
-            background: #00000000;
+            background: transparent;
 
             hl := HorizontalLayout {
                 min-height: LayoutTokens.action-list-item-min-height;
@@ -44,7 +44,7 @@ export component SelectPanelRow {
                     width: LayoutTokens.nav-list-sidebar-indicator-width;
                     height: LayoutTokens.nav-list-sidebar-indicator-height;
                     border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                    background: root.show-focus-accent ? PrimerColors.bgColor-accent-emphasis : #00000000;
+                    background: root.show-focus-accent ? PrimerColors.bgColor-accent-emphasis : transparent;
                 }
 
                 Checkbox {

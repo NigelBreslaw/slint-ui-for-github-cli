@@ -23,17 +23,9 @@ component UnderlineNavItemRow {
     private property <bool> show-counter-value: show-counter-slot && !loading-counters;
     private property <bool> show-counter-loading: show-counter-slot && loading-counters;
 
-    private property <float> loading-phase: mod(animation-tick(), UnderlineNavTokens.loading-counter-animation-period) / UnderlineNavTokens.loading-counter-animation-period;
-    private property <float> loading-pulse-opacity: loading-phase < 0.5
-        ? UnderlineNavTokens.loading-counter-opacity-max - (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * (loading-phase * 2)
-        : UnderlineNavTokens.loading-counter-opacity-min + (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * ((loading-phase - 0.5) * 2);
-
     private property <color> label-fg: !root.enabled
         ? PrimerColors.fgColor-muted
         : root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
-    private property <int> label-weight: root.enabled && root.selected
-        ? LayoutTokens.base-text-weight-semibold
-        : LayoutTokens.base-text-weight-medium;
 
     VerticalLayout {
         alignment: start;
@@ -68,7 +60,7 @@ component UnderlineNavItemRow {
                         alignment: center;
 
                         row-bg := Rectangle {
-                            background: #00000000;
+                            background: transparent;
                             border-radius: LayoutTokens.borderRadius-medium;
 
                             HorizontalLayout {
@@ -87,12 +79,23 @@ component UnderlineNavItemRow {
                                     colorize: root.label-fg;
                                 }
 
-                                label-t := Text {
-                                    text: root.label;
-                                    color: root.label-fg;
-                                    font-size: LayoutTokens.text-body-size-medium;
-                                    font-weight: root.label-weight;
-                                    vertical-alignment: center;
+                                Rectangle {
+                                    label-t := Text {
+                                        visible: !root.selected;
+                                        text: root.label;
+                                        color: root.label-fg;
+                                        font-size: LayoutTokens.text-body-size-medium;
+                                        font-weight: LayoutTokens.base-text-weight-medium;
+                                        vertical-alignment: center;
+                                    }
+                                    label-t-selected := Text {
+                                        visible: root.selected;
+                                        text: root.label;
+                                        color: root.label-fg;
+                                        font-size: LayoutTokens.text-body-size-medium;
+                                        font-weight: LayoutTokens.base-text-weight-semibold;
+                                        vertical-alignment: center;
+                                    }
                                 }
 
                                 if show-counter-value: Rectangle {
@@ -105,7 +108,11 @@ component UnderlineNavItemRow {
                                 }
 
                                 if show-counter-loading: Rectangle {
-                                    opacity: root.enabled ? root.loading-pulse-opacity : 0.45;
+                                    private property <float> loading-phase: mod(animation-tick(), UnderlineNavTokens.loading-counter-animation-period) / UnderlineNavTokens.loading-counter-animation-period;
+                                    private property <float> loading-pulse-opacity: loading-phase < 0.5
+                                        ? UnderlineNavTokens.loading-counter-opacity-max - (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * (loading-phase * 2)
+                                        : UnderlineNavTokens.loading-counter-opacity-min + (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * ((loading-phase - 0.5) * 2);
+                                    opacity: root.enabled ? loading-pulse-opacity : 0.45;
                                     width: UnderlineNavTokens.loading-counter-width;
                                     height: UnderlineNavTokens.loading-counter-height;
                                     border-radius: self.height / 2;
@@ -117,7 +124,7 @@ component UnderlineNavItemRow {
 
                             states [
                                 disabled when !root.enabled: {
-                                    background: #00000000;
+                                    background: transparent;
                                     label-t.color: PrimerColors.fgColor-muted;
                                     label-t.font-weight: LayoutTokens.base-text-weight-medium;
                                 }
@@ -136,7 +143,7 @@ component UnderlineNavItemRow {
 
         Rectangle {
             height: 2px;
-            background: root.selected ? PrimerColors.accent-underline : #00000000;
+            background: root.selected ? PrimerColors.accent-underline : transparent;
         }
     }
 }
