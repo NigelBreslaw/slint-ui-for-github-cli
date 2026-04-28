@@ -1,16 +1,10 @@
 import { CounterLabel, CounterLabelVariant } from "../CounterLabel/counter-label.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors, UnderlineNavTokens } from "../tokens.slint";
 
-export enum UnderlineNavVariant {
-    inset,
-    flush,
-}
-
 export struct UnderlineNavItem {
     label: string,
     enabled: bool,
     counter: string,
-    /// When true, shows **`leading-icon`** before the label (**`LayoutTokens.base-size-8`** gap, **`UnderlineItem`** / upstream).
     has-leading-icon: bool,
     leading-icon: image,
 }
@@ -150,15 +144,10 @@ component UnderlineNavItemRow {
 export component UnderlineNav {
     in property <[UnderlineNavItem]> items;
     in property <int> selected-index: -1;
-    /// **`inset`**: **`LayoutTokens.stack-padding-normal`** on the tab row. **`flush`**: no horizontal padding on the row.
-    in property <UnderlineNavVariant> variant: UnderlineNavVariant.inset;
-    /// When true, non-empty item **`counter`** values show the **LoadingCounter** skeleton (opacity pulse) instead of **`CounterLabel`**.
     in property <bool> loading-counters: false;
-    /// When non-empty, **`AccessibleRole.tab-list`** gets this landmark label.
     in property <string> accessible-name: "";
     callback item-activated(index: int);
 
-    private property <length> inset-padding-inline: variant == UnderlineNavVariant.inset ? LayoutTokens.stack-padding-normal : 0px;
 
 
     VerticalLayout {
@@ -167,8 +156,6 @@ export component UnderlineNav {
 
         HorizontalLayout {
             spacing: LayoutTokens.base-size-8;
-            padding-left: inset-padding-inline;
-            padding-right: inset-padding-inline;
             min-height: LayoutTokens.control-xlarge-size;
             alignment: start;
 
