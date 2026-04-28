@@ -5,6 +5,7 @@ import {
     Banner,
     BannerVariant,
     ButtonVariant,
+    Icons,
     Spinner,
     UnderlineNav,
     UnderlineNavItem,
@@ -16,8 +17,8 @@ export component Dashboard {
     height: 100%;
 
     private property <[UnderlineNavItem]> dashboard-nav-items: [
-        { label: "Items to review", enabled: true, counter: "" },
-        { label: "Security alerts", enabled: true, counter: "" },
+        { label: "Items to review", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Security alerts", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
 
     Rectangle {

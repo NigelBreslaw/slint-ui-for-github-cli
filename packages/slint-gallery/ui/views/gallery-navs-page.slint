@@ -5,9 +5,6 @@ import {
     NavListGroupHeadingVariant,
     NavListItem,
     UnderlineNav,
-    UnderlineNav2,
-    UnderlineNav2Item,
-    UnderlineNav2Variant,
     UnderlineNavItem,
     UnderlineNavVariant,
 } from "../../../primer-slint/primer.slint";
@@ -242,44 +239,44 @@ export component GalleryNavsPage inherits VerticalLayout {
 
     private property <int> demo-underline-selected: 0;
     private property <[UnderlineNavItem]> demo-underline-items: [
-        { label: "Code", enabled: true, counter: "" },
-        { label: "Issues", enabled: true, counter: "12" },
-        { label: "Pull requests", enabled: true, counter: "3" },
+        { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Issues", enabled: true, counter: "12", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-underline-flush-selected: 0;
     private property <[UnderlineNavItem]> demo-underline-flush-items: [
-        { label: "Actions", enabled: true, counter: "" },
-        { label: "Projects", enabled: true, counter: "" },
+        { label: "Actions", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Projects", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-underline-loading-selected: 0;
     private property <[UnderlineNavItem]> demo-underline-loading-items: [
-        { label: "Open", enabled: true, counter: "8" },
-        { label: "Closed", enabled: true, counter: "24" },
+        { label: "Open", enabled: true, counter: "8", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Closed", enabled: true, counter: "24", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-underline-scroll-selected: 0;
     private property <[UnderlineNavItem]> demo-underline-scroll-items: [
-        { label: "Overview", enabled: true, counter: "" },
-        { label: "Repositories", enabled: true, counter: "" },
-        { label: "Projects", enabled: true, counter: "" },
-        { label: "Packages", enabled: true, counter: "" },
-        { label: "Stars", enabled: true, counter: "" },
-        { label: "Sponsors", enabled: true, counter: "" },
+        { label: "Overview", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Repositories", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Projects", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Packages", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Stars", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Sponsors", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
 
     private property <int> demo-un2-selected: 0;
-    private property <[UnderlineNav2Item]> demo-un2-inset-items: [
+    private property <[UnderlineNavItem]> demo-un2-inset-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Issues", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Pull requests", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Security", enabled: false, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-un2-flush-selected: 0;
-    private property <[UnderlineNav2Item]> demo-un2-flush-items: [
+    private property <[UnderlineNavItem]> demo-un2-flush-items: [
         { label: "Actions", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Projects", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-un2-scroll-selected: 0;
-    private property <[UnderlineNav2Item]> demo-un2-scroll-items: [
+    private property <[UnderlineNavItem]> demo-un2-scroll-items: [
         { label: "Overview", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Repositories", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Projects", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
@@ -288,24 +285,24 @@ export component GalleryNavsPage inherits VerticalLayout {
         { label: "Sponsors", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-un2-counters-selected: 0;
-    private property <[UnderlineNav2Item]> demo-un2-counters-items: [
+    private property <[UnderlineNavItem]> demo-un2-counters-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Issues", enabled: true, counter: "12", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-un2-loading-selected: 0;
-    private property <[UnderlineNav2Item]> demo-un2-loading-items: [
+    private property <[UnderlineNavItem]> demo-un2-loading-items: [
         { label: "Open", enabled: true, counter: "8", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Closed", enabled: true, counter: "24", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
     private property <int> demo-un2-with-icons-selected: 0;
-    private property <[UnderlineNav2Item]> demo-un2-with-icons-items: [
+    private property <[UnderlineNavItem]> demo-un2-with-icons-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.layout_grid },
         { label: "Issues", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.issue_opened },
         { label: "Pull requests", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.pull_request },
     ];
     private property <int> demo-un2-with-icons-counters-selected: 0;
-    private property <[UnderlineNav2Item]> demo-un2-with-icons-counters-items: [
+    private property <[UnderlineNavItem]> demo-un2-with-icons-counters-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: true, leading-icon: Icons.layout_grid },
         { label: "Issues", enabled: true, counter: "12", has-leading-icon: true, leading-icon: Icons.issue_opened },
         { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: true, leading-icon: Icons.pull_request },
@@ -397,7 +394,7 @@ export component GalleryNavsPage inherits VerticalLayout {
         alignment: start;
 
         Text {
-            text: "UnderlineNav2";
+            text: "UnderlineNav (continued)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -409,10 +406,10 @@ export component GalleryNavsPage inherits VerticalLayout {
             font-size: 12px;
         }
 
-        UnderlineNav2 {
+        UnderlineNav {
             items: demo-un2-inset-items;
             selected-index: demo-un2-selected;
-            accessible-name: "Demo UnderlineNav2 repository tabs";
+            accessible-name: "Demo UnderlineNav repository tabs";
             item-activated(idx) => {
                 demo-un2-selected = idx;
             }
@@ -424,11 +421,11 @@ export component GalleryNavsPage inherits VerticalLayout {
             font-size: 12px;
         }
 
-        UnderlineNav2 {
-            variant: UnderlineNav2Variant.flush;
+        UnderlineNav {
+            variant: UnderlineNavVariant.flush;
             items: demo-un2-flush-items;
             selected-index: demo-un2-flush-selected;
-            accessible-name: "Demo UnderlineNav2 flush";
+            accessible-name: "Demo UnderlineNav flush";
             item-activated(idx) => {
                 demo-un2-flush-selected = idx;
             }
@@ -440,10 +437,10 @@ export component GalleryNavsPage inherits VerticalLayout {
             font-size: 12px;
         }
 
-        UnderlineNav2 {
+        UnderlineNav {
             items: demo-un2-counters-items;
             selected-index: demo-un2-counters-selected;
-            accessible-name: "Demo UnderlineNav2 with counters";
+            accessible-name: "Demo UnderlineNav with counters";
             item-activated(idx) => {
                 demo-un2-counters-selected = idx;
             }
@@ -455,11 +452,11 @@ export component GalleryNavsPage inherits VerticalLayout {
             font-size: 12px;
         }
 
-        UnderlineNav2 {
+        UnderlineNav {
             loading-counters: true;
             items: demo-un2-loading-items;
             selected-index: demo-un2-loading-selected;
-            accessible-name: "Demo UnderlineNav2 loading counters";
+            accessible-name: "Demo UnderlineNav loading counters";
             item-activated(idx) => {
                 demo-un2-loading-selected = idx;
             }
@@ -471,10 +468,10 @@ export component GalleryNavsPage inherits VerticalLayout {
             font-size: 12px;
         }
 
-        UnderlineNav2 {
+        UnderlineNav {
             items: demo-un2-with-icons-items;
             selected-index: demo-un2-with-icons-selected;
-            accessible-name: "Demo UnderlineNav2 with icons";
+            accessible-name: "Demo UnderlineNav with icons";
             item-activated(idx) => {
                 demo-un2-with-icons-selected = idx;
             }
@@ -486,10 +483,10 @@ export component GalleryNavsPage inherits VerticalLayout {
             font-size: 12px;
         }
 
-        UnderlineNav2 {
+        UnderlineNav {
             items: demo-un2-with-icons-counters-items;
             selected-index: demo-un2-with-icons-counters-selected;
-            accessible-name: "Demo UnderlineNav2 with icons and counters";
+            accessible-name: "Demo UnderlineNav with icons and counters";
             item-activated(idx) => {
                 demo-un2-with-icons-counters-selected = idx;
             }
@@ -505,10 +502,10 @@ export component GalleryNavsPage inherits VerticalLayout {
             width: 260px;
             clip: true;
 
-            UnderlineNav2 {
+            UnderlineNav {
                 items: demo-un2-scroll-items;
                 selected-index: demo-un2-scroll-selected;
-                accessible-name: "Demo UnderlineNav2 overflow";
+                accessible-name: "Demo UnderlineNav overflow";
                 item-activated(idx) => {
                     demo-un2-scroll-selected = idx;
                 }
