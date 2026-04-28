@@ -16,15 +16,15 @@ path = "src/lib.rs"
 crate-type = ["lib", "cdylib"]
 
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]
-slint = { git = "https://github.com/slint-ui/slint", branch = "master", default-features = false, features = ["std", "compat-1-2", "backend-winit", "renderer-skia"] }
+slint = { git = "https://github.com/Murmele/slint.git", branch = "mm/flickable-mouse-wheel-slow-down-fix", default-features = false, features = ["std", "compat-1-2", "backend-winit", "renderer-skia"] }
 
 [target.'cfg(target_arch = "wasm32")'.dependencies]
-slint = { git = "https://github.com/slint-ui/slint", branch = "master", default-features = false, features = ["std", "compat-1-2", "backend-winit", "renderer-femtovg"] }
+slint = { git = "https://github.com/Murmele/slint.git", branch = "mm/flickable-mouse-wheel-slow-down-fix", default-features = false, features = ["std", "compat-1-2", "backend-winit", "renderer-femtovg"] }
 wasm-bindgen = "0.2"
 console_error_panic_hook = "0.1"
 
 [build-dependencies]
-slint-build = { git = "https://github.com/slint-ui/slint", branch = "master" }
+slint-build = { git = "https://github.com/Murmele/slint.git", branch = "mm/flickable-mouse-wheel-slow-down-fix" }
 
 # Smaller artifacts for `cargo build --release` / `wasm-pack build --release` (slower compiles, esp. with LTO).
 # Native and wasm share this profile; the dominant wasm size is still Slint + winit + renderer.

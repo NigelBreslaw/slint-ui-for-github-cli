@@ -14,7 +14,7 @@ description: >-
 ## Canonical documentation
 
 - [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — package layout, `tokens.slint` composition rule, **Verification**, limitations.
-- [`packages/primer-slint/slint/component-imports.md`](../../../packages/primer-slint/slint/component-imports.md) — which globals to import per component family.
+- [`packages/primer-slint/component-imports.md`](../../../packages/primer-slint/component-imports.md) — which globals to import per component family.
 
 ## Phases (run in order)
 

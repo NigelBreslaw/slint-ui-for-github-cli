@@ -6,7 +6,7 @@
 
 ## Purpose
 
-- **Audience:** People and AI assistants working on **Primer-style** Slint under `packages/primer-slint/slint/`.
+- **Audience:** People and AI assistants working on **Primer-style** Slint under `packages/primer-slint/`.
 - **Goals:** Primer naming and token layering, no duplicate color literals across globals, valid `export global` order, reviewable changes.
 
 ## Porting and PRs
