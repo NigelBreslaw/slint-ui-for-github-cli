@@ -45,7 +45,7 @@ The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** t
 
 ## UnderlineNav2
 
-Primer-aligned product tabs using **`UnderlineItem`**-style layout (not **`Button`**); upstream reference: **`UnderlineTabbedInterface`**, **`UnderlineItem`**, **`underlineNav`** tokens. Each tab is a **`TouchArea`** + padded label row, **`PrimerColors.bgColor-neutral-muted`** hover, **`PrimerColors.fgColor-accent`** **2px** focus ring (**`FocusScope` + keyboard**), **2px** **`PrimerColors.accent-underline`** on the selected item, and a full-width **muted** rule on the wrapper. The responsive **“More”** overflow menu is **not** implemented; narrow hosts should **`clip`** or widen the container — tabs are not horizontally scrollable. Non-empty **`UnderlineNav2Item.counter`** shows **`CounterLabel`** (**`use-primer-scheme`** + **`CounterLabelVariant.secondary`**); with **`loading-counters`**, those slots use the **`LoadingCounter`** skeleton (**`UnderlineNavTokens`**) and an opacity pulse. **`leading-icon`** fields arrive in **PR3**.
+Primer-aligned product tabs using **`UnderlineItem`**-style layout (not **`Button`**); upstream reference: **`UnderlineTabbedInterface`**, **`UnderlineItem`**, **`underlineNav`** tokens. Each tab is a **`TouchArea`** + padded label row, optional **16px** leading icon (**`LayoutTokens.base-size-8`** gap to the label, matching upstream), **`PrimerColors.bgColor-neutral-muted`** hover, **`PrimerColors.fgColor-accent`** **2px** focus ring (**`FocusScope` + keyboard**), **2px** **`PrimerColors.accent-underline`** on the selected item, and a full-width **muted** rule on the wrapper. The responsive **“More”** overflow menu is **not** implemented; narrow hosts should **`clip`** or widen the container — tabs are not horizontally scrollable. Non-empty **`UnderlineNav2Item.counter`** shows **`CounterLabel`** (**`use-primer-scheme`** + **`CounterLabelVariant.secondary`**); with **`loading-counters`**, those slots use the **`LoadingCounter`** skeleton (**`UnderlineNavTokens`**) and an opacity pulse.
 
 | Property | Notes |
 | -------- | ----- |
@@ -53,6 +53,7 @@ Primer-aligned product tabs using **`UnderlineItem`**-style layout (not **`Butto
 | `loading-counters` | When true, tabs whose **`counter`** is non-empty show the animated skeleton instead of **`CounterLabel`**. |
 | `accessible-name` | When non-empty, sets the landmark label for **`AccessibleRole.tab-list`**. |
 | `item-activated(index)` | Fired when a tab is activated (click, **Space** / **Enter** when focused). |
+| `UnderlineNav2Item.has-leading-icon` / `leading-icon` | When **`has-leading-icon`**, the tab shows **`leading-icon`** before the label; icon color tracks label **fg** (selected / muted / disabled). |
 | `UnderlineNav2Item.counter` | Empty hides the trailing pill; non-empty shows **`CounterLabel`** or the loading skeleton (see **`loading-counters`**). |
 
 ## Banner

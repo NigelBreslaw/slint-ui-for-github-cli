@@ -10,6 +10,9 @@ export struct UnderlineNav2Item {
     label: string,
     enabled: bool,
     counter: string,
+    /// When true, shows **`leading-icon`** before the label (**`LayoutTokens.base-size-8`** gap, **`UnderlineItem`** / upstream).
+    has-leading-icon: bool,
+    leading-icon: image,
 }
 
 component UnderlineNav2ItemRow {
@@ -17,6 +20,8 @@ component UnderlineNav2ItemRow {
     in property <bool> selected;
     in property <bool> enabled: true;
     in property <string> counter: "";
+    in property <bool> has-leading-icon: false;
+    in property <image> leading-icon;
     in property <bool> loading-counters: false;
     callback clicked;
 
@@ -79,6 +84,14 @@ component UnderlineNav2ItemRow {
                                 padding-bottom: LayoutTokens.base-size-6;
                                 alignment: center;
                                 spacing: LayoutTokens.base-size-8;
+
+                                if root.has-leading-icon: Image {
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                    vertical-alignment: center;
+                                    source: root.leading-icon;
+                                    colorize: root.label-fg;
+                                }
 
                                 label-t := Text {
                                     text: root.label;
@@ -164,6 +177,8 @@ export component UnderlineNav2 {
                 selected: index == root.selected-index;
                 enabled: item.enabled;
                 counter: item.counter;
+                has-leading-icon: item.has-leading-icon;
+                leading-icon: item.leading-icon;
                 loading-counters: root.loading-counters;
                 clicked => {
                     root.item-activated(index);
