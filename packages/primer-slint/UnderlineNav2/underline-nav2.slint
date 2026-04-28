@@ -1,0 +1,170 @@
+// UnderlineNav2 — Primer **UnderlineItem**-style rows (not **Button**). See **primer-ui-react** `UnderlineTabbedInterface.module.css`, `UnderlineNavItem.tsx`. Overflow **More** menu is intentionally not ported; narrow hosts should use **Flickable** or clip.
+import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export enum UnderlineNav2Variant {
+    inset,
+    flush,
+}
+
+export struct UnderlineNav2Item {
+    label: string,
+    enabled: bool,
+    /// Reserved for **CounterLabel** integration (PR2). Ignored in this file until then.
+    counter: string,
+}
+
+/// One tab: **TouchArea** + **FocusScope** (focus ring), **PrimerColors.accent-underline** bar when **selected** (mimics **::after**).
+component UnderlineNav2ItemRow {
+    in property <string> label;
+    in property <bool> selected;
+    in property <bool> enabled: true;
+    callback clicked;
+
+    private property <color> label-fg: !root.enabled
+        ? PrimerColors.fgColor-muted
+        : root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
+    private property <int> label-weight: root.enabled && root.selected
+        ? LayoutTokens.base-text-weight-semibold
+        : LayoutTokens.base-text-weight-medium;
+
+    vertical-stretch: 1;
+    horizontal-stretch: 0;
+
+    VerticalLayout {
+        alignment: start;
+        horizontal-stretch: 0;
+        vertical-stretch: 1;
+        min-height: LayoutTokens.control-xlarge-size;
+
+        focus-host := Rectangle {
+            horizontal-stretch: 0;
+            vertical-stretch: 1;
+            border-width: tab-fs.has-focus && root.enabled ? 2px : 0px;
+            border-color: PrimerColors.fgColor-accent;
+            border-radius: LayoutTokens.borderRadius-medium;
+
+            tab-fs := FocusScope {
+                width: 100%;
+                height: 100%;
+
+                key-pressed(event) => {
+                    if !root.enabled {
+                        return reject;
+                    }
+                    if event.text == Key.Return || event.text == Key.Space {
+                        root.clicked();
+                        return accept;
+                    }
+                    return reject;
+                }
+
+                ta := TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    enabled: root.enabled;
+                    mouse-cursor: root.enabled ? pointer : default;
+                    clicked => {
+                        root.clicked();
+                    }
+
+                    VerticalLayout {
+                        alignment: center;
+                        horizontal-stretch: 1;
+                        vertical-stretch: 1;
+
+                        row-bg := Rectangle {
+                            horizontal-stretch: 1;
+                            vertical-stretch: 1;
+                            background: #00000000;
+                            border-radius: LayoutTokens.borderRadius-medium;
+
+                            HorizontalLayout {
+                                padding-left: LayoutTokens.base-size-8;
+                                padding-right: LayoutTokens.base-size-8;
+                                padding-top: LayoutTokens.base-size-6;
+                                padding-bottom: LayoutTokens.base-size-6;
+                                alignment: center;
+
+                                label-t := Text {
+                                    text: root.label;
+                                    color: root.label-fg;
+                                    font-size: LayoutTokens.text-body-size-medium;
+                                    font-weight: root.label-weight;
+                                    vertical-alignment: center;
+                                }
+                            }
+
+                            states [
+                                disabled when !root.enabled: {
+                                    background: #00000000;
+                                    label-t.color: PrimerColors.fgColor-muted;
+                                    label-t.font-weight: LayoutTokens.base-text-weight-medium;
+                                }
+                                pressed when root.enabled && ta.pressed: {
+                                    background: ButtonTokens.color-action-list-item-default-active-bg;
+                                }
+                                hover when root.enabled && !ta.pressed && ta.has-hover: {
+                                    background: PrimerColors.bgColor-neutral-muted;
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            width: 100%;
+            height: 2px;
+            background: root.selected ? PrimerColors.accent-underline : #00000000;
+        }
+    }
+}
+
+export component UnderlineNav2 {
+    in property <[UnderlineNav2Item]> items;
+    in property <int> selected-index: -1;
+    /// **`inset`**: **`LayoutTokens.stack-padding-normal`** on the tab row. **`flush`**: no horizontal padding on the row.
+    in property <UnderlineNav2Variant> variant: UnderlineNav2Variant.inset;
+    /// When non-empty, **`AccessibleRole.tab-list`** gets this landmark label.
+    in property <string> accessible-name: "";
+    callback item-activated(index: int);
+
+    private property <length> inset-padding-inline: variant == UnderlineNav2Variant.inset ? LayoutTokens.stack-padding-normal : 0px;
+
+    vertical-stretch: 0;
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        horizontal-stretch: 1;
+        accessible-role: AccessibleRole.tab-list;
+        accessible-label: accessible-name;
+
+        Flickable {
+            width: 100%;
+
+            nav-row := HorizontalLayout {
+                spacing: LayoutTokens.base-size-8;
+                padding-left: inset-padding-inline;
+                padding-right: inset-padding-inline;
+                min-height: LayoutTokens.control-xlarge-size;
+                alignment: center;
+
+                for item[index] in items: UnderlineNav2ItemRow {
+                    label: item.label;
+                    selected: index == root.selected-index;
+                    enabled: item.enabled;
+                    clicked => {
+                        root.item-activated(index);
+                    }
+                }
+            }
+        }
+
+        Rectangle {
+            height: 1px;
+            width: 100%;
+            background: PrimerColors.borderColor-muted;
+        }
+    }
+}

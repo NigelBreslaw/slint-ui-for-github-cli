@@ -5,6 +5,9 @@ import {
     NavListGroupHeadingVariant,
     NavListItem,
     UnderlineNav,
+    UnderlineNav2,
+    UnderlineNav2Item,
+    UnderlineNav2Variant,
     UnderlineNavItem,
     UnderlineNavVariant,
 } from "../../../primer-slint/primer.slint";
@@ -263,6 +266,28 @@ export component GalleryNavsPage inherits VerticalLayout {
         { label: "Sponsors", enabled: true, counter: "" },
     ];
 
+    private property <int> demo-un2-selected: 0;
+    private property <[UnderlineNav2Item]> demo-un2-inset-items: [
+        { label: "Code", enabled: true, counter: "" },
+        { label: "Issues", enabled: true, counter: "" },
+        { label: "Pull requests", enabled: true, counter: "" },
+        { label: "Security", enabled: false, counter: "" },
+    ];
+    private property <int> demo-un2-flush-selected: 0;
+    private property <[UnderlineNav2Item]> demo-un2-flush-items: [
+        { label: "Actions", enabled: true, counter: "" },
+        { label: "Projects", enabled: true, counter: "" },
+    ];
+    private property <int> demo-un2-scroll-selected: 0;
+    private property <[UnderlineNav2Item]> demo-un2-scroll-items: [
+        { label: "Overview", enabled: true, counter: "" },
+        { label: "Repositories", enabled: true, counter: "" },
+        { label: "Projects", enabled: true, counter: "" },
+        { label: "Packages", enabled: true, counter: "" },
+        { label: "Stars", enabled: true, counter: "" },
+        { label: "Sponsors", enabled: true, counter: "" },
+    ];
+
     VerticalLayout {
         spacing: 12px;
         width: 100%;
@@ -338,6 +363,70 @@ export component GalleryNavsPage inherits VerticalLayout {
                 accessible-name: "Demo overflow tabs";
                 item-activated(idx) => {
                     demo-underline-scroll-selected = idx;
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "UnderlineNav2";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Inset (custom tab row, no Button), including a disabled tab.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav2 {
+            items: demo-un2-inset-items;
+            selected-index: demo-un2-selected;
+            accessible-name: "Demo UnderlineNav2 repository tabs";
+            item-activated(idx) => {
+                demo-un2-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Flush variant";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        UnderlineNav2 {
+            variant: UnderlineNav2Variant.flush;
+            items: demo-un2-flush-items;
+            selected-index: demo-un2-flush-selected;
+            accessible-name: "Demo UnderlineNav2 flush";
+            item-activated(idx) => {
+                demo-un2-flush-selected = idx;
+            }
+        }
+
+        Text {
+            text: "Narrow width (horizontal scroll via Flickable inside UnderlineNav2)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Rectangle {
+            width: 260px;
+            clip: true;
+
+            UnderlineNav2 {
+                items: demo-un2-scroll-items;
+                selected-index: demo-un2-scroll-selected;
+                accessible-name: "Demo UnderlineNav2 overflow";
+                item-activated(idx) => {
+                    demo-un2-scroll-selected = idx;
                 }
             }
         }

@@ -42,6 +42,16 @@ Horizontal tabs with a model (`[UnderlineNavItem]`), controlled `selected-index`
 
 The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** to align with **`.UnderlineWrapper`**. When tabs are wider than the nav, the row is inside a horizontal **`Flickable`** (`viewport-width` = content width) so users can scroll sideways (Primer overflow behavior; scroll arrows **F16** not implemented).
 
+## UnderlineNav2
+
+Primer-aligned product tabs using **`UnderlineItem`**-style layout (not **`Button`**); upstream reference: **`UnderlineTabbedInterface`**, **`UnderlineItem`**, **`underlineNav`** tokens. Each tab is a **`TouchArea`** + padded label row, **`PrimerColors.bgColor-neutral-muted`** hover, **`PrimerColors.fgColor-accent`** **2px** focus ring (**`FocusScope` + keyboard**), **2px** **`PrimerColors.accent-underline`** on the selected item, and a full-width **muted** rule on the wrapper. The responsive **“More”** overflow menu is **not** implemented; use a narrow host with horizontal **`Flickable`** (built into **UnderlineNav2**) or parent clip. **`UnderlineNav2Item.counter`** is reserved for **PR2** (**`CounterLabel`**); **`leading-icon`** fields arrive in **PR3**.
+
+| Property | Notes |
+| -------- | ----- |
+| `variant` | **`UnderlineNav2Variant.inset`** (default): **`LayoutTokens.stack-padding-normal`** horizontal padding on the tab row. **`flush`**: no horizontal padding. |
+| `accessible-name` | When non-empty, sets the landmark label for **`AccessibleRole.tab-list`**. |
+| `item-activated(index)` | Fired when a tab is activated (click, **Space** / **Enter** when focused). |
+
 ## Banner
 
 Slint port of [@primer/react `Banner`](https://primer.style/product/components/banner/) — source of truth for behavior and variants: [`Banner.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.tsx) and [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css). Color literals in **PrimerColors** are aligned with **primer-tokens** functional color (`bgColor.json5`, `borderColor.json5`, `fgColor.json5`) and **primer-ui-react** legacy theme fallbacks (`light.ts` / `dark.ts`).
