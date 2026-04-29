@@ -10,6 +10,7 @@ import {
     AnchoredOverlaySide,
     Button,
     ButtonAlignContent,
+    FilteredActionList,
     Icons,
 } from "../../../primer-slint/primer.slint";
 import { GalleryActionListListboxMultiSelect } from "../state/gallery-action-list-listbox-multi-select-state.slint";
@@ -1576,6 +1577,9 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
+    private property <string> filtered-action-list-filter: "";
+    private property <string> filtered-action-list-last-edit: "";
+
     private property <[ActionListLine]> active-demo-lines: [
         {
             kind: ActionListLineKind.row,
@@ -1635,6 +1639,65 @@ export component GalleryActionListPage inherits VerticalLayout {
             trailing-icon: Icons.dot_fill,
         },
     ];
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "FilteredActionList (shell · PR1)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "Filtered Action List";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 18px;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Please select labels that describe your issue:";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    font-weight: 400;
+                    wrap: word-wrap;
+                }
+
+                FilteredActionList {
+                    width: 100%;
+                    filter-text <=> root.filtered-action-list-filter;
+                    placeholder: "Filter Labels";
+                    filter-changed(t) => {
+                        root.filtered-action-list-last-edit = t;
+                    }
+                }
+
+                Text {
+                    text: "Filter: \"" + root.filtered-action-list-filter + "\" — last edited: \"" + root.filtered-action-list-last-edit + "\"";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;
