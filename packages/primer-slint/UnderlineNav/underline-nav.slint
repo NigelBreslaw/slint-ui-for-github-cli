@@ -1,5 +1,13 @@
-import { CounterLabel, CounterLabelVariant } from "../CounterLabel/counter-label.slint";
-import { ButtonTokens, LayoutTokens, PrimerColors, UnderlineNavTokens } from "../tokens.slint";
+import {
+    CounterLabel,
+    CounterLabelVariant,
+} from "../CounterLabel/counter-label.slint";
+import {
+    ButtonTokens,
+    LayoutTokens,
+    PrimerColors,
+    UnderlineNavTokens,
+} from "../tokens.slint";
 
 export struct UnderlineNavItem {
     label: string,
@@ -29,7 +37,7 @@ component UnderlineNavItemRow {
 
     VerticalLayout {
         alignment: start;
-        min-height: LayoutTokens.control-xlarge-size;
+        height: self.preferred-height;
 
         focus-host := Rectangle {
             border-width: tab-fs.has-focus && root.enabled ? 2px : 0px;
@@ -79,17 +87,21 @@ component UnderlineNavItemRow {
                                     colorize: root.label-fg;
                                 }
 
+                                // Changing the font-weight of a single label would cause the component to layout shift
                                 Rectangle {
+                                    width: max(label-t.preferred-width, label-t-selected.preferred-width);
+                                    height: max(label-t.preferred-height, label-t-selected.preferred-height);
                                     label-t := Text {
-                                        visible: !root.selected;
+                                        visible: !(root.selected && root.enabled);
                                         text: root.label;
                                         color: root.label-fg;
                                         font-size: LayoutTokens.text-body-size-medium;
                                         font-weight: LayoutTokens.base-text-weight-medium;
                                         vertical-alignment: center;
                                     }
+
                                     label-t-selected := Text {
-                                        visible: root.selected;
+                                        visible: root.selected && root.enabled;
                                         text: root.label;
                                         color: root.label-fg;
                                         font-size: LayoutTokens.text-body-size-medium;
@@ -140,11 +152,12 @@ component UnderlineNavItemRow {
                 }
             }
         }
+    }
 
-        Rectangle {
-            height: 2px;
-            background: root.selected ? PrimerColors.accent-underline : transparent;
-        }
+    Rectangle {
+        y: parent.height - self.height;
+        height: 2px;
+        background: root.selected ? PrimerColors.accent-underline : transparent;
     }
 }
 
@@ -154,8 +167,13 @@ export component UnderlineNav {
     in property <bool> loading-counters: false;
     in property <string> accessible-name: "";
     callback item-activated(index: int);
+    min-height: LayoutTokens.control-xlarge-size;
 
-
+    Rectangle {
+        y: parent.height - self.height;
+        height: 1px;
+        background: PrimerColors.borderColor-muted;
+    }
 
     VerticalLayout {
         accessible-role: AccessibleRole.tab-list;
@@ -163,7 +181,6 @@ export component UnderlineNav {
 
         HorizontalLayout {
             spacing: LayoutTokens.base-size-8;
-            min-height: LayoutTokens.control-xlarge-size;
             alignment: start;
 
             for item[index] in items: UnderlineNavItemRow {
@@ -178,11 +195,6 @@ export component UnderlineNav {
                     root.item-activated(index);
                 }
             }
-        }
-
-        Rectangle {
-            height: 1px;
-            background: PrimerColors.borderColor-muted;
         }
     }
 }
