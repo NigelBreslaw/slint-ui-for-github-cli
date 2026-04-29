@@ -643,6 +643,35 @@ export global CheckboxTokens {
     out property <color> checkbox-iconColor-disabled: ButtonTokens.control-fgColor-disabled;
 }
 
+// primer-tokens **`control.borderColor.emphasis`** (unchecked native input chrome), **`control.bgColor/borderColor.disabled`**, **`control.checked.*`** with **radio** role swap (inner fill = **`fgColor`**, ring = **`bgColor`** per **`Radio.module.css`**). Composes **`PrimerColors`**, **`CheckboxTokens`**, **`ButtonTokens`** only.
+//
+// Token audit: | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
+// |--------|---------------------------|-------|-------|-----------|
+// | Unchecked fill | **`bgColor.default`** / shared **`.Input`** | RadioTokens | **`radio-bgColor-rest`** | **`Radio`** |
+// | Unchecked border | **`control.borderColor.emphasis`** → **`borderColor.emphasis`** | RadioTokens | **`radio-borderColor-rest`** | **`Radio`** |
+// | Unchecked disabled fill/border | **`control.bgColor.disabled`**, **`control.borderColor.disabled`** | RadioTokens | **`radio-bgColor-disabled`**, **`radio-borderColor-disabled`** | **`Radio`** |
+// | Checked inner disk | **`control.checked.fgColor.rest`** | RadioTokens | **`radio-checked-dot-fgColor-rest`** | **`Radio`** |
+// | Checked outer ring | **`control.checked.bgColor.rest`** | RadioTokens | **`radio-checked-ring-bgColor-rest`** | **`Radio`** |
+// | Checked dot disabled | **`control.checked.fgColor.disabled`** | RadioTokens | **`radio-checked-dot-fgColor-disabled`** | **`Radio`** |
+// | Checked ring disabled | **`control.checked.bgColor.disabled`** | RadioTokens | **`radio-checked-ring-bgColor-disabled`** | **`Radio`** |
+export global RadioTokens {
+    property <ColorScheme> color-scheme: Palette.color-scheme;
+
+    /// **`control.borderColor.emphasis`** — light **`neutral.8`** aligns with **`fgColor.subtle`**; dark **`neutral.8`** aligns with **`bgColor.neutral.emphasis`** (same hex as semantic neutral emphasis in dark).
+    out property <color> radio-borderColor-rest: color-scheme == ColorScheme.dark ? PrimerColors.bgColor-neutral-emphasis : PrimerColors.fgColor-subtle;
+
+    out property <color> radio-bgColor-rest: PrimerColors.bgColor-default;
+
+    out property <color> radio-bgColor-disabled: ButtonTokens.button-default-bgColor-disabled;
+    out property <color> radio-borderColor-disabled: ButtonTokens.button-default-borderColor-disabled;
+
+    out property <color> radio-checked-dot-fgColor-rest: PrimerColors.fgOnEmphasis;
+    out property <color> radio-checked-ring-bgColor-rest: PrimerColors.bgColor-accent-emphasis;
+
+    out property <color> radio-checked-dot-fgColor-disabled: CheckboxTokens.checkbox-fgColor-checked-disabled;
+    out property <color> radio-checked-ring-bgColor-disabled: CheckboxTokens.checkbox-bgColor-checked-disabled;
+}
+
 // primer-tokens `functional/color/control.json5` — **`controlTrack`**, **`control.checked`**, **`controlKnob`**. React: **`ToggleSwitch.module.css`**. Composes **`PrimerColors`**, **`CheckboxTokens`**, **`ButtonTokens`**.
 //
 // Token audit: | Intent | primer-tokens / upstream | Owner | `out` | Consumers |

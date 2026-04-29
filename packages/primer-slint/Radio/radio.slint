@@ -1,0 +1,100 @@
+// Primer-style radio — upstream: Radio.tsx + Radio.module.css + Checkbox/shared.module.css (16px circle, checked fill = control.checked fg, ring = control.checked bg, thicker border when checked).
+
+import { ButtonTokens, LayoutTokens, PrimerColors, RadioTokens, TextInputTokens } from "../tokens.slint";
+
+export component Radio {
+    in-out property <bool> checked: false;
+    in property <bool> disabled: false;
+    /// When false, display-only; parent handles activation (e.g. list row).
+    in property <bool> interactive: true;
+    /// Mutex key for gallery / groups — selection state is owned by the parent (`checked: selected == value`).
+    in property <string> value: "";
+    in property <string> label: "";
+
+    callback toggled;
+
+    private property <length> radio-size: LayoutTokens.iconButton-icon-size-medium;
+    private property <length> border-w-unchecked: LayoutTokens.table-border-width;
+    private property <length> border-w-checked: 2px;
+    private property <length> focus-ring-padding: 2px;
+    private property <length> focus-host-size: radio-size + 2 * focus-ring-padding;
+
+    fs := FocusScope {
+        enabled: !root.disabled && root.interactive;
+        /// Pointer activation uses **`TouchArea`** only; keep keyboard focus for Tab so **`has-focus`** matches **:focus-visible** (no ring on mouse/touch).
+        focus-on-click: false;
+
+        key-pressed(event) => {
+            if root.disabled || !root.interactive {
+                return reject;
+            }
+            if event.text == Key.Return || event.text == Key.Space {
+                root.toggled();
+                return accept;
+            }
+            return reject;
+        }
+
+        touch := TouchArea {
+            enabled: !root.disabled && root.interactive;
+            clicked => {
+                root.toggled();
+            }
+
+            HorizontalLayout {
+                spacing: LayoutTokens.button-content-gap;
+                alignment: center;
+
+                focus-host := Rectangle {
+                    width: focus-host-size;
+                    height: focus-host-size;
+                    border-width: fs.has-focus && !root.disabled && root.interactive ? 2px : 0px;
+                    border-color: TextInputTokens.borderColor-focus;
+                    border-radius: focus-host-size / 2;
+
+                    radio-outer := Rectangle {
+                        width: radio-size;
+                        height: radio-size;
+                        x: (parent.width - self.width) / 2;
+                        y: (parent.height - self.height) / 2;
+                        border-radius: (root.radio-size) / 2;
+                        border-width: root.checked ? root.border-w-checked : root.border-w-unchecked;
+                        background: root.checked
+                            ? (root.disabled ? RadioTokens.radio-checked-dot-fgColor-disabled : RadioTokens.radio-checked-dot-fgColor-rest)
+                            : (root.disabled ? RadioTokens.radio-bgColor-disabled : RadioTokens.radio-bgColor-rest);
+                        border-color: root.checked
+                            ? (root.disabled ? RadioTokens.radio-checked-ring-bgColor-disabled : RadioTokens.radio-checked-ring-bgColor-rest)
+                            : (root.disabled ? RadioTokens.radio-borderColor-disabled : RadioTokens.radio-borderColor-rest);
+
+                        states [
+                            disabled-checked when root.disabled && root.checked: {
+                                radio-outer.background: RadioTokens.radio-checked-dot-fgColor-disabled;
+                                radio-outer.border-color: RadioTokens.radio-checked-ring-bgColor-disabled;
+                                radio-outer.border-width: root.border-w-checked;
+                            }
+                            disabled-unchecked when root.disabled && !root.checked: {
+                                radio-outer.background: RadioTokens.radio-bgColor-disabled;
+                                radio-outer.border-color: RadioTokens.radio-borderColor-disabled;
+                                radio-outer.border-width: root.border-w-unchecked;
+                            }
+                            checked-rest when !root.disabled && root.checked: {
+                                radio-outer.background: RadioTokens.radio-checked-dot-fgColor-rest;
+                                radio-outer.border-color: RadioTokens.radio-checked-ring-bgColor-rest;
+                                radio-outer.border-width: root.border-w-checked;
+                            }
+                        ]
+                    }
+                }
+
+                if label != "": Text {
+                    text: label;
+                    color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-medium;
+                    wrap: word-wrap;
+                    vertical-alignment: center;
+                }
+            }
+        }
+    }
+}

@@ -10,6 +10,7 @@ import {
     Icons,
     LayoutTokens,
     PrimerTextInput,
+    Radio,
     TextInputLoaderPosition,
     Select,
     SelectOption,
@@ -42,6 +43,8 @@ export component GalleryFormsPage inherits VerticalLayout {
     private property <bool> demo-cb-indet: true;
     private property <bool> demo-cg-opt1: false;
     private property <bool> demo-cg-opt2: true;
+
+    private property <string> demo-radio-mutex: "beta";
 
     private property <bool> demo-ts-spike: false;
     private property <bool> demo-ts-end: false;
@@ -866,6 +869,129 @@ export component GalleryFormsPage inherits VerticalLayout {
             width: 100%;
             label: "Leading icon + label";
             checked: true;
+        }
+
+        Text {
+            text: "Radio";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Mutex selection is page state (`selected == value` + `toggled` sets value). Mirror `disabled` on each control when the group is disabled (RadioGroup in a later PR).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Unchecked";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                Radio {
+                    checked: false;
+                    interactive: false;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Checked";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                Radio {
+                    checked: true;
+                    interactive: false;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Disabled · off";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                Radio {
+                    disabled: true;
+                    checked: false;
+                    interactive: false;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+
+                Text {
+                    text: "Disabled · on";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                Radio {
+                    disabled: true;
+                    checked: true;
+                    interactive: false;
+                }
+            }
+        }
+
+        Text {
+            text: "Mutex (one selected value)";
+            color: PrimerColors.fgColor-default;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        VerticalLayout {
+            spacing: 8px;
+
+            Radio {
+                value: "alpha";
+                label: "Alpha";
+                checked: demo-radio-mutex == "alpha";
+                toggled => {
+                    demo-radio-mutex = "alpha";
+                }
+            }
+
+            Radio {
+                value: "beta";
+                label: "Beta";
+                checked: demo-radio-mutex == "beta";
+                toggled => {
+                    demo-radio-mutex = "beta";
+                }
+            }
+
+            Radio {
+                value: "gamma";
+                label: "Gamma";
+                checked: demo-radio-mutex == "gamma";
+                toggled => {
+                    demo-radio-mutex = "gamma";
+                }
+            }
         }
 
         Text {
