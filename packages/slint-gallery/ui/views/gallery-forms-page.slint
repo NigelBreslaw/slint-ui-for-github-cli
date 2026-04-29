@@ -29,7 +29,6 @@ import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
-    width: 100%;
 
     private property <[SelectOption]> demo-select-options: [
         { value: "one", label: "First option", enabled: true },
@@ -94,7 +93,6 @@ export component GalleryFormsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 12px;
-        width: 100%;
 
         Text {
             text: "Select";
@@ -104,7 +102,6 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Select {
-            width: 100%;
             label-text: "Demo select";
             placeholder: "Choose an option…";
             options: demo-select-options;
@@ -118,7 +115,6 @@ export component GalleryFormsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 12px;
-        width: 100%;
 
         Text {
             text: "PrimerTextInput";
@@ -549,7 +545,6 @@ export component GalleryFormsPage inherits VerticalLayout {
 
     anchored-overlay-demo-column := VerticalLayout {
         spacing: 12px;
-        width: 100%;
 
         Text {
             text: "AnchoredOverlay + SelectPanel (anchored)";
@@ -574,7 +569,6 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         btn-select-panel := Button {
-            width: 100%;
             max-width: 420px;
             align-content: ButtonAlignContent.start;
             label: "bug, good first issue";
@@ -599,7 +593,6 @@ export component GalleryFormsPage inherits VerticalLayout {
             }
 
             SelectPanel {
-                width: 100%;
                 mode: SelectPanelMode.multi;
                 title: "Select labels";
                 subtitle: "Use labels to organize issues and pull requests";
@@ -620,7 +613,6 @@ export component GalleryFormsPage inherits VerticalLayout {
 
                 HorizontalLayout {
                     spacing: LayoutTokens.button-content-gap;
-                    width: 100%;
                     alignment: end;
 
                     Button {
@@ -644,7 +636,6 @@ export component GalleryFormsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 12px;
-        width: 100%;
 
         Text {
             text: "ToggleSwitch";
@@ -812,7 +803,8 @@ export component GalleryFormsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 12px;
-        width: 100%;
+        align-items: start;
+        padding-left: 12px;
 
         Text {
             text: "Checkbox";
@@ -857,20 +849,17 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Checkbox {
-            width: 100%;
             label: "Send email notifications";
             checked <=> demo-cb-label;
         }
 
         Checkbox {
-            width: 100%;
             label: "Indeterminate (first click checks)";
             checked: false;
             indeterminate <=> demo-cb-indet;
         }
 
         Checkbox {
-            width: 100%;
             label: "Leading icon + label";
             checked: true;
         }
@@ -961,7 +950,6 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         RadioGroup {
-            width: 100%;
             label: "Mutex (one selected value)";
             caption: "Legend + caption on the group; radios bind to page state.";
 
@@ -1106,7 +1094,6 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         CheckboxGroup {
-            width: 100%;
             label: "Features";
             caption: "Choose one or more options.";
             required: true;
@@ -1114,32 +1101,27 @@ export component GalleryFormsPage inherits VerticalLayout {
             validation-message: !demo-cg-opt1 && !demo-cg-opt2 ? "Pick at least one." : "Looks good.";
 
             Checkbox {
-                width: 100%;
                 label: "Option A";
                 checked <=> demo-cg-opt1;
             }
 
             Checkbox {
-                width: 100%;
                 label: "Option B";
                 checked <=> demo-cg-opt2;
             }
         }
 
         CheckboxGroup {
-            width: 100%;
             label: "Disabled group";
             disabled: true;
 
             Checkbox {
-                width: 100%;
                 label: "Cannot toggle";
                 disabled: true;
                 checked: false;
             }
 
             Checkbox {
-                width: 100%;
                 label: "Also off";
                 disabled: true;
                 checked: true;
@@ -1147,18 +1129,15 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         CheckboxGroup {
-            width: 100%;
             label: "Screen-reader legend (hidden in UI)";
             label-visually-hidden: true;
             caption: "Legend text is not shown; caption remains.";
 
             Checkbox {
-                width: 100%;
                 label: "Alpha";
             }
 
             Checkbox {
-                width: 100%;
                 label: "Beta";
             }
         }

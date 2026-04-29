@@ -16,11 +16,9 @@ export component CheckboxGroup {
     in property <ValidationStatus> validation-status: ValidationStatus.none;
     in property <string> validation-message: "";
 
-    width: 100%;
 
     VerticalLayout {
         spacing: 6px;
-        width: 100%;
 
         if label != "" && !label-visually-hidden: HorizontalLayout {
             spacing: 4px;
@@ -51,15 +49,13 @@ export component CheckboxGroup {
 
         VerticalLayout {
             spacing: LayoutTokens.button-content-gap;
-            width: 100%;
             opacity: root.disabled ? 0.5 : 1.0;
-
+            align-items: start;
             @children
         }
 
         if validation-message != "" && validation-status != ValidationStatus.none: HorizontalLayout {
             spacing: 6px;
-            width: 100%;
 
             Image {
                 width: LayoutTokens.iconButton-icon-size-medium;
