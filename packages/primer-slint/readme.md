@@ -24,6 +24,7 @@ specified in detail.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
 - **ActionListTokens** — [**ActionList**](https://primer.style/product/components/action-list/) row and section-heading colors (danger, inactive, link, filled heading, divider, loading label fg): **only** **PrimerColors** + **ButtonTokens** `out` bindings. PR2 audit comment block in [`tokens.slint`](slint/tokens.slint) above **`ActionListTokens`**.
 - **CheckboxTokens** — unchecked rest/hover/pressed, checked/indeterminate accent fill + hover/active, and disabled colors; composes from **PrimerColors** and **ButtonTokens**. **`LayoutTokens.checkbox-border-radius`** matches Primer **`borderRadius-small`** (2px).
+- **RadioTokens** — unchecked base + checked inner dot (**`control.checked.fgColor`**) and outer ring (**`control.checked.bgColor`**) + disabled branches; composes **PrimerColors** / **ButtonTokens** (see audit block in [`tokens.slint`](slint/tokens.slint)).
 - **OverlayTokens** — **`backdrop-scrim`** for modal-style dimmers; **`panel-background`** / **`panel-border`** / **`panel-border-width`** / **`panel-border-radius`**, **`panel-elevation-shadow`** (`shadow.floating.small` via **ShadowTokens**) for floating panels (**AnchoredOverlay** and **ModalOverlay** use the panel tokens; **AnchoredOverlay** optional **`panel-fill`** / **`panel-border-*`** / **`panel-elevation-shadow`** mirror these when overriding shell chrome — defaults unchanged). **ModalOverlay** also uses **`backdrop-scrim`**. **No literals** — composes **PrimerColors**, **LayoutTokens**, **ShadowTokens**.
 - **DialogTokens** — Primer **`Dialog`**: spacing + header/body typography (**`title-font-size`** …), **`width-small`** … **`width-xlarge`** (**React **`Dialog.tsx`** **`widthMap`**, audited vs primer-tokens **`overlay.size`**), **`overlay-enter-duration`** (**`LayoutTokens.duration-200`**), **`overlay-sheet-enter-duration`** (**`LayoutTokens.duration-250`** — side/bottom sheets in later PRs). Full audit table in [`tokens.slint`](slint/tokens.slint).
 - **UnderlineNavTokens** — **`UnderlineNav`** **`LoadingCounter`** skeleton (**`UnderlineTabbedInterface.module.css`**) size and opacity pulse period; composes **LayoutTokens** only.
@@ -151,6 +152,23 @@ Slint port of Primer [**Checkbox**](https://primer.style/product/components/chec
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
 
+## Radio
+
+Slint port of Primer [**Radio**](https://primer.style/product/components/radio/) — 16px circular control; checked mapping follows **`Radio.module.css`** (inner fill = **`control.checked.fgColor`**, ring = **`control.checked.bgColor`**). Upstream: **`Radio.tsx`**, shared **`Checkbox/shared.module.css`** input chrome.
+
+| Property      | Type            | Notes                                                                                         |
+| ------------- | --------------- | --------------------------------------------------------------------------------------------- |
+| `checked`     | `bool` (in-out) | Selected state; in mutex groups bind **`checked: selected == value`**.                         |
+| `disabled`    | `bool`          | Disables interaction; uses disabled palette (checked + unchecked).                           |
+| `interactive` | `bool`          | When **`false`**, display-only (parent handles activation).                                   |
+| `value`       | `string`        | Mutex key for grouped radios.                                                                 |
+| `label`       | `string`        | Optional label; hit target covers the row.                                                    |
+| `toggled`     | `callback`      | Fires after the user activates the control (click / keyboard).                                |
+
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`Radio`**, **`RadioTokens`** (optional direct token access).
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
+
 ## CheckboxGroup
 
 Slint port of Primer [**CheckboxGroup**](https://primer.style/product/components/checkbox-group/) (fieldset-style stack). Upstream: React compound API (legend, caption, validation).
@@ -167,6 +185,25 @@ Slint port of Primer [**CheckboxGroup**](https://primer.style/product/components
 | `children`              | `@children`            | Place **`Checkbox`** instances here.                                                                              |
 
 **Imports for views:** [`primer.slint`](slint/primer.slint) — **`CheckboxGroup`**, **`Checkbox`**, **`ValidationStatus`**, **`Icons`**.
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
+
+## RadioGroup
+
+Slint port of Primer [**RadioGroup**](https://primer.style/product/components/radio-group/) (fieldset-style stack for mutually exclusive options). Same shell as **CheckboxGroup**: legend, caption, validation row. **Slint does not wire children automatically** — bind **`checked`** / **`toggled`** on each **`Radio`** from shared page state (same pattern as the gallery mutex demo).
+
+| Property                | Type                   | Notes                                                                                                          |
+| ----------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------- |
+| `label`                 | `string`               | Legend; hidden when **`label-visually-hidden`** is true.                                                       |
+| `label-visually-hidden` | `bool`                 | Skips visible legend; **`caption`** can still show.                                                          |
+| `caption`               | `string`               | Muted helper below the legend.                                                                                 |
+| `required`              | `bool`                 | Shows a red **`*`** next to the legend when visible.                                                           |
+| `disabled`              | `bool`                 | Dims the radio stack; set each child **`Radio`**’s **`disabled`** to the same value so activation is blocked. |
+| `validation-status`     | **`ValidationStatus`** | **`none`**, **`error`**, **`success`** (same enum as **Select**).                                              |
+| `validation-message`    | `string`               | Shown when **`validation-status`** is not **`none`**.                                                        |
+| `children`              | `@children`            | Place **`Radio`** instances here.                                                                              |
+
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`RadioGroup`**, **`Radio`**, **`ValidationStatus`**, **`Icons`**.
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
 

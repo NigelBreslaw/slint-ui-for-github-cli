@@ -11,6 +11,7 @@ import {
     LayoutTokens,
     PrimerTextInput,
     Radio,
+    RadioGroup,
     TextInputLoaderPosition,
     Select,
     SelectOption,
@@ -45,6 +46,9 @@ export component GalleryFormsPage inherits VerticalLayout {
     private property <bool> demo-cg-opt2: true;
 
     private property <string> demo-radio-mutex: "beta";
+    private property <string> demo-rg-plan: "";
+    private property <string> demo-rg-disabled-pick: "b";
+    private property <string> demo-rg-hidden-axis: "x";
 
     private property <bool> demo-ts-spike: false;
     private property <bool> demo-ts-end: false;
@@ -879,7 +883,7 @@ export component GalleryFormsPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Mutex selection is page state (`selected == value` + `toggled` sets value). Mirror `disabled` on each control when the group is disabled (RadioGroup in a later PR).";
+            text: "Mutex selection is page state (checked: selected == value; toggled updates selection). RadioGroup only provides the fieldset shell — bind each Radio from the same state. When the group is disabled, set disabled on every Radio too.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -956,15 +960,10 @@ export component GalleryFormsPage inherits VerticalLayout {
             }
         }
 
-        Text {
-            text: "Mutex (one selected value)";
-            color: PrimerColors.fgColor-default;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        VerticalLayout {
-            spacing: 8px;
+        RadioGroup {
+            width: 100%;
+            label: "Mutex (one selected value)";
+            caption: "Legend + caption on the group; radios bind to page state.";
 
             Radio {
                 value: "alpha";
@@ -990,6 +989,104 @@ export component GalleryFormsPage inherits VerticalLayout {
                 checked: demo-radio-mutex == "gamma";
                 toggled => {
                     demo-radio-mutex = "gamma";
+                }
+            }
+        }
+
+        Text {
+            text: "RadioGroup";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Validation row, disabled stack (mirror disabled on each Radio), and visually hidden legend — same shell as CheckboxGroup.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        RadioGroup {
+            label: "Shipping speed";
+            caption: "Gallery starts with no plan selected — validation shows until you pick one.";
+            required: true;
+            validation-status: demo-rg-plan == "" ? ValidationStatus.error : ValidationStatus.success;
+            validation-message: demo-rg-plan == "" ? "Select a shipping option." : "Looks good.";
+
+            Radio {
+                value: "standard";
+                label: "Standard";
+                checked: demo-rg-plan == "standard";
+                toggled => {
+                    demo-rg-plan = "standard";
+                }
+            }
+
+            Radio {
+                value: "express";
+                label: "Express";
+                checked: demo-rg-plan == "express";
+                toggled => {
+                    demo-rg-plan = "express";
+                }
+            }
+
+            Radio {
+                value: "overnight";
+                label: "Overnight";
+                checked: demo-rg-plan == "overnight";
+                toggled => {
+                    demo-rg-plan = "overnight";
+                }
+            }
+        }
+
+        RadioGroup {
+            label: "Disabled group";
+            disabled: true;
+
+            Radio {
+                value: "a";
+                label: "Option A";
+                disabled: true;
+                checked: demo-rg-disabled-pick == "a";
+                toggled => {
+                    demo-rg-disabled-pick = "a";
+                }
+            }
+
+            Radio {
+                value: "b";
+                label: "Option B";
+                disabled: true;
+                checked: demo-rg-disabled-pick == "b";
+                toggled => {
+                    demo-rg-disabled-pick = "b";
+                }
+            }
+        }
+
+        RadioGroup {
+            label: "External legend";
+            label-visually-hidden: true;
+            caption: "Legend text is not shown; caption remains visible.";
+
+            Radio {
+                value: "x";
+                label: "North";
+                checked: demo-rg-hidden-axis == "x";
+                toggled => {
+                    demo-rg-hidden-axis = "x";
+                }
+            }
+
+            Radio {
+                value: "y";
+                label: "South";
+                checked: demo-rg-hidden-axis == "y";
+                toggled => {
+                    demo-rg-hidden-axis = "y";
                 }
             }
         }
