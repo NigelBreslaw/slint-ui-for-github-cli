@@ -23,6 +23,7 @@ Collect **in-repo and Slint-ecosystem patterns** (file paths, idioms) to apply w
 | Area | Path | Why open it |
 |------|------|-------------|
 | **Reference control** | [`packages/primer-slint/Checkbox/checkbox.slint`](../../../packages/primer-slint/Checkbox/checkbox.slint) | `states [ ]`, TouchArea, token usage |
+| **Focus + pointer** | [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md) § *FocusScope + TouchArea* | **`FocusScope` → `TouchArea`**, **`focus-on-click: false`** for keyboard-only focus ring; see [`Radio/radio.slint`](../../../packages/primer-slint/Radio/radio.slint), [`ToggleSwitch/toggle-switch.slint`](../../../packages/primer-slint/ToggleSwitch/toggle-switch.slint) |
 | **Tokens** | [`packages/primer-slint/tokens.slint`](../../../packages/primer-slint/tokens.slint) | `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, … |
 | **Barrel** | [`packages/primer-slint/primer.slint`](../../../packages/primer-slint/primer.slint) | Exports and public API |
 | **Icons** | [`packages/primer-slint/assets/icons.slint`](../../../packages/primer-slint/assets/icons.slint) | Registry pattern for SVGs |

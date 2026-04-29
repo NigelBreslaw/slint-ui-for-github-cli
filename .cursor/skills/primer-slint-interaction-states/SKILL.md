@@ -3,10 +3,11 @@ name: primer-slint-interaction-states
 description: >-
   Designs and implements Primer-style interaction styling in Slint using explicit
   state dimensions, mutex groups, and `states [ ]` blocks instead of nested
-  ternary expressions. Use when adding or refactoring Primer components under
-  packages/primer-slint/, complex controls (hover, pressed, disabled, selected,
-  focus), or when the user asks for Checkbox-like state handling or token-driven
-  visuals.
+  ternary expressions. Covers TouchArea order vs FocusScope, `focus-on-click`
+  for `:focus-visible`-style focus rings, hover/pressed/disabled/selected/focus.
+  Use when adding or refactoring Primer components under packages/primer-slint/,
+  complex controls (hover, pressed, disabled, selected, focus), or when the
+  user asks for Checkbox-like state handling or token-driven visuals.
 ---
 
 # Primer Slint interaction states
@@ -98,6 +99,56 @@ rectangle := Rectangle {
 ```
 
 Use a **TouchArea** (`ta`) for `has-hover` / `pressed` when applicable.
+
+## FocusScope + TouchArea + keyboard ring (`:focus-visible` parity)
+
+Use this whenever a control must support **both** pointer activation **and** Tab/keyboard activation **and** a visible focus ring only for keyboard focus (browser `:focus-visible` behavior).
+
+### Required structure (ordering)
+
+**Always nest:** `FocusScope` → `TouchArea` → content (row, label, painted `Rectangle`).
+
+- **Never** put `TouchArea` on the outside and `FocusScope` inside. If `TouchArea` wraps `FocusScope`, the first pointer down often **focuses** the `FocusScope` without delivering `clicked` — users need a **second** click to activate (Radio, toggles, tabs).
+- **Reference implementations:** [`ToggleSwitch/toggle-switch.slint`](../../../packages/primer-slint/ToggleSwitch/toggle-switch.slint) (track), [`UnderlineNav/underline-nav.slint`](../../../packages/primer-slint/UnderlineNav/underline-nav.slint) (`UnderlineNavItemRow`), [`Radio/radio.slint`](../../../packages/primer-slint/Radio/radio.slint).
+
+### `focus-on-click: false`
+
+On the `FocusScope`, set **`focus-on-click: false`** when the focus ring is driven by **`FocusScope.has-focus`** (or equivalent).
+
+- **Pointer / touch:** does **not** move keyboard focus into the `FocusScope`, so **`has-focus`** stays false — **no focus ring** on tap/click.
+- **Activation** still happens via **`TouchArea.clicked`** (first interaction works).
+- **Tab:** focuses the `FocusScope` → **`has-focus`** true → show the ring (e.g. `Rectangle` border around the control, `TextInputTokens.borderColor-focus` / `PrimerColors.fgColor-link` per component).
+- **`Space` / `Enter`:** handle in `FocusScope.key-pressed` when the scope has focus.
+
+### `enabled` on `FocusScope`
+
+When the control is **`disabled`** or non-interactive, set **`FocusScope.enabled`** (and **`TouchArea.enabled`**) so the control does not stay in the tab order incorrectly.
+
+### Sketch
+
+```slint
+fs := FocusScope {
+    enabled: !root.disabled && root.interactive;
+    focus-on-click: false;
+
+    key-pressed(event) => {
+        /* Space / Return → activate */
+    }
+
+    ta := TouchArea {
+        enabled: !root.disabled && root.interactive;
+        clicked => {
+            root.activated();
+        }
+        /* layout + visuals */
+    }
+}
+```
+
+### Anti-patterns (focus)
+
+- **`TouchArea` outside `FocusScope`** — double-click / second tap to activate; broken pointer parity.
+- **`focus-on-click: true` (default) + ring from `has-focus`** — ring appears on every mouse click (not `:focus-visible`-aligned); use **`focus-on-click: false`** for ring-from-keyboard-only when combined with `TouchArea` activation.
 
 ## Anti-patterns
 
