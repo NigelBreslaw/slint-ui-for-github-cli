@@ -118,6 +118,104 @@ fn wire_gallery_action_list_listbox_multi_select(window: &GalleryWindow) {
     g.set_selection_summary(action_list_selection_summary(&s));
 }
 
+const FILTERED_ACTION_LIST_DEFAULT_LABELS: [&str; 7] = [
+    "enhancement",
+    "bug",
+    "good first issue",
+    "design",
+    "blocker",
+    "backend",
+    "frontend",
+];
+
+const FILTERED_ACTION_LIST_LONG_LABELS: [&str; 4] = [
+    "enhancement with a very long label that might wrap. enhancement with a very long label that might wrap. enhancement with a very long label that might wrap. ",
+    "bug with an excessively verbose description that goes on and on. bug with an excessively verbose description that goes on and on. bug with an excessively verbose description that goes on and on.",
+    "good first issue that is intended to be approachable for newcomers",
+    "design related task that involves multiple stakeholders and considerations",
+];
+
+fn filter_prefix_labels<'a>(labels: &[&'a str], filter: &str) -> Vec<&'a str> {
+    let q = filter.trim().to_lowercase();
+    labels
+        .iter()
+        .copied()
+        .filter(|l| q.is_empty() || l.to_lowercase().starts_with(&q))
+        .collect()
+}
+
+fn action_list_line_from_label(label: &str) -> ActionListLine {
+    ActionListLine {
+        kind: ActionListLineKind::Row,
+        label: label.into(),
+        row_variant: ActionListRowVariant::Default,
+        disabled: false,
+        has_leading_avatar: false,
+        avatar_source: Default::default(),
+        has_leading_visual: false,
+        leading_icon: Default::default(),
+        description: SharedString::new(),
+        description_layout: ActionListDescriptionLayout::None,
+        has_markdown: false,
+        label_markdown: Default::default(),
+        inactive_text: SharedString::new(),
+        active: false,
+        show_trailing_loading: false,
+        has_trailing_visual: false,
+        trailing_icon: Default::default(),
+    }
+}
+
+fn action_list_lines_from_labels(labels: &[&str]) -> Vec<ActionListLine> {
+    labels.iter().map(|&l| action_list_line_from_label(l)).collect()
+}
+
+fn wire_gallery_filtered_action_list_default(window: &GalleryWindow) {
+    let window_weak = window.as_weak();
+    window
+        .global::<GalleryFilteredActionListDefault>()
+        .on_filter_changed({
+            let window_weak = window_weak.clone();
+            move |filter: SharedString| {
+                let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.as_str());
+                let lines = action_list_lines_from_labels(&picked);
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                w.global::<GalleryFilteredActionListDefault>()
+                    .set_lines(ModelRc::new(VecModel::from(lines)));
+            }
+        });
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, "");
+    let lines = action_list_lines_from_labels(&picked);
+    window
+        .global::<GalleryFilteredActionListDefault>()
+        .set_lines(ModelRc::new(VecModel::from(lines)));
+}
+
+fn wire_gallery_filtered_action_list_long(window: &GalleryWindow) {
+    let window_weak = window.as_weak();
+    window
+        .global::<GalleryFilteredActionListLong>()
+        .on_filter_changed({
+            let window_weak = window_weak.clone();
+            move |filter: SharedString| {
+                let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_LONG_LABELS, filter.as_str());
+                let lines = action_list_lines_from_labels(&picked);
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                w.global::<GalleryFilteredActionListLong>()
+                    .set_lines(ModelRc::new(VecModel::from(lines)));
+            }
+        });
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_LONG_LABELS, "");
+    let lines = action_list_lines_from_labels(&picked);
+    window
+        .global::<GalleryFilteredActionListLong>()
+        .set_lines(ModelRc::new(VecModel::from(lines)));
+}
+
 fn wire_gallery_select_panel_multi(window: &GalleryWindow) {
     let selected = Rc::new(RefCell::new(BTreeSet::from([1usize, 2usize])));
     let window_weak = window.as_weak();
@@ -161,6 +259,8 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_action_list_multi_select(&window);
     wire_gallery_action_list_listbox_multi_select(&window);
     wire_gallery_select_panel_multi(&window);
+    wire_gallery_filtered_action_list_default(&window);
+    wire_gallery_filtered_action_list_long(&window);
 
     window.run()
 }

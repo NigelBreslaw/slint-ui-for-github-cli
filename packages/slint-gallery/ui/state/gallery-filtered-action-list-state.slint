@@ -1,0 +1,13 @@
+/// Storybook **FilteredActionList** demos — **lines** are filled and narrowed by **Node** / **Rust** using prefix match (Slint has no string **`starts-with`** yet).
+
+import { ActionListLine } from "../../../primer-slint/ActionList/types.slint";
+
+export global GalleryFilteredActionListDefault {
+    in-out property <[ActionListLine]> lines: [];
+    callback filter-changed(string);
+}
+
+export global GalleryFilteredActionListLong {
+    in-out property <[ActionListLine]> lines: [];
+    callback filter-changed(string);
+}

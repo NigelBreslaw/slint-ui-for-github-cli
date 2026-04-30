@@ -1,7 +1,8 @@
-// Filtered **ActionList** host: filter field, header hairline, and a fixed-height body region (list wiring in later PRs).
-// Visual shell aligns with [`SelectPanel`](../SelectPanel/select-panel.slint) filter + list chrome, without **`SelectOption`** row models.
+// Filtered **ActionList** host: filter field, header hairline, and scrollable **`ActionList`** body (upstream: Primer **`FilteredActionList`**).
 
 import { Icons } from "../assets/icons.slint";
+import { ActionList } from "../ActionList/action-list.slint";
+import { ActionListLine, ActionListSelectionMode } from "../ActionList/types.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
 import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../tokens.slint";
 
@@ -9,10 +10,17 @@ export component FilteredActionList {
     in-out property <string> filter-text: "";
     in property <string> placeholder: "Filter Labels";
     in property <bool> disabled: false;
-    /// Reserved list / message region height (scroll + **`ActionList`** added in a follow-up PR).
+    /// Parent supplies rows already narrowed by filter query (see gallery **`GalleryFilteredActionList*`** wiring).
+    in property <[ActionListLine]> lines: [];
+    in property <bool> show-dividers: false;
+    in property <ActionListSelectionMode> selection-mode: ActionListSelectionMode.none;
+    in property <int> selected-index: -1;
+    in property <[bool]> multi-selected: [];
+    /// Scroll region height (`SelectPanel`-aligned default).
     in property <length> body-region-height: SelectPanelTokens.list-max-height-default;
 
     callback filter-changed(string);
+    callback item-activated(int);
 
     horizontal-stretch: 1;
 
@@ -48,6 +56,29 @@ export component FilteredActionList {
             border-width: 1px;
             border-color: PrimerColors.borderColor-muted;
             clip: true;
+
+            Flickable {
+                width: parent.width;
+                height: parent.height;
+                viewport-width: parent.width;
+                viewport-height: body-vl.preferred-height;
+
+                body-vl := VerticalLayout {
+                    width: parent.width;
+
+                    ActionList {
+                        width: 100%;
+                        lines: root.lines;
+                        show-dividers: root.show-dividers;
+                        selection-mode: root.selection-mode;
+                        selected-index: root.selected-index;
+                        multi-selected: root.multi-selected;
+                        item-activated(ix) => {
+                            root.item-activated(ix);
+                        }
+                    }
+                }
+            }
         }
     }
 }

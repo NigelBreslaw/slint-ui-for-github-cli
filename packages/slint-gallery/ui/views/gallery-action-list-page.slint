@@ -15,6 +15,10 @@ import {
 } from "../../../primer-slint/primer.slint";
 import { GalleryActionListListboxMultiSelect } from "../state/gallery-action-list-listbox-multi-select-state.slint";
 import { GalleryActionListMultiSelect } from "../state/gallery-action-list-multi-select-state.slint";
+import {
+    GalleryFilteredActionListDefault,
+    GalleryFilteredActionListLong,
+} from "../state/gallery-filtered-action-list-state.slint";
 import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 
 export component GalleryActionListPage inherits VerticalLayout {
@@ -1579,6 +1583,7 @@ export component GalleryActionListPage inherits VerticalLayout {
 
     private property <string> filtered-action-list-filter: "";
     private property <string> filtered-action-list-last-edit: "";
+    private property <string> filtered-action-list-long-filter: "";
 
     private property <[ActionListLine]> active-demo-lines: [
         {
@@ -1646,7 +1651,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         alignment: start;
 
         Text {
-            text: "FilteredActionList (shell · PR1)";
+            text: "FilteredActionList (Default · Storybook)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -1684,13 +1689,70 @@ export component GalleryActionListPage inherits VerticalLayout {
                     width: 100%;
                     filter-text <=> root.filtered-action-list-filter;
                     placeholder: "Filter Labels";
+                    lines: GalleryFilteredActionListDefault.lines;
                     filter-changed(t) => {
                         root.filtered-action-list-last-edit = t;
+                        GalleryFilteredActionListDefault.filter-changed(t);
                     }
                 }
 
                 Text {
-                    text: "Filter: \"" + root.filtered-action-list-filter + "\" — last edited: \"" + root.filtered-action-list-last-edit + "\"";
+                    text: "Filter: \"" + root.filtered-action-list-filter + "\" — prefix match (upstream Default). Last callback text: \"" + root.filtered-action-list-last-edit + "\"";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        Text {
+            text: "FilteredActionList (WithLongItems · Storybook Examples)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "Filtered Action List with Long Items";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 18px;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Please select labels that describe your issue:";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    font-weight: 400;
+                    wrap: word-wrap;
+                }
+
+                FilteredActionList {
+                    width: 100%;
+                    filter-text <=> root.filtered-action-list-long-filter;
+                    placeholder: "Filter Labels";
+                    body-region-height: 320px;
+                    lines: GalleryFilteredActionListLong.lines;
+                    filter-changed(t) => {
+                        GalleryFilteredActionListLong.filter-changed(t);
+                    }
+                }
+
+                Text {
+                    text: "Long-item demo uses a taller scroll region (`body-region-height` 320px). Filter: \"" + root.filtered-action-list-long-filter + "\"";
                     color: PrimerColors.fgColor-muted;
                     font-size: 12px;
                     wrap: word-wrap;

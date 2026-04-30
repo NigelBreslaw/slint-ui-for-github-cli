@@ -1,9 +1,15 @@
 import * as slint from "slint-ui";
+import type { ImageData } from "slint-ui";
 import { assignProperties } from "slint-bridge-kit";
 import {
   wireActionListGalleryMultiSelect,
   type ActionListGalleryMultiSelectHandle,
 } from "./state/gallery-action-list-multi-select-bridge-shared.ts";
+import {
+    wireGalleryFilteredActionListDefault,
+    wireGalleryFilteredActionListLong,
+    type GalleryFilteredActionListHandle,
+} from "./state/gallery-filtered-action-list-bridge-shared.ts";
 import {
   wireGallerySelectPanelMultiSelect,
   type GallerySelectPanelMultiHandle,
@@ -19,6 +25,11 @@ type GalleryWindowModule = {
     GalleryActionListMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
     GallerySelectPanelMulti: GallerySelectPanelMultiHandle;
+    GalleryFilteredActionListDefault: GalleryFilteredActionListHandle;
+    GalleryFilteredActionListLong: GalleryFilteredActionListHandle;
+    Icons: {
+      dot_fill: ImageData;
+    };
   };
 };
 
@@ -37,6 +48,14 @@ wireActionListGalleryMultiSelect(
   window.GalleryActionListListboxMultiSelect,
 );
 wireGallerySelectPanelMultiSelect(window.GallerySelectPanelMulti);
+wireGalleryFilteredActionListDefault(
+  window.GalleryFilteredActionListDefault,
+  window.Icons.dot_fill,
+);
+wireGalleryFilteredActionListLong(
+  window.GalleryFilteredActionListLong,
+  window.Icons.dot_fill,
+);
 
 window.show();
 await slint.runEventLoop();

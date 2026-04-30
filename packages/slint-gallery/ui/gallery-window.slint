@@ -12,6 +12,9 @@ import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint"
 import { AppWindow } from "../../primer-slint/tokens.slint";
 import { Icons } from "../../primer-slint/primer.slint";
 
+/// Re-export **`Icons`** so Node can pass **`Icons.dot_fill`** as real **`ImageData`** into bridge-built **`ArrayModel`** rows (plain paths / ad-hoc buffers break FFI).
+export { Icons }
+
 import "../../primer-slint/assets/fonts/MonaSans-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/VeraMono.ttf";
@@ -20,6 +23,10 @@ import "../../primer-slint/assets/fonts/VeraMono.ttf";
 export { GalleryActionListMultiSelect } from "./state/gallery-action-list-multi-select-state.slint";
 export { GalleryActionListListboxMultiSelect } from "./state/gallery-action-list-listbox-multi-select-state.slint";
 export { GallerySelectPanelMulti } from "./state/gallery-select-panel-multi-state.slint";
+export {
+    GalleryFilteredActionListDefault,
+    GalleryFilteredActionListLong,
+} from "./state/gallery-filtered-action-list-state.slint";
 
 
 export global GalleryState {
