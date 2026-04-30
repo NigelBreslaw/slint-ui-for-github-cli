@@ -20,6 +20,7 @@ import {
     GalleryFilteredActionListDefault,
     GalleryFilteredActionListLong,
 } from "../state/gallery-filtered-action-list-state.slint";
+import { GalleryFilteredActionListSelectAll } from "../state/gallery-filtered-action-list-select-all-state.slint";
 import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 
 export component GalleryActionListPage inherits VerticalLayout {
@@ -1588,6 +1589,7 @@ export component GalleryActionListPage inherits VerticalLayout {
     private property <string> fal-loading-input-filter: "";
     private property <string> fal-loading-spinner-filter: "";
     private property <string> fal-loading-skeleton-filter: "";
+    private property <string> fal-select-all-filter: "";
 
     /// Static rows for loading-kind demos (isolated from **`GalleryFilteredActionListDefault`** bridge state).
     private property <[ActionListLine]> fal-loading-demo-lines: [
@@ -1931,6 +1933,84 @@ export component GalleryActionListPage inherits VerticalLayout {
                     lines: [];
                     filter-changed(_) => {
                     }
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "FilteredActionList · select-all row";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Optional muted strip with Select all / Deselect all (select-all-visible), Checkbox tri-state, and selection-mode multiple — selection tracked per row label through prefix filter (gallery bridge).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Text {
+                    text: "Filtered Action List";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 18px;
+                    font-weight: 700;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Multi-select rows; use the strip to toggle all visible labels.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    font-weight: 400;
+                    wrap: word-wrap;
+                }
+
+                FilteredActionList {
+                    width: 100%;
+                    select-all-visible: true;
+                    selection-mode: ActionListSelectionMode.multiple;
+                    filter-text <=> root.fal-select-all-filter;
+                    placeholder: "Filter Labels";
+                    lines: GalleryFilteredActionListSelectAll.lines;
+                    multi-selected: GalleryFilteredActionListSelectAll.multi-selected;
+                    select-all-checked <=> GalleryFilteredActionListSelectAll.select-all-checked;
+                    select-all-indeterminate <=> GalleryFilteredActionListSelectAll.select-all-indeterminate;
+                    filter-changed(t) => {
+                        GalleryFilteredActionListSelectAll.filter-changed(t);
+                    }
+                    item-activated(ix) => {
+                        GalleryFilteredActionListSelectAll.item-activated(ix);
+                    }
+                    select-all-changed(on) => {
+                        GalleryFilteredActionListSelectAll.select-all-changed(on);
+                    }
+                }
+
+                Text {
+                    text: "Filter: \"" + root.fal-select-all-filter + "\" — checked rows persist by label when the list narrows.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
                 }
             }
         }

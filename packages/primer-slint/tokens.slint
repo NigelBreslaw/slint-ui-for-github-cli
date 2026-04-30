@@ -830,7 +830,14 @@ export global SelectPanelTokens {
 }
 
 /// **`FilteredActionListLoaders.module.css`** — body skeleton chrome only (spinner padding reuses **`LayoutTokens.stack-padding-normal`** like **`SelectPanel`**).
+/// Select-all strip: **`FilteredActionList.module.css`** **`.SelectAllContainer`** / **`.SelectAllLabel`** — spacing aliases only (no new literals).
 export global FilteredActionListTokens {
+    /// **`.SelectAllContainer`** padding-block (**`base-size-4`**).
+    out property <length> select-all-padding-block: LayoutTokens.base-size-4;
+    /// **`.SelectAllContainer`** padding-inline (**`base-size-16`**).
+    out property <length> select-all-padding-inline: LayoutTokens.base-size-16;
+    /// Gap between checkbox control and label (**`.SelectAllCheckbox`** margin-inline-end **`base-size-8`**).
+    out property <length> select-all-control-label-gap: LayoutTokens.base-size-8;
     /// **`.LoadingSkeletonContainer`** padding (**8px**).
     out property <length> skeleton-container-padding: LayoutTokens.base-size-8;
     /// Vertical gap between skeleton bars.

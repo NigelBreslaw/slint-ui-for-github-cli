@@ -8,6 +8,17 @@ export type GalleryFilteredActionListHandle = {
     filter_changed: (text: string) => void;
 };
 
+/** **Select-all** demo: **`lines`**, **`multi_selected`**, select-all state, and row / strip callbacks. */
+export type GalleryFilteredActionListSelectAllHandle = {
+    lines: unknown;
+    multi_selected: boolean[];
+    select_all_checked: boolean;
+    select_all_indeterminate: boolean;
+    filter_changed: (text: string) => void;
+    item_activated: (ix: number) => void;
+    select_all_changed: (on: boolean) => void;
+};
+
 /**
  * `ActionListLine` rows for **`ArrayModel`**.
  *
@@ -115,4 +126,63 @@ function wireGalleryFilteredActionList(
         push(t);
     };
     push("");
+}
+
+/**
+ * **FilteredActionList** select-all strip + **multiple** selection (labels mirror **Default** story list).
+ *
+ * Selection is tracked by **label** so filter changes keep correct row checkmarks.
+ */
+export function wireGalleryFilteredActionListSelectAll(
+    g: GalleryFilteredActionListSelectAllHandle,
+    rowIcon: ImageData,
+): void {
+    let filterText = "";
+    const selectedLabels = new Set<string>();
+
+    const sync = () => {
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filterText);
+        const allSelected =
+            picked.length > 0 && picked.every((l) => selectedLabels.has(l));
+        const someSelected = picked.some((l) => selectedLabels.has(l));
+        assignProperties(g, {
+            lines: new slint.ArrayModel(
+                picked.map((l) => actionListLineRow(l, rowIcon)),
+            ),
+            multi_selected: picked.map((l) => selectedLabels.has(l)),
+            select_all_checked: allSelected,
+            select_all_indeterminate: !allSelected && someSelected,
+        });
+    };
+
+    g.filter_changed = (t: string) => {
+        filterText = t;
+        sync();
+    };
+    g.item_activated = (ix: number) => {
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filterText);
+        const label = picked[ix];
+        if (label === undefined) return;
+        if (selectedLabels.has(label)) {
+            selectedLabels.delete(label);
+        } else {
+            selectedLabels.add(label);
+        }
+        sync();
+    };
+    g.select_all_changed = (on: boolean) => {
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filterText);
+        if (on) {
+            for (const l of picked) {
+                selectedLabels.add(l);
+            }
+        } else {
+            for (const l of picked) {
+                selectedLabels.delete(l);
+            }
+        }
+        sync();
+    };
+
+    sync();
 }

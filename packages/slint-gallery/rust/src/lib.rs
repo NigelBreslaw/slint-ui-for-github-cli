@@ -216,6 +216,107 @@ fn wire_gallery_filtered_action_list_long(window: &GalleryWindow) {
         .set_lines(ModelRc::new(VecModel::from(lines)));
 }
 
+fn sync_gallery_filtered_action_list_select_all(
+    window: &GalleryWindow,
+    selected: &RefCell<BTreeSet<String>>,
+    filter: &RefCell<String>,
+) {
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.borrow().as_str());
+    let sel = selected.borrow();
+    let lines: Vec<ActionListLine> = picked
+        .iter()
+        .map(|&l| action_list_line_from_label(l))
+        .collect();
+    let multi: Vec<bool> = picked.iter().map(|l| sel.contains(*l)).collect();
+    let all = !picked.is_empty() && picked.iter().all(|l| sel.contains(*l));
+    let some = picked.iter().any(|l| sel.contains(*l));
+    let indeterminate = !all && some;
+    let g = window.global::<GalleryFilteredActionListSelectAll>();
+    g.set_lines(ModelRc::new(VecModel::from(lines)));
+    g.set_multi_selected(ModelRc::new(VecModel::from(multi)));
+    g.set_select_all_checked(all);
+    g.set_select_all_indeterminate(indeterminate);
+}
+
+fn wire_gallery_filtered_action_list_select_all(window: &GalleryWindow) {
+    let selected = Rc::new(RefCell::new(BTreeSet::<String>::new()));
+    let filter = Rc::new(RefCell::new(String::new()));
+    let window_weak = window.as_weak();
+
+    window
+        .global::<GalleryFilteredActionListSelectAll>()
+        .on_filter_changed({
+            let selected = Rc::clone(&selected);
+            let filter = Rc::clone(&filter);
+            let window_weak = window_weak.clone();
+            move |t: SharedString| {
+                *filter.borrow_mut() = t.to_string();
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                sync_gallery_filtered_action_list_select_all(&w, &selected, &filter);
+            }
+        });
+
+    window
+        .global::<GalleryFilteredActionListSelectAll>()
+        .on_item_activated({
+            let selected = Rc::clone(&selected);
+            let filter = Rc::clone(&filter);
+            let window_weak = window_weak.clone();
+            move |ix: i32| {
+                let ix = ix as usize;
+                let picked =
+                    filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.borrow().as_str());
+                if ix >= picked.len() {
+                    return;
+                }
+                let label = picked[ix];
+                {
+                    let mut s = selected.borrow_mut();
+                    if s.contains(label) {
+                        s.remove(label);
+                    } else {
+                        s.insert(label.to_string());
+                    }
+                }
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                sync_gallery_filtered_action_list_select_all(&w, &selected, &filter);
+            }
+        });
+
+    window
+        .global::<GalleryFilteredActionListSelectAll>()
+        .on_select_all_changed({
+            let selected = Rc::clone(&selected);
+            let filter = Rc::clone(&filter);
+            let window_weak = window_weak.clone();
+            move |on: bool| {
+                let picked =
+                    filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.borrow().as_str());
+                let mut s = selected.borrow_mut();
+                if on {
+                    for l in picked {
+                        s.insert(l.to_string());
+                    }
+                } else {
+                    for l in picked {
+                        s.remove(l);
+                    }
+                }
+                drop(s);
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                sync_gallery_filtered_action_list_select_all(&w, &selected, &filter);
+            }
+        });
+
+    sync_gallery_filtered_action_list_select_all(window, &selected, &filter);
+}
+
 fn wire_gallery_select_panel_multi(window: &GalleryWindow) {
     let selected = Rc::new(RefCell::new(BTreeSet::from([1usize, 2usize])));
     let window_weak = window.as_weak();
@@ -261,6 +362,7 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_select_panel_multi(&window);
     wire_gallery_filtered_action_list_default(&window);
     wire_gallery_filtered_action_list_long(&window);
+    wire_gallery_filtered_action_list_select_all(&window);
 
     window.run()
 }

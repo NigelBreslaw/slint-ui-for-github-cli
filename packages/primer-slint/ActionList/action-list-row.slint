@@ -11,7 +11,10 @@ import {
     PrimerColors,
     Size,
 } from "../tokens.slint";
-import { ActionListDescriptionLayout, ActionListRowVariant } from "./types.slint";
+import {
+    ActionListDescriptionLayout,
+    ActionListRowVariant,
+} from "./types.slint";
 
 export component ActionListRow {
     in property <styled-text> label-markdown;
@@ -58,50 +61,29 @@ export component ActionListRow {
     private property <color> label-color:
         root.is-loading-row
         ? ActionListTokens.item-loading-label-fgColor
-        : root.disabled
-        ? (
-              root.row-variant == ActionListRowVariant.danger
-              ? ActionListTokens.item-danger-fgColor-disabled
-              : ButtonTokens.control-fgColor-disabled
-          )
-        : root.is-inactive
-        ? PrimerColors.fgColor-muted
+        : root.disabled ? (root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled) 
+        : root.is-inactive ? PrimerColors.fgColor-muted
         : root.show-active-chrome
         ? ActionListTokens.item-active-label-fgColor-rest
-        : root.row-variant == ActionListRowVariant.danger
-        ? ActionListTokens.item-danger-fgColor-rest
-        : PrimerColors.fgColor-default;
+            : root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-rest
+            : PrimerColors.fgColor-default;
 
     private property <color> leading-icon-tint:
-        root.disabled
-        ? ButtonTokens.control-fgColor-disabled
-        : root.is-inactive
-        ? PrimerColors.fgColor-muted
-        : root.row-variant == ActionListRowVariant.danger
-        ? ActionListTokens.item-danger-fgColor-rest
-        : PrimerColors.fgColor-muted;
+        root.disabled ? ButtonTokens.control-fgColor-disabled : root.is-inactive
+        ? PrimerColors.fgColor-muted : root.row-variant == ActionListRowVariant.danger
+        ? ActionListTokens.item-danger-fgColor-rest : PrimerColors.fgColor-muted;
 
     /// Trailing affordance stays **muted** (including danger rows — label carries danger color).
     private property <color> trailing-icon-tint:
-        root.disabled
-        ? ButtonTokens.control-fgColor-disabled
-        : PrimerColors.fgColor-muted;
+        root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
 
     private property <color> single-select-check-tint:
-        root.disabled
-        ? ButtonTokens.control-fgColor-disabled
-        : root.is-inactive
-        ? PrimerColors.fgColor-muted
-        : PrimerColors.fgColor-default;
+        root.disabled ? ButtonTokens.control-fgColor-disabled : root.is-inactive ? PrimerColors.fgColor-muted : PrimerColors.fgColor-default;
 
     private property <color> multi-select-lead-bg:
-        root.disabled
-        ? (root.selected ? CheckboxTokens.checkbox-bgColor-checked-disabled : CheckboxTokens.checkbox-bgColor-rest)
-        : (root.selected ? CheckboxTokens.checkbox-bgColor-checked : CheckboxTokens.checkbox-bgColor-rest);
+        root.disabled ? (root.selected ? CheckboxTokens.checkbox-bgColor-checked-disabled : CheckboxTokens.checkbox-bgColor-rest) : (root.selected ? CheckboxTokens.checkbox-bgColor-checked : CheckboxTokens.checkbox-bgColor-rest);
     private property <color> multi-select-lead-border:
-        root.disabled
-        ? (root.selected ? CheckboxTokens.checkbox-borderColor-checked-disabled : CheckboxTokens.checkbox-borderColor-rest)
-        : (root.selected ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
+        root.disabled ? (root.selected ? CheckboxTokens.checkbox-borderColor-checked-disabled : CheckboxTokens.checkbox-borderColor-rest) : (root.selected ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
 
     private property <bool> show-inline-description:
         root.description != "" && root.description-layout == ActionListDescriptionLayout.inline;
@@ -110,24 +92,14 @@ export component ActionListRow {
         root.description != "" && root.description-layout == ActionListDescriptionLayout.block;
 
     private property <color> inline-description-color:
-        root.is-loading-row
-        ? ActionListTokens.item-loading-label-fgColor
-        : root.disabled
-        ? ButtonTokens.control-fgColor-disabled
-        : root.is-inactive
-        ? ActionListTokens.item-inactive-description-fgColor
-        : PrimerColors.fgColor-muted;
+        root.is-loading-row ? ActionListTokens.item-loading-label-fgColor : root.disabled ? ButtonTokens.control-fgColor-disabled : root.is-inactive ? ActionListTokens.item-inactive-description-fgColor : PrimerColors.fgColor-muted;
 
     /// Selected “chip” + semibold only when not using lead-only selection affordance (single check / multi checkbox).
     private property <bool> use-selected-surface:
         root.selected && !root.show-single-select-check && !root.show-multi-select-checkbox;
 
     private property <int> label-font-weight:
-        root.is-loading-row
-        ? LayoutTokens.base-text-weight-medium
-        : !root.disabled && (root.use-selected-surface || root.show-active-chrome)
-        ? LayoutTokens.base-text-weight-semibold
-        : LayoutTokens.base-text-weight-medium;
+        root.is-loading-row ? LayoutTokens.base-text-weight-medium : !root.disabled && (root.use-selected-surface || root.show-active-chrome) ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium;
 
     min-height: root.cell-min-height + (root.show-top-seam ? LayoutTokens.table-border-width : 0px);
     width: 100%;
@@ -167,297 +139,296 @@ export component ActionListRow {
             }
 
             ta := TouchArea {
-            min-height: root.cell-min-height;
-            enabled: !root.disabled && !root.is-inactive && !root.is-loading-row;
-            clicked => {
-                root.clicked();
-            }
+                min-height: root.cell-min-height;
+                enabled: !root.disabled && !root.is-inactive && !root.is-loading-row;
+                clicked => {
+                    root.clicked();
+                }
 
-            row-bg := Rectangle {
-                border-radius: LayoutTokens.borderRadius-medium;
-                background: transparent;
+                row-bg := Rectangle {
+                    border-radius: LayoutTokens.borderRadius-medium;
+                    background: transparent;
 
-                HorizontalLayout {
-                    width: 100%;
-                    align-items: center;
-
-                    VerticalLayout {
-                        horizontal-stretch: 1;
-                        padding-top: root.cell-padding-block;
-                        padding-bottom: root.cell-padding-block;
-                        spacing: 2px;
-                    hl := HorizontalLayout {
-                        // min-height: root.cell-min-height;
-                        padding-left: LayoutTokens.action-list-item-padding-inline;
-                        padding-right: LayoutTokens.action-list-item-padding-inline;
-                        spacing: LayoutTokens.button-content-gap;
-                        alignment: start;
+                    HorizontalLayout {
+                        width: 100%;
                         align-items: center;
 
-                        if root.show-single-select-check: HorizontalLayout {
-                            horizontal-stretch: 0;
-                            min-height: LayoutTokens.iconButton-icon-size-medium;
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            alignment: center;
-                            if root.selected: Image {
-                                horizontal-stretch: 0;
-                                width: 16px;
-                                height: 16px;
-                                vertical-alignment: center;
-                                source: Icons.check;
-                                colorize: root.single-select-check-tint;
-                            }
-                        }
-
-                        if root.show-multi-select-checkbox: Rectangle {
-                            horizontal-stretch: 0;
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            height: self.width;
-                            border-radius: LayoutTokens.checkbox-border-radius;
-                            border-width: 1px;
-                            border-color: root.multi-select-lead-border;
-                            background: root.multi-select-lead-bg;
-                            clip: true;
-
-                            if root.selected: Image {
-                                width: 12px;
-                                height: 12px;
-                                x: (parent.width - self.width) / 2;
-                                y: (parent.height - self.height) / 2;
-                                source: Icons.check;
-                                colorize: root.disabled ? CheckboxTokens.checkbox-fgColor-checked-disabled : PrimerColors.fgOnEmphasis;
-                            }
-                        }
-
-                        if root.has-leading-avatar: Avatar {
-                            horizontal-stretch: 0;
-                            diameter: root.avatar-diameter;
-                            source: root.avatar-source;
-                        }
-
-                        if !root.has-leading-avatar && root.has-leading-visual: Image {
-                            horizontal-stretch: 0;
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            height: LayoutTokens.iconButton-icon-size-medium;
-                            vertical-alignment: center;
-                            source: root.leading-icon;
-                            colorize: leading-icon-tint;
-                        }
-
-                        if root.show-inline-description: HorizontalLayout {
+                        VerticalLayout {
                             horizontal-stretch: 1;
-                            spacing: LayoutTokens.button-content-gap;
-                            alignment: center;
-                            align-items: center;
-
-                            if !root.has-markdown: Text {
-                                horizontal-stretch: 1;
-                                text: root.label;
-                                color: root.label-color;
-                                font-size: LayoutTokens.text-body-size-medium;
-                                font-weight: root.label-font-weight;
-                                wrap: word-wrap;
-                                vertical-alignment: center;
-                            }
-
-                            if root.has-markdown: StyledText {
-                                horizontal-stretch: 1;
-                                text: root.label-markdown;
-                                default-color: root.label-color;
-                                default-font-size: LayoutTokens.text-body-size-medium;
-                                vertical-alignment: center;
-                            }
-
-                            if root.description != "": Text {
-                                horizontal-stretch: 0;
-                                text: root.description;
-                                color: root.inline-description-color;
-                                font-size: LayoutTokens.text-body-size-small;
-                                font-weight: LayoutTokens.base-text-weight-medium;
-                                wrap: word-wrap;
-                                vertical-alignment: center;
-                            }
-                        }
-
-                        if root.show-block-description: VerticalLayout {
-                            horizontal-stretch: 1;
+                            padding-top: root.cell-padding-block;
+                            padding-bottom: root.cell-padding-block;
                             spacing: 2px;
-                            alignment: center;
-
-                            if !root.has-markdown: Text {
-                                horizontal-stretch: 1;
-                                text: root.label;
-                                color: root.label-color;
-                                font-size: LayoutTokens.text-body-size-medium;
-                                font-weight: root.label-font-weight;
-                                wrap: word-wrap;
-                            }
-
-                            if root.has-markdown: StyledText {
-                                horizontal-stretch: 1;
-                                text: root.label-markdown;
-                                default-color: root.label-color;
-                                default-font-size: LayoutTokens.text-body-size-medium;
-                            }
-                        }
-
-                        if !root.show-inline-description && !root.show-block-description && !root.has-markdown: Text {
-                            horizontal-stretch: 1;
-                            text: root.label;
-                            color: root.label-color;
-                            font-size: LayoutTokens.text-body-size-medium;
-                            font-weight: root.label-font-weight;
-                            vertical-alignment: center;
-                        }
-
-                        if !root.show-inline-description && !root.show-block-description && root.has-markdown: StyledText {
-                            horizontal-stretch: 1;
-                            text: root.label-markdown;
-                            default-color: root.label-color;
-                            default-font-size: LayoutTokens.text-body-size-medium;
-                            vertical-alignment: center;
-                        }
-                    }
-                    if root.show-block-description: HorizontalLayout {
+                            hl := HorizontalLayout {
                         // min-height: root.cell-min-height;
                         padding-left: LayoutTokens.action-list-item-padding-inline;
-                        padding-right: LayoutTokens.action-list-item-padding-inline;
+                                padding-right: LayoutTokens.action-list-item-padding-inline;
+                                spacing: LayoutTokens.button-content-gap;
+                                alignment: start;
+                                align-items: center;
+
+                                if root.show-single-select-check: HorizontalLayout {
+                                    horizontal-stretch: 0;
+                                    min-height: LayoutTokens.iconButton-icon-size-medium;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    alignment: center;
+                                    if root.selected: Image {
+                                        horizontal-stretch: 0;
+                                        width: 16px;
+                                        height: 16px;
+                                        vertical-alignment: center;
+                                        source: Icons.check;
+                                        colorize: root.single-select-check-tint;
+                                    }
+                                }
+
+                                if root.show-multi-select-checkbox: Rectangle {
+                                    horizontal-stretch: 0;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: self.width;
+                                    border-radius: LayoutTokens.checkbox-border-radius;
+                                    border-width: 1px;
+                                    border-color: root.multi-select-lead-border;
+                                    background: root.multi-select-lead-bg;
+                                    clip: true;
+
+                                    if root.selected: Image {
+                                        width: 12px;
+                                        height: 12px;
+                                        x: (parent.width - self.width) / 2;
+                                        y: (parent.height - self.height) / 2;
+                                        source: Icons.check;
+                                        colorize: root.disabled ? CheckboxTokens.checkbox-fgColor-checked-disabled : PrimerColors.fgOnEmphasis;
+                                    }
+                                }
+
+                                if root.has-leading-avatar: Avatar {
+                                    horizontal-stretch: 0;
+                                    diameter: root.avatar-diameter;
+                                    source: root.avatar-source;
+                                }
+
+                                if !root.has-leading-avatar && root.has-leading-visual: Image {
+                                    horizontal-stretch: 0;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                    vertical-alignment: center;
+                                    source: root.leading-icon;
+                                    colorize: leading-icon-tint;
+                                }
+
+                                if root.show-inline-description: HorizontalLayout {
+                                    horizontal-stretch: 1;
+                                    spacing: LayoutTokens.button-content-gap;
+                                    alignment: center;
+                                    align-items: center;
+
+                                    if !root.has-markdown: Text {
+                                        horizontal-stretch: 1;
+                                        text: root.label;
+                                        color: root.label-color;
+                                        font-size: LayoutTokens.text-body-size-medium;
+                                        font-weight: root.label-font-weight;
+                                        wrap: word-wrap;
+                                        vertical-alignment: center;
+                                    }
+
+                                    if root.has-markdown: StyledText {
+                                        horizontal-stretch: 1;
+                                        text: root.label-markdown;
+                                        default-color: root.label-color;
+                                        default-font-size: LayoutTokens.text-body-size-medium;
+                                        vertical-alignment: center;
+                                    }
+
+                                    if root.description != "": Text {
+                                        horizontal-stretch: 0;
+                                        text: root.description;
+                                        color: root.inline-description-color;
+                                        font-size: LayoutTokens.text-body-size-small;
+                                        font-weight: LayoutTokens.base-text-weight-medium;
+                                        wrap: word-wrap;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                if root.show-block-description: VerticalLayout {
+                                    horizontal-stretch: 1;
+                                    spacing: 2px;
+                                    alignment: center;
+
+                                    if !root.has-markdown: Text {
+                                        horizontal-stretch: 1;
+                                        text: root.label;
+                                        color: root.label-color;
+                                        font-size: LayoutTokens.text-body-size-medium;
+                                        font-weight: root.label-font-weight;
+                                        wrap: word-wrap;
+                                    }
+
+                                    if root.has-markdown: StyledText {
+                                        horizontal-stretch: 1;
+                                        text: root.label-markdown;
+                                        default-color: root.label-color;
+                                        default-font-size: LayoutTokens.text-body-size-medium;
+                                    }
+                                }
+
+                                if !root.show-inline-description && !root.show-block-description && !root.has-markdown: Text {
+                                    horizontal-stretch: 1;
+                                    text: root.label;
+                                    color: root.label-color;
+                                    font-size: LayoutTokens.text-body-size-medium;
+                                    font-weight: root.label-font-weight;
+                                    vertical-alignment: center;
+                                }
+
+                                if !root.show-inline-description && !root.show-block-description && root.has-markdown: StyledText {
+                                    horizontal-stretch: 1;
+                                    text: root.label-markdown;
+                                    default-color: root.label-color;
+                                    default-font-size: LayoutTokens.text-body-size-medium;
+                                    vertical-alignment: center;
+                                }
+                            }
+
+                            if root.show-block-description: HorizontalLayout {
+                        // min-height: root.cell-min-height;
+                        padding-left: LayoutTokens.action-list-item-padding-inline;
+                                padding-right: LayoutTokens.action-list-item-padding-inline;
                         // padding-top: root.cell-padding-block;
                         // padding-bottom: root.cell-padding-block;
                         spacing: LayoutTokens.button-content-gap;
-                        alignment: start;
-                        align-items: center;
-                        if root.show-single-select-check: HorizontalLayout {
+                                alignment: start;
+                                align-items: center;
+                                if root.show-single-select-check: HorizontalLayout {
+                                    horizontal-stretch: 0;
+                                    min-height: LayoutTokens.iconButton-icon-size-medium;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    alignment: center;
+                                }
+                                if root.show-multi-select-checkbox: Rectangle {
+                                    horizontal-stretch: 0;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                }
+                                if root.has-leading-avatar: Avatar {
+                                    horizontal-stretch: 0;
+                                    diameter: root.avatar-diameter;
+                                    visible: false;
+                                }
+
+                                if !root.has-leading-avatar && root.has-leading-visual: Rectangle {
+                                    horizontal-stretch: 0;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                }
+                                Text {
+                                    horizontal-stretch: 1;
+                                    text: root.description;
+                                    color: root.inline-description-color;
+                                    font-size: LayoutTokens.text-body-size-small;
+                                    font-weight: LayoutTokens.base-text-weight-medium;
+                                    wrap: word-wrap;
+                                }
+                            }
+
+                            if root.inactive-text != "": HorizontalLayout {
+                                padding-left: LayoutTokens.action-list-item-padding-inline;
+                                padding-right: LayoutTokens.action-list-item-padding-inline;
+                                spacing: LayoutTokens.button-content-gap;
+                                if root.show-single-select-check: Rectangle {
+                                    horizontal-stretch: 0;
+                                    min-height: LayoutTokens.iconButton-icon-size-medium;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                }
+                                if root.show-multi-select-checkbox: Rectangle {
+                                    horizontal-stretch: 0;
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                }
+                                Text {
+                                    text: root.inactive-text;
+                                    color: PrimerColors.fgColor-attention;
+                                    font-size: LayoutTokens.text-body-size-small;
+                                    font-weight: LayoutTokens.base-text-weight-medium;
+                                    wrap: word-wrap;
+                                }
+                            }
+                        }
+
+                        if root.has-trailing-visual && !root.show-trailing-loading: HorizontalLayout {
                             horizontal-stretch: 0;
-                            min-height: LayoutTokens.iconButton-icon-size-medium;
-                            width: LayoutTokens.iconButton-icon-size-medium;
+                            padding-right: LayoutTokens.action-list-item-padding-inline;
                             alignment: center;
-                        }
-                        if root.show-multi-select-checkbox: Rectangle {
-                            horizontal-stretch: 0;
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            height: LayoutTokens.iconButton-icon-size-medium;
-                        }
-                        if root.has-leading-avatar: Avatar {
-                            horizontal-stretch: 0;
-                            diameter: root.avatar-diameter;
-                            visible: false;
+                            Image {
+                                width: LayoutTokens.iconButton-icon-size-medium;
+                                height: LayoutTokens.iconButton-icon-size-medium;
+                                vertical-alignment: center;
+                                source: root.trailing-icon;
+                                colorize: root.trailing-icon-tint;
+                            }
                         }
 
-                        if !root.has-leading-avatar && root.has-leading-visual: Rectangle {
+                        if root.show-trailing-loading: HorizontalLayout {
                             horizontal-stretch: 0;
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            height: LayoutTokens.iconButton-icon-size-medium;
-                        }
-                        Text {
-                            horizontal-stretch: 1;
-                            text: root.description;
-                            color: root.inline-description-color;
-                            font-size: LayoutTokens.text-body-size-small;
-                            font-weight: LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
+                            padding-right: LayoutTokens.action-list-item-padding-inline;
+                            alignment: center;
+                            Spinner {
+                                size: Size.small;
+                                segment-color: ActionListTokens.item-loading-label-fgColor;
+                            }
                         }
                     }
 
-                    if root.inactive-text != "": HorizontalLayout {
-                        padding-left: LayoutTokens.action-list-item-padding-inline;
-                        padding-right: LayoutTokens.action-list-item-padding-inline;
-                        spacing: LayoutTokens.button-content-gap;
-                        if root.show-single-select-check: Rectangle {
-                            horizontal-stretch: 0;
-                            min-height: LayoutTokens.iconButton-icon-size-medium;
-                            width: LayoutTokens.iconButton-icon-size-medium;
+                    states [
+                        disabled when root.disabled: {
+                            row-bg.background: root.use-selected-surface ? ButtonTokens.color-action-list-item-default-selected-bg : transparent;
                         }
-                        if root.show-multi-select-checkbox: Rectangle {
-                            horizontal-stretch: 0;
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            height: LayoutTokens.iconButton-icon-size-medium;
+                        inactive when !root.disabled && root.is-inactive: {
+                            row-bg.background: transparent;
                         }
-                        Text {
-                            text: root.inactive-text;
-                            color: PrimerColors.fgColor-attention;
-                            font-size: LayoutTokens.text-body-size-small;
-                            font-weight: LayoutTokens.base-text-weight-medium;
-                            wrap: word-wrap;
+                        active-pressed when !root.disabled && root.show-active-chrome && ta.pressed: {
+                            row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                         }
-                    }
-                    }
-
-                    if root.has-trailing-visual && !root.show-trailing-loading: HorizontalLayout {
-                        horizontal-stretch: 0;
-                        padding-right: LayoutTokens.action-list-item-padding-inline;
-                        alignment: center;
-                        Image {
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            height: LayoutTokens.iconButton-icon-size-medium;
-                            vertical-alignment: center;
-                            source: root.trailing-icon;
-                            colorize: root.trailing-icon-tint;
+                        active-hover when !root.disabled && root.show-active-chrome && !ta.pressed && ta.has-hover: {
+                            row-bg.background: ActionListTokens.item-active-bgColor-hover;
                         }
-                    }
-
-                    if root.show-trailing-loading: HorizontalLayout {
-                        horizontal-stretch: 0;
-                        padding-right: LayoutTokens.action-list-item-padding-inline;
-                        alignment: center;
-                        Spinner {
-                            size: Size.small;
-                            segment-color: ActionListTokens.item-loading-label-fgColor;
+                        active-rest when !root.disabled && root.show-active-chrome && !ta.pressed && !ta.has-hover: {
+                            row-bg.background: ActionListTokens.item-active-bgColor-rest;
                         }
-                    }
+                        danger-selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.use-selected-surface && ta.pressed: {
+                            row-bg.background: ActionListTokens.item-danger-bgColor-active;
+                        }
+                        danger-selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                            row-bg.background: ActionListTokens.item-danger-bgColor-hover;
+                        }
+                        danger-selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                            row-bg.background: ActionListTokens.item-danger-bgColor-selected;
+                        }
+                        danger-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.use-selected-surface && ta.pressed: {
+                            row-bg.background: ActionListTokens.item-danger-bgColor-active;
+                        }
+                        danger-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                            row-bg.background: ActionListTokens.item-danger-bgColor-hover;
+                        }
+                        default-selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && root.use-selected-surface && ta.pressed: {
+                            row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                        }
+                        default-selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                            row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                        }
+                        default-selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.default && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                            row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
+                        }
+                        default-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && ta.pressed: {
+                            row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                        }
+                        default-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && !ta.pressed && ta.has-hover: {
+                            row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                        }
+                    ]
                 }
-
-                states [
-                    disabled when root.disabled: {
-                        row-bg.background: root.use-selected-surface
-                            ? ButtonTokens.color-action-list-item-default-selected-bg
-                            : transparent;
-                    }
-                    inactive when !root.disabled && root.is-inactive: {
-                        row-bg.background: transparent;
-                    }
-                    active-pressed when !root.disabled && root.show-active-chrome && ta.pressed: {
-                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
-                    }
-                    active-hover when !root.disabled && root.show-active-chrome && !ta.pressed && ta.has-hover: {
-                        row-bg.background: ActionListTokens.item-active-bgColor-hover;
-                    }
-                    active-rest when !root.disabled && root.show-active-chrome && !ta.pressed && !ta.has-hover: {
-                        row-bg.background: ActionListTokens.item-active-bgColor-rest;
-                    }
-                    danger-selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.use-selected-surface && ta.pressed: {
-                        row-bg.background: ActionListTokens.item-danger-bgColor-active;
-                    }
-                    danger-selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
-                        row-bg.background: ActionListTokens.item-danger-bgColor-hover;
-                    }
-                    danger-selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
-                        row-bg.background: ActionListTokens.item-danger-bgColor-selected;
-                    }
-                    danger-pressed when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.use-selected-surface && ta.pressed: {
-                        row-bg.background: ActionListTokens.item-danger-bgColor-active;
-                    }
-                    danger-hover when !root.disabled && root.row-variant == ActionListRowVariant.danger && !root.use-selected-surface && !ta.pressed && ta.has-hover: {
-                        row-bg.background: ActionListTokens.item-danger-bgColor-hover;
-                    }
-                    default-selected-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && root.use-selected-surface && ta.pressed: {
-                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
-                    }
-                    default-selected-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && root.use-selected-surface && !ta.pressed && ta.has-hover: {
-                        row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
-                    }
-                    default-selected-rest when !root.disabled && root.row-variant == ActionListRowVariant.default && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
-                        row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
-                    }
-                    default-pressed when !root.disabled && root.row-variant == ActionListRowVariant.default && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && ta.pressed: {
-                        row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
-                    }
-                    default-hover when !root.disabled && root.row-variant == ActionListRowVariant.default && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && !ta.pressed && ta.has-hover: {
-                        row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
-                    }
-                ]
             }
-        }
         }
     }
 }

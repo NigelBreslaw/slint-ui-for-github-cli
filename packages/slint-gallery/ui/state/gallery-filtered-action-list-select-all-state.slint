@@ -1,0 +1,13 @@
+/// **FilteredActionList** multi-select + **select-all** row — **Node** / **Rust** mirror selection by label through filter changes.
+
+import { ActionListLine } from "../../../primer-slint/ActionList/types.slint";
+
+export global GalleryFilteredActionListSelectAll {
+    in-out property <[ActionListLine]> lines: [];
+    in-out property <[bool]> multi-selected: [];
+    in-out property <bool> select-all-checked: false;
+    in-out property <bool> select-all-indeterminate: false;
+    callback filter-changed(string);
+    callback item-activated(int);
+    callback select-all-changed(bool);
+}

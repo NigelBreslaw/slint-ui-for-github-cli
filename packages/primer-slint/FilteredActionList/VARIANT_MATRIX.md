@@ -119,7 +119,7 @@ Goal: **no new hex**; prefer **`PrimerColors`**, **`LayoutTokens`**, **`ButtonTo
 - [ ] **Storybook:** `Default` + `WithLongItems` both have a matrix row or cross-reference in §3.
 - [x] **Loading:** `input` / `body_spinner` / `body_skeleton` — §2 + gallery **FilteredActionList · loading kinds**.
 - [ ] **Message vs list** ordering matches upstream `getBodyContent`.
-- [ ] **Select-all** maps to **Checkbox** + §4 tokens; no duplicate label colors.
+- [x] **Select-all** maps to **Checkbox** + §4 tokens; no duplicate label colors.
 - [ ] **Token audit** §6: every new `out` in `tokens.slint` justified or marked **Reuse** only.
 
 ---

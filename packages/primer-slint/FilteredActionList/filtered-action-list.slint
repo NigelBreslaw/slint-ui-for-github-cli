@@ -3,6 +3,7 @@
 import { Icons } from "../assets/icons.slint";
 import { ActionList } from "../ActionList/action-list.slint";
 import { ActionListLine, ActionListSelectionMode } from "../ActionList/types.slint";
+import { Checkbox } from "../Checkbox/checkbox.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
 import { SelectPanelLoading } from "../SelectPanelCompose/parts/select-panel-loading.slint";
 import {
@@ -30,9 +31,16 @@ export component FilteredActionList {
     in property <FilteredActionListLoadingKind> loading-kind: FilteredActionListLoadingKind.body_spinner;
     /// Shown with **`body_spinner`** (same default as **`SelectPanel.loading-message`**).
     in property <string> loading-message: "Loading…";
+    /// Optional **Select all** strip (upstream **`onSelectAllChange`**); sits under the header hairline, above the scroll body.
+    in property <bool> select-all-visible: false;
+    in-out property <bool> select-all-checked: false;
+    in-out property <bool> select-all-indeterminate: false;
+    in property <string> select-all-label-unchecked: "Select all";
+    in property <string> select-all-label-checked: "Deselect all";
 
     callback filter-changed(string);
     callback item-activated(int);
+    callback select-all-changed(bool);
 
     horizontal-stretch: 1;
 
@@ -47,11 +55,9 @@ export component FilteredActionList {
 
     VerticalLayout {
         spacing: SelectPanelTokens.wrapper-stack-gap;
-        width: 100%;
         alignment: stretch;
 
         PrimerTextInput {
-            width: 100%;
             block: true;
             placeholder: root.placeholder;
             text <=> root.filter-text;
@@ -65,13 +71,67 @@ export component FilteredActionList {
         }
 
         Rectangle {
-            width: 100%;
             height: 1px;
             background: PrimerColors.borderColor-default;
         }
 
+        if root.select-all-visible: VerticalLayout {
+            alignment: stretch;
+
+            Rectangle {
+                background: PrimerColors.bgColor-muted;
+
+                TouchArea {
+                    enabled: !root.disabled;
+
+                    clicked => {
+                        if root.select-all-indeterminate {
+                            root.select-all-indeterminate = false;
+                            root.select-all-checked = true;
+                        } else {
+                            root.select-all-checked = !root.select-all-checked;
+                        }
+                        root.select-all-changed(root.select-all-checked);
+                    }
+
+                    HorizontalLayout {
+                        padding-top: FilteredActionListTokens.select-all-padding-block;
+                        padding-bottom: FilteredActionListTokens.select-all-padding-block;
+                        padding-left: FilteredActionListTokens.select-all-padding-inline;
+                        padding-right: FilteredActionListTokens.select-all-padding-inline;
+                        spacing: FilteredActionListTokens.select-all-control-label-gap;
+                        alignment: center;
+
+                        Checkbox {
+                            interactive: false;
+                            checked <=> root.select-all-checked;
+                            indeterminate: root.select-all-indeterminate;
+                            disabled: root.disabled;
+                            label: "";
+                        }
+
+                        Text {
+                            text:
+                                root.select-all-checked && !root.select-all-indeterminate
+                                ? root.select-all-label-checked
+                                : root.select-all-label-unchecked;
+                            color: PrimerColors.fgColor-muted;
+                            font-size: LayoutTokens.text-body-size-medium;
+                            font-weight: LayoutTokens.base-text-weight-normal;
+                            wrap: word-wrap;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                height: LayoutTokens.table-border-width;
+                background: PrimerColors.borderColor-default;
+            }
+        }
+
         Rectangle {
-            width: 100%;
             height: root.body-region-height;
             background: PrimerColors.bgColor-canvas-subtle;
             border-radius: LayoutTokens.borderRadius-medium;
@@ -80,25 +140,20 @@ export component FilteredActionList {
             clip: true;
 
             VerticalLayout {
-                width: 100%;
-                height: 100%;
                 alignment: stretch;
 
                 if root.loading-body-spinner: SelectPanelLoading {
                     vertical-stretch: 1;
-                    width: 100%;
                     message: root.loading-message;
                 }
 
                 if root.loading-body-skeleton: VerticalLayout {
                     vertical-stretch: 1;
-                    width: 100%;
                     padding: FilteredActionListTokens.skeleton-container-padding;
                     spacing: FilteredActionListTokens.skeleton-stack-gap;
                     alignment: start;
 
                     Rectangle {
-                        width: 100%;
                         height: FilteredActionListTokens.skeleton-line-height;
                         background: PrimerColors.bgColor-neutral-muted;
                         border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
@@ -112,7 +167,6 @@ export component FilteredActionList {
                     }
 
                     Rectangle {
-                        width: 100%;
                         height: FilteredActionListTokens.skeleton-line-height;
                         background: PrimerColors.bgColor-neutral-muted;
                         border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
