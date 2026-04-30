@@ -829,6 +829,18 @@ export global SelectPanelTokens {
     out property <length> message-stack-gap: LayoutTokens.base-size-4;
 }
 
+/// **`FilteredActionListLoaders.module.css`** — body skeleton chrome only (spinner padding reuses **`LayoutTokens.stack-padding-normal`** like **`SelectPanel`**).
+export global FilteredActionListTokens {
+    /// **`.LoadingSkeletonContainer`** padding (**8px**).
+    out property <length> skeleton-container-padding: LayoutTokens.base-size-8;
+    /// Vertical gap between skeleton bars.
+    out property <length> skeleton-stack-gap: LayoutTokens.base-size-8;
+    /// **`SkeletonBox`** bar height in upstream loaders — composed from **`LayoutTokens.control-large-paddingInline-spacious`** (**10px**).
+    out property <length> skeleton-line-height: LayoutTokens.control-large-paddingInline-spacious;
+    /// **`.LoadingSkeleton`** border-radius (**4px**).
+    out property <length> skeleton-bar-border-radius: LayoutTokens.base-size-4;
+}
+
 /// **`UnderlineTabbedInterface.module.css`** **`LoadingCounter`** + **`UnderlineNav2`** tab counter chrome (dedupes literals vs row component).
 export global UnderlineNavTokens {
     /// Upstream **1.5rem** — **`base-size-8` × 3**.

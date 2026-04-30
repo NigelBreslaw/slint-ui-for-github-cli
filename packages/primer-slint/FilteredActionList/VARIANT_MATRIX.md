@@ -26,8 +26,8 @@ Exactly **one** of these is shown at a time (upstream `getBodyContent` order —
 
 | Body mode | Upstream condition | Slint matrix rows |
 |-----------|-------------------|-------------------|
-| Body **spinner** | `loading && loadingType.appearsInBody && scrollContainerRef.current` + `bodySpinner` | Centered **`Spinner`**; padding **16px** (`LayoutTokens.base-size-16`) |
-| Body **skeleton** | Same + `bodySkeleton` | **Strategy (v1):** geometric placeholders — see **§ Skeleton strategy** |
+| Body **spinner** | `loading && loadingType.appearsInBody && scrollContainerRef.current` + `bodySpinner` | Centered **`Spinner`** + label; padding **`LayoutTokens.stack-padding-normal`** via embedded **`SelectPanelLoading`** |
+| Body **skeleton** | Same + `bodySkeleton` | **`FilteredActionListTokens`** + **`PrimerColors.bgColor-neutral-muted`** bars (**`LayoutTokens.control-large-paddingInline-spacious`** height, **`base-size-4`** radius) |
 | **Custom message** | `!` above loading branch **or** loading branch skipped; `message` set | Message UI or `@children` — pick one API in implementation PR; gallery documents choice |
 | **ActionList** | Default | Embedded **`ActionList`** with parent-built **`[ActionListLine]`** |
 | Empty list | Parent passes empty `lines` | Still ActionList path; optional gallery “no matches” copy |
@@ -117,7 +117,7 @@ Goal: **no new hex**; prefer **`PrimerColors`**, **`LayoutTokens`**, **`ButtonTo
 ## 8. Traceability checklist
 
 - [ ] **Storybook:** `Default` + `WithLongItems` both have a matrix row or cross-reference in §3.
-- [ ] **Loading:** `input` / `bodySpinner` / `bodySkeleton` each have a row in §2 + gallery plan in inventory PR table.
+- [x] **Loading:** `input` / `body_spinner` / `body_skeleton` — §2 + gallery **FilteredActionList · loading kinds**.
 - [ ] **Message vs list** ordering matches upstream `getBodyContent`.
 - [ ] **Select-all** maps to **Checkbox** + §4 tokens; no duplicate label colors.
 - [ ] **Token audit** §6: every new `out` in `tokens.slint` justified or marked **Reuse** only.

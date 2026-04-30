@@ -1,0 +1,9 @@
+/// Matches upstream **`FilteredActionListLoadingTypes`** (where loading applies).
+export enum FilteredActionListLoadingKind {
+    /// Spinner in the filter field (leading slot replaces search when `PrimerTextInput.loading`).
+    input,
+    /// Centered spinner + label in the list region; list hidden.
+    body_spinner,
+    /// Placeholder bars in the list region; list hidden (no shared **`Skeleton`** primitive yet).
+    body_skeleton,
+}

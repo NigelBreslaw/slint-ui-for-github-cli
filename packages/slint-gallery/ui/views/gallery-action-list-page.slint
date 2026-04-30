@@ -11,6 +11,7 @@ import {
     Button,
     ButtonAlignContent,
     FilteredActionList,
+    FilteredActionListLoadingKind,
     Icons,
 } from "../../../primer-slint/primer.slint";
 import { GalleryActionListListboxMultiSelect } from "../state/gallery-action-list-listbox-multi-select-state.slint";
@@ -1584,6 +1585,70 @@ export component GalleryActionListPage inherits VerticalLayout {
     private property <string> filtered-action-list-filter: "";
     private property <string> filtered-action-list-last-edit: "";
     private property <string> filtered-action-list-long-filter: "";
+    private property <string> fal-loading-input-filter: "";
+    private property <string> fal-loading-spinner-filter: "";
+    private property <string> fal-loading-skeleton-filter: "";
+
+    /// Static rows for loading-kind demos (isolated from **`GalleryFilteredActionListDefault`** bridge state).
+    private property <[ActionListLine]> fal-loading-demo-lines: [
+        {
+            kind: ActionListLineKind.row,
+            label: "enhancement",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "bug",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "design",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
 
     private property <[ActionListLine]> active-demo-lines: [
         {
@@ -1756,6 +1821,116 @@ export component GalleryActionListPage inherits VerticalLayout {
                     color: PrimerColors.fgColor-muted;
                     font-size: 12px;
                     wrap: word-wrap;
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "FilteredActionList · loading kinds";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "input — spinner in the filter field (`PrimerTextInput.loading`); list stays visible.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                FilteredActionList {
+                    width: 100%;
+                    loading: true;
+                    loading-kind: FilteredActionListLoadingKind.input;
+                    filter-text <=> root.fal-loading-input-filter;
+                    placeholder: "Filter Labels";
+                    lines: root.fal-loading-demo-lines;
+                    filter-changed(_) => {
+                    }
+                }
+            }
+        }
+
+        Text {
+            text: "body_spinner — centered spinner + message; replaces list (`SelectPanelLoading`).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                FilteredActionList {
+                    width: 100%;
+                    loading: true;
+                    loading-kind: FilteredActionListLoadingKind.body_spinner;
+                    loading-message: "Loading labels…";
+                    filter-text <=> root.fal-loading-spinner-filter;
+                    placeholder: "Filter Labels";
+                    lines: root.fal-loading-demo-lines;
+                    filter-changed(_) => {
+                    }
+                }
+            }
+        }
+
+        Text {
+            text: "body_skeleton — neutral placeholder bars (no shared Skeleton primitive yet).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                FilteredActionList {
+                    width: 100%;
+                    loading: true;
+                    loading-kind: FilteredActionListLoadingKind.body_skeleton;
+                    filter-text <=> root.fal-loading-skeleton-filter;
+                    placeholder: "Filter Labels";
+                    lines: [];
+                    filter-changed(_) => {
+                    }
                 }
             }
         }

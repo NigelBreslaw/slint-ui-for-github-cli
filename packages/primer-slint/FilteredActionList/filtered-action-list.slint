@@ -4,7 +4,14 @@ import { Icons } from "../assets/icons.slint";
 import { ActionList } from "../ActionList/action-list.slint";
 import { ActionListLine, ActionListSelectionMode } from "../ActionList/types.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
-import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../tokens.slint";
+import { SelectPanelLoading } from "../SelectPanelCompose/parts/select-panel-loading.slint";
+import {
+    FilteredActionListTokens,
+    LayoutTokens,
+    PrimerColors,
+    SelectPanelTokens,
+} from "../tokens.slint";
+import { FilteredActionListLoadingKind } from "./types.slint";
 
 export component FilteredActionList {
     in-out property <string> filter-text: "";
@@ -18,11 +25,25 @@ export component FilteredActionList {
     in property <[bool]> multi-selected: [];
     /// Scroll region height (`SelectPanel`-aligned default).
     in property <length> body-region-height: SelectPanelTokens.list-max-height-default;
+    /// When true, loading UI follows **`loading-kind`** (upstream **`loading`** + **`FilteredActionListLoadingTypes`**).
+    in property <bool> loading: false;
+    in property <FilteredActionListLoadingKind> loading-kind: FilteredActionListLoadingKind.body_spinner;
+    /// Shown with **`body_spinner`** (same default as **`SelectPanel.loading-message`**).
+    in property <string> loading-message: "Loading…";
 
     callback filter-changed(string);
     callback item-activated(int);
 
     horizontal-stretch: 1;
+
+    private property <bool> loading-on-input:
+        root.loading && root.loading-kind == FilteredActionListLoadingKind.input;
+    private property <bool> loading-body-spinner:
+        root.loading && root.loading-kind == FilteredActionListLoadingKind.body_spinner;
+    private property <bool> loading-body-skeleton:
+        root.loading && root.loading-kind == FilteredActionListLoadingKind.body_skeleton;
+    private property <bool> show-action-list-body:
+        !root.loading-body-spinner && !root.loading-body-skeleton;
 
     VerticalLayout {
         spacing: SelectPanelTokens.wrapper-stack-gap;
@@ -37,6 +58,7 @@ export component FilteredActionList {
             disabled: root.disabled;
             has-leading-visual: true;
             leading-visual: Icons.search;
+            loading: root.loading-on-input;
             edited(t) => {
                 root.filter-changed(t);
             }
@@ -57,24 +79,80 @@ export component FilteredActionList {
             border-color: PrimerColors.borderColor-muted;
             clip: true;
 
-            Flickable {
-                width: parent.width;
-                height: parent.height;
-                viewport-width: parent.width;
-                viewport-height: body-vl.preferred-height;
+            VerticalLayout {
+                width: 100%;
+                height: 100%;
+                alignment: stretch;
 
-                body-vl := VerticalLayout {
-                    width: parent.width;
+                if root.loading-body-spinner: SelectPanelLoading {
+                    vertical-stretch: 1;
+                    width: 100%;
+                    message: root.loading-message;
+                }
 
-                    ActionList {
+                if root.loading-body-skeleton: VerticalLayout {
+                    vertical-stretch: 1;
+                    width: 100%;
+                    padding: FilteredActionListTokens.skeleton-container-padding;
+                    spacing: FilteredActionListTokens.skeleton-stack-gap;
+                    alignment: start;
+
+                    Rectangle {
                         width: 100%;
-                        lines: root.lines;
-                        show-dividers: root.show-dividers;
-                        selection-mode: root.selection-mode;
-                        selected-index: root.selected-index;
-                        multi-selected: root.multi-selected;
-                        item-activated(ix) => {
-                            root.item-activated(ix);
+                        height: FilteredActionListTokens.skeleton-line-height;
+                        background: PrimerColors.bgColor-neutral-muted;
+                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    }
+
+                    Rectangle {
+                        width: 88%;
+                        height: FilteredActionListTokens.skeleton-line-height;
+                        background: PrimerColors.bgColor-neutral-muted;
+                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    }
+
+                    Rectangle {
+                        width: 100%;
+                        height: FilteredActionListTokens.skeleton-line-height;
+                        background: PrimerColors.bgColor-neutral-muted;
+                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    }
+
+                    Rectangle {
+                        width: 64%;
+                        height: FilteredActionListTokens.skeleton-line-height;
+                        background: PrimerColors.bgColor-neutral-muted;
+                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    }
+
+                    Rectangle {
+                        width: 72%;
+                        height: FilteredActionListTokens.skeleton-line-height;
+                        background: PrimerColors.bgColor-neutral-muted;
+                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    }
+                }
+
+                if root.show-action-list-body: Flickable {
+                    vertical-stretch: 1;
+                    width: parent.width;
+                    height: parent.height;
+                    viewport-width: parent.width;
+                    viewport-height: body-vl.preferred-height;
+
+                    body-vl := VerticalLayout {
+                        width: parent.width;
+
+                        ActionList {
+                            width: 100%;
+                            lines: root.lines;
+                            show-dividers: root.show-dividers;
+                            selection-mode: root.selection-mode;
+                            selected-index: root.selected-index;
+                            multi-selected: root.multi-selected;
+                            item-activated(ix) => {
+                                root.item-activated(ix);
+                            }
                         }
                     }
                 }
