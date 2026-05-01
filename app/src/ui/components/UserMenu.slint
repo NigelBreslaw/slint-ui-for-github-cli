@@ -52,7 +52,9 @@ export component UserMenu {
                 spacing: 8px;
                 width: self.preferred-width;
 
-                avatar := Avatar { }
+                avatar := Avatar {
+                    size: LayoutTokens.avatar-size-header;
+                }
 
                 VerticalLayout {
                     height: self.preferred-height;

@@ -79,7 +79,9 @@ export component AppHeader {
             }
 
             avatar-container := Avatar {
+                size: LayoutTokens.avatar-size-header;
                 source: AppState.avatar;
+                alt-text: "Account menu";
                 TouchArea {
                     clicked => {
                         HeaderState.menu-visible = true;

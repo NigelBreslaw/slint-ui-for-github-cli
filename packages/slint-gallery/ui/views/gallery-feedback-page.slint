@@ -15,7 +15,8 @@ import {
     SkeletonBox,
     Spinner,
 } from "../../../primer-slint/primer.slint";
-import { PrimerColors } from "../../../primer-slint/tokens.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryFeedbackDemoAssets } from "../state/gallery-feedback-demo-assets.slint";
 import { Palette } from "std-widgets.slint";
 
 /// Banner, Spinner, Avatar, Label, and LabelGroup gallery demos.
@@ -318,12 +319,81 @@ export component GalleryFeedbackPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Placeholder (no image bound in this demo).";
+            text: "Primer Avatar — default size 20px, token ring + placeholder fill; sizes / square per Storybook features.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Placeholder (no image)";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
         }
 
-        Avatar { }
+        Avatar {
+            alt-text: "Demo placeholder avatar";
+        }
+
+        Text {
+            text: "Default 20px + image";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Avatar {
+            source: GalleryFeedbackDemoAssets.hubot;
+            alt-text: "Hubot";
+        }
+
+        Text {
+            text: "Header profile size (LayoutTokens.avatar-size-header)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        Avatar {
+            size: LayoutTokens.avatar-size-header;
+            source: GalleryFeedbackDemoAssets.hubot;
+            alt-text: "Profile";
+        }
+
+        Text {
+            text: "Size ladder (4–64px)";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        HorizontalLayout {
+            spacing: 8px;
+            alignment: center;
+            Avatar { size: 4px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 8px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 12px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 16px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 20px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 24px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 28px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 32px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 40px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 48px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 56px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { size: 64px; source: GalleryFeedbackDemoAssets.hubot; }
+        }
+
+        Text {
+            text: "Square";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+        }
+
+        HorizontalLayout {
+            spacing: 8px;
+            alignment: center;
+            Avatar { square: true; size: 24px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { square: true; size: 40px; source: GalleryFeedbackDemoAssets.hubot; }
+            Avatar { square: true; size: 48px; source: GalleryFeedbackDemoAssets.hubot; }
+        }
     }
 
     VerticalLayout {

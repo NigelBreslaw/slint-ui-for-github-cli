@@ -1,29 +1,37 @@
-import { Palette } from "std-widgets.slint";
+import { AvatarTokens, LayoutTokens } from "../tokens.slint";
 
+/// Primer [**Avatar**](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Avatar/Avatar.tsx) — circular or square image with token ring and placeholder fill.
 export component Avatar {
 
-    in-out property source <=> avatar.source;
-    /// Defaults to **34px** (profile); ActionList uses **`LayoutTokens.action-list-avatar-diameter`**.
-    in property <length> diameter: 34px;
+    in-out property source <=> img.source;
+    /// Width and height (maps to React **`size`**; default **20px** = **`DEFAULT_AVATAR_SIZE`**).
+    in property <length> size: 20px;
+    /// **`true`**: rounded rectangle radius **`clamp(4px, size − 24px, borderRadius-medium)`** per **`Avatar.module.css`**.
+    in property <bool> square: false;
+    /// Maps to React **`alt`** for standalone / iconic avatars (**`Image`** **`accessible-label`**).
+    in property <string> alt-text: "";
 
-    width: root.diameter;
-    height: self.width;
+    width: root.size;
+    height: root.size;
 
-    Rectangle {
-        width: parent.width - 2px;
-        height: self.width;
-        border-radius: self.width / 2;
-        clip: true;
-        avatar := Image {
-            width: parent.width;
-            height: self.width;
-        }
-    }
+    property <length> corner-radius:
+        root.square ? min(max(4px, root.size - 24px), LayoutTokens.borderRadius-medium) : root.size / 2;
 
     Rectangle {
+        width: 100%;
+        height: 100%;
+        border-radius: root.corner-radius;
         border-width: 1px;
-        border-color: Palette.color-scheme == ColorScheme.dark ? #28292d : #D7D8DB;
-        border-radius: self.width / 2;
+        border-color: AvatarTokens.avatar-borderColor;
+        background: AvatarTokens.avatar-bgColor;
+        clip: true;
+
+        img := Image {
+            width: 100%;
+            height: 100%;
+            accessible-role: AccessibleRole.image;
+            accessible-label: root.alt-text;
+        }
     }
 
     @children

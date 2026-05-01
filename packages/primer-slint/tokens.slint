@@ -132,6 +132,8 @@ export global LayoutTokens {
     /// ActionList leading **Avatar** (20px — compact row; large rows use **`action-list-avatar-diameter-large`**).
     out property <length> action-list-avatar-diameter: 20px;
     out property <length> action-list-avatar-diameter-large: 24px;
+    /// App chrome (**AppHeader** / **UserMenu**) profile avatar — matches former implicit **`Avatar`** default width (**34px**).
+    out property <length> avatar-size-header: 34px;
     // ActionList.module.css `.Divider` — margin-block-start: calc(var(--base-size-8) - var(--borderWidth-thin)); margin-block-end: var(--base-size-8). [`button-content-gap`] is `--base-size-8`; [`table-border-width`] is `--borderWidth-thin`.
     out property <length> action-list-item-divider-margin-block-start: button-content-gap - table-border-width;
     out property <length> action-list-item-divider-margin-block-end: button-content-gap;
@@ -154,6 +156,20 @@ export global LayoutTokens {
     out property <duration> duration-250: 250ms;
     /// primer-tokens **`base/motion/timing.json5`** — **`base.duration.1000`** — **`SkeletonBox.module.css`** shimmer cycle (`var(--base-duration-1000)`).
     out property <duration> duration-1000: 1000ms;
+}
+
+// primer-tokens **`component/avatar.json5`** (`avatar.bgColor`) + **`borderColor.translucent`** (`neutral.13` @ **α 0.15** — light: **`#010409`**, dark: **`#ffffff`**). High-contrast theme overrides deferred (same as other controls).
+export global AvatarTokens {
+
+    property <ColorScheme> color-scheme: Palette.color-scheme;
+
+    property <color> avatar-bg-light: #ffffff;
+    property <color> avatar-bg-dark: rgba(255, 255, 255, 0.1);
+    property <color> avatar-border-light: rgba(1, 4, 9, 0.15);
+    property <color> avatar-border-dark: rgba(255, 255, 255, 0.15);
+
+    out property <color> avatar-bgColor: color-scheme == ColorScheme.dark ? avatar-bg-dark : avatar-bg-light;
+    out property <color> avatar-borderColor: color-scheme == ColorScheme.dark ? avatar-border-dark : avatar-border-light;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
