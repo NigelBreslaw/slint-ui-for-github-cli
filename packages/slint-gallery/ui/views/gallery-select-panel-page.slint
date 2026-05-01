@@ -37,7 +37,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
     width: 100%;
     alignment: start;
 
-    private property <[SelectPanelItem]> sp_items_5: [
+    property <[SelectPanelItem]> sp_items_5: [
         { value: "enhancement", label: "enhancement", description: "New feature or request", swatch: #84b6eb, enabled: true },
         { value: "bug", label: "bug", description: "Something isn't working", swatch: #d73a4a, enabled: true },
         { value: "good-first-issue", label: "good first issue", description: "Good for newcomers", swatch: #3fb950, enabled: true },
@@ -46,10 +46,10 @@ export component GallerySelectPanelPage inherits VerticalLayout {
     ];
 
     // --- A0 baseline
-    private property <bool> baseline-select-panel-open: false;
-    private property <string> baseline-sp-filter: "";
-    private property <int> baseline-sp-focused: 0;
-    private property <[SelectPanelItem]> baseline-sp-items: [
+    property <bool> baseline-select-panel-open: false;
+    property <string> baseline-sp-filter: "";
+    property <int> baseline-sp-focused: 0;
+    property <[SelectPanelItem]> baseline-sp-items: [
         { value: "enhancement", label: "enhancement", description: "New feature or request", swatch: #84b6eb, enabled: true },
         { value: "bug", label: "bug", description: "Something isn't working", swatch: #d73a4a, enabled: true },
         { value: "good-first-issue", label: "good first issue", description: "Good for newcomers", swatch: #3fb950, enabled: true },
@@ -58,59 +58,59 @@ export component GallerySelectPanelPage inherits VerticalLayout {
     ];
 
     // --- 1 — multi, explicit row checked state
-    private property <bool> d1-open: false;
-    private property <string> d1-filter: "";
-    private property <int> d1-focus: 0;
-    private property <bool> d1b0: false;
-    private property <bool> d1b1: true;
-    private property <bool> d1b2: true;
-    private property <bool> d1b3: false;
-    private property <bool> d1b4: false;
+    property <bool> d1-open: false;
+    property <string> d1-filter: "";
+    property <int> d1-focus: 0;
+    property <bool> d1b0: false;
+    property <bool> d1b1: true;
+    property <bool> d1b2: true;
+    property <bool> d1b3: false;
+    property <bool> d1b4: false;
 
     // --- 2
-    private property <bool> d2-open: false;
-    private property <string> d2-filter: "";
-    private property <bool> d2a0: true;
-    private property <bool> d2a1: false;
+    property <bool> d2-open: false;
+    property <string> d2-filter: "";
+    property <bool> d2a0: true;
+    property <bool> d2a1: false;
 
     // --- 3
-    private property <bool> d3-open: false;
+    property <bool> d3-open: false;
 
     // --- 4
-    private property <bool> d4-open: false;
-    private property <int> d4-mode: 0; // 0 info, 1 warning, 2 critical
-    private property <string> d4-filter: "";
+    property <bool> d4-open: false;
+    property <int> d4-mode: 0; // 0 info, 1 warning, 2 critical
+    property <string> d4-filter: "";
 
     // --- 5
-    private property <bool> d5-open: false;
+    property <bool> d5-open: false;
 
     // --- 6
-    private property <bool> d6-open: false;
-    private property <int> d6-ix: 0;
+    property <bool> d6-open: false;
+    property <int> d6-ix: 0;
 
     // --- 7
-    private property <bool> d7-open: false;
+    property <bool> d7-open: false;
 
     // --- 8
-    private property <bool> d8-open: false;
-    private property <bool> d8-loading: true;
+    property <bool> d8-open: false;
+    property <bool> d8-loading: true;
 
     // --- 9
-    private property <bool> d9-open: false;
-    private property <string> d9-filter: "";
+    property <bool> d9-open: false;
+    property <string> d9-filter: "";
     // Type the literal "none" to exercise the no-results state (no substring search in Slint).
-    private property <bool> d9-empty: d9-filter == "none";
+    property <bool> d9-empty: d9-filter == "none";
 
     // --- 10
-    private property <bool> d10-open: false;
-    private property <int> d10-kind: 0; // 0 error, 1 warning
+    property <bool> d10-open: false;
+    property <int> d10-kind: 0; // 0 error, 1 warning
 
     // --- 11
-    private property <bool> d11-open: false;
-    private property <int> d11-rows: 22;
+    property <bool> d11-open: false;
+    property <int> d11-rows: 22;
 
     // --- 12
-    private property <bool> d12-open: false;
+    property <bool> d12-open: false;
 
     d8_fetch_done := Timer {
         interval: 1400ms;

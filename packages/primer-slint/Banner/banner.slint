@@ -45,67 +45,67 @@ export component Banner {
     /// When true and actions are present, primary/secondary render in the top row after the text column (full-width notice). Default stacks actions below the description.
     in property <bool> actions-trailing: false;
 
-    private property <length> dismiss-icon-side: 16px;
-    private property <length> dismiss-cell-width:
+    property <length> dismiss-icon-side: 16px;
+    property <length> dismiss-cell-width:
         LayoutTokens.banner-icon-container-padding * 2 + dismiss-icon-side;
 
-    private property <length> pad-inline:
+    property <length> pad-inline:
         layout == BannerLayout.compact ? LayoutTokens.banner-padding-compact : LayoutTokens.banner-padding-default;
-    private property <length> pad-block: pad-inline;
+    property <length> pad-block: pad-inline;
 
-    private property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
+    property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
 
     // Matches Banner.module.css: 20px default; 16px only when title hidden and no actions.
-    private property <length> icon-size:
+    property <length> icon-size:
         hide-title && !has-actions ? LayoutTokens.banner-icon-size-title-hidden : LayoutTokens.banner-icon-size-default;
 
-    private property <length> icon-cell-width:
+    property <length> icon-cell-width:
         LayoutTokens.banner-icon-container-padding * 2 + icon-size;
 
-    private property <bool> use-custom-leading:
+    property <bool> use-custom-leading:
         has-custom-leading-icon && (variant == BannerVariant.info || variant == BannerVariant.upsell);
 
-    private property <bool> use-trailing-actions: actions-trailing && has-actions;
+    property <bool> use-trailing-actions: actions-trailing && has-actions;
 
     /// Matches legacy dismiss sizing when actions sit below the description (not when `actions-trailing`).
-    private property <length> stacked-actions-dismiss-nudge:
+    property <length> stacked-actions-dismiss-nudge:
         has-actions && !actions-trailing ? LayoutTokens.banner-dismiss-margin-when-actions : 0px;
 
-    private property <length> dismiss-icon-y:
+    property <length> dismiss-icon-y:
         LayoutTokens.banner-icon-container-padding
         + (dismissible ? stacked-actions-dismiss-nudge : 0px);
 
-    private property <length> dismiss-cell-extra-height: stacked-actions-dismiss-nudge;
+    property <length> dismiss-cell-extra-height: stacked-actions-dismiss-nudge;
 
-    private property <color> banner-bg:
+    property <color> banner-bg:
         variant == BannerVariant.critical ? BannerTokens.banner-bgColor-critical
         : variant == BannerVariant.info ? BannerTokens.banner-bgColor-info
         : variant == BannerVariant.success ? BannerTokens.banner-bgColor-success
         : variant == BannerVariant.upsell ? BannerTokens.banner-bgColor-upsell
         : BannerTokens.banner-bgColor-warning;
 
-    private property <color> banner-border:
+    property <color> banner-border:
         variant == BannerVariant.critical ? BannerTokens.banner-borderColor-critical
         : variant == BannerVariant.info ? BannerTokens.banner-borderColor-info
         : variant == BannerVariant.success ? BannerTokens.banner-borderColor-success
         : variant == BannerVariant.upsell ? BannerTokens.banner-borderColor-upsell
         : BannerTokens.banner-borderColor-warning;
 
-    private property <color> banner-icon-fg:
+    property <color> banner-icon-fg:
         variant == BannerVariant.critical ? BannerTokens.banner-icon-fgColor-critical
         : variant == BannerVariant.info ? BannerTokens.banner-icon-fgColor-info
         : variant == BannerVariant.success ? BannerTokens.banner-icon-fgColor-success
         : variant == BannerVariant.upsell ? BannerTokens.banner-icon-fgColor-upsell
         : BannerTokens.banner-icon-fgColor-warning;
 
-    private property <image> default-leading-source:
+    property <image> default-leading-source:
         variant == BannerVariant.critical ? Icons.stop
         : variant == BannerVariant.info ? Icons.info
         : variant == BannerVariant.success ? Icons.circle_check
         : variant == BannerVariant.upsell ? Icons.info
         : Icons.alert;
 
-    private property <image> resolved-leading-source: use-custom-leading ? leading-icon : default-leading-source;
+    property <image> resolved-leading-source: use-custom-leading ? leading-icon : default-leading-source;
 
     min-width: 120px;
     preferred-width: 100%;
@@ -119,12 +119,9 @@ export component Banner {
         accessible-role: AccessibleRole.none;
 
         VerticalLayout {
-            // width: 100%;
-            spacing: 0;
 
             if flush: Rectangle {
                 height: 1px;
-                width: 100%;
                 background: banner-border;
             }
 
@@ -134,9 +131,7 @@ export component Banner {
                 padding-top: pad-block;
                 padding-bottom: pad-block;
                 spacing: 4px;
-                // width: 100%;
                 alignment: start;
-                // width: self.preferred-width;
 
                 Rectangle {
                     width: icon-cell-width;

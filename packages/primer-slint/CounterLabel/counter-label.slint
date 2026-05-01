@@ -17,15 +17,15 @@ export component CounterLabel {
     visible: text != "";
     horizontal-stretch: 0;
 
-    private property <color> effective-bg:
+    property <color> effective-bg:
         use-primer-scheme
         ? (scheme == CounterLabelVariant.primary ? PrimerColors.bgColor-neutral-emphasis : PrimerColors.bgColor-neutral-muted)
         : background;
-    private property <color> effective-fg:
+    property <color> effective-fg:
         use-primer-scheme
         ? (scheme == CounterLabelVariant.primary ? PrimerColors.fgOnEmphasis : PrimerColors.fgColor-default)
         : foreground;
-    private property <color> effective-border: use-primer-scheme ? PrimerColors.counter-borderColor : counter-border;
+    property <color> effective-border: use-primer-scheme ? PrimerColors.counter-borderColor : counter-border;
 
     Rectangle {
         border-radius: Math.min(LayoutTokens.counter-label-border-radius, self.height / 2);

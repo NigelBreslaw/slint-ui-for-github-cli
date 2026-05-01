@@ -153,7 +153,7 @@ fs := FocusScope {
 ## Anti-patterns
 
 - **Deep nested ternaries** on every property for every combination of flags — hard to read and easy to get wrong when adding a dimension.
-- **Mixing token logic with layout** — keep dimensions in `states` or small `private property <bool>` helpers, not inline in unrelated components.
+- **Mixing token logic with layout** — keep dimensions in `states` or small `property <bool>` helpers, not inline in unrelated components.
 
 ## Related skills
 

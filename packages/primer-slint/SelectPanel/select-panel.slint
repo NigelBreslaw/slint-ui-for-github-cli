@@ -46,7 +46,7 @@ export component SelectPanel {
 
     horizontal-stretch: 1;
 
-    private property <int> effective-len: item-count >= 0 ? item-count
+    property <int> effective-len: item-count >= 0 ? item-count
         : mode == SelectPanelMode.single ? single-items.length : multi-items.length;
 
     VerticalLayout {

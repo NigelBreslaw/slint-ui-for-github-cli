@@ -23,6 +23,7 @@ specified in detail.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
 - **ActionListTokens** — [**ActionList**](https://primer.style/product/components/action-list/) row and section-heading colors (danger, inactive, link, filled heading, divider, loading label fg): **only** **PrimerColors** + **ButtonTokens** `out` bindings. PR2 audit comment block in [`tokens.slint`](slint/tokens.slint) above **`ActionListTokens`**.
+- **FilteredActionListTokens** — [**FilteredActionList**](slint/FilteredActionList/filtered-action-list.slint) select-all strip padding/gaps and body skeleton bar spacing; composes **LayoutTokens** only. See [`FilteredActionList/VARIANT_MATRIX.md`](slint/FilteredActionList/VARIANT_MATRIX.md) for coverage and v1 non-goals.
 - **CheckboxTokens** — unchecked rest/hover/pressed, checked/indeterminate accent fill + hover/active, and disabled colors; composes from **PrimerColors** and **ButtonTokens**. **`LayoutTokens.checkbox-border-radius`** matches Primer **`borderRadius-small`** (2px).
 - **RadioTokens** — unchecked base + checked inner dot (**`control.checked.fgColor`**) and outer ring (**`control.checked.bgColor`**) + disabled branches; composes **PrimerColors** / **ButtonTokens** (see audit block in [`tokens.slint`](slint/tokens.slint)).
 - **OverlayTokens** — **`backdrop-scrim`** for modal-style dimmers; **`panel-background`** / **`panel-border`** / **`panel-border-width`** / **`panel-border-radius`**, **`panel-elevation-shadow`** (`shadow.floating.small` via **ShadowTokens**) for floating panels (**AnchoredOverlay** and **ModalOverlay** use the panel tokens; **AnchoredOverlay** optional **`panel-fill`** / **`panel-border-*`** / **`panel-elevation-shadow`** mirror these when overriding shell chrome — defaults unchanged). **ModalOverlay** also uses **`backdrop-scrim`**. **No literals** — composes **PrimerColors**, **LayoutTokens**, **ShadowTokens**.
@@ -256,6 +257,26 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 **Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionList`**, **`ActionListRow`**, **`ActionListItemDivider`**, **`ActionListLine`**, **`ActionListLineKind`**, **`ActionListRowVariant`**, **`ActionListDescriptionLayout`**, **`ActionListSelectionMode`**, **`ActionListTokens`**, **`LayoutTokens`**.
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group).
+
+## FilteredActionList
+
+Slint host for Primer **FilteredActionList** (filter field, header hairline, optional **select-all** row, scrollable **`ActionList`**). Upstream: [`FilteredActionList.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/FilteredActionList/FilteredActionList.tsx), [`FilteredActionList.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/FilteredActionList/FilteredActionList.module.css), loaders in the same folder. This component is **not** **`SelectPanel`**: it embeds **`ActionList`** with parent-built **`[ActionListLine]`** and parent-owned filtering (bind **`filter-text`** and react to **`filter-changed`**). **`loading`** + **`FilteredActionListLoadingKind`** (**`input`**, **`body_spinner`**, **`body_skeleton`**) mirror upstream loading modes; **`show-message`** + **`message-*`** replace the list after loading (upstream message wins). Empty filtered state uses **`empty-title`** / **`empty-message`** when **`lines`** is empty. **v1 non-goals** (virtualization, roving tabindex / `aria-activedescendant`, custom render nodes) are listed in [`FilteredActionList/VARIANT_MATRIX.md`](slint/FilteredActionList/VARIANT_MATRIX.md).
+
+| Property | Notes |
+| -------- | ----- |
+| `filter-text` | **in-out** `string`; wired to **`PrimerTextInput`**; **`filter-changed(string)`** on edit. |
+| `placeholder`, `disabled` | Filter field chrome. |
+| `lines` | **`[ActionListLine]`** — parent narrows by query. |
+| `show-dividers`, `selection-mode`, `selected-index`, `multi-selected`, `item-activated` | Passed through to **`ActionList`**. |
+| `body-region-height` | Scroll region height; default **`SelectPanelTokens.list-max-height-default`**. |
+| `loading`, `loading-kind`, `loading-message` | **`FilteredActionListLoadingKind`**: spinner in input, centered body spinner (**`SelectPanelLoading`**), or geometric skeleton rows (**`FilteredActionListTokens`**). |
+| `select-all-visible`, `select-all-checked`, `select-all-indeterminate`, `select-all-label-*`, `select-all-changed` | Optional strip above the list. |
+| `show-message`, `message-title`, `message-description` | Body message region when not loading. |
+| `empty-title`, `empty-message` | Centered empty copy when **`lines`** is empty and **`show-message`** is false. |
+
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`FilteredActionList`**, **`FilteredActionListLoadingKind`**, **`ActionListLine`**, **`ActionListSelectionMode`**, **`FilteredActionListTokens`**, **`SelectPanelTokens`** (default list height), **`LayoutTokens`**, **`PrimerColors`**.
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group, **FilteredActionList** subsections).
 
 ## Select
 

@@ -5,7 +5,7 @@ export component Spinner {
     in property <color> segment-color: PrimerColors.fgColor-default;
     in property <color> track-color: #f0f6fc40;
 
-    private property <length> box: size == Size.small ? 16px : size == Size.large ? 64px : 32px;
+    property <length> box: size == Size.small ? 16px : size == Size.large ? 64px : 32px;
 
     width: box;
     height: box;

@@ -51,18 +51,18 @@ export component FilteredActionList {
 
     horizontal-stretch: 1;
 
-    private property <bool> loading-on-input:
+    property <bool> loading-on-input:
         root.loading && root.loading-kind == FilteredActionListLoadingKind.input;
-    private property <bool> loading-body-spinner:
+    property <bool> loading-body-spinner:
         root.loading && root.loading-kind == FilteredActionListLoadingKind.body_spinner;
-    private property <bool> loading-body-skeleton:
+    property <bool> loading-body-skeleton:
         root.loading && root.loading-kind == FilteredActionListLoadingKind.body_skeleton;
-    private property <bool> show-body-message:
+    property <bool> show-body-message:
         !root.loading-body-spinner && !root.loading-body-skeleton && root.show-message;
-    private property <bool> show-body-empty:
+    property <bool> show-body-empty:
         !root.loading-body-spinner && !root.loading-body-skeleton && !root.show-message && root.lines.length == 0
         && (root.empty-title != "" || root.empty-message != "");
-    private property <bool> show-action-list-body:
+    property <bool> show-action-list-body:
         !root.loading-body-spinner && !root.loading-body-skeleton && !root.show-body-message && !root.show-body-empty;
 
     VerticalLayout {

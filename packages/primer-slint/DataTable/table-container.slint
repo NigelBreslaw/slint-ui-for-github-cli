@@ -13,9 +13,9 @@ export component TableContainer {
     callback primary-action();
     callback secondary-action();
 
-    private property <bool> has-text: title != "" || subtitle != "";
-    private property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
-    private property <bool> has-header: has-text || has-actions;
+    property <bool> has-text: title != "" || subtitle != "";
+    property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
+    property <bool> has-header: has-text || has-actions;
 
     width: 100%;
 

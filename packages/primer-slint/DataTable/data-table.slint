@@ -36,18 +36,18 @@ export component DataTable {
     /// Fired when the user activates a body row (e.g. open URL). Clicks on **`action`** **`IconButton`**s invoke **`row-action`** only (nested **`TouchArea`** does not also trigger this).
     callback row-clicked(row-id: string);
 
-    private property <length> pad-block:
+    property <length> pad-block:
         cell-padding == DataTableCellPadding.condensed ? LayoutTokens.table-cell-padding-block-condensed
         : cell-padding == DataTableCellPadding.spacious ? LayoutTokens.table-cell-padding-block-spacious
         : LayoutTokens.table-cell-padding-block-normal;
 
-    private property <length> pad-inline:
+    property <length> pad-inline:
         cell-padding == DataTableCellPadding.condensed ? LayoutTokens.table-cell-padding-inline-condensed
         : cell-padding == DataTableCellPadding.spacious ? LayoutTokens.table-cell-padding-inline-spacious
         : LayoutTokens.table-cell-padding-inline-normal;
 
     // Header must not use min-height: 0 with TouchArea — Slint can collapse the row to zero height.
-    private property <length> header-row-min-height:
+    property <length> header-row-min-height:
         pad-block + pad-block + LayoutTokens.text-body-lineHeight-medium;
 
     pure function col-max-width(col: DataTableColumn) -> length {
@@ -89,15 +89,11 @@ export component DataTable {
         background: PrimerColors.bgColor-default;
 
         VerticalLayout {
-            width: 100%;
-            spacing: 0;
 
             // Header row — fixed intrinsic height; do not absorb extra vertical space from the parent.
             HorizontalLayout {
-                width: 100%;
                 vertical-stretch: 0;
                 min-height: header-row-min-height;
-                spacing: 0;
 
                 for col[index] in columns: Rectangle {
                     horizontal-stretch: col.horizontal-stretch;
@@ -109,8 +105,7 @@ export component DataTable {
                     clip: true;
 
                     if col.sortable: header-ta := TouchArea {
-                        width: 100%;
-                        height: 100%;
+
                         clicked => {
                             if sorted-column-id != col.id || sort-direction == DataTableSortDirection.none {
                                 root.sort-toggled(col.id, DataTableSortDirection.ascending);
@@ -215,7 +210,6 @@ export component DataTable {
             for row in rows: VerticalLayout {
                 width: 100%;
                 vertical-stretch: 0;
-                spacing: 0;
 
                 row-ta := TouchArea {
                     width: 100%;
@@ -225,12 +219,9 @@ export component DataTable {
                     }
 
                     Rectangle {
-                        width: 100%;
                         background: row-ta.has-hover ? PrimerColors.table-row-bgColor-hover : PrimerColors.bgColor-default;
 
                         HorizontalLayout {
-                            width: 100%;
-                            spacing: 0;
 
                             for cell[index] in row.cells: Rectangle {
                                 horizontal-stretch: body-cell-stretch(index);

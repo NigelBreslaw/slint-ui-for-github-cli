@@ -48,17 +48,17 @@ export component ActionListRow {
 
     callback clicked;
 
-    private property <bool> is-inactive: root.inactive-text != "";
-    private property <bool> is-loading-row: root.show-trailing-loading;
+    property <bool> is-inactive: root.inactive-text != "";
+    property <bool> is-loading-row: root.show-trailing-loading;
     /// Primer **`[data-active]`** visuals (bar + surface + label override); not combined with **inactive** / **loading** / **disabled**.
-    private property <bool> show-active-chrome:
+    property <bool> show-active-chrome:
         root.active && !root.disabled && !root.is-inactive && !root.is-loading-row;
 
-    private property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
-    private property <length> avatar-diameter: LayoutTokens.action-list-avatar-diameter;
-    private property <length> cell-padding-block: LayoutTokens.action-list-item-padding-block;
+    property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
+    property <length> avatar-diameter: LayoutTokens.action-list-avatar-diameter;
+    property <length> cell-padding-block: LayoutTokens.action-list-item-padding-block;
 
-    private property <color> label-color:
+    property <color> label-color:
         root.is-loading-row
         ? ActionListTokens.item-loading-label-fgColor
         : root.disabled ? (root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled) 
@@ -68,37 +68,37 @@ export component ActionListRow {
             : root.row-variant == ActionListRowVariant.danger ? ActionListTokens.item-danger-fgColor-rest
             : PrimerColors.fgColor-default;
 
-    private property <color> leading-icon-tint:
+    property <color> leading-icon-tint:
         root.disabled ? ButtonTokens.control-fgColor-disabled : root.is-inactive
         ? PrimerColors.fgColor-muted : root.row-variant == ActionListRowVariant.danger
         ? ActionListTokens.item-danger-fgColor-rest : PrimerColors.fgColor-muted;
 
     /// Trailing affordance stays **muted** (including danger rows — label carries danger color).
-    private property <color> trailing-icon-tint:
+    property <color> trailing-icon-tint:
         root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
 
-    private property <color> single-select-check-tint:
+    property <color> single-select-check-tint:
         root.disabled ? ButtonTokens.control-fgColor-disabled : root.is-inactive ? PrimerColors.fgColor-muted : PrimerColors.fgColor-default;
 
-    private property <color> multi-select-lead-bg:
+    property <color> multi-select-lead-bg:
         root.disabled ? (root.selected ? CheckboxTokens.checkbox-bgColor-checked-disabled : CheckboxTokens.checkbox-bgColor-rest) : (root.selected ? CheckboxTokens.checkbox-bgColor-checked : CheckboxTokens.checkbox-bgColor-rest);
-    private property <color> multi-select-lead-border:
+    property <color> multi-select-lead-border:
         root.disabled ? (root.selected ? CheckboxTokens.checkbox-borderColor-checked-disabled : CheckboxTokens.checkbox-borderColor-rest) : (root.selected ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
 
-    private property <bool> show-inline-description:
+    property <bool> show-inline-description:
         root.description != "" && root.description-layout == ActionListDescriptionLayout.inline;
 
-    private property <bool> show-block-description:
+    property <bool> show-block-description:
         root.description != "" && root.description-layout == ActionListDescriptionLayout.block;
 
-    private property <color> inline-description-color:
+    property <color> inline-description-color:
         root.is-loading-row ? ActionListTokens.item-loading-label-fgColor : root.disabled ? ButtonTokens.control-fgColor-disabled : root.is-inactive ? ActionListTokens.item-inactive-description-fgColor : PrimerColors.fgColor-muted;
 
     /// Selected “chip” + semibold only when not using lead-only selection affordance (single check / multi checkbox).
-    private property <bool> use-selected-surface:
+    property <bool> use-selected-surface:
         root.selected && !root.show-single-select-check && !root.show-multi-select-checkbox;
 
-    private property <int> label-font-weight:
+    property <int> label-font-weight:
         root.is-loading-row ? LayoutTokens.base-text-weight-medium : !root.disabled && (root.use-selected-surface || root.show-active-chrome) ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium;
 
     min-height: root.cell-min-height + (root.show-top-seam ? LayoutTokens.table-border-width : 0px);

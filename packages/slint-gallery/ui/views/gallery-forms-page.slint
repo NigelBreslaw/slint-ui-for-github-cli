@@ -30,60 +30,60 @@ import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
 
-    private property <[SelectOption]> demo-select-options: [
+    property <[SelectOption]> demo-select-options: [
         { value: "one", label: "First option", enabled: true },
         { value: "two", label: "Second option", enabled: true },
         { value: "three", label: "Third option", enabled: false },
     ];
-    private property <int> demo-select-index: 0;
+    property <int> demo-select-index: 0;
 
-    private property <bool> demo-cb-off: false;
-    private property <bool> demo-cb-on: true;
-    private property <bool> demo-cb-label: false;
-    private property <bool> demo-cb-indet: true;
-    private property <bool> demo-cg-opt1: false;
-    private property <bool> demo-cg-opt2: true;
+    property <bool> demo-cb-off: false;
+    property <bool> demo-cb-on: true;
+    property <bool> demo-cb-label: false;
+    property <bool> demo-cb-indet: true;
+    property <bool> demo-cg-opt1: false;
+    property <bool> demo-cg-opt2: true;
 
-    private property <string> demo-radio-mutex: "beta";
-    private property <string> demo-rg-plan: "";
-    private property <string> demo-rg-disabled-pick: "b";
-    private property <string> demo-rg-hidden-axis: "x";
+    property <string> demo-radio-mutex: "beta";
+    property <string> demo-rg-plan: "";
+    property <string> demo-rg-disabled-pick: "b";
+    property <string> demo-rg-hidden-axis: "x";
 
-    private property <bool> demo-ts-spike: false;
-    private property <bool> demo-ts-end: false;
-    private property <bool> demo-ts-custom: false;
+    property <bool> demo-ts-spike: false;
+    property <bool> demo-ts-end: false;
+    property <bool> demo-ts-custom: false;
 
-    private property <string> demo-p1-block: "";
-    private property <string> demo-p1-small: "";
-    private property <string> demo-p1-large: "";
-    private property <string> demo-p1-disabled: "Cannot edit";
-    private property <string> demo-p1-caption: "";
-    private property <string> demo-p1-error: "";
-    private property <string> demo-p1-success: "";
-    private property <string> demo-p1-required: "";
-    private property <string> demo-p3-lead: "";
-    private property <string> demo-p3-trail: "value";
-    private property <string> demo-p3-mono: "repo/pkg@v1";
-    private property <string> demo-p3-default-fill: "";
-    private property <string> demo-p3-contrast-fill: "";
-    private property <string> demo-p4-plain: "";
-    private property <string> demo-p4-lead-auto: "";
-    private property <string> demo-p4-trail-auto: "";
-    private property <string> demo-p4-both-auto: "";
-    private property <string> demo-p4-force-lead: "";
-    private property <string> demo-p4-force-trail: "";
-    private property <string> demo-p4-both-force-lead: "";
-    private property <string> demo-p4-both-force-trail: "";
-    private property <string> demo-p5-limit-only: "Hello";
-    private property <string> demo-p5-limit-caption: "Notes";
-    private property <string> demo-p5-exceed: "This text exceeds the twelve-character limit.";
-    private property <string> demo-p5-hidden-label: "";
-    private property <string> demo-p6-trailing-clear: "Clear me";
+    property <string> demo-p1-block: "";
+    property <string> demo-p1-small: "";
+    property <string> demo-p1-large: "";
+    property <string> demo-p1-disabled: "Cannot edit";
+    property <string> demo-p1-caption: "";
+    property <string> demo-p1-error: "";
+    property <string> demo-p1-success: "";
+    property <string> demo-p1-required: "";
+    property <string> demo-p3-lead: "";
+    property <string> demo-p3-trail: "value";
+    property <string> demo-p3-mono: "repo/pkg@v1";
+    property <string> demo-p3-default-fill: "";
+    property <string> demo-p3-contrast-fill: "";
+    property <string> demo-p4-plain: "";
+    property <string> demo-p4-lead-auto: "";
+    property <string> demo-p4-trail-auto: "";
+    property <string> demo-p4-both-auto: "";
+    property <string> demo-p4-force-lead: "";
+    property <string> demo-p4-force-trail: "";
+    property <string> demo-p4-both-force-lead: "";
+    property <string> demo-p4-both-force-trail: "";
+    property <string> demo-p5-limit-only: "Hello";
+    property <string> demo-p5-limit-caption: "Notes";
+    property <string> demo-p5-exceed: "This text exceeds the twelve-character limit.";
+    property <string> demo-p5-hidden-label: "";
+    property <string> demo-p6-trailing-clear: "Clear me";
 
-    private property <bool> demo-select-panel-open: false;
-    private property <string> demo-sp-filter: "";
-    private property <int> demo-sp-focused: 0;
-    private property <[SelectPanelItem]> demo-sp-items: [
+    property <bool> demo-select-panel-open: false;
+    property <string> demo-sp-filter: "";
+    property <int> demo-sp-focused: 0;
+    property <[SelectPanelItem]> demo-sp-items: [
         { value: "enhancement", label: "enhancement", description: "New feature or request", swatch: #84b6eb, enabled: true },
         { value: "bug", label: "bug", description: "Something isn't working", swatch: #d73a4a, enabled: true },
         { value: "good-first-issue", label: "good first issue", description: "Good for newcomers", swatch: #3fb950, enabled: true },

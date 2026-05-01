@@ -35,16 +35,16 @@ export component Select {
     in property <int> option-count: -1;
     callback selected-changed(value_index: int);
 
-    private property <int> effective-len: option-count >= 0 ? option-count : options.length;
-    private property <bool> has-options: effective-len > 0;
+    property <int> effective-len: option-count >= 0 ? option-count : options.length;
+    property <bool> has-options: effective-len > 0;
 
-    private property <length> trigger-height:
+    property <length> trigger-height:
         size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
 
-    private property <length> trigger-font:
+    property <length> trigger-font:
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
-    private property <color> trigger-border-color:
+    property <color> trigger-border-color:
         validation-status == ValidationStatus.error ? ButtonTokens.color-btn-danger-text : validation-status == ValidationStatus.success ? PrimerColors.borderColor-success-emphasis : PrimerColors.borderColor-default;
 
     function apply-pick-at(ix: int) {

@@ -45,7 +45,7 @@ export component AnchoredOverlay {
     width: 0px;
     height: 0px;
 
-    private property <length> effective-panel-width: panel-width > 0px ? panel-width : anchor-width;
+    property <length> effective-panel-width: panel-width > 0px ? panel-width : anchor-width;
 
     changed open => {
         if root.open {
@@ -57,27 +57,27 @@ export component AnchoredOverlay {
 
     popup := PopupWindow {
         /// Shrink-wrap height follows slot; width is **`max(slot, anchor)`** when **`panel-width == 0`** so **`width: 100%`** menus get a stable host width on first layout.
-        private property <length> body-height: root.shrink-wrap ? panel-chrome.slot-preferred-height : root.panel-height;
-        private property <length> body-width: max(panel-chrome.slot-preferred-width, root.effective-panel-width);
+        property <length> body-height: root.shrink-wrap ? panel-chrome.slot-preferred-height : root.panel-height;
+        property <length> body-width: max(panel-chrome.slot-preferred-width, root.effective-panel-width);
 
-        private property <bool> flip-above:
+        property <bool> flip-above:
             root.anchor-abs-y + root.anchor-height + root.anchor-gap + body-height > AppWindow.window-height
             && root.anchor-abs-y >= root.anchor-gap + body-height;
 
-        private property <length> panel-window-y:
+        property <length> panel-window-y:
             root.vertical-side == AnchoredOverlaySide.outside_top ? root.anchor-abs-y - root.anchor-gap - body-height
             : root.vertical-side == AnchoredOverlaySide.outside_bottom ? root.anchor-abs-y + root.anchor-height + root.anchor-gap
             : flip-above ? root.anchor-abs-y - root.anchor-gap - body-height
             : root.anchor-abs-y + root.anchor-height + root.anchor-gap;
 
-        private property <length> panel-window-x-raw:
+        property <length> panel-window-x-raw:
             root.align == AnchoredOverlayAlign.start ? root.anchor-abs-x
             : root.align == AnchoredOverlayAlign.center ? root.anchor-abs-x + (root.anchor-width - root.effective-panel-width) / 2
             : root.anchor-abs-x + root.anchor-width - root.effective-panel-width;
 
-        private property <length> panel-window-x-max: max(0px, AppWindow.window-width - root.effective-panel-width);
+        property <length> panel-window-x-max: max(0px, AppWindow.window-width - root.effective-panel-width);
 
-        private property <length> panel-window-x: max(0px, min(panel-window-x-raw, panel-window-x-max));
+        property <length> panel-window-x: max(0px, min(panel-window-x-raw, panel-window-x-max));
 
         x: panel-window-x - root.absolute-position.x;
         y: panel-window-y - root.absolute-position.y;

@@ -21,7 +21,7 @@ export component ProjectBoardList {
     height: 100%;
 
     // Column definitions: widths come from `ProjectBoardTableLayout.widths` (edit in project-board-table-layout.slint).
-    private property <[DataTableColumn]> project-board-columns: [
+    property <[DataTableColumn]> project-board-columns: [
         {
             header: "#",
             id: "idx",
@@ -140,7 +140,6 @@ export component ProjectBoardList {
                 if ProjectBoardListState.items-load-status == "": VerticalLayout {
                     width: 100%;
                     vertical-stretch: 1;
-                    spacing: 0;
 
                     Rectangle {
                         vertical-stretch: 1;
@@ -157,10 +156,8 @@ export component ProjectBoardList {
                             board-inner := VerticalLayout {
                                 width: max(board-flick.width, ProjectBoardTableLayout.total-width);
                                 height: board-flick.height;
-                                spacing: 0;
 
                                 TableContainer {
-                                    width: 100%;
                                     vertical-stretch: 1;
                                     min-height: 120px;
                                     title: ProjectBoardListState.selected-project-label;

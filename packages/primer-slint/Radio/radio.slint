@@ -13,11 +13,11 @@ export component Radio {
 
     callback toggled;
 
-    private property <length> radio-size: LayoutTokens.iconButton-icon-size-medium;
-    private property <length> border-w-unchecked: LayoutTokens.table-border-width;
-    private property <length> border-w-checked: 2px;
-    private property <length> focus-ring-padding: 2px;
-    private property <length> focus-host-size: radio-size + 2 * focus-ring-padding;
+    property <length> radio-size: LayoutTokens.iconButton-icon-size-medium;
+    property <length> border-w-unchecked: LayoutTokens.table-border-width;
+    property <length> border-w-checked: 2px;
+    property <length> focus-ring-padding: 2px;
+    property <length> focus-host-size: radio-size + 2 * focus-ring-padding;
 
     fs := FocusScope {
         enabled: !root.disabled && root.interactive;

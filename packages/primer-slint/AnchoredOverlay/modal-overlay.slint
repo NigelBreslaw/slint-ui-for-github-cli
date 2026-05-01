@@ -31,27 +31,27 @@ export component ModalOverlay {
     in property <DialogNarrowPositionPreset> narrow-position: DialogNarrowPositionPreset.center;
     callback close-requested();
 
-    private property <length> panel-w: min(root.panel-width, OverlayTokens.modal-viewport-max-width);
+    property <length> panel-w: min(root.panel-width, OverlayTokens.modal-viewport-max-width);
     /// Height cap for the modal shell (`panel-max-height` ∩ viewport overlay max).
-    private property <length> viewport-cap-h: min(root.panel-max-height, OverlayTokens.modal-viewport-max-height);
+    property <length> viewport-cap-h: min(root.panel-max-height, OverlayTokens.modal-viewport-max-height);
 
     /// Shared **0–1** for backdrop opacity + panel enter motion — driven by **`Timer`**, not **`open`**, so **`animate`** has a real previous value after **`PopupWindow.show()`**.
-    private property <float> presented: 0.0;
+    property <float> presented: 0.0;
 
-    private property <bool> is-side-sheet:
+    property <bool> is-side-sheet:
         !root.narrow-viewport && (root.panel-position == DialogPositionPreset.left || root.panel-position == DialogPositionPreset.right);
 
-    private property <bool> is-narrow-bottom:
+    property <bool> is-narrow-bottom:
         root.narrow-viewport && root.narrow-position == DialogNarrowPositionPreset.bottom;
 
-    private property <bool> is-narrow-fullscreen:
+    property <bool> is-narrow-fullscreen:
         root.narrow-viewport && root.narrow-position == DialogNarrowPositionPreset.fullscreen;
 
     /// **`scaleFade`** opacity path — not side sheet / not narrow bottom sheet slide-only.
-    private property <bool> use-scale-fade-opacity:
+    property <bool> use-scale-fade-opacity:
         !root.is-side-sheet && !root.is-narrow-bottom;
 
-    private property <duration> presented-enter-duration:
+    property <duration> presented-enter-duration:
         root.is-side-sheet || root.is-narrow-bottom ? DialogTokens.overlay-sheet-enter-duration : DialogTokens.overlay-enter-duration;
 
     animate presented {
@@ -60,46 +60,46 @@ export component ModalOverlay {
     }
 
     /// Shell scale **0.5 → 1** (`Overlay--motion-scaleFade`) — side sheets + narrow bottom use scale **1**.
-    private property <float> shell-scale: 0.5 + 0.5 * presented;
+    property <float> shell-scale: 0.5 + 0.5 * presented;
 
-    private property <float> shell-scale-effective:
+    property <float> shell-scale-effective:
         root.is-side-sheet || root.is-narrow-bottom ? 1.0 : root.shell-scale;
 
     /// Full-bleed width (**narrow bottom** / **narrow fullscreen**).
-    private property <length> shell-width:
+    property <length> shell-width:
         root.is-narrow-bottom || root.is-narrow-fullscreen ? AppWindow.window-width : root.panel-w;
 
     /// Side sheet **`x`** (**`narrow-viewport`** off): **`slideInRight`** / **`slideInLeft`**; else horizontally centered (**full-bleed** shells **`x == 0`**).
-    private property <length> panel-shell-x:
+    property <length> panel-shell-x:
         root.is-side-sheet && root.panel-position == DialogPositionPreset.left ? root.panel-w * root.presented - root.panel-w
         : root.is-side-sheet && root.panel-position == DialogPositionPreset.right ? AppWindow.window-width - root.panel-w * root.presented
         : (AppWindow.window-width - root.shell-width) / 2;
 
-    private property <length> chrome-corner-tl:
+    property <length> chrome-corner-tl:
         root.is-narrow-fullscreen ? 0px
         : root.is-narrow-bottom ? OverlayTokens.panel-border-radius
         : root.panel-position == DialogPositionPreset.left ? 0px
         : OverlayTokens.panel-border-radius;
 
-    private property <length> chrome-corner-tr:
+    property <length> chrome-corner-tr:
         root.is-narrow-fullscreen ? 0px
         : root.is-narrow-bottom ? OverlayTokens.panel-border-radius
         : root.panel-position == DialogPositionPreset.right ? 0px
         : OverlayTokens.panel-border-radius;
 
-    private property <length> chrome-corner-br:
+    property <length> chrome-corner-br:
         root.is-narrow-fullscreen ? 0px
         : root.is-narrow-bottom ? 0px
         : root.panel-position == DialogPositionPreset.right ? 0px
         : OverlayTokens.panel-border-radius;
 
-    private property <length> chrome-corner-bl:
+    property <length> chrome-corner-bl:
         root.is-narrow-fullscreen ? 0px
         : root.is-narrow-bottom ? 0px
         : root.panel-position == DialogPositionPreset.left ? 0px
         : OverlayTokens.panel-border-radius;
 
-    private property <length> elevation-radius:
+    property <length> elevation-radius:
         root.is-narrow-fullscreen ? 0px : OverlayTokens.panel-border-radius;
 
     /// One tick after **`show()`**, bump **`presented`** to **1** so enter animation runs (see file comment).

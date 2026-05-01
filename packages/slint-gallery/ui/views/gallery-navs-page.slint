@@ -14,8 +14,8 @@ export component GalleryNavsPage inherits VerticalLayout {
     width: 100%;
     alignment: start;
 
-    private property <int> demo-nav-flat-selected: 0;
-    private property <[NavListItem]> demo-nav-flat-items: [
+    property <int> demo-nav-flat-selected: 0;
+    property <[NavListItem]> demo-nav-flat-items: [
         {
             data: {
                 label: "Dashboard",
@@ -59,7 +59,7 @@ export component GalleryNavsPage inherits VerticalLayout {
             subnav-default-open: false,
         },
     ];
-    private property <[NavListGroup]> demo-nav-groups: [
+    property <[NavListGroup]> demo-nav-groups: [
         {
             title: "Repository",
             heading-variant: NavListGroupHeadingVariant.filled,
@@ -129,7 +129,7 @@ export component GalleryNavsPage inherits VerticalLayout {
             ],
         },
     ];
-    private property <[NavListItem]> demo-nav-subnav-items: [
+    property <[NavListItem]> demo-nav-subnav-items: [
         {
             data: {
                 label: "Overview",
@@ -188,9 +188,9 @@ export component GalleryNavsPage inherits VerticalLayout {
             subnav-default-open: true,
         },
     ];
-    private property <int> demo-nav-sidebar-selected: 0;
+    property <int> demo-nav-sidebar-selected: 0;
     // Minimal labels — common Primer sidebar: blue accent bar + muted row for `current`.
-    private property <[NavListItem]> demo-nav-sidebar-items: [
+    property <[NavListItem]> demo-nav-sidebar-items: [
         {
             data: {
                 label: "Item 1",
@@ -234,23 +234,23 @@ export component GalleryNavsPage inherits VerticalLayout {
             subnav-default-open: false,
         },
     ];
-    private property <string> demo-nav-last: "";
+    property <string> demo-nav-last: "";
 
-    private property <int> demo-underline-selected: 0;
-    private property <[UnderlineNavItem]> demo-underline-items: [
+    property <int> demo-underline-selected: 0;
+    property <[UnderlineNavItem]> demo-underline-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Issues", enabled: true, counter: "12K", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
-    private property <int> demo-underline-disabled-selected: 0;
-    private property <[UnderlineNavItem]> demo-underline-disabled-items: [
+    property <int> demo-underline-disabled-selected: 0;
+    property <[UnderlineNavItem]> demo-underline-disabled-items: [
         { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Issues", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Pull requests", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Security", enabled: false, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
-    private property <int> demo-underline-loading-icons-selected: 0;
-    private property <[UnderlineNavItem]> demo-underline-loading-icons-items: [
+    property <int> demo-underline-loading-icons-selected: 0;
+    property <[UnderlineNavItem]> demo-underline-loading-icons-items: [
         { label: "Open", enabled: true, counter: "128", has-leading-icon: true, leading-icon: Icons.issue_opened },
         { label: "Closed", enabled: true, counter: "2.4k", has-leading-icon: true, leading-icon: Icons.issue_draft },
         { label: "Drafts", enabled: true, counter: "4", has-leading-icon: true, leading-icon: Icons.git_pull_request_draft },

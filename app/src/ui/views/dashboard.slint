@@ -16,7 +16,7 @@ export component Dashboard {
     width: 100%;
     height: 100%;
 
-    private property <[UnderlineNavItem]> dashboard-nav-items: [
+    property <[UnderlineNavItem]> dashboard-nav-items: [
         { label: "Items to review", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
         { label: "Security alerts", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
     ];
@@ -171,7 +171,6 @@ export component Dashboard {
 
                     security-alerts-vl := VerticalLayout {
                         width: parent.width;
-                        spacing: 0;
 
                         for row[ix] in AppState.security-alerts-model: ActionListRow {
                             width: 100%;

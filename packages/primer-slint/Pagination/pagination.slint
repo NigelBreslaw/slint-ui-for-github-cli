@@ -75,18 +75,18 @@ export component Pagination {
     in property <int> surrounding-page-count: 2;
     callback page-changed(int);
 
-    private property <int> page-count: PaginationLogic.page_count_from_total(total-count, page-size);
-    private property <int> idx-clamped: PaginationLogic.clamp_page_index(page-index, page-count);
-    private property <int> current-1based: idx-clamped + 1;
-    private property <int> model-len: PaginationLogic.model_len(
+    property <int> page-count: PaginationLogic.page_count_from_total(total-count, page-size);
+    property <int> idx-clamped: PaginationLogic.clamp_page_index(page-index, page-count);
+    property <int> current-1based: idx-clamped + 1;
+    property <int> model-len: PaginationLogic.model_len(
         page-count,
         current-1based,
         show-pages,
         margin-page-count,
         surrounding-page-count,
     );
-    private property <int> range-start: PaginationLogic.range_display_start(total-count, idx-clamped, page-size);
-    private property <int> range-end: PaginationLogic.range_display_end(total-count, idx-clamped, page-size);
+    property <int> range-start: PaginationLogic.range_display_start(total-count, idx-clamped, page-size);
+    property <int> range-end: PaginationLogic.range_display_end(total-count, idx-clamped, page-size);
 
     width: 100%;
     min-height: LayoutTokens.control-small-size;

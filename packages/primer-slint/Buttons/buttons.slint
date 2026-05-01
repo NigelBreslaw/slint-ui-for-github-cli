@@ -39,44 +39,44 @@ export component Button {
     in property <color> label-color-override: #000000;
 
     // Primer ButtonBase: only [data-size='small'] changes font-size; large keeps text-body-size-medium (L9 + L165–179).
-    private property <length> filled-label-font-size:
+    property <length> filled-label-font-size:
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
-    private property <length> btn-padding-inline:
+    property <length> btn-padding-inline:
         size == Size.small
         ? LayoutTokens.control-small-paddingInline-condensed
         : size == Size.large ? LayoutTokens.control-large-paddingInline-spacious : LayoutTokens.control-medium-paddingInline-normal;
 
-    private property <length> btn-control-height:
+    property <length> btn-control-height:
         size == Size.small
         ? LayoutTokens.control-small-size
         : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
 
-    private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
-    private property <bool> is-link: variant == ButtonVariant.link;
-    private property <bool> primary-pressed: variant == ButtonVariant.primary && ta.pressed;
-    private property <bool> danger-pressed: variant == ButtonVariant.danger && ta.pressed;
-    private property <bool> danger-hover: variant == ButtonVariant.danger && ta.has-hover && !ta.pressed;
-    private property <bool> has-leading-slot: leading-text != "" || has-leading-icon;
-    private property <bool> show-trailing-visual: trailing-text != "" || has-trailing-icon;
-    private property <bool> show-count: count != "" && !show-trailing-visual;
-    private property <bool> loading-replaces-leading: loading && has-leading-slot;
-    private property <bool> loading-replaces-trailing: loading && !has-leading-slot && (show-trailing-visual || show-count);
-    private property <bool> loading-only-spinner: loading && !has-leading-slot && !show-trailing-visual && !show-count;
-    private property <bool> danger-counter-hover: variant == ButtonVariant.danger && !disabled && (ta.has-hover || ta.pressed);
-    private property <length> btn-icon-size:
+    property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
+    property <bool> is-link: variant == ButtonVariant.link;
+    property <bool> primary-pressed: variant == ButtonVariant.primary && ta.pressed;
+    property <bool> danger-pressed: variant == ButtonVariant.danger && ta.pressed;
+    property <bool> danger-hover: variant == ButtonVariant.danger && ta.has-hover && !ta.pressed;
+    property <bool> has-leading-slot: leading-text != "" || has-leading-icon;
+    property <bool> show-trailing-visual: trailing-text != "" || has-trailing-icon;
+    property <bool> show-count: count != "" && !show-trailing-visual;
+    property <bool> loading-replaces-leading: loading && has-leading-slot;
+    property <bool> loading-replaces-trailing: loading && !has-leading-slot && (show-trailing-visual || show-count);
+    property <bool> loading-only-spinner: loading && !has-leading-slot && !show-trailing-visual && !show-count;
+    property <bool> danger-counter-hover: variant == ButtonVariant.danger && !disabled && (ta.has-hover || ta.pressed);
+    property <length> btn-icon-size:
         size == Size.small
         ? LayoutTokens.iconButton-icon-size-small
         : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
-    private property <Size> btn-spinner-size: size == Size.large ? Size.medium : Size.small;
-    private property <color> btn-spinner-track: is-dark ? #ffffff30 : #1f232830;
+    property <Size> btn-spinner-size: size == Size.large ? Size.medium : Size.small;
+    property <color> btn-spinner-track: is-dark ? #ffffff30 : #1f232830;
 
-    private property <ButtonPaint> paint: ButtonLogic.button-paint(variant, disabled, ta.has-hover, ta.pressed);
-    private property <length> effective-label-font-size: label-typography-override ? label-font-size-override : filled-label-font-size;
-    private property <int> effective-label-font-weight: label-typography-override ? label-font-weight-override : LayoutTokens.base-text-weight-medium;
-    private property <color> effective-label-fg: label-typography-override ? label-color-override : paint.fg;
-    private property <ButtonCounterPaint> btn-counter-paint: ButtonLogic.button-counter-paint(variant, disabled, danger-counter-hover, paint.fg);
-    private property <ButtonShadowState> btn-sh: ButtonLogic.button-shadow(variant, disabled, is-dark, danger-pressed, primary-pressed, danger-hover);
+    property <ButtonPaint> paint: ButtonLogic.button-paint(variant, disabled, ta.has-hover, ta.pressed);
+    property <length> effective-label-font-size: label-typography-override ? label-font-size-override : filled-label-font-size;
+    property <int> effective-label-font-weight: label-typography-override ? label-font-weight-override : LayoutTokens.base-text-weight-medium;
+    property <color> effective-label-fg: label-typography-override ? label-color-override : paint.fg;
+    property <ButtonCounterPaint> btn-counter-paint: ButtonLogic.button-counter-paint(variant, disabled, danger-counter-hover, paint.fg);
+    property <ButtonShadowState> btn-sh: ButtonLogic.button-shadow(variant, disabled, is-dark, danger-pressed, primary-pressed, danger-hover);
 
     MultiDropShadow {
         width: parent.width;
@@ -110,13 +110,7 @@ export component Button {
             padding-right: align-content == ButtonAlignContent.start ? btn-padding-inline: btn-padding-inline * 2;
             spacing: LayoutTokens.button-content-gap;
 
-            if loading-only-spinner: Spinner {
-                size: btn-spinner-size;
-                segment-color: paint.fg;
-                track-color: btn-spinner-track;
-            }
-
-            if loading-replaces-leading: Spinner {
+            if loading-only-spinner || loading-replaces-leading: Spinner {
                 size: btn-spinner-size;
                 segment-color: paint.fg;
                 track-color: btn-spinner-track;
@@ -315,15 +309,15 @@ export component IconButton {
         button-default-borderColor-active: ButtonTokens.color-btn-border,
     };
 
-    private property <bool> is-invisible: variant == IconButtonVariant.invisible;
+    property <bool> is-invisible: variant == IconButtonVariant.invisible;
 
-    private property <length> ib-border-width: is-invisible ? 0px : 1px;
+    property <length> ib-border-width: is-invisible ? 0px : 1px;
 
-    private property <color> ib-border-color: is-invisible ? transparent : style.button-default-borderColor-active;
+    property <color> ib-border-color: is-invisible ? transparent : style.button-default-borderColor-active;
 
-    private property <color> ib-bg-rest: is-invisible ? transparent : style.button-default-bgColor-active;
+    property <color> ib-bg-rest: is-invisible ? transparent : style.button-default-bgColor-active;
 
-    private property <length> icon-img-size:
+    property <length> icon-img-size:
         size == Size.small
         ? LayoutTokens.iconButton-icon-size-small
         : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;

@@ -1,22 +1,7 @@
-import { LabelTokens, LayoutTokens } from "../tokens.slint";
-import { LabelVariant, LabelSize } from "./types.slint";
+import { LabelTokens } from "../tokens.slint";
+import { LabelVariant } from "./types.slint";
 
 export global LabelLogic {
-    public pure function label-height(s: LabelSize) -> length {
-        if s == LabelSize.large {
-            return LayoutTokens.label-height-large;
-        }
-        // Remaining case: LabelSize.small (only other enum value).
-        return LayoutTokens.label-height-small;
-    }
-
-    public pure function label-padding-inline(s: LabelSize) -> length {
-        if s == LabelSize.large {
-            return LayoutTokens.label-padding-inline-large;
-        }
-        // Remaining case: LabelSize.small (only other enum value).
-        return LayoutTokens.label-padding-inline-small;
-    }
 
     public pure function label-fg(v: LabelVariant) -> color {
         if v == LabelVariant.primary {

@@ -51,68 +51,68 @@ export component PrimerTextInput {
 
     callback edited(text: string);
 
-    private property <bool> input-has-focus: false;
+    property <bool> input-has-focus: false;
 
-    private property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
+    property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
 
     /// Match [`Button`] spinner sizing: large control uses medium spinner; small spinner for small/medium controls.
-    private property <Size> field-spinner-component-size:
+    property <Size> field-spinner-component-size:
         size == Size.large ? Size.medium : Size.small;
 
-    private property <color> spinner-track-color: is-dark ? #ffffff30 : #1f232830;
+    property <color> spinner-track-color: is-dark ? #ffffff30 : #1f232830;
 
     /// `auto`: leading visual slot when present; otherwise trailing (aligned with Primer React TextInput).
-    private property <bool> loading-spin-leading:
+    property <bool> loading-spin-leading:
         loading && (
             loader-position == TextInputLoaderPosition.leading
             || (loader-position == TextInputLoaderPosition.auto && has-leading-visual)
         );
 
-    private property <bool> loading-spin-trailing:
+    property <bool> loading-spin-trailing:
         loading && (
             loader-position == TextInputLoaderPosition.trailing
             || (loader-position == TextInputLoaderPosition.auto && !has-leading-visual)
         );
 
-    private property <bool> reserve-leading-slot: has-leading-visual || loading-spin-leading;
-    private property <bool> reserve-trailing-slot:
+    property <bool> reserve-leading-slot: has-leading-visual || loading-spin-leading;
+    property <bool> reserve-trailing-slot:
         has-trailing-visual || loading-spin-trailing || has-trailing-action;
 
-    private property <length> field-height:
+    property <length> field-height:
         size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
 
-    private property <length> field-font-size:
+    property <length> field-font-size:
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
     /// Same inline padding as [`Button`] `btn-padding-inline` — edges stay flush; icons/spinner sit in fixed slots after this inset.
-    private property <length> field-padding-inline:
+    property <length> field-padding-inline:
         size == Size.small ? LayoutTokens.control-small-paddingInline-condensed : size == Size.large ? LayoutTokens.control-large-paddingInline-spacious : LayoutTokens.control-medium-paddingInline-normal;
 
     /// Icon column — TextInputInnerVisualSlot uses 16px glyphs for medium controls.
-    private property <length> visual-icon-size:
+    property <length> visual-icon-size:
         size == Size.small ? LayoutTokens.iconButton-icon-size-small : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
 
-    private property <color> chrome-bg-rest: contrast ? TextInputTokens.bg-contrast : TextInputTokens.bg-rest;
+    property <color> chrome-bg-rest: contrast ? TextInputTokens.bg-contrast : TextInputTokens.bg-rest;
 
-    private property <string> field-font-family:
+    property <string> field-font-family:
         monospace ? "Bitstream Vera Sans Mono" : "Mona Sans";
 
-    private property <bool> character-limit-active: character-limit > 0;
+    property <bool> character-limit-active: character-limit > 0;
 
-    private property <bool> character-limit-exceeded:
+    property <bool> character-limit-exceeded:
         character-limit-active && root.text.character-count > character-limit;
 
     /// Limit exceeded visually matches validation error (Primer counter danger); validation success is suppressed while over limit.
-    private property <bool> chrome-validation-error:
+    property <bool> chrome-validation-error:
         validation-status == ValidationStatus.error || character-limit-exceeded;
 
-    private property <bool> chrome-validation-success:
+    property <bool> chrome-validation-success:
         validation-status == ValidationStatus.success && !character-limit-exceeded;
 
-    private property <bool> show-status-validation-line:
+    property <bool> show-status-validation-line:
         validation-message != "" && validation-status != ValidationStatus.none;
 
-    private property <bool> show-limit-validation-line:
+    property <bool> show-limit-validation-line:
         character-limit-exceeded && character-limit-exceeded-message != "";
 
     height: column.preferred-height;

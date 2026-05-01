@@ -13,8 +13,8 @@ export component Checkbox {
 
     callback toggled;
 
-    private property <length> box-size: LayoutTokens.iconButton-icon-size-medium;
-    private property <bool> filled: root.checked || root.indeterminate;
+    property <length> box-size: LayoutTokens.iconButton-icon-size-medium;
+    property <bool> filled: root.checked || root.indeterminate;
 
     touch := TouchArea {
         enabled: !root.disabled && root.interactive;

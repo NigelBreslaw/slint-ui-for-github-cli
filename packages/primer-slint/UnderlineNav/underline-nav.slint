@@ -27,11 +27,11 @@ component UnderlineNavItemRow {
     in property <bool> loading-counters: false;
     callback clicked;
 
-    private property <bool> show-counter-slot: counter != "";
-    private property <bool> show-counter-value: show-counter-slot && !loading-counters;
-    private property <bool> show-counter-loading: show-counter-slot && loading-counters;
+    property <bool> show-counter-slot: counter != "";
+    property <bool> show-counter-value: show-counter-slot && !loading-counters;
+    property <bool> show-counter-loading: show-counter-slot && loading-counters;
 
-    private property <color> label-fg: !root.enabled
+    property <color> label-fg: !root.enabled
         ? PrimerColors.fgColor-muted
         : root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted;
 
@@ -120,8 +120,8 @@ component UnderlineNavItemRow {
                                 }
 
                                 if show-counter-loading: Rectangle {
-                                    private property <float> loading-phase: mod(animation-tick(), UnderlineNavTokens.loading-counter-animation-period) / UnderlineNavTokens.loading-counter-animation-period;
-                                    private property <float> loading-pulse-opacity: loading-phase < 0.5
+                                    property <float> loading-phase: mod(animation-tick(), UnderlineNavTokens.loading-counter-animation-period) / UnderlineNavTokens.loading-counter-animation-period;
+                                    property <float> loading-pulse-opacity: loading-phase < 0.5
                                         ? UnderlineNavTokens.loading-counter-opacity-max - (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * (loading-phase * 2)
                                         : UnderlineNavTokens.loading-counter-opacity-min + (UnderlineNavTokens.loading-counter-opacity-max - UnderlineNavTokens.loading-counter-opacity-min) * ((loading-phase - 0.5) * 2);
                                     opacity: root.enabled ? loading-pulse-opacity : 0.45;

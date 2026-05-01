@@ -21,91 +21,91 @@ import {
 } from "./gallery-dialog-instances.slint";
 export component GalleryDialogsPage inherits VerticalLayout {
 
-    private property <bool> default-outer-open: false;
-    private property <bool> default-inner-open: false;
+    property <bool> default-outer-open: false;
+    property <bool> default-inner-open: false;
 
-    private property <bool> playground-open: false;
-    private property <bool> align-demo-open: false;
-    private property <bool> side-sheet-open: false;
-    private property <bool> narrow-demo-open: false;
-    private property <bool> custom-renderers-open: false;
-    private property <bool> direct-sub-open: false;
+    property <bool> playground-open: false;
+    property <bool> align-demo-open: false;
+    property <bool> side-sheet-open: false;
+    property <bool> narrow-demo-open: false;
+    property <bool> custom-renderers-open: false;
+    property <bool> direct-sub-open: false;
 
-    private property <bool> stress-test-open: false;
-    private property <bool> stress-test-inner-open: false;
-    private property <bool> multistep-footer-open: false;
-    private property <int> multistep-footer-step: 0;
-    private property <bool> dynamic-footer-open: false;
-    private property <int> dynamic-footer-variant: 0;
+    property <bool> stress-test-open: false;
+    property <bool> stress-test-inner-open: false;
+    property <bool> multistep-footer-open: false;
+    property <int> multistep-footer-step: 0;
+    property <bool> dynamic-footer-open: false;
+    property <int> dynamic-footer-variant: 0;
 
-    private property <bool> loading-footer-open: false;
-    private property <bool> loading-footer-submitting: false;
-    private property <bool> loading-footer-deleting: false;
-    private property <bool> loading-custom-footer-open: false;
-    private property <bool> loading-custom-saving: false;
-    private property <bool> loading-custom-processing: false;
+    property <bool> loading-footer-open: false;
+    property <bool> loading-footer-submitting: false;
+    property <bool> loading-footer-deleting: false;
+    property <bool> loading-custom-footer-open: false;
+    property <bool> loading-custom-saving: false;
+    property <bool> loading-custom-processing: false;
 
-    private property <[SelectOption]> narrow-viewport-options: [
+    property <[SelectOption]> narrow-viewport-options: [
         { value: "bottom", label: "bottom — slideUp (narrow)", enabled: true },
         { value: "fullscreen", label: "fullscreen — scaleFade", enabled: true },
         { value: "center", label: "center — scaleFade", enabled: true },
     ];
 
-    private property <int> narrow-viewport-index: 0;
+    property <int> narrow-viewport-index: 0;
 
-    private property <DialogNarrowPositionPreset> narrow-viewport-position:
+    property <DialogNarrowPositionPreset> narrow-viewport-position:
         narrow-viewport-index == 0 ? DialogNarrowPositionPreset.bottom : narrow-viewport-index == 1 ? DialogNarrowPositionPreset.fullscreen : DialogNarrowPositionPreset.center;
 
-    private property <[SelectOption]> playground-width-options: [
+    property <[SelectOption]> playground-width-options: [
         { value: "small", label: "small (296px)", enabled: true },
         { value: "medium", label: "medium (320px)", enabled: true },
         { value: "large", label: "large (480px)", enabled: true },
         { value: "xlarge", label: "xlarge (640px)", enabled: true },
     ];
 
-    private property <[SelectOption]> playground-height-options: [
+    property <[SelectOption]> playground-height-options: [
         { value: "auto", label: "auto (viewport cap)", enabled: true },
         { value: "small", label: "small (480px max)", enabled: true },
         { value: "large", label: "large (640px max)", enabled: true },
     ];
 
-    private property <int> playground-width-index: 1;
-    private property <int> playground-height-index: 0;
+    property <int> playground-width-index: 1;
+    property <int> playground-height-index: 0;
 
-    private property <bool> playground-show-header: true;
-    private property <bool> playground-show-footer: true;
-    private property <string> playground-title-text: "Playground";
-    private property <string> playground-subtitle-text: "";
+    property <bool> playground-show-header: true;
+    property <bool> playground-show-footer: true;
+    property <string> playground-title-text: "Playground";
+    property <string> playground-subtitle-text: "";
 
-    private property <DialogWidthPreset> playground-width-enum:
+    property <DialogWidthPreset> playground-width-enum:
         playground-width-index == 0
         ? DialogWidthPreset.small : playground-width-index == 1
         ? DialogWidthPreset.medium : playground-width-index == 2
         ? DialogWidthPreset.large : DialogWidthPreset.xlarge;
 
-    private property <DialogHeightPreset> playground-height-enum:
+    property <DialogHeightPreset> playground-height-enum:
         playground-height-index == 0
         ? DialogHeightPreset.auto : playground-height-index == 1
         ? DialogHeightPreset.small : DialogHeightPreset.large;
 
-    private property <[SelectOption]> align-vertical-options: [
+    property <[SelectOption]> align-vertical-options: [
         { value: "top", label: "top", enabled: true },
         { value: "bottom", label: "bottom", enabled: true },
     ];
 
-    private property <int> align-vertical-index: 0;
+    property <int> align-vertical-index: 0;
 
-    private property <DialogAlignPreset> align-vertical-preset:
+    property <DialogAlignPreset> align-vertical-preset:
         align-vertical-index == 0 ? DialogAlignPreset.top : DialogAlignPreset.bottom;
 
-    private property <[SelectOption]> side-sheet-edge-options: [
+    property <[SelectOption]> side-sheet-edge-options: [
         { value: "left", label: "left (slide from left)", enabled: true },
         { value: "right", label: "right (slide from right)", enabled: true },
     ];
 
-    private property <int> side-sheet-edge-index: 1;
+    property <int> side-sheet-edge-index: 1;
 
-    private property <DialogPositionPreset> side-sheet-position-preset:
+    property <DialogPositionPreset> side-sheet-position-preset:
         side-sheet-edge-index == 0 ? DialogPositionPreset.left : DialogPositionPreset.right;
 
     dialog-instances := GalleryDialogInstances {

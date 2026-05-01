@@ -32,25 +32,25 @@ export component Dialog {
     width: 0px;
     height: 0px;
 
-    private property <bool> narrow-active:
+    property <bool> narrow-active:
         root.narrow-layout || AppWindow.window-width <= DialogTokens.narrow-max-width;
 
-    private property <bool> fill-viewport-height:
+    property <bool> fill-viewport-height:
         root.fill-mode == DialogFillMode.screen-height
         || (root.narrow-active && root.narrow-position-preset == DialogNarrowPositionPreset.fullscreen);
 
-    private property <length> panel-w:
+    property <length> panel-w:
         width-preset == DialogWidthPreset.small ? DialogTokens.width-small
         : width-preset == DialogWidthPreset.medium ? DialogTokens.width-medium
         : width-preset == DialogWidthPreset.large ? DialogTokens.width-large
         : DialogTokens.width-xlarge;
 
-    private property <length> dialog-panel-max-height:
+    property <length> dialog-panel-max-height:
         root.height-preset == DialogHeightPreset.small ? min(DialogTokens.height-small, OverlayTokens.modal-viewport-max-height)
         : root.height-preset == DialogHeightPreset.large ? min(DialogTokens.height-large, OverlayTokens.modal-viewport-max-height)
         : OverlayTokens.modal-viewport-max-height;
 
-    private property <length> dialog-overlay-max-height:
+    property <length> dialog-overlay-max-height:
         root.fill-viewport-height ? AppWindow.window-height : root.dialog-panel-max-height;
 
     modal-layer := ModalOverlay {

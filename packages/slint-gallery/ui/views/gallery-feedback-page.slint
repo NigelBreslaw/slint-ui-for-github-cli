@@ -21,9 +21,9 @@ export component GalleryFeedbackPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
 
-    private property <bool> show-dismiss-demo: true;
+    property <bool> show-dismiss-demo: true;
 
-    private property <[LabelGroupItem]> demo-label-group-items: [
+    property <[LabelGroupItem]> demo-label-group-items: [
         { text: "bug", variant: LabelVariant.danger, size: LabelSize.small },
         { text: "enhancement", variant: LabelVariant.accent, size: LabelSize.small },
         { text: "good first issue", variant: LabelVariant.success, size: LabelSize.small },

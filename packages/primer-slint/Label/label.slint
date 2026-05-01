@@ -13,10 +13,12 @@ export component Label {
     visible: text != "";
     horizontal-stretch: 0;
 
-    private property <length> effective-height: LabelLogic.label-height(size);
-    private property <length> effective-padding-inline: LabelLogic.label-padding-inline(size);
-    private property <color> effective-fg: LabelLogic.label-fg(variant);
-    private property <color> effective-border: LabelLogic.label-border(variant);
+    property <length> effective-height: size == LabelSize.large ? LayoutTokens.label-height-large : LayoutTokens.label-height-small;
+    property <length> effective-padding-inline: size == LabelSize.large
+    ? LayoutTokens.label-padding-inline-large
+    : LayoutTokens.label-padding-inline-small;
+    property <color> effective-fg: LabelLogic.label-fg(variant);
+    property <color> effective-border: LabelLogic.label-border(variant);
 
     Rectangle {
         height: effective-height;

@@ -28,24 +28,24 @@ export component GalleryActionListPage inherits VerticalLayout {
     width: 100%;
     alignment: start;
 
-    private property <int> single-select-index: 0;
-    private property <string> single-select-last: "";
-    private property <string> block-description-last: "";
-    private property <string> inline-description-last: "";
-    private property <string> item-dividers-last: "";
-    private property <string> with-avatars-last: "";
-    private property <string> with-icons-last: "";
-    private property <string> custom-heading-last: "";
-    private property <string> simple-list-last: "";
-    private property <string> active-demo-last: "";
-    private property <string> visual-heading-last: "";
-    private property <int> inactive-single-select-index: 1;
-    private property <string> inactive-single-select-last: "";
+    property <int> single-select-index: 0;
+    property <string> single-select-last: "";
+    property <string> block-description-last: "";
+    property <string> inline-description-last: "";
+    property <string> item-dividers-last: "";
+    property <string> with-avatars-last: "";
+    property <string> with-icons-last: "";
+    property <string> custom-heading-last: "";
+    property <string> simple-list-last: "";
+    property <string> active-demo-last: "";
+    property <string> visual-heading-last: "";
+    property <int> inactive-single-select-index: 1;
+    property <string> inactive-single-select-last: "";
 
-    private property <bool> inside-overlay-open: false;
-    private property <string> inside-overlay-last: "";
+    property <bool> inside-overlay-open: false;
+    property <string> inside-overlay-last: "";
 
-    private property <[ActionListLine]> inside-overlay-lines: [
+    property <[ActionListLine]> inside-overlay-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Use your arrow keys",
@@ -143,9 +143,9 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <string> loading-item-last: "";
+    property <string> loading-item-last: "";
 
-    private property <[ActionListLine]> loading-item-lines: [
+    property <[ActionListLine]> loading-item-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Primer Backlog",
@@ -224,12 +224,12 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <int> listbox-single-select-index: 0;
-    private property <string> listbox-single-select-last: "";
+    property <int> listbox-single-select-index: 0;
+    property <string> listbox-single-select-last: "";
 
-    private property <bool> with-dynamic-is-true: false;
-    private property <string> with-dynamic-item-label: root.with-dynamic-is-true ? "Activated? Yes" : "Activated? No";
-    private property <[ActionListLine]> with-dynamic-content-lines: [
+    property <bool> with-dynamic-is-true: false;
+    property <string> with-dynamic-item-label: root.with-dynamic-is-true ? "Activated? Yes" : "Activated? No";
+    property <[ActionListLine]> with-dynamic-content-lines: [
         {
             kind: ActionListLineKind.row,
             label: root.with-dynamic-item-label,
@@ -251,7 +251,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> single-select-lines: [
+    property <[ActionListLine]> single-select-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Primer Backlog",
@@ -330,7 +330,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> inactive-single-select-lines: [
+    property <[ActionListLine]> inactive-single-select-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Inactive item",
@@ -371,7 +371,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> listbox-single-select-lines: [
+    property <[ActionListLine]> listbox-single-select-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Primer Backlog",
@@ -450,7 +450,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> multi-select-lines: [
+    property <[ActionListLine]> multi-select-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Primer Backlog",
@@ -530,7 +530,7 @@ export component GalleryActionListPage inherits VerticalLayout {
     ];
 
     /// Same row data as **Multi select**; **Listbox multi select** uses **`show-dividers`** false (Storybook listbox variant).
-    private property <[ActionListLine]> listbox-multi-select-lines: [
+    property <[ActionListLine]> listbox-multi-select-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Primer Backlog",
@@ -609,7 +609,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> block-description-lines: [
+    property <[ActionListLine]> block-description-lines: [
         {
             kind: ActionListLineKind.row,
             label: "pksjce",
@@ -745,7 +745,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> inline-description-lines: [
+    property <[ActionListLine]> inline-description-lines: [
         {
             kind: ActionListLineKind.row,
             label: "pksjce",
@@ -881,7 +881,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> item-dividers-lines: [
+    property <[ActionListLine]> item-dividers-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Copy link",
@@ -941,7 +941,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> with-avatars-lines: [
+    property <[ActionListLine]> with-avatars-lines: [
         {
             kind: ActionListLineKind.row,
             label: "pksjce",
@@ -1077,7 +1077,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> with-icons-lines: [
+    property <[ActionListLine]> with-icons-lines: [
         {
             kind: ActionListLineKind.row,
             label: "github.com/primer",
@@ -1175,7 +1175,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> custom-heading-lines: [
+    property <[ActionListLine]> custom-heading-lines: [
         {
             kind: ActionListLineKind.custom_heading,
             label: "Details",
@@ -1292,7 +1292,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> simple-list-lines: [
+    property <[ActionListLine]> simple-list-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Copy link",
@@ -1390,7 +1390,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> visual-heading-lines: [
+    property <[ActionListLine]> visual-heading-lines: [
         {
             kind: ActionListLineKind.list_visual_heading,
             label: "Filter by",
@@ -1583,19 +1583,19 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <string> filtered-action-list-filter: "";
-    private property <string> filtered-action-list-last-edit: "";
-    private property <string> filtered-action-list-long-filter: "";
-    private property <string> fal-loading-input-filter: "";
-    private property <string> fal-loading-spinner-filter: "";
-    private property <string> fal-loading-skeleton-filter: "";
-    private property <string> fal-select-all-filter: "";
-    private property <string> fal-message-vs-list-filter: "";
-    private property <bool> fal-message-vs-list-show-message: false;
-    private property <string> fal-empty-body-filter: "";
+    property <string> filtered-action-list-filter: "";
+    property <string> filtered-action-list-last-edit: "";
+    property <string> filtered-action-list-long-filter: "";
+    property <string> fal-loading-input-filter: "";
+    property <string> fal-loading-spinner-filter: "";
+    property <string> fal-loading-skeleton-filter: "";
+    property <string> fal-select-all-filter: "";
+    property <string> fal-message-vs-list-filter: "";
+    property <bool> fal-message-vs-list-show-message: false;
+    property <string> fal-empty-body-filter: "";
 
     /// Static rows for loading-kind demos (isolated from **`GalleryFilteredActionListDefault`** bridge state).
-    private property <[ActionListLine]> fal-loading-demo-lines: [
+    property <[ActionListLine]> fal-loading-demo-lines: [
         {
             kind: ActionListLineKind.row,
             label: "enhancement",
@@ -1655,7 +1655,7 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    private property <[ActionListLine]> active-demo-lines: [
+    property <[ActionListLine]> active-demo-lines: [
         {
             kind: ActionListLineKind.row,
             label: "Active item",
