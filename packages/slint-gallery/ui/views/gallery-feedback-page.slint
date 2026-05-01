@@ -14,6 +14,7 @@ import {
     Size,
     Spinner,
 } from "../../../primer-slint/primer.slint";
+import { SkeletonShimmerSpike } from "../../../primer-slint/Skeleton/shimmer-spike.slint";
 import { PrimerColors } from "../../../primer-slint/tokens.slint";
 
 /// Banner, Spinner, Avatar, Label, and LabelGroup gallery demos.
@@ -263,6 +264,55 @@ export component GalleryFeedbackPage inherits VerticalLayout {
                 Spinner {
                     size: Size.large;
                 }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Skeleton (shimmer spike)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Engineering spike for SkeletonBox: animation-tick() drives a clipped highlight band; reduce-motion drops the overlay (static fill). Not exported from primer.slint yet.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        VerticalLayout {
+            spacing: 8px;
+            width: 100%;
+            max-width: 360px;
+
+            Text {
+                text: "Shimmer (default)";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+            }
+
+            SkeletonShimmerSpike {
+                width: 100%;
+                bar-height: 16px;
+                reduce-motion: false;
+            }
+
+            Text {
+                text: "Static when reduce-motion";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+            }
+
+            SkeletonShimmerSpike {
+                width: 100%;
+                bar-height: 16px;
+                reduce-motion: true;
             }
         }
     }
