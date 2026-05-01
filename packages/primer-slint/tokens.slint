@@ -837,18 +837,7 @@ export global SelectPanelTokens {
     out property <length> message-stack-gap: LayoutTokens.base-size-4;
 }
 
-// primer-tokens **`component/skeletonLoader.json5`** + **`SkeletonBox.module.css`** — composes **`PrimerColors.skeletonLoader-bgColor`**, **`LayoutTokens`** radii / shimmer duration.
-//
-// Token audit: | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
-// |--------|---------------------------|-------|-------|-----------|
-// | Track bg | **`skeletonLoader.bgColor`** | SkeletonTokens | **`bgColor`** | **`SkeletonBox`** |
-// | Corner | **`borderRadius.small`** | SkeletonTokens | **`box-border-radius`** | **`SkeletonBox`** |
-// | Shimmer period | **`base.duration.1000`** | SkeletonTokens | **`shimmer-period`** | **`SkeletonBox`** |
-export global SkeletonTokens {
-    out property <color> bgColor: PrimerColors.skeletonLoader-bgColor;
-    out property <length> box-border-radius: LayoutTokens.borderRadius-small;
-    out property <duration> shimmer-period: LayoutTokens.duration-1000;
-}
+
 
 /// **`FilteredActionListLoaders.module.css`** — body skeleton chrome only (spinner padding reuses **`LayoutTokens.stack-padding-normal`** like **`SelectPanel`**).
 /// Select-all strip: **`FilteredActionList.module.css`** **`.SelectAllContainer`** / **`.SelectAllLabel`** — spacing aliases only (no new literals).

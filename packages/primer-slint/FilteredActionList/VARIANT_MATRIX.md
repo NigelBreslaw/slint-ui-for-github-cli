@@ -27,7 +27,7 @@ Exactly **one** of these is shown at a time (upstream `getBodyContent` order —
 | Body mode | Upstream condition | Slint matrix rows |
 |-----------|-------------------|-------------------|
 | Body **spinner** | `loading && loadingType.appearsInBody && scrollContainerRef.current` + `bodySpinner` | Centered **`Spinner`** + label; padding **`LayoutTokens.stack-padding-normal`** via embedded **`SelectPanelLoading`** |
-| Body **skeleton** | Same + `bodySkeleton` | **`FilteredActionListTokens`** + **`PrimerColors.bgColor-neutral-muted`** bars (**`LayoutTokens.control-large-paddingInline-spacious`** height, **`base-size-4`** radius) |
+| Body **skeleton** | Same + `bodySkeleton` | **`SkeletonBox`** bars (**`FilteredActionListTokens.skeleton-line-height`**) + container padding/spacing from **`FilteredActionListTokens`**; bar corner radius follows **`SkeletonBox`** (**3px**, not the former **`base-size-4`** placeholder) |
 | **Message** | After loading branch; `message` truthy | **`show-message`** + **`message-title`** / **`message-description`** — **`SelectPanelTokens`** message padding/stack (**`SelectPanel`**-aligned typography) |
 | **Empty filtered** | Not loading, not message; `lines.length == 0` and empty copy set | **`empty-title`** / **`empty-message`** when at least one non-empty (same layout as message) |
 | **ActionList** | Default | Embedded **`ActionList`** with parent-built **`[ActionListLine]`** |
@@ -89,7 +89,7 @@ Goal: **no new hex**; prefer **`PrimerColors`**, **`LayoutTokens`**, **`ButtonTo
 | Checkbox margin hack | mixed `base-size-*` | `LayoutTokens` spacing | **Reuse** or **FilteredActionListTokens.select-all-checkbox-margin** if a single composed margin is clearer |
 | Body spinner padding | `--base-size-16` | `LayoutTokens.base-size-16` | **Reuse** |
 | Skeleton container padding | `--base-size-8` | `LayoutTokens.base-size-8` | **Reuse** |
-| Skeleton bar radius | `4px` literal in CSS | **`LayoutTokens.base-size-4`** (4px — same numeric as upstream radius) | **Reuse** unless a dedicated small-radius token is added repo-wide |
+| Skeleton bar radius | `4px` literal in CSS | Implemented inside **`SkeletonBox`** (**3px** — **`LayoutTokens.borderRadius-small`**) | **SkeletonBox** owns radius; **`FilteredActionListTokens.skeleton-bar-border-radius`** remains for documentation parity only until removed |
 | Skeleton bar height | `SkeletonBox` **10px** tall | No exact **`LayoutTokens`** match today | **`FilteredActionListTokens.skeleton-line-height`** → single `out` (compose from spacing audit) **or** reuse **`LayoutTokens.control-large-paddingInline-spacious`** (10px) only if reviewers accept semantic stretch |
 | List item focus bg | `--control-transparent-bgColor-selected` | `ButtonTokens.color-action-list-item-default-selected-bg` | **Reuse** (ActionList) |
 | SelectPanel message padding / gaps | N/A for FAL directly | `SelectPanelTokens.message-region-padding`, `message-stack-gap` | **Consider reuse** for message region only if layout matches; else **FilteredActionListTokens** message padding alias pointing at same `LayoutTokens` chain |
@@ -100,18 +100,17 @@ Goal: **no new hex**; prefer **`PrimerColors`**, **`LayoutTokens`**, **`ButtonTo
 
 ## 7. Skeleton strategy (confirmed)
 
-**Chosen for v1:** **(a) Minimal geometric placeholders** — no dependency on a shared **Skeleton** primitive (this repo does not ship `SkeletonBox`).
+**Implementation:** Shared **`SkeletonBox`** from [`Skeleton/skeleton-box.slint`](../Skeleton/skeleton-box.slint) — shimmer and light/dark fills live in that component.
 
-**Parity targets from upstream `LoadingSkeleton`:**
+**Layout (matches previous deterministic v1):**
 
-- Outer padding **`base-size-8`** (`LayoutTokens.base-size-8`).
-- Vertical stack with **`condensed`** gap (map to smallest standard vertical gap token already used in gallery / **`LayoutTokens`** — e.g. `base-size-4` if no `gap-condensed` alias).
-- Each row: **16×16** square (e.g. **`LayoutTokens.base-size-16`** if that is 16px in this repo) + **full-width** bar with **fixed height ~10px**, **`border-radius`** **`LayoutTokens.base-size-4`**, fill **`PrimerColors`** neutral placeholder (e.g. **`borderColor-default`** at reduced opacity **or** one muted surface — **no raw hex**; document the chosen semantic in `tokens.slint`).
-- Row count: mirror upstream formula — `height / 24px` with **minimum 3 rows** (expose `body-loader-height` from layout or approximate from parent-fixed viewport height in gallery).
+- Outer padding **`FilteredActionListTokens.skeleton-container-padding`** (**`base-size-8`**).
+- Vertical gap **`FilteredActionListTokens.skeleton-stack-gap`** (**`base-size-8`**).
+- Five horizontal bars: full width, **88%**, full, **64%**, **72%**; bar height **`FilteredActionListTokens.skeleton-line-height`** (**10px** via **`LayoutTokens.control-large-paddingInline-spacious`**).
 
-**Deferred:** Full **SkeletonBox** shimmer / random widths (upstream uses `Math.random()` for bar width). Slint v1 may use **deterministic** widths (e.g. 60%, 75%, 45% alternating) for stable rendering.
+**Upstream `LoadingSkeleton` gaps (optional later):** per-row **16×16** avatar square + variable-width bar; row count from height ÷ 24px (min 3). Not required for current gallery matrix.
 
-**Follow-up PR (optional):** If a shared **`Skeleton`** / **`SkeletonLine`** appears in `primer-slint`, replace placeholders and shrink **`FilteredActionListTokens`**.
+**Deferred:** Random bar widths (upstream `Math.random()`); Slint keeps **deterministic** widths for stable rendering.
 
 ---
 

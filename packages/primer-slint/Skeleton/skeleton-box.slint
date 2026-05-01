@@ -1,96 +1,7 @@
-// Primer SkeletonBox — upstream: primer-ui-react **`SkeletonBox.tsx`** + **`SkeletonBox.module.css`**
-// (**`skeletonLoader-bgColor`**, **`borderRadius-small`**, shimmer **`var(--base-duration-1000)`**).
-// Shimmer approximates **`mask-image`** (alpha **1 → 0.65**) over the fill: base layer at **`bgColor × 0.65`**, moving **`75deg`** gradient layer at **`bgColor × 0.35 → 0`** (same stops as CSS mask). Coverage **`×4`** width, **`x = -3 × width × phase`**. See **`SKELETON_BOX_CSS_REFERENCE.md`** / **`probe/README.md`**. **`reduce-motion`**: solid **`SkeletonTokens.bgColor`** only.
 
 import { Palette } from "std-widgets.slint";
-import { LayoutTokens, SkeletonTokens } from "../tokens.slint";
+import { LayoutTokens } from "../tokens.slint";
 
-// export component SkeletonBox {
-//     /// Block height (React **`height`**; default **1rem**).
-//     in property <length> box-height: LayoutTokens.base-size-16;
-//     /// **`0ms`** = visible immediately; **300ms** / **1000ms** match React **`delay`** **`short`** / **`long`**.
-//     in property <duration> delay: 0ms;
-//     in property <bool> reduce-motion: false;
-
-//     property <bool> delay-fired: false;
-//     property <bool> delay-visible: root.delay == 0ms || root.delay-fired;
-
-//     delay-timer := Timer {
-//         interval: root.delay;
-//         running: root.delay > 0ms && !root.delay-fired;
-//         triggered() => {
-//             root.delay-fired = true;
-//             self.running = false;
-//         }
-//     }
-
-//     visible: delay-visible;
-//     width: 100%;
-//     height: root.box-height;
-
-//     Rectangle {
-//         clip: true;
-//         width: 100%;
-//         height: 100%;
-//         border-radius: SkeletonTokens.box-border-radius;
-
-//         if root.reduce-motion: Rectangle {
-//             width: 100%;
-//             height: 100%;
-//             background: SkeletonTokens.bgColor;
-//         }
-
-//         if !root.reduce-motion: Rectangle {
-//             width: 100%;
-//             height: 100%;
-
-//             /// Minimum visibility — mask alpha **0.65** × **`skeletonLoader-bgColor`**.
-//             Rectangle {
-//                 width: 100%;
-//                 height: 100%;
-//                 states [
-//                     dark when Palette.color-scheme == ColorScheme.dark: {
-//                         background: rgba(101, 108, 118, 0.13);
-//                     }
-//                     light when Palette.color-scheme != ColorScheme.dark: {
-//                         background: rgba(129, 139, 152, 0.065);
-//                     }
-//                 ]
-//             }
-
-//             property <float> sweep-phase: mod(animation-tick(), SkeletonTokens.shimmer-period) / SkeletonTokens.shimmer-period;
-
-//             /// Delta **(mask alpha 1 → 0.65)** × **`skeletonLoader`** — **`75deg`** stops match upstream mask gradient.
-//             moving := Rectangle {
-//                 width: parent.width * 4;
-//                 height: parent.height * 2;
-//                 x: -3 * parent.width * sweep-phase;
-//                 y: -parent.height * 0.5;
-
-//                 states [
-//                     dark when Palette.color-scheme == ColorScheme.dark: {
-//                         background: @linear-gradient(
-//                             75deg,
-//                             rgba(101, 108, 118, 0.07) 0%,
-//                             rgba(101, 108, 118, 0.07) 30%,
-//                             rgba(101, 108, 118, 0) 80%,
-//                             rgba(101, 108, 118, 0) 100%,
-//                         );
-//                     }
-//                     light when Palette.color-scheme != ColorScheme.dark: {
-//                         background: @linear-gradient(
-//                             75deg,
-//                             rgba(129, 139, 152, 0.035) 0%,
-//                             rgba(129, 139, 152, 0.035) 30%,
-//                             rgba(129, 139, 152, 0) 80%,
-//                             rgba(129, 139, 152, 0) 100%,
-//                         );
-//                     }
-//                 ]
-//             }
-//         }
-//     }
-// }
 
 export component SkeletonBox inherits Rectangle {
     in property <bool> dark-canvas: Palette.color-scheme == ColorScheme.dark;
@@ -101,6 +12,7 @@ export component SkeletonBox inherits Rectangle {
     property <duration> pulse-duration: 1s;
     property <bool> pulsing: false;
 
+    height: root.box-height;
     border-radius: 3px;
     background: dark-canvas ? rgb(31, 35, 42) : rgb(242, 243, 245);
     clip: true;

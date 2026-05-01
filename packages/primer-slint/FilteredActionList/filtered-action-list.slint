@@ -6,6 +6,7 @@ import { ActionListLine, ActionListSelectionMode } from "../ActionList/types.sli
 import { Checkbox } from "../Checkbox/checkbox.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
 import { SelectPanelLoading } from "../SelectPanelCompose/parts/select-panel-loading.slint";
+import { SkeletonBox } from "../Skeleton/skeleton-box.slint";
 import {
     FilteredActionListTokens,
     LayoutTokens,
@@ -165,37 +166,69 @@ export component FilteredActionList {
                     spacing: FilteredActionListTokens.skeleton-stack-gap;
                     alignment: start;
 
-                    Rectangle {
-                        height: FilteredActionListTokens.skeleton-line-height;
-                        background: PrimerColors.bgColor-neutral-muted;
-                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    HorizontalLayout {
+                        width: 100%;
+                        alignment: stretch;
+
+                        SkeletonBox {
+                            horizontal-stretch: 1;
+                            box-height: FilteredActionListTokens.skeleton-line-height;
+                        }
                     }
 
-                    Rectangle {
-                        width: 88%;
-                        height: FilteredActionListTokens.skeleton-line-height;
-                        background: PrimerColors.bgColor-neutral-muted;
-                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    HorizontalLayout {
+                        width: 100%;
+                        alignment: start;
+
+                        Rectangle {
+                            width: 88%;
+                            height: FilteredActionListTokens.skeleton-line-height;
+
+                            SkeletonBox {
+                                width: 100%;
+                                box-height: FilteredActionListTokens.skeleton-line-height;
+                            }
+                        }
                     }
 
-                    Rectangle {
-                        height: FilteredActionListTokens.skeleton-line-height;
-                        background: PrimerColors.bgColor-neutral-muted;
-                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    HorizontalLayout {
+                        width: 100%;
+                        alignment: stretch;
+
+                        SkeletonBox {
+                            horizontal-stretch: 1;
+                            box-height: FilteredActionListTokens.skeleton-line-height;
+                        }
                     }
 
-                    Rectangle {
-                        width: 64%;
-                        height: FilteredActionListTokens.skeleton-line-height;
-                        background: PrimerColors.bgColor-neutral-muted;
-                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    HorizontalLayout {
+                        width: 100%;
+                        alignment: start;
+
+                        Rectangle {
+                            width: 64%;
+                            height: FilteredActionListTokens.skeleton-line-height;
+
+                            SkeletonBox {
+                                width: 100%;
+                                box-height: FilteredActionListTokens.skeleton-line-height;
+                            }
+                        }
                     }
 
-                    Rectangle {
-                        width: 72%;
-                        height: FilteredActionListTokens.skeleton-line-height;
-                        background: PrimerColors.bgColor-neutral-muted;
-                        border-radius: FilteredActionListTokens.skeleton-bar-border-radius;
+                    HorizontalLayout {
+                        width: 100%;
+                        alignment: start;
+
+                        Rectangle {
+                            width: 72%;
+                            height: FilteredActionListTokens.skeleton-line-height;
+
+                            SkeletonBox {
+                                width: 100%;
+                                box-height: FilteredActionListTokens.skeleton-line-height;
+                            }
+                        }
                     }
                 }
 

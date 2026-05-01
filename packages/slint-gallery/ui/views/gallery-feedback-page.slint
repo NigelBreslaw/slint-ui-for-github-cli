@@ -245,12 +245,28 @@ export component GalleryFeedbackPage inherits VerticalLayout {
                 spacing: 4px;
                 alignment: start;
                 Text {
+                    text: "Small";
+                    font-size: 12px;
+                    color: PrimerColors.fgColor-muted;
+                }
+
+                Spinner {
+                    size: Size.small;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+                alignment: start;
+                Text {
                     text: "Medium";
                     font-size: 12px;
                     color: PrimerColors.fgColor-muted;
                 }
 
-                Spinner { }
+                Spinner {
+                    size: Size.medium;
+                 }
             }
 
             VerticalLayout {
