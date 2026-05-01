@@ -28,9 +28,10 @@ Exactly **one** of these is shown at a time (upstream `getBodyContent` order —
 |-----------|-------------------|-------------------|
 | Body **spinner** | `loading && loadingType.appearsInBody && scrollContainerRef.current` + `bodySpinner` | Centered **`Spinner`** + label; padding **`LayoutTokens.stack-padding-normal`** via embedded **`SelectPanelLoading`** |
 | Body **skeleton** | Same + `bodySkeleton` | **`FilteredActionListTokens`** + **`PrimerColors.bgColor-neutral-muted`** bars (**`LayoutTokens.control-large-paddingInline-spacious`** height, **`base-size-4`** radius) |
-| **Custom message** | `!` above loading branch **or** loading branch skipped; `message` set | Message UI or `@children` — pick one API in implementation PR; gallery documents choice |
+| **Message** | After loading branch; `message` truthy | **`show-message`** + **`message-title`** / **`message-description`** — **`SelectPanelTokens`** message padding/stack (**`SelectPanel`**-aligned typography) |
+| **Empty filtered** | Not loading, not message; `lines.length == 0` and empty copy set | **`empty-title`** / **`empty-message`** when at least one non-empty (same layout as message) |
 | **ActionList** | Default | Embedded **`ActionList`** with parent-built **`[ActionListLine]`** |
-| Empty list | Parent passes empty `lines` | Still ActionList path; optional gallery “no matches” copy |
+| Empty list, no empty copy | Parent passes empty `lines`, no **`empty-*`** | **`ActionList`** path (zero rows) |
 
 ---
 
@@ -118,7 +119,7 @@ Goal: **no new hex**; prefer **`PrimerColors`**, **`LayoutTokens`**, **`ButtonTo
 
 - [ ] **Storybook:** `Default` + `WithLongItems` both have a matrix row or cross-reference in §3.
 - [x] **Loading:** `input` / `body_spinner` / `body_skeleton` — §2 + gallery **FilteredActionList · loading kinds**.
-- [ ] **Message vs list** ordering matches upstream `getBodyContent`.
+- [x] **Message vs list** ordering matches upstream `getBodyContent` (loading body first, then message, then list / empty copy).
 - [x] **Select-all** maps to **Checkbox** + §4 tokens; no duplicate label colors.
 - [ ] **Token audit** §6: every new `out` in `tokens.slint` justified or marked **Reuse** only.
 

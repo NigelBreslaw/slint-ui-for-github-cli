@@ -1590,6 +1590,9 @@ export component GalleryActionListPage inherits VerticalLayout {
     private property <string> fal-loading-spinner-filter: "";
     private property <string> fal-loading-skeleton-filter: "";
     private property <string> fal-select-all-filter: "";
+    private property <string> fal-message-vs-list-filter: "";
+    private property <bool> fal-message-vs-list-show-message: false;
+    private property <string> fal-empty-body-filter: "";
 
     /// Static rows for loading-kind demos (isolated from **`GalleryFilteredActionListDefault`** bridge state).
     private property <[ActionListLine]> fal-loading-demo-lines: [
@@ -1931,6 +1934,97 @@ export component GalleryActionListPage inherits VerticalLayout {
                     filter-text <=> root.fal-loading-skeleton-filter;
                     placeholder: "Filter Labels";
                     lines: [];
+                    filter-changed(_) => {
+                    }
+                }
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+        alignment: start;
+
+        Text {
+            text: "FilteredActionList · message and empty body";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Body order matches upstream **`getBodyContent`**: body spinner/skeleton first; then **`show-message`** hides **`ActionList`**; otherwise empty **`lines`** with **`empty-title`** / **`empty-message`** shows **`SelectPanel`**-style copy.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                Button {
+                    label: root.fal-message-vs-list-show-message ? "Show list body" : "Show message body";
+                    clicked => {
+                        root.fal-message-vs-list-show-message = !root.fal-message-vs-list-show-message;
+                    }
+                }
+
+                FilteredActionList {
+                    width: 100%;
+                    filter-text <=> root.fal-message-vs-list-filter;
+                    placeholder: "Filter Labels";
+                    lines: root.fal-message-vs-list-show-message ? [] : root.fal-loading-demo-lines;
+                    show-message: root.fal-message-vs-list-show-message;
+                    message-title: "No access";
+                    message-description: "You do not have permission to view these labels.";
+                    filter-changed(_) => {
+                    }
+                }
+
+                Text {
+                    text: "Filter field stays usable; body toggles between **`ActionList`** and **`message-*`**.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+        }
+
+        Text {
+            text: "Empty filtered result — **`lines: []`** with **`empty-message`** (no **`show-message`**).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            horizontal-stretch: 0;
+            width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: 6px;
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 12px;
+                width: 100%;
+                alignment: start;
+
+                FilteredActionList {
+                    width: 100%;
+                    filter-text <=> root.fal-empty-body-filter;
+                    placeholder: "Filter Labels";
+                    lines: [];
+                    empty-message: "No labels match your filter.";
                     filter-changed(_) => {
                     }
                 }
