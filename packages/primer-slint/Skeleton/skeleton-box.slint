@@ -1,0 +1,80 @@
+// Primer SkeletonBox — upstream: primer-ui-react **`SkeletonBox.tsx`** + **`SkeletonBox.module.css`**
+// (**`skeletonLoader-bgColor`**, **`borderRadius-small`**, shimmer **`var(--base-duration-1000)`**).
+// Shimmer matches **`mask-image: linear-gradient(75deg, #000 30%, rgb(0, 0, 0, 0.65) 80%)`**, **`mask-size: 200%`**, **`mask-position`** **`200% → 0%`**: same gradient angle/stops applied as **`@linear-gradient`** on an oversized layer (alphas = token × mask ladder **1 → 0.65**). **`reduce-motion`** uses solid **`SkeletonTokens.bgColor`** only.
+
+import { Palette } from "std-widgets.slint";
+import { LayoutTokens, SkeletonTokens } from "../tokens.slint";
+
+export component SkeletonBox {
+    /// Block height (React **`height`**; default **1rem**).
+    in property <length> box-height: LayoutTokens.base-size-16;
+    /// **`0ms`** = visible immediately; **300ms** / **1000ms** match React **`delay`** **`short`** / **`long`**.
+    in property <duration> delay: 0ms;
+    in property <bool> reduce-motion: false;
+
+    property <bool> delay-fired: false;
+    property <bool> delay-visible: root.delay == 0ms || root.delay-fired;
+
+    delay-timer := Timer {
+        interval: root.delay;
+        running: root.delay > 0ms && !root.delay-fired;
+        triggered() => {
+            root.delay-fired = true;
+            self.running = false;
+        }
+    }
+
+    visible: delay-visible;
+    width: 100%;
+    height: root.box-height;
+
+    Rectangle {
+        clip: true;
+        width: 100%;
+        height: 100%;
+        border-radius: SkeletonTokens.box-border-radius;
+
+        if root.reduce-motion: Rectangle {
+            width: 100%;
+            height: 100%;
+            background: SkeletonTokens.bgColor;
+        }
+
+        if !root.reduce-motion: Rectangle {
+            width: 100%;
+            height: 100%;
+
+            property <float> sweep-phase: mod(animation-tick(), SkeletonTokens.shimmer-period) / SkeletonTokens.shimmer-period;
+
+            /// **`SkeletonBox.module.css`** **`mask-size: 200%`** (horizontal sweep driver matches **`mask-position`** **`200% → 0%`**).
+            moving := Rectangle {
+                width: parent.width * 2;
+                height: parent.height * 2;
+                /// **`mask-size: 200%`** on both axes — center vertically so **`75deg`** gradient sweep matches the viewport.
+                x: parent.width - parent.width * 2 * sweep-phase;
+                y: -parent.height * 0.5;
+
+                states [
+                    dark when Palette.color-scheme == ColorScheme.dark: {
+                        background: @linear-gradient(
+                            75deg,
+                            rgba(101, 108, 118, 0.2) 0%,
+                            rgba(101, 108, 118, 0.2) 30%,
+                            rgba(101, 108, 118, 0.13) 80%,
+                            rgba(101, 108, 118, 0.13) 100%,
+                        );
+                    }
+                    light when Palette.color-scheme != ColorScheme.dark: {
+                        background: @linear-gradient(
+                            75deg,
+                            rgba(129, 139, 152, 0.1) 0%,
+                            rgba(129, 139, 152, 0.1) 30%,
+                            rgba(129, 139, 152, 0.065) 80%,
+                            rgba(129, 139, 152, 0.065) 100%,
+                        );
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -12,9 +12,9 @@ import {
     LabelSize,
     LabelVariant,
     Size,
+    SkeletonBox,
     Spinner,
 } from "../../../primer-slint/primer.slint";
-import { SkeletonShimmerSpike } from "../../../primer-slint/Skeleton/shimmer-spike.slint";
 import { PrimerColors } from "../../../primer-slint/tokens.slint";
 
 /// Banner, Spinner, Avatar, Label, and LabelGroup gallery demos.
@@ -273,14 +273,14 @@ export component GalleryFeedbackPage inherits VerticalLayout {
         width: 100%;
 
         Text {
-            text: "Skeleton (shimmer spike)";
+            text: "SkeletonBox";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "Engineering spike for SkeletonBox: animation-tick() drives a clipped highlight band; reduce-motion drops the overlay (static fill). Not exported from primer.slint yet.";
+            text: "Placeholder block matching Primer skeletonLoader fill; shimmer approximates upstream CSS mask animation. Set reduce-motion for a static bar.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -292,14 +292,25 @@ export component GalleryFeedbackPage inherits VerticalLayout {
             max-width: 360px;
 
             Text {
-                text: "Shimmer (default)";
+                text: "Default height (1rem)";
                 color: PrimerColors.fgColor-muted;
                 font-size: 12px;
             }
 
-            SkeletonShimmerSpike {
+            SkeletonBox {
                 width: 100%;
-                bar-height: 16px;
+                reduce-motion: false;
+            }
+
+            Text {
+                text: "Taller bar";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+            }
+
+            SkeletonBox {
+                width: 100%;
+                box-height: 32px;
                 reduce-motion: false;
             }
 
@@ -309,10 +320,21 @@ export component GalleryFeedbackPage inherits VerticalLayout {
                 font-size: 12px;
             }
 
-            SkeletonShimmerSpike {
+            SkeletonBox {
                 width: 100%;
-                bar-height: 16px;
                 reduce-motion: true;
+            }
+
+            Text {
+                text: "Delayed mount (300ms — React short)";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+            }
+
+            SkeletonBox {
+                width: 100%;
+                delay: 300ms;
+                reduce-motion: false;
             }
         }
     }

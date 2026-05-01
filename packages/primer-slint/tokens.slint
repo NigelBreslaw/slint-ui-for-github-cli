@@ -59,6 +59,8 @@ export global LayoutTokens {
     out property <length> iconButton-icon-size-medium: 16px;
     out property <length> iconButton-icon-size-large: 18px;
 
+    /// primer-tokens **`functional/size/radius.json5`** — **`borderRadius.small`** (**3px**) — skeleton bars, small controls.
+    out property <length> borderRadius-small: 3px;
     out property <length> borderRadius-medium: 6px;
     /// primer-tokens functional size **`base-size-4`** (used by ActionList **`activeIndicatorLine`** mixin top/width).
     out property <length> base-size-4: 4px;
@@ -73,7 +75,7 @@ export global LayoutTokens {
     /// primer-tokens `functional/size/radius.json5` — **`borderRadius.large`** (12px): dialogs, modals, larger containers.
     out property <length> borderRadius-large: 12px;
 
-    out property <length> checkbox-border-radius: 3px;
+    out property <length> checkbox-border-radius: borderRadius-small;
 
     // Banner (Banner.module.css padding / icon box; legacy-theme base-size-8 / base-size-4 / base-size-20 / base-size-16)
     out property <length> banner-padding-default: 8px;
@@ -150,6 +152,8 @@ export global LayoutTokens {
     out property <duration> duration-200: 200ms;
     /// React **`Dialog.module.css`** side-sheet + bottom-sheet enter — **250ms** (no named **250** step in **`timing.json5`**; literal tied to upstream CSS).
     out property <duration> duration-250: 250ms;
+    /// primer-tokens **`base/motion/timing.json5`** — **`base.duration.1000`** — **`SkeletonBox.module.css`** shimmer cycle (`var(--base-duration-1000)`).
+    out property <duration> duration-1000: 1000ms;
 }
 
 // Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
@@ -179,6 +183,9 @@ export global PrimerColors {
 
     property <color> bgColor-neutral-muted-dark: rgba(110, 118, 129, 0.1);
     property <color> bgColor-neutral-muted-light: rgba(234, 238, 242, 0.5);
+    // primer-tokens **`component/skeletonLoader.json5`** — **`bgColor`**: **`base.color.neutral.8`** @ **α 0.1** (light **`#818B98`**); dark override **α 0.2** (**`#656C76`**).
+    property <color> skeletonLoader-bg-light: rgba(129, 139, 152, 0.1);
+    property <color> skeletonLoader-bg-dark: rgba(101, 108, 118, 0.2);
     // bgColor.neutral.emphasis (primer-tokens functional); CounterLabel primary variant
     property <color> bgColor-neutral-emphasis-light: #24292f;
     property <color> bgColor-neutral-emphasis-dark: #656d76;
@@ -295,6 +302,7 @@ export global PrimerColors {
     out property <color> bgColor-canvas-subtle: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
     out property <color> bgColor-muted: color-scheme == ColorScheme.dark ? bgColor-canvas-subtle-dark : bgColor-canvas-subtle-light;
     out property <color> bgColor-neutral-muted: color-scheme == ColorScheme.dark ? bgColor-neutral-muted-dark : bgColor-neutral-muted-light;
+    out property <color> skeletonLoader-bgColor: color-scheme == ColorScheme.dark ? skeletonLoader-bg-dark : skeletonLoader-bg-light;
     out property <color> bgColor-neutral-emphasis: color-scheme == ColorScheme.dark ? bgColor-neutral-emphasis-dark : bgColor-neutral-emphasis-light;
     out property <color> counter-borderColor: transparent;
     out property <color> borderColor-muted: color-scheme == ColorScheme.dark ? borderColor-muted-dark : borderColor-muted-light;
@@ -827,6 +835,19 @@ export global SelectPanelTokens {
     out property <length> list-max-height-default: 240px;
     out property <length> message-region-padding: 24px;
     out property <length> message-stack-gap: LayoutTokens.base-size-4;
+}
+
+// primer-tokens **`component/skeletonLoader.json5`** + **`SkeletonBox.module.css`** — composes **`PrimerColors.skeletonLoader-bgColor`**, **`LayoutTokens`** radii / shimmer duration.
+//
+// Token audit: | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
+// |--------|---------------------------|-------|-------|-----------|
+// | Track bg | **`skeletonLoader.bgColor`** | SkeletonTokens | **`bgColor`** | **`SkeletonBox`** |
+// | Corner | **`borderRadius.small`** | SkeletonTokens | **`box-border-radius`** | **`SkeletonBox`** |
+// | Shimmer period | **`base.duration.1000`** | SkeletonTokens | **`shimmer-period`** | **`SkeletonBox`** |
+export global SkeletonTokens {
+    out property <color> bgColor: PrimerColors.skeletonLoader-bgColor;
+    out property <length> box-border-radius: LayoutTokens.borderRadius-small;
+    out property <duration> shimmer-period: LayoutTokens.duration-1000;
 }
 
 /// **`FilteredActionListLoaders.module.css`** — body skeleton chrome only (spinner padding reuses **`LayoutTokens.stack-padding-normal`** like **`SelectPanel`**).
