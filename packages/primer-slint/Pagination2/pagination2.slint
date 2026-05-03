@@ -1,58 +1,164 @@
 // Standalone Primer Pagination (nav strip only) — upstream: primer-ui-react `Pagination/Pagination.tsx`.
 // Reuses `PaginationLogic` / `PaginationPiece` from `../Pagination/` (same model as DataTable `Pagination`).
 // Callback `page-changed` emits **0-based page index** (matches `Pagination` and app state); `current-page` is **1-based** (React-style).
-import { Button } from "../Buttons/buttons.slint";
-import { ButtonVariant } from "../Buttons/types.slint";
 import { Icons } from "../assets/icons.slint";
-import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 import { PaginationPiece, PaginationPieceKind } from "../Pagination/types.slint";
 import { PaginationLogic } from "../Pagination/pagination-logic.slint";
+
+/// Link-style page control (32×32 parity with Primer `.Page` / `Pagination.module.css`).
+component Pagination2LinkCell {
+    in property <bool> disabled;
+    in property <bool> selected;
+    /// Prev/next use **`fgColor-accent`** when enabled.
+    in property <bool> accent-fg;
+    in property <string> label;
+    in property <bool> has-leading-icon: false;
+    in property <bool> has-trailing-icon: false;
+    in property <image> leading-icon;
+    in property <image> trailing-icon;
+    callback clicked;
+
+    property <color> symbol-fg: root.disabled
+        ? ButtonTokens.button-invisible-fgColor-disabled
+        : root.selected
+            ? PrimerColors.fgOnEmphasis
+            : root.accent-fg
+                ? PrimerColors.fgColor-accent
+                : PrimerColors.fgColor-default;
+
+    fs := FocusScope {
+        enabled: !root.disabled;
+        focus-on-click: false;
+
+        key-pressed(event) => {
+            if root.disabled {
+                return reject;
+            }
+            if event.text == Key.Return || event.text == Key.Space {
+                root.clicked();
+                return accept;
+            }
+            return reject;
+        }
+
+        touch := TouchArea {
+            enabled: !root.disabled;
+            mouse-cursor: root.disabled ? default : pointer;
+            clicked => {
+                root.clicked();
+            }
+
+            cell := Rectangle {
+                min-width: LayoutTokens.control-medium-size;
+                min-height: LayoutTokens.control-medium-size;
+                border-radius: LayoutTokens.borderRadius-medium;
+                border-width: (fs.has-focus && !root.disabled) ? 2px : 0px;
+                border-color: PrimerColors.bgColor-accent-emphasis;
+
+                HorizontalLayout {
+                    alignment: center;
+                    padding-left: LayoutTokens.control-medium-paddingInline-normal;
+                    padding-right: LayoutTokens.control-medium-paddingInline-normal;
+                    spacing: (root.has-leading-icon || root.has-trailing-icon) ? LayoutTokens.base-size-4 : 0px;
+                    align-items: center;
+                    if root.has-leading-icon: Image {
+                        width: LayoutTokens.iconButton-icon-size-medium;
+                        height: LayoutTokens.iconButton-icon-size-medium;
+                        vertical-alignment: center;
+                        source: root.leading-icon;
+                        colorize: root.symbol-fg;
+                    }
+
+                    Text {
+                        text: root.label;
+                        color: root.symbol-fg;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: root.selected && !root.disabled
+                            ? LayoutTokens.base-text-weight-semibold
+                            : LayoutTokens.base-text-weight-medium;
+                        vertical-alignment: center;
+                        wrap: no-wrap;
+                    }
+
+                    if root.has-trailing-icon: Image {
+                        width: LayoutTokens.iconButton-icon-size-medium;
+                        height: LayoutTokens.iconButton-icon-size-medium;
+                        vertical-alignment: center;
+                        source: root.trailing-icon;
+                        colorize: root.symbol-fg;
+                    }
+                }
+
+                states [
+                    disabled when root.disabled: {
+                        border-width: 0px;
+                    }
+                    selected when !root.disabled && root.selected: {
+                        background: PrimerColors.bgColor-accent-emphasis;
+                    }
+                    pressed when !root.disabled && !root.selected && touch.pressed: {
+                        background: ButtonTokens.button-invisible-bgColor-active;
+                    }
+                    hover when !root.disabled && !root.selected && !touch.pressed && touch.has-hover: {
+                        background: PrimerColors.table-row-bgColor-hover;
+                    }
+                ]
+            }
+        }
+    }
+}
 
 component Pagination2NavItem inherits HorizontalLayout {
     in property <PaginationPiece> piece;
     callback activate(int);
 
-    min-height: LayoutTokens.control-small-size;
+    min-height: LayoutTokens.control-medium-size;
 
-    if piece.kind == PaginationPieceKind.Prev: Button {
-        variant: ButtonVariant.invisible;
-        size: Size.small;
+    if piece.kind == PaginationPieceKind.Prev: Pagination2LinkCell {
         disabled: piece.disabled;
+        selected: false;
+        accent-fg: true;
+        label: "Previous";
         has-leading-icon: true;
         leading-icon: Icons.chevron_left;
-        label: "Previous";
         clicked => {
             activate(piece.page_num - 1);
         }
     }
 
-    if piece.kind == PaginationPieceKind.Next: Button {
-        variant: ButtonVariant.invisible;
-        size: Size.small;
+    if piece.kind == PaginationPieceKind.Next: Pagination2LinkCell {
         disabled: piece.disabled;
+        selected: false;
+        accent-fg: true;
+        label: "Next";
         has-trailing-icon: true;
         trailing-icon: Icons.chevron_right;
-        label: "Next";
         clicked => {
             activate(piece.page_num - 1);
         }
     }
 
-    if piece.kind == PaginationPieceKind.Num: Button {
-        variant: piece.selected ? ButtonVariant.default : ButtonVariant.invisible;
-        size: Size.small;
+    if piece.kind == PaginationPieceKind.Num: Pagination2LinkCell {
         disabled: piece.disabled;
+        selected: piece.selected;
+        accent-fg: false;
         label: "" + piece.page_num;
         clicked => {
             activate(piece.page_num - 1);
         }
     }
 
-    if piece.kind == PaginationPieceKind.Break: Text {
-        text: "…";
-        color: PrimerColors.fgColor-muted;
-        font-size: LayoutTokens.text-body-size-medium;
-        vertical-alignment: center;
+    if piece.kind == PaginationPieceKind.Break: HorizontalLayout {
+        min-height: LayoutTokens.control-medium-size;
+        min-width: LayoutTokens.control-medium-size;
+
+        Text {
+            text: "…";
+            color: PrimerColors.fgColor-muted;
+            font-size: LayoutTokens.text-body-size-medium;
+            vertical-alignment: center;
+        }
     }
 }
 
@@ -74,7 +180,7 @@ export component Pagination2 {
         surrounding-page-count,
     );
 
-    min-height: LayoutTokens.control-small-size;
+    min-height: LayoutTokens.control-medium-size;
 
     HorizontalLayout {
         spacing: LayoutTokens.button-content-gap;
