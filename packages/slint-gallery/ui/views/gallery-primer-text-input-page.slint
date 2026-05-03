@@ -1,0 +1,409 @@
+import {
+    Checkbox,
+    Icons,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    Select,
+    SelectOption,
+    Size,
+    TextInputLoaderPosition,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+
+export component GalleryPrimerTextInputPage {
+
+    property <string> preview-label-text: "Label";
+    property <string> preview-text: "";
+    property <string> preview-placeholder: "Placeholder…";
+    property <string> preview-caption: "";
+    property <string> preview-validation-message: "";
+    property <string> preview-limit-exceeded-message: "Reduce length to continue.";
+    property <ValidationStatus> preview-validation-status: ValidationStatus.none;
+    property <bool> preview-disabled: false;
+    property <bool> preview-block: true;
+    property <Size> preview-size: Size.medium;
+    property <bool> preview-required: false;
+    property <bool> preview-label-visually-hidden: false;
+    property <bool> preview-contrast: false;
+    property <bool> preview-monospace: false;
+    property <bool> preview-has-leading-visual: false;
+    property <bool> preview-has-trailing-visual: false;
+    property <bool> preview-has-trailing-action: false;
+    property <bool> preview-loading: false;
+    property <TextInputLoaderPosition> preview-loader-position: TextInputLoaderPosition.auto;
+
+    property <[SelectOption]> char-limit-options: [
+        { value: "0", label: "Off", enabled: true },
+        { value: "12", label: "12 characters", enabled: true },
+        { value: "20", label: "20 characters", enabled: true },
+        { value: "24", label: "24 characters", enabled: true },
+    ];
+    property <[int]> char-limit-values: [0, 12, 20, 24];
+    property <int> char-limit-selected-index: 0;
+
+    property <int> preview-character-limit: char-limit-values[char-limit-selected-index];
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            alignment: start;
+
+            PrimerTextInput {
+                width: 360px;
+                block: preview-block;
+                label-text: preview-label-text;
+                text <=> preview-text;
+                placeholder: preview-placeholder;
+                caption: preview-caption;
+                validation-status: preview-validation-status;
+                validation-message: preview-validation-message;
+                disabled: preview-disabled;
+                size: preview-size;
+                required: preview-required;
+                label-visually-hidden: preview-label-visually-hidden;
+                character-limit: preview-character-limit;
+                character-limit-exceeded-message: preview-limit-exceeded-message;
+                contrast: preview-contrast;
+                monospace: preview-monospace;
+                has-leading-visual: preview-has-leading-visual;
+                leading-visual: Icons.check_circle;
+                has-trailing-visual: preview-has-trailing-visual;
+                trailing-visual: Icons.info;
+                has-trailing-action: preview-has-trailing-action;
+                loading: preview-loading;
+                loader-position: preview-loader-position;
+                edited(_t) => {
+                }
+            }
+        }
+
+        Rectangle { }
+
+        Rectangle {
+            width: 300px;
+            background: PrimerColors.bgColor-inset;
+            vertical-stretch: 1;
+
+            Rectangle {
+                x: 0px;
+                width: 1px;
+                background: PrimerColors.borderColor-default;
+            }
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 20px;
+                alignment: start;
+
+                VerticalLayout {
+                    spacing: 6px;
+
+                    Text {
+                        text: "Label / value / placeholder";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    PrimerTextInput {
+                        block: true;
+                        label-text: "label-text";
+                        placeholder: "Label…";
+                        text <=> preview-label-text;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+
+                    PrimerTextInput {
+                        block: true;
+                        label-text: "text";
+                        placeholder: "Value…";
+                        text <=> preview-text;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+
+                    PrimerTextInput {
+                        block: true;
+                        label-text: "placeholder";
+                        placeholder: "Placeholder hint…";
+                        text <=> preview-placeholder;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+
+                    PrimerTextInput {
+                        block: true;
+                        label-text: "caption";
+                        placeholder: "Optional caption…";
+                        text <=> preview-caption;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 8px;
+
+                    Text {
+                        text: "State";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Checkbox {
+                        label: "disabled";
+                        checked <=> preview-disabled;
+                    }
+
+                    Checkbox {
+                        label: "block (full width in layouts)";
+                        checked <=> preview-block;
+                    }
+
+                    Checkbox {
+                        label: "required (asterisk on label)";
+                        checked <=> preview-required;
+                    }
+
+                    Checkbox {
+                        label: "label-visually-hidden";
+                        checked <=> preview-label-visually-hidden;
+                    }
+
+                    Checkbox {
+                        label: "contrast fill";
+                        checked <=> preview-contrast;
+                    }
+
+                    Checkbox {
+                        label: "monospace";
+                        checked <=> preview-monospace;
+                    }
+
+                    Checkbox {
+                        label: "loading";
+                        checked <=> preview-loading;
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    Text {
+                        text: "size";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    RadioGroup {
+                        label: "";
+
+                        Radio {
+                            value: "sm";
+                            label: "small";
+                            checked: preview-size == Size.small;
+                            toggled => {
+                                preview-size = Size.small;
+                            }
+                        }
+
+                        Radio {
+                            value: "md";
+                            label: "medium";
+                            checked: preview-size == Size.medium;
+                            toggled => {
+                                preview-size = Size.medium;
+                            }
+                        }
+
+                        Radio {
+                            value: "lg";
+                            label: "large";
+                            checked: preview-size == Size.large;
+                            toggled => {
+                                preview-size = Size.large;
+                            }
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    Text {
+                        text: "validation-status";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    RadioGroup {
+                        label: "";
+
+                        Radio {
+                            value: "none";
+                            label: "none";
+                            checked: preview-validation-status == ValidationStatus.none;
+                            toggled => {
+                                preview-validation-status = ValidationStatus.none;
+                            }
+                        }
+
+                        Radio {
+                            value: "error";
+                            label: "error";
+                            checked: preview-validation-status == ValidationStatus.error;
+                            toggled => {
+                                preview-validation-status = ValidationStatus.error;
+                            }
+                        }
+
+                        Radio {
+                            value: "success";
+                            label: "success";
+                            checked: preview-validation-status == ValidationStatus.success;
+                            toggled => {
+                                preview-validation-status = ValidationStatus.success;
+                            }
+                        }
+                    }
+
+                    PrimerTextInput {
+                        block: true;
+                        label-text: "validation-message";
+                        placeholder: "Message when error/success…";
+                        text <=> preview-validation-message;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    Text {
+                        text: "character-limit";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Select {
+                        label-text: "";
+                        placeholder: "Limit…";
+                        options: char-limit-options;
+                        selected-index <=> char-limit-selected-index;
+                        validation-status: ValidationStatus.none;
+                        selected-changed(_ix) => {
+                        }
+                    }
+
+                    PrimerTextInput {
+                        visible: preview-character-limit > 0;
+                        block: true;
+                        label-text: "character-limit-exceeded-message";
+                        placeholder: "Shown when over limit…";
+                        text <=> preview-limit-exceeded-message;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 8px;
+
+                    Text {
+                        text: "Icons / trailing action";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Text {
+                        text: "Leading uses Icons.check_circle; trailing uses Icons.info (same as Forms demos).";
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+
+                    Checkbox {
+                        label: "has-leading-visual";
+                        checked <=> preview-has-leading-visual;
+                    }
+
+                    Checkbox {
+                        label: "has-trailing-visual";
+                        checked <=> preview-has-trailing-visual;
+                    }
+
+                    Checkbox {
+                        label: "has-trailing-action (clear ×)";
+                        checked <=> preview-has-trailing-action;
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    Text {
+                        text: "loader-position";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Text {
+                        text: "auto: spinner replaces leading slot when has-leading-visual; otherwise trailing.";
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+
+                    RadioGroup {
+                        label: "";
+
+                        Radio {
+                            value: "auto";
+                            label: "auto";
+                            checked: preview-loader-position == TextInputLoaderPosition.auto;
+                            toggled => {
+                                preview-loader-position = TextInputLoaderPosition.auto;
+                            }
+                        }
+
+                        Radio {
+                            value: "leading";
+                            label: "leading";
+                            checked: preview-loader-position == TextInputLoaderPosition.leading;
+                            toggled => {
+                                preview-loader-position = TextInputLoaderPosition.leading;
+                            }
+                        }
+
+                        Radio {
+                            value: "trailing";
+                            label: "trailing";
+                            checked: preview-loader-position == TextInputLoaderPosition.trailing;
+                            toggled => {
+                                preview-loader-position = TextInputLoaderPosition.trailing;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
