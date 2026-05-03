@@ -4,8 +4,6 @@ import {
     NavListGroup,
     NavListGroupHeadingVariant,
     NavListItem,
-    UnderlineNav,
-    UnderlineNavItem,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 
@@ -235,84 +233,6 @@ export component GalleryNavsPage inherits VerticalLayout {
         },
     ];
     property <string> demo-nav-last: "";
-
-    property <int> demo-underline-selected: 0;
-    property <[UnderlineNavItem]> demo-underline-items: [
-        { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Issues", enabled: true, counter: "12K", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: false, leading-icon: Icons.dot_fill },
-    ];
-    property <int> demo-underline-disabled-selected: 0;
-    property <[UnderlineNavItem]> demo-underline-disabled-items: [
-        { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Issues", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Pull requests", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-        { label: "Security", enabled: false, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
-    ];
-    property <int> demo-underline-loading-icons-selected: 0;
-    property <[UnderlineNavItem]> demo-underline-loading-icons-items: [
-        { label: "Open", enabled: true, counter: "128", has-leading-icon: true, leading-icon: Icons.issue_opened },
-        { label: "Closed", enabled: true, counter: "2.4k", has-leading-icon: true, leading-icon: Icons.issue_draft },
-        { label: "Drafts", enabled: true, counter: "4", has-leading-icon: true, leading-icon: Icons.git_pull_request_draft },
-    ];
-
-    VerticalLayout {
-        spacing: 12px;
-        alignment: start;
-
-        Text {
-            text: "UnderlineNav";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Inset with counters.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            items: demo-underline-items;
-            selected-index: demo-underline-selected;
-            accessible-name: "Demo repository tabs";
-            item-activated(idx) => {
-                demo-underline-selected = idx;
-            }
-        }
-
-        Text {
-            text: "Inset with a disabled tab.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            items: demo-underline-disabled-items;
-            selected-index: demo-underline-disabled-selected;
-            accessible-name: "Demo tabs with disabled item";
-            item-activated(idx) => {
-                demo-underline-disabled-selected = idx;
-            }
-        }
-
-        Text {
-            text: "loading-counters + leading icons (pulse next to icons).";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-        }
-
-        UnderlineNav {
-            loading-counters: true;
-            items: demo-underline-loading-icons-items;
-            selected-index: demo-underline-loading-icons-selected;
-            accessible-name: "Demo loading counters with icons";
-            item-activated(idx) => {
-                demo-underline-loading-icons-selected = idx;
-            }
-        }
-    }
 
     VerticalLayout {
         spacing: 12px;

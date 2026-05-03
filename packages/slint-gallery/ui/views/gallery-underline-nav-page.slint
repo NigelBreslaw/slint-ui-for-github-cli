@@ -1,0 +1,155 @@
+import {
+    Checkbox,
+    Icons,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    UnderlineNav,
+    UnderlineNavItem,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryUnderlineNavPage {
+
+    property <[UnderlineNavItem]> items-counters: [
+        { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Issues", enabled: true, counter: "12K", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Pull requests", enabled: true, counter: "3", has-leading-icon: false, leading-icon: Icons.dot_fill },
+    ];
+    property <[UnderlineNavItem]> items-disabled: [
+        { label: "Code", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Issues", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Pull requests", enabled: true, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+        { label: "Security", enabled: false, counter: "", has-leading-icon: false, leading-icon: Icons.dot_fill },
+    ];
+    property <[UnderlineNavItem]> items-icons: [
+        { label: "Open", enabled: true, counter: "128", has-leading-icon: true, leading-icon: Icons.issue_opened },
+        { label: "Closed", enabled: true, counter: "2.4k", has-leading-icon: true, leading-icon: Icons.issue_draft },
+        { label: "Drafts", enabled: true, counter: "4", has-leading-icon: true, leading-icon: Icons.git_pull_request_draft },
+    ];
+
+    property <int> demo-preset: 0;
+    property <[UnderlineNavItem]> preview-items: demo-preset == 0
+        ? items-counters
+        : demo-preset == 1 ? items-disabled : items-icons;
+
+    property <int> preview-selected-index: 0;
+    property <bool> preview-loading-counters: false;
+    property <string> preview-accessible-name: "Demo repository tabs";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            alignment: start;
+            horizontal-stretch: 1;
+
+            UnderlineNav {
+                horizontal-stretch: 1;
+                items: preview-items;
+                selected-index: preview-selected-index;
+                loading-counters: preview-loading-counters;
+                accessible-name: preview-accessible-name;
+                item-activated(idx) => {
+                    preview-selected-index = idx;
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Items preset";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Turn on Loading counters to pulse the counter slot when a tab has counter text.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "counters";
+                        label: "Counters (inset)";
+                        checked: demo-preset == 0;
+                        toggled => {
+                            demo-preset = 0;
+                            preview-selected-index = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "disabled";
+                        label: "With disabled tab";
+                        checked: demo-preset == 1;
+                        toggled => {
+                            demo-preset = 1;
+                            preview-selected-index = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "icons";
+                        label: "Leading icons + counters";
+                        checked: demo-preset == 2;
+                        toggled => {
+                            demo-preset = 2;
+                            preview-selected-index = 0;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "loading-counters";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Loading counters";
+                    checked <=> preview-loading-counters;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "accessible-name";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "";
+                    placeholder: "Tab list label for assistive tech…";
+                    text <=> preview-accessible-name;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+        }
+    }
+}

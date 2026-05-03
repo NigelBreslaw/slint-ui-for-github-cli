@@ -15,6 +15,7 @@ import { GalleryPrimerTextInputPage } from "./views/gallery-primer-text-input-pa
 import { GallerySegmentedControlPage } from "./views/gallery-segmented-control-page.slint";
 import { GallerySelectPage } from "./views/gallery-select-page.slint";
 import { GalleryTreeViewPage } from "./views/gallery-tree-view-page.slint";
+import { GalleryUnderlineNavPage } from "./views/gallery-underline-nav-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
 import { Icons } from "../../primer-slint/primer.slint";
 
@@ -133,6 +134,10 @@ export component GalleryWindow inherits Window {
                         }
 
                         if GalleryState.selected-group-index == 13: GallerySelectPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-group-index == 14: GalleryUnderlineNavPage {
                             height: main-scroll.height;
                         }
                     }
