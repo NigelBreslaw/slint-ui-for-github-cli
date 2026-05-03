@@ -19,7 +19,7 @@ import { GalleryPaginationRangeFooter } from "../components/PaginationFooter.sli
 export component GalleryDataPage inherits VerticalLayout {
     spacing: 28px;
     padding: 24px;
-    
+
     property <[DataTableColumn]> demo-data-table-columns: [
         { header: "Type", id: "kind", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.iconText, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
         { header: "Repository", id: "name", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },

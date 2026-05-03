@@ -1,0 +1,214 @@
+import {
+    Checkbox,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    ToggleSwitch,
+    ToggleSwitchSize,
+    ToggleSwitchStatusLabelPosition,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+
+export component GalleryToggleSwitchPage {
+
+    property <bool> preview-checked: false;
+    property <bool> preview-disabled: false;
+    property <bool> preview-loading: false;
+    property <bool> preview-reduce-motion: false;
+    property <ToggleSwitchSize> preview-size: ToggleSwitchSize.medium;
+    property <ToggleSwitchStatusLabelPosition> preview-status-label-position: ToggleSwitchStatusLabelPosition.start;
+    property <string> preview-button-label-on: "On";
+    property <string> preview-button-label-off: "Off";
+    property <string> preview-caption: "Toggle label";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            alignment: start;
+
+            ToggleSwitch {
+                checked <=> preview-checked;
+                disabled: preview-disabled;
+                loading: preview-loading;
+                size: preview-size;
+                status-label-position: preview-status-label-position;
+                button-label-on: preview-button-label-on;
+                button-label-off: preview-button-label-off;
+                reduce-motion: preview-reduce-motion;
+            }
+        }
+
+        Rectangle { }
+
+        Rectangle {
+            width: 300px;
+            background: PrimerColors.bgColor-inset;
+
+            Rectangle {
+                x: 0px;
+                width: 1px;
+                background: PrimerColors.borderColor-default;
+            }
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 20px;
+                alignment: start;
+
+                VerticalLayout {
+                    spacing: 8px;
+
+                    Text {
+                        text: "State";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Checkbox {
+                        label: "Checked";
+                        checked <=> preview-checked;
+                    }
+
+                    Checkbox {
+                        label: "Disabled";
+                        checked <=> preview-disabled;
+                    }
+
+                    Checkbox {
+                        label: "Loading";
+                        checked <=> preview-loading;
+                    }
+
+                    Text {
+                        text: "Loading shows a spinner and blocks toggling until cleared.";
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+
+                    Checkbox {
+                        label: "Reduce motion";
+                        checked <=> preview-reduce-motion;
+                    }
+
+                    Text {
+                        text: "When on, track motion uses 0ms (matches prefers-reduced-motion).";
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    Text {
+                        text: "size";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    RadioGroup {
+                        label: "";
+
+                        Radio {
+                            value: "sm";
+                            label: "small";
+                            checked: preview-size == ToggleSwitchSize.small;
+                            toggled => {
+                                preview-size = ToggleSwitchSize.small;
+                            }
+                        }
+
+                        Radio {
+                            value: "md";
+                            label: "medium";
+                            checked: preview-size == ToggleSwitchSize.medium;
+                            toggled => {
+                                preview-size = ToggleSwitchSize.medium;
+                            }
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    Text {
+                        text: "status-label-position";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Text {
+                        text: "Where On/Off status text sits relative to the track.";
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+
+                    RadioGroup {
+                        label: "";
+
+                        Radio {
+                            value: "start";
+                            label: "start";
+                            checked: preview-status-label-position == ToggleSwitchStatusLabelPosition.start;
+                            toggled => {
+                                preview-status-label-position = ToggleSwitchStatusLabelPosition.start;
+                            }
+                        }
+
+                        Radio {
+                            value: "end";
+                            label: "end";
+                            checked: preview-status-label-position == ToggleSwitchStatusLabelPosition.end;
+                            toggled => {
+                                preview-status-label-position = ToggleSwitchStatusLabelPosition.end;
+                            }
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 6px;
+
+                    Text {
+                        text: "button-label-on / button-label-off";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    PrimerTextInput {
+                        // width: 100%;
+                        block: true;
+                        label-text: "On";
+                        placeholder: "On…";
+                        text <=> preview-button-label-on;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+
+                    PrimerTextInput {
+                        // width: 100%;
+                        block: true;
+                        label-text: "Off";
+                        placeholder: "Off…";
+                        text <=> preview-button-label-off;
+                        validation-status: ValidationStatus.none;
+                        edited(_t) => {
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

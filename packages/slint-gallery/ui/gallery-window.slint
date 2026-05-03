@@ -10,6 +10,7 @@ import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryDialogsPage } from "./views/gallery-dialogs-page.slint";
 import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint";
 import { GalleryStateLabelPage } from "./views/gallery-state-label-page.slint";
+import { GalleryToggleSwitchPage } from "./views/gallery-toggle-switch-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
 import { Icons } from "../../primer-slint/primer.slint";
 
@@ -104,6 +105,10 @@ export component GalleryWindow inherits Window {
                         if GalleryState.selected-group-index == 8: GalleryStateLabelPage {
                             height: main-scroll.height;
 
+                        }
+
+                        if GalleryState.selected-group-index == 9: GalleryToggleSwitchPage {
+                            height: main-scroll.height;
                         }
                     }
                 }

@@ -19,9 +19,6 @@ import {
     SelectPanelItem,
     SelectPanelMode,
     Size,
-    ToggleSwitch,
-    ToggleSwitchSize,
-    ToggleSwitchStatusLabelPosition,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import { GallerySelectPanelMulti } from "../state/gallery-select-panel-multi-state.slint";
@@ -49,10 +46,6 @@ export component GalleryFormsPage inherits VerticalLayout {
     property <string> demo-rg-plan: "";
     property <string> demo-rg-disabled-pick: "b";
     property <string> demo-rg-hidden-axis: "x";
-
-    property <bool> demo-ts-spike: false;
-    property <bool> demo-ts-end: false;
-    property <bool> demo-ts-custom: false;
 
     property <string> demo-p1-block: "";
     property <string> demo-p1-small: "";
@@ -630,173 +623,6 @@ export component GalleryFormsPage inherits VerticalLayout {
                             demo-select-panel-open = false;
                         }
                     }
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-
-        Text {
-            text: "ToggleSwitch";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        HorizontalLayout {
-            spacing: 12px;
-            alignment: start;
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Default";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                HorizontalLayout {
-                    spacing: 8px;
-                    alignment: center;
-
-                    Text {
-                        text: "Toggle label";
-                        color: PrimerColors.fgColor-default;
-                        font-size: LayoutTokens.text-body-size-medium;
-                        font-weight: LayoutTokens.base-text-weight-semibold;
-                    }
-
-                    ToggleSwitch {
-                        checked <=> demo-ts-spike;
-                    }
-                }
-            }
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Loading";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                ToggleSwitch {
-                    checked: false;
-                    loading: true;
-                }
-            }
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Label end";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                ToggleSwitch {
-                    size: ToggleSwitchSize.small;
-                    status-label-position: ToggleSwitchStatusLabelPosition.end;
-                    checked <=> demo-ts-end;
-                }
-            }
-        }
-
-        HorizontalLayout {
-            spacing: 12px;
-            alignment: start;
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Checked";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                ToggleSwitch {
-                    checked: true;
-                }
-            }
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Disabled (off)";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                ToggleSwitch {
-                    disabled: true;
-                    checked: false;
-                }
-            }
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Checked + disabled";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                ToggleSwitch {
-                    disabled: true;
-                    checked: true;
-                }
-            }
-        }
-
-        HorizontalLayout {
-            spacing: 12px;
-            alignment: start;
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Custom labels";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                ToggleSwitch {
-                    button-label-on: "Active";
-                    button-label-off: "Inactive";
-                    checked <=> demo-ts-custom;
-                }
-            }
-
-            VerticalLayout {
-                spacing: 4px;
-                alignment: start;
-
-                Text {
-                    text: "Loading, label end";
-                    font-size: 12px;
-                    color: PrimerColors.fgColor-muted;
-                }
-
-                ToggleSwitch {
-                    loading: true;
-                    status-label-position: ToggleSwitchStatusLabelPosition.end;
-                    checked: false;
                 }
             }
         }
