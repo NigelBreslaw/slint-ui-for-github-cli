@@ -1,6 +1,6 @@
 // Standalone Primer Pagination (nav strip only) — upstream: primer-ui-react `Pagination/Pagination.tsx`.
-// Reuses `PaginationLogic` / `PaginationPiece` from `../Pagination/` (same model as DataTable `Pagination`).
-// Callback `page-changed` emits **0-based page index** (matches `Pagination` and app state); `current-page` is **1-based** (React-style).
+// Reuses `PaginationLogic` / `PaginationPiece` from `../Pagination/` (shared strip model with composed table footers).
+// Callback `page-changed` emits **0-based page index** (app state); `current-page` is **1-based** (React-style).
 import { Icons } from "../assets/icons.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 import { PaginationPiece, PaginationPieceKind } from "../Pagination/types.slint";

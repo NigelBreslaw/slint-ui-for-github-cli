@@ -413,7 +413,7 @@ export component GalleryDataPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Use when you need the legacy `Pagination` chrome (range text + bordered row + spaced nav) but nav from `Pagination2`. Same wiring as github-app `project-board-list.slint` / `TimeReportingProjectPickerOverlay.slint`: 0-based `page-index`, `PaginationLogic` for `page-count` / range / clamp, bind `Pagination2.current-page` to `clamp_current_page_1based(page-index + 1, page-count)`. Copy `GalleryPagination2RangeFooter` from this file.";
+            text: "Use the DataTable-style footer (range text + bordered row + spaced nav) with nav from `Pagination2`. Same wiring as github-app `project-board-list.slint` / `TimeReportingProjectPickerOverlay.slint`: 0-based `page-index`, `PaginationLogic` for `page-count` / range / clamp, bind `Pagination2.current-page` to `clamp_current_page_1based(page-index + 1, page-count)`. Copy `GalleryPagination2RangeFooter` from this file.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;

@@ -4,7 +4,7 @@ Contributors and AI assistants: see [`AGENTS.md`](AGENTS.md) (reference and veri
 
 **Gallery app:** `pnpm dev:gallery` from the repository root (see [`slint-gallery/README.md`](../slint-gallery/README.md)). **`AnchoredOverlay` / `PopupWindow`:** [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) (parent-relative coords, vertical flip, app references).
 
-**Long lists in app views:** use **`Pagination`** ([`slint/Pagination/pagination.slint`](slint/Pagination/pagination.slint)), page fields on the right Slint global (`ProjectBoardListState` / `AppState` in `app/src/bridges/slint/`), and TypeScript **`apply…SliceToWindow`** helpers for **`ArrayModel`** slices.
+**Long lists in app views:** use **`Pagination2`** (nav strip from [`primer.slint`](slint/primer.slint)) plus **`PaginationLogic`** ([`slint/Pagination/pagination-logic.slint`](slint/Pagination/pagination-logic.slint)) to derive **`page-count`**, range text, and clamps from **`total-count`** / **`page-size`** / 0-based **`page-index`**, then compose the bordered footer row in your view (see **`GalleryPagination2RangeFooter`** in [`slint-gallery/ui/views/gallery-data-page.slint`](../slint-gallery/ui/views/gallery-data-page.slint)). Wire page fields on the right Slint global (`ProjectBoardListState` / `AppState` in `app/src/bridges/slint/`) and TypeScript **`apply…SliceToWindow`** helpers for **`ArrayModel`** slices.
 
 The Primer Design System is used to build the GitHub UI. It's open source (MIT) and
 specified in detail.
@@ -351,19 +351,20 @@ Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
 
 ## Pagination
 
-Table footer pagination aligned with Primer **DataTable** toolbar **`Pagination`**. Upstream: [`DataTable/Pagination.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/DataTable/Pagination.tsx) and [`Pagination/model.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Pagination/model.tsx).
+Primer **DataTable** toolbar parity is split: **`Pagination2`** renders only the **Previous** / **Next** / page-number strip (upstream [`Pagination/Pagination.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Pagination/Pagination.tsx)). **`PaginationLogic`** ([`slint/Pagination/pagination-logic.slint`](slint/Pagination/pagination-logic.slint)) matches [`Pagination/model.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Pagination/model.tsx). For a full **range label + bordered footer + nav** (like the React DataTable footer), compose **`Pagination2`** inside a padded row and compute **`page-count`**, range strings, and 1-based **`current-page`** from your **`total-count`**, **`page-size`**, and **0-based** `page-index` (see gallery **`GalleryPagination2RangeFooter`** and app **`ProjectBoardPaginationFooter`** / **`TimeReportingPickerPaginationFooter`**).
+
+**`Pagination2`**
 
 | Property                 | Type       | Notes                                                                                                   |
 | ------------------------ | ---------- | ------------------------------------------------------------------------------------------------------- |
-| `total-count`            | `int`      | Total items (same semantics as React `totalCount`).                                                     |
-| `page-size`              | `int`      | Items per page (default **25**).                                                                        |
-| `page-index`             | `int`      | **0-based** current page index (controlled; parent updates after `page-changed`).                       |
+| `page-count`             | `int`      | Total pages (derive from totals with **`PaginationLogic.page_count_from_total`** when you have item counts). |
+| `current-page`           | `int`      | **1-based** current page (controlled **`in-out`**; clamps when **`page-count`** changes).              |
 | `show-pages`             | `bool`     | When false, only **Previous** / **Next** (no numeric page strip).                                       |
 | `margin-page-count`      | `int`      | Pages fixed at the start/end of the strip (default **1**; matches React `buildPaginationModel` margin). |
 | `surrounding-page-count` | `int`      | Pages on each side of the current page (default **2**).                                                 |
-| `page-changed`           | `callback` | `(new-page-index)` **0-based** index to select.                                                         |
+| `page-changed`           | `callback` | Argument is **0-based** page index (same as app state / legacy footer).                                 |
 
-**Imports for views:** Prefer [`primer.slint`](slint/primer.slint) — **`Pagination`**. Compose it **below** **`TableContainer`** / **`DataTable`** when paging row models in the parent (parent slices **`rows`** and updates **`page-index`**).
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`Pagination2`**. Import **`PaginationLogic`** from [`slint/Pagination/pagination-logic.slint`](slint/Pagination/pagination-logic.slint) when you page by **`total-count`** / **`page-size`**. Compose **below** **`TableContainer`** / **`DataTable`** when the parent slices **`rows`** and owns **0-based** **`page-index`**.
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Data** group).
 

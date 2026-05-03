@@ -94,7 +94,7 @@ export global ProjectBoardListState {
     in-out property <int> board-items-count: 0;
     /** 0-based page index for `board-data-table-rows` (paged slice of the full board). */
     in-out property <int> board-page-index: 0;
-    /** Rows per page — set from the Node bridge (`main.ts`) and bound to `Pagination`. */
+    /** Rows per page — set from the Node bridge (`main.ts`) and bound to the board list pagination footer (Pagination2). */
     in property <int> board-page-size: 25;
     in-out property <[ProjectBoardListRow]> board-rows-model;
     /** `DataTable` rows mirroring `board-rows-model` (bridge-built). Row **`id`** is the issue/PR URL for `row-clicked` → open in browser. */
