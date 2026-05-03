@@ -13,7 +13,76 @@ import {
     Pagination2,
     TableContainer,
 } from "../../../primer-slint/primer.slint";
-import { PrimerColors } from "../../../primer-slint/tokens.slint";
+import { PaginationLogic } from "../../../primer-slint/Pagination/pagination-logic.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+
+/// Composed DataTable-style footer: range label + bordered bar + `Pagination2`.
+/// Matches github-app `ProjectBoardPaginationFooter` / `TimeReportingPickerPaginationFooter`:
+/// 0-based `page-index`, `PaginationLogic` for counts and range, 1-based `current-page` derived for `Pagination2`.
+component GalleryPagination2RangeFooter {
+    in-out property <int> page-index;
+    in property <int> total-count;
+    in property <int> page-size;
+    in property <bool> show-pages: true;
+    callback page-changed(int);
+
+    property <int> page-count: PaginationLogic.page_count_from_total(total-count, page-size);
+    property <int> idx-clamped: PaginationLogic.clamp_page_index(page-index, page-count);
+    property <int> range-start: PaginationLogic.range_display_start(total-count, idx-clamped, page-size);
+    property <int> range-end: PaginationLogic.range_display_end(total-count, idx-clamped, page-size);
+    property <int> pagination2-current-1based: PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
+
+    width: 100%;
+    vertical-stretch: 0;
+    min-height: LayoutTokens.control-small-size;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border-width: 1px;
+        border-color: PrimerColors.borderColor-default;
+        border-radius: LayoutTokens.table-border-radius;
+
+        HorizontalLayout {
+            width: 100%;
+            height: 100%;
+            padding-top: LayoutTokens.table-cell-padding-block-normal;
+            padding-bottom: LayoutTokens.table-cell-padding-block-normal;
+            padding-left: LayoutTokens.stack-padding-normal;
+            padding-right: LayoutTokens.stack-padding-normal;
+            spacing: LayoutTokens.stack-padding-normal;
+            alignment: stretch;
+
+            Text {
+                horizontal-stretch: 0;
+                text: total-count <= 0
+                    ? "0‒0 of 0"
+                    : "" + range-start + "‒" + range-end + " of " + total-count;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                vertical-alignment: center;
+                wrap: no-wrap;
+            }
+
+            HorizontalLayout {
+                horizontal-stretch: 1;
+                spacing: LayoutTokens.button-content-gap;
+                alignment: space-around;
+
+                Pagination2 {
+                    width: 100%;
+                    page-count: page-count;
+                    current-page: pagination2-current-1based;
+                    show-pages: show-pages;
+                    page-changed(idx) => {
+                        root.page-changed(idx);
+                    }
+                }
+            }
+        }
+    }
+}
 
 /// DataTable and Pagination gallery demos.
 export component GalleryDataPage inherits VerticalLayout {
@@ -47,6 +116,7 @@ export component GalleryDataPage inherits VerticalLayout {
     property <int> demo-pagination2-single-page: 1;
     property <int> demo-pagination2-ellipsis-page: 12;
     property <int> demo-pagination2-zero-page: 1;
+    property <int> demo-p2-footer-page-index: 0;
 
     VerticalLayout {
         spacing: 16px;
@@ -328,6 +398,43 @@ export component GalleryDataPage inherits VerticalLayout {
             current-page: demo-pagination2-zero-page;
             page-changed(idx) => {
                 demo-pagination2-zero-page = idx + 1;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Pagination2 — table footer (range + nav)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Use when you need the legacy `Pagination` chrome (range text + bordered row + spaced nav) but nav from `Pagination2`. Same wiring as github-app `project-board-list.slint` / `TimeReportingProjectPickerOverlay.slint`: 0-based `page-index`, `PaginationLogic` for `page-count` / range / clamp, bind `Pagination2.current-page` to `clamp_current_page_1based(page-index + 1, page-count)`. Copy `GalleryPagination2RangeFooter` from this file.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Demo: total-count 47, page-size 10, 0-based page-index " + demo-p2-footer-page-index + " (5 pages).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        GalleryPagination2RangeFooter {
+            width: 100%;
+            vertical-stretch: 0;
+            total-count: 47;
+            page-size: 10;
+            page-index: demo-p2-footer-page-index;
+            page-changed(idx) => {
+                demo-p2-footer-page-index = idx;
             }
         }
     }
