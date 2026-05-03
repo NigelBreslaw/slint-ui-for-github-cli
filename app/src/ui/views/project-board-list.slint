@@ -8,13 +8,95 @@ import {
     DataTableCellKind,
     DataTableColumn,
     DataTableSortDirection,
-    Pagination,
+    Pagination2,
     Spinner,
     TableContainer,
     Button,
 } from "../../../../packages/primer-slint/primer.slint";
+import { PaginationLogic } from "../../../../packages/primer-slint/Pagination/pagination-logic.slint";
 import { LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 import { ProjectBoardTableLayout } from "project-board-table-layout.slint";
+
+/// DataTable footer: range label + `Pagination2` strip; `page-index` is 0-based (two-way to bridge).
+component ProjectBoardPaginationFooter {
+    in-out property <int> page-index;
+    in property <int> total-count;
+    in property <int> page-size;
+    callback page-changed(int);
+
+    property <int> page-count: PaginationLogic.page_count_from_total(total-count, page-size);
+    property <int> idx-clamped: PaginationLogic.clamp_page_index(page-index, page-count);
+    property <int> range-start: PaginationLogic.range_display_start(total-count, idx-clamped, page-size);
+    property <int> range-end: PaginationLogic.range_display_end(total-count, idx-clamped, page-size);
+    in-out property <int> p2-current-page: 1;
+
+    init => {
+        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
+    }
+
+    changed page-index => {
+        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
+    }
+
+    changed total-count => {
+        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
+    }
+
+    changed page-size => {
+        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
+    }
+
+    width: 100%;
+    vertical-stretch: 0;
+    min-height: LayoutTokens.control-small-size;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: transparent;
+        border-width: 1px;
+        border-color: PrimerColors.borderColor-default;
+        border-radius: LayoutTokens.table-border-radius;
+
+        HorizontalLayout {
+            width: 100%;
+            height: 100%;
+            padding-top: LayoutTokens.table-cell-padding-block-normal;
+            padding-bottom: LayoutTokens.table-cell-padding-block-normal;
+            padding-left: LayoutTokens.stack-padding-normal;
+            padding-right: LayoutTokens.stack-padding-normal;
+            spacing: LayoutTokens.stack-padding-normal;
+            alignment: stretch;
+
+            Text {
+                horizontal-stretch: 0;
+                text: total-count <= 0
+                    ? "0‒0 of 0"
+                    : "" + range-start + "‒" + range-end + " of " + total-count;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                vertical-alignment: center;
+                wrap: no-wrap;
+            }
+
+            HorizontalLayout {
+                horizontal-stretch: 1;
+                spacing: LayoutTokens.button-content-gap;
+                alignment: space-around;
+
+                Pagination2 {
+                    width: 100%;
+                    page-count: page-count;
+                    current-page: p2-current-page;
+                    page-changed(idx) => {
+                        root.page-changed(idx);
+                        p2-current-page = idx + 1;
+                    }
+                }
+            }
+        }
+    }
+}
 
 export component ProjectBoardList {
     width: 100%;
@@ -185,12 +267,10 @@ export component ProjectBoardList {
                                     }
                                 }
 
-                                Pagination {
-                                    width: 100%;
-                                    vertical-stretch: 0;
+                                ProjectBoardPaginationFooter {
+                                    page-index: ProjectBoardListState.board-page-index;
                                     total-count: ProjectBoardListState.board-items-count;
                                     page-size: ProjectBoardListState.board-page-size;
-                                    page-index: ProjectBoardListState.board-page-index;
                                     page-changed(idx) => {
                                         ProjectBoardListState.project-board-page-changed(idx);
                                     }
