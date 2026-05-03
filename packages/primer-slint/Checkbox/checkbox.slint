@@ -15,18 +15,21 @@ export component Checkbox {
 
     property <length> box-size: LayoutTokens.iconButton-icon-size-medium;
     property <bool> filled: root.checked || root.indeterminate;
+    width: hl.preferred-width;
 
     touch := TouchArea {
         enabled: !root.disabled && root.interactive;
+
         clicked => {
             root.checked = root.indeterminate ? true : !root.checked;
             root.indeterminate = false;
             root.toggled();
         }
 
-        HorizontalLayout {
+        hl := HorizontalLayout {
             spacing: LayoutTokens.button-content-gap;
             alignment: center;
+            width: self.preferred-width;
 
             check-visuals := Rectangle {
                 width: box-size;
