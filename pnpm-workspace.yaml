@@ -8,5 +8,5 @@ catalog:
   oxfmt: "0.46.0"
   oxlint: "1.61.0"
   typescript: "6.0.3"
-  slint-ui: "1.17.0-nightly.2026042115"
+  slint-ui: "1.17.0-nightly.2026050221"
   cross-env: "10.1.0"
