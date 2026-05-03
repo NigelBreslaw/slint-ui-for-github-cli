@@ -1,0 +1,298 @@
+import {
+    Checkbox,
+    Icons,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    SegmentedControl,
+    SegmentedControlSegment,
+    SegmentedControlSize,
+    SegmentedControlVariant,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GallerySegmentedControlPage {
+
+    property <bool> preview-disable-0: false;
+    property <bool> preview-disable-1: false;
+    property <bool> preview-disable-2: false;
+    property <bool> preview-count-mid: false;
+    property <int> demo-preset: 0;
+    property <[SegmentedControlSegment]> segments-labeled: [
+        {
+            label: "Preview",
+            has-leading-icon: true,
+            leading-icon: Icons.eye,
+            disabled: preview-disable-0,
+            has-count: false,
+            count-text: "",
+            icon-only: false,
+        },
+        {
+            label: "Blame",
+            has-leading-icon: true,
+            leading-icon: Icons.file,
+            disabled: preview-disable-1,
+            has-count: preview-count-mid,
+            count-text: "12",
+            icon-only: false,
+        },
+        {
+            label: "Raw",
+            has-leading-icon: true,
+            leading-icon: Icons.link,
+            disabled: preview-disable-2,
+            has-count: false,
+            count-text: "",
+            icon-only: false,
+        },
+    ];
+    property <[SegmentedControlSegment]> segments-icons: [
+        {
+            label: "Preview",
+            has-leading-icon: true,
+            leading-icon: Icons.eye,
+            disabled: preview-disable-0,
+            has-count: false,
+            count-text: "",
+            icon-only: true,
+        },
+        {
+            label: "Blame",
+            has-leading-icon: true,
+            leading-icon: Icons.file,
+            disabled: preview-disable-1,
+            has-count: false,
+            count-text: "",
+            icon-only: true,
+        },
+        {
+            label: "Raw",
+            has-leading-icon: true,
+            leading-icon: Icons.link,
+            disabled: preview-disable-2,
+            has-count: false,
+            count-text: "",
+            icon-only: true,
+        },
+    ];
+    property <[SegmentedControlSegment]> preview-segments: demo-preset == 0 ? segments-labeled : segments-icons;
+
+    property <int> preview-selected-index: 0;
+    property <SegmentedControlSize> preview-size: SegmentedControlSize.medium;
+    property <SegmentedControlVariant> preview-variant: SegmentedControlVariant.default;
+    property <bool> preview-fill-width: false;
+    property <string> preview-accessible-name: "View mode";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            alignment: start;
+
+            SegmentedControl {
+                horizontal-stretch: preview-fill-width ? 1 : 0;
+                selected-index <=> preview-selected-index;
+                segments: preview-segments;
+                size: preview-size;
+                variant: preview-variant;
+                accessible-name: preview-accessible-name;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Demo preset";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Labeled rows match Storybook-style icons + text; Icons only uses label text for accessibility only.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "labeled";
+                        label: "Labeled segments";
+                        checked: demo-preset == 0;
+                        toggled => {
+                            demo-preset = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "icons";
+                        label: "Icons only";
+                        checked: demo-preset == 1;
+                        toggled => {
+                            demo-preset = 1;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "size";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "sm";
+                        label: "small";
+                        checked: preview-size == SegmentedControlSize.small;
+                        toggled => {
+                            preview-size = SegmentedControlSize.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "md";
+                        label: "medium";
+                        checked: preview-size == SegmentedControlSize.medium;
+                        toggled => {
+                            preview-size = SegmentedControlSize.medium;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "variant";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "hide_labels hides segment text when a leading icon is set (upstream hideLabels).";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "def";
+                        label: "default";
+                        checked: preview-variant == SegmentedControlVariant.default;
+                        toggled => {
+                            preview-variant = SegmentedControlVariant.default;
+                        }
+                    }
+
+                    Radio {
+                        value: "hl";
+                        label: "hide_labels";
+                        checked: preview-variant == SegmentedControlVariant.hide_labels;
+                        toggled => {
+                            preview-variant = SegmentedControlVariant.hide_labels;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "Layout";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Fill preview row (horizontal-stretch)";
+                    checked <=> preview-fill-width;
+                }
+
+                Text {
+                    text: "Full width is Slint layout on the host and control, not a React-style block prop.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "Per-segment disabled";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Disable Preview (first)";
+                    checked <=> preview-disable-0;
+                }
+
+                Checkbox {
+                    label: "Disable Blame (middle)";
+                    checked <=> preview-disable-1;
+                }
+
+                Checkbox {
+                    label: "Disable Raw (last)";
+                    checked <=> preview-disable-2;
+                }
+
+                Checkbox {
+                    label: "Counter on Blame (middle segment)";
+                    checked <=> preview-count-mid;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "accessible-name";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "Tab list label";
+                    placeholder: "Short name for the group…";
+                    text <=> preview-accessible-name;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+        }
+    }
+}

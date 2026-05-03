@@ -12,6 +12,7 @@ import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint"
 import { GalleryStateLabelPage } from "./views/gallery-state-label-page.slint";
 import { GalleryToggleSwitchPage } from "./views/gallery-toggle-switch-page.slint";
 import { GalleryPrimerTextInputPage } from "./views/gallery-primer-text-input-page.slint";
+import { GallerySegmentedControlPage } from "./views/gallery-segmented-control-page.slint";
 import { GallerySelectPage } from "./views/gallery-select-page.slint";
 import { GalleryTreeViewPage } from "./views/gallery-tree-view-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
@@ -122,12 +123,16 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-group-index == 11: GalleryTreeViewPage {
+                        if GalleryState.selected-group-index == 11: GallerySegmentedControlPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-group-index == 12: GalleryTreeViewPage {
                             width: gallery-flick.width;
                             horizontal-stretch: 1;
                         }
 
-                        if GalleryState.selected-group-index == 12: GallerySelectPage {
+                        if GalleryState.selected-group-index == 13: GallerySelectPage {
                             height: main-scroll.height;
                         }
                     }

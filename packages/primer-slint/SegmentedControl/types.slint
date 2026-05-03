@@ -1,0 +1,22 @@
+// Primer SegmentedControl — segment model + enums. Upstream: SegmentedControlButton / IconButton props.
+
+export enum SegmentedControlSize {
+    small,
+    medium,
+}
+
+/// Strip layout variant. **`hide_labels`** matches React **`hideLabels`** (hide `.Text` when icons present). **`dropdown`** is phase 2 (ActionMenu).
+export enum SegmentedControlVariant {
+    default,
+    hide_labels,
+}
+
+export struct SegmentedControlSegment {
+    label: string,
+    has-leading-icon: bool,
+    leading-icon: image,
+    disabled: bool,
+    has-count: bool,
+    count-text: string,
+    icon-only: bool,
+}

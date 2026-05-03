@@ -181,6 +181,23 @@ Slint port of Primer [**ToggleSwitch**](https://primer.style/product/components/
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group; **Dialog** → Playground uses **`ToggleSwitchSize.small`** for header/footer toggles).
 
+## SegmentedControl
+
+Slint port of Primer [**SegmentedControl**](https://primer.style/product/components/segmented-control/) (pill strip + optional **hide labels** variant). Upstream: **`SegmentedControl.tsx`**, **`SegmentedControlButton.tsx`**, **`SegmentedControl.module.css`**. Phase 1 is the **strip** only (**`dropdown`** / responsive menu parity is deferred).
+
+| Property | Type | Notes |
+| -------- | ---- | ----- |
+| `selected-index` | `int` (in-out) | **0-based** index into **`segments`**. |
+| `segments` | **`[SegmentedControlSegment]`** | Per-segment **`label`**, optional **`leading-icon`**, **`disabled`**, **`has-count`** / **`count-text`**, **`icon-only`**. |
+| `size` | **`SegmentedControlSize`** | **`small`** (28px) or **`medium`** (32px track height). |
+| `variant` | **`SegmentedControlVariant`** | **`default`** or **`hide_labels`** (hides visible label text when a leading icon is present). |
+| `accessible-name` | `string` | Maps to the tab list **`accessible-label`** (provide a short group name). |
+| `selected-changed` | `callback (int)` | New index after the user selects a different enabled segment. |
+
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`SegmentedControl`**, **`SegmentedControlSegment`**, **`SegmentedControlSize`**, **`SegmentedControlVariant`**, **`Icons`** (segment **`leading-icon`**), **`ButtonTokens`** / **`ToggleSwitchTokens`** / **`LayoutTokens`** / **`PrimerColors`** from tokens when needed.
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Segmented control** page).
+
 ## Checkbox
 
 Slint port of Primer [**Checkbox**](https://primer.style/product/components/checkbox/). Upstream: primer-ui-react **`Checkbox.module.css`** — 16px control, **`borderRadius-small`**, **`control-checked-bgColor-rest`** when checked or indeterminate (accent fill + on-emphasis mark).

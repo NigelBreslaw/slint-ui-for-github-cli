@@ -1,0 +1,250 @@
+// Primer SegmentedControl — upstream `SegmentedControl.module.css` + Button/IconButton.
+// Tokens: **`ToggleSwitchTokens`** (**controlTrack** / **controlKnob**), **`LayoutTokens`**, **`PrimerColors`**.
+
+import { CounterLabel, CounterLabelVariant } from "../CounterLabel/counter-label.slint";
+import { ButtonTokens, LayoutTokens, PrimerColors, ToggleSwitchTokens } from "../tokens.slint";
+import {
+    SegmentedControlSegment,
+    SegmentedControlSize,
+    SegmentedControlVariant,
+} from "./types.slint";
+
+component SegmentedControlCell {
+    in property <int> index;
+    in property <SegmentedControlSegment> segment;
+    in property <bool> selected;
+    in property <bool> hide-label-text;
+    in property <SegmentedControlSize> size;
+    in property <bool> stretch-cell;
+    in property <bool> is-last;
+    in property <int> selected-index;
+    in property <length> cell-height;
+
+    callback activated;
+
+    property <length> sep-inset: LayoutTokens.base-size-8;
+    property <length> sep-height: max(0px, root.cell-height - 2 * root.sep-inset);
+    property <color> sep-color:
+        (root.index == root.selected-index || root.index + 1 == root.selected-index)
+        ? transparent
+        : PrimerColors.borderColor-default;
+    property <length> button-pad: root.selected ? 0px : 4px;
+    property <length> content-pad-x: root.selected ? 12px : 8px;
+    property <length> body-font-size:
+        root.size == SegmentedControlSize.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
+    property <length> icon-dim:
+        root.size == SegmentedControlSize.small ? LayoutTokens.iconButton-icon-size-small : LayoutTokens.iconButton-icon-size-medium;
+    property <bool> show-text: !root.hide-label-text && !root.segment.icon-only;
+    property <bool> show-leading: root.segment.has-leading-icon;
+    property <bool> accepts: !root.segment.disabled;
+    property <color> label-fg: !root.accepts ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+    property <color> icon-fg:
+        !root.accepts ? ButtonTokens.control-fgColor-disabled : (root.selected ? PrimerColors.fgColor-default : PrimerColors.fgColor-muted);
+
+    min-width: root.segment.icon-only ? LayoutTokens.control-medium-size : 0px;
+    horizontal-stretch: root.stretch-cell ? 1 : 0;
+    height: root.cell-height;
+
+    Rectangle {
+        horizontal-stretch: root.stretch-cell ? 1 : 0;
+        height: root.cell-height;
+        background: transparent;
+
+        if !root.is-last: Rectangle {
+            x: parent.width - 1px;
+            y: (parent.height - root.sep-height) / 2;
+            width: 1px;
+            height: root.sep-height;
+            background: root.sep-color;
+        }
+
+        focus-chrome := Rectangle {
+            horizontal-stretch: 1;
+            height: root.cell-height;
+            border-width: seg-fs.has-focus && root.accepts ? 2px : 0px;
+            border-color: PrimerColors.fgColor-accent;
+            border-radius: LayoutTokens.borderRadius-medium + 2px;
+
+            seg-fs := FocusScope {
+                focus-on-click: false;
+                horizontal-stretch: 1;
+                height: 100%;
+                accessible-role: AccessibleRole.tab;
+                accessible-label: root.segment.label;
+
+                key-pressed(event) => {
+                    if !root.accepts {
+                        return reject;
+                    }
+                    if event.text == Key.Return || event.text == Key.Space {
+                        root.activated();
+                        return accept;
+                    }
+                    return reject;
+                }
+
+                seg-ta := TouchArea {
+                    enabled: root.accepts;
+                    mouse-cursor: root.accepts ? pointer : default;
+                    clicked => {
+                        root.activated();
+                    }
+
+                    HorizontalLayout {
+                        padding: root.button-pad;
+                        alignment: center;
+                        horizontal-stretch: 1;
+                        height: 100%;
+
+                        content-bg := Rectangle {
+                            horizontal-stretch: 1;
+                            height: 100%;
+                            border-radius: root.selected ? LayoutTokens.borderRadius-medium : LayoutTokens.borderRadius-medium - 2px;
+                            border-width: root.selected ? 1px : 0px;
+                            border-color: root.selected ? ToggleSwitchTokens.knob-borderColor-rest : transparent;
+                            background: root.selected ? ToggleSwitchTokens.knob-bgColor-rest : transparent;
+
+                            HorizontalLayout {
+                                padding-left: root.content-pad-x;
+                                padding-right: root.content-pad-x;
+                                alignment: center;
+                                spacing: LayoutTokens.base-size-4;
+                                align-items: center;
+
+                                if root.show-leading: Image {
+                                    width: root.icon-dim;
+                                    height: root.icon-dim;
+                                    vertical-alignment: center;
+                                    source: root.segment.leading-icon;
+                                    colorize: root.icon-fg;
+                                }
+
+                                if root.show-text: Rectangle {
+                                    horizontal-stretch: 0;
+                                    vertical-stretch: 1;
+                                    min-width: max(label-rest.preferred-width, label-sel.preferred-width);
+                                    min-height: max(label-rest.preferred-height, label-sel.preferred-height);
+
+                                    label-rest := Text {
+                                        visible: !(root.selected && root.accepts);
+                                        text: root.segment.label;
+                                        color: root.label-fg;
+                                        font-size: root.body-font-size;
+                                        font-weight: LayoutTokens.base-text-weight-normal;
+                                        vertical-alignment: center;
+                                    }
+
+                                    label-sel := Text {
+                                        visible: root.selected && root.accepts;
+                                        text: root.segment.label;
+                                        color: root.label-fg;
+                                        font-size: root.body-font-size;
+                                        font-weight: LayoutTokens.base-text-weight-semibold;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                if root.segment.has-count && root.segment.count-text != "": HorizontalLayout {
+                                    alignment: center;
+                                    opacity: root.accepts ? 1.0 : 0.45;
+
+                                    CounterLabel {
+                                        text: root.segment.count-text;
+                                        use-primer-scheme: true;
+                                        scheme: CounterLabelVariant.secondary;
+                                    }
+                                }
+                            }
+
+                            states [
+                                disabled-selected when !root.accepts && root.selected: {
+                                    content-bg.background: ToggleSwitchTokens.knob-bgColor-disabled;
+                                    content-bg.border-color: ToggleSwitchTokens.knob-borderColor-disabled;
+                                    content-bg.border-width: 1px;
+                                }
+                                disabled-unselected when !root.accepts && !root.selected: {
+                                    content-bg.background: transparent;
+                                    content-bg.border-width: 0px;
+                                }
+                                sel when root.selected && root.accepts: {
+                                    content-bg.background: ToggleSwitchTokens.knob-bgColor-rest;
+                                    content-bg.border-color: ToggleSwitchTokens.knob-borderColor-rest;
+                                }
+                                pressed when root.accepts && !root.selected && seg-ta.pressed: {
+                                    content-bg.background: ToggleSwitchTokens.track-bgColor-active;
+                                }
+                                hover when root.accepts && !root.selected && !seg-ta.pressed && seg-ta.has-hover: {
+                                    content-bg.background: ToggleSwitchTokens.track-bgColor-hover;
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export component SegmentedControl {
+    in-out property <int> selected-index: 0;
+    in property <[SegmentedControlSegment]> segments: [];
+    in property <SegmentedControlSize> size: SegmentedControlSize.medium;
+    in property <SegmentedControlVariant> variant: SegmentedControlVariant.default;
+    in property <string> accessible-name: "";
+
+    callback selected-changed(int);
+
+    property <length> track-h:
+        root.size == SegmentedControlSize.small ? LayoutTokens.control-small-size : LayoutTokens.control-medium-size;
+    property <bool> stretch-cells: root.horizontal-stretch > 0;
+    property <bool> hide-label-text:
+        root.variant == SegmentedControlVariant.hide_labels;
+    property <length> inner-row-height: root.track-h - 2px;
+
+    width: row.preferred-width;
+    height: root.track-h;
+
+
+    // init => {
+    //     if root.selected-index < 0 || root.selected-index >= root.segments.length {
+    //         root.selected-index = 0;
+    //     }
+    // }
+
+    track := Rectangle {
+        border-width: 1px;
+        border-color: ToggleSwitchTokens.track-borderColor-rest;
+        background: ToggleSwitchTokens.track-bgColor-rest;
+        border-radius: LayoutTokens.borderRadius-medium;
+        width: root.horizontal-stretch > 0 ? root.width : row.preferred-width;
+
+        row := HorizontalLayout {
+            x: 1px;
+            y: 1px;
+            width: parent.width - 2px;
+            height: root.inner-row-height;
+            accessible-role: AccessibleRole.tab-list;
+            accessible-label: root.accessible-name;
+            spacing: 0px;
+            alignment: stretch;
+
+            for seg[ix] in root.segments: SegmentedControlCell {
+                index: ix;
+                segment: seg;
+                selected: ix == root.selected-index;
+                hide-label-text: root.hide-label-text;
+                size: root.size;
+                stretch-cell: root.stretch-cells;
+                is-last: ix == root.segments.length - 1;
+                selected-index: root.selected-index;
+                cell-height: root.inner-row-height;
+                activated => {
+                    if !seg.disabled && ix != root.selected-index {
+                        root.selected-index = ix;
+                        root.selected-changed(ix);
+                    }
+                }
+            }
+        }
+    }
+}

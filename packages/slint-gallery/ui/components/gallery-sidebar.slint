@@ -164,7 +164,7 @@ export component GallerySidebar {
         },
         {
             data: {
-                label: "Tree view",
+                label: "Segmented control",
                 current: root.selected-index == 11,
                 inactive: false,
                 inactive-text: "",
@@ -178,8 +178,22 @@ export component GallerySidebar {
         },
         {
             data: {
-                label: "Select",
+                label: "Tree view",
                 current: root.selected-index == 12,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Select",
+                current: root.selected-index == 13,
                 inactive: false,
                 inactive-text: "",
                 description: "",
