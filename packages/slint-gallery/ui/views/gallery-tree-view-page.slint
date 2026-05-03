@@ -62,6 +62,8 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     in-out property <bool> def-src: true;
     in-out property <bool> def-components: true;
     in-out property <bool> def-folder: false;
+    in-out property <string> def-selection-id: "dialog";
+    in-out property <string> controlled-selection-id: "readme";
 
     property <[TreeViewRow]> default-rows-src-collapsed: [
         {
@@ -70,7 +72,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 1,
             has-children: true,
             expanded: false,
-            current: false,
+            current: def-selection-id == "src",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -93,7 +95,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 1,
             has-children: true,
             expanded: true,
-            current: false,
+            current: def-selection-id == "src",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -113,7 +115,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: false,
-            current: false,
+            current: def-selection-id == "components",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -133,7 +135,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: false,
             expanded: false,
-            current: false,
+            current: def-selection-id == "utils",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -153,7 +155,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: false,
-            current: false,
+            current: def-selection-id == "folder",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -176,7 +178,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 1,
             has-children: true,
             expanded: true,
-            current: false,
+            current: def-selection-id == "src",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -196,7 +198,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: true,
-            current: false,
+            current: def-selection-id == "components",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -216,7 +218,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 3,
             has-children: false,
             expanded: false,
-            current: false,
+            current: def-selection-id == "button",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.diff-modified,
@@ -236,7 +238,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 3,
             has-children: false,
             expanded: false,
-            current: true,
+            current: def-selection-id == "dialog",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.diff-added,
@@ -256,7 +258,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: false,
             expanded: false,
-            current: false,
+            current: def-selection-id == "utils",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -276,7 +278,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: false,
-            current: false,
+            current: def-selection-id == "folder",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -299,7 +301,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 1,
             has-children: true,
             expanded: true,
-            current: false,
+            current: def-selection-id == "src",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -319,7 +321,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: true,
-            current: false,
+            current: def-selection-id == "components",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -339,7 +341,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 3,
             has-children: false,
             expanded: false,
-            current: false,
+            current: def-selection-id == "button",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.diff-modified,
@@ -359,7 +361,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 3,
             has-children: false,
             expanded: false,
-            current: true,
+            current: def-selection-id == "dialog",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.diff-added,
@@ -379,7 +381,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: false,
             expanded: false,
-            current: false,
+            current: def-selection-id == "utils",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -399,7 +401,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: true,
-            current: false,
+            current: def-selection-id == "folder",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -419,7 +421,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 3,
             has-children: false,
             expanded: false,
-            current: false,
+            current: def-selection-id == "nested",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -444,7 +446,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 1,
             has-children: true,
             expanded: false,
-            current: false,
+            current: controlled-selection-id == "root",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -467,7 +469,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 1,
             has-children: true,
             expanded: true,
-            current: false,
+            current: controlled-selection-id == "root",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -487,7 +489,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: false,
-            current: false,
+            current: controlled-selection-id == "pkg",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -507,7 +509,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: false,
             expanded: false,
-            current: true,
+            current: controlled-selection-id == "readme",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -530,7 +532,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 1,
             has-children: true,
             expanded: true,
-            current: false,
+            current: controlled-selection-id == "root",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -550,7 +552,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: true,
             expanded: true,
-            current: false,
+            current: controlled-selection-id == "pkg",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -570,7 +572,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 3,
             has-children: false,
             expanded: false,
-            current: false,
+            current: controlled-selection-id == "primer",
             leading-is-directory: true,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -590,7 +592,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             level: 2,
             has-children: false,
             expanded: false,
-            current: true,
+            current: controlled-selection-id == "readme",
             leading-is-directory: false,
             has-leading-visual: true,
             trailing: TreeViewTrailingVisual.none,
@@ -1987,14 +1989,6 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             font-weight: 600;
             color: PrimerColors.fgColor-default;
         }
-
-        Text {
-            text: "Flat **[TreeViewRow]** model: **SubTree**-style loading (skeleton + count badge), **AsyncError** + retry **Dialog**, **AnchoredOverlay** + **ActionList** for kebab menus, leading-action column, multiline labels (**truncate = false**).";
-            wrap: word-wrap;
-            width: 100%;
-            font-size: 13px;
-            color: PrimerColors.fgColor-muted;
-        }
     }
 
     // --- Default (Components/TreeView)
@@ -2011,6 +2005,9 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         PrimerTreeView {
             accessible-name: "Source files";
             rows: default-rows;
+            row-current-requested(id) => {
+                def-selection-id = id;
+            }
             row-toggle-requested(id) => {
                 if id == "src" {
                     def-src = !def-src;
@@ -2042,6 +2039,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             horizontal-stretch: 1;
             rows: trailing-demo-rows;
             flat: true;
+            row-current-requested(_) => { }
             row-toggle-requested(_) => { }
             row-secondary-actions-requested(_, ax, ay, aw, ah) => {
                 tv-trailing-menu-ax = ax;
@@ -2112,25 +2110,6 @@ export component GalleryTreeViewPage inherits VerticalLayout {
 
     }
 
-    // --- Files
-    TreeViewSectionHeading { title: "Files"; note: "truncate = false (long paths wrap)."; }
-    Rectangle {
-        horizontal-stretch: 1;
-        min-width: 320px;
-        max-width: 560px;
-        background: PrimerColors.bgColor-default;
-        border-radius: LayoutTokens.borderRadius-medium;
-        border-width: LayoutTokens.table-border-width;
-        border-color: PrimerColors.borderColor-default;
-
-        PrimerTreeView {
-            truncate: false;
-            rows: files-rows;
-            row-toggle-requested(_) => { }
-            row-secondary-actions-requested(_, _, _, _, _) => { }
-        }
-    }
-
     // --- FilesChanged
     TreeViewSectionHeading { title: "FilesChanged"; note: "Diff trailing visuals."; }
     Rectangle {
@@ -2145,6 +2124,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         PrimerTreeView {
             truncate: false;
             rows: files-changed-rows;
+            row-current-requested(_) => { }
             row-toggle-requested(_) => { }
             row-secondary-actions-requested(_, _, _, _, _) => { }
         }
@@ -2190,6 +2170,9 @@ export component GalleryTreeViewPage inherits VerticalLayout {
 
             PrimerTreeView {
                 rows: controlled-rows;
+                row-current-requested(id) => {
+                    controlled-selection-id = id;
+                }
                 row-toggle-requested(_) => { }
                 row-secondary-actions-requested(_, _, _, _, _) => { }
             }
@@ -2226,6 +2209,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             PrimerTreeView {
                 accessible-name: "Async success";
                 rows: async-success-rows;
+                row-current-requested(_) => { }
                 row-toggle-requested(id) => {
                     if id == "as-root" {
                         if !async-s-expanded {
@@ -2262,6 +2246,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             PrimerTreeView {
                 accessible-name: "Async with count";
                 rows: async-with-count-rows;
+                row-current-requested(_) => { }
                 row-toggle-requested(id) => {
                     if id == "aw-root" {
                         if !async-w-expanded {
@@ -2298,6 +2283,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             PrimerTreeView {
                 accessible-name: "Async error";
                 rows: async-error-rows;
+                row-current-requested(_) => { }
                 row-toggle-requested(id) => {
                     if id == "ae-root" {
                         if !async-e-expanded {
@@ -2335,6 +2321,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
 
             PrimerTreeView {
                 rows: empty-dir-rows;
+                row-current-requested(_) => { }
                 row-toggle-requested(_) => { }
                 row-secondary-actions-requested(_, _, _, _, _) => { }
             }
@@ -2369,6 +2356,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                     PrimerTreeView {
                         rows: flat-rows;
                         flat: true;
+                        row-current-requested(_) => { }
                         row-toggle-requested(_) => { }
                         row-secondary-actions-requested(_, _, _, _, _) => { }
                     }
@@ -2392,6 +2380,9 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                     }
                     PrimerTreeView {
                         rows: default-rows;
+                        row-current-requested(id) => {
+                            def-selection-id = id;
+                        }
                         row-toggle-requested(id) => {
                             if id == "src" {
                                 def-src = !def-src;
@@ -2433,6 +2424,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             tree-ns := PrimerTreeView {
                 width: flick.width;
                 rows: nested-scroll-rows;
+                row-current-requested(_) => { }
                 row-toggle-requested(_) => { }
                 row-secondary-actions-requested(_, _, _, _, _) => { }
             }
@@ -2455,6 +2447,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
 
         PrimerTreeView {
             rows: stress-rows;
+            row-current-requested(_) => { }
             row-toggle-requested(_) => { }
             row-secondary-actions-requested(_, _, _, _, _) => { }
         }
@@ -2476,6 +2469,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
 
         PrimerTreeView {
             rows: intrinsic-rows;
+            row-current-requested(_) => { }
             row-toggle-requested(_) => { }
             row-secondary-actions-requested(_, _, _, _, _) => { }
         }
@@ -2505,6 +2499,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             PrimerTreeView {
                 truncate: false;
                 rows: files-rows;
+                row-current-requested(_) => { }
                 row-toggle-requested(_) => { }
                 row-secondary-actions-requested(_, _, _, _, _) => { }
             }
@@ -2568,6 +2563,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             PrimerTreeView {
                 rows: trailing-demo-rows;
                 flat: true;
+                row-current-requested(_) => { }
                 row-toggle-requested(_) => { }
                 row-secondary-actions-requested(_, ax, ay, aw, ah) => {
                     fm-focus-menu-ax = ax;
@@ -2576,77 +2572,6 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                     fm-focus-menu-ah = ah;
                     fm-focus-menu-open = true;
                 }
-            }
-        }
-    }
-
-    // --- WithoutIndentation (flat)
-    TreeViewSectionHeading { title: "WithoutIndentation"; note: "Root flat — no indent or chevron column."; }
-    Rectangle {
-        horizontal-stretch: 1;
-        min-width: 320px;
-        max-width: 560px;
-        background: PrimerColors.bgColor-default;
-        border-radius: LayoutTokens.borderRadius-medium;
-        border-width: LayoutTokens.table-border-width;
-        border-color: PrimerColors.borderColor-default;
-
-        PrimerTreeView {
-            flat: true;
-            rows: flat-rows;
-            row-toggle-requested(_) => { }
-            row-secondary-actions-requested(_, _, _, _, _) => { }
-        }
-    }
-
-    // --- MultilineItems
-    TreeViewSectionHeading { title: "MultilineItems"; note: "truncate = false; second row adds leading-action column + wrap."; }
-    Rectangle {
-        horizontal-stretch: 1;
-        min-width: 320px;
-        max-width: 560px;
-        background: PrimerColors.bgColor-default;
-        border-radius: LayoutTokens.borderRadius-medium;
-        border-width: LayoutTokens.table-border-width;
-        border-color: PrimerColors.borderColor-default;
-
-        PrimerTreeView {
-            truncate: false;
-            rows: multiline-rows;
-            row-toggle-requested(_) => { }
-            row-secondary-actions-requested(_, _, _, _, _) => { }
-        }
-    }
-
-    // --- LeadingAction (Private story)
-    TreeViewSectionHeading {
-        title: "LeadingAction";
-        note: "Leading-action column + issue icons (grabber is non-interactive here).";
-    }
-    VerticalLayout {
-        spacing: 12px;
-        alignment: start;
-        width: 100%;
-        max-width: 560px;
-
-        Banner {
-            variant: BannerVariant.warning;
-            title: "Do not grab items";
-            description: "Slint port echoes the upstream warning banner; drag-and-drop is out of scope.";
-        }
-
-        Rectangle {
-            horizontal-stretch: 1;
-            min-width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: LayoutTokens.borderRadius-medium;
-            border-width: LayoutTokens.table-border-width;
-            border-color: PrimerColors.borderColor-default;
-
-            PrimerTreeView {
-                rows: leading-action-rows;
-                row-toggle-requested(_) => { }
-                row-secondary-actions-requested(_, _, _, _, _) => { }
             }
         }
     }

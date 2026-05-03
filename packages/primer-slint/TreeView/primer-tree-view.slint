@@ -10,11 +10,11 @@ import { TreeViewRow, TreeViewTrailingVisual } from "./types.slint";
 component TreeViewRowView {
     in property <TreeViewRow> tree-row;
     in property <bool> flat;
-    in property <bool> truncate;
     in property <length> toggle-w;
     in property <int> gutter-slot-count;
     in property <length> row-min-h;
     callback row-toggle-requested(string);
+    callback row-current-requested(string);
     callback row-secondary-actions-requested(string, length, length, length, length);
 
     property <length> leading-action-w: tree-row.has-leading-action ? 3 * LayoutTokens.base-size-8 : 0px;
@@ -46,11 +46,14 @@ component TreeViewRowView {
             horizontal-stretch: 1;
 
             key-pressed(event) => {
-                if !tree-row.interactive || !tree-row.has-children || tree-row.is-skeleton {
+                if !tree-row.interactive || tree-row.is-skeleton {
                     return reject;
                 }
                 if event.text == Key.Return || event.text == Key.Space {
-                    root.row-toggle-requested(tree-row.id);
+                    root.row-current-requested(tree-row.id);
+                    if tree-row.has-children {
+                        root.row-toggle-requested(tree-row.id);
+                    }
                     return accept;
                 }
                 return reject;
@@ -83,10 +86,13 @@ component TreeViewRowView {
 
                     main-ta := TouchArea {
                         horizontal-stretch: 1;
-                        enabled: tree-row.interactive && tree-row.has-children && !tree-row.is-skeleton;
+                        enabled: tree-row.interactive && !tree-row.is-skeleton;
                         mouse-cursor: self.enabled ? pointer : default;
                         clicked => {
-                            root.row-toggle-requested(tree-row.id);
+                            root.row-current-requested(tree-row.id);
+                            if tree-row.has-children {
+                                root.row-toggle-requested(tree-row.id);
+                            }
                         }
 
                         HorizontalLayout {
@@ -95,7 +101,7 @@ component TreeViewRowView {
                             padding-left: TreeViewTokens.item-content-padding-inline;
                             padding-right: TreeViewTokens.item-content-padding-inline;
                             min-height: root.row-min-h;
-                            align-items: root.truncate ? center : start;
+                            align-items: center;
 
                             if !flat && gutter-segments > 0: HorizontalLayout {
                                 spacing: 0;
@@ -167,7 +173,7 @@ component TreeViewRowView {
                                 horizontal-stretch: 1;
                                 spacing: TreeViewTokens.item-content-gap;
                                 alignment: start;
-                                align-items: root.truncate ? center : start;
+                                align-items: center;
 
                                 if tree-row.has-leading-visual: Image {
                                     width: LayoutTokens.iconButton-icon-size-medium;
@@ -179,12 +185,12 @@ component TreeViewRowView {
 
                                 Text {
                                     horizontal-stretch: 1;
-                                    vertical-alignment: top;
+                                    vertical-alignment: center;
                                     text: tree-row.label;
                                     color: TreeViewTokens.item-fgColor-default;
                                     font-size: LayoutTokens.text-body-size-medium;
-                                    overflow: root.truncate ? elide : clip;
-                                    wrap: root.truncate ? no-wrap : word-wrap;
+                                    overflow: elide;
+                                    wrap: no-wrap;
                                 }
 
                                 if tree-row.loading-children-badge != "": CounterLabel {
@@ -197,7 +203,6 @@ component TreeViewRowView {
                             if !tree-row.is-skeleton && tree-row.trailing != TreeViewTrailingVisual.none: Image {
                                 width: LayoutTokens.iconButton-icon-size-medium;
                                 height: LayoutTokens.iconButton-icon-size-medium;
-                                vertical-alignment: top;
                                 source: trailing-img;
                                 colorize: trailing-color;
                             }
@@ -247,6 +252,7 @@ export component PrimerTreeView inherits VerticalLayout {
     in property <int> max-gutter-columns: 12;
 
     callback row-toggle-requested(string);
+    callback row-current-requested(string);
     callback row-secondary-actions-requested(string, length, length, length, length);
 
     property <length> toggle-w: root.coarse-pointer ? TreeViewTokens.toggle-width-coarse : TreeViewTokens.toggle-width-default;
@@ -260,12 +266,14 @@ export component PrimerTreeView inherits VerticalLayout {
     for row[i] in root.rows: TreeViewRowView {
         tree-row: row;
         flat: root.flat;
-        truncate: root.truncate;
         toggle-w: root.toggle-w;
         gutter-slot-count: root.max-gutter-columns;
         row-min-h: root.row-min-h;
         row-toggle-requested(id) => {
             root.row-toggle-requested(id);
+        }
+        row-current-requested(id) => {
+            root.row-current-requested(id);
         }
         row-secondary-actions-requested(id, ax, ay, aw, ah) => {
             root.row-secondary-actions-requested(id, ax, ay, aw, ah);

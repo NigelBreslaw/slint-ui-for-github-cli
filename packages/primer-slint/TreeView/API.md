@@ -22,7 +22,7 @@ Nested composition remains possible for tiny demos only; it is **not** the suppo
 | `truncate` | `truncate: bool` — default true: label `overflow: elide`; false allows wrapping (**Files**, **MultilineItems**). |
 | `max-gutter-columns` | `max-gutter-columns: int` (default **12**) — number of indent slots for vertical guides; use Slint **`for slot[index] in max-gutter-columns`**; must be ≥ deepest **`row.level − 1`** when not **`flat`**. |
 | `className` / `style` | Not ported; hosts use layout wrappers. |
-| (callbacks) | **`row-toggle-requested(string id)`** — expand/collapse when **`has-children`** and not skeleton. **`row-secondary-actions-requested(string id, length ax, length ay, length aw, length ah)`** — kebab pressed; anchor args are window-absolute geometry for **`AnchoredOverlay`**. |
+| (callbacks) | **`row-current-requested(string id)`** — fires on primary row activation (pointer click or Space/Return when the row’s **`FocusScope`** has focus) for every **`interactive`** non-skeleton row; host sets **`current`** on the matching row in its model. **`row-toggle-requested(string id)`** — fires in addition when the row has **`has-children`** (expand/collapse). **`row-secondary-actions-requested(string id, length ax, length ay, length aw, length ah)`** — kebab pressed; anchor args are window-absolute geometry for **`AnchoredOverlay`**. The main row **`TouchArea`** is enabled for **`interactive && !is-skeleton`** so hover/press applies to leaves and empty folders, not only expandable nodes. |
 
 ### Item — `TreeView.Item` → **one row struct + row callbacks**
 
@@ -31,7 +31,7 @@ Nested composition remains possible for tiny demos only; it is **not** the suppo
 | `id` | `id: string` (stable row id; used for expand cache and callbacks). |
 | `current` | `current: bool` on the row — drives “selected” background + left accent bar (`aria-current`). |
 | `defaultExpanded` / `expanded` / `onExpandedChange` | Host tracks expansion; row carries `has-children`, `expanded`, and optional `expanded-changed(bool)` or a single `activated` that toggles when the chevron/row policy matches React. |
-| `onSelect` | When set upstream, click on row selects and chevron toggles expand. Slint: `select-on-activate: bool` or infer from `callback` wiring: if `row-selected()` is connected, row click fires that; chevron still calls `expand-toggle()` (mirror React’s split). |
+| `onSelect` | Host sets **`current: true`** on one row at a time. Slint: implement **`row-current-requested(id)`** to update selection; **`row-toggle-requested(id)`** still runs for rows with **`has-children`** on the same interaction. |
 | `containIntrinsicSize` | Optional `intrinsic-height-hint: length` for gallery notes only; no `content-visibility` in Slint — large subtrees use **ListView** + bounded viewport (see port plan). |
 | `secondaryActions` | See below. |
 | Slots: `LeadingVisual`, `TrailingVisual`, `LeadingAction` | Row fields: **`TreeViewTrailingVisual`**, **`has-leading-visual`**, **`leading-is-directory`**, **`leading-file-icon`**; **LeadingAction** column: **`has-leading-action`**, **`show-leading-action-icon`**, **`leading-action-icon`**. |
