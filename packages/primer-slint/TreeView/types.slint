@@ -29,4 +29,12 @@ export struct TreeViewRow {
     leading-file-icon: image,
     /// When false, pointer styling and toggles are disabled (loading / skeleton host rows).
     interactive: bool,
+    /// **SubTree** skeleton placeholders — muted bars, no hover, no expand affordance.
+    is-skeleton: bool,
+    /// **TrailingVisual** kebab — host opens **AnchoredOverlay** + **ActionList** (see **`row-secondary-actions-requested`**).
+    has-secondary-actions: bool,
+    /// Non-empty shows **CounterLabel** before the kebab (Storybook trailing count).
+    secondary-actions-badge: string,
+    /// Non-empty shows **CounterLabel** after the label while children load (**AsyncWithCount**).
+    loading-children-badge: string,
 }

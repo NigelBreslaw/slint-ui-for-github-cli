@@ -1,13 +1,26 @@
-// One scroll — sections mirror Storybook **Components/TreeView** (see `TreeView/UPSTREAM_INVENTORY.md`). Heavy stories are scaled; async/error/dialog paths note follow-up PRs.
+// One scroll — sections mirror Storybook **Components/TreeView** (see `TreeView/UPSTREAM_INVENTORY.md`). Heavy stories are scaled.
 
 import {
+    ActionList,
+    ActionListDescriptionLayout,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListRowVariant,
+    AnchoredOverlay,
+    AnchoredOverlayAlign,
+    AnchoredOverlaySide,
     Banner,
     BannerVariant,
     Button,
     ButtonVariant,
+    Dialog,
+    DialogBody,
+    DialogFooter,
+    DialogWidthPreset,
     IconButton,
     Icons,
     PrimerTreeView,
+    StandardDialogHeader,
     TreeViewRow,
     TreeViewTrailingVisual,
 } from "../../../primer-slint/primer.slint";
@@ -66,6 +79,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -85,6 +102,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "components",
@@ -101,6 +122,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "utils",
@@ -117,6 +142,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "folder",
@@ -133,6 +162,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -152,6 +185,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "components",
@@ -168,6 +205,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "button",
@@ -184,6 +225,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "dialog",
@@ -200,6 +245,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "utils",
@@ -216,6 +265,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "folder",
@@ -232,6 +285,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -251,6 +308,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "components",
@@ -267,6 +328,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "button",
@@ -283,6 +348,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "dialog",
@@ -299,6 +368,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "utils",
@@ -315,6 +388,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "folder",
@@ -331,6 +408,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "nested",
@@ -347,6 +428,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -368,6 +453,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -387,6 +476,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "pkg",
@@ -403,6 +496,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "readme",
@@ -419,6 +516,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -438,6 +539,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "pkg",
@@ -454,6 +559,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "primer",
@@ -470,6 +579,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "readme",
@@ -486,6 +599,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -509,6 +626,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "f2",
@@ -525,6 +646,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -544,6 +669,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "fc2",
@@ -560,6 +689,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "fc3",
@@ -576,6 +709,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "fc4",
@@ -592,6 +729,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -611,6 +752,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "b2",
@@ -627,6 +772,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -646,6 +795,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.grabber,
             leading-file-icon: Icons.issue_opened,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "la2",
@@ -662,6 +815,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.grabber,
             leading-file-icon: Icons.issue_closed,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -681,6 +838,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns1",
@@ -697,6 +858,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns2",
@@ -713,6 +878,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns3",
@@ -729,6 +898,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns4",
@@ -745,6 +918,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns5",
@@ -761,6 +938,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns6",
@@ -777,6 +958,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns7",
@@ -793,6 +978,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "ns8",
@@ -809,6 +998,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -828,6 +1021,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s1",
@@ -844,6 +1041,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s2",
@@ -860,6 +1061,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s3",
@@ -876,6 +1081,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s4",
@@ -892,6 +1101,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s5",
@@ -908,6 +1121,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s6",
@@ -924,6 +1141,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s7",
@@ -940,6 +1161,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s8",
@@ -956,6 +1181,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s9",
@@ -972,6 +1201,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s10",
@@ -988,6 +1221,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "s11",
@@ -1004,6 +1241,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -1023,6 +1264,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "i1",
@@ -1039,6 +1284,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "i2",
@@ -1055,6 +1304,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "i3",
@@ -1071,6 +1324,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
 
@@ -1090,10 +1347,37 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
         {
             id: "m2",
             label: "Very long label that should wrap across multiple lines when truncate is false in the tree view root",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-modified,
+            has-leading-action: true,
+            show-leading-action-icon: true,
+            leading-action-icon: Icons.grabber,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> trailing-demo-rows: [
+        {
+            id: "td1",
+            label: "Button.tsx",
             level: 1,
             has-children: false,
             expanded: false,
@@ -1106,8 +1390,592 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             leading-action-icon: Icons.dot_fill,
             leading-file-icon: Icons.file,
             interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: true,
+            secondary-actions-badge: "12",
+            loading-children-badge: "",
+        },
+        {
+            id: "td2",
+            label: "Button.test.tsx",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-added,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: true,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
         },
     ];
+
+    property <[ActionListLine]> tv-trailing-menu-lines: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Open sample dialog",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Delete…",
+            row-variant: ActionListRowVariant.danger,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    in-out property <bool> tv-trailing-menu-open: false;
+    in-out property <bool> tv-trailing-sample-dialog-open: false;
+    property <length> tv-trailing-menu-ax: 0px;
+    property <length> tv-trailing-menu-ay: 0px;
+    property <length> tv-trailing-menu-aw: 0px;
+    property <length> tv-trailing-menu-ah: 0px;
+
+    in-out property <bool> fm-focus-menu-open: false;
+    property <length> fm-focus-menu-ax: 0px;
+    property <length> fm-focus-menu-ay: 0px;
+    property <length> fm-focus-menu-aw: 0px;
+    property <length> fm-focus-menu-ah: 0px;
+
+    in-out property <bool> async-s-expanded: false;
+    in-out property <bool> async-s-children-ready: false;
+    property <bool> async-s-timer-arm: false;
+
+    property <[TreeViewRow]> async-s-collapsed: [
+        {
+            id: "as-root",
+            label: "src",
+            level: 1,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-s-loading: [
+        {
+            id: "as-root",
+            label: "src",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "as-sk",
+            label: "",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: false,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: false,
+            is-skeleton: true,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-s-done: [
+        {
+            id: "as-root",
+            label: "src",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "as-leaf",
+            label: "index.ts",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-success-rows:
+        !async-s-expanded ? async-s-collapsed : !async-s-children-ready ? async-s-loading : async-s-done;
+
+    in-out property <bool> async-w-expanded: false;
+    in-out property <bool> async-w-children-ready: false;
+    property <bool> async-w-timer-arm: false;
+
+    property <[TreeViewRow]> async-w-collapsed: [
+        {
+            id: "aw-root",
+            label: "packages",
+            level: 1,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-w-loading: [
+        {
+            id: "aw-root",
+            label: "packages",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "3",
+        },
+        {
+            id: "aw-sk0",
+            label: "",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: false,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: false,
+            is-skeleton: true,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "aw-sk1",
+            label: "",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: false,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: false,
+            is-skeleton: true,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "aw-sk2",
+            label: "",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: false,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: false,
+            is-skeleton: true,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-w-done: [
+        {
+            id: "aw-root",
+            label: "packages",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "aw-a",
+            label: "react",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "aw-b",
+            label: "slint",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "aw-c",
+            label: "tokens",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-with-count-rows:
+        !async-w-expanded ? async-w-collapsed : !async-w-children-ready ? async-w-loading : async-w-done;
+
+    in-out property <bool> async-e-expanded: false;
+    in-out property <int> async-e-step: 0;
+    property <bool> async-e-timer-arm: false;
+    in-out property <bool> async-e-dialog-open: false;
+
+    property <[TreeViewRow]> async-e-collapsed: [
+        {
+            id: "ae-root",
+            label: "failing-fetch",
+            level: 1,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-e-loading: [
+        {
+            id: "ae-root",
+            label: "failing-fetch",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "ae-sk",
+            label: "",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: false,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: false,
+            is-skeleton: true,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-e-done: [
+        {
+            id: "ae-root",
+            label: "failing-fetch",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "ae-ok",
+            label: "README.md",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    property <[TreeViewRow]> async-error-rows:
+        !async-e-expanded ? async-e-collapsed
+        : async-e-step == 4 ? async-e-done
+        : async-e-loading;
+
+    property <[TreeViewRow]> empty-dir-rows: [
+        {
+            id: "ed",
+            label: "empty-folder",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+        {
+            id: "ed-h",
+            label: "No files in this directory.",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: false,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+            is-skeleton: false,
+            has-secondary-actions: false,
+            secondary-actions-badge: "",
+            loading-children-badge: "",
+        },
+    ];
+
+    Timer {
+        interval: 750ms;
+        running: async-s-timer-arm;
+        triggered => {
+            async-s-timer-arm = false;
+            async-s-children-ready = true;
+        }
+    }
+
+    Timer {
+        interval: 750ms;
+        running: async-w-timer-arm;
+        triggered => {
+            async-w-timer-arm = false;
+            async-w-children-ready = true;
+        }
+    }
+
+    Timer {
+        interval: 650ms;
+        running: async-e-timer-arm;
+        triggered => {
+            async-e-timer-arm = false;
+            if async-e-step == 1 {
+                async-e-step = 2;
+                async-e-dialog-open = true;
+            } else if async-e-step == 3 {
+                async-e-step = 4;
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 8px;
@@ -1121,7 +1989,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Flat row model + Primer tokens. Async, error dialogs, and secondary-actions overlays are follow-up PRs.";
+            text: "Flat **[TreeViewRow]** model: **SubTree**-style loading (skeleton + count badge), **AsyncError** + retry **Dialog**, **AnchoredOverlay** + **ActionList** for kebab menus, leading-action column, multiline labels (**truncate = false**).";
             wrap: word-wrap;
             width: 100%;
             font-size: 13px;
@@ -1152,13 +2020,14 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                     def-folder = !def-folder;
                 }
             }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
     // --- TrailingActions (Examples)
     TreeViewSectionHeading {
         title: "TrailingActions";
-        note: "Storybook: secondary actions, dialogs, and count buttons — ActionList / Dialog wiring in a later PR.";
+        note: "Kebab opens **AnchoredOverlay** + **ActionList**; count badge on the first row. **Open sample dialog** exercises a nested **Dialog**.";
     }
     Rectangle {
         horizontal-stretch: 1;
@@ -1169,33 +2038,78 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         border-width: LayoutTokens.table-border-width;
         border-color: PrimerColors.borderColor-default;
 
-        VerticalLayout {
-            padding: 8px;
-            spacing: 8px;
-
-            HorizontalLayout {
-                spacing: 8px;
-                IconButton {
-                    icon-source: Icons.gear_24;
-                }
-                IconButton {
-                    icon-source: Icons.issue_opened;
-                }
-                Text {
-                    text: "Placeholder actions row (mirrors story chrome).";
-                    vertical-alignment: center;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-
-            PrimerTreeView {
-                rows: flat-rows;
-                flat: true;
-                row-toggle-requested(_) => { }
+        PrimerTreeView {
+            horizontal-stretch: 1;
+            rows: trailing-demo-rows;
+            flat: true;
+            row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, ax, ay, aw, ah) => {
+                tv-trailing-menu-ax = ax;
+                tv-trailing-menu-ay = ay;
+                tv-trailing-menu-aw = aw;
+                tv-trailing-menu-ah = ah;
+                tv-trailing-menu-open = true;
             }
         }
+
+        tv-trailing-overlay := AnchoredOverlay {
+            open <=> tv-trailing-menu-open;
+            anchor-abs-x: tv-trailing-menu-ax;
+            anchor-abs-y: tv-trailing-menu-ay;
+            anchor-width: tv-trailing-menu-aw;
+            anchor-height: tv-trailing-menu-ah;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.end;
+            shrink-wrap: true;
+            panel-width: 220px;
+            close-requested => {
+                tv-trailing-menu-open = false;
+            }
+
+            ActionList {
+                lines: tv-trailing-menu-lines;
+                item-activated(ix) => {
+                    tv-trailing-menu-open = false;
+                    if ix == 0 {
+                        tv-trailing-sample-dialog-open = true;
+                    }
+                }
+            }
+        }
+
+        tv-trailing-sample-dialog := Dialog {
+            open <=> tv-trailing-sample-dialog-open;
+            width-preset: DialogWidthPreset.small;
+            on-close(_gesture) => {
+                tv-trailing-sample-dialog-open = false;
+            }
+
+            VerticalLayout {
+                alignment: stretch;
+
+                StandardDialogHeader {
+                    title: "Tree item action";
+                    close-requested => tv-trailing-sample-dialog.on-close("close-button");
+                }
+
+                DialogBody {
+                    Text {
+                        text: "This dialog was opened from the tree row overflow menu (Storybook **TrailingActions** echo).";
+                        wrap: word-wrap;
+                        color: PrimerColors.fgColor-default;
+                        font-size: 14px;
+                    }
+                }
+
+                DialogFooter {
+                    Button {
+                        label: "Close";
+                        clicked => tv-trailing-sample-dialog.on-close("close-button");
+                    }
+                }
+            }
+        }
+
     }
 
     // --- Files
@@ -1213,6 +2127,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             truncate: false;
             rows: files-rows;
             row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
@@ -1231,6 +2146,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             truncate: false;
             rows: files-changed-rows;
             row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
@@ -1275,6 +2191,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             PrimerTreeView {
                 rows: controlled-rows;
                 row-toggle-requested(_) => { }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
             }
         }
     }
@@ -1282,68 +2199,209 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     // --- AsyncSuccess, AsyncWithCount, AsyncError, EmptyDirectories, NestedTrees
     TreeViewSectionHeading {
         title: "AsyncSuccess · AsyncWithCount · AsyncError · EmptyDirectories · NestedTrees";
-        note: "SubTree loading / skeleton count / error dialog / empty leaf / nested inner tree — host-driven row rebuild + dialogs in follow-up PRs.";
-    }
-    Text {
-        text: "Use timers and flat row insertion in the gallery host to mirror Storybook; the row chrome above is shared.";
-        wrap: word-wrap;
-        width: 100%;
-        font-size: 13px;
-        color: PrimerColors.fgColor-muted;
+        note: "Host rebuilds **`rows`**; **Timer** drives loading → done (or error + **Dialog** + retry).";
     }
 
-    HorizontalLayout {
-        spacing: 16px;
+    VerticalLayout {
+        spacing: 20px;
         alignment: start;
+        width: 100%;
 
-        Rectangle {
-            width: 260px;
-            background: PrimerColors.bgColor-default;
-            border-radius: LayoutTokens.borderRadius-medium;
-            border-width: LayoutTokens.table-border-width;
-            border-color: PrimerColors.borderColor-default;
-
-            VerticalLayout {
-                padding: 4px;
-                Text {
-                    text: "Inner tree (NestedTrees echo)";
-                    font-size: 11px;
-                    font-weight: 600;
-                    color: PrimerColors.fgColor-muted;
-                }
-                PrimerTreeView {
-                    rows: flat-rows;
-                    flat: true;
-                    row-toggle-requested(_) => { }
-                }
-            }
+        Text {
+            text: "AsyncSuccess";
+            font-size: 12px;
+            font-weight: 600;
+            color: PrimerColors.fgColor-default;
         }
 
         Rectangle {
-            width: 260px;
+            horizontal-stretch: 1;
+            min-width: 280px;
+            max-width: 420px;
             background: PrimerColors.bgColor-default;
             border-radius: LayoutTokens.borderRadius-medium;
             border-width: LayoutTokens.table-border-width;
             border-color: PrimerColors.borderColor-default;
 
-            VerticalLayout {
-                padding: 4px;
-                Text {
-                    text: "Outer tree";
-                    font-size: 11px;
-                    font-weight: 600;
-                    color: PrimerColors.fgColor-muted;
-                }
-                PrimerTreeView {
-                    rows: default-rows;
-                    row-toggle-requested(id) => {
-                        if id == "src" {
-                            def-src = !def-src;
-                        } else if id == "components" {
-                            def-components = !def-components;
-                        } else if id == "folder" {
-                            def-folder = !def-folder;
+            PrimerTreeView {
+                accessible-name: "Async success";
+                rows: async-success-rows;
+                row-toggle-requested(id) => {
+                    if id == "as-root" {
+                        if !async-s-expanded {
+                            async-s-expanded = true;
+                            async-s-children-ready = false;
+                            async-s-timer-arm = true;
+                        } else {
+                            async-s-expanded = false;
+                            async-s-children-ready = false;
+                            async-s-timer-arm = false;
                         }
+                    }
+                }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
+            }
+        }
+
+        Text {
+            text: "AsyncWithCount (skeleton nodes + count badge)";
+            font-size: 12px;
+            font-weight: 600;
+            color: PrimerColors.fgColor-default;
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            min-width: 280px;
+            max-width: 420px;
+            background: PrimerColors.bgColor-default;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: LayoutTokens.table-border-width;
+            border-color: PrimerColors.borderColor-default;
+
+            PrimerTreeView {
+                accessible-name: "Async with count";
+                rows: async-with-count-rows;
+                row-toggle-requested(id) => {
+                    if id == "aw-root" {
+                        if !async-w-expanded {
+                            async-w-expanded = true;
+                            async-w-children-ready = false;
+                            async-w-timer-arm = true;
+                        } else {
+                            async-w-expanded = false;
+                            async-w-children-ready = false;
+                            async-w-timer-arm = false;
+                        }
+                    }
+                }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
+            }
+        }
+
+        Text {
+            text: "AsyncError (retry)";
+            font-size: 12px;
+            font-weight: 600;
+            color: PrimerColors.fgColor-default;
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            min-width: 280px;
+            max-width: 420px;
+            background: PrimerColors.bgColor-default;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: LayoutTokens.table-border-width;
+            border-color: PrimerColors.borderColor-default;
+
+            PrimerTreeView {
+                accessible-name: "Async error";
+                rows: async-error-rows;
+                row-toggle-requested(id) => {
+                    if id == "ae-root" {
+                        if !async-e-expanded {
+                            async-e-expanded = true;
+                            async-e-step = 1;
+                            async-e-dialog-open = false;
+                            async-e-timer-arm = true;
+                        } else {
+                            async-e-expanded = false;
+                            async-e-step = 0;
+                            async-e-dialog-open = false;
+                            async-e-timer-arm = false;
+                        }
+                    }
+                }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
+            }
+        }
+
+        Text {
+            text: "EmptyDirectories";
+            font-size: 12px;
+            font-weight: 600;
+            color: PrimerColors.fgColor-default;
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            min-width: 280px;
+            max-width: 420px;
+            background: PrimerColors.bgColor-default;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: LayoutTokens.table-border-width;
+            border-color: PrimerColors.borderColor-default;
+
+            PrimerTreeView {
+                rows: empty-dir-rows;
+                row-toggle-requested(_) => { }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
+            }
+        }
+
+        Text {
+            text: "NestedTrees";
+            font-size: 12px;
+            font-weight: 600;
+            color: PrimerColors.fgColor-default;
+        }
+
+        HorizontalLayout {
+            spacing: 16px;
+            alignment: start;
+
+            Rectangle {
+                width: 260px;
+                background: PrimerColors.bgColor-default;
+                border-radius: LayoutTokens.borderRadius-medium;
+                border-width: LayoutTokens.table-border-width;
+                border-color: PrimerColors.borderColor-default;
+
+                VerticalLayout {
+                    padding: 4px;
+                    Text {
+                        text: "Inner tree";
+                        font-size: 11px;
+                        font-weight: 600;
+                        color: PrimerColors.fgColor-muted;
+                    }
+                    PrimerTreeView {
+                        rows: flat-rows;
+                        flat: true;
+                        row-toggle-requested(_) => { }
+                        row-secondary-actions-requested(_, _, _, _, _) => { }
+                    }
+                }
+            }
+
+            Rectangle {
+                width: 260px;
+                background: PrimerColors.bgColor-default;
+                border-radius: LayoutTokens.borderRadius-medium;
+                border-width: LayoutTokens.table-border-width;
+                border-color: PrimerColors.borderColor-default;
+
+                VerticalLayout {
+                    padding: 4px;
+                    Text {
+                        text: "Outer tree";
+                        font-size: 11px;
+                        font-weight: 600;
+                        color: PrimerColors.fgColor-muted;
+                    }
+                    PrimerTreeView {
+                        rows: default-rows;
+                        row-toggle-requested(id) => {
+                            if id == "src" {
+                                def-src = !def-src;
+                            } else if id == "components" {
+                                def-components = !def-components;
+                            } else if id == "folder" {
+                                def-folder = !def-folder;
+                            }
+                        }
+                        row-secondary-actions-requested(_, _, _, _, _) => { }
                     }
                 }
             }
@@ -1376,6 +2434,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 width: flick.width;
                 rows: nested-scroll-rows;
                 row-toggle-requested(_) => { }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
             }
         }
     }
@@ -1397,6 +2456,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         PrimerTreeView {
             rows: stress-rows;
             row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
@@ -1417,6 +2477,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         PrimerTreeView {
             rows: intrinsic-rows;
             row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
@@ -1445,6 +2506,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 truncate: false;
                 rows: files-rows;
                 row-toggle-requested(_) => { }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
             }
             Button {
                 label: "After tree";
@@ -1455,7 +2517,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     // --- FocusManagement
     TreeViewSectionHeading {
         title: "FocusManagement";
-        note: "Kebab beside labels: full parity uses tabIndex -1 on trailing controls in the host.";
+        note: "Kebab in-row (**TrailingActions** pattern); separate **AnchoredOverlay** for this demo.";
     }
     Rectangle {
         horizontal-stretch: 1;
@@ -1466,6 +2528,28 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         border-width: LayoutTokens.table-border-width;
         border-color: PrimerColors.borderColor-default;
 
+        fm-focus-overlay := AnchoredOverlay {
+            open <=> fm-focus-menu-open;
+            anchor-abs-x: fm-focus-menu-ax;
+            anchor-abs-y: fm-focus-menu-ay;
+            anchor-width: fm-focus-menu-aw;
+            anchor-height: fm-focus-menu-ah;
+            vertical-side: AnchoredOverlaySide.auto;
+            align: AnchoredOverlayAlign.end;
+            shrink-wrap: true;
+            panel-width: 200px;
+            close-requested => {
+                fm-focus-menu-open = false;
+            }
+
+            ActionList {
+                lines: tv-trailing-menu-lines;
+                item-activated(_ix) => {
+                    fm-focus-menu-open = false;
+                }
+            }
+        }
+
         VerticalLayout {
             padding: 8px;
             spacing: 8px;
@@ -1473,7 +2557,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             HorizontalLayout {
                 spacing: 8px;
                 Text {
-                    text: "Row with adjacent menu:";
+                    text: "Adjacent standalone kebab (story chrome) vs in-tree kebab:";
                     vertical-alignment: center;
                     color: PrimerColors.fgColor-default;
                 }
@@ -1482,9 +2566,16 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 }
             }
             PrimerTreeView {
-                rows: flat-rows;
+                rows: trailing-demo-rows;
                 flat: true;
                 row-toggle-requested(_) => { }
+                row-secondary-actions-requested(_, ax, ay, aw, ah) => {
+                    fm-focus-menu-ax = ax;
+                    fm-focus-menu-ay = ay;
+                    fm-focus-menu-aw = aw;
+                    fm-focus-menu-ah = ah;
+                    fm-focus-menu-open = true;
+                }
             }
         }
     }
@@ -1504,11 +2595,12 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             flat: true;
             rows: flat-rows;
             row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
     // --- MultilineItems
-    TreeViewSectionHeading { title: "MultilineItems"; note: "truncate = false."; }
+    TreeViewSectionHeading { title: "MultilineItems"; note: "truncate = false; second row adds leading-action column + wrap."; }
     Rectangle {
         horizontal-stretch: 1;
         min-width: 320px;
@@ -1522,6 +2614,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             truncate: false;
             rows: multiline-rows;
             row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
@@ -1553,6 +2646,52 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             PrimerTreeView {
                 rows: leading-action-rows;
                 row-toggle-requested(_) => { }
+                row-secondary-actions-requested(_, _, _, _, _) => { }
+            }
+        }
+    }
+
+    async-e-dialog := Dialog {
+        open <=> async-e-dialog-open;
+        width-preset: DialogWidthPreset.small;
+        on-close(_gesture) => {
+            async-e-dialog-open = false;
+            async-e-expanded = false;
+            async-e-step = 0;
+            async-e-timer-arm = false;
+        }
+
+        VerticalLayout {
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: "Could not load folder";
+                close-requested => async-e-dialog.on-close("close-button");
+            }
+
+            DialogBody {
+                Text {
+                    text: "A simulated network error occurred while loading children (Storybook **AsyncError**).";
+                    wrap: word-wrap;
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Retry";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        async-e-dialog-open = false;
+                        async-e-step = 3;
+                        async-e-timer-arm = true;
+                    }
+                }
+                Button {
+                    label: "Close";
+                    clicked => async-e-dialog.on-close("close-button");
+                }
             }
         }
     }

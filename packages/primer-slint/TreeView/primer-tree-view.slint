@@ -1,7 +1,10 @@
-// Primer-style **TreeView** — flat **`[TreeViewRow]`** model, indent + toggle, leading/trailing visuals, **`current`** bar, **`flat`** + **`truncate`**. Upstream: `TreeView.module.css`, `TreeView.tsx`.
+// Primer-style **TreeView** — flat **`[TreeViewRow]`** model, indent + toggle, leading/trailing visuals, **`current`** bar, **`flat`** + **`truncate`**, skeleton rows, optional trailing **secondary actions** kebab. Upstream: `TreeView.module.css`, `TreeView.tsx`.
 
+import { IconButton, IconButtonVariant } from "../Buttons/buttons.slint";
+import { CounterLabel, CounterLabelVariant } from "../CounterLabel/counter-label.slint";
 import { Icons } from "../assets/icons.slint";
-import { LayoutTokens, PrimerColors, TreeViewTokens } from "../tokens.slint";
+import { SkeletonBox } from "../Skeleton/skeleton-box.slint";
+import { LayoutTokens, PrimerColors, Size, TreeViewTokens } from "../tokens.slint";
 import { TreeViewRow, TreeViewTrailingVisual } from "./types.slint";
 
 component TreeViewRowView {
@@ -9,9 +12,10 @@ component TreeViewRowView {
     in property <bool> flat;
     in property <bool> truncate;
     in property <length> toggle-w;
-    in property <length> toggle-half;
+    in property <int> gutter-slot-count;
     in property <length> row-min-h;
     callback row-toggle-requested(string);
+    callback row-secondary-actions-requested(string, length, length, length, length);
 
     property <length> leading-action-w: tree-row.has-leading-action ? 3 * LayoutTokens.base-size-8 : 0px;
     property <int> level-safe: max(1, tree-row.level);
@@ -42,7 +46,7 @@ component TreeViewRowView {
             horizontal-stretch: 1;
 
             key-pressed(event) => {
-                if !tree-row.interactive || !tree-row.has-children {
+                if !tree-row.interactive || !tree-row.has-children || tree-row.is-skeleton {
                     return reject;
                 }
                 if event.text == Key.Return || event.text == Key.Space {
@@ -56,14 +60,14 @@ component TreeViewRowView {
                 horizontal-stretch: 1;
                 border-radius: TreeViewTokens.item-border-radius;
                 min-height: root.row-min-h;
-                background: !tree-row.interactive ? transparent
+                background: !tree-row.interactive || tree-row.is-skeleton ? transparent
                     : tree-row.current ? TreeViewTokens.item-bgColor-current
                     : main-ta.has-hover ? TreeViewTokens.item-bgColor-hover
                     : transparent;
-                border-width: row-fs.has-focus && tree-row.interactive ? TreeViewTokens.item-focus-ring-width : 0px;
+                border-width: row-fs.has-focus && tree-row.interactive && !tree-row.is-skeleton ? TreeViewTokens.item-focus-ring-width : 0px;
                 border-color: TreeViewTokens.item-focus-ring-color;
 
-                if tree-row.current: Rectangle {
+                if tree-row.current && !tree-row.is-skeleton: Rectangle {
                     x: TreeViewTokens.item-current-indicator-offset-inline;
                     y: (root.row-min-h - self.height) / 2;
                     width: TreeViewTokens.item-current-indicator-width;
@@ -72,101 +76,159 @@ component TreeViewRowView {
                     background: TreeViewTokens.item-current-indicator-fgColor;
                 }
 
-                main-ta := TouchArea {
-                    enabled: tree-row.interactive && tree-row.has-children;
-                    mouse-cursor: tree-row.interactive && tree-row.has-children ? pointer : default;
-                    clicked => {
-                        root.row-toggle-requested(tree-row.id);
-                    }
+                HorizontalLayout {
+                    spacing: 0px;
+                    alignment: stretch;
+                    min-height: root.row-min-h;
 
-                    HorizontalLayout {
-                        spacing: TreeViewTokens.item-content-gap;
-                        alignment: start;
-                        padding-left: TreeViewTokens.item-content-padding-inline;
-                        padding-right: TreeViewTokens.item-content-padding-inline;
-                        min-height: root.row-min-h;
-                        align-items: center;
-
-                        if !flat && gutter-segments > 0: HorizontalLayout {
-                            spacing: 0;
-                            alignment: start;
-                            for slot[index] in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]: Rectangle {
-                                width: index < gutter-segments ? toggle-half : 0px;
-                                height: root.row-min-h;
-                                background: transparent;
-
-                                if index < gutter-segments: Rectangle {
-                                    x: parent.width - TreeViewTokens.item-border-width-thin;
-                                    y: 0px;
-                                    width: TreeViewTokens.item-border-width-thin;
-                                    height: root.row-min-h;
-                                    background: TreeViewTokens.level-line-borderColor;
-                                }
-                            }
-                        }
-
-                        if tree-row.has-leading-action: HorizontalLayout {
-                            width: leading-action-w;
-                            min-height: root.row-min-h;
-                            alignment: center;
-
-                            if tree-row.show-leading-action-icon: Image {
-                                width: LayoutTokens.iconButton-icon-size-small;
-                                height: LayoutTokens.iconButton-icon-size-small;
-                                vertical-alignment: center;
-                                source: tree-row.leading-action-icon;
-                                colorize: TreeViewTokens.item-fgColor-muted;
-                            }
-                        }
-
-                        if !flat: Rectangle {
-                            width: toggle-w;
-                            min-height: root.row-min-h;
-
-                            VerticalLayout {
-                                alignment: center;
-                                align-items: center;
-                                chevron-img := Image {
-                                    visible: tree-row.has-children;
-                                    width: 12px;
-                                    height: 12px;
-                                    source: tree-row.expanded ? Icons.chevron_down : Icons.chevron_right;
-                                    colorize: TreeViewTokens.item-fgColor-muted;
-                                }
-                            }
+                    main-ta := TouchArea {
+                        horizontal-stretch: 1;
+                        enabled: tree-row.interactive && tree-row.has-children && !tree-row.is-skeleton;
+                        mouse-cursor: self.enabled ? pointer : default;
+                        clicked => {
+                            root.row-toggle-requested(tree-row.id);
                         }
 
                         HorizontalLayout {
-                            horizontal-stretch: 1;
                             spacing: TreeViewTokens.item-content-gap;
                             alignment: start;
-                            align-items: center;
+                            padding-left: TreeViewTokens.item-content-padding-inline;
+                            padding-right: TreeViewTokens.item-content-padding-inline;
+                            min-height: root.row-min-h;
+                            align-items: root.truncate ? center : start;
 
-                            if tree-row.has-leading-visual: Image {
+                            if !flat && gutter-segments > 0: HorizontalLayout {
+                                spacing: 0;
+                                alignment: start;
+                                for slot[index] in gutter-slot-count: Rectangle {
+                                    width: index < gutter-segments ? toggle-w : 0px;
+                                    height: root.row-min-h;
+                                    background: transparent;
+
+                                    if index < gutter-segments: Rectangle {
+                                        x: parent.width - TreeViewTokens.item-border-width-thin;
+                                        y: 0px;
+                                        width: TreeViewTokens.item-border-width-thin;
+                                        height: root.row-min-h;
+                                        background: TreeViewTokens.level-line-borderColor;
+                                    }
+                                }
+                            }
+
+                            if tree-row.has-leading-action: HorizontalLayout {
+                                width: leading-action-w;
+                                min-height: root.row-min-h;
+                                alignment: center;
+
+                                if tree-row.show-leading-action-icon: Image {
+                                    width: LayoutTokens.iconButton-icon-size-small;
+                                    height: LayoutTokens.iconButton-icon-size-small;
+                                    vertical-alignment: center;
+                                    source: tree-row.leading-action-icon;
+                                    colorize: TreeViewTokens.item-fgColor-muted;
+                                }
+                            }
+
+                            if !flat: Rectangle {
+                                width: toggle-w;
+                                min-height: root.row-min-h;
+
+                                VerticalLayout {
+                                    alignment: center;
+                                    align-items: center;
+                                    Image {
+                                        visible: tree-row.has-children;
+                                        width: 12px;
+                                        height: 12px;
+                                        source: tree-row.expanded ? Icons.chevron_down : Icons.chevron_right;
+                                        colorize: TreeViewTokens.item-fgColor-muted;
+                                    }
+                                }
+                            }
+
+                            if tree-row.is-skeleton: HorizontalLayout {
+                                horizontal-stretch: 1;
+                                spacing: LayoutTokens.base-size-8;
+                                alignment: center;
+                                min-height: root.row-min-h;
+
+                                SkeletonBox {
+                                    width: 38%;
+                                    box-height: 10px;
+                                }
+
+                                SkeletonBox {
+                                    width: 24%;
+                                    box-height: 10px;
+                                }
+                            }
+
+                            if !tree-row.is-skeleton: HorizontalLayout {
+                                horizontal-stretch: 1;
+                                spacing: TreeViewTokens.item-content-gap;
+                                alignment: start;
+                                align-items: root.truncate ? center : start;
+
+                                if tree-row.has-leading-visual: Image {
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                    vertical-alignment: top;
+                                    source: tree-row.leading-is-directory ? dir-leading-img : tree-row.leading-file-icon;
+                                    colorize: tree-row.leading-is-directory ? TreeViewTokens.item-leadingVisual-icon-fgColor-rest : TreeViewTokens.item-fgColor-muted;
+                                }
+
+                                Text {
+                                    horizontal-stretch: 1;
+                                    vertical-alignment: top;
+                                    text: tree-row.label;
+                                    color: TreeViewTokens.item-fgColor-default;
+                                    font-size: LayoutTokens.text-body-size-medium;
+                                    overflow: root.truncate ? elide : clip;
+                                    wrap: root.truncate ? no-wrap : word-wrap;
+                                }
+
+                                if tree-row.loading-children-badge != "": CounterLabel {
+                                    text: tree-row.loading-children-badge;
+                                    use-primer-scheme: true;
+                                    scheme: CounterLabelVariant.secondary;
+                                }
+                            }
+
+                            if !tree-row.is-skeleton && tree-row.trailing != TreeViewTrailingVisual.none: Image {
                                 width: LayoutTokens.iconButton-icon-size-medium;
                                 height: LayoutTokens.iconButton-icon-size-medium;
                                 vertical-alignment: top;
-                                source: tree-row.leading-is-directory ? dir-leading-img : tree-row.leading-file-icon;
-                                colorize: tree-row.leading-is-directory ? TreeViewTokens.item-leadingVisual-icon-fgColor-rest : TreeViewTokens.item-fgColor-muted;
-                            }
-
-                            Text {
-                                horizontal-stretch: 1;
-                                vertical-alignment: top;
-                                text: tree-row.label;
-                                color: TreeViewTokens.item-fgColor-default;
-                                font-size: LayoutTokens.text-body-size-medium;
-                                overflow: root.truncate ? elide : clip;
-                                wrap: root.truncate ? no-wrap : word-wrap;
+                                source: trailing-img;
+                                colorize: trailing-color;
                             }
                         }
+                    }
 
-                        if tree-row.trailing != TreeViewTrailingVisual.none: Image {
-                            width: LayoutTokens.iconButton-icon-size-medium;
-                            height: LayoutTokens.iconButton-icon-size-medium;
-                            vertical-alignment: top;
-                            source: trailing-img;
-                            colorize: trailing-color;
+                    if tree-row.has-secondary-actions: HorizontalLayout {
+                        spacing: TreeViewTokens.item-content-gap;
+                        alignment: center;
+                        padding-right: TreeViewTokens.item-content-padding-inline;
+                        min-height: root.row-min-h;
+
+                        if tree-row.secondary-actions-badge != "": CounterLabel {
+                            text: tree-row.secondary-actions-badge;
+                            use-primer-scheme: true;
+                            scheme: CounterLabelVariant.secondary;
+                        }
+
+                        menu-btn := IconButton {
+                            size: Size.small;
+                            variant: IconButtonVariant.invisible;
+                            icon-source: Icons.kebab_horizontal;
+                            clicked => {
+                                root.row-secondary-actions-requested(
+                                    tree-row.id,
+                                    menu-btn.absolute-position.x,
+                                    menu-btn.absolute-position.y,
+                                    menu-btn.width,
+                                    menu-btn.height,
+                                );
+                            }
                         }
                     }
                 }
@@ -181,11 +243,13 @@ export component PrimerTreeView inherits VerticalLayout {
     in property <bool> coarse-pointer: false;
     in property <string> accessible-name: "";
     in property <[TreeViewRow]> rows: [];
+    /// How many indent columns to allocate for vertical guides (must be ≥ **`max(row.level) − 1`** when **`flat`** is false).
+    in property <int> max-gutter-columns: 12;
 
     callback row-toggle-requested(string);
+    callback row-secondary-actions-requested(string, length, length, length, length);
 
     property <length> toggle-w: root.coarse-pointer ? TreeViewTokens.toggle-width-coarse : TreeViewTokens.toggle-width-default;
-    property <length> toggle-half: root.toggle-w / 2;
     property <length> row-min-h: root.coarse-pointer ? TreeViewTokens.item-min-height-coarse : TreeViewTokens.item-min-height;
 
     alignment: start;
@@ -198,10 +262,13 @@ export component PrimerTreeView inherits VerticalLayout {
         flat: root.flat;
         truncate: root.truncate;
         toggle-w: root.toggle-w;
-        toggle-half: root.toggle-half;
+        gutter-slot-count: root.max-gutter-columns;
         row-min-h: root.row-min-h;
         row-toggle-requested(id) => {
             root.row-toggle-requested(id);
+        }
+        row-secondary-actions-requested(id, ax, ay, aw, ah) => {
+            root.row-secondary-actions-requested(id, ax, ay, aw, ah);
         }
     }
 }

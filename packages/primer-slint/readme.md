@@ -54,14 +54,29 @@ The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** t
 
 **Status:** **`PrimerTreeView`** is exported from [`primer.slint`](slint/primer.slint) with **`TreeViewRow`** / **`TreeViewTrailingVisual`** ([`TreeView/types.slint`](slint/TreeView/types.slint)). Gallery: **`pnpm dev:gallery`** → **Tree view**.
 
+**Imports for views:** **`PrimerTreeView`**, **`TreeViewRow`**, **`TreeViewTrailingVisual`**, **`TreeViewTokens`**, **`LayoutTokens`**, **`PrimerColors`**, **`Icons`** from [`primer.slint`](slint/primer.slint) (or `tokens.slint` for tokens only). Secondary overflow menus are **not** built into the tree: set **`has-secondary-actions`** / **`secondary-actions-badge`** on rows and handle **`row-secondary-actions-requested`** with **`AnchoredOverlay`** + **`ActionList`** (see gallery **TrailingActions**). Async **SubTree** is host-owned: insert skeleton rows (**`is-skeleton: true`**, **`interactive: false`**), drive **`loading-children-badge`**, and use **`Dialog`** for errors (gallery **AsyncError**).
+
 | Topic | Where it lives |
 | -------- | ----- |
 | **Flat model vs nested components** | [`TreeView/API.md`](TreeView/API.md) — **visible-row / flat model** is the supported approach; nested Slint children mirror React only for small demos. |
-| **React prop → Slint mapping** (`TreeViewProps`, row fields, `SubTreeState`, `secondaryActions`) | Same file — tables for root, item row, subtree, and trailing actions. |
-| **Interaction states** (`hover`, `current`, `:focus-visible`, skeleton) | [`TreeView/API.md`](TreeView/API.md) **Interaction states** + [`.cursor/skills/primer-slint-interaction-states/SKILL.md`](../../.cursor/skills/primer-slint-interaction-states/SKILL.md) — **`FocusScope`** → **`TouchArea`** → row **`Rectangle`**, **`focus-on-click: false`**, named **`states [ ]`** branches (**disabled/skeleton** first, then **current × pointer**, then focus ring from **`FocusScope.has-focus`**). |
-| **Tokens** | **`TreeViewTokens`** in [`tokens.slint`](slint/tokens.slint) — no duplicate hex; row hover reuses **`PrimerColors.table-row-bgColor-hover`** (`--control-transparent-bgColor-hover`), current row reuses **`ButtonTokens.color-action-list-item-default-selected-bg`**. |
+| **React prop → Slint mapping** | [`TreeView/API.md`](TreeView/API.md) — root, row, **SubTree**, secondary actions. |
+| **Interaction states** | [`TreeView/API.md`](TreeView/API.md) **Interaction states** + [`.cursor/skills/primer-slint-interaction-states/SKILL.md`](../../.cursor/skills/primer-slint-interaction-states/SKILL.md). |
+| **Tokens** | **`TreeViewTokens`** in [`tokens.slint`](slint/tokens.slint) — no duplicate hex; row hover reuses **`PrimerColors.table-row-bgColor-hover`**, current row reuses **`ButtonTokens.color-action-list-item-default-selected-bg`**. |
+
+| Property / callback | Notes |
+| -------- | ----- |
+| `rows` | **`[TreeViewRow]`** — visible pre-order flatten; host rebuilds on expand/collapse/async. |
+| `flat` / `truncate` | Omit indent + chevrons vs default; label elide vs wrap. |
+| `max-gutter-columns` | Indent guide slots (default **12**); raise if the flat model uses **`level`** deeper than slots + 1. |
+| `row-toggle-requested(id)` | Chevron / row expand target (**disabled** for **`!interactive`**, **`is-skeleton`**, or **`!has-children`**). |
+| `row-secondary-actions-requested(id, ax, ay, aw, ah)` | Fires when **`has-secondary-actions`** kebab is pressed; anchor lengths for **`AnchoredOverlay`**. |
+| Row **`is-skeleton`** | Muted **SkeletonBox** strip; no hover; no expand interaction. |
+| Row **`has-secondary-actions`** / **`secondary-actions-badge`** | Kebab + optional **CounterLabel** (Storybook trailing count). |
+| Row **`loading-children-badge`** | **CounterLabel** after label while children are loading. |
 
 **v1 non-goals (call out in reviews):** roving tabindex, typeahead, and live-region announcements are not expected to match React **TreeView** on first ship; keyboard parity is partial via **`FocusScope`** and host shortcuts. **`containIntrinsicSize`** has no Slint equivalent — large lists use bounded **`ListView`** / scaled demos (see port plan).
+
+**Icons:** The gallery and row chrome use existing registry entries (**`kebab_horizontal`**, **`grabber`**, **`file`** / **`file_directory_*`**, diff icons, issue icons). Add new **`@image-url`** properties in [`assets/icons.slint`](slint/assets/icons.slint) when upstream stories need additional Octicons (see [`.cursor/skills/primer-slint-icons-registry/SKILL.md`](../../.cursor/skills/primer-slint-icons-registry/SKILL.md)).
 
 ## Avatar
 
