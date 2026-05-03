@@ -113,6 +113,7 @@ component Pagination2NavItem inherits HorizontalLayout {
     in property <PaginationPiece> piece;
     callback activate(int);
 
+    horizontal-stretch: 0;
     min-height: LayoutTokens.control-medium-size;
 
     if piece.kind == PaginationPieceKind.Prev: Pagination2LinkCell {
@@ -143,7 +144,7 @@ component Pagination2NavItem inherits HorizontalLayout {
         disabled: piece.disabled;
         selected: piece.selected;
         accent-fg: false;
-        label: "" + piece.page_num;
+        label: piece.page_num;
         clicked => {
             activate(piece.page_num - 1);
         }
@@ -170,15 +171,33 @@ export component Pagination2 {
     in property <int> surrounding-page-count: 2;
     callback page-changed(int);
 
-    property <int> idx-clamped: PaginationLogic.clamp_page_index(current-page - 1, page-count);
-    property <int> current-1based: idx-clamped + 1;
+    /// Non-negative margins (negative **`margin-page-count`** / **`surrounding-page-count`** are treated as 0).
+    property <int> margin-safe: max(0, margin-page-count);
+    property <int> surrounding-safe: max(0, surrounding-page-count);
+
+    property <int> current-1based: PaginationLogic.clamp_current_page_1based(current-page, page-count);
     property <int> model-len: PaginationLogic.model_len(
         page-count,
         current-1based,
         show-pages,
-        margin-page-count,
-        surrounding-page-count,
+        margin-safe,
+        surrounding-safe,
     );
+
+    // Use `clamp_current_page_1based(current-page, page-count)` here, not `current-1based`: `changed` can run
+    // before dependent properties are refreshed, so reading `current-1based` would compare against a stale value
+    // and overwrite every navigation (e.g. page 2 snapped back to 1).
+    changed current-page => {
+        if root.current-page != PaginationLogic.clamp_current_page_1based(root.current-page, root.page-count) {
+            root.current-page = PaginationLogic.clamp_current_page_1based(root.current-page, root.page-count);
+        }
+    }
+
+    changed page-count => {
+        if root.current-page != PaginationLogic.clamp_current_page_1based(root.current-page, root.page-count) {
+            root.current-page = PaginationLogic.clamp_current_page_1based(root.current-page, root.page-count);
+        }
+    }
 
     min-height: LayoutTokens.control-medium-size;
 
@@ -192,8 +211,8 @@ export component Pagination2 {
                 page-count,
                 current-1based,
                 show-pages,
-                margin-page-count,
-                surrounding-page-count,
+                margin-safe,
+                surrounding-safe,
             );
             activate(idx) => {
                 root.page-changed(idx);

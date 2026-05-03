@@ -41,6 +41,10 @@ export component GalleryDataPage inherits VerticalLayout {
     property <int> demo-pagination-page-index-prevnext: 0;
     property <int> demo-pagination-page-index-short: 0;
     property <int> demo-pagination2-current-page: 1;
+    property <int> demo-pagination2-prevnext-page: 1;
+    property <int> demo-pagination2-single-page: 1;
+    property <int> demo-pagination2-ellipsis-page: 12;
+    property <int> demo-pagination2-zero-page: 1;
 
     VerticalLayout {
         spacing: 12px;
@@ -53,7 +57,7 @@ export component GalleryDataPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Standalone nav (centered strip, no bordered footer). Page count 10; `page-changed` is 0-based index.";
+            text: "Standalone nav (centered strip, no bordered footer). Page count 10; default `show-pages`, `margin-page-count`, `surrounding-page-count`; `page-changed` emits 0-based index.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -72,6 +76,134 @@ export component GalleryDataPage inherits VerticalLayout {
             show-pages: true;
             page-changed(idx) => {
                 demo-pagination2-current-page = idx + 1;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "Pagination2 — prev / next only";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "`show-pages: false` — numeric strip hidden (same idea as Primer’s narrow `showPages`). Five pages total.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Current page (1-based): " + demo-pagination2-prevnext-page;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination2 {
+            page-count: 5;
+            current-page: demo-pagination2-prevnext-page;
+            show-pages: false;
+            page-changed(idx) => {
+                demo-pagination2-prevnext-page = idx + 1;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "Pagination2 — single page";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "`page-count: 1` — Previous and Next disabled; one numbered cell.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination2 {
+            page-count: 1;
+            current-page: demo-pagination2-single-page;
+            page-changed(idx) => {
+                demo-pagination2-single-page = idx + 1;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "Pagination2 — larger margin / surrounding (ellipsis)";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "25 pages, `margin-page-count: 2`, `surrounding-page-count: 3` — window around current page plus leading/trailing breaks when needed.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Current page (1-based): " + demo-pagination2-ellipsis-page;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination2 {
+            page-count: 25;
+            current-page: demo-pagination2-ellipsis-page;
+            margin-page-count: 2;
+            surrounding-page-count: 3;
+            page-changed(idx) => {
+                demo-pagination2-ellipsis-page = idx + 1;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "Pagination2 — zero pages";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "`page-count: 0` — no page numbers; Previous and Next disabled; `current-page` clamps to 1.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Bound `current-page` (1-based): " + demo-pagination2-zero-page;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination2 {
+            page-count: 0;
+            current-page: demo-pagination2-zero-page;
+            page-changed(idx) => {
+                demo-pagination2-zero-page = idx + 1;
             }
         }
     }

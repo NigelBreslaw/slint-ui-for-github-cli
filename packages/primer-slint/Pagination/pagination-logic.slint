@@ -135,6 +135,11 @@ export global PaginationLogic {
         }
     }
 
+    /// 1-based page number clamped to `[1, page-count]` when `page-count > 0`; otherwise **1** (matches `clamp_page_index` + 1).
+    public pure function clamp_current_page_1based(current_page: int, page_count: int) -> int {
+        clamp_page_index(current_page - 1, page_count) + 1
+    }
+
     public pure function piece_at(
         flat_index: int,
         page_count: int,
