@@ -41,23 +41,43 @@ export component GalleryDataPage inherits VerticalLayout {
     property <int> demo-pagination-page-index-prevnext: 0;
     property <int> demo-pagination-page-index-short: 0;
     property <int> demo-pagination2-current-page: 1;
-    property <int> demo-pagination2-prevnext-page: 1;
+    property <int> demo-p2-larger-margin-page: 5;
+    property <int> demo-p2-hide-numbers-page: 5;
+    property <int> demo-p2-higher-surrounding-page: 5;
     property <int> demo-pagination2-single-page: 1;
     property <int> demo-pagination2-ellipsis-page: 12;
     property <int> demo-pagination2-zero-page: 1;
 
     VerticalLayout {
+        spacing: 16px;
+
+        Text {
+            text: "Pagination2 — Storybook Features matrix";
+            color: PrimerColors.fgColor-default;
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        Text {
+            text: "Sections mirror `Pagination.features.stories.tsx` (Components/Pagination/Features). Standalone nav, centered strip; `page-changed` emits 0-based index; `current-page` is 1-based.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
         spacing: 12px;
 
         Text {
-            text: "Pagination2 — smoke";
+            text: "Default strip";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "Standalone nav (centered strip, no bordered footer). Page count 10; default `show-pages`, `margin-page-count`, `surrounding-page-count`; `page-changed` emits 0-based index.";
+            text: "Ten pages, default `show-pages`, `margin-page-count`, `surrounding-page-count` — baseline numbered strip.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -84,32 +104,32 @@ export component GalleryDataPage inherits VerticalLayout {
         spacing: 12px;
 
         Text {
-            text: "Pagination2 — prev / next only";
+            text: "LargerPageCountMargin";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "`show-pages: false` — numeric strip hidden (same idea as Primer’s narrow `showPages`). Five pages total.";
+            text: "Story: `pageCount={15}`, `currentPage={5}`, `marginPageCount={4}` — more leading/trailing page numbers before ellipsis.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
 
         Text {
-            text: "Current page (1-based): " + demo-pagination2-prevnext-page;
+            text: "Current page (1-based): " + demo-p2-larger-margin-page;
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
 
         Pagination2 {
-            page-count: 5;
-            current-page: demo-pagination2-prevnext-page;
-            show-pages: false;
+            page-count: 15;
+            current-page: demo-p2-larger-margin-page;
+            margin-page-count: 4;
             page-changed(idx) => {
-                demo-pagination2-prevnext-page = idx + 1;
+                demo-p2-larger-margin-page = idx + 1;
             }
         }
     }
@@ -118,7 +138,111 @@ export component GalleryDataPage inherits VerticalLayout {
         spacing: 12px;
 
         Text {
-            text: "Pagination2 — single page";
+            text: "HidePageNumbers";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Story: `pageCount={15}`, `currentPage={5}`, `showPages={false}` — Previous / Next only.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Current page (1-based): " + demo-p2-hide-numbers-page;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination2 {
+            page-count: 15;
+            current-page: demo-p2-hide-numbers-page;
+            show-pages: false;
+            page-changed(idx) => {
+                demo-p2-hide-numbers-page = idx + 1;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "HidePageNumbersByViewport";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Primer React can pass `showPages` as a responsive object (e.g. `{ narrow: false }`). Slint v1 exposes `show-pages: bool` only; use **`show-pages: false`** when you want numbers hidden (e.g. narrow layout decided in Rust/TS). No separate control in this gallery.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "HigherSurroundingPageCount";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Story: `pageCount={15}`, `currentPage={5}`, `surroundingPageCount={4}` — wider window of neighbors around the current page.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Current page (1-based): " + demo-p2-higher-surrounding-page;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination2 {
+            page-count: 5;
+            current-page: demo-p2-higher-surrounding-page;
+            surrounding-page-count: 4;
+            page-changed(idx) => {
+                demo-p2-higher-surrounding-page = idx + 1;
+            }
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "RenderLinks";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Story uses `renderPage` with router links. Slint stays callback-centric: handle **`page-changed`** in your bridge and navigate or set URL; no built-in href builder.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+    }
+
+    VerticalLayout {
+        spacing: 12px;
+
+        Text {
+            text: "Edge: single page";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
