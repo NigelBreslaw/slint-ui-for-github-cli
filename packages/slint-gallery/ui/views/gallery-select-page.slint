@@ -1,0 +1,284 @@
+import {
+    Checkbox,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    Select,
+    SelectOption,
+    Size,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GallerySelectPage {
+
+    property <string> preview-label-text: "Demo select";
+    property <string> preview-placeholder: "Choose an option…";
+    property <string> preview-caption: "";
+    property <bool> preview-disabled: false;
+    property <Size> preview-size: Size.medium;
+    property <ValidationStatus> preview-validation-status: ValidationStatus.success;
+    property <string> preview-validation-message: "Static gallery model.";
+    property <int> preview-selected-index: 0;
+
+    /// 0 = default (3 options, one disabled), 1 = empty, 2 = many (scroll menu)
+    property <int> options-preset: 0;
+
+    property <[SelectOption]> options-default: [
+        { value: "one", label: "First option", enabled: true },
+        { value: "two", label: "Second option", enabled: true },
+        { value: "three", label: "Third option", enabled: false },
+    ];
+
+    property <[SelectOption]> options-empty: [];
+
+    property <[SelectOption]> options-many: [
+        { value: "m0", label: "Alpha", enabled: true },
+        { value: "m1", label: "Bravo", enabled: true },
+        { value: "m2", label: "Charlie", enabled: true },
+        { value: "m3", label: "Delta", enabled: true },
+        { value: "m4", label: "Echo", enabled: true },
+        { value: "m5", label: "Foxtrot", enabled: true },
+        { value: "m6", label: "Golf", enabled: true },
+        { value: "m7", label: "Hotel (disabled)", enabled: false },
+        { value: "m8", label: "India", enabled: true },
+        { value: "m9", label: "Juliet", enabled: true },
+    ];
+
+    property <[SelectOption]> preview-options:
+        options-preset == 0 ? options-default : options-preset == 1 ? options-empty : options-many;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            alignment: start;
+            spacing: 8px;
+
+            Select {
+                width: 360px;
+                horizontal-stretch: 1;
+                label-text: preview-label-text;
+                placeholder: preview-placeholder;
+                caption: preview-caption;
+                options: preview-options;
+                selected-index <=> preview-selected-index;
+                disabled: preview-disabled;
+                size: preview-size;
+                validation-status: preview-validation-status;
+                validation-message: preview-validation-message;
+                selected-changed(_idx) => {
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Options preset";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Switching preset resets selection to a safe index.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "def";
+                        label: "Default (3, one disabled)";
+                        checked: options-preset == 0;
+                        toggled => {
+                            options-preset = 0;
+                            preview-selected-index = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "empty";
+                        label: "Empty (placeholder only)";
+                        checked: options-preset == 1;
+                        toggled => {
+                            options-preset = 1;
+                            preview-selected-index = -1;
+                        }
+                    }
+
+                    Radio {
+                        value: "many";
+                        label: "Many (scroll in menu)";
+                        checked: options-preset == 2;
+                        toggled => {
+                            options-preset = 2;
+                            preview-selected-index = 0;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Label / placeholder / caption";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "label-text";
+                    placeholder: "Label…";
+                    text <=> preview-label-text;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "placeholder";
+                    placeholder: "Placeholder…";
+                    text <=> preview-placeholder;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "caption";
+                    placeholder: "Optional caption…";
+                    text <=> preview-caption;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "State";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "disabled";
+                    checked <=> preview-disabled;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "size";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "sm";
+                        label: "small";
+                        checked: preview-size == Size.small;
+                        toggled => {
+                            preview-size = Size.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "md";
+                        label: "medium";
+                        checked: preview-size == Size.medium;
+                        toggled => {
+                            preview-size = Size.medium;
+                        }
+                    }
+
+                    Radio {
+                        value: "lg";
+                        label: "large";
+                        checked: preview-size == Size.large;
+                        toggled => {
+                            preview-size = Size.large;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "validation-status";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "none";
+                        label: "none";
+                        checked: preview-validation-status == ValidationStatus.none;
+                        toggled => {
+                            preview-validation-status = ValidationStatus.none;
+                        }
+                    }
+
+                    Radio {
+                        value: "error";
+                        label: "error";
+                        checked: preview-validation-status == ValidationStatus.error;
+                        toggled => {
+                            preview-validation-status = ValidationStatus.error;
+                        }
+                    }
+
+                    Radio {
+                        value: "success";
+                        label: "success";
+                        checked: preview-validation-status == ValidationStatus.success;
+                        toggled => {
+                            preview-validation-status = ValidationStatus.success;
+                        }
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "validation-message";
+                    placeholder: "Message when error/success…";
+                    text <=> preview-validation-message;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+        }
+    }
+}

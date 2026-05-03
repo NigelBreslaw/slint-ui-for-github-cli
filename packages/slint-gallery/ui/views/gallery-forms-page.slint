@@ -11,8 +11,6 @@ import {
     LayoutTokens,
     Radio,
     RadioGroup,
-    Select,
-    SelectOption,
     SelectPanel,
     SelectPanelItem,
     SelectPanelMode,
@@ -24,13 +22,6 @@ import { AppWindow, PrimerColors } from "../../../primer-slint/tokens.slint";
 export component GalleryFormsPage inherits VerticalLayout {
     spacing: 28px;
     padding: 24px;
-
-    property <[SelectOption]> demo-select-options: [
-        { value: "one", label: "First option", enabled: true },
-        { value: "two", label: "Second option", enabled: true },
-        { value: "three", label: "Third option", enabled: false },
-    ];
-    property <int> demo-select-index: 0;
 
     property <bool> demo-cb-off: false;
     property <bool> demo-cb-on: true;
@@ -54,28 +45,6 @@ export component GalleryFormsPage inherits VerticalLayout {
         { value: "documentation", label: "documentation", description: "Improvements or additions to documentation", swatch: #0075ca, enabled: true },
         { value: "duplicate", label: "duplicate", description: "This issue or pull request already exists", swatch: #cfd3d7, enabled: true },
     ];
-
-    VerticalLayout {
-        spacing: 12px;
-
-        Text {
-            text: "Select";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Select {
-            label-text: "Demo select";
-            placeholder: "Choose an option…";
-            options: demo-select-options;
-            selected-index <=> demo-select-index;
-            validation-status: ValidationStatus.success;
-            validation-message: "Static gallery model.";
-            selected-changed(_idx) => {
-            }
-        }
-    }
 
     anchored-overlay-demo-column := VerticalLayout {
         spacing: 12px;
