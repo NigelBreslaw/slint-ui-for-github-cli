@@ -28,23 +28,8 @@ component ProjectBoardPaginationFooter {
     property <int> idx-clamped: PaginationLogic.clamp_page_index(page-index, page-count);
     property <int> range-start: PaginationLogic.range_display_start(total-count, idx-clamped, page-size);
     property <int> range-end: PaginationLogic.range_display_end(total-count, idx-clamped, page-size);
-    in-out property <int> p2-current-page: 1;
-
-    init => {
-        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
-    }
-
-    changed page-index => {
-        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
-    }
-
-    changed total-count => {
-        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
-    }
-
-    changed page-size => {
-        p2-current-page = PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
-    }
+    /// 1-based page for `Pagination2`; derived from 0-based `page-index` (single source of truth).
+    property <int> pagination2-current-1based: PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
 
     width: 100%;
     vertical-stretch: 0;
@@ -87,10 +72,9 @@ component ProjectBoardPaginationFooter {
                 Pagination2 {
                     width: 100%;
                     page-count: page-count;
-                    current-page: p2-current-page;
+                    current-page: pagination2-current-1based;
                     page-changed(idx) => {
                         root.page-changed(idx);
-                        p2-current-page = idx + 1;
                     }
                 }
             }
