@@ -1,0 +1,215 @@
+import { Button } from "std-widgets.slint";
+import { AnchoredOverlay } from "anchored-overlay.slint";
+import { AppWindow } from "packages/primer-slint/tokens.slint";
+import { OverlayType } from "anchored-overlay.slint";
+
+export component TestButton {
+    width: btn.preferred-width;
+    height: btn.preferred-height;
+    in-out property text <=> btn.text;
+    in-out property overlay-type <=> ao.overlay-type;
+
+    callback clicked();
+
+    btn := Button {
+        primary: true;
+        clicked => {
+            // Concerned if this was a binding it would be firing too often
+            // when just scrolling a view of buttons and as the AnchoredOverlay
+            // isn't showing that is just pointless code running.
+            ao.position-props = {
+                absolute-position: btn.absolute-position,
+                source-size: { width: btn.width, height: btn.height }
+            };
+            root.clicked();
+            ao.show();
+        }
+    }
+    ao := AnchoredOverlay {
+        @children
+    }
+}
+
+export component AnchoredOverlayTest inherits Window {
+
+    preferred-width: 300px;
+    preferred-height: 300px;
+
+    background: white;
+
+    init => {
+        AppWindow.window-width = root.width;
+        AppWindow.window-height = root.height;
+    }
+
+    changed width => {
+        AppWindow.window-width = root.width;
+    }
+
+    changed height => {
+        AppWindow.window-height = root.height;
+    }
+
+    main-scroll := Rectangle {
+        Flickable {
+            width: main-scroll.width;
+            height: main-scroll.height;
+            viewport-width: self.width;
+            viewport-height: gallery-main.preferred-height;
+
+            gallery-main := VerticalLayout {
+                spacing: 40px;
+
+                TestButton {
+                    text: "center modal";
+
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "center modal";
+                        }
+                    }
+                 }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                 }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

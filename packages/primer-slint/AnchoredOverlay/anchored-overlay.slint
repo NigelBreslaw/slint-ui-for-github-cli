@@ -95,14 +95,11 @@ export component AnchoredOverlay {
             TouchArea {
                 enabled: root.allow-dismiss && root.open;
                 clicked => {
-                    debug("hello");
                     root.open = false;
                     root.close-requested();
                 }
             }
         }
-
-
 
         panel-chrome := OverlayPanelChrome {
             width: 100%;

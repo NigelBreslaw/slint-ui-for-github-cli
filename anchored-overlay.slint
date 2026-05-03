@@ -1,0 +1,125 @@
+
+// Used by non modal overlays that need to be smart positioned
+export struct PositionProps {
+    // Used to tell the overlay where the item that called for an overlay is positioned
+    absolute-position: Point,
+    // Anchor control size; used to place the overlay and flip side when it would clip off-screen.
+    source-size: Size,
+}
+
+// modal overlays are centered in the screen e.g. dialogs
+// anchored target a specific position e.g. component menus, etc.
+export enum OverlayType {
+    modal,
+    anchored
+}
+
+enum PositionAxis {
+    pos-x,
+    pos-y,
+}
+
+import { AppWindow } from "./packages/primer-slint/tokens.slint";
+
+export component AnchoredOverlay {
+    in property <PositionProps> position-props;
+    in-out property <OverlayType> overlay-type: modal;
+
+    callback show();
+    show => {
+        popup.show();
+    }
+
+    callback close();
+    close => {
+        popup.close();
+    }
+
+    // This is only relevant for modal overlays. The default is to center in the entire
+    // window/screen. However there may be situations such as apps with a large sidebar
+    // Where overlays need to be centered to specific content.
+    in property <Size> screen-bounds: { width: AppWindow.window-width, height: AppWindow.window-height };
+
+    callback close-requested();
+    close-requested => {
+        // default
+        root.close();
+    }
+
+    popup := PopupWindow {
+        x: 0px - root.absolute-position.x;
+        y: 0px - root.absolute-position.y;
+        width: AppWindow.window-width;
+        height: AppWindow.window-height;
+
+        close-policy: no-auto-close;
+
+        // Hack to work around issue #6000 https://github.com/slint-ui/slint/issues/6000
+        property <length> width-binding: AppWindow.window-width;
+        changed width-binding  => {
+            popup.width = width-binding;
+        }
+
+        property <length> height-binding: AppWindow.window-height;
+        changed height-binding  => {
+            popup.height = height-binding;
+        }
+        // end of
+
+
+        function get-overlay-position(axis: PositionAxis) -> length {
+            if axis == PositionAxis.pos-x {
+                if root.overlay-type == OverlayType.modal {
+                    return (popup-screen.width - pane.preferred-width) / 2;
+                } else {
+                    return root.position-props.absolute-position.x;
+                }
+            } else {
+                if root.overlay-type == OverlayType.modal {
+                    return (popup-screen.height - pane.preferred-height) / 2;
+                } else {
+                    return root.position-props.absolute-position.y;
+                }
+            }
+        }
+
+        popup-screen := Rectangle {
+            x: 0;
+            y: 0;
+            width: AppWindow.window-width;
+            height: AppWindow.window-height;
+
+            ta := TouchArea {
+                clicked => {
+                    root.close-requested();
+                    debug("clicked");
+                }
+            }
+
+            pane := Rectangle {
+                x: get-overlay-position(PositionAxis.pos-x);
+                y: get-overlay-position(PositionAxis.pos-y);
+                width: pane.preferred-width;
+                height: pane.preferred-height;
+
+                touch-blocker := TouchArea { }
+
+                background: ta.has-hover ? red : blue;
+
+                VerticalLayout {
+                    visible: false;
+                    @children
+                }
+            }
+        }
+
+        Rectangle {
+            width: 100px;
+            height: 100px;
+            background: red;
+            Text {
+                text: popup.width / 1px + "  " + popup.height / 1px;
+            }
+        }
+    }
+}
