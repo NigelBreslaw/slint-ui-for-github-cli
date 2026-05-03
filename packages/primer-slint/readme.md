@@ -344,7 +344,7 @@ Upstream inventory: **[`Dialog.stories.tsx`](https://github.com/primer/primer-ui
 
 ## PrimerTextInput
 
-Slint port of Primer [**TextInput**](https://primer.style/product/components/text-input/) field chrome (label, validation, leading/trailing visuals, loading, character limit, optional trailing clear). Upstream **Features** stories are mapped in the **Forms** gallery (**PrimerTextInput** section, including a compact #1–18 checklist and an autocomplete disclaimer).
+Slint port of Primer [**TextInput**](https://primer.style/product/components/text-input/) field chrome (label, validation, leading/trailing visuals, loading, character limit, optional trailing clear). Upstream **Features** stories are mapped in the **Forms** gallery (**PrimerTextInput** section, including a compact #1–18 checklist and an autocomplete disclaimer). **Full-width fields:** set **`horizontal-stretch: 1`** on the instance (or an explicit **`width`**); there is no `block` property — layout is Slint-native.
 
 **Imports for views:** [`primer.slint`](slint/primer.slint) — **`PrimerTextInput`**, **`ValidationStatus`**, **`Size`**, **`TextInputLoaderPosition`**, **`Icons`** (when using **`leading-visual`**, **`trailing-visual`**, **`has-trailing-action`**, or loading slot visuals).
 

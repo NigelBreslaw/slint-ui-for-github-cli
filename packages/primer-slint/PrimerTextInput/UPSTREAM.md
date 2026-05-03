@@ -27,7 +27,7 @@ Tracing target: **GitHub Primer React `TextInput`** + **`TextInputWrapper`** chr
 
 | Prop | Notes for Slint |
 |------|-------------------|
-| `block` | Full width / stretch |
+| `block` | React / `data-block`: full width. **Slint:** no `block` property — callers use **`horizontal-stretch: 1`** (and/or explicit **`width`**) on **`PrimerTextInput`** so the inner column fills allocated width. |
 | `size` | `'small' \| 'medium' \| 'large'` — maps to **`Size`** |
 | `disabled` | |
 | `contrast` | Higher-contrast field background |

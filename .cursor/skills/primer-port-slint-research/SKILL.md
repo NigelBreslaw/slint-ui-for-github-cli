@@ -30,6 +30,11 @@ Collect **in-repo and Slint-ecosystem patterns** (file paths, idioms) to apply w
 
 Pick **one** existing Primer component closest to the new port (e.g. **Button**, **Select**) and skim its folder for layout and callback patterns.
 
+## Layout / width (no Primer `block` mirror)
+
+- **Fill a row** in `HorizontalLayout` / stretched columns: set **`horizontal-stretch: 1`** on the component **instance** (and/or **`width: 100%`** / explicit **`width`** on the instance). Do **not** add an upstream-style **`block`** boolean to the Slint API.
+- **Hug content:** leave the default **`horizontal-stretch: 0`** on the instance; inner layouts use **preferred width** unless the component implements stretch-aware inner width (see **[`PrimerTextInput/primer-text-input.slint`](../../../packages/primer-slint/PrimerTextInput/primer-text-input.slint)** — inner column uses **`root.horizontal-stretch > 0 ? root.width : self.preferred-width`**).
+
 ## gb-slint clone (optional but valuable)
 
 If `~/gb-slint` (or your local Slint checkout) exists, use it for **idioms**, not for Primer colors:

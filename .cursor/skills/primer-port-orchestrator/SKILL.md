@@ -27,6 +27,10 @@ description: >-
 | 5 | **Interaction styling** | [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md) | `states [ ]` design; Checkbox as reference |
 | 6 | **Implementation + PRs** | [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) + [AGENTS verification](../../../packages/primer-slint/AGENTS.md#verification) | Spike → Tokens → Visual → Integration → Docs; **one PR at a time** when executing |
 
+## Layout API (width / “block” upstream)
+
+Primer React often has **`block`**, **`fullWidth`**, **`fluid`**, or **`width`** props for “fill the row.” **Do not** add a parallel **`in property <bool> block`** (or similar) on new Slint components in this repo. Map fill-width to **Slint layout**: default **`horizontal-stretch: 0`** on the component root when the control should hug content; callers set **`horizontal-stretch: 1`** and/or explicit **`width`** when the control should span a container. Inner chrome can branch on **`root.horizontal-stretch`** vs preferred width (see **`PrimerTextInput`** in [`primer-port-slint-research`](../primer-port-slint-research/SKILL.md)).
+
 ## PR breakdown (from primer-port-sequential)
 
 Multi-PR work **must** include an ordered table:

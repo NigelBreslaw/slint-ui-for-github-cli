@@ -39,7 +39,7 @@ Ordered roughly by **layout shell → body → list chrome**.
 | Scenario | Upstream props / code | Notes |
 |----------|----------------------|--------|
 | Idle filtered list | `items`, `filterValue` / internal state, `onFilterChange`, `placeholderText` | Default path: `getBodyContent()` renders `ActionList` |
-| Header filter only | `textInputProps`, `placeholderText` | `TextInput` with `block`, `width="auto"`, `color="fg.default"`, `loaderPosition="leading"` |
+| Header filter only | `textInputProps`, `placeholderText` | Upstream React **`TextInput`** uses **`block`** / width props; this repo’s **`PrimerTextInput`** uses **`horizontal-stretch: 1`** in the filter row (no `block` prop). |
 | Loading in **input** (no body takeover) | `loading: true`, `loadingType: FilteredActionListLoadingTypes.input` | `loading={loading && !loadingType.appearsInBody}` → spinner in field (`appearsInBody === false`) |
 | Loading **body spinner** | `loading: true`, `loadingType: bodySpinner` (default) | `FilteredActionListBodyLoader` when `loadingType.appearsInBody` and `scrollContainerRef.current` set |
 | Loading **body skeleton** | `loading: true`, `loadingType: bodySkeleton` | Rows of `SkeletonBox` (16×16 + variable width bar), count from container height ÷ 24px, min 3 rows |

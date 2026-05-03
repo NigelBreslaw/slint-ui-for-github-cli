@@ -23,7 +23,6 @@ export component GalleryPrimerTextInputPage {
     property <string> preview-limit-exceeded-message: "Reduce length to continue.";
     property <ValidationStatus> preview-validation-status: ValidationStatus.none;
     property <bool> preview-disabled: false;
-    property <bool> preview-block: true;
     property <Size> preview-size: Size.medium;
     property <bool> preview-required: false;
     property <bool> preview-label-visually-hidden: false;
@@ -55,7 +54,7 @@ export component GalleryPrimerTextInputPage {
 
             PrimerTextInput {
                 width: 360px;
-                block: preview-block;
+                horizontal-stretch: 1;
                 label-text: preview-label-text;
                 text <=> preview-text;
                 placeholder: preview-placeholder;
@@ -96,7 +95,7 @@ export component GalleryPrimerTextInputPage {
                     }
 
                     PrimerTextInput {
-                        block: true;
+                        horizontal-stretch: 1;
                         label-text: "label-text";
                         placeholder: "Label…";
                         text <=> preview-label-text;
@@ -106,7 +105,7 @@ export component GalleryPrimerTextInputPage {
                     }
 
                     PrimerTextInput {
-                        block: true;
+                        horizontal-stretch: 1;
                         label-text: "text";
                         placeholder: "Value…";
                         text <=> preview-text;
@@ -116,7 +115,7 @@ export component GalleryPrimerTextInputPage {
                     }
 
                     PrimerTextInput {
-                        block: true;
+                        horizontal-stretch: 1;
                         label-text: "placeholder";
                         placeholder: "Placeholder hint…";
                         text <=> preview-placeholder;
@@ -126,7 +125,7 @@ export component GalleryPrimerTextInputPage {
                     }
 
                     PrimerTextInput {
-                        block: true;
+                        horizontal-stretch: 1;
                         label-text: "caption";
                         placeholder: "Optional caption…";
                         text <=> preview-caption;
@@ -146,14 +145,16 @@ export component GalleryPrimerTextInputPage {
                         color: PrimerColors.fgColor-default;
                     }
 
-                    Checkbox {
-                        label: "disabled";
-                        checked <=> preview-disabled;
+                    Text {
+                        text: "Full-width fields: set horizontal-stretch: 1 on PrimerTextInput (Slint layout), not a block prop.";
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
                     }
 
                     Checkbox {
-                        label: "block (full width in layouts)";
-                        checked <=> preview-block;
+                        label: "disabled";
+                        checked <=> preview-disabled;
                     }
 
                     Checkbox {
@@ -266,7 +267,7 @@ export component GalleryPrimerTextInputPage {
                     }
 
                     PrimerTextInput {
-                        block: true;
+                        horizontal-stretch: 1;
                         label-text: "validation-message";
                         placeholder: "Message when error/success…";
                         text <=> preview-validation-message;
@@ -296,9 +297,8 @@ export component GalleryPrimerTextInputPage {
                         }
                     }
 
-                    PrimerTextInput {
-                        visible: preview-character-limit > 0;
-                        block: true;
+                    if preview-character-limit > 0: PrimerTextInput {
+                        horizontal-stretch: 1;
                         label-text: "character-limit-exceeded-message";
                         placeholder: "Shown when over limit…";
                         text <=> preview-limit-exceeded-message;

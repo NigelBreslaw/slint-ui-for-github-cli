@@ -25,7 +25,7 @@ Copy and fill (remove rows/columns that do not apply):
 | default | dark | no | … | R, H, P | … | |
 | … | … | … | … | … | … | |
 
-**Coverage rule:** every **cell** that should differ visually must map to a **token** or **`states [ ]`** branch—no orphan combinations.
+**Coverage rule:** every **cell** that should differ visually must map to a **token** or **`states [ ]`** branch—no orphan combinations. **Width:** “full width in a form vs narrow in a toolbar” is usually **parent composition and instance `horizontal-stretch` / `width`**, not a separate component variant row and **not** a ported **`block`** prop—demo those cases via **gallery layout**, not a fake variant on the control.
 
 ## Related
 
