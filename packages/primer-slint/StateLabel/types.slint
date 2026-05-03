@@ -1,0 +1,32 @@
+/// Mirrors primer-ui-react **`StateLabel.tsx`** `status` (`issueOpened`, **`pullOpened`**, …).
+export enum StateLabelStatus {
+    IssueOpened,
+    PullOpened,
+    IssueClosed,
+    IssueClosedNotPlanned,
+    PullClosed,
+    PullMerged,
+    Draft,
+    IssueDraft,
+    PullQueued,
+    Unavailable,
+    AlertOpened,
+    AlertFixed,
+    AlertDismissed,
+    AlertClosed,
+    Open,
+    Closed,
+    Archived,
+}
+
+/// Matches **`size`** (`'small' \| 'medium'`).
+export enum StateLabelSize {
+    small,
+    medium,
+}
+
+/// Deprecated upstream **`variant`** (`'normal' \| 'small'`); prefer **`StateLabelSize`**.
+export enum StateLabelVariant {
+    normal,
+    small,
+}

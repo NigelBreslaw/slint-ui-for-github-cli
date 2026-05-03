@@ -308,6 +308,9 @@ export global PrimerColors {
     property <color> bgColor-sponsors-emphasis-light: fgColor-sponsors-light;
     property <color> bgColor-sponsors-emphasis-dark: #bf4b8a;
 
+    /// primer-tokens **`borderColor.neutral.emphasis`** — light **`base.color.neutral.9`**; dark **`borderColor.emphasis`** (**`neutral.8`**, same storage as **`bgColor-neutral-emphasis`** dark).
+    property <color> borderColor-neutral-emphasis-light: #59636e;
+
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
     out property <color> bgColor-default: color-scheme == ColorScheme.dark ? bgColor-default-dark : bgColor-default-light;
     out property <color> fgColor-default: color-scheme == ColorScheme.dark ? fgColor-default-dark : fgColor-default-light;
@@ -365,6 +368,17 @@ export global PrimerColors {
     out property <color> bgColor-done-emphasis: color-scheme == ColorScheme.dark ? bgColor-done-emphasis-dark : bgColor-done-emphasis-light;
     out property <color> fgColor-sponsors: color-scheme == ColorScheme.dark ? fgColor-sponsors-dark : fgColor-sponsors-light;
     out property <color> bgColor-sponsors-emphasis: color-scheme == ColorScheme.dark ? bgColor-sponsors-emphasis-dark : bgColor-sponsors-emphasis-light;
+
+    // primer-tokens semantic pairs for **`StateLabel.module.css`** (`--bgColor-*-emphasis`, `--borderColor-*-emphasis`). Aliases reuse existing **`out`** bindings — no duplicate hex.
+    out property <color> borderColor-neutral-emphasis: color-scheme == ColorScheme.dark ? bgColor-neutral-emphasis-dark : borderColor-neutral-emphasis-light;
+    out property <color> borderColor-done-emphasis: bgColor-done-emphasis;
+    out property <color> borderColor-attention-emphasis: bgColor-attention-emphasis;
+    out property <color> bgColor-open-emphasis: borderColor-success-emphasis;
+    out property <color> borderColor-open-emphasis: borderColor-success-emphasis;
+    out property <color> bgColor-closed-emphasis: borderColor-danger-emphasis;
+    out property <color> borderColor-closed-emphasis: borderColor-danger-emphasis;
+    out property <color> bgColor-draft-emphasis: bgColor-neutral-emphasis;
+    out property <color> borderColor-draft-emphasis: borderColor-neutral-emphasis;
 }
 
 // color-btn-*, button-*, filled-button shadows, iconButton palette, control disabled fg. Used by Button / IconButton.
@@ -595,6 +609,21 @@ export global LabelTokens {
 
     out property <color> label-fg-sponsors: PrimerColors.fgColor-sponsors;
     out property <color> label-border-sponsors: PrimerColors.bgColor-sponsors-emphasis;
+}
+
+/// primer-ui-react **`StateLabel.module.css`** — sizing and **`fgColor-onEmphasis`** via **`LayoutTokens`** and **`PrimerColors`** (`out` only).
+export global StateLabelTokens {
+    out property <color> label-fgColor: PrimerColors.fgOnEmphasis;
+    out property <length> border-radius-pill: LayoutTokens.label-border-radius-pill;
+    out property <length> inset-border-width: LayoutTokens.table-border-width;
+    out property <length> icon-margin-end: LayoutTokens.base-size-4;
+    out property <length> padding-vertical-small: LayoutTokens.base-size-4;
+    out property <length> padding-horizontal-small: LayoutTokens.base-size-8;
+    out property <length> padding-vertical-medium: LayoutTokens.base-size-8;
+    out property <length> padding-horizontal-medium: LayoutTokens.base-size-12;
+    out property <length> text-size-small: LayoutTokens.text-body-size-small;
+    out property <length> text-size-medium: LayoutTokens.text-body-size-medium;
+    out property <int> text-weight-semibold: LayoutTokens.base-text-weight-semibold;
 }
 
 
