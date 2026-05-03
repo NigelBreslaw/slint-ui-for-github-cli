@@ -11,6 +11,7 @@ import {
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
 export component GalleryPrimerTextInputPage {
 
@@ -83,23 +84,8 @@ export component GalleryPrimerTextInputPage {
 
         Rectangle { }
 
-        Rectangle {
-            width: 300px;
-            background: PrimerColors.bgColor-inset;
-            vertical-stretch: 1;
-
-            Rectangle {
-                x: 0px;
-                width: 1px;
-                background: PrimerColors.borderColor-default;
-            }
-
+        GalleryDemoOptionsSidebar {
             VerticalLayout {
-                padding: 16px;
-                spacing: 20px;
-                alignment: start;
-
-                VerticalLayout {
                     spacing: 6px;
 
                     Text {
@@ -403,7 +389,6 @@ export component GalleryPrimerTextInputPage {
                         }
                     }
                 }
-            }
         }
     }
 }

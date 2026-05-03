@@ -1,0 +1,42 @@
+import { PrimerColors } from "../../../primer-slint/tokens.slint";
+
+/// Inset options column for gallery demo pages: fixed width, left border rule, independently scrollable body.
+export component GalleryDemoOptionsSidebar {
+    vertical-stretch: 1;
+
+    demo-sidebar-root := Rectangle {
+        width: 300px;
+        background: PrimerColors.bgColor-inset;
+        vertical-stretch: 1;
+
+        HorizontalLayout {
+            vertical-stretch: 1;
+
+            Rectangle {
+                width: 1px;
+                background: PrimerColors.borderColor-default;
+                vertical-stretch: 1;
+            }
+
+            options-flick := Flickable {
+                horizontal-stretch: 1;
+                vertical-stretch: 1;
+                width: demo-sidebar-root.width - 1px;
+                height: demo-sidebar-root.height;
+
+                viewport-width: self.width;
+                viewport-height: options-main.preferred-height;
+
+                options-main := VerticalLayout {
+                    width: options-flick.width;
+                    min-height: options-flick.height;
+                    padding: 16px;
+                    spacing: 20px;
+                    alignment: start;
+
+                    @children
+                }
+            }
+        }
+    }
+}

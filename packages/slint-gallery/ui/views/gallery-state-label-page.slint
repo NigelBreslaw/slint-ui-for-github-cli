@@ -11,6 +11,7 @@ import {
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
 export component GalleryStateLabelPage {
 
@@ -73,91 +74,75 @@ export component GalleryStateLabelPage {
 
         Rectangle { }
 
-        Rectangle {
-            width: 300px;
-            background: PrimerColors.bgColor-inset;
-            vertical-stretch: 1;
-
-            Rectangle {
-                x: 0px;
-                width: 1px;
-                background: PrimerColors.borderColor-default;
-            }
-
+        GalleryDemoOptionsSidebar {
             VerticalLayout {
-                padding: 16px;
-                spacing: 20px;
-                alignment: start;
+                spacing: 6px;
 
-                VerticalLayout {
-                    spacing: 6px;
-
-                    HorizontalLayout {
-                        spacing: 4px;
-                        alignment: start;
-
-                        Text {
-                            text: "status";
-                            font-size: LayoutTokens.text-body-size-medium;
-                            font-weight: LayoutTokens.base-text-weight-semibold;
-                            color: PrimerColors.fgColor-default;
-                        }
-
-                        Text {
-                            text: "*";
-                            color: PrimerColors.fgColor-danger;
-                            font-size: LayoutTokens.text-body-size-medium;
-                            vertical-alignment: top;
-                        }
-                    }
-
-                    Select {
-                        label-text: "";
-                        placeholder: "Choose status…";
-                        options: status-options;
-                        selected-index <=> demo-status-index;
-                        validation-status: ValidationStatus.none;
-                        selected-changed(_ix) => {
-                        }
-                    }
-                }
-
-                VerticalLayout {
+                HorizontalLayout {
                     spacing: 4px;
+                    alignment: start;
 
                     Text {
-                        text: "size";
+                        text: "status";
                         font-size: LayoutTokens.text-body-size-medium;
                         font-weight: LayoutTokens.base-text-weight-semibold;
                         color: PrimerColors.fgColor-default;
                     }
 
                     Text {
-                        text: "Infer matches React when size is omitted; small / medium set an explicit size.";
-                        font-size: LayoutTokens.text-body-size-small;
-                        color: PrimerColors.fgColor-muted;
-                        wrap: word-wrap;
+                        text: "*";
+                        color: PrimerColors.fgColor-danger;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        vertical-alignment: top;
+                    }
+                }
+
+                Select {
+                    label-text: "";
+                    placeholder: "Choose status…";
+                    options: status-options;
+                    selected-index <=> demo-status-index;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_ix) => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "size";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Infer matches React when size is omitted; small / medium set an explicit size.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "sm";
+                        label: "small";
+                        checked: preview-size == StateLabelSize.small;
+                        toggled => {
+                            preview-size = StateLabelSize.small;
+                        }
                     }
 
-                    RadioGroup {
-                        label: "";
-
-                        Radio {
-                            value: "sm";
-                            label: "small";
-                            checked: preview-size == StateLabelSize.small;
-                            toggled => {
-                                preview-size = StateLabelSize.small;
-                            }
-                        }
-
-                        Radio {
-                            value: "md";
-                            label: "medium";
-                            checked: preview-size == StateLabelSize.medium;
-                            toggled => {
-                                preview-size = StateLabelSize.medium;
-                            }
+                    Radio {
+                        value: "md";
+                        label: "medium";
+                        checked: preview-size == StateLabelSize.medium;
+                        toggled => {
+                            preview-size = StateLabelSize.medium;
                         }
                     }
                 }
