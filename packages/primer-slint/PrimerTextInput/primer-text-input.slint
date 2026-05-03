@@ -187,8 +187,6 @@ export component PrimerTextInput {
                             padding-left: field-padding-inline;
                             padding-right: field-padding-inline;
                             spacing: LayoutTokens.button-content-gap;
-                            width: 100%;
-                            height: 100%;
                             alignment: stretch;
 
                             if loading-spin-leading: VerticalLayout {
@@ -218,7 +216,6 @@ export component PrimerTextInput {
 
                             Rectangle {
                                 horizontal-stretch: 1;
-                                height: 100%;
 
                                 if root.text == "" && root.placeholder != "": Text {
                                     x: 0px;
@@ -348,7 +345,6 @@ export component PrimerTextInput {
 
         if character-limit-active: HorizontalLayout {
             spacing: 4px;
-            width: 100%;
 
             Text {
                 horizontal-stretch: 1;
