@@ -52,7 +52,7 @@ The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** t
 
 ## TreeView
 
-**Status:** Design-only in this repo slice — **`PrimerTreeView`** UI is not exported from [`primer.slint`](slint/primer.slint) yet. Use this section for the agreed **Slint architecture**, **token ownership**, and **v1 limitations** before wiring the gallery page.
+**Status:** **`PrimerTreeView`** is exported from [`primer.slint`](slint/primer.slint) with **`TreeViewRow`** / **`TreeViewTrailingVisual`** ([`TreeView/types.slint`](slint/TreeView/types.slint)). Gallery: **`pnpm dev:gallery`** → **Tree view**.
 
 | Topic | Where it lives |
 | -------- | ----- |

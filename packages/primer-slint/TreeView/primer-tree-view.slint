@@ -1,0 +1,207 @@
+// Primer-style **TreeView** — flat **`[TreeViewRow]`** model, indent + toggle, leading/trailing visuals, **`current`** bar, **`flat`** + **`truncate`**. Upstream: `TreeView.module.css`, `TreeView.tsx`.
+
+import { Icons } from "../assets/icons.slint";
+import { LayoutTokens, PrimerColors, TreeViewTokens } from "../tokens.slint";
+import { TreeViewRow, TreeViewTrailingVisual } from "./types.slint";
+
+component TreeViewRowView {
+    in property <TreeViewRow> tree-row;
+    in property <bool> flat;
+    in property <bool> truncate;
+    in property <length> toggle-w;
+    in property <length> toggle-half;
+    in property <length> row-min-h;
+    callback row-toggle-requested(string);
+
+    property <length> leading-action-w: tree-row.has-leading-action ? 3 * LayoutTokens.base-size-8 : 0px;
+    property <int> level-safe: max(1, tree-row.level);
+    property <int> gutter-segments: max(0, root.level-safe - 1);
+
+    property <color> trailing-color: tree-row.trailing == TreeViewTrailingVisual.diff-added ? PrimerColors.fgColor-success
+        : tree-row.trailing == TreeViewTrailingVisual.diff-modified ? PrimerColors.fgColor-attention
+        : tree-row.trailing == TreeViewTrailingVisual.diff-removed ? PrimerColors.fgColor-danger
+        : PrimerColors.fgColor-muted;
+
+    property <image> trailing-img: tree-row.trailing == TreeViewTrailingVisual.diff-added ? Icons.diff_added
+        : tree-row.trailing == TreeViewTrailingVisual.diff-modified ? Icons.diff_modified
+        : tree-row.trailing == TreeViewTrailingVisual.diff-removed ? Icons.diff_removed
+        : Icons.diff_renamed;
+
+    property <image> dir-leading-img: tree-row.expanded ? Icons.file_directory_open_fill : Icons.file_directory_fill;
+
+    vertical-stretch: 0;
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        alignment: start;
+        horizontal-stretch: 1;
+
+        row-fs := FocusScope {
+            focus-on-click: false;
+            vertical-stretch: 0;
+            horizontal-stretch: 1;
+
+            key-pressed(event) => {
+                if !tree-row.interactive || !tree-row.has-children {
+                    return reject;
+                }
+                if event.text == Key.Return || event.text == Key.Space {
+                    root.row-toggle-requested(tree-row.id);
+                    return accept;
+                }
+                return reject;
+            }
+
+            row-chrome := Rectangle {
+                horizontal-stretch: 1;
+                border-radius: TreeViewTokens.item-border-radius;
+                min-height: root.row-min-h;
+                background: !tree-row.interactive ? transparent
+                    : tree-row.current ? TreeViewTokens.item-bgColor-current
+                    : main-ta.has-hover ? TreeViewTokens.item-bgColor-hover
+                    : transparent;
+                border-width: row-fs.has-focus && tree-row.interactive ? TreeViewTokens.item-focus-ring-width : 0px;
+                border-color: TreeViewTokens.item-focus-ring-color;
+
+                if tree-row.current: Rectangle {
+                    x: TreeViewTokens.item-current-indicator-offset-inline;
+                    y: (root.row-min-h - self.height) / 2;
+                    width: TreeViewTokens.item-current-indicator-width;
+                    height: TreeViewTokens.item-current-indicator-height;
+                    border-radius: TreeViewTokens.item-border-radius;
+                    background: TreeViewTokens.item-current-indicator-fgColor;
+                }
+
+                main-ta := TouchArea {
+                    enabled: tree-row.interactive && tree-row.has-children;
+                    mouse-cursor: tree-row.interactive && tree-row.has-children ? pointer : default;
+                    clicked => {
+                        root.row-toggle-requested(tree-row.id);
+                    }
+
+                    HorizontalLayout {
+                        spacing: TreeViewTokens.item-content-gap;
+                        alignment: start;
+                        padding-left: TreeViewTokens.item-content-padding-inline;
+                        padding-right: TreeViewTokens.item-content-padding-inline;
+                        min-height: root.row-min-h;
+                        align-items: center;
+
+                        if !flat && gutter-segments > 0: HorizontalLayout {
+                            spacing: 0;
+                            alignment: start;
+                            for slot[index] in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]: Rectangle {
+                                width: index < gutter-segments ? toggle-half : 0px;
+                                height: root.row-min-h;
+                                background: transparent;
+
+                                if index < gutter-segments: Rectangle {
+                                    x: parent.width - TreeViewTokens.item-border-width-thin;
+                                    y: 0px;
+                                    width: TreeViewTokens.item-border-width-thin;
+                                    height: root.row-min-h;
+                                    background: TreeViewTokens.level-line-borderColor;
+                                }
+                            }
+                        }
+
+                        if tree-row.has-leading-action: HorizontalLayout {
+                            width: leading-action-w;
+                            min-height: root.row-min-h;
+                            alignment: center;
+
+                            if tree-row.show-leading-action-icon: Image {
+                                width: LayoutTokens.iconButton-icon-size-small;
+                                height: LayoutTokens.iconButton-icon-size-small;
+                                vertical-alignment: center;
+                                source: tree-row.leading-action-icon;
+                                colorize: TreeViewTokens.item-fgColor-muted;
+                            }
+                        }
+
+                        if !flat: Rectangle {
+                            width: toggle-w;
+                            min-height: root.row-min-h;
+
+                            VerticalLayout {
+                                alignment: center;
+                                align-items: center;
+                                chevron-img := Image {
+                                    visible: tree-row.has-children;
+                                    width: 12px;
+                                    height: 12px;
+                                    source: tree-row.expanded ? Icons.chevron_down : Icons.chevron_right;
+                                    colorize: TreeViewTokens.item-fgColor-muted;
+                                }
+                            }
+                        }
+
+                        HorizontalLayout {
+                            horizontal-stretch: 1;
+                            spacing: TreeViewTokens.item-content-gap;
+                            alignment: start;
+                            align-items: center;
+
+                            if tree-row.has-leading-visual: Image {
+                                width: LayoutTokens.iconButton-icon-size-medium;
+                                height: LayoutTokens.iconButton-icon-size-medium;
+                                vertical-alignment: top;
+                                source: tree-row.leading-is-directory ? dir-leading-img : tree-row.leading-file-icon;
+                                colorize: tree-row.leading-is-directory ? TreeViewTokens.item-leadingVisual-icon-fgColor-rest : TreeViewTokens.item-fgColor-muted;
+                            }
+
+                            Text {
+                                horizontal-stretch: 1;
+                                vertical-alignment: top;
+                                text: tree-row.label;
+                                color: TreeViewTokens.item-fgColor-default;
+                                font-size: LayoutTokens.text-body-size-medium;
+                                overflow: root.truncate ? elide : clip;
+                                wrap: root.truncate ? no-wrap : word-wrap;
+                            }
+                        }
+
+                        if tree-row.trailing != TreeViewTrailingVisual.none: Image {
+                            width: LayoutTokens.iconButton-icon-size-medium;
+                            height: LayoutTokens.iconButton-icon-size-medium;
+                            vertical-alignment: top;
+                            source: trailing-img;
+                            colorize: trailing-color;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+export component PrimerTreeView inherits VerticalLayout {
+    in property <bool> flat: false;
+    in property <bool> truncate: true;
+    in property <bool> coarse-pointer: false;
+    in property <string> accessible-name: "";
+    in property <[TreeViewRow]> rows: [];
+
+    callback row-toggle-requested(string);
+
+    property <length> toggle-w: root.coarse-pointer ? TreeViewTokens.toggle-width-coarse : TreeViewTokens.toggle-width-default;
+    property <length> toggle-half: root.toggle-w / 2;
+    property <length> row-min-h: root.coarse-pointer ? TreeViewTokens.item-min-height-coarse : TreeViewTokens.item-min-height;
+
+    alignment: start;
+    horizontal-stretch: 1;
+    accessible-role: AccessibleRole.list;
+    accessible-label: root.accessible-name;
+
+    for row[i] in root.rows: TreeViewRowView {
+        tree-row: row;
+        flat: root.flat;
+        truncate: root.truncate;
+        toggle-w: root.toggle-w;
+        toggle-half: root.toggle-half;
+        row-min-h: root.row-min-h;
+        row-toggle-requested(id) => {
+            root.row-toggle-requested(id);
+        }
+    }
+}

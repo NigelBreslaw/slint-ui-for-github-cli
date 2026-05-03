@@ -1,0 +1,1559 @@
+// One scroll — sections mirror Storybook **Components/TreeView** (see `TreeView/UPSTREAM_INVENTORY.md`). Heavy stories are scaled; async/error/dialog paths note follow-up PRs.
+
+import {
+    Banner,
+    BannerVariant,
+    Button,
+    ButtonVariant,
+    IconButton,
+    Icons,
+    PrimerTreeView,
+    TreeViewRow,
+    TreeViewTrailingVisual,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+
+component TreeViewSectionHeading {
+    in property <string> title;
+    in property <string> note: "";
+
+    VerticalLayout {
+        spacing: 4px;
+        alignment: start;
+
+        Text {
+            text: root.title;
+            font-size: 14px;
+            font-weight: 600;
+            color: PrimerColors.fgColor-default;
+        }
+
+        if root.note != "": Text {
+            text: root.note;
+            wrap: word-wrap;
+            width: 100%;
+            font-size: 12px;
+            color: PrimerColors.fgColor-muted;
+        }
+    }
+}
+
+export component GalleryTreeViewPage inherits VerticalLayout {
+    spacing: 28px;
+    alignment: start;
+    padding: 24px;
+
+    /// **Controlled** — three discrete expansion snapshots (host would rebuild a flat model).
+    in-out property <int> controlled-mode: 2;
+
+    in-out property <bool> def-src: true;
+    in-out property <bool> def-components: true;
+    in-out property <bool> def-folder: false;
+
+    property <[TreeViewRow]> default-rows-src-collapsed: [
+        {
+            id: "src",
+            label: "src",
+            level: 1,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> default-rows-components-collapsed: [
+        {
+            id: "src",
+            label: "src",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "components",
+            label: "components",
+            level: 2,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "utils",
+            label: "utils",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "folder",
+            label: "folder",
+            level: 2,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> default-rows-folder-collapsed: [
+        {
+            id: "src",
+            label: "src",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "components",
+            label: "components",
+            level: 2,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "button",
+            label: "Button.tsx",
+            level: 3,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-modified,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "dialog",
+            label: "Dialog.tsx",
+            level: 3,
+            has-children: false,
+            expanded: false,
+            current: true,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-added,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "utils",
+            label: "utils",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "folder",
+            label: "folder",
+            level: 2,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> default-rows-folder-expanded: [
+        {
+            id: "src",
+            label: "src",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "components",
+            label: "components",
+            level: 2,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "button",
+            label: "Button.tsx",
+            level: 3,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-modified,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "dialog",
+            label: "Dialog.tsx",
+            level: 3,
+            has-children: false,
+            expanded: false,
+            current: true,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-added,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "utils",
+            label: "utils",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "folder",
+            label: "folder",
+            level: 2,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "nested",
+            label: "nested.tsx",
+            level: 3,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> default-rows: !def-src ? default-rows-src-collapsed : (!def-components ? default-rows-components-collapsed : (!def-folder ? default-rows-folder-collapsed : default-rows-folder-expanded));
+
+    property <[TreeViewRow]> controlled-rows-mode0: [
+        {
+            id: "root",
+            label: "repository",
+            level: 1,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> controlled-rows-mode1: [
+        {
+            id: "root",
+            label: "repository",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "pkg",
+            label: "packages",
+            level: 2,
+            has-children: true,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "readme",
+            label: "README.md",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: true,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> controlled-rows-mode2: [
+        {
+            id: "root",
+            label: "repository",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "pkg",
+            label: "packages",
+            level: 2,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "primer",
+            label: "primer-slint",
+            level: 3,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "readme",
+            label: "README.md",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: true,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> controlled-rows: controlled-mode == 0
+        ? controlled-rows-mode0
+        : controlled-mode == 1 ? controlled-rows-mode1 : controlled-rows-mode2;
+
+    property <[TreeViewRow]> files-rows: [
+        {
+            id: "f1",
+            label: "packages/react/src/components/Dialog/Dialog.tsx",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "f2",
+            label: "Dialog.module.css",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> files-changed-rows: [
+        {
+            id: "fc1",
+            label: "added.tsx",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-added,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "fc2",
+            label: "modified.tsx",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-modified,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "fc3",
+            label: "renamed.tsx",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-renamed,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "fc4",
+            label: "removed.tsx",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-removed,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> flat-rows: [
+        {
+            id: "b1",
+            label: "Button.tsx",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-modified,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "b2",
+            label: "Button.test.tsx",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-added,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> leading-action-rows: [
+        {
+            id: "la1",
+            label: "Implement drag and drop",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: true,
+            show-leading-action-icon: true,
+            leading-action-icon: Icons.grabber,
+            leading-file-icon: Icons.issue_opened,
+            interactive: true,
+        },
+        {
+            id: "la2",
+            label: "Sub-task A",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: true,
+            show-leading-action-icon: true,
+            leading-action-icon: Icons.grabber,
+            leading-file-icon: Icons.issue_closed,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> nested-scroll-rows: [
+        {
+            id: "ns0",
+            label: "root",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns1",
+            label: "item-0",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns2",
+            label: "item-1",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns3",
+            label: "item-2",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns4",
+            label: "item-3",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns5",
+            label: "item-4",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns6",
+            label: "item-5",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns7",
+            label: "item-6",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "ns8",
+            label: "item-7",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> stress-rows: [
+        {
+            id: "s0",
+            label: "stress-root",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s1",
+            label: "row-1",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s2",
+            label: "row-2",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s3",
+            label: "row-3",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s4",
+            label: "row-4",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s5",
+            label: "row-5",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s6",
+            label: "row-6",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s7",
+            label: "row-7",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s8",
+            label: "row-8",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s9",
+            label: "row-9",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s10",
+            label: "row-10",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "s11",
+            label: "row-11",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> intrinsic-rows: [
+        {
+            id: "i0",
+            label: "root-a",
+            level: 1,
+            has-children: true,
+            expanded: true,
+            current: false,
+            leading-is-directory: true,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "i1",
+            label: "leaf-1",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "i2",
+            label: "leaf-2",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "i3",
+            label: "leaf-3",
+            level: 2,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.none,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    property <[TreeViewRow]> multiline-rows: [
+        {
+            id: "m1",
+            label: "Short row",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-added,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+        {
+            id: "m2",
+            label: "Very long label that should wrap across multiple lines when truncate is false in the tree view root",
+            level: 1,
+            has-children: false,
+            expanded: false,
+            current: false,
+            leading-is-directory: false,
+            has-leading-visual: true,
+            trailing: TreeViewTrailingVisual.diff-modified,
+            has-leading-action: false,
+            show-leading-action-icon: false,
+            leading-action-icon: Icons.dot_fill,
+            leading-file-icon: Icons.file,
+            interactive: true,
+        },
+    ];
+
+    VerticalLayout {
+        spacing: 8px;
+        alignment: start;
+
+        Text {
+            text: "Tree view";
+            font-size: 20px;
+            font-weight: 600;
+            color: PrimerColors.fgColor-default;
+        }
+
+        Text {
+            text: "Flat row model + Primer tokens. Async, error dialogs, and secondary-actions overlays are follow-up PRs.";
+            wrap: word-wrap;
+            width: 100%;
+            font-size: 13px;
+            color: PrimerColors.fgColor-muted;
+        }
+    }
+
+    // --- Default (Components/TreeView)
+    TreeViewSectionHeading { title: "Default"; }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        PrimerTreeView {
+            accessible-name: "Source files";
+            rows: default-rows;
+            row-toggle-requested(id) => {
+                if id == "src" {
+                    def-src = !def-src;
+                } else if id == "components" {
+                    def-components = !def-components;
+                } else if id == "folder" {
+                    def-folder = !def-folder;
+                }
+            }
+        }
+    }
+
+    // --- TrailingActions (Examples)
+    TreeViewSectionHeading {
+        title: "TrailingActions";
+        note: "Storybook: secondary actions, dialogs, and count buttons — ActionList / Dialog wiring in a later PR.";
+    }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        VerticalLayout {
+            padding: 8px;
+            spacing: 8px;
+
+            HorizontalLayout {
+                spacing: 8px;
+                IconButton {
+                    icon-source: Icons.gear_24;
+                }
+                IconButton {
+                    icon-source: Icons.issue_opened;
+                }
+                Text {
+                    text: "Placeholder actions row (mirrors story chrome).";
+                    vertical-alignment: center;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+
+            PrimerTreeView {
+                rows: flat-rows;
+                flat: true;
+                row-toggle-requested(_) => { }
+            }
+        }
+    }
+
+    // --- Files
+    TreeViewSectionHeading { title: "Files"; note: "truncate = false (long paths wrap)."; }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        PrimerTreeView {
+            truncate: false;
+            rows: files-rows;
+            row-toggle-requested(_) => { }
+        }
+    }
+
+    // --- FilesChanged
+    TreeViewSectionHeading { title: "FilesChanged"; note: "Diff trailing visuals."; }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        PrimerTreeView {
+            truncate: false;
+            rows: files-changed-rows;
+            row-toggle-requested(_) => { }
+        }
+    }
+
+    // --- Controlled
+    TreeViewSectionHeading { title: "Controlled"; note: "Discrete expand-all / partial / collapse snapshots."; }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        VerticalLayout {
+            padding: 8px;
+            spacing: 8px;
+
+            HorizontalLayout {
+                spacing: 8px;
+                Button {
+                    label: "Collapse all";
+                    clicked => {
+                        controlled-mode = 0;
+                    }
+                }
+                Button {
+                    label: "Partial";
+                    clicked => {
+                        controlled-mode = 1;
+                    }
+                }
+                Button {
+                    label: "Expand all";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        controlled-mode = 2;
+                    }
+                }
+            }
+
+            PrimerTreeView {
+                rows: controlled-rows;
+                row-toggle-requested(_) => { }
+            }
+        }
+    }
+
+    // --- AsyncSuccess, AsyncWithCount, AsyncError, EmptyDirectories, NestedTrees
+    TreeViewSectionHeading {
+        title: "AsyncSuccess · AsyncWithCount · AsyncError · EmptyDirectories · NestedTrees";
+        note: "SubTree loading / skeleton count / error dialog / empty leaf / nested inner tree — host-driven row rebuild + dialogs in follow-up PRs.";
+    }
+    Text {
+        text: "Use timers and flat row insertion in the gallery host to mirror Storybook; the row chrome above is shared.";
+        wrap: word-wrap;
+        width: 100%;
+        font-size: 13px;
+        color: PrimerColors.fgColor-muted;
+    }
+
+    HorizontalLayout {
+        spacing: 16px;
+        alignment: start;
+
+        Rectangle {
+            width: 260px;
+            background: PrimerColors.bgColor-default;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: LayoutTokens.table-border-width;
+            border-color: PrimerColors.borderColor-default;
+
+            VerticalLayout {
+                padding: 4px;
+                Text {
+                    text: "Inner tree (NestedTrees echo)";
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: PrimerColors.fgColor-muted;
+                }
+                PrimerTreeView {
+                    rows: flat-rows;
+                    flat: true;
+                    row-toggle-requested(_) => { }
+                }
+            }
+        }
+
+        Rectangle {
+            width: 260px;
+            background: PrimerColors.bgColor-default;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: LayoutTokens.table-border-width;
+            border-color: PrimerColors.borderColor-default;
+
+            VerticalLayout {
+                padding: 4px;
+                Text {
+                    text: "Outer tree";
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: PrimerColors.fgColor-muted;
+                }
+                PrimerTreeView {
+                    rows: default-rows;
+                    row-toggle-requested(id) => {
+                        if id == "src" {
+                            def-src = !def-src;
+                        } else if id == "components" {
+                            def-components = !def-components;
+                        } else if id == "folder" {
+                            def-folder = !def-folder;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // --- NestedScrollContainer (scaled)
+    TreeViewSectionHeading {
+        title: "NestedScrollContainer";
+        note: "Scaled: 8 children in a fixed-height flickable (Storybook: 100×10).";
+    }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        height: 200px;
+        background: PrimerColors.bgColor-inset;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+        clip: true;
+
+        flick := Flickable {
+            width: parent.width;
+            height: parent.height;
+            viewport-width: parent.width;
+            viewport-height: tree-ns.preferred-height;
+
+            tree-ns := PrimerTreeView {
+                width: flick.width;
+                rows: nested-scroll-rows;
+                row-toggle-requested(_) => { }
+            }
+        }
+    }
+
+    // --- StressTest (scaled)
+    TreeViewSectionHeading {
+        title: "StressTest";
+        note: "Scaled: 12 visible rows (Storybook: 1000×100). Prefer ListView virtualization for real workloads.";
+    }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        PrimerTreeView {
+            rows: stress-rows;
+            row-toggle-requested(_) => { }
+        }
+    }
+
+    // --- ContainIntrinsicSize (scaled + note)
+    TreeViewSectionHeading {
+        title: "ContainIntrinsicSize";
+        note: "Web content-visibility has no Slint equivalent; fixed row height + bounded scroll approximate large subtrees.";
+    }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        PrimerTreeView {
+            rows: intrinsic-rows;
+            row-toggle-requested(_) => { }
+        }
+    }
+
+    // --- InitialFocus
+    TreeViewSectionHeading {
+        title: "InitialFocus";
+        note: "Focus order before/after the tree; default-focus wiring is host-specific.";
+    }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        VerticalLayout {
+            padding: 8px;
+            spacing: 8px;
+
+            Button {
+                label: "Before tree";
+            }
+            PrimerTreeView {
+                truncate: false;
+                rows: files-rows;
+                row-toggle-requested(_) => { }
+            }
+            Button {
+                label: "After tree";
+            }
+        }
+    }
+
+    // --- FocusManagement
+    TreeViewSectionHeading {
+        title: "FocusManagement";
+        note: "Kebab beside labels: full parity uses tabIndex -1 on trailing controls in the host.";
+    }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        VerticalLayout {
+            padding: 8px;
+            spacing: 8px;
+
+            HorizontalLayout {
+                spacing: 8px;
+                Text {
+                    text: "Row with adjacent menu:";
+                    vertical-alignment: center;
+                    color: PrimerColors.fgColor-default;
+                }
+                IconButton {
+                    icon-source: Icons.kebab_horizontal;
+                }
+            }
+            PrimerTreeView {
+                rows: flat-rows;
+                flat: true;
+                row-toggle-requested(_) => { }
+            }
+        }
+    }
+
+    // --- WithoutIndentation (flat)
+    TreeViewSectionHeading { title: "WithoutIndentation"; note: "Root flat — no indent or chevron column."; }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        PrimerTreeView {
+            flat: true;
+            rows: flat-rows;
+            row-toggle-requested(_) => { }
+        }
+    }
+
+    // --- MultilineItems
+    TreeViewSectionHeading { title: "MultilineItems"; note: "truncate = false."; }
+    Rectangle {
+        horizontal-stretch: 1;
+        min-width: 320px;
+        max-width: 560px;
+        background: PrimerColors.bgColor-default;
+        border-radius: LayoutTokens.borderRadius-medium;
+        border-width: LayoutTokens.table-border-width;
+        border-color: PrimerColors.borderColor-default;
+
+        PrimerTreeView {
+            truncate: false;
+            rows: multiline-rows;
+            row-toggle-requested(_) => { }
+        }
+    }
+
+    // --- LeadingAction (Private story)
+    TreeViewSectionHeading {
+        title: "LeadingAction";
+        note: "Leading-action column + issue icons (grabber is non-interactive here).";
+    }
+    VerticalLayout {
+        spacing: 12px;
+        alignment: start;
+        width: 100%;
+        max-width: 560px;
+
+        Banner {
+            variant: BannerVariant.warning;
+            title: "Do not grab items";
+            description: "Slint port echoes the upstream warning banner; drag-and-drop is out of scope.";
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            min-width: 320px;
+            background: PrimerColors.bgColor-default;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: LayoutTokens.table-border-width;
+            border-color: PrimerColors.borderColor-default;
+
+            PrimerTreeView {
+                rows: leading-action-rows;
+                row-toggle-requested(_) => { }
+            }
+        }
+    }
+}

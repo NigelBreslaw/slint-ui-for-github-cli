@@ -341,6 +341,13 @@ export type SlintIconsGlobal = {
   skip: ImageData;
   checkbox_fill: ImageData;
   file_directory_fill: ImageData;
+  file_directory_open_fill: ImageData;
+  file: ImageData;
+  diff_added: ImageData;
+  diff_modified: ImageData;
+  diff_removed: ImageData;
+  diff_renamed: ImageData;
+  grabber: ImageData;
   plus_circle: ImageData;
   book: ImageData;
   law: ImageData;

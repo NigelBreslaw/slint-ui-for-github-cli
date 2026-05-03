@@ -1,0 +1,32 @@
+/// Trailing diff affordances (Storybook **FilesChanged** / **Default**).
+export enum TreeViewTrailingVisual {
+    none,
+    diff-added,
+    diff-modified,
+    diff-removed,
+    diff-renamed,
+}
+
+/// One visible row in the flat tree model (see [`API.md`](./API.md)).
+export struct TreeViewRow {
+    id: string,
+    label: string,
+    /// 1-based depth (matches upstream **`level`**). Level **1** is the root row.
+    level: int,
+    has-children: bool,
+    expanded: bool,
+    current: bool,
+    /// **`TreeView.DirectoryIcon`** semantics — open/closed fill icons + directory tint.
+    leading-is-directory: bool,
+    has-leading-visual: bool,
+    trailing: TreeViewTrailingVisual,
+    /// Reserves the leading-action column (**`--leading-action-width`** upstream).
+    has-leading-action: bool,
+    /// When true with **`has-leading-action`**, shows **`leading-action-icon`** (e.g. grabber).
+    show-leading-action-icon: bool,
+    leading-action-icon: image,
+    /// Used when **`leading-is-directory`** is false and **`has-leading-visual`** is true.
+    leading-file-icon: image,
+    /// When false, pointer styling and toggles are disabled (loading / skeleton host rows).
+    interactive: bool,
+}
