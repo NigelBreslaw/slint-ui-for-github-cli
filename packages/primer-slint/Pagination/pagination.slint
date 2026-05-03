@@ -1,16 +1,12 @@
-// Standalone Primer Pagination (nav strip only) — upstream: primer-ui-react `Pagination/Pagination.tsx`.
-// Reuses `PaginationLogic` / `PaginationPiece` from `../Pagination/` (shared strip model with composed table footers).
-// Callback `page-changed` emits **0-based page index** (app state); `current-page` is **1-based** (React-style).
+
 import { Icons } from "../assets/icons.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
-import { PaginationPiece, PaginationPieceKind } from "../Pagination/types.slint";
-import { PaginationLogic } from "../Pagination/pagination-logic.slint";
+import { PaginationPiece, PaginationPieceKind } from "./types.slint";
+import { PaginationLogic } from "./pagination-logic.slint";
 
-/// Link-style page control (32×32 parity with Primer `.Page` / `Pagination.module.css`).
-component Pagination2LinkCell {
+component PaginationLinkCell {
     in property <bool> disabled;
     in property <bool> selected;
-    /// Prev/next use **`fgColor-accent`** when enabled.
     in property <bool> accent-fg;
     in property <string> label;
     in property <bool> has-leading-icon: false;
@@ -109,14 +105,14 @@ component Pagination2LinkCell {
     }
 }
 
-component Pagination2NavItem inherits HorizontalLayout {
+component PaginationNavItem inherits HorizontalLayout {
     in property <PaginationPiece> piece;
     callback activate(int);
 
     horizontal-stretch: 0;
     min-height: LayoutTokens.control-medium-size;
 
-    if piece.kind == PaginationPieceKind.Prev: Pagination2LinkCell {
+    if piece.kind == PaginationPieceKind.Prev: PaginationLinkCell {
         disabled: piece.disabled;
         selected: false;
         accent-fg: true;
@@ -128,7 +124,7 @@ component Pagination2NavItem inherits HorizontalLayout {
         }
     }
 
-    if piece.kind == PaginationPieceKind.Next: Pagination2LinkCell {
+    if piece.kind == PaginationPieceKind.Next: PaginationLinkCell {
         disabled: piece.disabled;
         selected: false;
         accent-fg: true;
@@ -140,7 +136,7 @@ component Pagination2NavItem inherits HorizontalLayout {
         }
     }
 
-    if piece.kind == PaginationPieceKind.Num: Pagination2LinkCell {
+    if piece.kind == PaginationPieceKind.Num: PaginationLinkCell {
         disabled: piece.disabled;
         selected: piece.selected;
         accent-fg: false;
@@ -163,7 +159,7 @@ component Pagination2NavItem inherits HorizontalLayout {
     }
 }
 
-export component Pagination2 {
+export component Pagination {
     in property <int> page-count: 1;
     in-out property <int> current-page: 1;
     in property <bool> show-pages: true;
@@ -171,7 +167,6 @@ export component Pagination2 {
     in property <int> surrounding-page-count: 2;
     callback page-changed(int);
 
-    /// Non-negative margins (negative **`margin-page-count`** / **`surrounding-page-count`** are treated as 0).
     property <int> margin-safe: max(0, margin-page-count);
     property <int> surrounding-safe: max(0, surrounding-page-count);
 
@@ -205,7 +200,7 @@ export component Pagination2 {
         spacing: LayoutTokens.button-content-gap;
         alignment: center;
 
-        for i in model-len: Pagination2NavItem {
+        for i in model-len: PaginationNavItem {
             piece: PaginationLogic.piece_at(
                 i,
                 page-count,

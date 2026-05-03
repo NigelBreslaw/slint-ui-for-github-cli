@@ -9,16 +9,16 @@ import {
     Icons,
     LabelSize,
     LabelVariant,
-    Pagination2,
+    Pagination,
     TableContainer,
 } from "../../../primer-slint/primer.slint";
 import { PaginationLogic } from "../../../primer-slint/Pagination/pagination-logic.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 
-/// Composed DataTable-style footer: range label + bordered bar + `Pagination2`.
+/// Composed DataTable-style footer: range label + bordered bar + `Pagination`.
 /// Matches github-app `ProjectBoardPaginationFooter` / `TimeReportingPickerPaginationFooter`:
-/// 0-based `page-index`, `PaginationLogic` for counts and range, 1-based `current-page` derived for `Pagination2`.
-component GalleryPagination2RangeFooter {
+/// 0-based `page-index`, `PaginationLogic` for counts and range, 1-based `current-page` derived for `Pagination`.
+component GalleryPaginationRangeFooter {
     in-out property <int> page-index;
     in property <int> total-count;
     in property <int> page-size;
@@ -29,7 +29,7 @@ component GalleryPagination2RangeFooter {
     property <int> idx-clamped: PaginationLogic.clamp_page_index(page-index, page-count);
     property <int> range-start: PaginationLogic.range_display_start(total-count, idx-clamped, page-size);
     property <int> range-end: PaginationLogic.range_display_end(total-count, idx-clamped, page-size);
-    property <int> pagination2-current-1based: PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
+    property <int> pagination-current-1based: PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
 
     width: 100%;
     vertical-stretch: 0;
@@ -69,10 +69,10 @@ component GalleryPagination2RangeFooter {
                 spacing: LayoutTokens.button-content-gap;
                 alignment: space-around;
 
-                Pagination2 {
+                Pagination {
                     width: 100%;
                     page-count: page-count;
-                    current-page: pagination2-current-1based;
+                    current-page: pagination-current-1based;
                     show-pages: show-pages;
                     page-changed(idx) => {
                         root.page-changed(idx);
@@ -83,7 +83,7 @@ component GalleryPagination2RangeFooter {
     }
 }
 
-/// DataTable and Pagination2 gallery demos (composed footers use `GalleryPagination2RangeFooter`).
+/// DataTable and Pagination gallery demos (composed footers use `GalleryPaginationRangeFooter`).
 export component GalleryDataPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -108,20 +108,20 @@ export component GalleryDataPage inherits VerticalLayout {
     property <int> demo-pagination-page-index: 0;
     property <int> demo-pagination-page-index-prevnext: 0;
     property <int> demo-pagination-page-index-short: 0;
-    property <int> demo-pagination2-current-page: 1;
+    property <int> demo-pagination-current-page: 1;
     property <int> demo-p2-larger-margin-page: 5;
     property <int> demo-p2-hide-numbers-page: 5;
     property <int> demo-p2-higher-surrounding-page: 5;
-    property <int> demo-pagination2-single-page: 1;
-    property <int> demo-pagination2-ellipsis-page: 12;
-    property <int> demo-pagination2-zero-page: 1;
+    property <int> demo-pagination-single-page: 1;
+    property <int> demo-pagination-ellipsis-page: 12;
+    property <int> demo-pagination-zero-page: 1;
     property <int> demo-p2-footer-page-index: 0;
 
     VerticalLayout {
         spacing: 16px;
 
         Text {
-            text: "Pagination2 — Storybook Features matrix";
+            text: "Pagination — Storybook Features matrix";
             color: PrimerColors.fgColor-default;
             font-size: 17px;
             font-weight: 700;
@@ -153,18 +153,18 @@ export component GalleryDataPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Current page (1-based): " + demo-pagination2-current-page;
+            text: "Current page (1-based): " + demo-pagination-current-page;
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
 
-        Pagination2 {
+        Pagination {
             page-count: 10;
-            current-page: demo-pagination2-current-page;
+            current-page: demo-pagination-current-page;
             show-pages: true;
             page-changed(idx) => {
-                demo-pagination2-current-page = idx + 1;
+                demo-pagination-current-page = idx + 1;
             }
         }
     }
@@ -193,7 +193,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        Pagination2 {
+        Pagination {
             page-count: 15;
             current-page: demo-p2-larger-margin-page;
             margin-page-count: 4;
@@ -227,7 +227,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        Pagination2 {
+        Pagination {
             page-count: 15;
             current-page: demo-p2-hide-numbers-page;
             show-pages: false;
@@ -279,7 +279,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        Pagination2 {
+        Pagination {
             page-count: 5;
             current-page: demo-p2-higher-surrounding-page;
             surrounding-page-count: 4;
@@ -324,11 +324,11 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        Pagination2 {
+        Pagination {
             page-count: 1;
-            current-page: demo-pagination2-single-page;
+            current-page: demo-pagination-single-page;
             page-changed(idx) => {
-                demo-pagination2-single-page = idx + 1;
+                demo-pagination-single-page = idx + 1;
             }
         }
     }
@@ -337,7 +337,7 @@ export component GalleryDataPage inherits VerticalLayout {
         spacing: 12px;
 
         Text {
-            text: "Pagination2 — larger margin / surrounding (ellipsis)";
+            text: "Pagination — larger margin / surrounding (ellipsis)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -351,19 +351,19 @@ export component GalleryDataPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Current page (1-based): " + demo-pagination2-ellipsis-page;
+            text: "Current page (1-based): " + demo-pagination-ellipsis-page;
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
 
-        Pagination2 {
+        Pagination {
             page-count: 25;
-            current-page: demo-pagination2-ellipsis-page;
+            current-page: demo-pagination-ellipsis-page;
             margin-page-count: 2;
             surrounding-page-count: 3;
             page-changed(idx) => {
-                demo-pagination2-ellipsis-page = idx + 1;
+                demo-pagination-ellipsis-page = idx + 1;
             }
         }
     }
@@ -372,7 +372,7 @@ export component GalleryDataPage inherits VerticalLayout {
         spacing: 12px;
 
         Text {
-            text: "Pagination2 — zero pages";
+            text: "Pagination — zero pages";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -386,17 +386,17 @@ export component GalleryDataPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Bound `current-page` (1-based): " + demo-pagination2-zero-page;
+            text: "Bound `current-page` (1-based): " + demo-pagination-zero-page;
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
         }
 
-        Pagination2 {
+        Pagination {
             page-count: 0;
-            current-page: demo-pagination2-zero-page;
+            current-page: demo-pagination-zero-page;
             page-changed(idx) => {
-                demo-pagination2-zero-page = idx + 1;
+                demo-pagination-zero-page = idx + 1;
             }
         }
     }
@@ -406,14 +406,14 @@ export component GalleryDataPage inherits VerticalLayout {
         width: 100%;
 
         Text {
-            text: "Pagination2 — table footer (range + nav)";
+            text: "Pagination — table footer (range + nav)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
         }
 
         Text {
-            text: "Use the DataTable-style footer (range text + bordered row + spaced nav) with nav from `Pagination2`. Same wiring as github-app `project-board-list.slint` / `TimeReportingProjectPickerOverlay.slint`: 0-based `page-index`, `PaginationLogic` for `page-count` / range / clamp, bind `Pagination2.current-page` to `clamp_current_page_1based(page-index + 1, page-count)`. Copy `GalleryPagination2RangeFooter` from this file.";
+            text: "Use the DataTable-style footer (range text + bordered row + spaced nav) with nav from `Pagination`. Same wiring as github-app `project-board-list.slint` / `TimeReportingProjectPickerOverlay.slint`: 0-based `page-index`, `PaginationLogic` for `page-count` / range / clamp, bind `Pagination.current-page` to `clamp_current_page_1based(page-index + 1, page-count)`. Copy `GalleryPaginationRangeFooter` from this file.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -426,7 +426,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        GalleryPagination2RangeFooter {
+        GalleryPaginationRangeFooter {
             width: 100%;
             vertical-stretch: 0;
             total-count: 47;
@@ -449,7 +449,7 @@ export component GalleryDataPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Footer: range label + bordered bar + Pagination2 nav (same pattern as github-app board list / time-reporting picker).";
+            text: "Footer: range label + bordered bar + Pagination nav (same pattern as github-app board list / time-reporting picker).";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -481,7 +481,7 @@ export component GalleryDataPage inherits VerticalLayout {
             }
         }
 
-        GalleryPagination2RangeFooter {
+        GalleryPaginationRangeFooter {
             width: 100%;
             total-count: 100;
             page-size: 25;
@@ -498,7 +498,7 @@ export component GalleryDataPage inherits VerticalLayout {
         width: 100%;
 
         Text {
-            text: "Pagination2 — table footer (Previous / Next only)";
+            text: "Pagination — table footer (Previous / Next only)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -511,7 +511,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        GalleryPagination2RangeFooter {
+        GalleryPaginationRangeFooter {
             width: 100%;
             total-count: 100;
             page-size: 25;
@@ -528,7 +528,7 @@ export component GalleryDataPage inherits VerticalLayout {
         width: 100%;
 
         Text {
-            text: "Pagination2 — table footer (single page)";
+            text: "Pagination — table footer (single page)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -541,7 +541,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        GalleryPagination2RangeFooter {
+        GalleryPaginationRangeFooter {
             width: 100%;
             total-count: 8;
             page-size: 25;

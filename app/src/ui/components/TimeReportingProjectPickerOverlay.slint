@@ -6,14 +6,14 @@ import {
     DialogNarrowPositionPreset,
     DialogPositionPreset,
     ModalOverlay,
-    Pagination2,
+    Pagination,
     SelectPanel,
     SelectPanelMode,
 } from "../../../../packages/primer-slint/primer.slint";
 import { PaginationLogic } from "../../../../packages/primer-slint/Pagination/pagination-logic.slint";
 import { AppWindow, DialogTokens, LayoutTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
-/// Range label + `Pagination2` strip; `page-index` is 0-based (two-way to `AppState`).
+/// Range label + `Pagination` strip; `page-index` is 0-based (two-way to `AppState`).
 component TimeReportingPickerPaginationFooter {
     in-out property <int> page-index;
     in property <int> total-count;
@@ -24,8 +24,8 @@ component TimeReportingPickerPaginationFooter {
     property <int> idx-clamped: PaginationLogic.clamp_page_index(page-index, page-count);
     property <int> range-start: PaginationLogic.range_display_start(total-count, idx-clamped, page-size);
     property <int> range-end: PaginationLogic.range_display_end(total-count, idx-clamped, page-size);
-    /// 1-based page for `Pagination2`; derived from 0-based `page-index` (single source of truth).
-    property <int> pagination2-current-1based: PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
+    /// 1-based page for `Pagination`; derived from 0-based `page-index` (single source of truth).
+    property <int> pagination-current-1based: PaginationLogic.clamp_current_page_1based(page-index + 1, page-count);
 
     width: 100%;
     vertical-stretch: 0;
@@ -65,10 +65,10 @@ component TimeReportingPickerPaginationFooter {
                 spacing: LayoutTokens.button-content-gap;
                 alignment: space-around;
 
-                Pagination2 {
+                Pagination {
                     width: 100%;
                     page-count: page-count;
-                    current-page: pagination2-current-1based;
+                    current-page: pagination-current-1based;
                     page-changed(idx) => {
                         root.page-changed(idx);
                     }
