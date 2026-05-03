@@ -5,6 +5,7 @@ import { CounterLabel, CounterLabelVariant } from "../CounterLabel/counter-label
 import { Icons } from "../assets/icons.slint";
 import { SkeletonBox } from "../Skeleton/skeleton-box.slint";
 import { LayoutTokens, PrimerColors, Size, TreeViewTokens } from "../tokens.slint";
+import { ListView } from "std-widgets.slint";
 import { TreeViewRow, TreeViewTrailingVisual } from "./types.slint";
 
 component TreeViewRowView {
@@ -250,6 +251,8 @@ export component PrimerTreeView inherits VerticalLayout {
     in property <[TreeViewRow]> rows: [];
     /// How many indent columns to allocate for vertical guides (must be ≥ **`max(row.level) − 1`** when **`flat`** is false).
     in property <int> max-gutter-columns: 12;
+    /// When true, rows render inside **`std-widgets::ListView`** (recycled delegates). Host must give this control a **bounded height** (or stretch into a parent with one).
+    in property <bool> virtualized: false;
 
     callback row-toggle-requested(string);
     callback row-current-requested(string);
@@ -260,23 +263,61 @@ export component PrimerTreeView inherits VerticalLayout {
 
     alignment: start;
     horizontal-stretch: 1;
+    vertical-stretch: 0;
     accessible-role: AccessibleRole.list;
     accessible-label: root.accessible-name;
 
-    for row[i] in root.rows: TreeViewRowView {
-        tree-row: row;
-        flat: root.flat;
-        toggle-w: root.toggle-w;
-        gutter-slot-count: root.max-gutter-columns;
-        row-min-h: root.row-min-h;
-        row-toggle-requested(id) => {
-            root.row-toggle-requested(id);
+    if !root.virtualized: VerticalLayout {
+        alignment: start;
+        horizontal-stretch: 1;
+
+        for row[i] in root.rows: TreeViewRowView {
+            tree-row: row;
+            flat: root.flat;
+            toggle-w: root.toggle-w;
+            gutter-slot-count: root.max-gutter-columns;
+            row-min-h: root.row-min-h;
+            row-toggle-requested(id) => {
+                root.row-toggle-requested(id);
+            }
+            row-current-requested(id) => {
+                root.row-current-requested(id);
+            }
+            row-secondary-actions-requested(id, ax, ay, aw, ah) => {
+                root.row-secondary-actions-requested(id, ax, ay, aw, ah);
+            }
         }
-        row-current-requested(id) => {
-            root.row-current-requested(id);
-        }
-        row-secondary-actions-requested(id, ax, ay, aw, ah) => {
-            root.row-secondary-actions-requested(id, ax, ay, aw, ah);
+    }
+
+    if root.virtualized: ListView {
+        width: 100%;
+        height: 100%;
+        horizontal-stretch: 1;
+        vertical-stretch: 1;
+
+        for row[i] in root.rows: Rectangle {
+            height: root.row-min-h;
+            horizontal-stretch: 1;
+            background: transparent;
+
+            TreeViewRowView {
+                width: parent.width;
+                y: 0px;
+                tree-row: row;
+                flat: root.flat;
+                toggle-w: root.toggle-w;
+                gutter-slot-count: root.max-gutter-columns;
+                row-min-h: root.row-min-h;
+                row-toggle-requested(id) => {
+                    root.row-toggle-requested(id);
+                }
+                row-current-requested(id) => {
+                    root.row-current-requested(id);
+                }
+                row-secondary-actions-requested(id, ax, ay, aw, ah) => {
+                    root.row-secondary-actions-requested(id, ax, ay, aw, ah);
+                }
+            }
         }
     }
 }

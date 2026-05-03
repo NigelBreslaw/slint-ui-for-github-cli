@@ -25,6 +25,7 @@ import {
     TreeViewTrailingVisual,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryTreeViewListModels } from "../state/gallery-tree-view-list-models.slint";
 
 component TreeViewSectionHeading {
     in property <string> title;
@@ -55,6 +56,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     spacing: 28px;
     alignment: start;
     padding: 24px;
+    horizontal-stretch: 1;
 
     /// **Controlled** — three discrete expansion snapshots (host would rebuild a flat model).
     in-out property <int> controlled-mode: 2;
@@ -816,432 +818,6 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             show-leading-action-icon: true,
             leading-action-icon: Icons.grabber,
             leading-file-icon: Icons.issue_closed,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-    ];
-
-    property <[TreeViewRow]> nested-scroll-rows: [
-        {
-            id: "ns0",
-            label: "root",
-            level: 1,
-            has-children: true,
-            expanded: true,
-            current: false,
-            leading-is-directory: true,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns1",
-            label: "item-0",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns2",
-            label: "item-1",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns3",
-            label: "item-2",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns4",
-            label: "item-3",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns5",
-            label: "item-4",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns6",
-            label: "item-5",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns7",
-            label: "item-6",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "ns8",
-            label: "item-7",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-    ];
-
-    property <[TreeViewRow]> stress-rows: [
-        {
-            id: "s0",
-            label: "stress-root",
-            level: 1,
-            has-children: true,
-            expanded: true,
-            current: false,
-            leading-is-directory: true,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s1",
-            label: "row-1",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s2",
-            label: "row-2",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s3",
-            label: "row-3",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s4",
-            label: "row-4",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s5",
-            label: "row-5",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s6",
-            label: "row-6",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s7",
-            label: "row-7",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s8",
-            label: "row-8",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s9",
-            label: "row-9",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s10",
-            label: "row-10",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
-            interactive: true,
-            is-skeleton: false,
-            has-secondary-actions: false,
-            secondary-actions-badge: "",
-            loading-children-badge: "",
-        },
-        {
-            id: "s11",
-            label: "row-11",
-            level: 2,
-            has-children: false,
-            expanded: false,
-            current: false,
-            leading-is-directory: false,
-            has-leading-visual: true,
-            trailing: TreeViewTrailingVisual.none,
-            has-leading-action: false,
-            show-leading-action-icon: false,
-            leading-action-icon: Icons.dot_fill,
-            leading-file-icon: Icons.file,
             interactive: true,
             is-skeleton: false,
             has-secondary-actions: false,
@@ -2399,10 +1975,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         }
     }
 
-    // --- NestedScrollContainer (scaled)
+    // --- NestedScrollContainer (ListView + runtime model)
     TreeViewSectionHeading {
         title: "NestedScrollContainer";
-        note: "Scaled: 8 children in a fixed-height flickable (Storybook: 100×10).";
+        note: "200px viewport, std-widgets ListView + ~100 rows (Rust/Node fill GalleryTreeViewListModels).";
     }
     Rectangle {
         horizontal-stretch: 1;
@@ -2415,38 +1991,38 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         border-color: PrimerColors.borderColor-default;
         clip: true;
 
-        flick := Flickable {
+        PrimerTreeView {
+            virtualized: true;
             width: parent.width;
             height: parent.height;
-            viewport-width: parent.width;
-            viewport-height: tree-ns.preferred-height;
-
-            tree-ns := PrimerTreeView {
-                width: flick.width;
-                rows: nested-scroll-rows;
-                row-current-requested(_) => { }
-                row-toggle-requested(_) => { }
-                row-secondary-actions-requested(_, _, _, _, _) => { }
-            }
+            rows: GalleryTreeViewListModels.nested_scroll_list_rows;
+            row-current-requested(_) => { }
+            row-toggle-requested(_) => { }
+            row-secondary-actions-requested(_, _, _, _, _) => { }
         }
     }
 
-    // --- StressTest (scaled)
+    // --- StressTest (ListView + runtime model)
     TreeViewSectionHeading {
         title: "StressTest";
-        note: "Scaled: 12 visible rows (Storybook: 1000×100). Prefer ListView virtualization for real workloads.";
+        note: "360px viewport, ListView + ~1000 rows (Rust/Node); Storybook-scale stress without Slint literals.";
     }
     Rectangle {
         horizontal-stretch: 1;
         min-width: 320px;
         max-width: 560px;
+        height: 360px;
         background: PrimerColors.bgColor-default;
         border-radius: LayoutTokens.borderRadius-medium;
         border-width: LayoutTokens.table-border-width;
         border-color: PrimerColors.borderColor-default;
+        clip: true;
 
         PrimerTreeView {
-            rows: stress-rows;
+            virtualized: true;
+            width: parent.width;
+            height: parent.height;
+            rows: GalleryTreeViewListModels.stress_list_rows;
             row-current-requested(_) => { }
             row-toggle-requested(_) => { }
             row-secondary-actions-requested(_, _, _, _, _) => { }

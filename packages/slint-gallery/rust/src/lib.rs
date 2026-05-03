@@ -1,6 +1,6 @@
 //! Primer gallery — shared wiring (native binary and future WASM entry).
 
-use slint::{ComponentHandle, ModelRc, SharedString, VecModel};
+use slint::{ComponentHandle, Image, ModelRc, SharedString, VecModel};
 use std::cell::RefCell;
 use std::collections::BTreeSet;
 use std::rc::Rc;
@@ -18,6 +18,125 @@ const ACTION_LIST_ROW_LABELS: [&str; 4] = [
 ];
 
 const SELECT_PANEL_MULTI_ROW_COUNT: usize = 5;
+
+/// Keep in sync with **`packages/slint-gallery/node/state/gallery-tree-view-list-models-bridge-shared.ts`**
+const GALLERY_TREE_STRESS_CHILD_COUNT: usize = 1000;
+const GALLERY_TREE_NESTED_SCROLL_CHILD_COUNT: usize = 100;
+
+fn tree_view_row_leaf(
+    id: SharedString,
+    label: SharedString,
+    dot_fill: &Image,
+    file_icon: &Image,
+) -> TreeViewRow {
+    TreeViewRow {
+        id,
+        label,
+        level: 2,
+        has_children: false,
+        expanded: false,
+        current: false,
+        leading_is_directory: false,
+        has_leading_visual: true,
+        trailing: TreeViewTrailingVisual::None,
+        has_leading_action: false,
+        show_leading_action_icon: false,
+        leading_action_icon: dot_fill.clone(),
+        leading_file_icon: file_icon.clone(),
+        interactive: true,
+        is_skeleton: false,
+        has_secondary_actions: false,
+        secondary_actions_badge: SharedString::new(),
+        loading_children_badge: SharedString::new(),
+    }
+}
+
+fn tree_view_row_stress_root(dot_fill: &Image, file_icon: &Image) -> TreeViewRow {
+    TreeViewRow {
+        id: SharedString::from("stress-root"),
+        label: SharedString::from("stress-root"),
+        level: 1,
+        has_children: true,
+        expanded: true,
+        current: false,
+        leading_is_directory: true,
+        has_leading_visual: true,
+        trailing: TreeViewTrailingVisual::None,
+        has_leading_action: false,
+        show_leading_action_icon: false,
+        leading_action_icon: dot_fill.clone(),
+        leading_file_icon: file_icon.clone(),
+        interactive: true,
+        is_skeleton: false,
+        has_secondary_actions: false,
+        secondary_actions_badge: SharedString::new(),
+        loading_children_badge: SharedString::new(),
+    }
+}
+
+fn tree_view_row_nested_root(dot_fill: &Image, file_icon: &Image) -> TreeViewRow {
+    TreeViewRow {
+        id: SharedString::from("nested-root"),
+        label: SharedString::from("root"),
+        level: 1,
+        has_children: true,
+        expanded: true,
+        current: false,
+        leading_is_directory: true,
+        has_leading_visual: true,
+        trailing: TreeViewTrailingVisual::None,
+        has_leading_action: false,
+        show_leading_action_icon: false,
+        leading_action_icon: dot_fill.clone(),
+        leading_file_icon: file_icon.clone(),
+        interactive: true,
+        is_skeleton: false,
+        has_secondary_actions: false,
+        secondary_actions_badge: SharedString::new(),
+        loading_children_badge: SharedString::new(),
+    }
+}
+
+fn gallery_tree_view_stress_rows(icons: &Icons) -> Vec<TreeViewRow> {
+    let dot = icons.get_dot_fill();
+    let file = icons.get_file();
+    let mut rows = Vec::with_capacity(1 + GALLERY_TREE_STRESS_CHILD_COUNT);
+    rows.push(tree_view_row_stress_root(&dot, &file));
+    for i in 0..GALLERY_TREE_STRESS_CHILD_COUNT {
+        rows.push(tree_view_row_leaf(
+            SharedString::from(format!("stress-{i}")),
+            SharedString::from(format!("row-{i}")),
+            &dot,
+            &file,
+        ));
+    }
+    rows
+}
+
+fn gallery_tree_view_nested_scroll_rows(icons: &Icons) -> Vec<TreeViewRow> {
+    let dot = icons.get_dot_fill();
+    let file = icons.get_file();
+    let mut rows = Vec::with_capacity(1 + GALLERY_TREE_NESTED_SCROLL_CHILD_COUNT);
+    rows.push(tree_view_row_nested_root(&dot, &file));
+    for i in 0..GALLERY_TREE_NESTED_SCROLL_CHILD_COUNT {
+        rows.push(tree_view_row_leaf(
+            SharedString::from(format!("nested-{i}")),
+            SharedString::from(format!("item-{i}")),
+            &dot,
+            &file,
+        ));
+    }
+    rows
+}
+
+fn fill_gallery_tree_view_list_models(window: &GalleryWindow) {
+    let icons = window.global::<Icons>();
+    let stress = gallery_tree_view_stress_rows(&icons);
+    let nested = gallery_tree_view_nested_scroll_rows(&icons);
+    let g = window.global::<GalleryTreeViewListModels>();
+    g.set_stress_list_rows(ModelRc::new(VecModel::from(stress)));
+    g.set_nested_scroll_list_rows(ModelRc::new(VecModel::from(nested)));
+}
 
 fn row_checked_model(row_count: usize, selected: &BTreeSet<usize>) -> ModelRc<bool> {
     let v: Vec<bool> = (0..row_count).map(|i| selected.contains(&i)).collect();
@@ -363,6 +482,8 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_filtered_action_list_default(&window);
     wire_gallery_filtered_action_list_long(&window);
     wire_gallery_filtered_action_list_select_all(&window);
+
+    fill_gallery_tree_view_list_models(&window);
 
     window.run()
 }

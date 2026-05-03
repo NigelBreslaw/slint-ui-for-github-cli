@@ -1,0 +1,7 @@
+/// Runtime-filled **`[TreeViewRow]`** for **NestedScrollContainer** and **StressTest** (Node + Rust); keep counts in sync with gallery bridges / `lib.rs`.
+import { TreeViewRow } from "../../../primer-slint/primer.slint";
+
+export global GalleryTreeViewListModels {
+    in-out property <[TreeViewRow]> stress_list_rows: [];
+    in-out property <[TreeViewRow]> nested_scroll_list_rows: [];
+}

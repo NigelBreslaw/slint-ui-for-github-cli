@@ -16,6 +16,10 @@ import {
   wireGallerySelectPanelMultiSelect,
   type GallerySelectPanelMultiHandle,
 } from "./state/gallery-select-panel-multi-bridge-shared.ts";
+import {
+  wireGalleryTreeViewListModels,
+  type GalleryTreeViewListModelsHandle,
+} from "./state/gallery-tree-view-list-models-bridge-shared.ts";
 
 type GalleryWindowModule = {
   GalleryWindow: new () => {
@@ -30,8 +34,10 @@ type GalleryWindowModule = {
     GalleryFilteredActionListDefault: GalleryFilteredActionListHandle;
     GalleryFilteredActionListLong: GalleryFilteredActionListHandle;
     GalleryFilteredActionListSelectAll: GalleryFilteredActionListSelectAllHandle;
+    GalleryTreeViewListModels: GalleryTreeViewListModelsHandle;
     Icons: {
       dot_fill: ImageData;
+      file: ImageData;
     };
   };
 };
@@ -62,6 +68,11 @@ wireGalleryFilteredActionListLong(
 wireGalleryFilteredActionListSelectAll(
   window.GalleryFilteredActionListSelectAll,
   window.Icons.dot_fill,
+);
+wireGalleryTreeViewListModels(
+  window.GalleryTreeViewListModels,
+  window.Icons.dot_fill,
+  window.Icons.file,
 );
 
 window.show();

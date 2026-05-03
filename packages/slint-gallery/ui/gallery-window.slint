@@ -31,6 +31,7 @@ export {
     GalleryFilteredActionListLong,
 } from "./state/gallery-filtered-action-list-state.slint";
 export { GalleryFilteredActionListSelectAll } from "./state/gallery-filtered-action-list-select-all-state.slint";
+export { GalleryTreeViewListModels } from "./state/gallery-tree-view-list-models.slint";
 
 
 export global GalleryState {
@@ -67,6 +68,7 @@ export component GalleryWindow inherits Window {
         }
 
         HorizontalLayout {
+            vertical-stretch: 1;
 
             GallerySidebar {
                 selected-index: GalleryState.selected-group-index;
@@ -76,6 +78,8 @@ export component GalleryWindow inherits Window {
             }
 
             main-scroll := Rectangle {
+                horizontal-stretch: 1;
+                vertical-stretch: 1;
 
                 gallery-flick := Flickable {
                     width: main-scroll.width;
@@ -118,7 +122,10 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-group-index == 11: GalleryTreeViewPage { }
+                        if GalleryState.selected-group-index == 11: GalleryTreeViewPage {
+                            width: gallery-flick.width;
+                            horizontal-stretch: 1;
+                        }
 
                         if GalleryState.selected-group-index == 12: GallerySelectPage {
                             height: main-scroll.height;
