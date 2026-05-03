@@ -9,7 +9,6 @@ import {
     Icons,
     LabelSize,
     LabelVariant,
-    Pagination,
     Pagination2,
     TableContainer,
 } from "../../../primer-slint/primer.slint";
@@ -84,7 +83,7 @@ component GalleryPagination2RangeFooter {
     }
 }
 
-/// DataTable and Pagination gallery demos.
+/// DataTable and Pagination2 gallery demos (composed footers use `GalleryPagination2RangeFooter`).
 export component GalleryDataPage inherits VerticalLayout {
     spacing: 28px;
     width: 100%;
@@ -449,6 +448,13 @@ export component GalleryDataPage inherits VerticalLayout {
             font-weight: 600;
         }
 
+        Text {
+            text: "Footer: range label + bordered bar + Pagination2 nav (same pattern as github-app board list / time-reporting picker).";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
         TableContainer {
             width: 100%;
             title: "Repositories";
@@ -475,7 +481,7 @@ export component GalleryDataPage inherits VerticalLayout {
             }
         }
 
-        Pagination {
+        GalleryPagination2RangeFooter {
             width: 100%;
             total-count: 100;
             page-size: 25;
@@ -487,14 +493,12 @@ export component GalleryDataPage inherits VerticalLayout {
         }
     }
 
-    
-
     VerticalLayout {
         spacing: 12px;
         width: 100%;
 
         Text {
-            text: "Pagination (Previous / Next only)";
+            text: "Pagination2 — table footer (Previous / Next only)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -507,7 +511,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        Pagination {
+        GalleryPagination2RangeFooter {
             width: 100%;
             total-count: 100;
             page-size: 25;
@@ -524,7 +528,7 @@ export component GalleryDataPage inherits VerticalLayout {
         width: 100%;
 
         Text {
-            text: "Pagination (single page)";
+            text: "Pagination2 — table footer (single page)";
             color: PrimerColors.fgColor-default;
             font-size: 15px;
             font-weight: 600;
@@ -537,7 +541,7 @@ export component GalleryDataPage inherits VerticalLayout {
             wrap: word-wrap;
         }
 
-        Pagination {
+        GalleryPagination2RangeFooter {
             width: 100%;
             total-count: 8;
             page-size: 25;
