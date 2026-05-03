@@ -31,6 +31,7 @@ specified in detail.
 - **OverlayTokens** — **`backdrop-scrim`** for modal-style dimmers; **`panel-background`** / **`panel-border`** / **`panel-border-width`** / **`panel-border-radius`**, **`panel-elevation-shadow`** (`shadow.floating.small` via **ShadowTokens**) for floating panels (**AnchoredOverlay** and **ModalOverlay** use the panel tokens; **AnchoredOverlay** optional **`panel-fill`** / **`panel-border-*`** / **`panel-elevation-shadow`** mirror these when overriding shell chrome — defaults unchanged). **ModalOverlay** also uses **`backdrop-scrim`**. **No literals** — composes **PrimerColors**, **LayoutTokens**, **ShadowTokens**.
 - **DialogTokens** — Primer **`Dialog`**: spacing + header/body typography (**`title-font-size`** …), **`width-small`** … **`width-xlarge`** (**React **`Dialog.tsx`** **`widthMap`**, audited vs primer-tokens **`overlay.size`**), **`overlay-enter-duration`** (**`LayoutTokens.duration-200`**), **`overlay-sheet-enter-duration`** (**`LayoutTokens.duration-250`** — side/bottom sheets in later PRs). Full audit table in [`tokens.slint`](slint/tokens.slint).
 - **UnderlineNavTokens** — **`UnderlineNav`** **`LoadingCounter`** skeleton (**`UnderlineTabbedInterface.module.css`**) size and opacity pulse period; composes **LayoutTokens** only.
+- **TreeViewTokens** — [**`TreeView.module.css`**](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/TreeView/TreeView.module.css) row chrome (hover, `aria-current`, focus ring, level lines, toggle sizes) + [**`treeView.json5`**](https://github.com/primer/primer-tokens/blob/main/src/tokens/component/treeView.json5) leading-visual rest color; composes **PrimerColors**, **ButtonTokens**, **LayoutTokens** only (audit table in [`tokens.slint`](slint/tokens.slint)). API and interaction-state plan: [`TreeView/API.md`](TreeView/API.md).
 
 Views and chrome typically import **PrimerColors** (and **LayoutTokens** when needed). **Button** / **IconButton** use **ButtonTokens** and **PrimerColors**. **Banner** uses **BannerTokens**, **LayoutTokens**, and **PrimerColors** (for default body text). **Label** uses **LabelTokens** and **LayoutTokens**; variant mapping is implemented in [`Label/logic.slint`](slint/Label/logic.slint). **LabelGroup** composes **Label** + **LayoutTokens** only (see [`LabelGroup/label-group.slint`](slint/LabelGroup/label-group.slint)). **DataTable** composes **LayoutTokens** + **PrimerColors** (see [`DataTable/data-table.slint`](slint/DataTable/data-table.slint)); body cells use **Label**, **Image**, and **IconButton** for **`label`** / **`iconText`** / **`action`** kinds. **`TableContainer`** composes **Button** for the title/toolbar (see [`DataTable/table-container.slint`](slint/DataTable/table-container.slint)). Sort icons use `@image-url` assets under `app/src/assets/16px/`. **Banner** action rows use embedded **Button** (**ButtonTokens** / **PrimerColors**), not new literals in `Banner`.
 
@@ -48,6 +49,19 @@ Horizontal tabs with a model (`[UnderlineNavItem]`), controlled `selected-index`
 | `UnderlineNavItem.counter` | Empty hides the trailing pill; non-empty shows **`CounterLabel`** or the loading skeleton (see **`loading-counters`**). |
 
 The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** to align with **`.UnderlineWrapper`**. When tabs are wider than the nav, the row does not scroll horizontally; use a wider host or **`clip: true`** on a parent if overflow should be hidden.
+
+## TreeView
+
+**Status:** Design-only in this repo slice — **`PrimerTreeView`** UI is not exported from [`primer.slint`](slint/primer.slint) yet. Use this section for the agreed **Slint architecture**, **token ownership**, and **v1 limitations** before wiring the gallery page.
+
+| Topic | Where it lives |
+| -------- | ----- |
+| **Flat model vs nested components** | [`TreeView/API.md`](TreeView/API.md) — **visible-row / flat model** is the supported approach; nested Slint children mirror React only for small demos. |
+| **React prop → Slint mapping** (`TreeViewProps`, row fields, `SubTreeState`, `secondaryActions`) | Same file — tables for root, item row, subtree, and trailing actions. |
+| **Interaction states** (`hover`, `current`, `:focus-visible`, skeleton) | [`TreeView/API.md`](TreeView/API.md) **Interaction states** + [`.cursor/skills/primer-slint-interaction-states/SKILL.md`](../../.cursor/skills/primer-slint-interaction-states/SKILL.md) — **`FocusScope`** → **`TouchArea`** → row **`Rectangle`**, **`focus-on-click: false`**, named **`states [ ]`** branches (**disabled/skeleton** first, then **current × pointer**, then focus ring from **`FocusScope.has-focus`**). |
+| **Tokens** | **`TreeViewTokens`** in [`tokens.slint`](slint/tokens.slint) — no duplicate hex; row hover reuses **`PrimerColors.table-row-bgColor-hover`** (`--control-transparent-bgColor-hover`), current row reuses **`ButtonTokens.color-action-list-item-default-selected-bg`**. |
+
+**v1 non-goals (call out in reviews):** roving tabindex, typeahead, and live-region announcements are not expected to match React **TreeView** on first ship; keyboard parity is partial via **`FocusScope`** and host shortcuts. **`containIntrinsicSize`** has no Slint equivalent — large lists use bounded **`ListView`** / scaled demos (see port plan).
 
 ## Avatar
 

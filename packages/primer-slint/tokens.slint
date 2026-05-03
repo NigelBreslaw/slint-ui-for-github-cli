@@ -798,6 +798,59 @@ export global TextInputTokens {
     out property <color> border-disabled: ButtonTokens.button-default-borderColor-disabled;
 }
 
+// primer-ui-react **`TreeView.module.css`** + primer-tokens **`component/treeView.json5`**. Row hover / current / focus map to shared **`control.transparent`** and **`fgColor.accent`** semantics already stored in **`PrimerColors`** / **`ButtonTokens`**. Composes those globals + **`LayoutTokens`** only — **no new hex literals**.
+//
+// Token audit: | Intent | upstream | `out` on **TreeViewTokens** | Composes from |
+// |--------|----------|-----------------------------|----------------|
+// | Row container hover bg | `--control-transparent-bgColor-hover` | **`item-bgColor-hover`** | **`PrimerColors.table-row-bgColor-hover`** |
+// | `aria-current` row bg | `--control-transparent-bgColor-selected` | **`item-bgColor-current`** | **`ButtonTokens.color-action-list-item-default-selected-bg`** |
+// | Chevron hit hover (when split) | `.TreeViewItemToggleHover` same hover | **`toggle-bgColor-hover`** | **`item-bgColor-hover`** |
+// | Row + label fg | `--fgColor-default` | **`item-fgColor-default`** | **`PrimerColors.fgColor-default`** |
+// | Chevron / visuals / trailing fg | `--fgColor-muted` | **`item-fgColor-muted`** | **`PrimerColors.fgColor-muted`** |
+// | Directory leading icon rest | `--treeViewItem-leadingVisual-iconColor-rest` (**`treeView.json5`**: light blue.3, dark → muted) | **`item-leadingVisual-icon-fgColor-rest`** | light **`PrimerColors.fgColor-link`**, dark **`PrimerColors.fgColor-muted`** |
+// | Current pill accent | deliberate **`--fgColor-accent`** (not emphasis bg) | **`item-current-indicator-fgColor`** | **`PrimerColors.fgColor-accent`** |
+// | Nesting guide lines | `--borderColor-muted` | **`level-line-borderColor`** | **`PrimerColors.borderColor-muted`** |
+// | `:focus-visible` ring | `--boxShadow-thick` + **`--fgColor-accent`** | **`item-focus-ring-color`** | **`PrimerColors.fgColor-accent`** |
+// | Content column gap | `--stack-gap-condensed` (**8px**) | **`item-content-gap`** | **`LayoutTokens.base-size-8`** |
+// | Row corner radius | `--borderRadius-medium` | **`item-border-radius`** | **`LayoutTokens.borderRadius-medium`** |
+// | Thin borders | `--borderWidth-thin` | **`item-border-width-thin`** | **`LayoutTokens.table-border-width`** |
+// | Min row height | `--min-item-height` **2rem** | **`item-min-height`** | **`LayoutTokens.control-medium-size`** |
+// | Min row height coarse pointer | **2.75rem** | **`item-min-height-coarse`** | **44px** literal (React `pointer: coarse` parity) |
+// | Toggle width | **1rem** / **1.5rem** | **`toggle-width-default`**, **`toggle-width-coarse`** | **`LayoutTokens.base-size-16`**, **`3 * base-size-8`** |
+// | Content horizontal padding | `--base-size-8` | **`item-content-padding-inline`** | **`LayoutTokens.base-size-8`** |
+// | Current bar geometry | **0.25rem × 1.5rem**, offset **-8px** | **`item-current-indicator-width`**, **`-height`**, **`item-current-indicator-offset-inline`** | **`base-size-4`**, **`label-height-large`**, **negated `base-size-8`** |
+// | Body line height fallback | `--text-body-lineHeight-medium` | **`item-line-height-fallback`** | **`LayoutTokens.text-body-lineHeight-medium`** |
+export global TreeViewTokens {
+    out property <color> item-bgColor-hover: PrimerColors.table-row-bgColor-hover;
+    out property <color> item-bgColor-current: ButtonTokens.color-action-list-item-default-selected-bg;
+    out property <color> toggle-bgColor-hover: item-bgColor-hover;
+
+    out property <color> item-fgColor-default: PrimerColors.fgColor-default;
+    out property <color> item-fgColor-muted: PrimerColors.fgColor-muted;
+
+    property <ColorScheme> color-scheme: Palette.color-scheme;
+    out property <color> item-leadingVisual-icon-fgColor-rest: color-scheme == ColorScheme.dark ? PrimerColors.fgColor-muted : PrimerColors.fgColor-link;
+
+    out property <color> item-current-indicator-fgColor: PrimerColors.fgColor-accent;
+    out property <color> level-line-borderColor: PrimerColors.borderColor-muted;
+    out property <color> item-focus-ring-color: PrimerColors.fgColor-accent;
+
+    out property <length> item-content-gap: LayoutTokens.base-size-8;
+    out property <length> item-border-radius: LayoutTokens.borderRadius-medium;
+    out property <length> item-border-width-thin: LayoutTokens.table-border-width;
+    out property <length> item-min-height: LayoutTokens.control-medium-size;
+    out property <length> item-min-height-coarse: 44px;
+    out property <length> toggle-width-default: LayoutTokens.base-size-16;
+    out property <length> toggle-width-coarse: 3 * LayoutTokens.base-size-8;
+    out property <length> item-content-padding-inline: LayoutTokens.base-size-8;
+    out property <length> item-current-indicator-width: LayoutTokens.base-size-4;
+    out property <length> item-current-indicator-height: LayoutTokens.label-height-large;
+    out property <length> item-current-indicator-offset-inline: 0px - LayoutTokens.base-size-8;
+    out property <length> item-line-height-fallback: LayoutTokens.text-body-lineHeight-medium;
+    /// Matches upstream **`:focus-visible`** **thick** ring spread (implement as **2px** stroke / border on the row chrome).
+    out property <length> item-focus-ring-width: 2 * item-border-width-thin;
+}
+
 export global OverlayTokens {
     out property <color> backdrop-scrim: PrimerColors.overlay-scrim;
     out property <color> panel-background: PrimerColors.bgColor-default;
