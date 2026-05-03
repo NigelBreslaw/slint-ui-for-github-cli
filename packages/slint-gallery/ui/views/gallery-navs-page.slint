@@ -11,8 +11,8 @@ import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 
 export component GalleryNavsPage inherits VerticalLayout {
     spacing: 28px;
-    width: 100%;
     alignment: start;
+    padding: 24px;
 
     property <int> demo-nav-flat-selected: 0;
     property <[NavListItem]> demo-nav-flat-items: [
@@ -258,7 +258,6 @@ export component GalleryNavsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 12px;
-        width: 100%;
         alignment: start;
 
         Text {
