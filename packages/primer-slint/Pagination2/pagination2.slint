@@ -1,0 +1,100 @@
+// Standalone Primer Pagination (nav strip only) — upstream: primer-ui-react `Pagination/Pagination.tsx`.
+// Reuses `PaginationLogic` / `PaginationPiece` from `../Pagination/` (same model as DataTable `Pagination`).
+// Callback `page-changed` emits **0-based page index** (matches `Pagination` and app state); `current-page` is **1-based** (React-style).
+import { Button } from "../Buttons/buttons.slint";
+import { ButtonVariant } from "../Buttons/types.slint";
+import { Icons } from "../assets/icons.slint";
+import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import { PaginationPiece, PaginationPieceKind } from "../Pagination/types.slint";
+import { PaginationLogic } from "../Pagination/pagination-logic.slint";
+
+component Pagination2NavItem {
+    in property <PaginationPiece> piece;
+    callback activate(int);
+
+    min-height: LayoutTokens.control-small-size;
+    horizontal-stretch: 0;
+
+    if piece.kind == PaginationPieceKind.Prev: Button {
+        variant: ButtonVariant.invisible;
+        size: Size.small;
+        disabled: piece.disabled;
+        has-leading-icon: true;
+        leading-icon: Icons.chevron_left;
+        label: "Previous";
+        clicked => {
+            activate(piece.page_num - 1);
+        }
+    }
+
+    if piece.kind == PaginationPieceKind.Next: Button {
+        variant: ButtonVariant.invisible;
+        size: Size.small;
+        disabled: piece.disabled;
+        has-trailing-icon: true;
+        trailing-icon: Icons.chevron_right;
+        label: "Next";
+        clicked => {
+            activate(piece.page_num - 1);
+        }
+    }
+
+    if piece.kind == PaginationPieceKind.Num: Button {
+        variant: piece.selected ? ButtonVariant.default : ButtonVariant.invisible;
+        size: Size.small;
+        disabled: piece.disabled;
+        label: "" + piece.page_num;
+        clicked => {
+            activate(piece.page_num - 1);
+        }
+    }
+
+    if piece.kind == PaginationPieceKind.Break: Text {
+        text: "…";
+        color: PrimerColors.fgColor-muted;
+        font-size: LayoutTokens.text-body-size-medium;
+        vertical-alignment: center;
+    }
+}
+
+export component Pagination2 {
+    in property <int> page-count: 1;
+    in-out property <int> current-page: 1;
+    in property <bool> show-pages: true;
+    in property <int> margin-page-count: 1;
+    in property <int> surrounding-page-count: 2;
+    callback page-changed(int);
+
+    property <int> idx-clamped: PaginationLogic.clamp_page_index(current-page - 1, page-count);
+    property <int> current-1based: idx-clamped + 1;
+    property <int> model-len: PaginationLogic.model_len(
+        page-count,
+        current-1based,
+        show-pages,
+        margin-page-count,
+        surrounding-page-count,
+    );
+
+    width: 100%;
+    min-height: LayoutTokens.control-small-size;
+
+    HorizontalLayout {
+        width: 100%;
+        spacing: LayoutTokens.button-content-gap;
+        alignment: center;
+
+        for i in model-len: Pagination2NavItem {
+            piece: PaginationLogic.piece_at(
+                i,
+                page-count,
+                current-1based,
+                show-pages,
+                margin-page-count,
+                surrounding-page-count,
+            );
+            activate(idx) => {
+                root.page-changed(idx);
+            }
+        }
+    }
+}

@@ -10,6 +10,7 @@ import {
     LabelSize,
     LabelVariant,
     Pagination,
+    Pagination2,
     TableContainer,
 } from "../../../primer-slint/primer.slint";
 import { PrimerColors } from "../../../primer-slint/tokens.slint";
@@ -39,6 +40,43 @@ export component GalleryDataPage inherits VerticalLayout {
     property <int> demo-pagination-page-index: 0;
     property <int> demo-pagination-page-index-prevnext: 0;
     property <int> demo-pagination-page-index-short: 0;
+    property <int> demo-pagination2-current-page: 1;
+
+    VerticalLayout {
+        spacing: 12px;
+        width: 100%;
+
+        Text {
+            text: "Pagination2 — smoke";
+            color: PrimerColors.fgColor-default;
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Standalone nav (centered strip, no bordered footer). Page count 10; `page-changed` is 0-based index.";
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Text {
+            text: "Current page (1-based): " + demo-pagination2-current-page;
+            color: PrimerColors.fgColor-muted;
+            font-size: 12px;
+            wrap: word-wrap;
+        }
+
+        Pagination2 {
+            width: 100%;
+            page-count: 10;
+            current-page: demo-pagination2-current-page;
+            show-pages: true;
+            page-changed(idx) => {
+                demo-pagination2-current-page = idx + 1;
+            }
+        }
+    }
 
     VerticalLayout {
         spacing: 12px;
@@ -109,6 +147,8 @@ export component GalleryDataPage inherits VerticalLayout {
             }
         }
     }
+
+    
 
     VerticalLayout {
         spacing: 12px;
