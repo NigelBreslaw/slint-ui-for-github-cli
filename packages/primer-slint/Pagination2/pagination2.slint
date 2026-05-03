@@ -8,12 +8,11 @@ import { LayoutTokens, PrimerColors, Size } from "../tokens.slint";
 import { PaginationPiece, PaginationPieceKind } from "../Pagination/types.slint";
 import { PaginationLogic } from "../Pagination/pagination-logic.slint";
 
-component Pagination2NavItem {
+component Pagination2NavItem inherits HorizontalLayout {
     in property <PaginationPiece> piece;
     callback activate(int);
 
     min-height: LayoutTokens.control-small-size;
-    horizontal-stretch: 0;
 
     if piece.kind == PaginationPieceKind.Prev: Button {
         variant: ButtonVariant.invisible;
@@ -75,11 +74,9 @@ export component Pagination2 {
         surrounding-page-count,
     );
 
-    width: 100%;
     min-height: LayoutTokens.control-small-size;
 
     HorizontalLayout {
-        width: 100%;
         spacing: LayoutTokens.button-content-gap;
         alignment: center;
 
