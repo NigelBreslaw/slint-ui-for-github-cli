@@ -1,0 +1,56 @@
+import { LayoutTokens, StateLabelTokens } from "../tokens.slint";
+import { StateLabelLogic } from "./logic.slint";
+import { StateLabelSize, StateLabelStatus } from "./types.slint";
+
+export { StateLabelSize, StateLabelStatus }
+
+export component StateLabel {
+    in property <string> text: "";
+    in property <StateLabelStatus> status: StateLabelStatus.IssueOpened;
+    in property <StateLabelSize> size: medium;
+
+    property <color> effective-bg: StateLabelLogic.status-background(root.status);
+    property <color> effective-border: StateLabelLogic.status-border(root.status);
+    property <bool> show-icon: StateLabelLogic.shows-icon(root.status);
+    property <image> icon-src: StateLabelLogic.status-icon(root.status);
+
+    property <length> pad-v:
+        size == StateLabelSize.small ? StateLabelTokens.padding-vertical-small : StateLabelTokens.padding-vertical-medium;
+    property <length> pad-h:
+        size == StateLabelSize.small ? StateLabelTokens.padding-horizontal-small : StateLabelTokens.padding-horizontal-medium;
+    property <length> text-size:
+        size == StateLabelSize.small ? StateLabelTokens.text-size-small : StateLabelTokens.text-size-medium;
+    property <length> icon-side:
+        size == StateLabelSize.small ? text-size : LayoutTokens.base-size-16;
+
+    Rectangle {
+        border-radius: StateLabelTokens.border-radius-pill;
+        border-width: StateLabelTokens.inset-border-width;
+        border-color: effective-border;
+        background: effective-bg;
+
+        HorizontalLayout {
+            padding-left: pad-h;
+            padding-right: pad-h;
+            padding-top: pad-v;
+            padding-bottom: pad-v;
+            spacing: show-icon ? StateLabelTokens.icon-margin-end : 0px;
+            alignment: center;
+
+            if show-icon: Image {
+                width: icon-side;
+                height: icon-side;
+                source: icon-src;
+                colorize: StateLabelTokens.label-fgColor;
+            }
+
+            Text {
+                text: root.text;
+                color: StateLabelTokens.label-fgColor;
+                font-size: text-size;
+                font-weight: StateLabelTokens.text-weight-semibold;
+                vertical-alignment: center;
+            }
+        }
+    }
+}

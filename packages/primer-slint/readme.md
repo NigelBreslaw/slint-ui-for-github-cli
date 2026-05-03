@@ -23,6 +23,7 @@ specified in detail.
 - **ButtonTokens** — `color-btn-*`, `button-*`, action-list hover backgrounds, disabled fg, icon-button tints, and filled-button shadow colors (`button-shadow-*-light` / `button-shadow-*-dark`); composes from **PrimerColors** where possible.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
+- **StateLabelTokens** — [StateLabel](slint/StateLabel/state-label.slint) padding, pill radius, semibold text size, and **onEmphasis** fg; composes **LayoutTokens** + **PrimerColors** only. Emphasis **bg** / **border** pairs: **PrimerColors** (`bgColor-open-emphasis`, `borderColor-done-emphasis`, …) in the **`StateLabel.module.css`** audit block.
 - **ActionListTokens** — [**ActionList**](https://primer.style/product/components/action-list/) row and section-heading colors (danger, inactive, link, filled heading, divider, loading label fg): **only** **PrimerColors** + **ButtonTokens** `out` bindings. PR2 audit comment block in [`tokens.slint`](slint/tokens.slint) above **`ActionListTokens`**.
 - **FilteredActionListTokens** — [**FilteredActionList**](slint/FilteredActionList/filtered-action-list.slint) select-all strip padding/gaps and body skeleton bar spacing; composes **LayoutTokens** only. See [`FilteredActionList/VARIANT_MATRIX.md`](slint/FilteredActionList/VARIANT_MATRIX.md) for coverage and v1 non-goals.
 - **CheckboxTokens** — unchecked rest/hover/pressed, checked/indeterminate accent fill + hover/active, and disabled colors; composes from **PrimerColors** and **ButtonTokens**. **`LayoutTokens.checkbox-border-radius`** matches Primer **`borderRadius-small`** (2px).
@@ -348,6 +349,21 @@ Slint port of Primer [**TextInput**](https://primer.style/product/components/tex
 **Imports for views:** [`primer.slint`](slint/primer.slint) — **`PrimerTextInput`**, **`ValidationStatus`**, **`Size`**, **`TextInputLoaderPosition`**, **`Icons`** (when using **`leading-visual`**, **`trailing-visual`**, **`has-trailing-action`**, or loading slot visuals).
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Forms** group).
+
+## StateLabel
+
+Slint port of Primer [**StateLabel**](https://primer.style/product/components/state-label/) (issue/PR/alert status pill). Upstream: [`StateLabel.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/StateLabel/StateLabel.tsx), [`StateLabel.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/StateLabel/StateLabel.module.css).
+
+| Property | Type | Notes |
+| -------- | ---- | ----- |
+| `text` | `string` | Label text; empty hides the control (same pattern as **Label**). |
+| `status` | **`StateLabelStatus`** | Drives emphasis **bg** / **border** and Octicon (**`Open`** / **`Closed`** omit the icon). |
+| `size` | **`StateLabelSize`** | **`unset`** (default) omits React **`size`**; **`small`** / **`medium`** set padding + typography. |
+| `variant` | **`StateLabelVariant`** | Deprecated upstream; used **only** when **`size`** is **`unset`** (**`small`** → small chip). |
+
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`StateLabel`**, **`StateLabelStatus`**, **`StateLabelSize`**, **`StateLabelVariant`**, **`Icons`**. Optional **`StateLabelTokens`** / **`PrimerColors`** from [`tokens.slint`](slint/tokens.slint).
+
+Examples: **standalone gallery** (`pnpm dev:gallery` — **State label** group).
 
 ## Pagination
 

@@ -1,0 +1,167 @@
+import {
+    IconButton,
+    Icons,
+    Radio,
+    RadioGroup,
+    Select,
+    SelectOption,
+    StateLabel,
+    StateLabelSize,
+    StateLabelStatus,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+
+export component GalleryStateLabelPage {
+
+    property <[SelectOption]> status-options: [
+        { value: "i0", label: "Issue opened", enabled: true },
+        { value: "i1", label: "Pull request opened", enabled: true },
+        { value: "i2", label: "Issue closed", enabled: true },
+        { value: "i3", label: "Issue closed (not planned)", enabled: true },
+        { value: "i4", label: "Pull request closed", enabled: true },
+        { value: "i5", label: "Pull request merged", enabled: true },
+        { value: "i6", label: "Pull request draft", enabled: true },
+        { value: "i7", label: "Issue draft", enabled: true },
+        { value: "i8", label: "Pull request queued", enabled: true },
+        { value: "i9", label: "Unavailable", enabled: true },
+        { value: "i10", label: "Alert opened", enabled: true },
+        { value: "i11", label: "Alert fixed", enabled: true },
+        { value: "i12", label: "Alert dismissed", enabled: true },
+        { value: "i13", label: "Alert closed", enabled: true },
+        { value: "i14", label: "Open", enabled: true },
+        { value: "i15", label: "Closed", enabled: true },
+        { value: "i16", label: "Archived", enabled: true },
+    ];
+
+    property <[StateLabelStatus]> status-order: [
+        StateLabelStatus.IssueOpened,
+        StateLabelStatus.PullOpened,
+        StateLabelStatus.IssueClosed,
+        StateLabelStatus.PullClosed,
+        StateLabelStatus.PullMerged,
+        StateLabelStatus.Draft,
+        StateLabelStatus.IssueDraft,
+        StateLabelStatus.PullQueued,
+        StateLabelStatus.Unavailable,
+        StateLabelStatus.AlertOpened,
+        StateLabelStatus.AlertFixed,
+        StateLabelStatus.AlertDismissed,
+        StateLabelStatus.AlertClosed,
+        StateLabelStatus.Open,
+        StateLabelStatus.Closed,
+        StateLabelStatus.Archived,
+    ];
+
+    property <int> demo-status-index: 0;
+
+    property <StateLabelStatus> preview-status: status-order[demo-status-index];
+    property <StateLabelSize> preview-size: StateLabelSize.medium;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+
+            StateLabel {
+                text: status-options[demo-status-index].label;
+                status: preview-status;
+                size: preview-size;
+            }
+        }
+
+        Rectangle { }
+
+        Rectangle {
+            width: 300px;
+            background: PrimerColors.bgColor-inset;
+            vertical-stretch: 1;
+
+            Rectangle {
+                x: 0px;
+                width: 1px;
+                background: PrimerColors.borderColor-default;
+            }
+
+            VerticalLayout {
+                padding: 16px;
+                spacing: 20px;
+                alignment: start;
+
+                VerticalLayout {
+                    spacing: 6px;
+
+                    HorizontalLayout {
+                        spacing: 4px;
+                        alignment: start;
+
+                        Text {
+                            text: "status";
+                            font-size: LayoutTokens.text-body-size-medium;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
+                            color: PrimerColors.fgColor-default;
+                        }
+
+                        Text {
+                            text: "*";
+                            color: PrimerColors.fgColor-danger;
+                            font-size: LayoutTokens.text-body-size-medium;
+                            vertical-alignment: top;
+                        }
+                    }
+
+                    Select {
+                        label-text: "";
+                        placeholder: "Choose status…";
+                        options: status-options;
+                        selected-index <=> demo-status-index;
+                        validation-status: ValidationStatus.none;
+                        selected-changed(_ix) => {
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 4px;
+
+                    Text {
+                        text: "size";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Text {
+                        text: "Infer matches React when size is omitted; small / medium set an explicit size.";
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        wrap: word-wrap;
+                    }
+
+                    RadioGroup {
+                        label: "";
+
+                        Radio {
+                            value: "sm";
+                            label: "small";
+                            checked: preview-size == StateLabelSize.small;
+                            toggled => {
+                                preview-size = StateLabelSize.small;
+                            }
+                        }
+
+                        Radio {
+                            value: "md";
+                            label: "medium";
+                            checked: preview-size == StateLabelSize.medium;
+                            toggled => {
+                                preview-size = StateLabelSize.medium;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

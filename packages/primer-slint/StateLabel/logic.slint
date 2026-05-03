@@ -1,0 +1,95 @@
+import { Icons } from "../assets/icons.slint";
+import { PrimerColors } from "../tokens.slint";
+import { StateLabelStatus } from "./types.slint";
+
+export global StateLabelLogic {
+    public pure function shows-icon(s: StateLabelStatus) -> bool {
+        return s != StateLabelStatus.Open && s != StateLabelStatus.Closed;
+    }
+
+    public pure function status-background(s: StateLabelStatus) -> color {
+        if s == StateLabelStatus.IssueClosed || s == StateLabelStatus.PullMerged || s == StateLabelStatus.AlertFixed || s == StateLabelStatus.Closed {
+            return PrimerColors.bgColor-done-emphasis;
+        }
+        if s == StateLabelStatus.Unavailable || s == StateLabelStatus.Archived {
+            return PrimerColors.bgColor-neutral-emphasis;
+        }
+        if s == StateLabelStatus.PullClosed || s == StateLabelStatus.AlertClosed {
+            return PrimerColors.bgColor-closed-emphasis;
+        }
+        if s == StateLabelStatus.PullQueued {
+            return PrimerColors.bgColor-attention-emphasis;
+        }
+        if s == StateLabelStatus.IssueOpened || s == StateLabelStatus.PullOpened || s == StateLabelStatus.Open || s == StateLabelStatus.AlertOpened {
+            return PrimerColors.bgColor-open-emphasis;
+        }
+        // Draft, IssueDraft, AlertDismissed
+        return PrimerColors.bgColor-draft-emphasis;
+    }
+
+    public pure function status-border(s: StateLabelStatus) -> color {
+        if s == StateLabelStatus.IssueClosed || s == StateLabelStatus.PullMerged || s == StateLabelStatus.AlertFixed || s == StateLabelStatus.Closed {
+            return PrimerColors.borderColor-done-emphasis;
+        }
+        if s == StateLabelStatus.Unavailable || s == StateLabelStatus.Archived {
+            return PrimerColors.borderColor-neutral-emphasis;
+        }
+        if s == StateLabelStatus.PullClosed || s == StateLabelStatus.AlertClosed {
+            return PrimerColors.borderColor-closed-emphasis;
+        }
+        if s == StateLabelStatus.PullQueued {
+            return PrimerColors.borderColor-attention-emphasis;
+        }
+        if s == StateLabelStatus.IssueOpened || s == StateLabelStatus.PullOpened || s == StateLabelStatus.Open || s == StateLabelStatus.AlertOpened {
+            return PrimerColors.borderColor-open-emphasis;
+        }
+        return PrimerColors.borderColor-draft-emphasis;
+    }
+
+    public pure function status-icon(s: StateLabelStatus) -> image {
+        if s == StateLabelStatus.IssueOpened {
+            return Icons.issue_opened;
+        }
+        if s == StateLabelStatus.PullOpened {
+            return Icons.pull_request;
+        }
+        if s == StateLabelStatus.IssueClosed {
+            return Icons.issue_closed;
+        }
+        if s == StateLabelStatus.PullClosed {
+            return Icons.git_pull_request_closed;
+        }
+        if s == StateLabelStatus.PullMerged {
+            return Icons.git_merge;
+        }
+        if s == StateLabelStatus.Draft {
+            return Icons.git_pull_request_draft;
+        }
+        if s == StateLabelStatus.IssueDraft {
+            return Icons.issue_draft;
+        }
+        if s == StateLabelStatus.PullQueued {
+            return Icons.git_merge_queue;
+        }
+        if s == StateLabelStatus.Unavailable {
+            return Icons.alert;
+        }
+        if s == StateLabelStatus.AlertOpened {
+            return Icons.shield;
+        }
+        if s == StateLabelStatus.AlertFixed {
+            return Icons.shield_check;
+        }
+        if s == StateLabelStatus.AlertDismissed {
+            return Icons.shield_slash;
+        }
+        if s == StateLabelStatus.AlertClosed {
+            return Icons.shield_x;
+        }
+        if s == StateLabelStatus.Archived {
+            return Icons.archive;
+        }
+        // Open / Closed: no icon (never drawn when shows-icon is false).
+        return Icons.issue_opened;
+    }
+}

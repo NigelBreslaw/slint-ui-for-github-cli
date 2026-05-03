@@ -9,6 +9,7 @@ import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryDialogsPage } from "./views/gallery-dialogs-page.slint";
 import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint";
+import { GalleryStateLabelPage } from "./views/gallery-state-label-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
 import { Icons } from "../../primer-slint/primer.slint";
 
@@ -81,8 +82,7 @@ export component GalleryWindow inherits Window {
 
                     gallery-main := VerticalLayout {
                         width: gallery-flick.width;
-                        padding: 24px;
-                        spacing: 8px;
+                        min-height: gallery-flick.height;
                         alignment: start;
 
                         if GalleryState.selected-group-index == 0: GalleryButtonsPage { }
@@ -100,6 +100,11 @@ export component GalleryWindow inherits Window {
                         if GalleryState.selected-group-index == 6: GalleryDialogsPage { }
 
                         if GalleryState.selected-group-index == 7: GallerySelectPanelPage { }
+
+                        if GalleryState.selected-group-index == 8: GalleryStateLabelPage {
+                            height: main-scroll.height;
+
+                        }
                     }
                 }
             }

@@ -295,6 +295,7 @@ export type ShellDialogsStateHandle = {
 export type SlintIconsGlobal = {
   pull_request: ImageData;
   issue_opened: ImageData;
+  issue_closed: ImageData;
   issue_draft: ImageData;
   dot_fill: ImageData;
   sort_desc: ImageData;
@@ -306,6 +307,7 @@ export type SlintIconsGlobal = {
   chevron_up: ImageData;
   arrow_down: ImageData;
   arrow_up: ImageData;
+  archive: ImageData;
   triangle_down: ImageData;
   alert: ImageData;
   check_circle: ImageData;
@@ -314,6 +316,9 @@ export type SlintIconsGlobal = {
   circle_check: ImageData;
   x: ImageData;
   git_pull_request_draft: ImageData;
+  git_merge: ImageData;
+  git_merge_queue: ImageData;
+  git_pull_request_closed: ImageData;
   kebab_horizontal: ImageData;
   link: ImageData;
   link_external: ImageData;
@@ -329,6 +334,11 @@ export type SlintIconsGlobal = {
   checkbox: ImageData;
   check: ImageData;
   search: ImageData;
+  shield: ImageData;
+  shield_check: ImageData;
+  shield_slash: ImageData;
+  shield_x: ImageData;
+  skip: ImageData;
   checkbox_fill: ImageData;
   file_directory_fill: ImageData;
   plus_circle: ImageData;
