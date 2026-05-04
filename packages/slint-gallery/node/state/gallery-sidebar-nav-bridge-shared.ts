@@ -2,38 +2,97 @@ import { assignProperties } from "slint-bridge-kit";
 import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 
-/** One folder + single **Playground** leaf — order matches prior static [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint). Keep in sync with **`GALLERY_SIDEBAR_NAV`** in [`rust/src/lib.rs`](../../rust/src/lib.rs). */
-const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: string }[] = [
-    { folderId: "folder-action-list", label: "Action list", leafId: "action-list-playground" },
-    { folderId: "folder-avatar", label: "Avatar", leafId: "avatar-playground" },
-    { folderId: "folder-banner", label: "Banner", leafId: "banner-playground" },
-    { folderId: "folder-buttons", label: "Buttons", leafId: "buttons-playground" },
+/** One folder and one or more nav leaves. Order matches [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint) fallback. Keep in sync with **`GALLERY_SIDEBAR_NAV`** in [`rust/src/lib.rs`](../../rust/src/lib.rs). */
+const GALLERY_SIDEBAR_NAV: readonly {
+    folderId: string;
+    label: string;
+    leaves: readonly { id: string; label: string }[];
+}[] = [
+    {
+        folderId: "folder-action-list",
+        label: "Action list",
+        leaves: [{ id: "action-list-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-avatar",
+        label: "Avatar",
+        leaves: [{ id: "avatar-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-banner",
+        label: "Banner",
+        leaves: [{ id: "banner-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-buttons",
+        label: "Buttons",
+        leaves: [
+            { id: "buttons-playground", label: "Button" },
+            { id: "icon-button-playground", label: "IconButton" },
+        ],
+    },
     {
         folderId: "folder-counter-label",
         label: "Counter label",
-        leafId: "counter-label-playground",
+        leaves: [{ id: "counter-label-playground", label: "Playground" }],
     },
-    { folderId: "folder-data", label: "Data", leafId: "data-playground" },
-    { folderId: "folder-dialogs", label: "Dialogs", leafId: "dialogs-playground" },
-    { folderId: "folder-forms", label: "Forms", leafId: "forms-playground" },
-    { folderId: "folder-label", label: "Label", leafId: "label-playground" },
-    { folderId: "folder-navs", label: "Navs", leafId: "navs-playground" },
-    { folderId: "folder-select", label: "Select", leafId: "select-playground" },
+    { folderId: "folder-data", label: "Data", leaves: [{ id: "data-playground", label: "Playground" }] },
+    {
+        folderId: "folder-dialogs",
+        label: "Dialogs",
+        leaves: [{ id: "dialogs-playground", label: "Playground" }],
+    },
+    { folderId: "folder-forms", label: "Forms", leaves: [{ id: "forms-playground", label: "Playground" }] },
+    { folderId: "folder-label", label: "Label", leaves: [{ id: "label-playground", label: "Playground" }] },
+    { folderId: "folder-navs", label: "Navs", leaves: [{ id: "navs-playground", label: "Playground" }] },
+    {
+        folderId: "folder-select",
+        label: "Select",
+        leaves: [{ id: "select-playground", label: "Playground" }],
+    },
     {
         folderId: "folder-segmented-control",
         label: "Segmented control",
-        leafId: "segmented-control-playground",
+        leaves: [{ id: "segmented-control-playground", label: "Playground" }],
     },
-    { folderId: "folder-skeleton-box", label: "Skeleton box", leafId: "skeleton-box-playground" },
-    { folderId: "folder-spinner", label: "Spinner", leafId: "spinner-playground" },
-    { folderId: "folder-state-label", label: "State label", leafId: "state-label-playground" },
-    { folderId: "folder-text-input", label: "Text input", leafId: "text-input-playground" },
-    { folderId: "folder-toggle-switch", label: "Toggle switch", leafId: "toggle-switch-playground" },
-    { folderId: "folder-tree-view", label: "Tree view", leafId: "tree-view-playground" },
-    { folderId: "folder-underline-nav", label: "Underline nav", leafId: "underline-nav-playground" },
+    {
+        folderId: "folder-skeleton-box",
+        label: "Skeleton box",
+        leaves: [{ id: "skeleton-box-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-spinner",
+        label: "Spinner",
+        leaves: [{ id: "spinner-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-state-label",
+        label: "State label",
+        leaves: [{ id: "state-label-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-text-input",
+        label: "Text input",
+        leaves: [{ id: "text-input-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-toggle-switch",
+        label: "Toggle switch",
+        leaves: [{ id: "toggle-switch-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-tree-view",
+        label: "Tree view",
+        leaves: [{ id: "tree-view-playground", label: "Playground" }],
+    },
+    {
+        folderId: "folder-underline-nav",
+        label: "Underline nav",
+        leaves: [{ id: "underline-nav-playground", label: "Playground" }],
+    },
 ] as const;
 
-const PLAYGROUND_LEAF_IDS = new Set(GALLERY_SIDEBAR_NAV.map((e) => e.leafId));
+const PLAYGROUND_LEAF_IDS = new Set(GALLERY_SIDEBAR_NAV.flatMap((e) => e.leaves.map((l) => l.id)));
 const FOLDER_IDS = new Set(GALLERY_SIDEBAR_NAV.map((e) => e.folderId));
 
 export type GallerySidebarNavHandle = {
@@ -100,15 +159,16 @@ function treeViewRowFolder(
     };
 }
 
-function treeViewRowPlaygroundLeaf(
+function treeViewRowNavLeaf(
     id: string,
+    leafLabel: string,
     current: boolean,
     dotFill: ImageData,
     fileIcon: ImageData,
 ): TreeViewRowJs {
     return {
         id,
-        label: "Playground",
+        label: leafLabel,
         level: 2,
         has_children: false,
         expanded: false,
@@ -137,7 +197,7 @@ function buildVisibleNavRows(
     const rows: TreeViewRowJs[] = [];
     for (const entry of GALLERY_SIDEBAR_NAV) {
         const isOpen = expandedFolderIds.has(entry.folderId);
-        const selectionInFolder = selectedPageId === entry.leafId;
+        const selectionInFolder = entry.leaves.some((l) => l.id === selectedPageId);
         rows.push(
             treeViewRowFolder(
                 entry.folderId,
@@ -149,14 +209,17 @@ function buildVisibleNavRows(
             ),
         );
         if (isOpen) {
-            rows.push(
-                treeViewRowPlaygroundLeaf(
-                    entry.leafId,
-                    selectionInFolder,
-                    dotFill,
-                    fileIcon,
-                ),
-            );
+            for (const leaf of entry.leaves) {
+                rows.push(
+                    treeViewRowNavLeaf(
+                        leaf.id,
+                        leaf.label,
+                        selectedPageId === leaf.id,
+                        dotFill,
+                        fileIcon,
+                    ),
+                );
+            }
         }
     }
     return rows;

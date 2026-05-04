@@ -146,11 +146,30 @@ export component GallerySidebar {
     loading-children-badge: "",
 },{
     id: "buttons-playground",
-    label: "Playground",
+    label: "Button",
     level: 2,
     has-children: false,
     expanded: false,
     current: GalleryState.selected-page-id == "buttons-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "icon-button-playground",
+    label: "IconButton",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "icon-button-playground",
     leading-is-directory: false,
     has-leading-visual: true,
     trailing: TreeViewTrailingVisual.none,
@@ -780,6 +799,7 @@ export component GallerySidebar {
                                 || id == "avatar-playground"
                                 || id == "banner-playground"
                                 || id == "buttons-playground"
+                                || id == "icon-button-playground"
                                 || id == "counter-label-playground"
                                 || id == "data-playground"
                                 || id == "dialogs-playground"

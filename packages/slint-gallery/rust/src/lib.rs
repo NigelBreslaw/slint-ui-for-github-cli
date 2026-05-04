@@ -6,57 +6,72 @@ use std::collections::BTreeSet;
 use std::rc::Rc;
 
 /// Keep in sync with **`packages/slint-gallery/node/state/gallery-sidebar-nav-bridge-shared.ts`** (`GALLERY_SIDEBAR_NAV`).
-const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 19] = [
+const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
     (
         "folder-action-list",
         "Action list",
-        "action-list-playground",
+        &[("action-list-playground", "Playground")],
     ),
-    ("folder-avatar", "Avatar", "avatar-playground"),
-    ("folder-banner", "Banner", "banner-playground"),
-    ("folder-buttons", "Buttons", "buttons-playground"),
+    ("folder-avatar", "Avatar", &[("avatar-playground", "Playground")]),
+    ("folder-banner", "Banner", &[("banner-playground", "Playground")]),
+    (
+        "folder-buttons",
+        "Buttons",
+        &[
+            ("buttons-playground", "Button"),
+            ("icon-button-playground", "IconButton"),
+        ],
+    ),
     (
         "folder-counter-label",
         "Counter label",
-        "counter-label-playground",
+        &[("counter-label-playground", "Playground")],
     ),
-    ("folder-data", "Data", "data-playground"),
-    ("folder-dialogs", "Dialogs", "dialogs-playground"),
-    ("folder-forms", "Forms", "forms-playground"),
-    ("folder-label", "Label", "label-playground"),
-    ("folder-navs", "Navs", "navs-playground"),
-    ("folder-select", "Select", "select-playground"),
+    ("folder-data", "Data", &[("data-playground", "Playground")]),
+    (
+        "folder-dialogs",
+        "Dialogs",
+        &[("dialogs-playground", "Playground")],
+    ),
+    ("folder-forms", "Forms", &[("forms-playground", "Playground")]),
+    ("folder-label", "Label", &[("label-playground", "Playground")]),
+    ("folder-navs", "Navs", &[("navs-playground", "Playground")]),
+    ("folder-select", "Select", &[("select-playground", "Playground")]),
     (
         "folder-segmented-control",
         "Segmented control",
-        "segmented-control-playground",
+        &[("segmented-control-playground", "Playground")],
     ),
     (
         "folder-skeleton-box",
         "Skeleton box",
-        "skeleton-box-playground",
+        &[("skeleton-box-playground", "Playground")],
     ),
-    ("folder-spinner", "Spinner", "spinner-playground"),
+    ("folder-spinner", "Spinner", &[("spinner-playground", "Playground")]),
     (
         "folder-state-label",
         "State label",
-        "state-label-playground",
+        &[("state-label-playground", "Playground")],
     ),
     (
         "folder-text-input",
         "Text input",
-        "text-input-playground",
+        &[("text-input-playground", "Playground")],
     ),
     (
         "folder-toggle-switch",
         "Toggle switch",
-        "toggle-switch-playground",
+        &[("toggle-switch-playground", "Playground")],
     ),
-    ("folder-tree-view", "Tree view", "tree-view-playground"),
+    (
+        "folder-tree-view",
+        "Tree view",
+        &[("tree-view-playground", "Playground")],
+    ),
     (
         "folder-underline-nav",
         "Underline nav",
-        "underline-nav-playground",
+        &[("underline-nav-playground", "Playground")],
     ),
 ];
 
@@ -194,15 +209,13 @@ fn fill_gallery_tree_view_list_models(window: &GalleryWindow) {
 }
 
 fn sidebar_nav_is_folder_id(id: &str) -> bool {
-    GALLERY_SIDEBAR_NAV
-        .iter()
-        .any(|(folder_id, _, _)| *folder_id == id)
+    GALLERY_SIDEBAR_NAV.iter().any(|(folder_id, _, _)| *folder_id == id)
 }
 
 fn sidebar_nav_is_leaf_id(id: &str) -> bool {
     GALLERY_SIDEBAR_NAV
         .iter()
-        .any(|(_, _, leaf_id)| *leaf_id == id)
+        .any(|(_, _, leaves)| leaves.iter().any(|(leaf_id, _)| *leaf_id == id))
 }
 
 fn tree_view_row_sidebar_folder(
@@ -235,15 +248,16 @@ fn tree_view_row_sidebar_folder(
     }
 }
 
-fn tree_view_row_sidebar_playground_leaf(
+fn tree_view_row_sidebar_nav_leaf(
     leaf_id: &str,
+    leaf_label: &str,
     current: bool,
     dot_fill: &Image,
     file_icon: &Image,
 ) -> TreeViewRow {
     TreeViewRow {
         id: SharedString::from(leaf_id),
-        label: SharedString::from("Playground"),
+        label: SharedString::from(leaf_label),
         level: 2,
         has_children: false,
         expanded: false,
@@ -270,9 +284,10 @@ fn gallery_sidebar_visible_rows(
     file_icon: &Image,
 ) -> Vec<TreeViewRow> {
     let mut rows = Vec::new();
-    for (folder_id, label, leaf_id) in GALLERY_SIDEBAR_NAV.iter() {
+    let selected = selected_page_id.as_str();
+    for (folder_id, label, leaves) in GALLERY_SIDEBAR_NAV.iter() {
         let is_open = expanded_folder_ids.contains(*folder_id);
-        let selection_in_folder = selected_page_id.as_str() == *leaf_id;
+        let selection_in_folder = leaves.iter().any(|(id, _)| *id == selected);
         rows.push(tree_view_row_sidebar_folder(
             folder_id,
             label,
@@ -282,12 +297,15 @@ fn gallery_sidebar_visible_rows(
             file_icon,
         ));
         if is_open {
-            rows.push(tree_view_row_sidebar_playground_leaf(
-                leaf_id,
-                selection_in_folder,
-                dot_fill,
-                file_icon,
-            ));
+            for (leaf_id, leaf_label) in leaves.iter() {
+                rows.push(tree_view_row_sidebar_nav_leaf(
+                    leaf_id,
+                    leaf_label,
+                    selected == *leaf_id,
+                    dot_fill,
+                    file_icon,
+                ));
+            }
         }
     }
     rows

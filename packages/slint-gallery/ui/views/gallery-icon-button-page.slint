@@ -1,0 +1,195 @@
+import {
+    IconButton,
+    IconButtonVariant,
+    Icons,
+    Radio,
+    RadioGroup,
+    Size,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryIconButtonPage {
+    property <IconButtonVariant> preview-variant: IconButtonVariant.default;
+    property <Size> preview-size: Size.medium;
+    /// 0 info, 1 circle_check, 2 search, 3 gear (24px asset)
+    property <int> icon-preset: 0;
+
+    property <image> preview-icon:
+        icon-preset == 0 ? Icons.info
+        : icon-preset == 1 ? Icons.circle_check
+        : icon-preset == 2 ? Icons.search : Icons.gear_24;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "IconButton";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            IconButton {
+                variant: preview-variant;
+                size: preview-size;
+                icon-source: preview-icon;
+                clicked => {
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Variant";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "def";
+                        label: "default";
+                        checked: preview-variant == IconButtonVariant.default;
+                        toggled => {
+                            preview-variant = IconButtonVariant.default;
+                        }
+                    }
+
+                    Radio {
+                        value: "pri";
+                        label: "primary";
+                        checked: preview-variant == IconButtonVariant.primary;
+                        toggled => {
+                            preview-variant = IconButtonVariant.primary;
+                        }
+                    }
+
+                    Radio {
+                        value: "dan";
+                        label: "danger";
+                        checked: preview-variant == IconButtonVariant.danger;
+                        toggled => {
+                            preview-variant = IconButtonVariant.danger;
+                        }
+                    }
+
+                    Radio {
+                        value: "inv";
+                        label: "invisible";
+                        checked: preview-variant == IconButtonVariant.invisible;
+                        toggled => {
+                            preview-variant = IconButtonVariant.invisible;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Size";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "sm";
+                        label: "small";
+                        checked: preview-size == Size.small;
+                        toggled => {
+                            preview-size = Size.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "md";
+                        label: "medium";
+                        checked: preview-size == Size.medium;
+                        toggled => {
+                            preview-size = Size.medium;
+                        }
+                    }
+
+                    Radio {
+                        value: "lg";
+                        label: "large";
+                        checked: preview-size == Size.large;
+                        toggled => {
+                            preview-size = Size.large;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Icon";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "i0";
+                        label: "info";
+                        checked: icon-preset == 0;
+                        toggled => {
+                            icon-preset = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "i1";
+                        label: "circle_check";
+                        checked: icon-preset == 1;
+                        toggled => {
+                            icon-preset = 1;
+                        }
+                    }
+
+                    Radio {
+                        value: "i2";
+                        label: "search";
+                        checked: icon-preset == 2;
+                        toggled => {
+                            icon-preset = 2;
+                        }
+                    }
+
+                    Radio {
+                        value: "i3";
+                        label: "gear";
+                        checked: icon-preset == 3;
+                        toggled => {
+                            icon-preset = 3;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

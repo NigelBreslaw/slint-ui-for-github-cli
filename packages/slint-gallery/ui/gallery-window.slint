@@ -2,6 +2,7 @@ import { PrimerColors } from "../../primer-slint/tokens.slint";
 import { GalleryHeader } from "./components/gallery-header.slint";
 import { GallerySidebar } from "./components/gallery-sidebar.slint";
 import { GalleryButtonsPage } from "./views/gallery-buttons-page.slint";
+import { GalleryIconButtonPage } from "./views/gallery-icon-button-page.slint";
 import { GalleryCounterLabelPage } from "./views/gallery-counter-label-page.slint";
 import { GalleryNavsPage } from "./views/gallery-navs-page.slint";
 import { GalleryAvatarPage } from "./views/gallery-avatar-page.slint";
@@ -102,7 +103,13 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id == "buttons-playground": GalleryButtonsPage { }
+                        if GalleryState.selected-page-id == "buttons-playground": GalleryButtonsPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "icon-button-playground": GalleryIconButtonPage {
+                            height: main-scroll.height;
+                        }
 
                         if GalleryState.selected-page-id == "counter-label-playground": GalleryCounterLabelPage {
                             height: main-scroll.height;
