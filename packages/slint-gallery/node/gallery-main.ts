@@ -1,6 +1,5 @@
 import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
-import { assignProperties } from "slint-bridge-kit";
 import {
   wireActionListGalleryMultiSelect,
   type ActionListGalleryMultiSelectHandle,
@@ -26,7 +25,7 @@ type GalleryWindowModule = {
     show(): void;
     hide(): void;
     GalleryState: {
-      selected_group_index: number;
+      selected_page_id: string;
     };
     GalleryActionListMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
@@ -47,10 +46,6 @@ const ui = slint.loadFile(
 ) as GalleryWindowModule;
 
 const window = new ui.GalleryWindow();
-
-assignProperties(window.GalleryState, {
-  selected_group_index: 0,
-});
 
 wireActionListGalleryMultiSelect(window.GalleryActionListMultiSelect);
 wireActionListGalleryMultiSelect(

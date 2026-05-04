@@ -37,7 +37,8 @@ export { GalleryTreeViewListModels } from "./state/gallery-tree-view-list-models
 
 
 export global GalleryState {
-    in-out property <int> selected-group-index: 4;
+    /// Leaf row id from the sidebar **TreeView** (alphabetical folders; default matches prior **Data** landing).
+    in-out property <string> selected-page-id: "data-playground";
 }
 
 export component GalleryWindow inherits Window {
@@ -73,9 +74,9 @@ export component GalleryWindow inherits Window {
             vertical-stretch: 1;
 
             GallerySidebar {
-                selected-index: GalleryState.selected-group-index;
-                group-selected(idx) => {
-                    GalleryState.selected-group-index = idx;
+                selected-page-id: GalleryState.selected-page-id;
+                page-selected(id) => {
+                    GalleryState.selected-page-id = id;
                 }
             }
 
@@ -95,49 +96,48 @@ export component GalleryWindow inherits Window {
                         min-height: gallery-flick.height;
                         alignment: start;
 
-                        if GalleryState.selected-group-index == 0: GalleryButtonsPage { }
+                        if GalleryState.selected-page-id == "action-list-playground": GalleryActionListPage { }
 
-                        if GalleryState.selected-group-index == 1: GalleryNavsPage { }
+                        if GalleryState.selected-page-id == "buttons-playground": GalleryButtonsPage { }
 
-                        if GalleryState.selected-group-index == 2: GalleryFeedbackPage { }
+                        if GalleryState.selected-page-id == "data-playground": GalleryDataPage { }
 
-                        if GalleryState.selected-group-index == 3: GalleryFormsPage { }
+                        if GalleryState.selected-page-id == "dialogs-playground": GalleryDialogsPage { }
 
-                        if GalleryState.selected-group-index == 4: GalleryDataPage { }
+                        if GalleryState.selected-page-id == "feedback-playground": GalleryFeedbackPage { }
 
-                        if GalleryState.selected-group-index == 5: GalleryActionListPage { }
+                        if GalleryState.selected-page-id == "forms-playground": GalleryFormsPage { }
 
-                        if GalleryState.selected-group-index == 6: GalleryDialogsPage { }
+                        if GalleryState.selected-page-id == "navs-playground": GalleryNavsPage { }
 
-                        if GalleryState.selected-group-index == 7: GallerySelectPanelPage { }
-
-                        if GalleryState.selected-group-index == 8: GalleryStateLabelPage {
-                            height: main-scroll.height;
-
-                        }
-
-                        if GalleryState.selected-group-index == 9: GalleryToggleSwitchPage {
+                        if GalleryState.selected-page-id == "select-playground": GallerySelectPage {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-group-index == 10: GalleryPrimerTextInputPage {
+                        if GalleryState.selected-page-id == "select-panel-playground": GallerySelectPanelPage { }
+
+                        if GalleryState.selected-page-id == "segmented-control-playground": GallerySegmentedControlPage {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-group-index == 11: GallerySegmentedControlPage {
+                        if GalleryState.selected-page-id == "state-label-playground": GalleryStateLabelPage {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-group-index == 12: GalleryTreeViewPage {
+                        if GalleryState.selected-page-id == "text-input-playground": GalleryPrimerTextInputPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "toggle-switch-playground": GalleryToggleSwitchPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "tree-view-playground": GalleryTreeViewPage {
                             width: gallery-flick.width;
                             horizontal-stretch: 1;
                         }
 
-                        if GalleryState.selected-group-index == 13: GallerySelectPage {
-                            height: main-scroll.height;
-                        }
-
-                        if GalleryState.selected-group-index == 14: GalleryUnderlineNavPage {
+                        if GalleryState.selected-page-id == "underline-nav-playground": GalleryUnderlineNavPage {
                             height: main-scroll.height;
                         }
                     }

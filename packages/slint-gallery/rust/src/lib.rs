@@ -474,8 +474,6 @@ fn wire_gallery_select_panel_multi(window: &GalleryWindow) {
 pub fn run_gallery() -> Result<(), slint::PlatformError> {
     let window = GalleryWindow::new()?;
 
-    window.global::<GalleryState>().set_selected_group_index(0);
-
     wire_gallery_action_list_multi_select(&window);
     wire_gallery_action_list_listbox_multi_select(&window);
     wire_gallery_select_panel_multi(&window);
