@@ -3,7 +3,12 @@
 
 import { Icons } from "../assets/icons.slint";
 import { Spinner } from "../Progress/spinner.slint";
-import { LayoutTokens, PrimerColors, Size, ToggleSwitchTokens } from "../tokens.slint";
+import {
+    LayoutTokens,
+    PrimerColors,
+    Size,
+    ToggleSwitchTokens,
+} from "../tokens.slint";
 
 export enum ToggleSwitchSize {
     small,
@@ -160,7 +165,7 @@ export component ToggleSwitch {
                             height: root.track-height;
                             border-radius: LayoutTokens.borderRadius-medium;
                             border-width: 1px;
-                            clip: true;
+
                             background: root.disabled ? ToggleSwitchTokens.track-bgColor-disabled : (root.checked ? ToggleSwitchTokens.track-bgColor-checked-rest : ToggleSwitchTokens.track-bgColor-rest);
                             border-color: root.disabled ? ToggleSwitchTokens.track-borderColor-disabled : (root.checked ? ToggleSwitchTokens.track-borderColor-checked : ToggleSwitchTokens.track-borderColor-rest);
 
@@ -173,51 +178,54 @@ export component ToggleSwitch {
                                 duration: root.motion-duration;
                                 easing: cubic-bezier(0.5, 1, 0.89, 1);
                             }
-
-                            HorizontalLayout {
-                                x: root.track-border-w;
-                                y: root.track-border-w;
-                                width: root.track-inner-w;
-                                height: root.track-inner-h;
-
-                                Rectangle {
-                                    width: root.track-half-w;
-                                    height: root.track-inner-h;
-
-                                    Image {
-                                        source: Icons.toggle_switch_line;
-                                        width: root.icon-diameter;
-                                        height: root.icon-diameter;
-                                        x: root.line-icon-x;
-                                        y: (parent.height - self.height) / 2;
-                                        colorize: root.line-icon-fg;
-                                    }
-                                }
-
-                                Rectangle {
-                                    width: root.track-half-w;
-                                    height: root.track-inner-h;
-
-                                    Image {
-                                        source: Icons.toggle_switch_circle;
-                                        width: root.icon-diameter;
-                                        height: root.icon-diameter;
-                                        x: root.circle-icon-x;
-                                        y: (parent.height - self.height) / 2;
-                                        colorize: root.circle-icon-fg;
-                                    }
-                                }
-                            }
-
                             Rectangle {
-                                x: root.knob-x;
-                                y: root.knob-y;
-                                width: root.knob-w;
-                                height: root.knob-h;
-                                border-radius: root.knob-corner-radius;
-                                border-width: 1px;
-                                border-color: root.knob-stroke;
-                                background: root.knob-fill;
+                                clip: true;
+
+                                HorizontalLayout {
+                                    x: root.track-border-w;
+                                    y: root.track-border-w;
+                                    width: root.track-inner-w;
+                                    height: root.track-inner-h;
+
+                                    Rectangle {
+                                        width: root.track-half-w;
+                                        height: root.track-inner-h;
+
+                                        Image {
+                                            source: Icons.toggle_switch_line;
+                                            width: root.icon-diameter;
+                                            height: root.icon-diameter;
+                                            x: root.line-icon-x;
+                                            y: (parent.height - self.height) / 2;
+                                            colorize: root.line-icon-fg;
+                                        }
+                                    }
+
+                                    Rectangle {
+                                        width: root.track-half-w;
+                                        height: root.track-inner-h;
+
+                                        Image {
+                                            source: Icons.toggle_switch_circle;
+                                            width: root.icon-diameter;
+                                            height: root.icon-diameter;
+                                            x: root.circle-icon-x;
+                                            y: (parent.height - self.height) / 2;
+                                            colorize: root.circle-icon-fg;
+                                        }
+                                    }
+                                }
+
+                                Rectangle {
+                                    x: root.knob-x;
+                                    y: root.knob-y;
+                                    width: root.knob-w;
+                                    height: root.knob-h;
+                                    border-radius: root.knob-corner-radius;
+                                    border-width: 1px;
+                                    border-color: root.knob-stroke;
+                                    background: root.knob-fill;
+                                }
                             }
 
                             states [

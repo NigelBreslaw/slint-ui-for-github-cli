@@ -24,7 +24,7 @@ export component StateLabel {
         size == StateLabelSize.small ? text-size : LayoutTokens.base-size-16;
 
     Rectangle {
-        border-radius: StateLabelTokens.border-radius-pill;
+        border-radius: Math.min(StateLabelTokens.border-radius-pill, self.height / 2);
         border-width: StateLabelTokens.inset-border-width;
         border-color: effective-border;
         background: effective-bg;
