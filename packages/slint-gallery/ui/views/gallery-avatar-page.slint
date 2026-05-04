@@ -13,7 +13,7 @@ import { GalleryFeedbackDemoAssets } from "../state/gallery-feedback-demo-assets
 export component GalleryAvatarPage {
     property <bool> preview-square: false;
     property <bool> preview-show-image: true;
-    property <string> preview-alt: "Hubot";
+    property <string> preview-alt: "Mona";
     /// 0 = 16px, 1 = 20px, 2 = header, 3 = 32px, 4 = 48px
     property <int> size-preset: 1;
 
@@ -42,7 +42,7 @@ export component GalleryAvatarPage {
             if preview-show-image: Avatar {
                 size: preview-size;
                 square: preview-square;
-                source: GalleryFeedbackDemoAssets.hubot;
+                source: @image-url("../assets/avatar-mona.png");
                 alt-text: preview-alt;
             }
 
