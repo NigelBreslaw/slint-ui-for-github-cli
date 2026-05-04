@@ -18,6 +18,7 @@ import { GalleryTreeViewPage } from "./views/gallery-tree-view-page.slint";
 import { GalleryUnderlineNavPage } from "./views/gallery-underline-nav-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
 import { Icons } from "../../primer-slint/primer.slint";
+import { GalleryState } from "./state/gallery-state.slint";
 
 import "../../primer-slint/assets/fonts/MonaSans-VariableFont.ttf";
 import "../../primer-slint/assets/fonts/MonaSans-Italic-VariableFont.ttf";
@@ -35,12 +36,7 @@ export {
 export { GalleryFilteredActionListSelectAll } from "./state/gallery-filtered-action-list-select-all-state.slint";
 export { GalleryTreeViewListModels } from "./state/gallery-tree-view-list-models.slint";
 export { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
-
-
-export global GalleryState {
-    /// Leaf row id from the sidebar **TreeView** (alphabetical folders; default matches prior **Data** landing).
-    in-out property <string> selected-page-id: "data-playground";
-}
+export { GalleryState } from "./state/gallery-state.slint";
 
 export component GalleryWindow inherits Window {
 

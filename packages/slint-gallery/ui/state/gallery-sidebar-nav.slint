@@ -1,6 +1,6 @@
 import { TreeViewRow } from "../../../primer-slint/primer.slint";
 
-/// Sidebar **PrimerTreeView** model and row callbacks — populated from Node via **`wireGallerySidebarNav`** (Rust gallery: seed **`rows`** separately).
+/// Sidebar **PrimerTreeView** model and row callbacks. Starts **`[]`** so **slint-viewer** / Rust use built-in fallback rows in **`GallerySidebar`**; Node **`wireGallerySidebarNav`** assigns **`rows`** and owns expand/collapse (Rust can mirror later).
 export global GallerySidebarNav {
     in-out property <[TreeViewRow]> rows: [];
     callback row-current-requested(string);

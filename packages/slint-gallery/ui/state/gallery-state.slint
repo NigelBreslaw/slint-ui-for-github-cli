@@ -1,0 +1,5 @@
+/// Shared gallery selection (sidebar + main content). Imported by **GalleryWindow**, **GallerySidebar**, and bridges.
+export global GalleryState {
+    /// Leaf row id from the sidebar **TreeView** (alphabetical folders; default matches prior **Data** landing).
+    in-out property <string> selected-page-id: "data-playground";
+}
