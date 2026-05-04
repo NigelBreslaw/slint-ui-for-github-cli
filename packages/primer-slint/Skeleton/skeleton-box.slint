@@ -4,11 +4,11 @@ import { LayoutTokens } from "../tokens.slint";
 
 
 export component SkeletonBox inherits Rectangle {
-    in property <bool> dark-canvas: Palette.color-scheme == ColorScheme.dark;
     in property <bool> enabled: true;
 
     in property <length> box-height: LayoutTokens.base-size-16;
 
+    property <bool> dark-canvas: Palette.color-scheme == ColorScheme.dark;
     property <duration> pulse-duration: 1s;
     property <bool> pulsing: false;
 

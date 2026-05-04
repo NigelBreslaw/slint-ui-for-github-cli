@@ -10,7 +10,6 @@ import { Palette } from "std-widgets.slint";
 
 export component GallerySkeletonBoxPage {
     property <bool> preview-enabled: true;
-    property <bool> preview-dark-canvas: false;
     /// 0 = 8px, 1 = 16px, 2 = 24px, 3 = 32px
     property <int> height-preset: 1;
 
@@ -46,7 +45,6 @@ export component GallerySkeletonBoxPage {
                     SkeletonBox {
                         horizontal-stretch: 1;
                         enabled: preview-enabled;
-                        dark-canvas: preview-dark-canvas;
                         box-height: preview-box-height;
                     }
                 }
@@ -69,11 +67,6 @@ export component GallerySkeletonBoxPage {
                 Checkbox {
                     label: "Enabled (pulse)";
                     checked <=> preview-enabled;
-                }
-
-                Checkbox {
-                    label: "Dark canvas";
-                    checked <=> preview-dark-canvas;
                 }
             }
 
