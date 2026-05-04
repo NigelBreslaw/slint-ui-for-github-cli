@@ -1,0 +1,388 @@
+import {
+    Banner,
+    BannerLayout,
+    BannerVariant,
+    Button,
+    ButtonVariant,
+    Checkbox,
+    Icons,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    Size,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+/// Interactive **Banner** playground (variant, layout, chrome, copy, actions, dismiss).
+export component GalleryBannerPage {
+    property <bool> preview-visible: true;
+    property <BannerVariant> preview-variant: BannerVariant.info;
+    property <BannerLayout> preview-layout: BannerLayout.default;
+    property <bool> preview-flush: false;
+    property <bool> preview-hide-title: false;
+    property <bool> preview-has-custom-leading: false;
+    property <string> preview-title: "Info";
+    property <string> preview-description: "Supplemental context or a non-blocking notice.";
+    property <string> preview-description-emphasis: "";
+    property <string> preview-subtitle: "";
+    property <bool> preview-dismissible: false;
+    property <string> preview-primary-label: "Primary";
+    property <string> preview-secondary-label: "Secondary";
+    property <ButtonVariant> preview-primary-variant: ButtonVariant.default;
+    property <bool> preview-actions-trailing: false;
+    property <Size> preview-action-size: Size.medium;
+
+    vertical-stretch: 1;
+    horizontal-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "Banner";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            if preview-visible: Banner {
+                horizontal-stretch: 1;
+                variant: preview-variant;
+                layout: preview-layout;
+                flush: preview-flush;
+                hide-title: preview-hide-title;
+                has-custom-leading-icon: preview-has-custom-leading;
+                leading-icon: Icons.gear_24;
+                title: preview-title;
+                description: preview-description;
+                description-emphasis: preview-description-emphasis;
+                subtitle: preview-subtitle;
+                dismissible: preview-dismissible;
+                dismiss => {
+                    preview-visible = false;
+                }
+                primary-action-label: preview-primary-label;
+                primary-action-variant: preview-primary-variant;
+                action-size: preview-action-size;
+                primary-action => {
+                }
+                secondary-action-label: preview-secondary-label;
+                secondary-action => {
+                }
+                actions-trailing: preview-actions-trailing;
+            }
+        }
+
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Variant";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "critical";
+                        label: "critical";
+                        checked: preview-variant == BannerVariant.critical;
+                        toggled => {
+                            preview-variant = BannerVariant.critical;
+                        }
+                    }
+
+                    Radio {
+                        value: "info";
+                        label: "info";
+                        checked: preview-variant == BannerVariant.info;
+                        toggled => {
+                            preview-variant = BannerVariant.info;
+                        }
+                    }
+
+                    Radio {
+                        value: "success";
+                        label: "success";
+                        checked: preview-variant == BannerVariant.success;
+                        toggled => {
+                            preview-variant = BannerVariant.success;
+                        }
+                    }
+
+                    Radio {
+                        value: "upsell";
+                        label: "upsell";
+                        checked: preview-variant == BannerVariant.upsell;
+                        toggled => {
+                            preview-variant = BannerVariant.upsell;
+                        }
+                    }
+
+                    Radio {
+                        value: "warning";
+                        label: "warning";
+                        checked: preview-variant == BannerVariant.warning;
+                        toggled => {
+                            preview-variant = BannerVariant.warning;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Layout";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "def";
+                        label: "default";
+                        checked: preview-layout == BannerLayout.default;
+                        toggled => {
+                            preview-layout = BannerLayout.default;
+                        }
+                    }
+
+                    Radio {
+                        value: "compact";
+                        label: "compact";
+                        checked: preview-layout == BannerLayout.compact;
+                        toggled => {
+                            preview-layout = BannerLayout.compact;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Chrome";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "flush";
+                    checked <=> preview-flush;
+                }
+
+                Checkbox {
+                    label: "hide title";
+                    checked <=> preview-hide-title;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Leading icon";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "custom leading (gear)";
+                    checked <=> preview-has-custom-leading;
+                }
+
+                Text {
+                    text: "Applies on info and upsell variants only.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Copy";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "title";
+                    text <=> preview-title;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "description";
+                    text <=> preview-description;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "description emphasis";
+                    placeholder: "Bold first segment; leave empty for plain description";
+                    text <=> preview-description-emphasis;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "subtitle";
+                    placeholder: "Optional muted line";
+                    text <=> preview-subtitle;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Dismiss";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "dismissible";
+                    checked <=> preview-dismissible;
+                }
+
+                Button {
+                    label: "Show banner again";
+                    clicked => {
+                        preview-visible = true;
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Actions";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Clear a label to hide that button.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "primary label";
+                    text <=> preview-primary-label;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "secondary label";
+                    text <=> preview-secondary-label;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                RadioGroup {
+                    label: "primary variant";
+
+                    Radio {
+                        value: "def";
+                        label: "default";
+                        checked: preview-primary-variant == ButtonVariant.default;
+                        toggled => {
+                            preview-primary-variant = ButtonVariant.default;
+                        }
+                    }
+
+                    Radio {
+                        value: "pri";
+                        label: "primary (green)";
+                        checked: preview-primary-variant == ButtonVariant.primary;
+                        toggled => {
+                            preview-primary-variant = ButtonVariant.primary;
+                        }
+                    }
+                }
+
+                Checkbox {
+                    label: "actions trailing (top row)";
+                    checked <=> preview-actions-trailing;
+                }
+
+                RadioGroup {
+                    label: "action size";
+
+                    Radio {
+                        value: "sm";
+                        label: "small";
+                        checked: preview-action-size == Size.small;
+                        toggled => {
+                            preview-action-size = Size.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "md";
+                        label: "medium";
+                        checked: preview-action-size == Size.medium;
+                        toggled => {
+                            preview-action-size = Size.medium;
+                        }
+                    }
+
+                    Radio {
+                        value: "lg";
+                        label: "large";
+                        checked: preview-action-size == Size.large;
+                        toggled => {
+                            preview-action-size = Size.large;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

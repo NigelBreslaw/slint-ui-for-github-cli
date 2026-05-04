@@ -108,10 +108,9 @@ export component Banner {
     property <image> resolved-leading-source: use-custom-leading ? leading-icon : default-leading-source;
 
     min-width: 120px;
-    preferred-width: 100%;
+    horizontal-stretch: 1;
 
     Rectangle {
-        width: 100%;
         background: banner-bg;
         border-radius: flush ? 0px : LayoutTokens.borderRadius-medium;
         border-width: flush ? 0px : 1px;
@@ -195,12 +194,10 @@ export component Banner {
                         color: PrimerColors.fgColor-muted;
                         font-size: LayoutTokens.text-body-size-small;
                         wrap: word-wrap;
-                        width: 100%;
                     }
 
                     if has-actions && !use-trailing-actions: HorizontalLayout {
                         spacing: LayoutTokens.banner-actions-gap;
-                        width: 100%;
                         alignment: start;
 
                         if secondary-action-label != "": Button {
@@ -272,7 +269,6 @@ export component Banner {
 
             if flush: Rectangle {
                 height: 1px;
-                width: 100%;
                 background: banner-border;
             }
         }

@@ -5,6 +5,7 @@ import type { ImageData } from "slint-ui";
 /** One folder + single **Playground** leaf — order matches prior static [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint). Keep in sync with **`GALLERY_SIDEBAR_NAV`** in [`rust/src/lib.rs`](../../rust/src/lib.rs). */
 const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: string }[] = [
     { folderId: "folder-action-list", label: "Action list", leafId: "action-list-playground" },
+    { folderId: "folder-banner", label: "Banner", leafId: "banner-playground" },
     { folderId: "folder-buttons", label: "Buttons", leafId: "buttons-playground" },
     {
         folderId: "folder-counter-label",

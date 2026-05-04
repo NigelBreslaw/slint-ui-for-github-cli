@@ -50,6 +50,44 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
+    id: "folder-banner",
+    label: "Banner",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "banner-playground",
+    label: "Playground",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "banner-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
     id: "folder-buttons",
     label: "Buttons",
     level: 1,
@@ -630,6 +668,7 @@ export component GallerySidebar {
                                 || id == "data-playground"
                                 || id == "dialogs-playground"
                                 || id == "feedback-playground"
+                                || id == "banner-playground"
                                 || id == "forms-playground"
                                 || id == "navs-playground"
                                 || id == "select-playground"

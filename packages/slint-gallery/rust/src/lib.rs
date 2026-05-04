@@ -6,12 +6,13 @@ use std::collections::BTreeSet;
 use std::rc::Rc;
 
 /// Keep in sync with **`packages/slint-gallery/node/state/gallery-sidebar-nav-bridge-shared.ts`** (`GALLERY_SIDEBAR_NAV`).
-const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 15] = [
+const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 16] = [
     (
         "folder-action-list",
         "Action list",
         "action-list-playground",
     ),
+    ("folder-banner", "Banner", "banner-playground"),
     ("folder-buttons", "Buttons", "buttons-playground"),
     (
         "folder-counter-label",
