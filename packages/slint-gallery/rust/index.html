@@ -12,27 +12,130 @@
   <meta http-equiv="Cache-Control" content="no-store, must-revalidate">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Primer Slint Gallery (WebAssembly)</title>
-  <link rel="stylesheet" href="https://slint.dev/css/demos-v1.css">
   <style>
-    body { margin: 0; font-family: system-ui, sans-serif; }
-    #spinner { padding: 1.5rem; }
-    #canvas-parent { min-height: 60vh; }
+    :root {
+      color-scheme: light dark;
+      --bg: #f6f7f9;
+      --bg-elevated: #ffffff;
+      --fg: #1f2328;
+      --fg-muted: #59636e;
+      --border: #d1d9e0;
+      --link: #0969da;
+      --link-hover: #0550ae;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1117;
+        --bg-elevated: #161b22;
+        --fg: #e6edf3;
+        --fg-muted: #8b949e;
+        --border: #30363d;
+        --link: #58a6ff;
+        --link-hover: #79b8ff;
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      font-size: 1rem;
+      line-height: 1.5;
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    .shell-header {
+      padding: 1.25rem 1.5rem 0;
+      max-width: 72rem;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .shell-header h1 {
+      margin: 0 0 0.35rem;
+      font-size: 1.375rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .shell-header p {
+      margin: 0;
+      color: var(--fg-muted);
+      font-size: 0.9375rem;
+    }
+
+    .shell-header a {
+      color: var(--link);
+      text-decoration: underline;
+      text-underline-offset: 0.15em;
+    }
+
+    .shell-header a:hover {
+      color: var(--link-hover);
+    }
+
+    #load-error {
+      margin: 0 auto;
+      max-width: 72rem;
+      width: 100%;
+      padding: 0 1.5rem 1rem;
+      color: var(--fg-muted);
+      font-size: 0.9375rem;
+    }
+
+    #canvas-parent {
+      flex: 1;
+      min-height: 60vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      padding: 1rem 1.5rem 1.5rem;
+      background: var(--bg);
+    }
+
+    #canvas-parent canvas {
+      max-width: 100%;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg-elevated);
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      #canvas-parent canvas {
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+      }
+    }
+
+    #canvas:focus,
+    #canvas:focus-visible {
+      touch-action: none;
+      outline: none;
+    }
   </style>
 </head>
 <body>
-  <h1>Primer Slint Gallery</h1>
-  <p>Primer design system components in <a href="https://slint.dev">Slint</a>, compiled to WebAssembly.</p>
+  <header class="shell-header">
+    <h1>Primer Slint Gallery</h1>
+    <p>Primer design system components in <a href="https://slint.dev">Slint</a>, compiled to WebAssembly.</p>
+  </header>
 
-  <div id="spinner">
-    <div class="spinner">Loading…</div>
-  </div>
+  <p id="load-error" role="alert" hidden></p>
   <!-- Slint winit (wasm) uses document.getElementById("canvas"); id must be exactly "canvas". -->
   <div id="canvas-parent">
     <canvas id="canvas" unselectable="on" data-slint-auto-resize-to-preferred="true"></canvas>
   </div>
 
   <script type="module">
-    const spinner = document.getElementById("spinner");
+    const loadError = document.getElementById("load-error");
 
     function winitWebYieldException(err) {
       return (
@@ -49,7 +152,6 @@
 
       const { default: init, start } = await import("./pkg/primer_slint_gallery.js");
       await init();
-      spinner.hidden = true;
       try {
         start();
       } catch (err) {
@@ -61,8 +163,8 @@
       }
     } catch (err) {
       console.error("Primer Slint gallery failed to start:", err);
-      spinner.hidden = false;
-      spinner.textContent = "Failed to load. See the browser console for details.";
+      loadError.textContent = "Failed to load. See the browser console for details.";
+      loadError.hidden = false;
     }
   </script>
 </body>
