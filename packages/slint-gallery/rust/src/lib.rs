@@ -5,6 +5,48 @@ use std::cell::RefCell;
 use std::collections::BTreeSet;
 use std::rc::Rc;
 
+/// Keep in sync with **`packages/slint-gallery/node/state/gallery-sidebar-nav-bridge-shared.ts`** (`GALLERY_SIDEBAR_NAV`).
+const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 14] = [
+    (
+        "folder-action-list",
+        "Action list",
+        "action-list-playground",
+    ),
+    ("folder-buttons", "Buttons", "buttons-playground"),
+    ("folder-data", "Data", "data-playground"),
+    ("folder-dialogs", "Dialogs", "dialogs-playground"),
+    ("folder-feedback", "Feedback", "feedback-playground"),
+    ("folder-forms", "Forms", "forms-playground"),
+    ("folder-navs", "Navs", "navs-playground"),
+    ("folder-select", "Select", "select-playground"),
+    (
+        "folder-segmented-control",
+        "Segmented control",
+        "segmented-control-playground",
+    ),
+    (
+        "folder-state-label",
+        "State label",
+        "state-label-playground",
+    ),
+    (
+        "folder-text-input",
+        "Text input",
+        "text-input-playground",
+    ),
+    (
+        "folder-toggle-switch",
+        "Toggle switch",
+        "toggle-switch-playground",
+    ),
+    ("folder-tree-view", "Tree view", "tree-view-playground"),
+    (
+        "folder-underline-nav",
+        "Underline nav",
+        "underline-nav-playground",
+    ),
+];
+
 #[cfg(target_arch = "wasm32")]
 use wasm_bindgen::prelude::*;
 
@@ -136,6 +178,174 @@ fn fill_gallery_tree_view_list_models(window: &GalleryWindow) {
     let g = window.global::<GalleryTreeViewListModels>();
     g.set_stress_list_rows(ModelRc::new(VecModel::from(stress)));
     g.set_nested_scroll_list_rows(ModelRc::new(VecModel::from(nested)));
+}
+
+fn sidebar_nav_is_folder_id(id: &str) -> bool {
+    GALLERY_SIDEBAR_NAV
+        .iter()
+        .any(|(folder_id, _, _)| *folder_id == id)
+}
+
+fn sidebar_nav_is_leaf_id(id: &str) -> bool {
+    GALLERY_SIDEBAR_NAV
+        .iter()
+        .any(|(_, _, leaf_id)| *leaf_id == id)
+}
+
+fn tree_view_row_sidebar_folder(
+    folder_id: &str,
+    label: &str,
+    expanded: bool,
+    current: bool,
+    dot_fill: &Image,
+    file_icon: &Image,
+) -> TreeViewRow {
+    TreeViewRow {
+        id: SharedString::from(folder_id),
+        label: SharedString::from(label),
+        level: 1,
+        has_children: true,
+        expanded,
+        current,
+        leading_is_directory: true,
+        has_leading_visual: true,
+        trailing: TreeViewTrailingVisual::None,
+        has_leading_action: false,
+        show_leading_action_icon: false,
+        leading_action_icon: dot_fill.clone(),
+        leading_file_icon: file_icon.clone(),
+        interactive: true,
+        is_skeleton: false,
+        has_secondary_actions: false,
+        secondary_actions_badge: SharedString::new(),
+        loading_children_badge: SharedString::new(),
+    }
+}
+
+fn tree_view_row_sidebar_playground_leaf(
+    leaf_id: &str,
+    current: bool,
+    dot_fill: &Image,
+    file_icon: &Image,
+) -> TreeViewRow {
+    TreeViewRow {
+        id: SharedString::from(leaf_id),
+        label: SharedString::from("Playground"),
+        level: 2,
+        has_children: false,
+        expanded: false,
+        current,
+        leading_is_directory: false,
+        has_leading_visual: true,
+        trailing: TreeViewTrailingVisual::None,
+        has_leading_action: false,
+        show_leading_action_icon: false,
+        leading_action_icon: dot_fill.clone(),
+        leading_file_icon: file_icon.clone(),
+        interactive: true,
+        is_skeleton: false,
+        has_secondary_actions: false,
+        secondary_actions_badge: SharedString::new(),
+        loading_children_badge: SharedString::new(),
+    }
+}
+
+fn gallery_sidebar_visible_rows(
+    selected_page_id: SharedString,
+    expanded_folder_ids: &BTreeSet<String>,
+    dot_fill: &Image,
+    file_icon: &Image,
+) -> Vec<TreeViewRow> {
+    let mut rows = Vec::new();
+    for (folder_id, label, leaf_id) in GALLERY_SIDEBAR_NAV.iter() {
+        let is_open = expanded_folder_ids.contains(*folder_id);
+        let selection_in_folder = selected_page_id.as_str() == *leaf_id;
+        rows.push(tree_view_row_sidebar_folder(
+            folder_id,
+            label,
+            is_open,
+            selection_in_folder && !is_open,
+            dot_fill,
+            file_icon,
+        ));
+        if is_open {
+            rows.push(tree_view_row_sidebar_playground_leaf(
+                leaf_id,
+                selection_in_folder,
+                dot_fill,
+                file_icon,
+            ));
+        }
+    }
+    rows
+}
+
+fn push_gallery_sidebar_nav_rows(window: &GalleryWindow, expanded: &RefCell<BTreeSet<String>>) {
+    let state = window.global::<GalleryState>();
+    let selected = state.get_selected_page_id();
+    let icons = window.global::<Icons>();
+    let dot = icons.get_dot_fill();
+    let file = icons.get_file();
+    let ex = expanded.borrow();
+    let rows = gallery_sidebar_visible_rows(selected, &ex, &dot, &file);
+    window
+        .global::<GallerySidebarNav>()
+        .set_rows(ModelRc::new(VecModel::from(rows)));
+}
+
+/// Keep in sync with **`wireGallerySidebarNav`** in **`gallery-sidebar-nav-bridge-shared.ts`**.
+fn wire_gallery_sidebar_nav(window: &GalleryWindow) {
+    let expanded = Rc::new(RefCell::new(BTreeSet::<String>::new()));
+    let window_weak = window.as_weak();
+
+    window
+        .global::<GallerySidebarNav>()
+        .on_row_toggle_requested({
+            let expanded = Rc::clone(&expanded);
+            let window_weak = window_weak.clone();
+            move |id: SharedString| {
+                let id = id.to_string();
+                if !sidebar_nav_is_folder_id(&id) {
+                    return;
+                }
+                {
+                    let mut ex = expanded.borrow_mut();
+                    if ex.contains(&id) {
+                        ex.remove(&id);
+                    } else {
+                        ex.insert(id);
+                    }
+                }
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                push_gallery_sidebar_nav_rows(&w, expanded.as_ref());
+            }
+        });
+
+    window
+        .global::<GallerySidebarNav>()
+        .on_row_current_requested({
+            let expanded = Rc::clone(&expanded);
+            let window_weak = window_weak.clone();
+            move |id: SharedString| {
+                if !sidebar_nav_is_leaf_id(id.as_str()) {
+                    return;
+                }
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                w.global::<GalleryState>()
+                    .set_selected_page_id(id.clone());
+                push_gallery_sidebar_nav_rows(&w, expanded.as_ref());
+            }
+        });
+
+    window
+        .global::<GallerySidebarNav>()
+        .on_row_secondary_actions_requested(|_id, _ax, _ay, _aw, _ah| {});
+
+    push_gallery_sidebar_nav_rows(window, expanded.as_ref());
 }
 
 fn row_checked_model(row_count: usize, selected: &BTreeSet<usize>) -> ModelRc<bool> {
@@ -482,6 +692,7 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_filtered_action_list_select_all(&window);
 
     fill_gallery_tree_view_list_models(&window);
+    wire_gallery_sidebar_nav(&window);
 
     window.run()
 }

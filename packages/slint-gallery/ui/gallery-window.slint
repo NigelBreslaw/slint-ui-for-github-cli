@@ -8,7 +8,6 @@ import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryDialogsPage } from "./views/gallery-dialogs-page.slint";
-import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint";
 import { GalleryStateLabelPage } from "./views/gallery-state-label-page.slint";
 import { GalleryToggleSwitchPage } from "./views/gallery-toggle-switch-page.slint";
 import { GalleryPrimerTextInputPage } from "./views/gallery-primer-text-input-page.slint";
@@ -105,8 +104,6 @@ export component GalleryWindow inherits Window {
                         if GalleryState.selected-page-id == "select-playground": GallerySelectPage {
                             height: main-scroll.height;
                         }
-
-                        if GalleryState.selected-page-id == "select-panel-playground": GallerySelectPanelPage { }
 
                         if GalleryState.selected-page-id == "segmented-control-playground": GallerySegmentedControlPage {
                             height: main-scroll.height;

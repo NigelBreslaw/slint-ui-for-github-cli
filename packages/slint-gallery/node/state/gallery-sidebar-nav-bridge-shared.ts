@@ -2,7 +2,7 @@ import { assignProperties } from "slint-bridge-kit";
 import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 
-/** One folder + single **Playground** leaf — order matches prior static [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint). */
+/** One folder + single **Playground** leaf — order matches prior static [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint). Keep in sync with **`GALLERY_SIDEBAR_NAV`** in [`rust/src/lib.rs`](../../rust/src/lib.rs). */
 const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: string }[] = [
     { folderId: "folder-action-list", label: "Action list", leafId: "action-list-playground" },
     { folderId: "folder-buttons", label: "Buttons", leafId: "buttons-playground" },
@@ -12,7 +12,6 @@ const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: s
     { folderId: "folder-forms", label: "Forms", leafId: "forms-playground" },
     { folderId: "folder-navs", label: "Navs", leafId: "navs-playground" },
     { folderId: "folder-select", label: "Select", leafId: "select-playground" },
-    { folderId: "folder-select-panel", label: "Select panel", leafId: "select-panel-playground" },
     {
         folderId: "folder-segmented-control",
         label: "Segmented control",
