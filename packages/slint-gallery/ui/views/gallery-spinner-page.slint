@@ -1,0 +1,79 @@
+import {
+    Radio,
+    RadioGroup,
+    Size,
+    Spinner,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GallerySpinnerPage {
+    property <Size> preview-size: Size.large;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "Spinner";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            Spinner {
+                size: preview-size;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "size";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "sm";
+                        label: "small";
+                        checked: preview-size == Size.small;
+                        toggled => {
+                            preview-size = Size.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "md";
+                        label: "medium";
+                        checked: preview-size == Size.medium;
+                        toggled => {
+                            preview-size = Size.medium;
+                        }
+                    }
+
+                    Radio {
+                        value: "lg";
+                        label: "large";
+                        checked: preview-size == Size.large;
+                        toggled => {
+                            preview-size = Size.large;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

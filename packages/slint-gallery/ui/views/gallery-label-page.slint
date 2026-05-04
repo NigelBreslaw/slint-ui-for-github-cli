@@ -1,0 +1,169 @@
+import {
+    Label,
+    LabelSize,
+    LabelVariant,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    Select,
+    SelectOption,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryLabelPage {
+    property <[SelectOption]> variant-options: [
+        { value: "v0", label: "Default", enabled: true },
+        { value: "v1", label: "Primary", enabled: true },
+        { value: "v2", label: "Secondary", enabled: true },
+        { value: "v3", label: "Accent", enabled: true },
+        { value: "v4", label: "Success", enabled: true },
+        { value: "v5", label: "Attention", enabled: true },
+        { value: "v6", label: "Severe", enabled: true },
+        { value: "v7", label: "Danger", enabled: true },
+        { value: "v8", label: "Done", enabled: true },
+        { value: "v9", label: "Sponsors", enabled: true },
+    ];
+
+    property <[LabelVariant]> variant-order: [
+        LabelVariant.default,
+        LabelVariant.primary,
+        LabelVariant.secondary,
+        LabelVariant.accent,
+        LabelVariant.success,
+        LabelVariant.attention,
+        LabelVariant.severe,
+        LabelVariant.danger,
+        LabelVariant.done,
+        LabelVariant.sponsors,
+    ];
+
+    property <int> demo-variant-index: 0;
+    property <LabelVariant> preview-variant: variant-order[demo-variant-index];
+    property <LabelSize> preview-size: LabelSize.small;
+    property <string> preview-text: "enhancement";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 12px;
+            alignment: start;
+
+            Text {
+                text: "Label";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+
+            Label {
+                width: 200px;
+                text: preview-text;
+                variant: preview-variant;
+                size: preview-size;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 6px;
+
+                HorizontalLayout {
+                    spacing: 4px;
+                    alignment: start;
+
+                    Text {
+                        text: "variant";
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                    }
+
+                    Text {
+                        text: "*";
+                        color: PrimerColors.fgColor-danger;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        vertical-alignment: top;
+                    }
+                }
+
+                Select {
+                    label-text: "";
+                    placeholder: "Choose variant…";
+                    options: variant-options;
+                    selected-index <=> demo-variant-index;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_ix) => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "size";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "sm";
+                        label: "small";
+                        checked: preview-size == LabelSize.small;
+                        toggled => {
+                            preview-size = LabelSize.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "lg";
+                        label: "large";
+                        checked: preview-size == LabelSize.large;
+                        toggled => {
+                            preview-size = LabelSize.large;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Preview text";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Empty string hides the chip.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "text";
+                    placeholder: "e.g. enhancement";
+                    text <=> preview-text;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+        }
+    }
+}

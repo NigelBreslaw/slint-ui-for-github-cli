@@ -4,7 +4,10 @@ import { GallerySidebar } from "./components/gallery-sidebar.slint";
 import { GalleryButtonsPage } from "./views/gallery-buttons-page.slint";
 import { GalleryCounterLabelPage } from "./views/gallery-counter-label-page.slint";
 import { GalleryNavsPage } from "./views/gallery-navs-page.slint";
-import { GalleryFeedbackPage } from "./views/gallery-feedback-page.slint";
+import { GalleryAvatarPage } from "./views/gallery-avatar-page.slint";
+import { GalleryLabelPage } from "./views/gallery-label-page.slint";
+import { GallerySkeletonBoxPage } from "./views/gallery-skeleton-box-page.slint";
+import { GallerySpinnerPage } from "./views/gallery-spinner-page.slint";
 import { GalleryBannerPage } from "./views/gallery-banner-page.slint";
 import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
@@ -91,6 +94,14 @@ export component GalleryWindow inherits Window {
 
                         if GalleryState.selected-page-id == "action-list-playground": GalleryActionListPage { }
 
+                        if GalleryState.selected-page-id == "avatar-playground": GalleryAvatarPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "banner-playground": GalleryBannerPage {
+                            height: main-scroll.height;
+                        }
+
                         if GalleryState.selected-page-id == "buttons-playground": GalleryButtonsPage { }
 
                         if GalleryState.selected-page-id == "counter-label-playground": GalleryCounterLabelPage {
@@ -101,13 +112,11 @@ export component GalleryWindow inherits Window {
 
                         if GalleryState.selected-page-id == "dialogs-playground": GalleryDialogsPage { }
 
-                        if GalleryState.selected-page-id == "feedback-playground": GalleryFeedbackPage { }
+                        if GalleryState.selected-page-id == "forms-playground": GalleryFormsPage { }
 
-                        if GalleryState.selected-page-id == "banner-playground": GalleryBannerPage {
+                        if GalleryState.selected-page-id == "label-playground": GalleryLabelPage {
                             height: main-scroll.height;
                         }
-
-                        if GalleryState.selected-page-id == "forms-playground": GalleryFormsPage { }
 
                         if GalleryState.selected-page-id == "navs-playground": GalleryNavsPage { }
 
@@ -116,6 +125,14 @@ export component GalleryWindow inherits Window {
                         }
 
                         if GalleryState.selected-page-id == "segmented-control-playground": GallerySegmentedControlPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "skeleton-box-playground": GallerySkeletonBoxPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "spinner-playground": GallerySpinnerPage {
                             height: main-scroll.height;
                         }
 

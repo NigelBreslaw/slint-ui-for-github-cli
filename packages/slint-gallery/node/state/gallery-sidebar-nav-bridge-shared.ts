@@ -5,6 +5,7 @@ import type { ImageData } from "slint-ui";
 /** One folder + single **Playground** leaf — order matches prior static [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint). Keep in sync with **`GALLERY_SIDEBAR_NAV`** in [`rust/src/lib.rs`](../../rust/src/lib.rs). */
 const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: string }[] = [
     { folderId: "folder-action-list", label: "Action list", leafId: "action-list-playground" },
+    { folderId: "folder-avatar", label: "Avatar", leafId: "avatar-playground" },
     { folderId: "folder-banner", label: "Banner", leafId: "banner-playground" },
     { folderId: "folder-buttons", label: "Buttons", leafId: "buttons-playground" },
     {
@@ -14,8 +15,8 @@ const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: s
     },
     { folderId: "folder-data", label: "Data", leafId: "data-playground" },
     { folderId: "folder-dialogs", label: "Dialogs", leafId: "dialogs-playground" },
-    { folderId: "folder-feedback", label: "Feedback", leafId: "feedback-playground" },
     { folderId: "folder-forms", label: "Forms", leafId: "forms-playground" },
+    { folderId: "folder-label", label: "Label", leafId: "label-playground" },
     { folderId: "folder-navs", label: "Navs", leafId: "navs-playground" },
     { folderId: "folder-select", label: "Select", leafId: "select-playground" },
     {
@@ -23,6 +24,8 @@ const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: s
         label: "Segmented control",
         leafId: "segmented-control-playground",
     },
+    { folderId: "folder-skeleton-box", label: "Skeleton box", leafId: "skeleton-box-playground" },
+    { folderId: "folder-spinner", label: "Spinner", leafId: "spinner-playground" },
     { folderId: "folder-state-label", label: "State label", leafId: "state-label-playground" },
     { folderId: "folder-text-input", label: "Text input", leafId: "text-input-playground" },
     { folderId: "folder-toggle-switch", label: "Toggle switch", leafId: "toggle-switch-playground" },

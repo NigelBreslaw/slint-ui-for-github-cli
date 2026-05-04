@@ -1,0 +1,132 @@
+import {
+    Checkbox,
+    Radio,
+    RadioGroup,
+    SkeletonBox,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { Palette } from "std-widgets.slint";
+
+export component GallerySkeletonBoxPage {
+    property <bool> preview-enabled: true;
+    property <bool> preview-dark-canvas: false;
+    /// 0 = 8px, 1 = 16px, 2 = 24px, 3 = 32px
+    property <int> height-preset: 1;
+
+    property <length> preview-box-height:
+        height-preset == 0 ? 8px
+        : height-preset == 1 ? 16px
+        : height-preset == 2 ? 24px
+        : 32px;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "SkeletonBox";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            Rectangle {
+                background: Palette.color-scheme == ColorScheme.dark ? #0d1117 : #ffffff;
+                border-radius: 6px;
+                width: 272px;
+
+                VerticalLayout {
+                    padding: 8px;
+
+                    SkeletonBox {
+                        horizontal-stretch: 1;
+                        enabled: preview-enabled;
+                        dark-canvas: preview-dark-canvas;
+                        box-height: preview-box-height;
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "State";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Enabled (pulse)";
+                    checked <=> preview-enabled;
+                }
+
+                Checkbox {
+                    label: "Dark canvas";
+                    checked <=> preview-dark-canvas;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Height";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "h8";
+                        label: "8px";
+                        checked: height-preset == 0;
+                        toggled => {
+                            height-preset = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "h16";
+                        label: "16px";
+                        checked: height-preset == 1;
+                        toggled => {
+                            height-preset = 1;
+                        }
+                    }
+
+                    Radio {
+                        value: "h24";
+                        label: "24px";
+                        checked: height-preset == 2;
+                        toggled => {
+                            height-preset = 2;
+                        }
+                    }
+
+                    Radio {
+                        value: "h32";
+                        label: "32px";
+                        checked: height-preset == 3;
+                        toggled => {
+                            height-preset = 3;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

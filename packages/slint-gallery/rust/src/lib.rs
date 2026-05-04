@@ -6,12 +6,13 @@ use std::collections::BTreeSet;
 use std::rc::Rc;
 
 /// Keep in sync with **`packages/slint-gallery/node/state/gallery-sidebar-nav-bridge-shared.ts`** (`GALLERY_SIDEBAR_NAV`).
-const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 16] = [
+const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 19] = [
     (
         "folder-action-list",
         "Action list",
         "action-list-playground",
     ),
+    ("folder-avatar", "Avatar", "avatar-playground"),
     ("folder-banner", "Banner", "banner-playground"),
     ("folder-buttons", "Buttons", "buttons-playground"),
     (
@@ -21,8 +22,8 @@ const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 16] = [
     ),
     ("folder-data", "Data", "data-playground"),
     ("folder-dialogs", "Dialogs", "dialogs-playground"),
-    ("folder-feedback", "Feedback", "feedback-playground"),
     ("folder-forms", "Forms", "forms-playground"),
+    ("folder-label", "Label", "label-playground"),
     ("folder-navs", "Navs", "navs-playground"),
     ("folder-select", "Select", "select-playground"),
     (
@@ -30,6 +31,12 @@ const GALLERY_SIDEBAR_NAV: [(&str, &str, &str); 16] = [
         "Segmented control",
         "segmented-control-playground",
     ),
+    (
+        "folder-skeleton-box",
+        "Skeleton box",
+        "skeleton-box-playground",
+    ),
+    ("folder-spinner", "Spinner", "spinner-playground"),
     (
         "folder-state-label",
         "State label",

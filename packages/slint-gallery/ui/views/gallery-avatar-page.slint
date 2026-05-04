@@ -1,0 +1,173 @@
+import {
+    Avatar,
+    Checkbox,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { GalleryFeedbackDemoAssets } from "../state/gallery-feedback-demo-assets.slint";
+
+export component GalleryAvatarPage {
+    property <bool> preview-square: false;
+    property <bool> preview-show-image: true;
+    property <string> preview-alt: "Hubot";
+    /// 0 = 16px, 1 = 20px, 2 = header, 3 = 32px, 4 = 48px
+    property <int> size-preset: 1;
+
+    property <length> preview-size:
+        size-preset == 0 ? 16px
+        : size-preset == 1 ? 20px
+        : size-preset == 2 ? LayoutTokens.avatar-size-header
+        : size-preset == 3 ? 32px
+        : 48px;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "Avatar";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            if preview-show-image: Avatar {
+                size: preview-size;
+                square: preview-square;
+                source: GalleryFeedbackDemoAssets.hubot;
+                alt-text: preview-alt;
+            }
+
+            if !preview-show-image: Avatar {
+                size: preview-size;
+                square: preview-square;
+                alt-text: preview-alt;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "Shape";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Square";
+                    checked <=> preview-square;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "Image";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Show image (Hubot)";
+                    checked <=> preview-show-image;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Alt text";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "alt";
+                    placeholder: "Accessible name";
+                    text <=> preview-alt;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Size";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "s16";
+                        label: "16px";
+                        checked: size-preset == 0;
+                        toggled => {
+                            size-preset = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "s20";
+                        label: "20px (default)";
+                        checked: size-preset == 1;
+                        toggled => {
+                            size-preset = 1;
+                        }
+                    }
+
+                    Radio {
+                        value: "hdr";
+                        label: "Header (token)";
+                        checked: size-preset == 2;
+                        toggled => {
+                            size-preset = 2;
+                        }
+                    }
+
+                    Radio {
+                        value: "s32";
+                        label: "32px";
+                        checked: size-preset == 3;
+                        toggled => {
+                            size-preset = 3;
+                        }
+                    }
+
+                    Radio {
+                        value: "s48";
+                        label: "48px";
+                        checked: size-preset == 4;
+                        toggled => {
+                            size-preset = 4;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
