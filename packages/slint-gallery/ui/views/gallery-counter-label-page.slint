@@ -1,0 +1,108 @@
+import {
+    CounterLabel,
+    CounterLabelVariant,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+/// CounterLabel playground (**`scheme`**: primary / secondary).
+export component GalleryCounterLabelPage {
+    property <string> preview-text: "12";
+    property <CounterLabelVariant> preview-scheme: CounterLabelVariant.secondary;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "CounterLabel";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            HorizontalLayout {
+                spacing: 12px;
+                alignment: start;
+
+                CounterLabel {
+                    text: preview-text;
+                    scheme: preview-scheme;
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Preview text";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Empty string hides the pill";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "text";
+                    placeholder: "e.g. 12 or 99+";
+                    text <=> preview-text;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "scheme";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "sec";
+                        label: "secondary (muted)";
+                        checked: preview-scheme == CounterLabelVariant.secondary;
+                        toggled => {
+                            preview-scheme = CounterLabelVariant.secondary;
+                        }
+                    }
+
+                    Radio {
+                        value: "pri";
+                        label: "primary (emphasis)";
+                        checked: preview-scheme == CounterLabelVariant.primary;
+                        toggled => {
+                            preview-scheme = CounterLabelVariant.primary;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

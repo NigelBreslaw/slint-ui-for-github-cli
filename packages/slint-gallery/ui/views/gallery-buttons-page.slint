@@ -2,14 +2,12 @@ import {
     Button,
     ButtonAlignContent,
     ButtonVariant,
-    CounterLabel,
-    CounterLabelVariant,
     Icons,
     Size,
 } from "../../../primer-slint/primer.slint";
 import { PrimerColors } from "../../../primer-slint/tokens.slint";
 
-/// Button, CounterLabel, and related Primer gallery demos (Buttons group).
+/// Button and related Primer gallery demos (Buttons group). Standalone **CounterLabel** lives under **Counter label** in the sidebar.
 export component GalleryButtonsPage inherits VerticalLayout {
     spacing: 12px;
     padding: 24px;
@@ -19,29 +17,6 @@ export component GalleryButtonsPage inherits VerticalLayout {
         color: PrimerColors.fgColor-default;
         font-size: 15px;
         font-weight: 600;
-    }
-
-    Text {
-        text: "CounterLabel (Primer scheme, standalone)";
-        color: PrimerColors.fgColor-muted;
-        font-size: 12px;
-    }
-
-    HorizontalLayout {
-        spacing: 8px;
-        width: self.preferred-width;
-
-        CounterLabel {
-            text: "12";
-            use-primer-scheme: true;
-            scheme: CounterLabelVariant.secondary;
-        }
-
-        CounterLabel {
-            text: "3";
-            use-primer-scheme: true;
-            scheme: CounterLabelVariant.primary;
-        }
     }
 
     HorizontalLayout {

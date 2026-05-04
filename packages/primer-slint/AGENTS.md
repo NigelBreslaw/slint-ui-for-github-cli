@@ -1,6 +1,6 @@
 # Primer Slint — guide for contributors and AI assistants
 
-**Location:** Library code lives in **`slint/`** (import from the github-app tree with **relative** paths, e.g. to [`primer.slint`](slint/primer.slint)). **Which globals to use:** [`slint/component-imports.md`](slint/component-imports.md).
+**Location:** Library code lives in **`slint/`** (import from the github-app tree with **relative** paths, e.g. to [`primer.slint`](slint/primer.slint)). **Which globals to use:** [`component-imports.md`](component-imports.md).
 
 **Gallery:** `pnpm dev:gallery` from the monorepo root — details: [`packages/slint-gallery/README.md`](../slint-gallery/README.md). **`AnchoredOverlay` / `PopupWindow`:** [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md).
 
@@ -23,7 +23,7 @@ Full **procedure** (research → matrix → tokens → states → PRs) lives in 
 
 1. Upstream: closest **primer-ui-react** + **primer-tokens** (orchestrator and [`primer-port-upstream-research/SKILL.md`](../../.cursor/skills/primer-port-upstream-research/SKILL.md)).
 2. Add `slint/<Name>/` with a clear entry `*.slint`.
-3. **Imports** per [component-imports](slint/component-imports.md); **export** from `primer.slint` when public; **user-facing docs** in [`readme.md`](readme.md).
+3. **Imports** per [component-imports](component-imports.md); **export** from `primer.slint` when public; **user-facing docs** in [`readme.md`](readme.md).
 
 ## Verification
 

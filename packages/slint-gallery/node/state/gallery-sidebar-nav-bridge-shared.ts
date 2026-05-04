@@ -6,6 +6,11 @@ import type { ImageData } from "slint-ui";
 const GALLERY_SIDEBAR_NAV: readonly { folderId: string; label: string; leafId: string }[] = [
     { folderId: "folder-action-list", label: "Action list", leafId: "action-list-playground" },
     { folderId: "folder-buttons", label: "Buttons", leafId: "buttons-playground" },
+    {
+        folderId: "folder-counter-label",
+        label: "Counter label",
+        leafId: "counter-label-playground",
+    },
     { folderId: "folder-data", label: "Data", leafId: "data-playground" },
     { folderId: "folder-dialogs", label: "Dialogs", leafId: "dialogs-playground" },
     { folderId: "folder-feedback", label: "Feedback", leafId: "feedback-playground" },
@@ -153,7 +158,7 @@ function buildVisibleNavRows(
     return rows;
 }
 
-export type GalleryStateNavHandle = {
+type GalleryStateNavHandle = {
     selected_page_id: string;
 };
 

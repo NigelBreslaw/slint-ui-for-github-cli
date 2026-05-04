@@ -1,37 +1,25 @@
 import { LayoutTokens, PrimerColors } from "../tokens.slint";
+import { CounterLabelVariant } from "./types.slint";
 
-export enum CounterLabelVariant {
-    primary,
-    secondary,
-}
+export { CounterLabelVariant }
 
-// Primer CounterLabel: paint from parent (Button) or `use-primer-scheme` + `scheme` (SegmentedControl-style).
+// Primer CounterLabel: default **`background`** / **`foreground`** follow **`scheme`**; **`Button`** overrides those + **`counter-border`** for trailing counts.
 export component CounterLabel {
     in property <string> text: "";
-    in property <bool> use-primer-scheme: false;
     in property <CounterLabelVariant> scheme: secondary;
-    in property <color> background;
-    in property <color> foreground;
+    in property <color> background: scheme == CounterLabelVariant.primary ? PrimerColors.bgColor-neutral-emphasis : PrimerColors.bgColor-neutral-muted;
+    in property <color> foreground: scheme == CounterLabelVariant.primary ? PrimerColors.fgOnEmphasis : PrimerColors.fgColor-default;
     in property <color> counter-border;
 
     visible: text != "";
     horizontal-stretch: 0;
 
-    property <color> effective-bg:
-        use-primer-scheme
-        ? (scheme == CounterLabelVariant.primary ? PrimerColors.bgColor-neutral-emphasis : PrimerColors.bgColor-neutral-muted)
-        : background;
-    property <color> effective-fg:
-        use-primer-scheme
-        ? (scheme == CounterLabelVariant.primary ? PrimerColors.fgOnEmphasis : PrimerColors.fgColor-default)
-        : foreground;
-    property <color> effective-border: use-primer-scheme ? PrimerColors.counter-borderColor : counter-border;
 
     Rectangle {
         border-radius: Math.min(LayoutTokens.counter-label-border-radius, self.height / 2);
         border-width: LayoutTokens.counter-label-border-width;
-        border-color: effective-border;
-        background: effective-bg;
+        border-color: root.counter-border;
+        background: root.background;
 
         HorizontalLayout {
             padding-top: LayoutTokens.counter-label-padding-block;
@@ -42,7 +30,7 @@ export component CounterLabel {
 
             Text {
                 text: root.text;
-                color: effective-fg;
+                color: root.foreground;
                 font-size: LayoutTokens.text-body-size-small;
                 font-weight: LayoutTokens.base-text-weight-semibold;
                 vertical-alignment: center;

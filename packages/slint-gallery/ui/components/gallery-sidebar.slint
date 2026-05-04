@@ -88,6 +88,44 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
+    id: "folder-counter-label",
+    label: "Counter label",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "counter-label-playground",
+    label: "Playground",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "counter-label-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
     id: "folder-data",
     label: "Data",
     level: 1,
@@ -588,6 +626,7 @@ export component GallerySidebar {
                                 GallerySidebarNav.row-current-requested(id);
                             } else if id == "action-list-playground"
                                 || id == "buttons-playground"
+                                || id == "counter-label-playground"
                                 || id == "data-playground"
                                 || id == "dialogs-playground"
                                 || id == "feedback-playground"
