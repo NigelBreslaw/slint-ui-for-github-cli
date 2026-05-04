@@ -116,10 +116,12 @@ component TreeViewRowView {
                                 for slot[index] in gutter-slot-count: Rectangle {
                                     width: index < gutter-segments ? toggle-w : 0px;
                                     height: root.row-min-h;
-                                    background: transparent;
 
                                     if index < gutter-segments: Rectangle {
-                                        x: parent.width - TreeViewTokens.item-border-width-thin;
+                                        // Center in `toggle-w` like the chevron column; rows with a gutter also have
+                                        // `item-content-gap` before the chevron — shift guides for index ≥ 1 to match.
+                                        x: (parent.width - TreeViewTokens.item-border-width-thin) / 2
+                                            + (index >= 1 ? TreeViewTokens.item-content-gap : 0px);
                                         y: 0px;
                                         width: TreeViewTokens.item-border-width-thin;
                                         height: root.row-min-h;
