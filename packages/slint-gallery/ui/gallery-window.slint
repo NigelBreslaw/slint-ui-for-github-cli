@@ -34,6 +34,7 @@ export {
 } from "./state/gallery-filtered-action-list-state.slint";
 export { GalleryFilteredActionListSelectAll } from "./state/gallery-filtered-action-list-select-all-state.slint";
 export { GalleryTreeViewListModels } from "./state/gallery-tree-view-list-models.slint";
+export { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 
 
 export global GalleryState {
@@ -73,12 +74,7 @@ export component GalleryWindow inherits Window {
         HorizontalLayout {
             vertical-stretch: 1;
 
-            GallerySidebar {
-                selected-page-id: GalleryState.selected-page-id;
-                page-selected(id) => {
-                    GalleryState.selected-page-id = id;
-                }
-            }
+            GallerySidebar { }
 
             main-scroll := Rectangle {
                 horizontal-stretch: 1;

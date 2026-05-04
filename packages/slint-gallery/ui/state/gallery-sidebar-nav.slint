@@ -1,0 +1,9 @@
+import { TreeViewRow } from "../../../primer-slint/primer.slint";
+
+/// Sidebar **PrimerTreeView** model and row callbacks — populated from Node via **`wireGallerySidebarNav`** (Rust gallery: seed **`rows`** separately).
+export global GallerySidebarNav {
+    in-out property <[TreeViewRow]> rows: [];
+    callback row-current-requested(string);
+    callback row-toggle-requested(string);
+    callback row-secondary-actions-requested(string, length, length, length, length);
+}

@@ -11,6 +11,8 @@ import { TreeViewRow, TreeViewTrailingVisual } from "./types.slint";
 component TreeViewRowView {
     in property <TreeViewRow> tree-row;
     in property <bool> flat;
+    /// When true, rows with **`has-children`** only invoke **`row-toggle-requested`** on primary activation (no **`row-current-requested`**).
+    in property <bool> suppress-current-for-directories: false;
     in property <length> toggle-w;
     in property <int> gutter-slot-count;
     in property <length> row-min-h;
@@ -51,7 +53,9 @@ component TreeViewRowView {
                     return reject;
                 }
                 if event.text == Key.Return || event.text == Key.Space {
-                    root.row-current-requested(tree-row.id);
+                    if !(root.suppress-current-for-directories && tree-row.has-children) {
+                        root.row-current-requested(tree-row.id);
+                    }
                     if tree-row.has-children {
                         root.row-toggle-requested(tree-row.id);
                     }
@@ -90,7 +94,9 @@ component TreeViewRowView {
                         enabled: tree-row.interactive && !tree-row.is-skeleton;
                         mouse-cursor: self.enabled ? pointer : default;
                         clicked => {
-                            root.row-current-requested(tree-row.id);
+                            if !(root.suppress-current-for-directories && tree-row.has-children) {
+                                root.row-current-requested(tree-row.id);
+                            }
                             if tree-row.has-children {
                                 root.row-toggle-requested(tree-row.id);
                             }
@@ -253,6 +259,8 @@ export component PrimerTreeView inherits VerticalLayout {
     in property <int> max-gutter-columns: 12;
     /// When true, rows render inside **`std-widgets::ListView`** (recycled delegates). Host must give this control a **bounded height** (or stretch into a parent with one).
     in property <bool> virtualized: false;
+    /// When true, directory rows (**`has-children`**) only emit **`row-toggle-requested`** on activation, not **`row-current-requested`**.
+    in property <bool> suppress-current-for-directories: false;
 
     callback row-toggle-requested(string);
     callback row-current-requested(string);
@@ -274,6 +282,7 @@ export component PrimerTreeView inherits VerticalLayout {
         for row[i] in root.rows: TreeViewRowView {
             tree-row: row;
             flat: root.flat;
+            suppress-current-for-directories: root.suppress-current-for-directories;
             toggle-w: root.toggle-w;
             gutter-slot-count: root.max-gutter-columns;
             row-min-h: root.row-min-h;
@@ -305,6 +314,7 @@ export component PrimerTreeView inherits VerticalLayout {
                 y: 0px;
                 tree-row: row;
                 flat: root.flat;
+                suppress-current-for-directories: root.suppress-current-for-directories;
                 toggle-w: root.toggle-w;
                 gutter-slot-count: root.max-gutter-columns;
                 row-min-h: root.row-min-h;

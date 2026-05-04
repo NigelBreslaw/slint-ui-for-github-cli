@@ -19,6 +19,10 @@ import {
   wireGalleryTreeViewListModels,
   type GalleryTreeViewListModelsHandle,
 } from "./state/gallery-tree-view-list-models-bridge-shared.ts";
+import {
+  wireGallerySidebarNav,
+  type GallerySidebarNavHandle,
+} from "./state/gallery-sidebar-nav-bridge-shared.ts";
 
 type GalleryWindowModule = {
   GalleryWindow: new () => {
@@ -27,6 +31,7 @@ type GalleryWindowModule = {
     GalleryState: {
       selected_page_id: string;
     };
+    GallerySidebarNav: GallerySidebarNavHandle;
     GalleryActionListMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
     GallerySelectPanelMulti: GallerySelectPanelMultiHandle;
@@ -66,6 +71,12 @@ wireGalleryFilteredActionListSelectAll(
 );
 wireGalleryTreeViewListModels(
   window.GalleryTreeViewListModels,
+  window.Icons.dot_fill,
+  window.Icons.file,
+);
+wireGallerySidebarNav(
+  window.GallerySidebarNav,
+  window.GalleryState,
   window.Icons.dot_fill,
   window.Icons.file,
 );

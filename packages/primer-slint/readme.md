@@ -52,7 +52,7 @@ The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** t
 
 ## TreeView
 
-**Status:** **`PrimerTreeView`** is exported from [`primer.slint`](slint/primer.slint) with **`TreeViewRow`** / **`TreeViewTrailingVisual`** ([`TreeView/types.slint`](slint/TreeView/types.slint)). Gallery: **`pnpm dev:gallery`** → **Tree view**.
+**Status:** **`PrimerTreeView`** is exported from [`primer.slint`](slint/primer.slint) with **`TreeViewRow`** / **`TreeViewTrailingVisual`** ([`TreeView/types.slint`](slint/TreeView/types.slint)); optional **`suppress-current-for-directories`** makes directory activation toggle-only (see [`TreeView/API.md`](slint/TreeView/API.md)). Gallery: **`pnpm dev:gallery`** → **Tree view**.
 
 **Imports for views:** **`PrimerTreeView`**, **`TreeViewRow`**, **`TreeViewTrailingVisual`**, **`TreeViewTokens`**, **`LayoutTokens`**, **`PrimerColors`**, **`Icons`** from [`primer.slint`](slint/primer.slint) (or `tokens.slint` for tokens only). Secondary overflow menus are **not** built into the tree: set **`has-secondary-actions`** / **`secondary-actions-badge`** on rows and handle **`row-secondary-actions-requested`** with **`AnchoredOverlay`** + **`ActionList`** (see gallery **TrailingActions**). Async **SubTree** is host-owned: insert skeleton rows (**`is-skeleton: true`**, **`interactive: false`**), drive **`loading-children-badge`**, and use **`Dialog`** for errors (gallery **AsyncError**).
 
