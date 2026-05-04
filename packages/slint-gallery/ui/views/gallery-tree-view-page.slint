@@ -2051,45 +2051,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         }
     }
 
-    // --- InitialFocus
-    TreeViewSectionHeading {
-        title: "InitialFocus";
-        note: "Focus order before/after the tree; default-focus wiring is host-specific.";
-    }
-    Rectangle {
-        horizontal-stretch: 1;
-        min-width: 320px;
-        max-width: 560px;
-        background: PrimerColors.bgColor-default;
-        border-radius: LayoutTokens.borderRadius-medium;
-        border-width: LayoutTokens.table-border-width;
-        border-color: PrimerColors.borderColor-default;
 
-        VerticalLayout {
-            padding: 8px;
-            spacing: 8px;
-
-            Button {
-                label: "Before tree";
-            }
-            PrimerTreeView {
-                truncate: false;
-                rows: files-rows;
-                row-current-requested(_) => { }
-                row-toggle-requested(_) => { }
-                row-secondary-actions-requested(_, _, _, _, _) => { }
-            }
-            Button {
-                label: "After tree";
-            }
-        }
-    }
-
-    // --- FocusManagement
-    TreeViewSectionHeading {
-        title: "FocusManagement";
-        note: "Kebab in-row (**TrailingActions** pattern); separate **AnchoredOverlay** for this demo.";
-    }
     Rectangle {
         horizontal-stretch: 1;
         min-width: 320px;
