@@ -109,14 +109,18 @@ export component Button {
             padding-left: align-content == ButtonAlignContent.start ? btn-padding-inline: btn-padding-inline * 2;
             padding-right: align-content == ButtonAlignContent.start ? btn-padding-inline: btn-padding-inline * 2;
             spacing: LayoutTokens.button-content-gap;
+            align-items: center;
+
 
             if loading-only-spinner || loading-replaces-leading: Spinner {
+                // y: (parent.height - self.height) / 2;
                 size: btn-spinner-size;
                 segment-color: paint.fg;
                 track-color: btn-spinner-track;
             }
 
             if !loading-replaces-leading && leading-text != "": Text {
+                // y: (parent.height - self.height) / 2;
                 text: leading-text;
                 color: effective-label-fg;
                 font-size: effective-label-font-size;
@@ -132,7 +136,7 @@ export component Button {
             }
 
             if !loading-only-spinner: Text {
-                y: (parent.height - self.preferred-height) / 2;
+                // y: (parent.height - self.preferred-height) / 2;
                 text: root.label;
                 color: effective-label-fg;
                 font-size: effective-label-font-size;
