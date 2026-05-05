@@ -24,6 +24,7 @@ import { AppWindow } from "./packages/primer-slint/tokens.slint";
 export component AnchoredOverlay {
     in property <PositionProps> position-props;
     in-out property <OverlayType> overlay-type: modal;
+    in-out property <Size> overlay-size: { width: 200px, height: 200px };
 
     callback show();
     show => {
@@ -70,13 +71,13 @@ export component AnchoredOverlay {
         function get-overlay-position(axis: PositionAxis) -> length {
             if axis == PositionAxis.pos-x {
                 if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.width - pane.preferred-width) / 2;
+                    return (popup-screen.width - root.overlay-size.width) / 2;
                 } else {
                     return root.position-props.absolute-position.x;
                 }
             } else {
                 if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.height - pane.preferred-height) / 2;
+                    return (popup-screen.height - root.overlay-size.height) / 2;
                 } else {
                     return root.position-props.absolute-position.y;
                 }
@@ -88,6 +89,7 @@ export component AnchoredOverlay {
             y: 0;
             width: AppWindow.window-width;
             height: AppWindow.window-height;
+            background: red.with-alpha(0.2);
 
             ta := TouchArea {
                 clicked => {
@@ -99,26 +101,16 @@ export component AnchoredOverlay {
             pane := Rectangle {
                 x: get-overlay-position(PositionAxis.pos-x);
                 y: get-overlay-position(PositionAxis.pos-y);
-                width: pane.preferred-width;
-                height: pane.preferred-height;
+                width: root.overlay-size.width;
+                height: root.overlay-size.height;
 
                 touch-blocker := TouchArea { }
 
-                background: ta.has-hover ? red : blue;
-
-                VerticalLayout {
-                    visible: false;
+                va := VerticalLayout {
+                    width: self.preferred-width;
+                    height: self.preferred-height;
                     @children
                 }
-            }
-        }
-
-        Rectangle {
-            width: 100px;
-            height: 100px;
-            background: red;
-            Text {
-                text: popup.width / 1px + "  " + popup.height / 1px;
             }
         }
     }
