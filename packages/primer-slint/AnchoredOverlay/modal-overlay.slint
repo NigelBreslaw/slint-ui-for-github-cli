@@ -75,27 +75,9 @@ export component ModalOverlay {
         : root.is-side-sheet && root.panel-position == DialogPositionPreset.right ? AppWindow.window-width - root.panel-w * root.presented
         : (AppWindow.window-width - root.shell-width) / 2;
 
-    property <length> chrome-corner-tl:
+    property <length> chrome-corner:
         root.is-narrow-fullscreen ? 0px
         : root.is-narrow-bottom ? OverlayTokens.panel-border-radius
-        : root.panel-position == DialogPositionPreset.left ? 0px
-        : OverlayTokens.panel-border-radius;
-
-    property <length> chrome-corner-tr:
-        root.is-narrow-fullscreen ? 0px
-        : root.is-narrow-bottom ? OverlayTokens.panel-border-radius
-        : root.panel-position == DialogPositionPreset.right ? 0px
-        : OverlayTokens.panel-border-radius;
-
-    property <length> chrome-corner-br:
-        root.is-narrow-fullscreen ? 0px
-        : root.is-narrow-bottom ? 0px
-        : root.panel-position == DialogPositionPreset.right ? 0px
-        : OverlayTokens.panel-border-radius;
-
-    property <length> chrome-corner-bl:
-        root.is-narrow-fullscreen ? 0px
-        : root.is-narrow-bottom ? 0px
         : root.panel-position == DialogPositionPreset.left ? 0px
         : OverlayTokens.panel-border-radius;
 
@@ -201,10 +183,7 @@ export component ModalOverlay {
                         surface-border: OverlayTokens.panel-border;
                         surface-border-width: OverlayTokens.panel-border-width;
                         elevation-border-radius: root.elevation-radius;
-                        surface-border-top-left-radius: root.chrome-corner-tl;
-                        surface-border-top-right-radius: root.chrome-corner-tr;
-                        surface-border-bottom-right-radius: root.chrome-corner-br;
-                        surface-border-bottom-left-radius: root.chrome-corner-bl;
+                        surface-border-radius: root.chrome-corner-tl;
                         surface-shadow: OverlayTokens.panel-elevation-shadow;
                         slot-padding: root.slot-padding;
                         slot-fill-height: true;

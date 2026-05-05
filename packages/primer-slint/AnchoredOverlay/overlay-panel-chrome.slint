@@ -10,10 +10,7 @@ export component OverlayPanelChrome {
     /// Radius used for **`MultiDropShadow`** layers (often uniform **`borderRadius-large`**).
     in property <length> elevation-border-radius;
     /// Per-corner radius on the clipped fill (**side sheets** flush one vertical edge with **`0px`** per **`Dialog.module.css`**).
-    in property <length> surface-border-top-left-radius;
-    in property <length> surface-border-top-right-radius;
-    in property <length> surface-border-bottom-right-radius;
-    in property <length> surface-border-bottom-left-radius;
+    in property <length> surface-border-radius;
     in property <[DropShadowLayer]> surface-shadow;
     /// Inset around **`@children`** (menus: **`LayoutTokens.stack-padding-normal`**; modal dialog shell: **`0px`** so header/body/footer control padding).
     in property <length> slot-padding;
@@ -40,10 +37,7 @@ export component OverlayPanelChrome {
             width: 100%;
             height: 100%;
             background: root.surface-background;
-            border-top-left-radius: root.surface-border-top-left-radius;
-            border-top-right-radius: root.surface-border-top-right-radius;
-            border-bottom-right-radius: root.surface-border-bottom-right-radius;
-            border-bottom-left-radius: root.surface-border-bottom-left-radius;
+            border-radius: root.surface-border-radius;
             border-width: root.surface-border-width;
             border-color: root.surface-border;
 
