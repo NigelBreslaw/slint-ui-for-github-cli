@@ -1,9 +1,12 @@
 // Shared floating **panel** chrome: elevation shadow + rounded fill + border + padded content slot.
 // Used by **`AnchoredOverlay`** (anchored menus) and **`ModalOverlay`** (viewport modal shell). Pass token-backed colors, radii, and shadow from **`OverlayTokens`** or overrides.
 
-import { DropShadowLayer, MultiDropShadow } from "../Effects/multi-drop-shadow.slint";
+import {
+    DropShadowLayer,
+    MultiDropShadow,
+} from "../Effects/multi-drop-shadow.slint";
 
-export component OverlayPanelChrome {
+export component OverlayPanelChrome inherits Rectangle {
     in property <color> surface-background;
     in property <color> surface-border;
     in property <length> surface-border-width;
@@ -21,35 +24,26 @@ export component OverlayPanelChrome {
     out property <length> slot-preferred-width: inner-slot.preferred-width;
     out property <length> slot-preferred-height: inner-slot.preferred-height;
 
+    MultiDropShadow {
+        border-radius: root.elevation-border-radius;
+        shadows: root.surface-shadow;
+    }
+
     Rectangle {
-        width: 100%;
-        height: 100%;
+        clip: true;
+        background: root.surface-background;
+        border-radius: root.surface-border-radius;
+        border-width: root.surface-border-width;
+        border-color: root.surface-border;
 
-        MultiDropShadow {
-            width: parent.width;
-            height: parent.height;
-            border-radius: root.elevation-border-radius;
-            shadows: root.surface-shadow;
-        }
-
-        Rectangle {
-            clip: true;
-            width: 100%;
-            height: 100%;
-            background: root.surface-background;
-            border-radius: root.surface-border-radius;
-            border-width: root.surface-border-width;
-            border-color: root.surface-border;
-
-            // Do not set width/height here — same as pre-refactor `panel-slot`: intrinsic **`preferred-*`**
+        // Do not set width/height here — same as pre-refactor `panel-slot`: intrinsic **`preferred-*`**
             // must drive **`AnchoredOverlay`** `PopupWindow` geometry (`body-width` / `body-height`).
             inner-slot := VerticalLayout {
-                vertical-stretch: root.slot-fill-height ? 1 : 0;
-                padding: root.slot-padding;
-                alignment: start;
+            vertical-stretch: root.slot-fill-height ? 1 : 0;
+            padding: root.slot-padding;
+            alignment: start;
 
-                @children
-            }
+            @children
         }
     }
 }

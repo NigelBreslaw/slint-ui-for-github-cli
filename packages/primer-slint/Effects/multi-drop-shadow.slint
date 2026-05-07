@@ -6,18 +6,12 @@ export struct DropShadowLayer {
     blur: length,
 }
 
-export component MultiDropShadow {
-    in property <length> border-radius;
+export component MultiDropShadow inherits Rectangle {
     in property <[DropShadowLayer]> shadows;
 
-    width: 100%;
-    height: 100%;
-
     for shadow in shadows: Rectangle {
-        width: 100%;
-        height: 100%;
         drop-shadow-color: shadow.color;
-        border-radius: border-radius;
+        border-radius: root.border-radius;
         drop-shadow-offset-x: shadow.offset-x;
         drop-shadow-offset-y: shadow.offset-y;
         drop-shadow-blur: shadow.blur;
