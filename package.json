@@ -23,7 +23,8 @@
     "test": "pnpm --filter github-app run test && pnpm --filter slint-bridge-kit run test"
   },
   "devDependencies": {
-    "knip": "6.1.0"
+    "knip": "6.1.0",
+    "typescript": "catalog:"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
