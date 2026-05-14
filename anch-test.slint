@@ -9,6 +9,7 @@ export component TestButton {
     in-out property text <=> btn.text;
     in-out property overlay-type <=> ao.overlay-type;
     in-out property overlay-size <=> ao.overlay-size;
+    in property <length> margin: 0px;
 
     callback clicked();
 
@@ -26,7 +27,9 @@ export component TestButton {
             ao.show();
         }
     }
+
     ao := AnchoredOverlay {
+        margin: root.margin;
         @children
     }
 }
@@ -63,6 +66,7 @@ export component AnchoredOverlayTest inherits Window {
 
                 TestButton {
                     text: "center modal";
+                    overlay-size: { width: 100px, height: 100px };
 
                     Rectangle {
                         width: 100px;
@@ -74,23 +78,7 @@ export component AnchoredOverlayTest inherits Window {
                             text: "center modal";
                         }
                     }
-                 }
-
-                TestButton {
-                    text: "Position under item";
-                    overlay-type: anchored;
-                    overlay-size: { width: 100px, height: 100px };
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
-                        }
-                    }
-                 }
+                }
 
                 TestButton {
                     text: "Position under item";
@@ -111,6 +99,7 @@ export component AnchoredOverlayTest inherits Window {
                 TestButton {
                     text: "Position under item";
                     overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
                     Rectangle {
                         width: 100px;
                         height: 100px;
@@ -126,6 +115,7 @@ export component AnchoredOverlayTest inherits Window {
                 TestButton {
                     text: "Position under item";
                     overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
                     Rectangle {
                         width: 100px;
                         height: 100px;
@@ -141,6 +131,7 @@ export component AnchoredOverlayTest inherits Window {
                 TestButton {
                     text: "Position under item";
                     overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
                     Rectangle {
                         width: 100px;
                         height: 100px;
@@ -156,6 +147,7 @@ export component AnchoredOverlayTest inherits Window {
                 TestButton {
                     text: "Position under item";
                     overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
                     Rectangle {
                         width: 100px;
                         height: 100px;
@@ -171,6 +163,7 @@ export component AnchoredOverlayTest inherits Window {
                 TestButton {
                     text: "Position under item";
                     overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
                     Rectangle {
                         width: 100px;
                         height: 100px;
@@ -186,6 +179,7 @@ export component AnchoredOverlayTest inherits Window {
                 TestButton {
                     text: "Position under item";
                     overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
                     Rectangle {
                         width: 100px;
                         height: 100px;
@@ -201,6 +195,23 @@ export component AnchoredOverlayTest inherits Window {
                 TestButton {
                     text: "Position under item";
                     overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                TestButton {
+                    text: "Position under item";
+                    overlay-type: anchored;
+                    overlay-size: { width: 100px, height: 100px };
                     Rectangle {
                         width: 100px;
                         height: 100px;

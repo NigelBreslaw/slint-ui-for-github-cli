@@ -25,6 +25,8 @@ export component AnchoredOverlay {
     in property <PositionProps> position-props;
     in-out property <OverlayType> overlay-type: modal;
     in-out property <Size> overlay-size: { width: 200px, height: 200px };
+    /// Gap between anchor and overlay (below anchor bottom, or above anchor top when flipped).
+    in property <length> margin: 0px;
 
     callback show();
     show => {
@@ -79,7 +81,14 @@ export component AnchoredOverlay {
                 if root.overlay-type == OverlayType.modal {
                     return (popup-screen.height - root.overlay-size.height) / 2;
                 } else {
-                    return root.position-props.absolute-position.y;
+                    // Below anchor by default; flip above if viewport is too short; y never < 0.
+                    let pos = root.position-props;
+                    let item_bottom = pos.absolute-position.y + pos.source-size.height
+                        + root.margin + root.overlay-size.height;
+                    return (item_bottom
+                        <= popup-screen.height)
+                        ? (pos.absolute-position.y + pos.source-size.height + root.margin)
+                        : max(0px, pos.absolute-position.y - root.margin - root.overlay-size.height);
                 }
             }
         }
@@ -89,7 +98,6 @@ export component AnchoredOverlay {
             y: 0;
             width: AppWindow.window-width;
             height: AppWindow.window-height;
-            background: red.with-alpha(0.2);
 
             ta := TouchArea {
                 clicked => {
@@ -103,7 +111,12 @@ export component AnchoredOverlay {
                 width: root.overlay-size.width;
                 height: root.overlay-size.height;
 
-                touch-blocker := TouchArea { }
+                touch-blocker := TouchArea { 
+                    Rectangle {
+                        background: green.with-alpha(0.2);
+                    }
+                }
+
 
                 va := VerticalLayout {
                     width: self.preferred-width;
