@@ -24,7 +24,6 @@ import { AppWindow } from "./packages/primer-slint/tokens.slint";
 export component AnchoredOverlay {
     in property <PositionProps> position-props;
     in-out property <OverlayType> overlay-type: modal;
-    in-out property <Size> overlay-size: { width: 200px, height: 200px };
     /// Gap between anchor and overlay (below anchor bottom, or above anchor top when flipped).
     in property <length> margin: 0px;
 
@@ -73,22 +72,22 @@ export component AnchoredOverlay {
         function get-overlay-position(axis: PositionAxis) -> length {
             if axis == PositionAxis.pos-x {
                 if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.width - root.overlay-size.width) / 2;
+                    return (popup-screen.width - va.width) / 2;
                 } else {
                     return root.position-props.absolute-position.x;
                 }
             } else {
                 if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.height - root.overlay-size.height) / 2;
+                    return (popup-screen.height - va.height) / 2;
                 } else {
                     // Below anchor by default; flip above if viewport is too short; y never < 0.
                     let pos = root.position-props;
                     let item_bottom = pos.absolute-position.y + pos.source-size.height
-                        + root.margin + root.overlay-size.height;
+                        + root.margin + va.height;
                     return (item_bottom
                         <= popup-screen.height)
                         ? (pos.absolute-position.y + pos.source-size.height + root.margin)
-                        : max(0px, pos.absolute-position.y - root.margin - root.overlay-size.height);
+                        : max(0px, pos.absolute-position.y - root.margin - va.height);
                 }
             }
         }
@@ -108,14 +107,10 @@ export component AnchoredOverlay {
             pane := Rectangle {
                 x: get-overlay-position(PositionAxis.pos-x);
                 y: get-overlay-position(PositionAxis.pos-y);
-                width: root.overlay-size.width;
-                height: root.overlay-size.height;
+                width: va.width;
+                height: va.height;
 
-                touch-blocker := TouchArea { 
-                    Rectangle {
-                        background: green.with-alpha(0.2);
-                    }
-                }
+                touch-blocker := TouchArea { }
 
 
                 va := VerticalLayout {
