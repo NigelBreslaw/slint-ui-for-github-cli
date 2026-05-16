@@ -1,0 +1,30 @@
+// Shared floating **panel** chrome: elevation shadow + rounded fill + border + padded content slot.
+// Used by **`AnchoredOverlay`** (anchored menus) and **`ModalOverlay`** (viewport modal shell). Pass token-backed colors, radii, and shadow from **`OverlayTokens`** or overrides.
+
+import {
+    DropShadowLayer,
+    MultiDropShadow,
+} from "../Effects/multi-drop-shadow.slint";
+
+export component OverlayPanelChrome inherits Rectangle {
+
+    in property <[DropShadowLayer]> surface-shadows;
+    in property <length> slot-padding;
+
+    out property <length> slot-preferred-width: inner-slot.preferred-width;
+    out property <length> slot-preferred-height: inner-slot.preferred-height;
+
+    clip: true;
+
+    MultiDropShadow {
+        border-radius: root.border-radius;
+        shadows: root.surface-shadows;
+    }
+
+    inner-slot := VerticalLayout {
+        padding: root.slot-padding;
+        alignment: start;
+
+        @children
+    }
+}

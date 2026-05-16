@@ -56,19 +56,6 @@ export component AnchoredOverlay {
 
         close-policy: no-auto-close;
 
-        // Hack to work around issue #6000 https://github.com/slint-ui/slint/issues/6000
-        property <length> width-binding: AppWindow.window-width;
-        changed width-binding  => {
-            popup.width = width-binding;
-        }
-
-        property <length> height-binding: AppWindow.window-height;
-        changed height-binding  => {
-            popup.height = height-binding;
-        }
-        // end of
-
-
         function get-overlay-position(axis: PositionAxis) -> length {
             if axis == PositionAxis.pos-x {
                 if root.overlay-type == OverlayType.modal {
@@ -92,21 +79,22 @@ export component AnchoredOverlay {
             }
         }
 
-        popup-screen := Rectangle {
-            x: 0;
-            y: 0;
-            width: AppWindow.window-width;
-            height: AppWindow.window-height;
+        ta := TouchArea {
+            clicked => {
+                root.close-requested();
+            }
+        }
 
-            ta := TouchArea {
-                clicked => {
-                    root.close-requested();
-                }
+        popup-screen := Rectangle {
+            background: red.with-alpha(0.5);
+            // x and y are set here because the position should not be a binding that
+            // would change if the window is resized after the overlay is shown.
+            init => {
+                pane.x = get-overlay-position(PositionAxis.pos-x);
+                pane.y = get-overlay-position(PositionAxis.pos-y);
             }
 
             pane := Rectangle {
-                x: get-overlay-position(PositionAxis.pos-x);
-                y: get-overlay-position(PositionAxis.pos-y);
                 width: va.width;
                 height: va.height;
 
