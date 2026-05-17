@@ -13,6 +13,9 @@ import {
     DialogNarrowPositionPreset,
     DialogPositionPreset,
     DialogWidthPreset,
+    OverlayAlign,
+    OverlayWidth,
+    OverlayHeight,
 } from "../../../primer-slint/primer.slint";
 import {
     DialogTokens,
@@ -22,10 +25,8 @@ import {
 // Gallery dialog modals (`Dialog`), timers, and dialog-only state; the page drives fields via `in` / `in-out` bindings.
 export component GalleryDialogInstances inherits VerticalLayout {
     callback default-outer-open <=> default-outer-dialog.show;
-
     callback playground-open <=> playground-dialog.show;
-
-    in-out property <bool> align-demo-open: false;
+    callback align-demo-open <=> align-demo-dialog.show;
     in-out property <bool> side-sheet-open: false;
     in-out property <bool> narrow-demo-open: false;
     in-out property <bool> custom-renderers-open: false;
@@ -43,13 +44,13 @@ export component GalleryDialogInstances inherits VerticalLayout {
     in-out property <bool> loading-custom-saving: false;
     in-out property <bool> loading-custom-processing: false;
 
-    in property <DialogWidthPreset> playground-width-enum: DialogWidthPreset.medium;
-    in property <DialogHeightPreset> playground-height-enum: DialogHeightPreset.auto;
+    in property <OverlayWidth> playground-width-enum: OverlayWidth.medium;
+    in property <OverlayHeight> playground-height-enum: OverlayHeight.auto;
     in property <bool> playground-show-header: true;
     in property <bool> playground-show-footer: true;
     in property <string> playground-title-text: "Playground";
     in property <string> playground-subtitle-text: "";
-    in property <DialogAlignPreset> align-vertical-preset: DialogAlignPreset.center;
+    in property <OverlayAlign> align-vertical-preset: OverlayAlign.center;
     in property <int> align-vertical-index: 0;
     in property <DialogPositionPreset> side-sheet-position-preset: DialogPositionPreset.right;
     in property <int> side-sheet-edge-index: 1;
@@ -57,7 +58,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
     in property <int> narrow-viewport-index: 0;
 
     default-outer-dialog := Dialog2 {
-        width-preset: DialogWidthPreset.xlarge;
+        width-preset: OverlayWidth.xlarge;
         VerticalLayout {
 
             StandardDialogHeader {
@@ -123,7 +124,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
     }
 
     default-inner-dialog := Dialog2 {
-        width-preset: DialogWidthPreset.small;
+        width-preset: OverlayWidth.small;
 
         VerticalLayout {
 
@@ -220,14 +221,11 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    align-demo-dialog := Dialog {
-        open <=> root.align-demo-open;
+    align-demo-dialog := Dialog2 {
         align-preset: root.align-vertical-preset;
-        width-preset: DialogWidthPreset.medium;
-        height-preset: DialogHeightPreset.auto;
-        on-close(_gesture) => {
-            root.align-demo-open = false;
-        }
+        width-preset: OverlayWidth.medium;
+        height-preset: OverlayHeight.auto;
+
 
         VerticalLayout {
 
@@ -235,7 +233,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                 title: align-vertical-index == 0 ? "Align top" : "Align bottom";
 
                 close-requested => {
-                    align-demo-dialog.on-close("close-button");
+                    align-demo-dialog.close();
                 }
             }
 
@@ -260,7 +258,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                     label: "Delete the universe";
                     variant: ButtonVariant.danger;
                     clicked => {
-                        align-demo-dialog.on-close("close-button");
+                        align-demo-dialog.close();
                     }
                 }
 

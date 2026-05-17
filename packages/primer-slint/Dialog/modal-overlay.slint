@@ -1,19 +1,34 @@
 import { AppWindow, DialogTokens, OverlayTokens } from "../tokens.slint";
-import { OverlayPanelChrome } from "overlay-panel-chrome.slint";
+import { OverlayPanelChrome } from "../AO2/overlay-panel-chrome.slint";
 
-export enum AlignPreset {
+export enum OverlayAlign {
     center,
     top,
     bottom,
+}
+
+export enum OverlayWidth {
+    small,
+    medium,
+    large,
+    xlarge,
+}
+
+export enum OverlayHeight {
+    auto,
+    small,
+    large,
 }
 
 export component ModalOverlay {
 
     property <bool> open: false;
     in property <bool> allow-dismiss: true;
-    in property <AlignPreset> align-preset: AlignPreset.center;
-    in property <length> default-width: 640px;
-    in property <length> default-height: 640px;
+    in property <OverlayAlign> align-preset: OverlayAlign.center;
+    in property <OverlayWidth> width-preset: OverlayWidth.medium;
+    in property <OverlayHeight> height-preset: OverlayHeight.auto;
+    in property <length> default-width: width-preset == OverlayWidth.small ? DialogTokens.width-small : root.width-preset == OverlayWidth.medium ? DialogTokens.width-medium : root.width-preset == OverlayWidth.large ? DialogTokens.width-large : DialogTokens.width-xlarge;
+    in property <length> default-height: height-preset == OverlayHeight.small ? DialogTokens.height-small : root.height-preset == OverlayHeight.large ? DialogTokens.height-large : OverlayTokens.modal-viewport-max-height;
     property <length> panel-width: min(root.default-width, OverlayTokens.modal-viewport-max-width);
     property <length> panel-height: min(root.default-height, OverlayTokens.modal-viewport-max-height);
 
@@ -126,13 +141,13 @@ export component ModalOverlay {
                     }
 
                     states [
-                        top when root.align-preset == AlignPreset.top: {
+                        top when root.align-preset == OverlayAlign.top: {
                             y: 64px;
                         }
-                        bottom when root.align-preset == AlignPreset.bottom: {
+                        bottom when root.align-preset == OverlayAlign.bottom: {
                             y: max(0px, AppWindow.window-height - pane.height - 64px);
                         }
-                        center when root.align-preset == AlignPreset.center: {
+                        center when root.align-preset == OverlayAlign.center: {
                             y: (AppWindow.window-height - pane.height) / 2;
                         }
                     ]
