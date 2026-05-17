@@ -4,6 +4,7 @@ import {
     DialogAlignPreset,
     DialogBody,
     Dialog,
+    Dialog2,
     DialogFooter,
     DialogFillMode,
     DialogHeader,
@@ -21,7 +22,14 @@ import {
 // Gallery dialog modals (`Dialog`), timers, and dialog-only state; the page drives fields via `in` / `in-out` bindings.
 export component GalleryDialogInstances inherits VerticalLayout {
     in-out property <bool> default-outer-open: false;
-    in-out property <bool> default-inner-open: false;
+    changed default-outer-open => {
+        if default-outer-open {
+            default-outer-dialog.show();
+        } else {
+            default-outer-dialog.close();
+        }
+    }
+
     in-out property <bool> playground-open: false;
     in-out property <bool> align-demo-open: false;
     in-out property <bool> side-sheet-open: false;
@@ -54,20 +62,19 @@ export component GalleryDialogInstances inherits VerticalLayout {
     in property <DialogNarrowPositionPreset> narrow-viewport-position: DialogNarrowPositionPreset.bottom;
     in property <int> narrow-viewport-index: 0;
 
-    default-outer-dialog := Dialog {
-        open <=> root.default-outer-open;
+    default-outer-dialog := Dialog2 {
         width-preset: DialogWidthPreset.xlarge;
-        on-close(_gesture) => {
-            root.default-outer-open = false;
-            root.default-inner-open = false;
-        }
+        // on-close(_gesture) => {
+        //     root.default-outer-open = false;
+        //     root.default-inner-open = false;
+        // }
 
         VerticalLayout {
 
             StandardDialogHeader {
                 title: "My Dialog";
 
-                close-requested => default-outer-dialog.on-close("close-button");
+                close-requested => default-outer-dialog.close();
             }
 
             DialogBody {
@@ -105,39 +112,35 @@ export component GalleryDialogInstances inherits VerticalLayout {
                     label: "Open Second Dialog";
                     variant: ButtonVariant.default;
                     clicked => {
-                        root.default-inner-open = true;
+                        default-inner-dialog.show();
                     }
                 }
 
                 Button {
                     label: "Delete the universe";
                     variant: ButtonVariant.danger;
-                    clicked => default-outer-dialog.on-close("close-button");
+                    clicked => default-outer-dialog.close();
                 }
 
                 Button {
                     label: "Proceed";
                     variant: ButtonVariant.primary;
                     clicked => {
-                        root.default-inner-open = true;
+                        default-inner-dialog.show();
                     }
                 }
             }
         }
     }
 
-    default-inner-dialog := Dialog {
-        open <=> root.default-inner-open;
+    default-inner-dialog := Dialog2 {
         width-preset: DialogWidthPreset.small;
-        on-close(_gesture) => {
-            root.default-inner-open = false;
-        }
 
         VerticalLayout {
 
             DialogHeader {
                 close-requested => {
-                    root.default-inner-open = false;
+                    default-inner-dialog.close();
                 }
 
                 StandardDialogHeader {

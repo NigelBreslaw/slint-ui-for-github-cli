@@ -222,7 +222,7 @@ export component AnchoredOverlayTest inherits Window {
             StandardDialogHeader {
                 title: "My Dialog";
 
-                close-requested => default-outer-dialog.close-requested();
+                close-requested => default-outer-dialog.close();
             }
 
             DialogBody {

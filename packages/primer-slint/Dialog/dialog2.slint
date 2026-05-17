@@ -1,0 +1,35 @@
+// Full-panel composition host (**`@children`** = entire inner shell). Use with **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`** for Storybook **`WithCustomRenderers`** / **`WithDirectSubcomponents`** (`PR9`).
+// Sheet-style layouts (**`ModalOverlay`** left / right / narrow bottom): set **`fill-mode`** to **`screen-height`** or **`screen-width`** and drive edge attachment with **`position-preset`** / **`narrow-position-preset`** — do not infer from position alone.
+// Viewport modal: **`ModalOverlay`** + clipped inner **`Rectangle`** (formerly **`DialogSurface`**, PR9).
+
+import { ModalOverlay } from "../AO2/modal-overlay.slint";
+import {
+    AppWindow,
+    DialogTokens,
+    OverlayTokens,
+} from "../tokens.slint";
+import {
+    DialogAlignPreset,
+    DialogHeightPreset,
+    DialogNarrowPositionPreset,
+    DialogPositionPreset,
+    DialogWidthPreset,
+    DialogFillMode,
+} from "./types.slint";
+
+export component Dialog2 {
+    in property <DialogWidthPreset> width-preset: DialogWidthPreset.medium;
+    in property <DialogHeightPreset> height-preset: DialogHeightPreset.auto;
+    in property <DialogAlignPreset> align-preset: DialogAlignPreset.center;
+    in property <DialogPositionPreset> position-preset: DialogPositionPreset.center;
+
+    callback show <=> modal-overlay.show;
+    callback close <=> modal-overlay.close;
+
+    modal-overlay := ModalOverlay {
+        default-width: width-preset == DialogWidthPreset.small ? DialogTokens.width-small : width-preset == DialogWidthPreset.medium ? DialogTokens.width-medium : width-preset == DialogWidthPreset.large ? DialogTokens.width-large : DialogTokens.width-xlarge;
+
+        default-height: root.height-preset == DialogHeightPreset.small ? min(DialogTokens.height-small, OverlayTokens.modal-viewport-max-height) : root.height-preset == DialogHeightPreset.large ? min(DialogTokens.height-large, OverlayTokens.modal-viewport-max-height) : OverlayTokens.modal-viewport-max-height;
+        @children
+    }
+}
