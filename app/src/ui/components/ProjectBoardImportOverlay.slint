@@ -8,26 +8,25 @@ import {
     ButtonVariant,
     Checkbox,
     Dialog2,
+    OverlayAlign,
+    OverlayHeight,
+    OverlayWidth,
     PrimerTextInput,
     SelectPanel,
     SelectPanelMode,
     Size,
     Spinner,
 } from "../../../../packages/primer-slint/primer.slint";
-import { AppWindow, DialogTokens, LayoutTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { DialogTokens, LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component ProjectBoardImportOverlay {
-    Dialog2 {
-        open <=> ProjectBoardListState.import-dialog-open;
+    import-dialog := Dialog2 {
         allow-dismiss: true;
-        panel-width: DialogTokens.width-xlarge;
-        panel-max-height: OverlayTokens.modal-viewport-max-height;
-        panel-vertical-align: DialogAlignPreset.center;
-        panel-position: DialogPositionPreset.center;
-        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
-        narrow-position: DialogNarrowPositionPreset.center;
-        slot-padding: DialogTokens.body-padding;
-        close-requested => {
+        width-preset: OverlayWidth.xlarge;
+        height-preset: OverlayHeight.auto;
+        align-preset: OverlayAlign.center;
+        panel-padding: DialogTokens.body-padding;
+        closed => {
             ProjectBoardListState.project-board-import-dialog-closed();
         }
 
@@ -290,6 +289,16 @@ export component ProjectBoardImportOverlay {
                     }
                 }
             }
+        }
+    }
+
+    property <bool> import-dialog-open-sync: ProjectBoardListState.import-dialog-open;
+
+    changed import-dialog-open-sync => {
+        if import-dialog-open-sync {
+            import-dialog.show();
+        } else {
+            import-dialog.close();
         }
     }
 }

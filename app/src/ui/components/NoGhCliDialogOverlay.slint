@@ -1,24 +1,23 @@
 import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint";
 import {
     Button,
-    DialogAlignPreset,
-    DialogNarrowPositionPreset,
-    DialogPositionPreset,
-    ModalOverlay,
+    Dialog2,
+    OverlayAlign,
+    OverlayHeight,
+    OverlayWidth,
 } from "../../../../packages/primer-slint/primer.slint";
-import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { DialogTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component NoGhCliDialogOverlay {
-    ModalOverlay {
-        open <=> ShellDialogsState.no-gh-cli-dialog-open;
+    no-gh-cli-dialog := Dialog2 {
         allow-dismiss: false;
-        panel-width: DialogTokens.width-large;
-        panel-max-height: OverlayTokens.modal-viewport-max-height;
-        panel-vertical-align: DialogAlignPreset.center;
-        panel-position: DialogPositionPreset.center;
-        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
-        narrow-position: DialogNarrowPositionPreset.center;
-        slot-padding: DialogTokens.body-padding;
+        width-preset: OverlayWidth.large;
+        height-preset: OverlayHeight.auto;
+        align-preset: OverlayAlign.center;
+        panel-padding: DialogTokens.body-padding;
+        closed => {
+            ShellDialogsState.no-gh-cli-dialog-open = false;
+        }
 
         VerticalLayout {
             width: 100%;
@@ -37,6 +36,16 @@ export component NoGhCliDialogOverlay {
                     ShellDialogsState.open-cli-install-page();
                 }
             }
+        }
+    }
+
+    property <bool> no-gh-cli-dialog-open-sync: ShellDialogsState.no-gh-cli-dialog-open;
+
+    changed no-gh-cli-dialog-open-sync => {
+        if no-gh-cli-dialog-open-sync {
+            no-gh-cli-dialog.show();
+        } else {
+            no-gh-cli-dialog.close();
         }
     }
 }

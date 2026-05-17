@@ -1,21 +1,20 @@
 import { SettingsState } from "../../bridges/slint/settings-state.slint";
-import { DialogAlignPreset, DialogNarrowPositionPreset, DialogPositionPreset, ModalOverlay, Spinner } from "../../../../packages/primer-slint/primer.slint";
-import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { Dialog2, OverlayAlign, OverlayHeight, OverlayWidth, Spinner } from "../../../../packages/primer-slint/primer.slint";
+import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 /// Hosts the settings **Loading** state at the shell level so it is not a child of the
 /// conditionally-instantiated **`Settings`** view — Slint can panic with
-/// *accessing deleted parent* (#6426) when **`ModalOverlay`**/dialog chrome lives under `if` view branches.
+/// *accessing deleted parent* (#6426) when **`Dialog2`**/dialog chrome lives under `if` view branches.
 export component SettingsDebugLoadingOverlay {
-    ModalOverlay {
-        open <=> SettingsState.settings-debug-panel-loading;
+    loading-dialog := Dialog2 {
         allow-dismiss: false;
-        panel-width: DialogTokens.width-large;
-        panel-max-height: OverlayTokens.modal-viewport-max-height;
-        panel-vertical-align: DialogAlignPreset.center;
-        panel-position: DialogPositionPreset.center;
-        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
-        narrow-position: DialogNarrowPositionPreset.center;
-        slot-padding: 24px;
+        width-preset: OverlayWidth.large;
+        height-preset: OverlayHeight.auto;
+        align-preset: OverlayAlign.center;
+        panel-padding: 24px;
+        closed => {
+            SettingsState.settings-debug-panel-loading = false;
+        }
 
         VerticalLayout {
             alignment: center;
@@ -37,6 +36,16 @@ export component SettingsDebugLoadingOverlay {
                     size: medium;
                 }
             }
+        }
+    }
+
+    property <bool> settings-debug-panel-loading-sync: SettingsState.settings-debug-panel-loading;
+
+    changed settings-debug-panel-loading-sync => {
+        if settings-debug-panel-loading-sync {
+            loading-dialog.show();
+        } else {
+            loading-dialog.close();
         }
     }
 }

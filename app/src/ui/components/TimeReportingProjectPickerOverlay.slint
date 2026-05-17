@@ -3,12 +3,15 @@ import { TimeReportingState } from "../../bridges/slint/time-reporting-state.sli
 import {
     Button,
     Dialog2,
+    OverlayAlign,
+    OverlayHeight,
+    OverlayWidth,
     Pagination,
     SelectPanel,
     SelectPanelMode,
 } from "../../../../packages/primer-slint/primer.slint";
 import { PaginationLogic } from "../../../../packages/primer-slint/Pagination/pagination-logic.slint";
-import { AppWindow, DialogTokens, LayoutTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { DialogTokens, LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 /// Range label + `Pagination` strip; `page-index` is 0-based (two-way to `AppState`).
 component TimeReportingPickerPaginationFooter {
@@ -70,17 +73,13 @@ component TimeReportingPickerPaginationFooter {
 }
 
 export component TimeReportingProjectPickerOverlay {
-    Dialog2 {
-        open <=> TimeReportingState.picker-open;
+    picker-dialog := Dialog2 {
         allow-dismiss: TimeReportingState.picker-allow-cancel;
-        panel-width: DialogTokens.width-large;
-        panel-max-height: OverlayTokens.modal-viewport-max-height;
-        panel-vertical-align: DialogAlignPreset.center;
-        panel-position: DialogPositionPreset.center;
-        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
-        narrow-position: DialogNarrowPositionPreset.center;
-        slot-padding: DialogTokens.body-padding;
-        close-requested => {
+        width-preset: OverlayWidth.large;
+        height-preset: OverlayHeight.auto;
+        align-preset: OverlayAlign.center;
+        panel-padding: DialogTokens.body-padding;
+        closed => {
             TimeReportingState.time-reporting-picker-cancel();
         }
 
@@ -144,6 +143,16 @@ export component TimeReportingProjectPickerOverlay {
                     }
                 }
             }
+        }
+    }
+
+    property <bool> picker-open-sync: TimeReportingState.picker-open;
+
+    changed picker-open-sync => {
+        if picker-open-sync {
+            picker-dialog.show();
+        } else {
+            picker-dialog.close();
         }
     }
 }

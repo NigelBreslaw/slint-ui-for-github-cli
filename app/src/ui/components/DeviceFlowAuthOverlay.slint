@@ -2,18 +2,21 @@ import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint
 import {
     Button,
     Dialog2,
+    OverlayAlign,
     Spinner,
 } from "../../../../packages/primer-slint/primer.slint";
-import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
+import { DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component DeviceFlowAuthOverlay {
-    Dialog2 {
-        open <=> ShellDialogsState.auth-device-flow-open;
+    auth-flow-dialog := Dialog2 {
         allow-dismiss: false;
         default-width: DialogTokens.width-large;
         default-height: OverlayTokens.modal-viewport-max-height;
         align-preset: OverlayAlign.center;
         panel-padding: DialogTokens.body-padding;
+        closed => {
+            ShellDialogsState.auth-device-flow-open = false;
+        }
 
         VerticalLayout {
             width: 100%;
@@ -66,6 +69,16 @@ export component DeviceFlowAuthOverlay {
                     size: medium;
                 }
             }
+        }
+    }
+
+    property <bool> auth-device-flow-open-sync: ShellDialogsState.auth-device-flow-open;
+
+    changed auth-device-flow-open-sync => {
+        if auth-device-flow-open-sync {
+            auth-flow-dialog.show();
+        } else {
+            auth-flow-dialog.close();
         }
     }
 }
