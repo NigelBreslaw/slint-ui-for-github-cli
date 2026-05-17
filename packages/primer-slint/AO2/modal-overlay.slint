@@ -1,10 +1,17 @@
 import { AppWindow, DialogTokens, OverlayTokens } from "../tokens.slint";
 import { OverlayPanelChrome } from "overlay-panel-chrome.slint";
 
+export enum AlignPreset {
+    center,
+    top,
+    bottom,
+}
+
 export component ModalOverlay {
 
     property <bool> open: false;
     in property <bool> allow-dismiss: true;
+    in property <AlignPreset> align-preset: AlignPreset.center;
     in property <length> default-width: 640px;
     in property <length> default-height: 640px;
     property <length> panel-width: min(root.default-width, OverlayTokens.modal-viewport-max-width);
@@ -117,6 +124,18 @@ export component ModalOverlay {
 
                         @children
                     }
+
+                    states [
+                        top when root.align-preset == AlignPreset.top: {
+                            y: 64px;
+                        }
+                        bottom when root.align-preset == AlignPreset.bottom: {
+                            y: max(0px, AppWindow.window-height - pane.height - 64px);
+                        }
+                        center when root.align-preset == AlignPreset.center: {
+                            y: (AppWindow.window-height - pane.height) / 2;
+                        }
+                    ]
                 }
             }
         }
