@@ -1,7 +1,8 @@
 [package]
 name = "primer_slint_gallery"
 version = "0.1.0"
-edition = "2021"
+edition = "2024"
+rust-version = "1.85"
 description = "Rust runner for the Primer Slint component gallery (native: winit + Skia; wasm: winit + FemtoVG)"
 publish = false
 autobins = false

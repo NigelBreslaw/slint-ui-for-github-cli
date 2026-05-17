@@ -1,0 +1,4 @@
+# Matches Node gallery (`SLINT_ENABLE_EXPERIMENTAL_FEATURES=1` in package.json / gallery-main.ts).
+# Using Cargo `[env]` avoids `std::env::set_var`, which is `unsafe` in Rust 2024 edition.
+[env]
+SLINT_ENABLE_EXPERIMENTAL_FEATURES = "1"
