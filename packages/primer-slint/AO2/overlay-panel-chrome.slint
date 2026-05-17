@@ -6,25 +6,35 @@ import {
     MultiDropShadow,
 } from "../Effects/multi-drop-shadow.slint";
 
-export component OverlayPanelChrome inherits Rectangle {
+export component OverlayPanelChrome {
 
+    in property <length> border-radius;
+    in property <brush> background;
+    in property <color> border-color;
+    in property <length> border-width;
     in property <[DropShadowLayer]> surface-shadows;
     in property <length> slot-padding;
 
     out property <length> slot-preferred-width: inner-slot.preferred-width;
     out property <length> slot-preferred-height: inner-slot.preferred-height;
 
-    clip: true;
-
     MultiDropShadow {
         border-radius: root.border-radius;
         shadows: root.surface-shadows;
     }
 
-    inner-slot := VerticalLayout {
-        padding: root.slot-padding;
-        alignment: start;
+    overlay := Rectangle {
+        border-radius: root.border-radius;
+        background: root.background;
+        border-color: root.border-color;
+        border-width: root.border-width;
+        clip: true;
 
-        @children
+        inner-slot := VerticalLayout {
+            padding: root.slot-padding;
+            alignment: start;
+
+            @children
+        }
     }
 }

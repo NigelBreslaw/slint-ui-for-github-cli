@@ -1,19 +1,26 @@
-import { Button } from "std-widgets.slint";
 import { AnchoredOverlay } from "anchored-overlay.slint";
-import { AppWindow } from "packages/primer-slint/tokens.slint";
+import { AppWindow } from "../tokens.slint";
 import { OverlayType } from "anchored-overlay.slint";
+import { StandardDialogHeader } from "../Dialog/parts/dialog-header.slint";
+import { DialogBody } from "../Dialog/parts/dialog-body.slint";
+import { DialogFooter } from "../Dialog/parts/dialog-footer.slint";
+import { Dialog } from "../Dialog/dialog.slint";
+import { Button } from "../Buttons/buttons.slint";
+import { ModalOverlay } from "./modal-overlay.slint";
+import { PrimerColors } from "../tokens.slint";
+import { ButtonVariant } from "../Buttons/buttons.slint";
+
 
 export component TestButton {
     width: btn.preferred-width;
     height: btn.preferred-height;
-    in-out property text <=> btn.text;
+    in-out property label <=> btn.label;
     in-out property overlay-type <=> ao.overlay-type;
     in property <length> margin: 0px;
 
     callback clicked();
 
     btn := Button {
-        primary: true;
         clicked => {
             // Concerned if this was a binding it would be firing too often
             // when just scrolling a view of buttons and as the AnchoredOverlay
@@ -64,7 +71,7 @@ export component AnchoredOverlayTest inherits Window {
                 spacing: 40px;
 
                 TestButton {
-                    text: "center modal";
+                    label: "center modal";
 
                     Rectangle {
                         width: 100px;
@@ -79,7 +86,7 @@ export component AnchoredOverlayTest inherits Window {
                 }
 
                 TestButton {
-                    text: "Position under item";
+                    label: "Position under item";
                     overlay-type: anchored;
                     Rectangle {
                         width: 100px;
@@ -94,7 +101,29 @@ export component AnchoredOverlayTest inherits Window {
                 }
 
                 TestButton {
-                    text: "Position under item";
+                    label: "Position under item";
+                    overlay-type: anchored;
+                    Rectangle {
+                        width: 100px;
+                        height: 100px;
+                        background: red;
+                        border-width: 2px;
+                        border-color: blue;
+                        Text {
+                            text: "Position under item";
+                        }
+                    }
+                }
+
+                Button {
+                    label: "Open Modal";
+                    clicked => {
+                        default-outer-dialog.show();
+                    }
+                }
+
+                TestButton {
+                    label: "Position under item";
                     overlay-type: anchored;
                     Rectangle {
                         width: 100px;
@@ -109,7 +138,7 @@ export component AnchoredOverlayTest inherits Window {
                 }
 
                 TestButton {
-                    text: "Position under item";
+                    label: "Position under item";
                     overlay-type: anchored;
                     Rectangle {
                         width: 100px;
@@ -124,7 +153,7 @@ export component AnchoredOverlayTest inherits Window {
                 }
 
                 TestButton {
-                    text: "Position under item";
+                    label: "Position under item";
                     overlay-type: anchored;
                     Rectangle {
                         width: 100px;
@@ -139,7 +168,7 @@ export component AnchoredOverlayTest inherits Window {
                 }
 
                 TestButton {
-                    text: "Position under item";
+                    label: "Position under item";
                     overlay-type: anchored;
                     Rectangle {
                         width: 100px;
@@ -154,7 +183,7 @@ export component AnchoredOverlayTest inherits Window {
                 }
 
                 TestButton {
-                    text: "Position under item";
+                    label: "Position under item";
                     overlay-type: anchored;
                     Rectangle {
                         width: 100px;
@@ -169,7 +198,7 @@ export component AnchoredOverlayTest inherits Window {
                 }
 
                 TestButton {
-                    text: "Position under item";
+                    label: "Position under item";
                     overlay-type: anchored;
                     Rectangle {
                         width: 100px;
@@ -182,34 +211,77 @@ export component AnchoredOverlayTest inherits Window {
                         }
                     }
                 }
+            }
+        }
+    }
 
-                TestButton {
-                    text: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
-                        }
+    default-outer-dialog := ModalOverlay {
+        // open <=> root.default-outer-open;
+        // width-preset: DialogWidthPreset.xlarge;
+        // on-close(_gesture) => {
+        //     root.default-outer-open = false;
+        //     root.default-inner-open = false;
+        // }
+
+        VerticalLayout {
+            alignment: stretch;
+
+            StandardDialogHeader {
+                title: "My Dialog";
+
+                // close-requested => default-outer-dialog.on-close("close-button");
+            }
+
+            DialogBody {
+                Text {
+                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Open Second Dialog";
+                    variant: ButtonVariant.default;
+                    clicked => {
+                        // root.default-inner-open = true;
                     }
                 }
 
-                TestButton {
-                    text: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
-                        }
+                Button {
+                    label: "Delete the universe";
+                    variant: ButtonVariant.danger;
+                    // clicked => default-outer-dialog.on-close("close-button");
+                }
+
+                Button {
+                    label: "Proceed";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        // root.default-inner-open = true;
                     }
                 }
             }

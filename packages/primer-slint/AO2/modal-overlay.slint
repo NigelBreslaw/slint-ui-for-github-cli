@@ -1,0 +1,68 @@
+
+import { AppWindow, OverlayTokens } from "../tokens.slint";
+import { OverlayPanelChrome } from "overlay-panel-chrome.slint";
+
+export component ModalOverlay {
+
+    in property <length> default-width: 640px;
+    property <length> panel-width: min(root.default-width, OverlayTokens.modal-viewport-max-width);
+
+    callback show();
+    show => {
+        popup.show();
+    }
+
+    callback close();
+    close => {
+        popup.close();
+    }
+
+    in property <Size> screen-bounds: { width: AppWindow.window-width, height: AppWindow.window-height };
+
+    callback close-requested();
+    close-requested => {
+        // default
+        root.close();
+    }
+
+    popup := PopupWindow {
+        x: 0px - root.absolute-position.x;
+        y: 0px - root.absolute-position.y;
+        width: AppWindow.window-width;
+        height: AppWindow.window-height;
+
+        close-policy: no-auto-close;
+
+        ta := TouchArea {
+            clicked => {
+                root.close-requested();
+            }
+        }
+
+        popup-screen := Rectangle {
+
+
+            pane := Rectangle {
+                x: (popup-screen.width - va.width) / 2;
+                y: (popup-screen.height - va.height) / 2;
+                width: panel-width;
+                height: va.height;
+
+                touch-blocker := TouchArea { }
+
+
+                va := OverlayPanelChrome {
+                    background: OverlayTokens.panel-background;
+                    border-color: OverlayTokens.panel-border;
+                    border-width: OverlayTokens.panel-border-width;
+                    border-radius: OverlayTokens.panel-border-radius;
+                    surface-shadows: OverlayTokens.panel-elevation-shadow;
+
+                    width: panel-width;
+                    height: self.preferred-height;
+                    @children
+                }
+            }
+        }
+    }
+}
