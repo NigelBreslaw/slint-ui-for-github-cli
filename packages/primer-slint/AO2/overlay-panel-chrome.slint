@@ -9,6 +9,10 @@ import {
 export component OverlayPanelChrome {
 
     in property <length> border-radius;
+    in property <length> border-top-left-radius;
+    in property <length> border-top-right-radius;
+    in property <length> border-bottom-left-radius;
+    in property <length> border-bottom-right-radius;
     in property <brush> background;
     in property <color> border-color;
     in property <length> border-width;
@@ -19,14 +23,22 @@ export component OverlayPanelChrome {
 
     MultiDropShadow {
         border-radius: root.border-radius;
+        border-top-left-radius: root.border-top-left-radius;
+        border-top-right-radius: root.border-top-right-radius;
+        border-bottom-left-radius: root.border-bottom-left-radius;
+        border-bottom-right-radius: root.border-bottom-right-radius;
         shadows: root.surface-shadows;
     }
 
     overlay := Rectangle {
-        border-radius: root.border-radius;
         background: root.background;
         border-color: root.border-color;
         border-width: root.border-width;
+        border-radius: root.border-radius;
+        border-top-left-radius: root.border-top-left-radius;
+        border-top-right-radius: root.border-top-right-radius;
+        border-bottom-left-radius: root.border-bottom-left-radius;
+        border-bottom-right-radius: root.border-bottom-right-radius;
         clip: true;
 
         inner-slot := VerticalLayout {

@@ -1,14 +1,12 @@
 import { AnchoredOverlay } from "anchored-overlay.slint";
-import { AppWindow } from "../tokens.slint";
 import { OverlayType } from "anchored-overlay.slint";
 import { StandardDialogHeader } from "../Dialog/parts/dialog-header.slint";
 import { DialogBody } from "../Dialog/parts/dialog-body.slint";
 import { DialogFooter } from "../Dialog/parts/dialog-footer.slint";
-import { Dialog } from "../Dialog/dialog.slint";
-import { Button } from "../Buttons/buttons.slint";
-import { ModalOverlay } from "./modal-overlay.slint";
-import { PrimerColors } from "../tokens.slint";
-import { ButtonVariant } from "../Buttons/buttons.slint";
+import { Button, ButtonVariant } from "../Buttons/buttons.slint";
+import { ModalOverlay } from "../Dialog/modal-overlay.slint";
+import { SheetOverlay, SheetSide } from "./sheet-overlay.slint";
+import { AppWindow, PrimerColors } from "../tokens.slint";
 
 
 export component TestButton {
@@ -100,21 +98,6 @@ export component AnchoredOverlayTest inherits Window {
                     }
                 }
 
-                TestButton {
-                    label: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
-                        }
-                    }
-                }
-
                 Button {
                     label: "Open Modal";
                     clicked => {
@@ -122,92 +105,38 @@ export component AnchoredOverlayTest inherits Window {
                     }
                 }
 
-                TestButton {
-                    label: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
-                        }
-                    }
-                }
+                VerticalLayout {
+                    spacing: 12px;
 
-                TestButton {
-                    label: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
-                        }
+                    Text {
+                        text: "SheetOverlay (AO2)";
+                        color: PrimerColors.fgColor-default;
+                        font-size: 16px;
+                        font-weight: 600;
                     }
-                }
 
-                TestButton {
-                    label: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
+                    HorizontalLayout {
+                        spacing: 12px;
+
+                        Button {
+                            label: "Sheet left";
+                            clicked => {
+                                sheet-left.show();
+                            }
                         }
-                    }
-                }
 
-                TestButton {
-                    label: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
+                        Button {
+                            label: "Sheet right";
+                            clicked => {
+                                sheet-right.show();
+                            }
                         }
-                    }
-                }
 
-                TestButton {
-                    label: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
-                        }
-                    }
-                }
-
-                TestButton {
-                    label: "Position under item";
-                    overlay-type: anchored;
-                    Rectangle {
-                        width: 100px;
-                        height: 100px;
-                        background: red;
-                        border-width: 2px;
-                        border-color: blue;
-                        Text {
-                            text: "Position under item";
+                        Button {
+                            label: "Sheet bottom";
+                            clicked => {
+                                sheet-bottom.show();
+                            }
                         }
                     }
                 }
@@ -275,6 +204,118 @@ export component AnchoredOverlayTest inherits Window {
                     variant: ButtonVariant.primary;
                     clicked => {
                         // root.default-inner-open = true;
+                    }
+                }
+            }
+        }
+    }
+
+    sheet-left := SheetOverlay {
+        side: SheetSide.left;
+        default-panel-width: 360px;
+
+        VerticalLayout {
+
+            StandardDialogHeader {
+                title: "Left sheet";
+
+                close-requested => {
+                    sheet-left.close();
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Left SheetOverlay — dismiss with backdrop, Escape, or header close.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Done";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        sheet-left.close();
+                    }
+                }
+            }
+        }
+    }
+
+    sheet-right := SheetOverlay {
+        side: SheetSide.right;
+        default-panel-width: 360px;
+
+        VerticalLayout {
+
+            StandardDialogHeader {
+                title: "Right sheet";
+
+                close-requested => {
+                    sheet-right.close();
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Right SheetOverlay — slide-in from the right edge.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Done";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        sheet-right.close();
+                    }
+                }
+            }
+        }
+    }
+
+    sheet-bottom := SheetOverlay {
+        side: SheetSide.bottom;
+        default-panel-height: 320px;
+
+        VerticalLayout {
+
+            StandardDialogHeader {
+                title: "Bottom sheet";
+
+                close-requested => {
+                    sheet-bottom.close();
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text: "Bottom SheetOverlay — slides up. Extra copy so the sheet has meaningful height.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text: "Second paragraph to exercise max height and scrolling if content grows.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Done";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        sheet-bottom.close();
                     }
                 }
             }

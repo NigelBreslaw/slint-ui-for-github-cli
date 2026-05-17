@@ -1,51 +1,102 @@
+import { AppWindow, DialogTokens, OverlayTokens } from "../tokens.slint";
+import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
 
-// Used by non modal overlays that need to be smart positioned
-export struct PositionProps {
-    // Used to tell the overlay where the item that called for an overlay is positioned
-    absolute-position: Point,
-    // Anchor control size; used to place the overlay and flip side when it would clip off-screen.
-    source-size: Size,
+export enum SheetSide {
+    left,
+    right,
+    bottom,
 }
 
-// modal overlays are centered in the screen e.g. dialogs
-// anchored target a specific position e.g. component menus, etc.
-export enum OverlayType {
-    modal,
-    anchored
-}
+struct sheet-border-radius { top-left: length, top-right: length, bottom-left: length, bottom-right: length}
 
-enum PositionAxis {
-    pos-x,
-    pos-y,
-}
+export component SheetOverlay {
 
-import { AppWindow } from "../tokens.slint";
+    in property <SheetSide> side: SheetSide.right;
+    property <bool> open: false;
+    in property <bool> allow-dismiss: true;
+    in property <bool> reduce-motion: false;
+    in property <length> default-panel-width: 640px;
+    in property <length> default-panel-height: 480px;
 
-export component AnchoredOverlay {
-    in property <PositionProps> position-props;
-    in-out property <OverlayType> overlay-type: modal;
-    /// Gap between anchor and overlay (below anchor bottom, or above anchor top when flipped).
-    in property <length> margin: 0px;
+    property <length> panel-width: min(root.default-panel-width, OverlayTokens.modal-viewport-max-width);
+    property <length> panel-height: min(root.default-panel-height, OverlayTokens.modal-viewport-max-height);
+
+    property <float> presented: 0.0;
+
+    property <sheet-border-radius> left-sheet-border-radius: {
+        top-left: 0px,
+        top-right: OverlayTokens.panel-border-radius,
+        bottom-left: 0px,
+        bottom-right: OverlayTokens.panel-border-radius
+    };
+
+    property <sheet-border-radius> right-sheet-border-radius: {
+        top-left: OverlayTokens.panel-border-radius,
+        top-right: 0px,
+        bottom-left: OverlayTokens.panel-border-radius,
+        bottom-right: 0px
+    };
+
+    property <sheet-border-radius> bottom-sheet-border-radius: {
+        top-left: OverlayTokens.panel-border-radius,
+        top-right: OverlayTokens.panel-border-radius,
+        bottom-left: 0px,
+        bottom-right: 0px
+    };
+
+    property <sheet-border-radius> chrome-border-radius: root.side == SheetSide.left ? root.left-sheet-border-radius : root.side == SheetSide.right ? root.right-sheet-border-radius : root.bottom-sheet-border-radius;
+
+    callback closed();
+
+    states [
+        show-animated-pane when root.open && !reduce-motion: {
+            presented: 1.0;
+            in-out {
+                animate presented {
+                    duration: DialogTokens.overlay-sheet-enter-duration;
+                    easing: cubic-bezier(0.33, 1, 0.68, 1);
+                }
+            }
+        }
+        show-unanimated-pane when root.open && reduce-motion: {
+            presented: 1.0;
+        }
+    ]
+
+    presented-enter-arm := Timer {
+        interval: 1ms;
+        running: false;
+        triggered() => {
+            root.open = true;
+            self.stop();
+        }
+    }
+
+    popup-close-after-exit := Timer {
+        interval: DialogTokens.overlay-sheet-enter-duration;
+        running: false;
+        triggered() => {
+            popup.close();
+            root.closed();
+            self.stop();
+        }
+    }
 
     callback show();
     show => {
+        presented-enter-arm.start();
         popup.show();
     }
 
     callback close();
     close => {
-        popup.close();
-    }
-
-    // This is only relevant for modal overlays. The default is to center in the entire
-    // window/screen. However there may be situations such as apps with a large sidebar
-    // Where overlays need to be centered to specific content.
-    in property <Size> screen-bounds: { width: AppWindow.window-width, height: AppWindow.window-height };
-
-    callback close-requested();
-    close-requested => {
-        // default
-        root.close();
+        root.open = false;
+        if reduce-motion {
+            popup.close();
+            root.closed();
+        } else {
+            popup-close-after-exit.start();
+        }
     }
 
     popup := PopupWindow {
@@ -55,57 +106,71 @@ export component AnchoredOverlay {
         height: AppWindow.window-height;
 
         close-policy: no-auto-close;
+        forward-focus: modal-scope;
 
-        function get-overlay-position(axis: PositionAxis) -> length {
-            if axis == PositionAxis.pos-x {
-                if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.width - va.width) / 2;
-                } else {
-                    return root.position-props.absolute-position.x;
+        modal-scope := FocusScope {
+
+            key-pressed(event) => {
+                if root.allow-dismiss && event.text == Key.Escape {
+                    root.close();
+                    return accept;
                 }
-            } else {
-                if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.height - va.height) / 2;
-                } else {
-                    // Below anchor by default; flip above if viewport is too short; y never < 0.
-                    let pos = root.position-props;
-                    let item_bottom = pos.absolute-position.y + pos.source-size.height
-                        + root.margin + va.height;
-                    return (item_bottom
-                        <= popup-screen.height)
-                        ? (pos.absolute-position.y + pos.source-size.height + root.margin)
-                        : max(0px, pos.absolute-position.y - root.margin - va.height);
+                return reject;
+            }
+
+            popup-screen := Rectangle {
+                background: OverlayTokens.backdrop-scrim;
+                opacity: root.presented;
+
+                ta := TouchArea {
+                    enabled: root.allow-dismiss && root.open;
+                    clicked => {
+                        root.close();
+                    }
                 }
-            }
-        }
-
-        ta := TouchArea {
-            clicked => {
-                root.close-requested();
-            }
-        }
-
-        popup-screen := Rectangle {
-            background: red.with-alpha(0.5);
-            // x and y are set here because the position should not be a binding that
-            // would change if the window is resized after the overlay is shown.
-            init => {
-                pane.x = get-overlay-position(PositionAxis.pos-x);
-                pane.y = get-overlay-position(PositionAxis.pos-y);
             }
 
             pane := Rectangle {
-                width: va.width;
-                height: va.height;
+                background: red;
 
                 touch-blocker := TouchArea { }
 
+                panel-chrome := OverlayPanelChrome {
+                    width: parent.width;
+                    height: parent.height;
+                    background: OverlayTokens.panel-background;
+                    border-color: OverlayTokens.panel-border;
+                    border-width: OverlayTokens.panel-border-width;
+                    border-radius: OverlayTokens.panel-border-radius;
+                    border-top-left-radius: root.chrome-border-radius.top-left;
+                    border-top-right-radius: root.chrome-border-radius.top-right;
+                    border-bottom-left-radius: root.chrome-border-radius.bottom-left;
+                    border-bottom-right-radius: root.chrome-border-radius.bottom-right;
+                    surface-shadows: OverlayTokens.panel-elevation-shadow;
 
-                va := VerticalLayout {
-                    width: self.preferred-width;
-                    height: self.preferred-height;
                     @children
                 }
+
+                states [
+                    sheet-left when root.side == SheetSide.left: {
+                        pane.x: root.panel-width * root.presented - root.panel-width;
+                        pane.y: 0px;
+                        pane.width: root.panel-width;
+                        pane.height: AppWindow.window-height;
+                    }
+                    sheet-right when root.side == SheetSide.right: {
+                        pane.x: AppWindow.window-width - root.panel-width * root.presented;
+                        pane.y: 0px;
+                        pane.width: root.panel-width;
+                        pane.height: AppWindow.window-height;
+                    }
+                    sheet-bottom when root.side == SheetSide.bottom: {
+                        pane.x: 0px;
+                        pane.y: AppWindow.window-height - pane.height * root.presented;
+                        pane.width: AppWindow.window-width;
+                        pane.height: min(panel-chrome.chrome-preferred-height, root.panel-height);
+                    }
+                ]
             }
         }
     }
