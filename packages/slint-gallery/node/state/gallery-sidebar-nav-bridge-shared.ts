@@ -42,7 +42,6 @@ const GALLERY_SIDEBAR_NAV: readonly {
         label: "Dialogs",
         leaves: [
             { id: "dialogs-playground", label: "Playground" },
-            { id: "dialogs-old", label: "Old" },
         ],
     },
     { folderId: "folder-sheets", label: "Sheets", leaves: [{ id: "sheets-playground", label: "Playground" }] },

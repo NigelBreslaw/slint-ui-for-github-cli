@@ -297,25 +297,6 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "dialogs-old",
-    label: "Old",
-    level: 2,
-    has-children: false,
-    expanded: false,
-    current: GalleryState.selected-page-id == "dialogs-old",
-    leading-is-directory: false,
-    has-leading-visual: true,
-    trailing: TreeViewTrailingVisual.none,
-    has-leading-action: false,
-    show-leading-action-icon: false,
-    leading-action-icon: Icons.dot_fill,
-    leading-file-icon: Icons.file,
-    interactive: true,
-    is-skeleton: false,
-    has-secondary-actions: false,
-    secondary-actions-badge: "",
-    loading-children-badge: "",
-},{
     id: "folder-sheets",
     label: "Sheets",
     level: 1,
@@ -860,7 +841,6 @@ export component GallerySidebar {
                                 || id == "counter-label-playground"
                                 || id == "data-playground"
                                 || id == "dialogs-playground"
-                                || id == "dialogs-old"
                                 || id == "sheets-playground"
                                 || id == "forms-playground"
                                 || id == "label-playground"

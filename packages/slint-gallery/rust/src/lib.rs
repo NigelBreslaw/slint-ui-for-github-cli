@@ -33,7 +33,6 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         "Dialogs",
         &[
             ("dialogs-playground", "Playground"),
-            ("dialogs-old", "Old"),
         ],
     ),
     (

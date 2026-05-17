@@ -2,10 +2,7 @@ import { AppState } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
 import {
     Button,
-    DialogAlignPreset,
-    DialogNarrowPositionPreset,
-    DialogPositionPreset,
-    ModalOverlay,
+    Dialog2,
     Pagination,
     SelectPanel,
     SelectPanelMode,
@@ -73,7 +70,7 @@ component TimeReportingPickerPaginationFooter {
 }
 
 export component TimeReportingProjectPickerOverlay {
-    ModalOverlay {
+    Dialog2 {
         open <=> TimeReportingState.picker-open;
         allow-dismiss: TimeReportingState.picker-allow-cancel;
         panel-width: DialogTokens.width-large;

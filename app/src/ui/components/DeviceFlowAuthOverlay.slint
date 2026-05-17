@@ -1,25 +1,19 @@
 import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint";
 import {
     Button,
-    DialogAlignPreset,
-    DialogNarrowPositionPreset,
-    DialogPositionPreset,
-    ModalOverlay,
+    Dialog2,
     Spinner,
 } from "../../../../packages/primer-slint/primer.slint";
 import { AppWindow, DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component DeviceFlowAuthOverlay {
-    ModalOverlay {
+    Dialog2 {
         open <=> ShellDialogsState.auth-device-flow-open;
         allow-dismiss: false;
-        panel-width: DialogTokens.width-large;
-        panel-max-height: OverlayTokens.modal-viewport-max-height;
-        panel-vertical-align: DialogAlignPreset.center;
-        panel-position: DialogPositionPreset.center;
-        narrow-viewport: AppWindow.window-width <= DialogTokens.narrow-max-width;
-        narrow-position: DialogNarrowPositionPreset.center;
-        slot-padding: DialogTokens.body-padding;
+        default-width: DialogTokens.width-large;
+        default-height: OverlayTokens.modal-viewport-max-height;
+        align-preset: OverlayAlign.center;
+        panel-padding: DialogTokens.body-padding;
 
         VerticalLayout {
             width: 100%;

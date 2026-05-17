@@ -7,10 +7,7 @@ import {
     Button,
     ButtonVariant,
     Checkbox,
-    DialogAlignPreset,
-    DialogNarrowPositionPreset,
-    DialogPositionPreset,
-    ModalOverlay,
+    Dialog2,
     PrimerTextInput,
     SelectPanel,
     SelectPanelMode,
@@ -20,7 +17,7 @@ import {
 import { AppWindow, DialogTokens, LayoutTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component ProjectBoardImportOverlay {
-    ModalOverlay {
+    Dialog2 {
         open <=> ProjectBoardListState.import-dialog-open;
         allow-dismiss: true;
         panel-width: DialogTokens.width-xlarge;

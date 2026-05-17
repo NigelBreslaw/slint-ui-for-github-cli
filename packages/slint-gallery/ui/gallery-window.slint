@@ -13,7 +13,6 @@ import { GalleryBannerPage } from "./views/gallery-banner-page.slint";
 import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
-import { GalleryDialogsPage } from "./views/gallery-dialogs-page.slint";
 import { GalleryDialogsPlaygroundPage } from "./views/gallery-dialog-playground-page.slint";
 import { GallerySheetsPage } from "./views/gallery-sheets-page.slint";
 import { GalleryStateLabelPage } from "./views/gallery-state-label-page.slint";
@@ -122,8 +121,6 @@ export component GalleryWindow inherits Window {
                         if GalleryState.selected-page-id == "dialogs-playground": GalleryDialogsPlaygroundPage {
                             height: main-scroll.height;
                         }
-
-                        if GalleryState.selected-page-id == "dialogs-old": GalleryDialogsPage { }
 
                         if GalleryState.selected-page-id == "sheets-playground": GallerySheetsPage {
                             height: main-scroll.height;

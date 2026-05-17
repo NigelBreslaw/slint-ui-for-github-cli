@@ -43,6 +43,8 @@ export component ModalOverlay {
     property <float> presented: 0.0;
     property <float> pane-scale: 0.5 + 0.5 * presented;
 
+    in property <length> panel-padding: 0px;
+
     callback closed();
 
     states [
@@ -142,6 +144,7 @@ export component ModalOverlay {
                         border-width: OverlayTokens.panel-border-width;
                         border-radius: OverlayTokens.panel-border-radius;
                         surface-shadows: OverlayTokens.panel-elevation-shadow;
+                        panel-padding: root.panel-padding;
 
                         @children
                     }

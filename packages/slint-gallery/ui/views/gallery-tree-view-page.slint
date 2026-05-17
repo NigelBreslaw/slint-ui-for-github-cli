@@ -13,10 +13,10 @@ import {
     BannerVariant,
     Button,
     ButtonVariant,
-    Dialog,
+    Dialog2,
     DialogBody,
     DialogFooter,
-    DialogWidthPreset,
+    OverlayWidth,
     IconButton,
     Icons,
     PrimerTreeView,
@@ -1037,7 +1037,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     ];
 
     in-out property <bool> tv-trailing-menu-open: false;
-    in-out property <bool> tv-trailing-sample-dialog-open: false;
+    callback tv-trailing-sample-dialog-open();
+    tv-trailing-sample-dialog-open => {
+        tv-trailing-sample-dialog.show();
+    }
     property <length> tv-trailing-menu-ax: 0px;
     property <length> tv-trailing-menu-ay: 0px;
     property <length> tv-trailing-menu-aw: 0px;
@@ -1364,7 +1367,10 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     in-out property <bool> async-e-expanded: false;
     in-out property <int> async-e-step: 0;
     property <bool> async-e-timer-arm: false;
-    in-out property <bool> async-e-dialog-open: false;
+    callback async-e-dialog-open();
+    async-e-dialog-open => {
+        async-e-dialog.show();
+    }
 
     property <[TreeViewRow]> async-e-collapsed: [
         {
@@ -1548,7 +1554,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             async-e-timer-arm = false;
             if async-e-step == 1 {
                 async-e-step = 2;
-                async-e-dialog-open = true;
+                async-e-dialog-open();
             } else if async-e-step == 3 {
                 async-e-step = 4;
             }
@@ -1645,24 +1651,21 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 item-activated(ix) => {
                     tv-trailing-menu-open = false;
                     if ix == 0 {
-                        tv-trailing-sample-dialog-open = true;
+                        tv-trailing-sample-dialog-open();
                     }
                 }
             }
         }
 
-        tv-trailing-sample-dialog := Dialog {
-            open <=> tv-trailing-sample-dialog-open;
-            width-preset: DialogWidthPreset.small;
-            on-close(_gesture) => {
-                tv-trailing-sample-dialog-open = false;
-            }
+        tv-trailing-sample-dialog := Dialog2 {
+            width-preset: OverlayWidth.small;
+
 
             VerticalLayout {
 
                 StandardDialogHeader {
                     title: "Tree item action";
-                    close-requested => tv-trailing-sample-dialog.on-close("close-button");
+                    close-requested => tv-trailing-sample-dialog.close();
                 }
 
                 DialogBody {
@@ -1677,7 +1680,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 DialogFooter {
                     Button {
                         label: "Close";
-                        clicked => tv-trailing-sample-dialog.on-close("close-button");
+                        clicked => tv-trailing-sample-dialog.close();
                     }
                 }
             }
@@ -1864,12 +1867,12 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                         if !async-e-expanded {
                             async-e-expanded = true;
                             async-e-step = 1;
-                            async-e-dialog-open = false;
+                            async-e-dialog.close();
                             async-e-timer-arm = true;
                         } else {
                             async-e-expanded = false;
                             async-e-step = 0;
-                            async-e-dialog-open = false;
+                            async-e-dialog.close();
                             async-e-timer-arm = false;
                         }
                     }
@@ -2113,21 +2116,15 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         }
     }
 
-    async-e-dialog := Dialog {
-        open <=> async-e-dialog-open;
-        width-preset: DialogWidthPreset.small;
-        on-close(_gesture) => {
-            async-e-dialog-open = false;
-            async-e-expanded = false;
-            async-e-step = 0;
-            async-e-timer-arm = false;
-        }
+    async-e-dialog := Dialog2 {
+        width-preset: OverlayWidth.small;
+
 
         VerticalLayout {
 
             StandardDialogHeader {
                 title: "Could not load folder";
-                close-requested => async-e-dialog.on-close("close-button");
+                close-requested => async-e-dialog.close();
             }
 
             DialogBody {
@@ -2144,14 +2141,14 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                     label: "Retry";
                     variant: ButtonVariant.primary;
                     clicked => {
-                        async-e-dialog-open = false;
+                        async-e-dialog.close();
                         async-e-step = 3;
                         async-e-timer-arm = true;
                     }
                 }
                 Button {
                     label: "Close";
-                    clicked => async-e-dialog.on-close("close-button");
+                    clicked => async-e-dialog.close();
                 }
             }
         }
