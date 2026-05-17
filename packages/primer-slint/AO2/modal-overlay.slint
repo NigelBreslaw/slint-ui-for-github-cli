@@ -15,6 +15,8 @@ export component ModalOverlay {
     property <float> presented: 0.0;
     property <float> pane-scale: 0.5 + 0.5 * presented;
 
+    callback closed();
+
     states [
         show-animated-pane when root.open && !reduce-motion: {
             presented: 1.0;
@@ -44,6 +46,7 @@ export component ModalOverlay {
         running: false;
         triggered() => {
             popup.close();
+            root.closed();
             self.stop();
         }
     }
@@ -60,6 +63,7 @@ export component ModalOverlay {
         root.open = false;
         if reduce-motion {
             popup.close();
+            root.closed();
         } else {
             popup-close-after-exit.start();
         }
