@@ -14,10 +14,6 @@ export component ModalOverlay {
     in property <bool> reduce-motion: false;
     property <float> presented: 0.0;
     property <float> pane-scale: 0.5 + 0.5 * presented;
-    callback close-requested();
-    close-requested => {
-        root.close();
-    }
 
     states [
         show-animated-pane when root.open && !reduce-motion: {
