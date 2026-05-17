@@ -1,28 +1,64 @@
-
-import { AppWindow, OverlayTokens } from "../tokens.slint";
+import { AppWindow, DialogTokens, OverlayTokens } from "../tokens.slint";
 import { OverlayPanelChrome } from "overlay-panel-chrome.slint";
 
 export component ModalOverlay {
 
+    property <bool> open: false;
     in property <length> default-width: 640px;
     property <length> panel-width: min(root.default-width, OverlayTokens.modal-viewport-max-width);
 
+    // animation system
+    in property <bool> reduce-motion: false;
+    property <float> presented: 0.0;
+    property <float> pane-scale: 0.5 + 0.5 * presented;
+
+    states [
+        show-animated-pane when root.open && !reduce-motion: {
+            presented: 1.0;
+            in-out  {
+                animate presented {
+                    duration: DialogTokens.overlay-enter-duration;
+                    easing: cubic-bezier(0.33, 1, 0.68, 1);
+                }
+            }
+        }
+        show-unanimated-pane when root.open && reduce-motion: {
+            presented: 1.0;
+        }
+    ]
+
+    presented-enter-arm := Timer {
+        interval: 1ms;
+        running: false;
+        triggered() => {
+            root.open = true;
+            self.stop();
+        }
+    }
+
+    popup-close-after-exit := Timer {
+        interval: DialogTokens.overlay-enter-duration;
+        running: false;
+        triggered() => {
+            popup.close();
+            self.stop();
+        }
+    }
+
     callback show();
     show => {
+        presented-enter-arm.start();
         popup.show();
     }
 
     callback close();
     close => {
-        popup.close();
-    }
-
-    in property <Size> screen-bounds: { width: AppWindow.window-width, height: AppWindow.window-height };
-
-    callback close-requested();
-    close-requested => {
-        // default
-        root.close();
+        root.open = false;
+        if reduce-motion {
+            popup.close();
+        } else {
+            popup-close-after-exit.start();
+        }
     }
 
     popup := PopupWindow {
@@ -35,7 +71,7 @@ export component ModalOverlay {
 
         ta := TouchArea {
             clicked => {
-                root.close-requested();
+                root.close();
             }
         }
 
@@ -47,6 +83,8 @@ export component ModalOverlay {
                 y: (popup-screen.height - va.height) / 2;
                 width: panel-width;
                 height: va.height;
+                opacity: presented;
+                transform-scale: pane-scale;
 
                 touch-blocker := TouchArea { }
 
