@@ -4,6 +4,7 @@ import { OverlayPanelChrome } from "overlay-panel-chrome.slint";
 export component ModalOverlay {
 
     property <bool> open: false;
+    in property <bool> allow-dismiss: true;
     in property <length> default-width: 640px;
     property <length> panel-width: min(root.default-width, OverlayTokens.modal-viewport-max-width);
 
@@ -11,11 +12,15 @@ export component ModalOverlay {
     in property <bool> reduce-motion: false;
     property <float> presented: 0.0;
     property <float> pane-scale: 0.5 + 0.5 * presented;
+    callback close-requested();
+    close-requested => {
+        root.close();
+    }
 
     states [
         show-animated-pane when root.open && !reduce-motion: {
             presented: 1.0;
-            in-out  {
+            in-out {
                 animate presented {
                     duration: DialogTokens.overlay-enter-duration;
                     easing: cubic-bezier(0.33, 1, 0.68, 1);
@@ -47,6 +52,7 @@ export component ModalOverlay {
 
     callback show();
     show => {
+        // Shame root.open cannot be set directly to true. Is this a bug?
         presented-enter-arm.start();
         popup.show();
     }
@@ -68,37 +74,49 @@ export component ModalOverlay {
         height: AppWindow.window-height;
 
         close-policy: no-auto-close;
+        forward-focus: modal-scope;
 
-        ta := TouchArea {
-            clicked => {
-                root.close();
+        modal-scope := FocusScope {
+
+            key-pressed(event) => {
+                if root.allow-dismiss && event.text == Key.Escape {
+                    root.close();
+                    return accept;
+                }
+                return reject;
             }
-        }
 
-        popup-screen := Rectangle {
+            popup-screen := Rectangle {
+                background: OverlayTokens.backdrop-scrim;
+                opacity: root.presented;
 
+                ta := TouchArea {
+                    clicked => {
+                        root.close();
+                    }
+                }
 
-            pane := Rectangle {
-                x: (popup-screen.width - va.width) / 2;
-                y: (popup-screen.height - va.height) / 2;
-                width: panel-width;
-                height: va.height;
-                opacity: presented;
-                transform-scale: pane-scale;
-
-                touch-blocker := TouchArea { }
-
-
-                va := OverlayPanelChrome {
-                    background: OverlayTokens.panel-background;
-                    border-color: OverlayTokens.panel-border;
-                    border-width: OverlayTokens.panel-border-width;
-                    border-radius: OverlayTokens.panel-border-radius;
-                    surface-shadows: OverlayTokens.panel-elevation-shadow;
-
+                pane := Rectangle {
+                    x: (popup-screen.width - va.width) / 2;
+                    y: (popup-screen.height - va.height) / 2;
                     width: panel-width;
-                    height: self.preferred-height;
-                    @children
+                    height: va.height;
+                    opacity: presented;
+                    transform-scale: pane-scale;
+
+                    touch-blocker := TouchArea { }
+
+                    va := OverlayPanelChrome {
+                        background: OverlayTokens.panel-background;
+                        border-color: OverlayTokens.panel-border;
+                        border-width: OverlayTokens.panel-border-width;
+                        border-radius: OverlayTokens.panel-border-radius;
+                        surface-shadows: OverlayTokens.panel-elevation-shadow;
+
+                        width: panel-width;
+                        height: self.preferred-height;
+                        @children
+                    }
                 }
             }
         }

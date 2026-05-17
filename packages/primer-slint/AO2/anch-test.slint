@@ -216,12 +216,6 @@ export component AnchoredOverlayTest inherits Window {
     }
 
     default-outer-dialog := ModalOverlay {
-        // open <=> root.default-outer-open;
-        // width-preset: DialogWidthPreset.xlarge;
-        // on-close(_gesture) => {
-        //     root.default-outer-open = false;
-        //     root.default-inner-open = false;
-        // }
 
         VerticalLayout {
             alignment: stretch;
@@ -229,7 +223,7 @@ export component AnchoredOverlayTest inherits Window {
             StandardDialogHeader {
                 title: "My Dialog";
 
-                // close-requested => default-outer-dialog.on-close("close-button");
+                close-requested => default-outer-dialog.close-requested();
             }
 
             DialogBody {
