@@ -36,6 +36,11 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
             ("dialogs-old", "Old"),
         ],
     ),
+    (
+        "folder-sheets",
+        "Sheets",
+        &[("sheets-playground", "Playground")],
+    ),
     ("folder-forms", "Forms", &[("forms-playground", "Playground")]),
     ("folder-label", "Label", &[("label-playground", "Playground")]),
     ("folder-navs", "Navs", &[("navs-playground", "Playground")]),

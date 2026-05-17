@@ -1,0 +1,143 @@
+import {
+    Button,
+    ButtonVariant,
+    DialogBody,
+    DialogFooter,
+    Radio,
+    RadioGroup,
+    SheetOverlay,
+    SheetSide,
+    StandardDialogHeader,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GallerySheetsPage {
+    property <SheetSide> preview-side: SheetSide.right;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "Sheet";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            Text {
+                text: "Open a viewport sheet. Pick the edge in the sidebar, then open.";
+                color: PrimerColors.fgColor-muted;
+                font-size: 14px;
+                wrap: word-wrap;
+            }
+
+            Button {
+                label: "Open sheet";
+                variant: ButtonVariant.primary;
+                clicked => {
+                    demo-sheet.show();
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Side";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "left";
+                        label: "left";
+                        checked: preview-side == SheetSide.left;
+                        toggled => {
+                            demo-sheet.close();
+                            preview-side = SheetSide.left;
+                        }
+                    }
+
+                    Radio {
+                        value: "right";
+                        label: "right";
+                        checked: preview-side == SheetSide.right;
+                        toggled => {
+                            demo-sheet.close();
+                            preview-side = SheetSide.right;
+                        }
+                    }
+
+                    Radio {
+                        value: "bottom";
+                        label: "bottom";
+                        checked: preview-side == SheetSide.bottom;
+                        toggled => {
+                            demo-sheet.close();
+                            preview-side = SheetSide.bottom;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    demo-sheet := SheetOverlay {
+        side: preview-side;
+        default-panel-width: 360px;
+        default-panel-height: 320px;
+
+        VerticalLayout {
+
+            StandardDialogHeader {
+                title:
+                    preview-side == SheetSide.left ? "Left sheet" : preview-side == SheetSide.right ? "Right sheet" : "Bottom sheet";
+
+                close-requested => {
+                    demo-sheet.close();
+                }
+            }
+
+            DialogBody {
+                Text {
+                    text:
+                        preview-side == SheetSide.bottom ? "Bottom SheetOverlay — slides up. Dismiss with backdrop, Escape, header close, or Done." : "Side sheet — slide-in from the edge. Dismiss with backdrop, Escape, header close, or Done.";
+                    color: PrimerColors.fgColor-default;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+
+                if preview-side == SheetSide.bottom: Text {
+                    text: "Extra copy so the bottom sheet has meaningful height.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 14px;
+                    wrap: word-wrap;
+                }
+            }
+
+            DialogFooter {
+                Button {
+                    label: "Done";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        demo-sheet.close();
+                    }
+                }
+            }
+        }
+    }
+}
