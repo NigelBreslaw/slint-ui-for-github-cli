@@ -27,8 +27,14 @@ export component ModalOverlay {
     in property <OverlayAlign> align-preset: OverlayAlign.center;
     in property <OverlayWidth> width-preset: OverlayWidth.medium;
     in property <OverlayHeight> height-preset: OverlayHeight.auto;
-    in property <length> default-width: width-preset == OverlayWidth.small ? DialogTokens.width-small : root.width-preset == OverlayWidth.medium ? DialogTokens.width-medium : root.width-preset == OverlayWidth.large ? DialogTokens.width-large : DialogTokens.width-xlarge;
-    in property <length> default-height: height-preset == OverlayHeight.small ? DialogTokens.height-small : root.height-preset == OverlayHeight.large ? DialogTokens.height-large : OverlayTokens.modal-viewport-max-height;
+    in property <length> default-width: width-preset == OverlayWidth.small ? DialogTokens.width-small
+        : width-preset == OverlayWidth.medium ? DialogTokens.width-medium
+        : width-preset == OverlayWidth.large ? DialogTokens.width-large
+        : width-preset == OverlayWidth.xlarge ? DialogTokens.width-xlarge
+        : AppWindow.window-width;
+    in property <length> default-height: height-preset == OverlayHeight.small ? DialogTokens.height-small
+        : height-preset == OverlayHeight.large ? DialogTokens.height-large
+        : OverlayTokens.modal-viewport-max-height;
     property <length> panel-width: min(root.default-width, OverlayTokens.modal-viewport-max-width);
     property <length> panel-height: min(root.default-height, OverlayTokens.modal-viewport-max-height);
 
