@@ -85,8 +85,6 @@ component TreeViewRowView {
                 }
 
                 HorizontalLayout {
-                    spacing: 0px;
-                    alignment: stretch;
                     min-height: root.row-min-h;
 
                     main-ta := TouchArea {
@@ -111,7 +109,6 @@ component TreeViewRowView {
                             align-items: center;
 
                             if !flat && gutter-segments > 0: HorizontalLayout {
-                                spacing: 0;
                                 alignment: start;
                                 for slot[index] in gutter-slot-count: Rectangle {
                                     width: index < gutter-segments ? toggle-w : 0px;
@@ -307,7 +304,6 @@ export component PrimerTreeView inherits VerticalLayout {
         for row[i] in root.rows: Rectangle {
             height: root.row-min-h;
             horizontal-stretch: 1;
-            background: transparent;
 
             TreeViewRowView {
                 width: parent.width;

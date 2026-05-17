@@ -68,7 +68,6 @@ export component FilteredActionList {
 
     VerticalLayout {
         spacing: SelectPanelTokens.wrapper-stack-gap;
-        alignment: stretch;
 
         PrimerTextInput {
             horizontal-stretch: 1;
@@ -89,7 +88,6 @@ export component FilteredActionList {
         }
 
         if root.select-all-visible: VerticalLayout {
-            alignment: stretch;
 
             Rectangle {
                 background: PrimerColors.bgColor-muted;
@@ -153,7 +151,6 @@ export component FilteredActionList {
             clip: true;
 
             VerticalLayout {
-                alignment: stretch;
 
                 if root.loading-body-spinner: SelectPanelLoading {
                     vertical-stretch: 1;
@@ -167,8 +164,6 @@ export component FilteredActionList {
                     alignment: start;
 
                     HorizontalLayout {
-                        width: 100%;
-                        alignment: stretch;
 
                         SkeletonBox {
                             horizontal-stretch: 1;
@@ -177,7 +172,6 @@ export component FilteredActionList {
                     }
 
                     HorizontalLayout {
-                        width: 100%;
                         alignment: start;
 
                         Rectangle {
@@ -185,15 +179,12 @@ export component FilteredActionList {
                             height: FilteredActionListTokens.skeleton-line-height;
 
                             SkeletonBox {
-                                width: 100%;
                                 box-height: FilteredActionListTokens.skeleton-line-height;
                             }
                         }
                     }
 
                     HorizontalLayout {
-                        width: 100%;
-                        alignment: stretch;
 
                         SkeletonBox {
                             horizontal-stretch: 1;

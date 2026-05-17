@@ -17,7 +17,6 @@ export component SelectPanelRow {
     width: 100%;
 
     ta := TouchArea {
-        width: 100%;
         min-height: LayoutTokens.action-list-item-min-height;
         enabled: !root.disabled;
         clicked => {
@@ -26,7 +25,6 @@ export component SelectPanelRow {
 
         row-bg := Rectangle {
             border-radius: LayoutTokens.borderRadius-medium;
-            background: transparent;
 
             hl := HorizontalLayout {
                 min-height: LayoutTokens.action-list-item-min-height;
