@@ -25,6 +25,7 @@ export component Dialog2 {
 
     callback show <=> modal-overlay.show;
     callback close <=> modal-overlay.close;
+    callback closed <=> modal-overlay.closed;
 
     modal-overlay := ModalOverlay {
         default-width: width-preset == DialogWidthPreset.small ? DialogTokens.width-small : width-preset == DialogWidthPreset.medium ? DialogTokens.width-medium : width-preset == DialogWidthPreset.large ? DialogTokens.width-large : DialogTokens.width-xlarge;

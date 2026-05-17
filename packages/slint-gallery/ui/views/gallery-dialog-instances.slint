@@ -21,16 +21,10 @@ import {
 
 // Gallery dialog modals (`Dialog`), timers, and dialog-only state; the page drives fields via `in` / `in-out` bindings.
 export component GalleryDialogInstances inherits VerticalLayout {
-    in-out property <bool> default-outer-open: false;
-    changed default-outer-open => {
-        if default-outer-open {
-            default-outer-dialog.show();
-        } else {
-            default-outer-dialog.close();
-        }
-    }
+    callback default-outer-open <=> default-outer-dialog.show;
 
-    in-out property <bool> playground-open: false;
+    callback playground-open <=> playground-dialog.show;
+
     in-out property <bool> align-demo-open: false;
     in-out property <bool> side-sheet-open: false;
     in-out property <bool> narrow-demo-open: false;
@@ -64,11 +58,6 @@ export component GalleryDialogInstances inherits VerticalLayout {
 
     default-outer-dialog := Dialog2 {
         width-preset: DialogWidthPreset.xlarge;
-        // on-close(_gesture) => {
-        //     root.default-outer-open = false;
-        //     root.default-inner-open = false;
-        // }
-
         VerticalLayout {
 
             StandardDialogHeader {
@@ -160,13 +149,10 @@ export component GalleryDialogInstances inherits VerticalLayout {
         }
     }
 
-    playground-dialog := Dialog {
-        open <=> root.playground-open;
+    playground-dialog := Dialog2 {
         width-preset: root.playground-width-enum;
         height-preset: root.playground-height-enum;
-        on-close(_gesture) => {
-            root.playground-open = false;
-        }
+
 
         VerticalLayout {
 
@@ -174,7 +160,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                 title: root.playground-title-text;
                 subtitle: root.playground-subtitle-text;
                 close-requested => {
-                    playground-dialog.on-close("close-button");
+                    playground-dialog.close();
                 }
             }
 
@@ -220,7 +206,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                     label: "Delete the universe";
                     variant: ButtonVariant.danger;
                     clicked => {
-                        playground-dialog.on-close("close-button");
+                        playground-dialog.close();
                     }
                 }
 

@@ -22,11 +22,6 @@ import {
 export component GalleryDialogsPage inherits VerticalLayout {
 
     padding: 24px;
-
-    property <bool> default-outer-open: false;
-    property <bool> default-inner-open: false;
-
-    property <bool> playground-open: false;
     property <bool> align-demo-open: false;
     property <bool> side-sheet-open: false;
     property <bool> narrow-demo-open: false;
@@ -111,8 +106,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
         side-sheet-edge-index == 0 ? DialogPositionPreset.left : DialogPositionPreset.right;
 
     dialog-instances := GalleryDialogInstances {
-        default-outer-open <=> root.default-outer-open;
-        playground-open <=> root.playground-open;
+        
         align-demo-open <=> root.align-demo-open;
         side-sheet-open <=> root.side-sheet-open;
         narrow-demo-open <=> root.narrow-demo-open;
@@ -172,7 +166,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
             align-content: ButtonAlignContent.start;
             label: "Show dialog";
             clicked => {
-                root.default-outer-open = true;
+                dialog-instances.default-outer-open();
             }
         }
     }
@@ -285,7 +279,7 @@ export component GalleryDialogsPage inherits VerticalLayout {
             align-content: ButtonAlignContent.start;
             label: "Show dialog";
             clicked => {
-                root.playground-open = true;
+                dialog-instances.playground-open();
             }
         }
     }
