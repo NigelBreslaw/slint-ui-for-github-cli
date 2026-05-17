@@ -4,7 +4,6 @@ import {
     DialogAlignPreset,
     DialogBody,
     Dialog,
-    Dialog2,
     DialogFooter,
     DialogFillMode,
     DialogHeader,
@@ -13,9 +12,6 @@ import {
     DialogNarrowPositionPreset,
     DialogPositionPreset,
     DialogWidthPreset,
-    OverlayAlign,
-    OverlayWidth,
-    OverlayHeight,
 } from "../../../primer-slint/primer.slint";
 import {
     DialogTokens,
@@ -24,9 +20,6 @@ import {
 
 // Gallery dialog modals (`Dialog`), timers, and dialog-only state; the page drives fields via `in` / `in-out` bindings.
 export component GalleryDialogInstances inherits VerticalLayout {
-    callback default-outer-open <=> default-outer-dialog.show;
-    callback playground-open <=> playground-dialog.show;
-    callback align-demo-open <=> align-demo-dialog.show;
     in-out property <bool> side-sheet-open: false;
     in-out property <bool> narrow-demo-open: false;
     in-out property <bool> custom-renderers-open: false;
@@ -44,233 +37,10 @@ export component GalleryDialogInstances inherits VerticalLayout {
     in-out property <bool> loading-custom-saving: false;
     in-out property <bool> loading-custom-processing: false;
 
-    in property <OverlayWidth> playground-width-enum: OverlayWidth.medium;
-    in property <OverlayHeight> playground-height-enum: OverlayHeight.auto;
-    in property <bool> playground-show-header: true;
-    in property <bool> playground-show-footer: true;
-    in property <string> playground-title-text: "Playground";
-    in property <string> playground-subtitle-text: "";
-    in property <OverlayAlign> align-vertical-preset: OverlayAlign.center;
-    in property <int> align-vertical-index: 0;
     in property <DialogPositionPreset> side-sheet-position-preset: DialogPositionPreset.right;
     in property <int> side-sheet-edge-index: 1;
     in property <DialogNarrowPositionPreset> narrow-viewport-position: DialogNarrowPositionPreset.bottom;
     in property <int> narrow-viewport-index: 0;
-
-    default-outer-dialog := Dialog2 {
-        width-preset: OverlayWidth.xlarge;
-        VerticalLayout {
-
-            StandardDialogHeader {
-                title: "My Dialog";
-
-                close-requested => default-outer-dialog.close();
-            }
-
-            DialogBody {
-                Text {
-                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-            }
-
-            DialogFooter {
-                Button {
-                    label: "Open Second Dialog";
-                    variant: ButtonVariant.default;
-                    clicked => {
-                        default-inner-dialog.show();
-                    }
-                }
-
-                Button {
-                    label: "Delete the universe";
-                    variant: ButtonVariant.danger;
-                    clicked => default-outer-dialog.close();
-                }
-
-                Button {
-                    label: "Proceed";
-                    variant: ButtonVariant.primary;
-                    clicked => {
-                        default-inner-dialog.show();
-                    }
-                }
-            }
-        }
-    }
-
-    default-inner-dialog := Dialog2 {
-        width-preset: OverlayWidth.small;
-
-        VerticalLayout {
-
-            DialogHeader {
-                close-requested => {
-                    default-inner-dialog.close();
-                }
-
-                StandardDialogHeader {
-                    title: "Inner dialog!";
-                    subtitle: "";
-                }
-            }
-
-            DialogBody {
-                Text {
-                    text: "Hello world";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    playground-dialog := Dialog2 {
-        width-preset: root.playground-width-enum;
-        height-preset: root.playground-height-enum;
-
-
-        VerticalLayout {
-
-            if root.playground-show-header: StandardDialogHeader {
-                title: root.playground-title-text;
-                subtitle: root.playground-subtitle-text;
-                close-requested => {
-                    playground-dialog.close();
-                }
-            }
-
-            DialogBody {
-                Text {
-                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    text: "Curabitur scelerisque bibendum faucibus. Duis rhoncus nunc est, at pharetra eros tristique a. Nam sodales turpis lectus, quis faucibus felis fermentum in.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    text: "Sed fringilla est ac urna aliquet, eget condimentum felis vulputate. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-
-                Text {
-                    text: "Nunc sodales quis ante quis porttitor. Donec fringilla erat vitae viverra feugiat. Pellentesque vitae rutrum orci.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-            }
-
-            if root.playground-show-footer: DialogFooter {
-                Button {
-                    label: "Open Second Dialog";
-                    variant: ButtonVariant.default;
-                    clicked => {
-                    }
-                }
-
-                Button {
-                    label: "Delete the universe";
-                    variant: ButtonVariant.danger;
-                    clicked => {
-                        playground-dialog.close();
-                    }
-                }
-
-                Button {
-                    label: "Proceed";
-                    variant: ButtonVariant.primary;
-                    clicked => {
-                    }
-                }
-            }
-        }
-    }
-
-    align-demo-dialog := Dialog2 {
-        align-preset: root.align-vertical-preset;
-        width-preset: OverlayWidth.medium;
-        height-preset: OverlayHeight.auto;
-
-
-        VerticalLayout {
-
-            StandardDialogHeader {
-                title: align-vertical-index == 0 ? "Align top" : "Align bottom";
-
-                close-requested => {
-                    align-demo-dialog.close();
-                }
-            }
-
-            DialogBody {
-                Text {
-                    text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque sollicitudin mauris maximus elit sagittis, nec lobortis ligula elementum. Nam iaculis urna nec lobortis posuere.";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    wrap: word-wrap;
-                }
-            }
-
-            DialogFooter {
-                Button {
-                    label: "Open Second Dialog";
-                    variant: ButtonVariant.default;
-                    clicked => {
-                    }
-                }
-
-                Button {
-                    label: "Delete the universe";
-                    variant: ButtonVariant.danger;
-                    clicked => {
-                        align-demo-dialog.close();
-                    }
-                }
-
-                Button {
-                    label: "Proceed";
-                    variant: ButtonVariant.primary;
-                    clicked => {
-                    }
-                }
-            }
-        }
-    }
 
     side-sheet-dialog := Dialog {
         open <=> root.side-sheet-open;
@@ -325,8 +95,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                 }
             }
 
-            DialogBody {
-            }
+            DialogBody { }
 
             DialogFooter {
                 Button {
@@ -408,6 +177,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                     clicked => {
                     }
                 }
+
                 Button {
                     label: "Delete the universe";
                     variant: ButtonVariant.danger;
@@ -415,6 +185,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                         root.custom-renderers-open = false;
                     }
                 }
+
                 Button {
                     label: "Proceed";
                     variant: ButtonVariant.primary;
@@ -893,6 +664,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                         root.loading-custom-processing = false;
                     }
                 }
+
                 Button {
                     label: "Save Draft";
                     variant: ButtonVariant.default;
@@ -900,6 +672,7 @@ export component GalleryDialogInstances inherits VerticalLayout {
                     clicked => {
                     }
                 }
+
                 Button {
                     label: "Process & Continue";
                     variant: ButtonVariant.primary;

@@ -14,6 +14,7 @@ import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryDialogsPage } from "./views/gallery-dialogs-page.slint";
+import { GalleryDialogsPlaygroundPage } from "./views/gallery-dialog-playground-page.slint";
 import { GalleryStateLabelPage } from "./views/gallery-state-label-page.slint";
 import { GalleryToggleSwitchPage } from "./views/gallery-toggle-switch-page.slint";
 import { GalleryPrimerTextInputPage } from "./views/gallery-primer-text-input-page.slint";
@@ -117,7 +118,11 @@ export component GalleryWindow inherits Window {
 
                         if GalleryState.selected-page-id == "data-playground": GalleryDataPage { }
 
-                        if GalleryState.selected-page-id == "dialogs-playground": GalleryDialogsPage { }
+                        if GalleryState.selected-page-id == "dialogs-playground": GalleryDialogsPlaygroundPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "dialogs-old": GalleryDialogsPage { }
 
                         if GalleryState.selected-page-id == "forms-playground": GalleryFormsPage { }
 

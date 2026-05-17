@@ -40,7 +40,10 @@ const GALLERY_SIDEBAR_NAV: readonly {
     {
         folderId: "folder-dialogs",
         label: "Dialogs",
-        leaves: [{ id: "dialogs-playground", label: "Playground" }],
+        leaves: [
+            { id: "dialogs-playground", label: "Playground" },
+            { id: "dialogs-old", label: "Old" },
+        ],
     },
     { folderId: "folder-forms", label: "Forms", leaves: [{ id: "forms-playground", label: "Playground" }] },
     { folderId: "folder-label", label: "Label", leaves: [{ id: "label-playground", label: "Playground" }] },

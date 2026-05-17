@@ -1,19 +1,12 @@
 import {
     Button,
     ButtonAlignContent,
-    DialogAlignPreset,
     DialogHeightPreset,
     DialogNarrowPositionPreset,
     DialogPositionPreset,
     DialogWidthPreset,
-    OverlayAlign,
-    OverlayWidth,
-    OverlayHeight,
-    PrimerTextInput,
     Select,
     SelectOption,
-    ToggleSwitch,
-    ToggleSwitchSize,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import {
@@ -55,48 +48,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
     property <DialogNarrowPositionPreset> narrow-viewport-position:
         narrow-viewport-index == 0 ? DialogNarrowPositionPreset.bottom : narrow-viewport-index == 1 ? DialogNarrowPositionPreset.fullscreen : DialogNarrowPositionPreset.center;
 
-    property <[SelectOption]> playground-width-options: [
-        { value: "small", label: "small (296px)", enabled: true },
-        { value: "medium", label: "medium (320px)", enabled: true },
-        { value: "large", label: "large (480px)", enabled: true },
-        { value: "xlarge", label: "xlarge (640px)", enabled: true },
-    ];
-
-    property <[SelectOption]> playground-height-options: [
-        { value: "auto", label: "auto (viewport cap)", enabled: true },
-        { value: "small", label: "small (480px max)", enabled: true },
-        { value: "large", label: "large (640px max)", enabled: true },
-    ];
-
-    property <int> playground-width-index: 1;
-    property <int> playground-height-index: 0;
-
-    property <bool> playground-show-header: true;
-    property <bool> playground-show-footer: true;
-    property <string> playground-title-text: "Playground";
-    property <string> playground-subtitle-text: "";
-
-    property <OverlayWidth> playground-width-enum:
-        playground-width-index == 0
-        ? OverlayWidth.small : playground-width-index == 1
-        ? OverlayWidth.medium : playground-width-index == 2
-        ? OverlayWidth.large : OverlayWidth.xlarge;
-
-    property <OverlayHeight> playground-height-enum:
-        playground-height-index == 0
-        ? OverlayHeight.auto : playground-height-index == 1
-        ? OverlayHeight.small : OverlayHeight.large;
-
-    property <[SelectOption]> align-vertical-options: [
-        { value: "top", label: "top", enabled: true },
-        { value: "bottom", label: "bottom", enabled: true },
-    ];
-
-    property <int> align-vertical-index: 0;
-
-    property <OverlayAlign> align-vertical-preset:
-        align-vertical-index == 0 ? OverlayAlign.top : OverlayAlign.bottom;
-
     property <[SelectOption]> side-sheet-edge-options: [
         { value: "left", label: "left (slide from left)", enabled: true },
         { value: "right", label: "right (slide from right)", enabled: true },
@@ -125,14 +76,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
         loading-custom-saving <=> root.loading-custom-saving;
         loading-custom-processing <=> root.loading-custom-processing;
 
-        playground-width-enum: root.playground-width-enum;
-        playground-height-enum: root.playground-height-enum;
-        playground-show-header: root.playground-show-header;
-        playground-show-footer: root.playground-show-footer;
-        playground-title-text: root.playground-title-text;
-        playground-subtitle-text: root.playground-subtitle-text;
-        align-vertical-preset: root.align-vertical-preset;
-        align-vertical-index: root.align-vertical-index;
         side-sheet-position-preset: root.side-sheet-position-preset;
         side-sheet-edge-index: root.side-sheet-edge-index;
         narrow-viewport-position: root.narrow-viewport-position;
@@ -148,183 +91,6 @@ export component GalleryDialogsPage inherits VerticalLayout {
 
     VerticalLayout {
         spacing: 10px;
-
-        Rectangle {
-            height: 1px;
-            background: PrimerColors.borderColor-default;
-        }
-
-        Text {
-            text: "Default";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Button {
-            max-width: 200px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                dialog-instances.default-outer-open();
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 10px;
-        padding-top: 16px;
-
-        Rectangle {
-            height: 1px;
-            background: PrimerColors.borderColor-default;
-        }
-
-        Text {
-            text: "Playground";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        HorizontalLayout {
-            spacing: 16px;
-
-            Select {
-                horizontal-stretch: 1;
-                label-text: "Width";
-                placeholder: "Choose width…";
-                options: playground-width-options;
-                selected-index <=> playground-width-index;
-                validation-status: ValidationStatus.none;
-                selected-changed(_idx) => {
-                }
-            }
-
-            Select {
-                horizontal-stretch: 1;
-                label-text: "Height";
-                placeholder: "Choose height…";
-                options: playground-height-options;
-                selected-index <=> playground-height-index;
-                validation-status: ValidationStatus.none;
-                selected-changed(_idx) => {
-                }
-            }
-        }
-
-        HorizontalLayout {
-            spacing: 24px;
-            alignment: start;
-
-            HorizontalLayout {
-                spacing: 8px;
-                alignment: center;
-
-                Text {
-                    text: "Show header";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    vertical-alignment: center;
-                }
-
-                ToggleSwitch {
-                    size: ToggleSwitchSize.small;
-                    checked <=> playground-show-header;
-                }
-            }
-
-            HorizontalLayout {
-                spacing: 8px;
-                alignment: center;
-
-                Text {
-                    text: "Show footer";
-                    color: PrimerColors.fgColor-default;
-                    font-size: 14px;
-                    vertical-alignment: center;
-                }
-
-                ToggleSwitch {
-                    size: ToggleSwitchSize.small;
-                    checked <=> playground-show-footer;
-                }
-            }
-        }
-
-        PrimerTextInput {
-            width: 100%;
-            horizontal-stretch: 1;
-            label-text: "Title";
-            placeholder: "Dialog title…";
-            text <=> playground-title-text;
-            validation-status: ValidationStatus.none;
-            edited(_) => {
-            }
-        }
-
-        PrimerTextInput {
-            width: 100%;
-            horizontal-stretch: 1;
-            label-text: "Subtitle";
-            placeholder: "Optional subtitle…";
-            text <=> playground-subtitle-text;
-            validation-status: ValidationStatus.none;
-            edited(_) => {
-            }
-        }
-
-        Button {
-            max-width: 200px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                dialog-instances.playground-open();
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 10px;
-        padding-top: 16px;
-        alignment: start;
-        width: self.preferred-width;
-
-        Rectangle {
-            height: 1px;
-            background: PrimerColors.borderColor-default;
-        }
-
-        Text {
-            text: "Align top / bottom";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Select {
-            label-text: "Vertical align";
-            placeholder: "Choose top or bottom…";
-            options: align-vertical-options;
-            selected-index <=> align-vertical-index;
-            validation-status: ValidationStatus.none;
-            selected-changed(_idx) => {
-            }
-        }
-
-        Button {
-            max-width: 200px;
-            align-content: ButtonAlignContent.start;
-            label: "Show dialog";
-            clicked => {
-                dialog-instances.align-demo-open();
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 10px;
-        padding-top: 16px;
         alignment: start;
         width: self.preferred-width;
 
