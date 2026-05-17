@@ -13,10 +13,9 @@ export component OverlayPanelChrome {
     in property <color> border-color;
     in property <length> border-width;
     in property <[DropShadowLayer]> surface-shadows;
-    in property <length> slot-padding;
+    in property <length> panel-padding;
 
-    out property <length> slot-preferred-width: inner-slot.preferred-width;
-    out property <length> slot-preferred-height: inner-slot.preferred-height;
+    out property <length> chrome-preferred-height: inner-slot.preferred-height;
 
     MultiDropShadow {
         border-radius: root.border-radius;
@@ -31,7 +30,8 @@ export component OverlayPanelChrome {
         clip: true;
 
         inner-slot := VerticalLayout {
-            padding: root.slot-padding;
+            vertical-stretch: 1;
+            padding: root.panel-padding;
             alignment: start;
 
             @children

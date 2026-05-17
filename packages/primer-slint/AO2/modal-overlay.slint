@@ -6,7 +6,11 @@ export component ModalOverlay {
     property <bool> open: false;
     in property <bool> allow-dismiss: true;
     in property <length> default-width: 640px;
+    in property <length> default-height: 640px;
     property <length> panel-width: min(root.default-width, OverlayTokens.modal-viewport-max-width);
+    property <length> viewport-cap-h: min(root.default-height, OverlayTokens.modal-viewport-max-height);
+
+
 
     // animation system
     in property <bool> reduce-motion: false;
@@ -97,24 +101,23 @@ export component ModalOverlay {
                 }
 
                 pane := Rectangle {
-                    x: (popup-screen.width - va.width) / 2;
-                    y: (popup-screen.height - va.height) / 2;
+                    x: (popup-screen.width - panel-chrome.width) / 2;
+                    y: (popup-screen.height - panel-chrome.height) / 2;
                     width: panel-width;
-                    height: va.height;
+                    height: min(panel-chrome.chrome-preferred-height, root.viewport-cap-h);
                     opacity: presented;
                     transform-scale: pane-scale;
 
                     touch-blocker := TouchArea { }
 
-                    va := OverlayPanelChrome {
+                    panel-chrome := OverlayPanelChrome {
+                        width: panel-width;
                         background: OverlayTokens.panel-background;
                         border-color: OverlayTokens.panel-border;
                         border-width: OverlayTokens.panel-border-width;
                         border-radius: OverlayTokens.panel-border-radius;
                         surface-shadows: OverlayTokens.panel-elevation-shadow;
 
-                        width: panel-width;
-                        height: self.preferred-height;
                         @children
                     }
                 }
