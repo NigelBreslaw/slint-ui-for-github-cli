@@ -184,6 +184,8 @@ export component GalleryActionMenuPage {
         root.scenario-ix == 0 || root.scenario-ix == 8 || root.scenario-ix == 10 || root.scenario-ix == 12
         ? AnchoredOverlayWidth.medium
         : AnchoredOverlayWidth.auto;
+    /// **`ActionList.fill-width`** for menus in this page — **`false`** when the overlay uses **`auto`** width.
+    property <bool> menu-list-fill-width: root.overlay-width != AnchoredOverlayWidth.auto;
 
     property <ActionListSelectionMode> overlay-sel-mode:
         root.scenario-ix == 2 || root.scenario-ix == 8 ? ActionListSelectionMode.single
@@ -832,8 +834,10 @@ export component GalleryActionMenuPage {
                 shortcut-am := ActionMenu {
                     button-label: "Anchor";
                     open <=> shortcut-menu-open;
-                    width-preset: AnchoredOverlayWidth.medium;
+                    width-preset: root.overlay-width;
                     ActionList {
+                        list-role: ActionListListRole.menu;
+                        fill-width: root.menu-list-fill-width;
                         lines: root.lines-default;
                         selection-mode: ActionListSelectionMode.none;
                         item-activated(ix) => {
@@ -850,11 +854,13 @@ export component GalleryActionMenuPage {
 
                 sub-root := ActionMenu {
                     button-label: "Edit";
-                    width-preset: AnchoredOverlayWidth.medium;
+                    width-preset: root.overlay-width;
                     VerticalLayout {
                         spacing: 0px;
                         alignment: start;
                         ActionList {
+                            list-role: ActionListListRole.menu;
+                            fill-width: root.menu-list-fill-width;
                             lines: [
                                 {
                                     kind: ActionListLineKind.row,
@@ -874,6 +880,7 @@ export component GalleryActionMenuPage {
                                     show-trailing-loading: false,
                                     has-trailing-visual: false,
                                     trailing-icon: Icons.dot_fill,
+                                    trailing-text: "",
                                 },
                                 {
                                     kind: ActionListLineKind.row,
@@ -893,6 +900,7 @@ export component GalleryActionMenuPage {
                                     show-trailing-loading: false,
                                     has-trailing-visual: false,
                                     trailing-icon: Icons.dot_fill,
+                                    trailing-text: "",
                                 },
                                 {
                                     kind: ActionListLineKind.row,
@@ -912,6 +920,7 @@ export component GalleryActionMenuPage {
                                     show-trailing-loading: false,
                                     has-trailing-visual: false,
                                     trailing-icon: Icons.dot_fill,
+                                    trailing-text: "",
                                 },
                             ];
                             selection-mode: ActionListSelectionMode.none;
@@ -929,6 +938,8 @@ export component GalleryActionMenuPage {
                             width-preset: AnchoredOverlayWidth.auto;
                             VerticalLayout {
                                 ActionList {
+                                    list-role: ActionListListRole.menu;
+                                    fill-width: false;
                                     lines: [
                                         {
                                             kind: ActionListLineKind.row,
@@ -948,6 +959,7 @@ export component GalleryActionMenuPage {
                                             show-trailing-loading: false,
                                             has-trailing-visual: false,
                                             trailing-icon: Icons.dot_fill,
+                                            trailing-text: "",
                                         },
                                         {
                                             kind: ActionListLineKind.row,
@@ -967,6 +979,27 @@ export component GalleryActionMenuPage {
                                             show-trailing-loading: false,
                                             has-trailing-visual: false,
                                             trailing-icon: Icons.dot_fill,
+                                            trailing-text: "",
+                                        },
+                                        {
+                                            kind: ActionListLineKind.row,
+                                            label: "Paste with formatting",
+                                            row-variant: ActionListRowVariant.default,
+                                            disabled: false,
+                                            has-leading-avatar: false,
+                                            avatar-source: Icons.dot_fill,
+                                            has-leading-visual: false,
+                                            leading-icon: Icons.dot_fill,
+                                            description: "",
+                                            description-layout: ActionListDescriptionLayout.none,
+                                            has-markdown: false,
+                                            label-markdown: @markdown(""),
+                                            inactive-text: "",
+                                            active: false,
+                                            show-trailing-loading: false,
+                                            has-trailing-visual: false,
+                                            trailing-icon: Icons.dot_fill,
+                                            trailing-text: "",
                                         },
                                     ];
                                     selection-mode: ActionListSelectionMode.none;
@@ -983,6 +1016,8 @@ export component GalleryActionMenuPage {
                                     side: AnchoredOverlaySide.outside_right;
                                     width-preset: AnchoredOverlayWidth.auto;
                                     ActionList {
+                                        list-role: ActionListListRole.menu;
+                                        fill-width: false;
                                         lines: [
                                             {
                                                 kind: ActionListLineKind.row,
@@ -1002,6 +1037,7 @@ export component GalleryActionMenuPage {
                                                 show-trailing-loading: false,
                                                 has-trailing-visual: false,
                                                 trailing-icon: Icons.dot_fill,
+                                                trailing-text: "",
                                             },
                                             {
                                                 kind: ActionListLineKind.row,
@@ -1021,6 +1057,27 @@ export component GalleryActionMenuPage {
                                                 show-trailing-loading: false,
                                                 has-trailing-visual: false,
                                                 trailing-icon: Icons.dot_fill,
+                                                trailing-text: "",
+                                            },
+                                            {
+                                                kind: ActionListLineKind.row,
+                                                label: "Another device",
+                                                row-variant: ActionListRowVariant.default,
+                                                disabled: false,
+                                                has-leading-avatar: false,
+                                                avatar-source: Icons.dot_fill,
+                                                has-leading-visual: false,
+                                                leading-icon: Icons.dot_fill,
+                                                description: "",
+                                                description-layout: ActionListDescriptionLayout.none,
+                                                has-markdown: false,
+                                                label-markdown: @markdown(""),
+                                                inactive-text: "",
+                                                active: false,
+                                                show-trailing-loading: false,
+                                                has-trailing-visual: false,
+                                                trailing-icon: Icons.dot_fill,
+                                                trailing-text: "",
                                             },
                                         ];
                                         selection-mode: ActionListSelectionMode.none;
@@ -1037,11 +1094,13 @@ export component GalleryActionMenuPage {
 
             if root.scenario-ix == 10: ActionMenu {
                 button-label: "Group items by";
-                width-preset: AnchoredOverlayWidth.medium;
+                width-preset: root.overlay-width;
                 VerticalLayout {
                     spacing: 8px;
                     alignment: start;
                     ActionList {
+                        list-role: ActionListListRole.menu;
+                        fill-width: root.menu-list-fill-width;
                         lines: root.lines-mix-single;
                         selection-mode: ActionListSelectionMode.single;
                         selected-index <=> mix-single-ix;
@@ -1053,6 +1112,8 @@ export component GalleryActionMenuPage {
                     }
 
                     ActionList {
+                        list-role: ActionListListRole.menu;
+                        fill-width: root.menu-list-fill-width;
                         lines: root.lines-mix-multi;
                         selection-mode: ActionListSelectionMode.multiple;
                         multi-selected: [root.mx0, root.mx1, root.mx2];
@@ -1075,8 +1136,10 @@ export component GalleryActionMenuPage {
             if root.scenario-ix == 11: ActionMenu {
                 button-label: "Anchor";
                 open <=> delayed-menu-open;
-                width-preset: AnchoredOverlayWidth.medium;
+                width-preset: root.overlay-width;
                 ActionList {
+                    list-role: ActionListListRole.menu;
+                    fill-width: root.menu-list-fill-width;
                     lines: root.delayed-lines-view;
                     selection-mode: ActionListSelectionMode.none;
                     item-activated(ix) => {
@@ -1094,8 +1157,8 @@ export component GalleryActionMenuPage {
                 side: root.overlay-side;
                 width-preset: root.overlay-width;
                 ActionList {
-                    list-role: root.scenario-ix == 3 ? ActionListListRole.menu : ActionListListRole.none;
-                    fill-width: root.overlay-width != AnchoredOverlayWidth.auto;
+                    list-role: ActionListListRole.menu;
+                    fill-width: root.menu-list-fill-width;
                     lines: root.overlay-lines;
                     selection-mode: root.overlay-sel-mode;
                     selected-index <=> demo-sel-ix;
