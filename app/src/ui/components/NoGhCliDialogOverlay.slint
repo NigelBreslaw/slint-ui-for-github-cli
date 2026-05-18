@@ -1,7 +1,7 @@
 import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint";
 import {
     Button,
-    Dialog2,
+    ModalOverlay,
     OverlayAlign,
     OverlayHeight,
     OverlayWidth,
@@ -9,7 +9,7 @@ import {
 import { DialogTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component NoGhCliDialogOverlay {
-    no-gh-cli-dialog := Dialog2 {
+    no-gh-cli-dialog := ModalOverlay {
         allow-dismiss: false;
         width-preset: OverlayWidth.large;
         height-preset: OverlayHeight.auto;

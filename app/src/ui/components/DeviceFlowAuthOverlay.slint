@@ -1,14 +1,14 @@
 import { ShellDialogsState } from "../../bridges/slint/shell-dialogs-state.slint";
 import {
     Button,
-    Dialog2,
+    ModalOverlay,
     OverlayAlign,
     Spinner,
 } from "../../../../packages/primer-slint/primer.slint";
 import { DialogTokens, OverlayTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component DeviceFlowAuthOverlay {
-    auth-flow-dialog := Dialog2 {
+    auth-flow-dialog := ModalOverlay {
         allow-dismiss: false;
         default-width: DialogTokens.width-large;
         default-height: OverlayTokens.modal-viewport-max-height;

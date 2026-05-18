@@ -1,12 +1,12 @@
 import { SettingsState } from "../../bridges/slint/settings-state.slint";
-import { Dialog2, OverlayAlign, OverlayHeight, OverlayWidth, Spinner } from "../../../../packages/primer-slint/primer.slint";
+import { ModalOverlay, OverlayAlign, OverlayHeight, OverlayWidth, Spinner } from "../../../../packages/primer-slint/primer.slint";
 import { PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 /// Hosts the settings **Loading** state at the shell level so it is not a child of the
 /// conditionally-instantiated **`Settings`** view — Slint can panic with
 /// *accessing deleted parent* (#6426) when **`Dialog2`**/dialog chrome lives under `if` view branches.
 export component SettingsDebugLoadingOverlay {
-    loading-dialog := Dialog2 {
+    loading-dialog := ModalOverlay {
         allow-dismiss: false;
         width-preset: OverlayWidth.large;
         height-preset: OverlayHeight.auto;

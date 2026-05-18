@@ -7,7 +7,7 @@ import {
     Button,
     ButtonVariant,
     Checkbox,
-    Dialog2,
+    ModalOverlay,
     OverlayAlign,
     OverlayHeight,
     OverlayWidth,
@@ -20,7 +20,7 @@ import {
 import { DialogTokens, LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
 
 export component ProjectBoardImportOverlay {
-    import-dialog := Dialog2 {
+    import-dialog := ModalOverlay {
         allow-dismiss: true;
         width-preset: OverlayWidth.xlarge;
         height-preset: OverlayHeight.auto;

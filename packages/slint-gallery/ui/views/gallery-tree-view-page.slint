@@ -10,7 +10,7 @@ import {
     BannerVariant,
     Button,
     ButtonVariant,
-    Dialog2,
+    ModalOverlay,
     DialogBody,
     DialogFooter,
     OverlayWidth,
@@ -1645,7 +1645,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
             }
         }
 
-        tv-trailing-sample-dialog := Dialog2 {
+        tv-trailing-sample-dialog := ModalOverlay {
             width-preset: OverlayWidth.small;
 
 
@@ -2090,7 +2090,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         }
     }
 
-    async-e-dialog := Dialog2 {
+    async-e-dialog := ModalOverlay {
         width-preset: OverlayWidth.small;
 
 
