@@ -1,215 +1,211 @@
 // **ActionList2** gallery — PR3 default row + interaction.
 import {
-  ActionList2,
-  ActionList2Line,
-  ActionList2LineKind,
-  ActionList2ListVariant,
-  ActionList2RowVariant,
-  Icons,
-  Select,
-  SelectOption,
-  ValidationStatus,
+    ActionList2,
+    ActionList2Line,
+    ActionList2LineKind,
+    ActionList2ListVariant,
+    ActionList2RowVariant,
+    Icons,
+    Select,
+    SelectOption,
+    ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
-import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import {
+    GalleryDemoOptionsSidebar,
+} from "../components/gallery-demo-options-sidebar.slint";
 
 export component GalleryActionList2Page {
-  property <int> scenario-ix: 0;
-  property <int> list-variant-ix: 0;
+    property <int> scenario-ix: 0;
+    property <int> list-variant-ix: 0;
 
-  property <[SelectOption]> scenario-options: [
-    { value: "0", label: "Default", enabled: true },
-    { value: "1", label: "SimpleList", enabled: true },
-  ];
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default", enabled: true },
+        { value: "1", label: "SimpleList", enabled: true },
+    ];
 
-  property <[SelectOption]> list-variant-options: [
-    { value: "0", label: "inset", enabled: true },
-    { value: "1", label: "horizontal-inset", enabled: true },
-    { value: "2", label: "full", enabled: true },
-  ];
+    property <[SelectOption]> list-variant-options: [
+        { value: "0", label: "inset", enabled: true },
+        { value: "1", label: "horizontal-inset", enabled: true },
+        { value: "2", label: "full", enabled: true },
+    ];
 
-  property <string> last-action: "";
+    property <string> last-action: "";
 
-  property <ActionList2ListVariant> preview-list-variant:
-    root.list-variant-ix == 1 ? ActionList2ListVariant.horizontal_inset
-    : root.list-variant-ix == 2 ? ActionList2ListVariant.full
-    : ActionList2ListVariant.inset;
+    property <ActionList2ListVariant> preview-list-variant:
+    root.list-variant-ix == 1 ? ActionList2ListVariant.horizontal_inset : root.list-variant-ix == 2 ? ActionList2ListVariant.full : ActionList2ListVariant.inset;
 
-  property <[ActionList2Line]> lines-default: [
-    {
-      kind: ActionList2LineKind.row,
-      label: "Copy link",
-      row-variant: ActionList2RowVariant.default,
-      disabled: false,
-      has-leading-visual: false,
-      leading-icon: Icons.dot_fill,
-      trailing-text: "",
-    },
-    {
-      kind: ActionList2LineKind.row,
-      label: "Quote reply",
-      row-variant: ActionList2RowVariant.default,
-      disabled: false,
-      has-leading-visual: false,
-      leading-icon: Icons.dot_fill,
-      trailing-text: "",
-    },
-    {
-      kind: ActionList2LineKind.row,
-      label: "Edit comment",
-      row-variant: ActionList2RowVariant.default,
-      disabled: false,
-      has-leading-visual: false,
-      leading-icon: Icons.dot_fill,
-      trailing-text: "",
-    },
-  ];
+    property <[ActionList2Line]> lines-default: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Copy link",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Quote reply",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Edit comment",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
+    ];
 
-  property <[ActionList2Line]> lines-simple-list: [
-    {
-      kind: ActionList2LineKind.row,
-      label: "Copy link",
-      row-variant: ActionList2RowVariant.default,
-      disabled: false,
-      has-leading-visual: false,
-      leading-icon: Icons.dot_fill,
-      trailing-text: "⌘C",
-    },
-    {
-      kind: ActionList2LineKind.row,
-      label: "Quote reply",
-      row-variant: ActionList2RowVariant.default,
-      disabled: false,
-      has-leading-visual: false,
-      leading-icon: Icons.dot_fill,
-      trailing-text: "⌘Q",
-    },
-    {
-      kind: ActionList2LineKind.row,
-      label: "Edit comment",
-      row-variant: ActionList2RowVariant.default,
-      disabled: false,
-      has-leading-visual: false,
-      leading-icon: Icons.dot_fill,
-      trailing-text: "⌘E",
-    },
-  ];
+    property <[ActionList2Line]> lines-simple-list: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Copy link",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "⌘C",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Quote reply",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "⌘Q",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Edit comment",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "⌘E",
+        },
+    ];
 
-  property <[ActionList2Line]> preview-lines:
+    property <[ActionList2Line]> preview-lines:
     root.scenario-ix == 1 ? root.lines-simple-list : root.lines-default;
 
-  property <string> scenario-caption:
-    root.scenario-ix == 1 ? "Upstream: SimpleList (shortcuts; divider + danger in PR4)"
-    : "Upstream: Default";
+    property <string> scenario-caption:
+    root.scenario-ix == 1 ? "Upstream: SimpleList (shortcuts; divider + danger in PR4)" : "Upstream: Default";
 
-  vertical-stretch: 1;
+    vertical-stretch: 1;
 
-  HorizontalLayout {
-    VerticalLayout {
-      padding: 24px;
-      spacing: 16px;
-      alignment: start;
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
 
-      Text {
-        text: "ActionList2";
-        color: PrimerColors.fgColor-default;
-        font-size: 15px;
-        font-weight: 600;
-      }
-
-      Text {
-        text: root.scenario-caption;
-        color: PrimerColors.fgColor-muted;
-        font-size: LayoutTokens.text-body-size-small;
-        wrap: word-wrap;
-      }
-
-      preview-chrome := Rectangle {
-        width: 240px;
-        border-width: 1px;
-        border-color: PrimerColors.borderColor-muted;
-        border-radius: LayoutTokens.borderRadius-medium;
-        background: PrimerColors.bgColor-default;
-
-        // `Rectangle` paints chrome only — it does not lay out children. A layout inside receives `parent.width`.
-        preview-layout := VerticalLayout {
-          width: parent.width;
-          alignment: start;
-
-          ActionList2 {
-            horizontal-stretch: 1;
-            list-variant: root.preview-list-variant;
-            lines: root.preview-lines;
-            item-activated(ix) => {
-              root.last-action = "Activated line " + ix;
+            Text {
+                text: "ActionList2";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
             }
-          }
-        }
-      }
 
-      if root.last-action != "": Text {
-        text: "Last activated: " + root.last-action;
-        color: PrimerColors.fgColor-muted;
-        font-size: LayoutTokens.text-body-size-small;
-        wrap: word-wrap;
-      }
+            Text {
+                text: root.scenario-caption;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+
+            preview-chrome := Rectangle {
+                width: 240px;
+                border-width: 1px;
+                border-color: PrimerColors.borderColor-muted;
+                border-radius: LayoutTokens.borderRadius-medium;
+                background: PrimerColors.bgColor-default;
+
+                preview-layout := VerticalLayout {
+                    alignment: start;
+
+                    ActionList2 {
+                        list-variant: root.preview-list-variant;
+                        lines: root.preview-lines;
+                        item-activated(ix) => {
+                            root.last-action = "Activated line " + ix;
+                        }
+                    }
+                }
+            }
+
+            if root.last-action != "": Text {
+                text: "Last activated: " + root.last-action;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 16px;
+                alignment: start;
+
+                Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "List options";
+                    placeholder: "Choose…";
+                    options: root.scenario-options;
+                    selected-index <=> scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+                alignment: start;
+
+                Text {
+                    text: "List";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "variant";
+                    placeholder: "Choose…";
+                    options: root.list-variant-options;
+                    selected-index <=> list-variant-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
+                    }
+                }
+
+                Text {
+                    text: "Tab to a row for focus ring. Hover and press for row background.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+            }
+        }
     }
-
-    Rectangle { }
-
-    GalleryDemoOptionsSidebar {
-      VerticalLayout {
-        spacing: 16px;
-        alignment: start;
-
-        Text {
-          text: "Scenario";
-          font-size: LayoutTokens.text-body-size-medium;
-          font-weight: LayoutTokens.base-text-weight-semibold;
-          color: PrimerColors.fgColor-default;
-        }
-
-        Select {
-          horizontal-stretch: 1;
-          label-text: "List options";
-          placeholder: "Choose…";
-          options: root.scenario-options;
-          selected-index <=> scenario-ix;
-          validation-status: ValidationStatus.none;
-          selected-changed(_i) => {
-          }
-        }
-      }
-
-      VerticalLayout {
-        spacing: 8px;
-        alignment: start;
-
-        Text {
-          text: "List";
-          font-size: LayoutTokens.text-body-size-medium;
-          font-weight: LayoutTokens.base-text-weight-semibold;
-          color: PrimerColors.fgColor-default;
-        }
-
-        Select {
-          horizontal-stretch: 1;
-          label-text: "variant";
-          placeholder: "Choose…";
-          options: root.list-variant-options;
-          selected-index <=> list-variant-ix;
-          validation-status: ValidationStatus.none;
-          selected-changed(_i) => {
-          }
-        }
-
-        Text {
-          text: "Tab to a row for focus ring. Hover and press for row background.";
-          font-size: LayoutTokens.text-body-size-small;
-          color: PrimerColors.fgColor-muted;
-          wrap: word-wrap;
-        }
-      }
-    }
-  }
 }

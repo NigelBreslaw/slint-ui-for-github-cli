@@ -29,12 +29,9 @@ export component ActionList2 {
     property <length> item-margin-inline:
         root.list-variant == ActionList2ListVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
 
-    /// Default hug; caller sets **`horizontal-stretch: 1`** to fill a menu/panel (see **`PrimerTextInput`**).
-    horizontal-stretch: 0;
 
     list-body := VerticalLayout {
         alignment: start;
-        width: root.horizontal-stretch > 0 ? root.width : self.preferred-width;
         padding-top: root.list-padding-top;
         padding-bottom: root.list-padding-bottom;
 
