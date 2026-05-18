@@ -31,7 +31,7 @@ export struct TreeViewRow {
     interactive: bool,
     /// **SubTree** skeleton placeholders — muted bars, no hover, no expand affordance.
     is-skeleton: bool,
-    /// **TrailingVisual** kebab — host opens **AnchoredOverlay** + **ActionList** (see **`row-secondary-actions-requested`**).
+    /// **TrailingVisual** kebab — host opens overflow UI (e.g. **`ActionList`**) using **`row-secondary-actions-requested`** anchor geometry.
     has-secondary-actions: bool,
     /// Non-empty shows **CounterLabel** before the kebab (Storybook trailing count).
     secondary-actions-badge: string,

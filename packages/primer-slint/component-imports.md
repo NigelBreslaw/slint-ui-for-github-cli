@@ -18,7 +18,7 @@
 | `TreeView` | `TreeViewTokens`, `Icons` — API: [`TreeView/API.md`](TreeView/API.md) |
 | `SegmentedControl` | `ToggleSwitchTokens`, `ButtonTokens`, `CounterLabel` as needed |
 | `PrimerTextInput` | `TextInputTokens`, `ButtonTokens` (disabled + counter danger) |
-| `AnchoredOverlay` / `ModalOverlay` / `Dialog` | `OverlayTokens`, `DialogTokens`; see [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) |
+| `ModalOverlay` / `Dialog` | `OverlayTokens`, `DialogTokens`; anchored `PopupWindow` notes in [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) |
 | `ActionList` / `SelectPanel` / `FilteredActionList` | `ActionListTokens` / `SelectPanelTokens` / `FilteredActionListTokens` as in the entry `.slint` |
 
 **Reuse (grep before duplicating):** `ValidationStatus` and friends — import from [`Select/select.slint`](Select/select.slint) for inputs and groups. **`DialogFooter`:** custom actions use `visible:` branches, not `if`, around `@children` (Slint limitation).

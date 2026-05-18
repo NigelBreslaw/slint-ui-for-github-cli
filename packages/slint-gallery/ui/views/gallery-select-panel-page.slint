@@ -1,11 +1,8 @@
-// Primer **SelectPanel** gallery: Storybook-aligned **SelectPanelCompose** + **AnchoredOverlay** per block. Monolithic **SelectPanel** only in A0.
+// Primer **SelectPanel** gallery: Storybook-aligned **SelectPanelCompose** + inline expand/collapse per block. Monolithic **SelectPanel** only in A0.
 import {
     ActionListItemDivider,
     ActionListRow,
     ActionListDescriptionLayout,
-    AnchoredOverlay,
-    AnchoredOverlayAlign,
-    AnchoredOverlaySide,
     Banner,
     BannerVariant,
     Button,
@@ -133,7 +130,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Each block uses **AnchoredOverlay**; **A0** is the monolithic **SelectPanel** baseline, **1–12** are **SelectPanelCompose** + parts aligned with Primer **SelectPanel** / **Features** / **Examples** stories.";
+            text: "Each block opens below the trigger when expanded; **A0** is the monolithic **SelectPanel** baseline, **1–12** are **SelectPanelCompose** + parts aligned with Primer **SelectPanel** / **Features** / **Examples** stories.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -153,7 +150,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
         }
 
         Text {
-            text: "Gallery **AnchoredOverlay** + monolithic **SelectPanel**; selection toggles via **GallerySelectPanelMulti**; Cancel/Apply in the panel footer children.";
+            text: "Monolithic **SelectPanel**; selection toggles via **GallerySelectPanelMulti**; Cancel/Apply in the panel footer children.";
             color: PrimerColors.fgColor-muted;
             font-size: 12px;
             wrap: word-wrap;
@@ -171,18 +168,10 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             }
         }
 
-        AnchoredOverlay {
-            open <=> baseline-select-panel-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 480px;
-            anchor-abs-x: btn-baseline-select-panel.absolute-position.x;
-            anchor-abs-y: btn-baseline-select-panel.absolute-position.y;
-            anchor-width: btn-baseline-select-panel.width;
-            anchor-height: btn-baseline-select-panel.height;
-            close-requested => {
-            }
+        if baseline-select-panel-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
 
             SelectPanel {
                 width: 100%;
@@ -226,6 +215,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 1
@@ -259,18 +249,10 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             }
         }
 
-        AnchoredOverlay {
-            open <=> d1-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 480px;
-            anchor-abs-x: btn1.absolute-position.x;
-            anchor-abs-y: btn1.absolute-position.y;
-            anchor-width: btn1.width;
-            anchor-height: btn1.height;
-            close-requested => {
-            }
+        if d1-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
 
             SelectPanelCompose {
                 StandardSelectPanelHeading {
@@ -367,6 +349,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 // }
             }
         }
+
     }
 
     // ----- 2
@@ -394,17 +377,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d2-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d2-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 400px;
-            anchor-abs-x: btn2.absolute-position.x;
-            anchor-abs-y: btn2.absolute-position.y;
-            anchor-width: btn2.width;
-            anchor-height: btn2.height;
-            close-requested => { }
+        if d2-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading {
@@ -426,6 +403,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 3
@@ -453,17 +431,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d3-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d3-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 400px;
-            anchor-abs-x: btn3.absolute-position.x;
-            anchor-abs-y: btn3.absolute-position.y;
-            anchor-width: btn3.width;
-            anchor-height: btn3.height;
-            close-requested => { }
+        if d3-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Divided rows"; }
@@ -480,6 +452,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 4
@@ -507,17 +480,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d4-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d4-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 440px;
-            anchor-abs-x: btn4.absolute-position.x;
-            anchor-abs-y: btn4.absolute-position.y;
-            anchor-width: btn4.width;
-            anchor-height: btn4.height;
-            close-requested => { }
+        if d4-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Review"; subtitle: "Notice above the list"; }
@@ -554,6 +521,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 5
@@ -581,17 +549,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d5-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d5-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 400px;
-            anchor-abs-x: btn5.absolute-position.x;
-            anchor-abs-y: btn5.absolute-position.y;
-            anchor-width: btn5.width;
-            anchor-height: btn5.height;
-            close-requested => { }
+        if d5-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Create"; subtitle: "Save or add another"; }
@@ -621,6 +583,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 6
@@ -648,17 +611,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d6-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d6-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 320px;
-            panel-height: 320px;
-            anchor-abs-x: btn6.absolute-position.x;
-            anchor-abs-y: btn6.absolute-position.y;
-            anchor-width: btn6.width;
-            anchor-height: btn6.height;
-            close-requested => { }
+        if d6-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 320px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Inbox type"; }
@@ -694,6 +651,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 7
@@ -721,17 +679,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d7-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d7-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 380px;
-            anchor-abs-x: btn7.absolute-position.x;
-            anchor-abs-y: btn7.absolute-position.y;
-            anchor-width: btn7.width;
-            anchor-height: btn7.height;
-            close-requested => { }
+        if d7-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Permissions"; }
@@ -763,6 +715,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 8
@@ -794,20 +747,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 d8_fetch_done.running = true;
             }
         }
-        AnchoredOverlay {
-            open <=> d8-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 360px;
-            anchor-abs-x: btn8.absolute-position.x;
-            anchor-abs-y: btn8.absolute-position.y;
-            anchor-width: btn8.width;
-            anchor-height: btn8.height;
-            close-requested => {
-                root.d8-loading = true;
-                d8_fetch_done.running = false;
-            }
+        if d8-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Assignees"; subtitle: "Fetches in the background…"; }
@@ -822,6 +766,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 9
@@ -849,17 +794,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d9-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d9-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 400px;
-            anchor-abs-x: btn9.absolute-position.x;
-            anchor-abs-y: btn9.absolute-position.y;
-            anchor-width: btn9.width;
-            anchor-height: btn9.height;
-            close-requested => { }
+        if d9-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Search members"; }
@@ -883,6 +822,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 10
@@ -910,17 +850,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d10-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d10-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 400px;
-            anchor-abs-x: btn10.absolute-position.x;
-            anchor-abs-y: btn10.absolute-position.y;
-            anchor-width: btn10.width;
-            anchor-height: btn10.height;
-            close-requested => { }
+        if d10-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Data source"; }
@@ -947,6 +881,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 11
@@ -974,17 +909,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d11-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d11-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 360px;
-            panel-height: 500px;
-            anchor-abs-x: btn11.absolute-position.x;
-            anchor-abs-y: btn11.absolute-position.y;
-            anchor-width: btn11.width;
-            anchor-height: btn11.height;
-            close-requested => { }
+        if d11-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 360px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "All branches"; subtitle: "Narrow `list-max-height`"; }
@@ -1000,6 +929,7 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 
     // ----- 12
@@ -1027,17 +957,11 @@ export component GallerySelectPanelPage inherits VerticalLayout {
             trailing-icon: Icons.triangle_down;
             clicked => { d12-open = true; }
         }
-        AnchoredOverlay {
-            open <=> d12-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            panel-width: 400px;
-            panel-height: 400px;
-            anchor-abs-x: btn12.absolute-position.x;
-            anchor-abs-y: btn12.absolute-position.y;
-            anchor-width: btn12.width;
-            anchor-height: btn12.height;
-            close-requested => { }
+        if d12-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 400px;
+
             SelectPanelCompose {
                 width: 100%;
                 StandardSelectPanelHeading { title: "Releases"; }
@@ -1069,5 +993,6 @@ export component GallerySelectPanelPage inherits VerticalLayout {
                 }
             }
         }
+
     }
 }

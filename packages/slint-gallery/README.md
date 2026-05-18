@@ -4,7 +4,7 @@ Standalone Slint window for browsing Primer components. This package is split as
 
 **Content:** **Buttons** (`gallery-buttons-page.slint`), **Checkbox** (`gallery-checkbox-page.slint`), **Counter label** (`gallery-counter-label-page.slint`), **Navs** (`gallery-navs-page.slint`), **Radio** (`gallery-radio-page.slint`), **Data** (`gallery-data-page.slint` — DataTable, Pagination), **Action list** (`gallery-action-list-page.slint` — ActionList, Storybook Features demos).
 
-**`AnchoredOverlay` / `PopupWindow`:** [`ui/views/anchored-popupwindow.md`](ui/views/anchored-popupwindow.md) — parent-relative coordinates, vertical flip, and references to app patterns.
+**`PopupWindow`:** [`ui/views/anchored-popupwindow.md`](ui/views/anchored-popupwindow.md) — parent-relative coordinates, vertical flip, and references to app patterns.
 
 **Direction:** evolve toward a Storybook-like experience: named demos per component, optional metadata (variants, tokens), and room for visual or manual QA notes in later PRs.
 

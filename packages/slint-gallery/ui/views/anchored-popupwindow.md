@@ -1,8 +1,10 @@
-# Anchored dialogs and `PopupWindow` (Slint)
+# Anchored surfaces and `PopupWindow` (Slint)
 
-Use this note when implementing Primer-style **anchored** surfaces (SelectPanel, upstream Primer **AnchoredOverlay**). In this repo the shared shell is **`AnchoredOverlay`**: a **trigger** plus a **`PopupWindow`** that aligns to the anchor and stays on screen.
+Use this note when implementing Primer-style **anchored** menus or panels (e.g. **SelectPanel** as a dropdown, upstream Primer **AnchoredOverlay**). **`packages/primer-slint` does not ship a reusable anchored-popup shell** — hosts own **`PopupWindow`** placement, sizing, and chrome. The **standalone gallery** uses simple **inline expand** for some demos (see [`gallery-select-panel-page.slint`](gallery-select-panel-page.slint)); treat that as layout-only, not a product overlay.
 
-**Implementation in this repo:** [`AnchoredOverlay/anchored-overlay.slint`](../../../primer-slint/AnchoredOverlay/anchored-overlay.slint) (**`AnchoredOverlay`**) sizes the **`PopupWindow`** to the panel (**`panel-width`** or anchor width × **`panel-height`**) and positions it with parent-relative **`x`** / **`y`** — **no** full-viewport dimmer, matching Primer **anchored** surfaces (dropdown-style). **[`ModalOverlay`](../../../primer-slint/AnchoredOverlay/modal-overlay.slint)** is a fullscreen **`PopupWindow`** with **`OverlayTokens.backdrop-scrim`**, backdrop dismiss segments, and centered **[`OverlayPanelChrome`](../../../primer-slint/AnchoredOverlay/overlay-panel-chrome.slint)**; bind **`window-inner-width`** / **`window-inner-height`** the same way (gallery **Dialogs** page smoke block). Bind **`window-inner-width`** / **`window-inner-height`** to the viewport size for **horizontal clamp** and **below/above** flip. **Standalone gallery:** [`GalleryWindow`](../gallery-window.slint) keeps the global **`AppWindow`** ([`tokens.slint`](../../../primer-slint/tokens.slint)) in sync with the root window **`width`** / **`height`** — use **`AppWindow.window-width`** / **`AppWindow.window-height`** on **`AnchoredOverlay`** (see **Forms** page) instead of threading **`in property`** viewport values through child pages. **`vertical-side`** (`auto` | `outside_bottom` | `outside_top`) and **`align`** (`start` | `center` | `end`) match a Primer subset (default: **auto** + **start**). Enums: [`types.slint`](../../../primer-slint/AnchoredOverlay/types.slint). Panel chrome: **`OverlayTokens`** (**`backdrop-scrim`** is for modals such as [`primer-dialog.slint`](../../../../app/src/ui/components/primer-dialog.slint)). **`SelectPanel`** ([`SelectPanel/select-panel.slint`](../../../primer-slint/SelectPanel/select-panel.slint)) is the panel **body** (filter + list + optional footer); compose it inside **`AnchoredOverlay`** (gallery **Forms** page; github-app project board import dialog uses **`SelectPanel`** in **`SelectPanelMode.single`**). Exported from [`primer.slint`](../../../primer-slint/primer.slint).
+**Modal shell in this repo:** [`ModalOverlay`](../../../primer-slint/Dialog/modal-overlay.slint) is a fullscreen **`PopupWindow`** with **`OverlayTokens.backdrop-scrim`**, backdrop dismiss, and centered panel chrome (see that file’s imports). Bind viewport size for layout caps the same way as in the gallery **Dialogs** page. **Standalone gallery:** [`GalleryWindow`](../gallery-window.slint) keeps the global **`AppWindow`** ([`tokens.slint`](../../../primer-slint/tokens.slint)) in sync with the root window **`width`** / **`height`** — use **`AppWindow.window-width`** / **`AppWindow.window-height`** for clamp and flip math instead of threading viewport **`in property`** values through every child.
+
+**Panel body:** [`SelectPanel`](../../../primer-slint/SelectPanel/select-panel.slint) is the panel **body** (filter + list + optional footer). Compose it inside your own anchored **`PopupWindow`** or other host. Example host usage: github-app project board import dialog (**`SelectPanel`** **`SelectPanelMode.single`**). Tokens: **`OverlayTokens`** (**`backdrop-scrim`** is for modals such as [`primer-dialog.slint`](../../../../app/src/ui/components/primer-dialog.slint)).
 
 ## Coordinate system
 
@@ -30,7 +32,7 @@ Example: panel **above** the anchor:
 W_y = anchor.absolute-position.y - g - h
 ```
 
-Bind **`popup.width`** / **`height`** to **`panel-width`** (or anchor width) × **`panel-height`**.
+Bind **`popup.width`** / **`height`** to your panel size (or anchor width for dropdown-style width).
 
 ## Horizontal align and clamp
 
@@ -40,21 +42,21 @@ In **window space**, compute the raw panel left **`W_x`** from **`align`** (LTR)
 - **center:** `W_x = anchor.x + (anchor.width - panel.width) / 2`
 - **end:** `W_x = anchor.x + anchor.width - panel.width`
 
-Then clamp to the viewport: **`W_x = max(0, min(W_x, window.innerWidth - panel.width))`** so the panel stays on-screen (Primer **`preventOverflow`**-style). Bind **`AnchoredOverlay`** **`window-inner-width`** to that viewport width (gallery: **`AppWindow.window-width`**).
+Then clamp to the viewport: **`W_x = max(0, min(W_x, window.innerWidth - panel.width))`** so the panel stays on-screen (Primer **`preventOverflow`**-style). Use **`AppWindow.window-width`** (gallery) or your host’s viewport width for **`window.innerWidth`**.
 
 ## Vertical flip (below vs above)
 
-Bind **`window-inner-height`** to the viewport height (gallery: **`AppWindow.window-height`**) and compare in **window space**:
+Use the viewport height (gallery: **`AppWindow.window-height`**) and compare in **window space**:
 
 - Let **`below_bottom = anchor.y + anchor.height + gap + body_height`** (using **`absolute-position`**-style coordinates).
 - Prefer **below** by default.
-- Use **above** when **`below_bottom > window-inner-height`** and there is room: **`anchor.y >= gap + body_height`** so the panel does not cross **`y = 0`**. If **below** overflows but **above** does not fit, keep **below** (clip) or clamp in a later iteration.
+- Use **above** when **`below_bottom > viewport_height`** and there is room: **`anchor.y >= gap + body_height`** so the panel does not cross **`y = 0`**. If **below** overflows but **above** does not fit, keep **below** (clip) or clamp in a later iteration.
 
-Implement flip by setting the boolean **before** `show()`, then bind **`popup.y`** from window-space **`W_y`** and convert with **`parent.absolute-position.y`** as above.
+Implement flip by setting placement **before** `show()`, then bind **`popup.y`** from window-space **`W_y`** and convert with **`parent.absolute-position.y`** as above.
 
 ## API habits
 
-- Call **`show()`** / **`close()`** from gestures; avoid **`init { show(); }`** before layout is stable (packaged **`Dialog`** uses **`ModalOverlay`**’s deferred enter animation — see [`packages/primer-slint/AnchoredOverlay/modal-overlay.slint`](../../../primer-slint/AnchoredOverlay/modal-overlay.slint)).
+- Call **`show()`** / **`close()`** from gestures; avoid **`init { show(); }`** before layout is stable (packaged **`Dialog`** uses **`ModalOverlay`**’s deferred enter animation — see [`packages/primer-slint/Dialog/modal-overlay.slint`](../../../primer-slint/Dialog/modal-overlay.slint)).
 - **`width`** / **`height`** on `PopupWindow` size the popup’s client area; inner content typically uses **`100%`** fill.
 - **`close-policy`**: fullscreen modals in the app often use **`no-auto-close`**; anchored popups may use the default—see existing usage in [`app/src/ui/main.slint`](../../../../app/src/ui/main.slint) and [`app/src/ui/views/settings.slint`](../../../../app/src/ui/views/settings.slint).
 
@@ -68,4 +70,4 @@ Content inside a **`Flickable`** (e.g. gallery main area) moves when the user sc
 
 ## Primer mapping
 
-Upstream Primer **AnchoredOverlay** + internal **Overlay** use the same ideas: anchor geometry, **`align`**, **`side`**, and viewport overflow. This Slint layer (**`AnchoredOverlay`**) converts window-space panel **`(W_x, W_y)`** to **parent-relative** **`PopupWindow`** **`x`** / **`y`** (see above). Panel border and **`shadow.floating.small`** elevation use **`OverlayTokens`**; viewport scrims are a **modal** concern, not the default anchored panel.
+Upstream Primer **AnchoredOverlay** + internal **Overlay** use anchor geometry, **`align`**, **`side`**, and viewport overflow. In Slint, convert window-space panel **`(W_x, W_y)`** to **parent-relative** **`PopupWindow`** **`x`** / **`y`** (see above). Panel border and **`shadow.floating.small`** elevation use **`OverlayTokens`**; viewport scrims are a **modal** concern, not the default anchored panel.

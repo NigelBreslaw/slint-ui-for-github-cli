@@ -2,7 +2,7 @@
 
 **Location:** Library code lives in **`slint/`** (import from the github-app tree with **relative** paths, e.g. to [`primer.slint`](slint/primer.slint)). **Which globals to use:** [`component-imports.md`](component-imports.md).
 
-**Gallery:** `pnpm dev:gallery` from the monorepo root — details: [`packages/slint-gallery/README.md`](../slint-gallery/README.md). **`AnchoredOverlay` / `PopupWindow`:** [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md).
+**Gallery:** `pnpm dev:gallery` from the monorepo root — details: [`packages/slint-gallery/README.md`](../slint-gallery/README.md). **`PopupWindow`** (anchored / modals): [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md).
 
 ## Purpose
 

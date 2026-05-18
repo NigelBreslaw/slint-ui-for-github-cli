@@ -5,9 +5,6 @@ import {
     ActionListLineKind,
     ActionListRowVariant,
     ActionListSelectionMode,
-    AnchoredOverlay,
-    AnchoredOverlayAlign,
-    AnchoredOverlaySide,
     Button,
     ButtonAlignContent,
     FilteredActionList,
@@ -2177,19 +2174,10 @@ export component GalleryActionListPage inherits VerticalLayout {
             }
         }
 
-        anchored-overlay-action-list := AnchoredOverlay {
-            open <=> root.inside-overlay-open;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.start;
-            shrink-wrap: true;
-            panel-width: 0px;
-            panel-height: 360px;
-            anchor-abs-x: btn-inside-overlay.absolute-position.x;
-            anchor-abs-y: btn-inside-overlay.absolute-position.y;
-            anchor-width: btn-inside-overlay.width;
-            anchor-height: btn-inside-overlay.height;
-            close-requested => {
-            }
+        if root.inside-overlay-open: VerticalLayout {
+            spacing: 0px;
+            width: 100%;
+            max-width: 320px;
 
             ActionList {
                 width: 100%;

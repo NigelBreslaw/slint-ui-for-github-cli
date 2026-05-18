@@ -6,9 +6,6 @@ import {
     ActionListLine,
     ActionListLineKind,
     ActionListRowVariant,
-    AnchoredOverlay,
-    AnchoredOverlayAlign,
-    AnchoredOverlaySide,
     Banner,
     BannerVariant,
     Button,
@@ -1606,7 +1603,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     // --- TrailingActions (Examples)
     TreeViewSectionHeading {
         title: "TrailingActions";
-        note: "Kebab opens **AnchoredOverlay** + **ActionList**; count badge on the first row. **Open sample dialog** exercises a nested **Dialog**.";
+        note: "Kebab opens an **ActionList** below the tree; count badge on the first row. **Open sample dialog** exercises a nested **Dialog**.";
     }
     Rectangle {
         horizontal-stretch: 1;
@@ -1617,36 +1614,27 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         border-width: LayoutTokens.table-border-width;
         border-color: PrimerColors.borderColor-default;
 
-        PrimerTreeView {
+        VerticalLayout {
             horizontal-stretch: 1;
-            rows: trailing-demo-rows;
-            flat: true;
-            row-current-requested(_) => { }
-            row-toggle-requested(_) => { }
-            row-secondary-actions-requested(_, ax, ay, aw, ah) => {
-                tv-trailing-menu-ax = ax;
-                tv-trailing-menu-ay = ay;
-                tv-trailing-menu-aw = aw;
-                tv-trailing-menu-ah = ah;
-                tv-trailing-menu-open = true;
-            }
-        }
+            spacing: 0px;
 
-        tv-trailing-overlay := AnchoredOverlay {
-            open <=> tv-trailing-menu-open;
-            anchor-abs-x: tv-trailing-menu-ax;
-            anchor-abs-y: tv-trailing-menu-ay;
-            anchor-width: tv-trailing-menu-aw;
-            anchor-height: tv-trailing-menu-ah;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.end;
-            shrink-wrap: true;
-            panel-width: 220px;
-            close-requested => {
-                tv-trailing-menu-open = false;
+            PrimerTreeView {
+                horizontal-stretch: 1;
+                rows: trailing-demo-rows;
+                flat: true;
+                row-current-requested(_) => { }
+                row-toggle-requested(_) => { }
+                row-secondary-actions-requested(_, ax, ay, aw, ah) => {
+                    tv-trailing-menu-ax = ax;
+                    tv-trailing-menu-ay = ay;
+                    tv-trailing-menu-aw = aw;
+                    tv-trailing-menu-ah = ah;
+                    tv-trailing-menu-open = true;
+                }
             }
 
-            ActionList {
+            if tv-trailing-menu-open: ActionList {
+                width: 220px;
                 lines: tv-trailing-menu-lines;
                 item-activated(ix) => {
                     tv-trailing-menu-open = false;
@@ -2063,28 +2051,6 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         border-width: LayoutTokens.table-border-width;
         border-color: PrimerColors.borderColor-default;
 
-        fm-focus-overlay := AnchoredOverlay {
-            open <=> fm-focus-menu-open;
-            anchor-abs-x: fm-focus-menu-ax;
-            anchor-abs-y: fm-focus-menu-ay;
-            anchor-width: fm-focus-menu-aw;
-            anchor-height: fm-focus-menu-ah;
-            vertical-side: AnchoredOverlaySide.auto;
-            align: AnchoredOverlayAlign.end;
-            shrink-wrap: true;
-            panel-width: 200px;
-            close-requested => {
-                fm-focus-menu-open = false;
-            }
-
-            ActionList {
-                lines: tv-trailing-menu-lines;
-                item-activated(_ix) => {
-                    fm-focus-menu-open = false;
-                }
-            }
-        }
-
         VerticalLayout {
             padding: 8px;
             spacing: 8px;
@@ -2111,6 +2077,14 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                     fm-focus-menu-aw = aw;
                     fm-focus-menu-ah = ah;
                     fm-focus-menu-open = true;
+                }
+            }
+
+            if fm-focus-menu-open: ActionList {
+                width: 200px;
+                lines: tv-trailing-menu-lines;
+                item-activated(_ix) => {
+                    fm-focus-menu-open = false;
                 }
             }
         }
