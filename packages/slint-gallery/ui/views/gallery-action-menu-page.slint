@@ -180,7 +180,10 @@ export component GalleryActionMenuPage {
     ];
 
     property <AnchoredOverlaySide> overlay-side: root.scenario-ix == 12 ? AnchoredOverlaySide.outside_right : AnchoredOverlaySide.outside_bottom;
-    property <AnchoredOverlayWidth> overlay-width: root.scenario-ix == 1 ? AnchoredOverlayWidth.auto : AnchoredOverlayWidth.medium;
+    property <AnchoredOverlayWidth> overlay-width:
+        root.scenario-ix == 0 || root.scenario-ix == 8 || root.scenario-ix == 10 || root.scenario-ix == 12
+        ? AnchoredOverlayWidth.medium
+        : AnchoredOverlayWidth.auto;
 
     property <ActionListSelectionMode> overlay-sel-mode:
         root.scenario-ix == 2 || root.scenario-ix == 8 ? ActionListSelectionMode.single
@@ -201,7 +204,7 @@ export component GalleryActionMenuPage {
     property <[ActionListLine]> lines-links: [
         {
             kind: ActionListLineKind.row,
-            label: "Workflows (link → row)",
+            label: "Workflows",
             row-variant: ActionListRowVariant.default,
             disabled: false,
             has-leading-avatar: false,
@@ -221,7 +224,7 @@ export component GalleryActionMenuPage {
         },
         {
             kind: ActionListLineKind.row,
-            label: "Settings (LinkItem not ported — same as row)",
+            label: "Settings",
             row-variant: ActionListRowVariant.default,
             disabled: false,
             has-leading-avatar: false,
@@ -1092,6 +1095,7 @@ export component GalleryActionMenuPage {
                 width-preset: root.overlay-width;
                 ActionList {
                     list-role: root.scenario-ix == 3 ? ActionListListRole.menu : ActionListListRole.none;
+                    fill-width: root.overlay-width != AnchoredOverlayWidth.auto;
                     lines: root.overlay-lines;
                     selection-mode: root.overlay-sel-mode;
                     selected-index <=> demo-sel-ix;

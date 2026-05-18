@@ -105,8 +105,9 @@ export component AnchoredOverlay {
     property <length> vw: AppWindow.window-width;
     property <length> vh: AppWindow.window-height;
 
-    property <length> panel-width: root.width-preset == AnchoredOverlayWidth.auto ? min(480px, root.vw - 32px)
-        : root.width-preset == AnchoredOverlayWidth.small ? 256px
+    property <bool> width-is-auto: root.width-preset == AnchoredOverlayWidth.auto;
+
+    property <length> panel-width-fixed: root.width-preset == AnchoredOverlayWidth.small ? 256px
         : root.width-preset == AnchoredOverlayWidth.medium ? 320px
         : root.width-preset == AnchoredOverlayWidth.large ? 480px
         : root.width-preset == AnchoredOverlayWidth.xlarge ? 640px
@@ -165,7 +166,12 @@ export component AnchoredOverlay {
             }
 
             pane := Rectangle {
-                width: root.panel-width;
+                width: root.width-is-auto
+                    ? max(
+                        OverlayTokens.anchored-overlay-auto-min-width,
+                        min(panel-chrome.chrome-preferred-width, OverlayTokens.anchored-overlay-auto-max-width),
+                    )
+                    : root.panel-width-fixed;
                 height: root.height-preset == AnchoredOverlayHeight.auto ? min(panel-chrome.chrome-preferred-height, OverlayTokens.modal-viewport-max-height)
                     : root.height-preset == AnchoredOverlayHeight.xsmall ? 192px
                     : root.height-preset == AnchoredOverlayHeight.small ? 256px

@@ -863,6 +863,10 @@ export global OverlayTokens {
     /// Primer modal panel max size vs host viewport (**`AppWindow`**, e.g. gallery `changed width` / `height`). Used by **`ModalOverlay`** and **`Dialog`** (single source — do not duplicate `64px` / `120px` off **`AppWindow`** here).
     out property <length> modal-viewport-max-width: max(AppWindow.window-width - 64px, 300px);
     out property <length> modal-viewport-max-height: max(AppWindow.window-height - 64px, 200px);
+    /// React **`Overlay.module.css`** **`min-width: 192px`** when **`width: auto`**.
+    out property <length> anchored-overlay-auto-min-width: 192px;
+    /// React **`max-width: calc(100vw - 2rem)`** for floating overlays.
+    out property <length> anchored-overlay-auto-max-width: max(AppWindow.window-width - 32px, anchored-overlay-auto-min-width);
 }
 
 // primer-ui-react `Dialog.module.css` + `Dialog.tsx` **`widthMap`**, plus primer-tokens **`functional/size`**. Composes **`LayoutTokens`** `out` only (width literals below are **React-shipped** exceptions vs **`overlay.size`** in JSON5 — see audit).

@@ -24,16 +24,19 @@ export component ActionList {
     in property <int> selected-index: -1;
     /// **`selection-mode`** **`multiple`**: row **`ix`** is checked when **`multi-selected[ix]`** is true. Ignored for **`single`** / **`none`**.
     in property <[bool]> multi-selected: [];
+    /// When **`false`**, list and rows use **preferred-width** (for **`AnchoredOverlayWidth.auto`** menus). Default **`true`** stretches to the overlay panel.
+    in property <bool> fill-width: true;
     /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers, **inactive**, or **`show-trailing-loading`** rows).
     callback item-activated(int);
 
-    VerticalLayout {
+    list-body := VerticalLayout {
         alignment: start;
 
         for line[ix] in root.lines: VerticalLayout {
             alignment: start;
 
             if line.kind == ActionListLineKind.row: ActionListRow {
+                fill-width: root.fill-width;
                 inactive-text: line.inactive-text;
                 active: line.active;
                 show-trailing-loading: line.show-trailing-loading;
@@ -77,24 +80,22 @@ export component ActionList {
                 }
             }
 
-            if line.kind == ActionListLineKind.item_divider: ActionListItemDivider {
-                width: 100%;
-            }
+            if line.kind == ActionListLineKind.item_divider: ActionListItemDivider { }
 
             if line.kind == ActionListLineKind.list_visual_heading: ActionListListVisualHeading {
-                width: 100%;
                 title: line.label;
             }
 
             if line.kind == ActionListLineKind.custom_heading: ActionListCustomHeading {
-                width: 100%;
                 title: line.label;
             }
 
             if line.kind == ActionListLineKind.section_heading: ActionListSectionHeading {
-                width: 100%;
                 title: line.label;
             }
         }
     }
+
+    horizontal-stretch: root.fill-width ? 1 : 0;
+    width: root.fill-width ? 0px : list-body.preferred-width;
 }
