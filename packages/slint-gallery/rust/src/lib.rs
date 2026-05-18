@@ -545,6 +545,7 @@ fn action_list_line_from_label(label: &str) -> ActionListLine {
         show_trailing_loading: false,
         has_trailing_visual: false,
         trailing_icon: Default::default(),
+        trailing_text: SharedString::new(),
     }
 }
 

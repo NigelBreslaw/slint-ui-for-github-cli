@@ -4,6 +4,7 @@ import {
     ActionListDescriptionLayout,
     ActionListLine,
     ActionListLineKind,
+    ActionListListRole,
     ActionListRowVariant,
     ActionListSelectionMode,
     ActionMenu,
@@ -92,8 +93,9 @@ export component GalleryActionMenuPage {
             inactive-text: "",
             active: false,
             show-trailing-loading: false,
-            has-trailing-visual: true,
+            has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "⌘C",
         },
         {
             kind: ActionListLineKind.row,
@@ -111,8 +113,29 @@ export component GalleryActionMenuPage {
             inactive-text: "",
             active: false,
             show-trailing-loading: false,
-            has-trailing-visual: true,
+            has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "⌘Q",
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Edit comment",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+            trailing-text: "⌘E",
         },
         {
             kind: ActionListLineKind.item_divider,
@@ -132,6 +155,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -149,8 +173,9 @@ export component GalleryActionMenuPage {
             inactive-text: "",
             active: false,
             show-trailing-loading: false,
-            has-trailing-visual: true,
+            has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "⌘D",
         },
     ];
 
@@ -192,6 +217,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -211,6 +237,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.section_heading,
@@ -230,6 +257,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -249,6 +277,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -271,6 +300,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -290,6 +320,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -309,6 +340,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -331,6 +363,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -350,6 +383,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -369,6 +403,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -391,6 +426,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -410,6 +446,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -432,6 +469,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: true,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -451,6 +489,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: true,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -473,6 +512,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -492,6 +532,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -514,6 +555,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -533,6 +575,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -552,6 +595,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -574,6 +618,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -593,6 +638,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -612,6 +658,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -634,6 +681,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -653,6 +701,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
         {
             kind: ActionListLineKind.row,
@@ -672,6 +721,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -694,6 +744,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -716,6 +767,7 @@ export component GalleryActionMenuPage {
             show-trailing-loading: false,
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
+            trailing-text: "",
         },
     ];
 
@@ -1039,6 +1091,7 @@ export component GalleryActionMenuPage {
                 side: root.overlay-side;
                 width-preset: root.overlay-width;
                 ActionList {
+                    list-role: root.scenario-ix == 3 ? ActionListListRole.menu : ActionListListRole.none;
                     lines: root.overlay-lines;
                     selection-mode: root.overlay-sel-mode;
                     selected-index <=> demo-sel-ix;

@@ -22,6 +22,13 @@ export enum ActionListSelectionMode {
     multiple,
 }
 
+/// Mirrors upstream `ActionList` **`role`** / **`ActionListContainerContext.listRole`**. **`menu`** uses the check column for **`multiple`** (see **`Selection.tsx`**); **`listbox`** uses **`.MultiSelectCheckbox`**.
+export enum ActionListListRole {
+    none,
+    menu,
+    listbox,
+}
+
 /// Line in [`ActionList`](action-list.slint): interactive row or item divider hairline.
 export enum ActionListLineKind {
     row,
@@ -58,7 +65,9 @@ export struct ActionListLine {
     active: bool,
     /// Row-only: Primer **LoadingItem** — trailing **`Spinner`**; row is not activatable; label and description use loading foreground tokens.
     show-trailing-loading: bool,
-    /// Row-only: trailing **visual** (e.g. chevron). Ignored when **`show-trailing-loading`**.
+    /// Row-only: trailing **visual** (e.g. chevron). Ignored when **`show-trailing-loading`** or **`trailing-text`** is set.
     has-trailing-visual: bool,
     trailing-icon: image,
+    /// Row-only: Primer **`ActionList.TrailingVisual`** text (e.g. **`⌘C`**). Ignored when **`show-trailing-loading`**.
+    trailing-text: string,
 }

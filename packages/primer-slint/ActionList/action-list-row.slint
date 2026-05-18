@@ -42,9 +42,11 @@ export component ActionListRow {
     in property <string> inactive-text: "";
     /// Primer **LoadingItem**: trailing **`Spinner`**; row is not activatable; label and description use **`item-loading-label-fgColor`**.
     in property <bool> show-trailing-loading: false;
-    /// Trailing **icon** (e.g. chevron). Not shown when **`show-trailing-loading`**.
+    /// Trailing **icon** (e.g. chevron). Not shown when **`show-trailing-loading`** or **`trailing-text`** is set.
     in property <bool> has-trailing-visual: false;
     in property <image> trailing-icon: Icons.dot_fill;
+    /// Primer **`ActionList.TrailingVisual`** shortcut / auxiliary text (e.g. **`⌘C`**).
+    in property <string> trailing-text: "";
 
     callback clicked;
 
@@ -354,7 +356,20 @@ export component ActionListRow {
                             }
                         }
 
-                        if root.has-trailing-visual && !root.show-trailing-loading: HorizontalLayout {
+                        if root.trailing-text != "" && !root.show-trailing-loading: HorizontalLayout {
+                            horizontal-stretch: 0;
+                            padding-right: LayoutTokens.action-list-item-padding-inline;
+                            alignment: center;
+                            Text {
+                                text: root.trailing-text;
+                                color: root.trailing-icon-tint;
+                                font-size: LayoutTokens.text-body-size-medium;
+                                font-weight: LayoutTokens.base-text-weight-medium;
+                                vertical-alignment: center;
+                            }
+                        }
+
+                        if root.has-trailing-visual && root.trailing-text == "" && !root.show-trailing-loading: HorizontalLayout {
                             horizontal-stretch: 0;
                             padding-right: LayoutTokens.action-list-item-padding-inline;
                             alignment: center;

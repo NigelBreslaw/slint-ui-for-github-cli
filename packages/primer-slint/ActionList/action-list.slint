@@ -5,13 +5,20 @@ import { ActionListItemDivider } from "./action-list-item-divider.slint";
 import { ActionListListVisualHeading } from "./action-list-list-visual-heading.slint";
 import { ActionListRow } from "./action-list-row.slint";
 import { ActionListSectionHeading } from "./action-list-section-heading.slint";
-import { ActionListLine, ActionListLineKind, ActionListSelectionMode } from "./types.slint";
+import {
+    ActionListLine,
+    ActionListLineKind,
+    ActionListListRole,
+    ActionListSelectionMode,
+} from "./types.slint";
 
 export component ActionList {
     /// Lines top to bottom: rows, item dividers, list/custom visual headings, and subtle section headings.
     in property <[ActionListLine]> lines: [];
     /// Primer `ActionList` **`showDividers`**: draw a **seam** hairline (`borderColor-muted`) between consecutive **rows** only — not after the last row, and no block margins (unlike explicit [`item_divider`](ActionListLineKind.item_divider) / [`ActionListItemDivider`]).
     in property <bool> show-dividers: false;
+    /// Upstream **`role`** / menu container: **`menu`** → **`multiple`** uses **`.SingleSelectCheckmark`**, not **`.MultiSelectCheckbox`**.
+    in property <ActionListListRole> list-role: ActionListListRole.none;
     /// Primer `selectionVariant`: **`single`** uses **`selected-index`**; **`multiple`** uses **`multi-selected`** (index **`ix`** into **`lines`**; treat out-of-range / missing entries as unchecked).
     in property <ActionListSelectionMode> selection-mode: ActionListSelectionMode.none;
     in property <int> selected-index: -1;
@@ -32,6 +39,7 @@ export component ActionList {
                 show-trailing-loading: line.show-trailing-loading;
                 has-trailing-visual: line.has-trailing-visual;
                 trailing-icon: line.trailing-icon;
+                trailing-text: line.trailing-text;
                 label-markdown: line.label-markdown;
                 label: line.label;
                 has-markdown: line.has-markdown;
@@ -53,8 +61,15 @@ export component ActionList {
                             && root.multi-selected[ix]
                         )
                     );
-                show-single-select-check: root.selection-mode == ActionListSelectionMode.single;
-                show-multi-select-checkbox: root.selection-mode == ActionListSelectionMode.multiple;
+                show-single-select-check:
+                    root.selection-mode == ActionListSelectionMode.single
+                    || (
+                        root.selection-mode == ActionListSelectionMode.multiple
+                        && root.list-role == ActionListListRole.menu
+                    );
+                show-multi-select-checkbox:
+                    root.selection-mode == ActionListSelectionMode.multiple
+                    && root.list-role != ActionListListRole.menu;
                 clicked => {
                     if line.inactive-text == "" && !line.show-trailing-loading {
                         root.item-activated(ix);
