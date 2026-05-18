@@ -1,4 +1,4 @@
-import { AppWindow, LayoutTokens, OverlayTokens } from "../tokens.slint";
+import { AppWindow, DialogTokens, LayoutTokens, OverlayTokens } from "../tokens.slint";
 import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
 
 export struct PositionProps {
@@ -41,6 +41,7 @@ export component AnchoredOverlay {
     width: 0px;
     height: 0px;
 
+    property <bool> open: false;
     in property <PositionProps> position-props;
     in property <AnchoredOverlaySide> side: AnchoredOverlaySide.outside_bottom;
     in property <AnchoredOverlayAlign> align: AnchoredOverlayAlign.start;
@@ -57,6 +58,35 @@ export component AnchoredOverlay {
     /// Optional dimmed scrim behind the panel (anchored popovers are often undimmed).
     in property <bool> show-backdrop: false;
     in property <length> panel-padding: 16px;
+    /// When true, skip the opacity enter animation (matches `prefers-reduced-motion`).
+    in property <bool> reduce-motion: false;
+
+    property <float> presented: 0.0;
+
+    states [
+        pane-reveal when root.open && !root.reduce-motion: {
+            presented: 1.0;
+            in {
+                animate presented {
+                    duration: DialogTokens.overlay-enter-duration;
+                    easing: cubic-bezier(0.33, 1, 0.68, 1);
+                }
+            }
+        }
+        pane-reveal-instant when root.open && root.reduce-motion: {
+            presented: 1.0;
+        }
+    ]
+
+    presented-enter-arm := Timer {
+        interval: 1ms;
+        running: false;
+        triggered() => {
+            root.open = true;
+            root.opened();
+            self.stop();
+        }
+    }
 
     callback show();
     callback close();
@@ -81,10 +111,16 @@ export component AnchoredOverlay {
 
     show => {
         popup.show();
-        root.opened();
+        if root.reduce-motion {
+            root.open = true;
+            root.opened();
+        } else {
+            presented-enter-arm.start();
+        }
     }
 
     close => {
+        root.open = false;
         popup.close();
         root.closed();
     }
@@ -124,6 +160,7 @@ export component AnchoredOverlay {
             }
 
             pane := Rectangle {
+                opacity: root.presented;
                 width: root.panel-width;
                 height: root.height-preset == AnchoredOverlayHeight.auto ? min(panel-chrome.chrome-preferred-height, OverlayTokens.modal-viewport-max-height)
                     : root.height-preset == AnchoredOverlayHeight.xsmall ? 192px

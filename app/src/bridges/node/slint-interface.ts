@@ -351,9 +351,12 @@ export type SlintIconsGlobal = {
   plus_circle: ImageData;
   book: ImageData;
   law: ImageData;
+  location: ImageData;
+  table: ImageData;
   star: ImageData;
   eye: ImageData;
   repo_forked: ImageData;
+  repo: ImageData;
   toggle_switch_line: ImageData;
   toggle_switch_circle: ImageData;
 };

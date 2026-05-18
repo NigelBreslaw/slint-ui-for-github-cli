@@ -4,11 +4,14 @@ import {
     AnchoredOverlayHeight,
     AnchoredOverlaySide,
     AnchoredOverlayWidth,
+    Avatar,
     Button,
     ButtonVariant,
     Checkbox,
+    Icons,
     Radio,
     RadioGroup,
+    Size,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
@@ -16,11 +19,12 @@ import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-si
 export component GalleryAnchoredOverlayPage {
     property <AnchoredOverlaySide> preview-side: AnchoredOverlaySide.outside_bottom;
     property <AnchoredOverlayAlign> preview-align: AnchoredOverlayAlign.start;
-    property <AnchoredOverlayWidth> preview-width: AnchoredOverlayWidth.large;
+    property <AnchoredOverlayWidth> preview-width: AnchoredOverlayWidth.medium;
     property <AnchoredOverlayHeight> preview-height: AnchoredOverlayHeight.auto;
     property <bool> preview-prevent-overflow: true;
     property <bool> preview-show-backdrop: false;
     property <bool> preview-allow-dismiss: true;
+    property <bool> preview-reduce-motion: false;
     property <bool> preview-wide-anchor: false;
     /// 0 = 0px, 1 = 50px, 2 = 100px (parity with offset stories)
     property <int> preview-anchor-offset-ix: 0;
@@ -79,6 +83,7 @@ export component GalleryAnchoredOverlayPage {
                 prevent-overflow: preview-prevent-overflow;
                 show-backdrop: preview-show-backdrop;
                 allow-dismiss: preview-allow-dismiss;
+                reduce-motion: preview-reduce-motion;
                 anchor-offset: anchor-offset-pixels;
                 alignment-offset: alignment-offset-pixels;
 
@@ -94,18 +99,93 @@ export component GalleryAnchoredOverlayPage {
                 VerticalLayout {
                     spacing: 12px;
 
+                    HorizontalLayout {
+                        alignment: center;
+
+                        Avatar {
+                            size: 48px;
+                            source: @image-url("../assets/avatar-mona.png");
+                            alt-text: "Mona";
+                        }
+
+                        Rectangle {
+                            horizontal-stretch: 1;
+                        }
+
+                        Button {
+                            label: "Follow";
+                            variant: ButtonVariant.default;
+                            size: Size.small;
+                        }
+                    }
+
+                    HorizontalLayout {
+                        spacing: LayoutTokens.base-size-4;
+                        alignment: center;
+
+                        Text {
+                            text: "monalisa";
+                            color: PrimerColors.fgColor-default;
+                            font-size: 14px;
+                            font-weight: LayoutTokens.base-text-weight-medium;
+                        }
+
+                        Text {
+                            text: "Monalisa Octocat";
+                            color: PrimerColors.fgColor-link;
+                            font-size: 14px;
+                            font-weight: LayoutTokens.base-text-weight-normal;
+                            wrap: no-wrap;
+                        }
+                    }
+
                     Text {
-                        text: "Demo panel — Primer AnchoredOverlay port.";
+                        text: "Former beach cat and champion swimmer. Now your friendly octopus with a normal face.";
                         color: PrimerColors.fgColor-default;
                         font-size: 14px;
                         wrap: word-wrap;
                     }
 
-                    Text {
-                        text: "Dismiss with backdrop tap (if enabled), Escape, or Done.";
-                        color: PrimerColors.fgColor-muted;
-                        font-size: 13px;
-                        wrap: word-wrap;
+                    VerticalLayout {
+                        spacing: 4px;
+
+                        HorizontalLayout {
+                            spacing: LayoutTokens.base-size-4;
+                            alignment: center;
+
+                            Image {
+                                source: Icons.location;
+                                width: 16px;
+                                height: 16px;
+                                colorize: PrimerColors.fgColor-muted;
+                            }
+
+                            Text {
+                                text: "Interwebs";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: LayoutTokens.text-body-size-small;
+                                wrap: no-wrap;
+                            }
+                        }
+
+                        HorizontalLayout {
+                            spacing: LayoutTokens.base-size-4;
+                            alignment: center;
+
+                            Image {
+                                source: Icons.repo;
+                                width: 16px;
+                                height: 16px;
+                                colorize: PrimerColors.fgColor-muted;
+                            }
+
+                            Text {
+                                text: "Owns this repository";
+                                color: PrimerColors.fgColor-muted;
+                                font-size: LayoutTokens.text-body-size-small;
+                                wrap: no-wrap;
+                            }
+                        }
                     }
 
                     Button {
@@ -438,6 +518,14 @@ export component GalleryAnchoredOverlayPage {
                             demo-anchored.close();
                             preview-alignment-offset-ix = 2;
                         }
+                    }
+                }
+
+                Checkbox {
+                    label: "Reduce motion (skip enter fade)";
+                    checked <=> preview-reduce-motion;
+                    toggled => {
+                        demo-anchored.close();
                     }
                 }
 
