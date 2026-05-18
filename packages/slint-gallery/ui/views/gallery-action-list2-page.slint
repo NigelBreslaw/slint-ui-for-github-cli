@@ -1,0 +1,96 @@
+// **ActionList2** gallery — PR1 spike (Default scenario).
+import {
+  ActionList2,
+  ActionList2Line,
+  ActionList2LineKind,
+  Select,
+  SelectOption,
+  ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryActionList2Page {
+  property <int> scenario-ix: 0;
+
+  property <[SelectOption]> scenario-options: [
+    { value: "0", label: "Default", enabled: true },
+  ];
+
+  property <string> last-action: "";
+
+  property <[ActionList2Line]> lines-default: [
+    { kind: ActionList2LineKind.row, label: "Copy link" },
+    { kind: ActionList2LineKind.row, label: "Quote reply" },
+    { kind: ActionList2LineKind.row, label: "Edit comment" },
+  ];
+
+  property <[ActionList2Line]> preview-lines: root.scenario-ix == 0 ? root.lines-default : [];
+
+  vertical-stretch: 1;
+
+  HorizontalLayout {
+    VerticalLayout {
+      padding: 24px;
+      spacing: 16px;
+      alignment: start;
+
+      Text {
+        text: "ActionList2";
+        color: PrimerColors.fgColor-default;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      Text {
+        text: "Upstream: ActionList — Default";
+        color: PrimerColors.fgColor-muted;
+        font-size: LayoutTokens.text-body-size-small;
+        wrap: word-wrap;
+      }
+
+      ActionList2 {
+        horizontal-stretch: 0;
+        fill-width: false;
+        lines: root.preview-lines;
+        item-activated(ix) => {
+          root.last-action = "Activated line " + ix;
+        }
+      }
+
+      if root.last-action != "": Text {
+        text: "Last activated: " + root.last-action;
+        color: PrimerColors.fgColor-muted;
+        font-size: LayoutTokens.text-body-size-small;
+        wrap: word-wrap;
+      }
+    }
+
+    Rectangle { }
+
+    GalleryDemoOptionsSidebar {
+      VerticalLayout {
+        spacing: 16px;
+        alignment: start;
+
+        Text {
+          text: "Scenario";
+          font-size: LayoutTokens.text-body-size-medium;
+          font-weight: LayoutTokens.base-text-weight-semibold;
+          color: PrimerColors.fgColor-default;
+        }
+
+        Select {
+          horizontal-stretch: 1;
+          label-text: "List options";
+          placeholder: "Choose…";
+          options: root.scenario-options;
+          selected-index <=> scenario-ix;
+          validation-status: ValidationStatus.none;
+          selected-changed(_i) => {
+          }
+        }
+      }
+    }
+  }
+}

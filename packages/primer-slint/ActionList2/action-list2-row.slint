@@ -1,0 +1,36 @@
+// ActionList2 row — stub (PR1); full visuals in PR3+.
+
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export component ActionList2Row {
+  in property <string> label: "";
+  callback clicked;
+
+  min-height: LayoutTokens.action-list-item-min-height;
+  vertical-stretch: 0;
+
+  ta := TouchArea {
+    min-height: parent.min-height;
+    clicked => {
+      root.clicked();
+    }
+
+    HorizontalLayout {
+      padding-left: LayoutTokens.action-list-item-padding-inline;
+      padding-right: LayoutTokens.action-list-item-padding-inline;
+      padding-top: LayoutTokens.action-list-item-padding-block;
+      padding-bottom: LayoutTokens.action-list-item-padding-block;
+      alignment: center;
+
+      Text {
+        horizontal-stretch: 1;
+        text: root.label;
+        color: PrimerColors.fgColor-default;
+        font-size: LayoutTokens.text-body-size-medium;
+        font-weight: LayoutTokens.base-text-weight-medium;
+        wrap: word-wrap;
+        vertical-alignment: center;
+      }
+    }
+  }
+}

@@ -15,6 +15,7 @@ import { GalleryRadioPage } from "./views/gallery-radio-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryAnchoredOverlayPage } from "./views/gallery-anchored-overlay-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
+import { GalleryActionList2Page } from "./views/gallery-action-list2-page.slint";
 import { GalleryFilteredActionListPage } from "./views/gallery-filtered-action-list-page.slint";
 import { GalleryActionMenuPage } from "./views/gallery-action-menu-page.slint";
 import { GalleryDialogsPlaygroundPage } from "./views/gallery-dialog-playground-page.slint";
@@ -99,6 +100,10 @@ export component GalleryWindow inherits Window {
                         alignment: start;
 
                         if GalleryState.selected-page-id == "action-list-playground": GalleryActionListPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "action-list2-playground": GalleryActionList2Page {
                             height: main-scroll.height;
                         }
 

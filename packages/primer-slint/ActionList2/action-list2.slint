@@ -1,0 +1,40 @@
+// ActionList2 — vertical list of rows (upstream: Primer ActionList).
+
+import { ActionList2Row } from "./action-list2-row.slint";
+import {
+  ActionList2Line,
+  ActionList2LineKind,
+  ActionList2ListRole,
+  ActionList2ListVariant,
+  ActionList2SelectionMode,
+} from "./types.slint";
+
+export component ActionList2 {
+  in property <[ActionList2Line]> lines: [];
+  in property <ActionList2ListVariant> list-variant: ActionList2ListVariant.inset;
+  in property <bool> show-dividers: false;
+  in property <ActionList2ListRole> list-role: ActionList2ListRole.none;
+  in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.none;
+  in property <int> selected-index: -1;
+  in property <[bool]> multi-selected: [];
+  in property <bool> fill-width: true;
+  callback item-activated(int);
+
+  list-body := VerticalLayout {
+    alignment: start;
+
+    for line[ix] in root.lines: VerticalLayout {
+      alignment: start;
+
+      if line.kind == ActionList2LineKind.row: ActionList2Row {
+        label: line.label;
+        clicked => {
+          root.item-activated(ix);
+        }
+      }
+    }
+  }
+
+  horizontal-stretch: root.fill-width ? 1 : 0;
+  width: root.fill-width ? 0px : list-body.preferred-width;
+}

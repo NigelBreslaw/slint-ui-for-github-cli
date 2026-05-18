@@ -12,6 +12,7 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         "Action list",
         &[
             ("action-list-playground", "ActionList"),
+            ("action-list2-playground", "ActionList2"),
             ("filtered-action-list-playground", "FilteredActionList"),
         ],
     ),

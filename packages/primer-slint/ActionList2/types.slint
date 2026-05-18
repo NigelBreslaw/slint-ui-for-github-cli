@@ -1,0 +1,50 @@
+// ActionList2 models — Primer ActionList (fresh port).
+
+/// List container variant (`ActionList` **`variant`**).
+export enum ActionList2ListVariant {
+  inset,
+  horizontal_inset,
+  full,
+}
+
+/// Row visual variant (default action vs danger).
+export enum ActionList2RowVariant {
+  default,
+  danger,
+}
+
+/// Primary label vs optional **Description**.
+export enum ActionList2DescriptionLayout {
+  none,
+  inline,
+  block,
+}
+
+/// Primer **`selectionVariant`**: none, single, or multiple.
+export enum ActionList2SelectionMode {
+  none,
+  single,
+  multiple,
+}
+
+/// Mirrors upstream **`role`** / list container context.
+export enum ActionList2ListRole {
+  none,
+  menu,
+  listbox,
+}
+
+/// Line kind in [`ActionList2`](action-list2.slint).
+export enum ActionList2LineKind {
+  row,
+  item_divider,
+  list_visual_heading,
+  custom_heading,
+  section_heading,
+}
+
+/// One list entry. Unused fields ignored per **`kind`** (expanded in later PRs).
+export struct ActionList2Line {
+  kind: ActionList2LineKind,
+  label: string,
+}

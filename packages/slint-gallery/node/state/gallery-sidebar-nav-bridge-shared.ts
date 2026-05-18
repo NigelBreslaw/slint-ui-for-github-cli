@@ -13,6 +13,7 @@ const GALLERY_SIDEBAR_NAV: readonly {
         label: "Action list",
         leaves: [
             { id: "action-list-playground", label: "ActionList" },
+            { id: "action-list2-playground", label: "ActionList2" },
             { id: "filtered-action-list-playground", label: "FilteredActionList" },
         ],
     },
