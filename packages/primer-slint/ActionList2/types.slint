@@ -51,5 +51,8 @@ export struct ActionList2Line {
   disabled: bool,
   has-leading-visual: bool,
   leading-icon: image,
+  /// Secondary line when **`description-layout`** is **inline** or **block**.
+  description: string,
+  description-layout: ActionList2DescriptionLayout,
   trailing-text: string,
 }

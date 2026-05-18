@@ -7,7 +7,7 @@ import {
     LayoutTokens,
     PrimerColors,
 } from "../tokens.slint";
-import { ActionList2RowVariant } from "./types.slint";
+import { ActionList2DescriptionLayout, ActionList2RowVariant } from "./types.slint";
 
 export component ActionList2Row {
     in property <string> label;
@@ -15,6 +15,8 @@ export component ActionList2Row {
     in property <bool> disabled: false;
     in property <bool> has-leading-visual: false;
     in property <image> leading-icon: Icons.dot_fill;
+    in property <string> description: "";
+    in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
     in property <string> trailing-text;
     in property <length> margin-inline;
     /// Primer **`showDividers`** seam hairline above this row (`borderColor-muted`, no block margins).
@@ -35,6 +37,15 @@ export component ActionList2Row {
 
     property <color> trailing-text-color:
         root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+
+    property <bool> show-inline-description:
+        root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
+
+    property <bool> show-block-description:
+        root.description != "" && root.description-layout == ActionList2DescriptionLayout.block;
+
+    property <color> description-color:
+        root.disabled ? ButtonTokens.control-fgColor-disabled : ActionList2Tokens.item-description-fgColor;
 
     property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
 
@@ -89,22 +100,94 @@ export component ActionList2Row {
                             padding-bottom: LayoutTokens.action-list-item-padding-block;
                             spacing: LayoutTokens.button-content-gap;
 
-                            if root.has-leading-visual: Image {
-                                width: LayoutTokens.iconButton-icon-size-medium;
-                                height: LayoutTokens.iconButton-icon-size-medium;
-                                vertical-alignment: center;
-                                source: root.leading-icon;
-                                colorize: root.leading-icon-tint;
-                            }
-
-                            Text {
+                            primary-column := VerticalLayout {
                                 horizontal-stretch: 1;
-                                text: root.label;
-                                color: root.label-color;
-                                font-size: LayoutTokens.text-body-size-medium;
-                                font-weight: LayoutTokens.base-text-weight-medium;
-                                wrap: word-wrap;
-                                vertical-alignment: center;
+                                spacing: root.show-block-description ? 2px : 0px;
+                                alignment: start;
+
+                                primary-line := HorizontalLayout {
+                                    spacing: LayoutTokens.button-content-gap;
+                                    alignment: start;
+                                    align-items: center;
+
+                                    if root.has-leading-visual: Image {
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: LayoutTokens.iconButton-icon-size-medium;
+                                        vertical-alignment: center;
+                                        source: root.leading-icon;
+                                        colorize: root.leading-icon-tint;
+                                    }
+
+                                    if root.show-inline-description: HorizontalLayout {
+                                        horizontal-stretch: 1;
+                                        spacing: LayoutTokens.button-content-gap;
+                                        alignment: center;
+                                        align-items: center;
+
+                                        Text {
+                                            horizontal-stretch: 1;
+                                            text: root.label;
+                                            color: root.label-color;
+                                            font-size: LayoutTokens.text-body-size-medium;
+                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            wrap: word-wrap;
+                                            vertical-alignment: center;
+                                        }
+
+                                        Text {
+                                            text: root.description;
+                                            color: root.description-color;
+                                            font-size: LayoutTokens.text-body-size-small;
+                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            wrap: word-wrap;
+                                            vertical-alignment: center;
+                                        }
+                                    }
+
+                                    if root.show-block-description: VerticalLayout {
+                                        horizontal-stretch: 1;
+                                        spacing: 2px;
+                                        alignment: start;
+
+                                        Text {
+                                            text: root.label;
+                                            color: root.label-color;
+                                            font-size: LayoutTokens.text-body-size-medium;
+                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            wrap: word-wrap;
+                                        }
+                                    }
+
+                                    if !root.show-inline-description && !root.show-block-description: Text {
+                                        horizontal-stretch: 1;
+                                        text: root.label;
+                                        color: root.label-color;
+                                        font-size: LayoutTokens.text-body-size-medium;
+                                        font-weight: LayoutTokens.base-text-weight-medium;
+                                        wrap: word-wrap;
+                                        vertical-alignment: center;
+                                    }
+                                }
+
+                                if root.show-block-description: HorizontalLayout {
+                                    spacing: LayoutTokens.button-content-gap;
+                                    alignment: start;
+                                    align-items: center;
+
+                                    if root.has-leading-visual: Rectangle {
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: LayoutTokens.iconButton-icon-size-medium;
+                                    }
+
+                                    Text {
+                                        horizontal-stretch: 1;
+                                        text: root.description;
+                                        color: root.description-color;
+                                        font-size: LayoutTokens.text-body-size-small;
+                                        font-weight: LayoutTokens.base-text-weight-medium;
+                                        wrap: word-wrap;
+                                    }
+                                }
                             }
 
                             if root.trailing-text != "": Text {
