@@ -50,6 +50,44 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
+    id: "folder-anchored-overlay",
+    label: "Anchored overlay",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "anchored-overlay-playground",
+    label: "Playground",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "anchored-overlay-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
     id: "folder-avatar",
     label: "Avatar",
     level: 1,
@@ -873,6 +911,7 @@ export component GallerySidebar {
                             if nav-from-host {
                                 GallerySidebarNav.row-current-requested(id);
                             } else if id == "action-list-playground"
+                                || id == "anchored-overlay-playground"
                                 || id == "avatar-playground"
                                 || id == "banner-playground"
                                 || id == "buttons-playground"

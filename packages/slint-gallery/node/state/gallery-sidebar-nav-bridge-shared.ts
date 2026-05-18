@@ -14,6 +14,11 @@ const GALLERY_SIDEBAR_NAV: readonly {
         leaves: [{ id: "action-list-playground", label: "Playground" }],
     },
     {
+        folderId: "folder-anchored-overlay",
+        label: "Anchored overlay",
+        leaves: [{ id: "anchored-overlay-playground", label: "Playground" }],
+    },
+    {
         folderId: "folder-avatar",
         label: "Avatar",
         leaves: [{ id: "avatar-playground", label: "Playground" }],

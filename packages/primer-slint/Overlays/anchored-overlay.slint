@@ -1,51 +1,92 @@
+import { AppWindow, LayoutTokens, OverlayTokens } from "../tokens.slint";
+import { OverlayPanelChrome } from "./overlay-panel-chrome.slint";
 
-// Used by non modal overlays that need to be smart positioned
 export struct PositionProps {
-    // Used to tell the overlay where the item that called for an overlay is positioned
     absolute-position: Point,
-    // Anchor control size; used to place the overlay and flip side when it would clip off-screen.
     source-size: Size,
 }
 
-// modal overlays are centered in the screen e.g. dialogs
-// anchored target a specific position e.g. component menus, etc.
-export enum OverlayType {
-    modal,
-    anchored
+export enum AnchoredOverlaySide {
+    outside_bottom,
+    outside_top,
+    outside_left,
+    outside_right,
 }
 
-enum PositionAxis {
-    pos-x,
-    pos-y,
+export enum AnchoredOverlayAlign {
+    start,
+    center,
+    end,
 }
 
-import { AppWindow } from "../tokens.slint";
+export enum AnchoredOverlayWidth {
+    auto,
+    small,
+    medium,
+    large,
+    xlarge,
+    xxlarge,
+}
+
+export enum AnchoredOverlayHeight {
+    auto,
+    xsmall,
+    small,
+    medium,
+    large,
+    xlarge,
+}
 
 export component AnchoredOverlay {
+    width: 0px;
+    height: 0px;
+
     in property <PositionProps> position-props;
-    in-out property <OverlayType> overlay-type: modal;
-    /// Gap between anchor and overlay (below anchor bottom, or above anchor top when flipped).
-    in property <length> margin: 0px;
+    in property <AnchoredOverlaySide> side: AnchoredOverlaySide.outside_bottom;
+    in property <AnchoredOverlayAlign> align: AnchoredOverlayAlign.start;
+    /// Gap along the attachment axis (Primer default gap is often `base-size-4`; extra margin is folded into `anchor-offset` if needed).
+    in property <length> margin: LayoutTokens.base-size-4;
+    /// Offset along the attachment axis (Primer `anchorOffset`).
+    in property <length> anchor-offset: 0px;
+    /// Offset perpendicular to the attachment axis (Primer `alignmentOffset`).
+    in property <length> alignment-offset: 0px;
+    in property <bool> prevent-overflow: true;
+    in property <AnchoredOverlayWidth> width-preset: AnchoredOverlayWidth.large;
+    in property <AnchoredOverlayHeight> height-preset: AnchoredOverlayHeight.auto;
+    in property <bool> allow-dismiss: true;
+    /// Optional dimmed scrim behind the panel (anchored popovers are often undimmed).
+    in property <bool> show-backdrop: false;
+    in property <length> panel-padding: 16px;
 
     callback show();
+    callback close();
+    /// Fired when the user requests dismiss (outside tap, Escape) before `close()` runs.
+    callback close-requested();
+    callback opened();
+    callback closed();
+
+    property <length> ax: root.position-props.absolute-position.x;
+    property <length> ay: root.position-props.absolute-position.y;
+    property <length> aw: root.position-props.source-size.width;
+    property <length> ah: root.position-props.source-size.height;
+    property <length> vw: AppWindow.window-width;
+    property <length> vh: AppWindow.window-height;
+
+    property <length> panel-width: root.width-preset == AnchoredOverlayWidth.auto ? min(480px, root.vw - 32px)
+        : root.width-preset == AnchoredOverlayWidth.small ? 256px
+        : root.width-preset == AnchoredOverlayWidth.medium ? 320px
+        : root.width-preset == AnchoredOverlayWidth.large ? 480px
+        : root.width-preset == AnchoredOverlayWidth.xlarge ? 640px
+        : 960px;
+
     show => {
         popup.show();
+        root.opened();
     }
 
-    callback close();
     close => {
         popup.close();
-    }
-
-    // This is only relevant for modal overlays. The default is to center in the entire
-    // window/screen. However there may be situations such as apps with a large sidebar
-    // Where overlays need to be centered to specific content.
-    in property <Size> screen-bounds: { width: AppWindow.window-width, height: AppWindow.window-height };
-
-    callback close-requested();
-    close-requested => {
-        // default
-        root.close();
+        root.closed();
     }
 
     popup := PopupWindow {
@@ -55,57 +96,80 @@ export component AnchoredOverlay {
         height: AppWindow.window-height;
 
         close-policy: no-auto-close;
+        forward-focus: overlay-scope;
 
-        function get-overlay-position(axis: PositionAxis) -> length {
-            if axis == PositionAxis.pos-x {
-                if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.width - va.width) / 2;
-                } else {
-                    return root.position-props.absolute-position.x;
+        overlay-scope := FocusScope {
+
+            key-pressed(event) => {
+                if root.allow-dismiss && event.text == Key.Escape {
+                    root.close-requested();
+                    root.close();
+                    return accept;
                 }
-            } else {
-                if root.overlay-type == OverlayType.modal {
-                    return (popup-screen.height - va.height) / 2;
-                } else {
-                    // Below anchor by default; flip above if viewport is too short; y never < 0.
-                    let pos = root.position-props;
-                    let item_bottom = pos.absolute-position.y + pos.source-size.height
-                        + root.margin + va.height;
-                    return (item_bottom
-                        <= popup-screen.height)
-                        ? (pos.absolute-position.y + pos.source-size.height + root.margin)
-                        : max(0px, pos.absolute-position.y - root.margin - va.height);
+                return reject;
+            }
+
+            dismiss-layer := Rectangle {
+                width: AppWindow.window-width;
+                height: AppWindow.window-height;
+                background: root.show-backdrop ? OverlayTokens.backdrop-scrim : #00000000;
+
+                dismiss-ta := TouchArea {
+                    enabled: root.allow-dismiss;
+                    clicked => {
+                        root.close-requested();
+                        root.close();
+                    }
                 }
-            }
-        }
-
-        ta := TouchArea {
-            clicked => {
-                root.close-requested();
-            }
-        }
-
-        popup-screen := Rectangle {
-            background: red.with-alpha(0.5);
-            // x and y are set here because the position should not be a binding that
-            // would change if the window is resized after the overlay is shown.
-            init => {
-                pane.x = get-overlay-position(PositionAxis.pos-x);
-                pane.y = get-overlay-position(PositionAxis.pos-y);
             }
 
             pane := Rectangle {
-                width: va.width;
-                height: va.height;
+                width: root.panel-width;
+                height: root.height-preset == AnchoredOverlayHeight.auto ? min(panel-chrome.chrome-preferred-height, OverlayTokens.modal-viewport-max-height)
+                    : root.height-preset == AnchoredOverlayHeight.xsmall ? 192px
+                    : root.height-preset == AnchoredOverlayHeight.small ? 256px
+                    : root.height-preset == AnchoredOverlayHeight.medium ? 320px
+                    : root.height-preset == AnchoredOverlayHeight.large ? 432px
+                    : 600px;
+
+                property <length> align-h: root.align == AnchoredOverlayAlign.start ? root.ax
+                    : root.align == AnchoredOverlayAlign.center ? root.ax + (root.aw - self.width) / 2
+                    : root.ax + root.aw - self.width;
+
+                property <length> align-v: root.align == AnchoredOverlayAlign.start ? root.ay
+                    : root.align == AnchoredOverlayAlign.center ? root.ay + (root.ah - self.height) / 2
+                    : root.ay + root.ah - self.height;
+
+                property <length> raw-x: root.side == AnchoredOverlaySide.outside_bottom || root.side == AnchoredOverlaySide.outside_top ? self.align-h + root.alignment-offset
+                    : root.side == AnchoredOverlaySide.outside_right ? root.ax + root.aw + root.margin + root.anchor-offset
+                    : root.ax - root.margin - root.anchor-offset - self.width;
+
+                property <length> raw-y: root.side == AnchoredOverlaySide.outside_bottom ? root.ay + root.ah + root.margin + root.anchor-offset
+                    : root.side == AnchoredOverlaySide.outside_top ? root.ay - root.margin - root.anchor-offset - self.height
+                    : self.align-v + root.alignment-offset;
+
+                x: root.prevent-overflow ? max(0px, min(self.raw-x, root.vw - self.width)) : self.raw-x;
+                y: root.prevent-overflow ? max(0px, min(self.raw-y, root.vh - self.height)) : self.raw-y;
 
                 touch-blocker := TouchArea { }
 
+                panel-chrome := OverlayPanelChrome {
+                    width: parent.width;
+                    height: parent.height;
+                    background: OverlayTokens.panel-background;
+                    border-color: OverlayTokens.panel-border;
+                    border-width: OverlayTokens.panel-border-width;
+                    shadow-border-radius: OverlayTokens.panel-border-radius;
+                    border-top-left-radius: OverlayTokens.panel-border-radius;
+                    border-top-right-radius: OverlayTokens.panel-border-radius;
+                    border-bottom-left-radius: OverlayTokens.panel-border-radius;
+                    border-bottom-right-radius: OverlayTokens.panel-border-radius;
+                    surface-shadows: OverlayTokens.panel-elevation-shadow;
+                    panel-padding: root.panel-padding;
 
-                va := VerticalLayout {
-                    width: self.preferred-width;
-                    height: self.preferred-height;
                     @children
                 }
+
             }
         }
     }

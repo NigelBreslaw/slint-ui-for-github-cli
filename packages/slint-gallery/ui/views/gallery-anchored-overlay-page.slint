@@ -1,0 +1,478 @@
+import {
+    AnchoredOverlay,
+    AnchoredOverlayAlign,
+    AnchoredOverlayHeight,
+    AnchoredOverlaySide,
+    AnchoredOverlayWidth,
+    Button,
+    ButtonVariant,
+    Checkbox,
+    Radio,
+    RadioGroup,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryAnchoredOverlayPage {
+    property <AnchoredOverlaySide> preview-side: AnchoredOverlaySide.outside_bottom;
+    property <AnchoredOverlayAlign> preview-align: AnchoredOverlayAlign.start;
+    property <AnchoredOverlayWidth> preview-width: AnchoredOverlayWidth.large;
+    property <AnchoredOverlayHeight> preview-height: AnchoredOverlayHeight.auto;
+    property <bool> preview-prevent-overflow: true;
+    property <bool> preview-show-backdrop: false;
+    property <bool> preview-allow-dismiss: true;
+    property <bool> preview-wide-anchor: false;
+    /// 0 = 0px, 1 = 50px, 2 = 100px (parity with offset stories)
+    property <int> preview-anchor-offset-ix: 0;
+    property <int> preview-alignment-offset-ix: 0;
+
+    property <length> anchor-offset-pixels: preview-anchor-offset-ix == 1 ? 50px : preview-anchor-offset-ix == 2 ? 100px : 0px;
+    property <length> alignment-offset-pixels: preview-alignment-offset-ix == 1 ? 50px : preview-alignment-offset-ix == 2 ? 100px : 0px;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "Anchored overlay";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            HorizontalLayout {
+                spacing: 16px;
+                alignment: center;
+
+
+                VerticalLayout {
+                    spacing: 12px;
+                    alignment: center;
+                    min-width: preview-wide-anchor ? 360px : 0px;
+
+                    open-btn := Button {
+                        label: "Open overlay";
+                        variant: ButtonVariant.default;
+                        horizontal-stretch: preview-wide-anchor ? 1 : 0;
+                        clicked => {
+                            demo-anchored.show();
+                        }
+                    }
+                }
+
+                Rectangle { }
+            }
+
+            demo-anchored := AnchoredOverlay {
+                position-props: {
+                    absolute-position: open-btn.absolute-position,
+                    source-size: { width: open-btn.width, height: open-btn.height },
+                };
+                side: preview-side;
+                align: preview-align;
+                width-preset: preview-width;
+                height-preset: preview-height;
+                prevent-overflow: preview-prevent-overflow;
+                show-backdrop: preview-show-backdrop;
+                allow-dismiss: preview-allow-dismiss;
+                anchor-offset: anchor-offset-pixels;
+                alignment-offset: alignment-offset-pixels;
+
+                close-requested => {
+                }
+
+                opened => {
+                }
+
+                closed => {
+                }
+
+                VerticalLayout {
+                    spacing: 12px;
+
+                    Text {
+                        text: "Demo panel — Primer AnchoredOverlay port.";
+                        color: PrimerColors.fgColor-default;
+                        font-size: 14px;
+                        wrap: word-wrap;
+                    }
+
+                    Text {
+                        text: "Dismiss with backdrop tap (if enabled), Escape, or Done.";
+                        color: PrimerColors.fgColor-muted;
+                        font-size: 13px;
+                        wrap: word-wrap;
+                    }
+
+                    Button {
+                        label: "Done";
+                        variant: ButtonVariant.primary;
+                        clicked => {
+                            demo-anchored.close();
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 10px;
+
+                Text {
+                    text: "Side";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "bottom";
+                        label: "outside-bottom";
+                        checked: preview-side == AnchoredOverlaySide.outside_bottom;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-side = AnchoredOverlaySide.outside_bottom;
+                        }
+                    }
+
+                    Radio {
+                        value: "top";
+                        label: "outside-top";
+                        checked: preview-side == AnchoredOverlaySide.outside_top;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-side = AnchoredOverlaySide.outside_top;
+                        }
+                    }
+
+                    Radio {
+                        value: "left";
+                        label: "outside-left";
+                        checked: preview-side == AnchoredOverlaySide.outside_left;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-side = AnchoredOverlaySide.outside_left;
+                        }
+                    }
+
+                    Radio {
+                        value: "right";
+                        label: "outside-right";
+                        checked: preview-side == AnchoredOverlaySide.outside_right;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-side = AnchoredOverlaySide.outside_right;
+                        }
+                    }
+                }
+
+                Text {
+                    text: "Align";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "start";
+                        label: "start";
+                        checked: preview-align == AnchoredOverlayAlign.start;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-align = AnchoredOverlayAlign.start;
+                        }
+                    }
+
+                    Radio {
+                        value: "center";
+                        label: "center";
+                        checked: preview-align == AnchoredOverlayAlign.center;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-align = AnchoredOverlayAlign.center;
+                        }
+                    }
+
+                    Radio {
+                        value: "end";
+                        label: "end";
+                        checked: preview-align == AnchoredOverlayAlign.end;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-align = AnchoredOverlayAlign.end;
+                        }
+                    }
+                }
+
+                Text {
+                    text: "Width";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "auto";
+                        label: "auto";
+                        checked: preview-width == AnchoredOverlayWidth.auto;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-width = AnchoredOverlayWidth.auto;
+                        }
+                    }
+
+                    Radio {
+                        value: "small";
+                        label: "small";
+                        checked: preview-width == AnchoredOverlayWidth.small;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-width = AnchoredOverlayWidth.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "medium";
+                        label: "medium";
+                        checked: preview-width == AnchoredOverlayWidth.medium;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-width = AnchoredOverlayWidth.medium;
+                        }
+                    }
+
+                    Radio {
+                        value: "large";
+                        label: "large";
+                        checked: preview-width == AnchoredOverlayWidth.large;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-width = AnchoredOverlayWidth.large;
+                        }
+                    }
+
+                    Radio {
+                        value: "xlarge";
+                        label: "xlarge";
+                        checked: preview-width == AnchoredOverlayWidth.xlarge;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-width = AnchoredOverlayWidth.xlarge;
+                        }
+                    }
+
+                    Radio {
+                        value: "xxlarge";
+                        label: "xxlarge";
+                        checked: preview-width == AnchoredOverlayWidth.xxlarge;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-width = AnchoredOverlayWidth.xxlarge;
+                        }
+                    }
+                }
+
+                Text {
+                    text: "Height";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "h-auto";
+                        label: "auto";
+                        checked: preview-height == AnchoredOverlayHeight.auto;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-height = AnchoredOverlayHeight.auto;
+                        }
+                    }
+
+                    Radio {
+                        value: "h-xs";
+                        label: "xsmall";
+                        checked: preview-height == AnchoredOverlayHeight.xsmall;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-height = AnchoredOverlayHeight.xsmall;
+                        }
+                    }
+
+                    Radio {
+                        value: "h-sm";
+                        label: "small";
+                        checked: preview-height == AnchoredOverlayHeight.small;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-height = AnchoredOverlayHeight.small;
+                        }
+                    }
+
+                    Radio {
+                        value: "h-md";
+                        label: "medium";
+                        checked: preview-height == AnchoredOverlayHeight.medium;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-height = AnchoredOverlayHeight.medium;
+                        }
+                    }
+
+                    Radio {
+                        value: "h-lg";
+                        label: "large";
+                        checked: preview-height == AnchoredOverlayHeight.large;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-height = AnchoredOverlayHeight.large;
+                        }
+                    }
+
+                    Radio {
+                        value: "h-xl";
+                        label: "xlarge";
+                        checked: preview-height == AnchoredOverlayHeight.xlarge;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-height = AnchoredOverlayHeight.xlarge;
+                        }
+                    }
+                }
+
+                Text {
+                    text: "Anchor offset";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "a0";
+                        label: "0";
+                        checked: preview-anchor-offset-ix == 0;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-anchor-offset-ix = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "a50";
+                        label: "50px";
+                        checked: preview-anchor-offset-ix == 1;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-anchor-offset-ix = 1;
+                        }
+                    }
+
+                    Radio {
+                        value: "a100";
+                        label: "100px";
+                        checked: preview-anchor-offset-ix == 2;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-anchor-offset-ix = 2;
+                        }
+                    }
+                }
+
+                Text {
+                    text: "Alignment offset";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "m0";
+                        label: "0";
+                        checked: preview-alignment-offset-ix == 0;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-alignment-offset-ix = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "m50";
+                        label: "50px";
+                        checked: preview-alignment-offset-ix == 1;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-alignment-offset-ix = 1;
+                        }
+                    }
+
+                    Radio {
+                        value: "m100";
+                        label: "100px";
+                        checked: preview-alignment-offset-ix == 2;
+                        toggled => {
+                            demo-anchored.close();
+                            preview-alignment-offset-ix = 2;
+                        }
+                    }
+                }
+
+                Checkbox {
+                    label: "Prevent overflow (viewport clamp)";
+                    checked <=> preview-prevent-overflow;
+                    toggled => {
+                        demo-anchored.close();
+                    }
+                }
+
+                Checkbox {
+                    label: "Show backdrop scrim";
+                    checked <=> preview-show-backdrop;
+                    toggled => {
+                        demo-anchored.close();
+                    }
+                }
+
+                Checkbox {
+                    label: "Allow dismiss (outside + Escape)";
+                    checked <=> preview-allow-dismiss;
+                    toggled => {
+                        demo-anchored.close();
+                    }
+                }
+
+                Checkbox {
+                    label: "Wide anchor (align demo)";
+                    checked <=> preview-wide-anchor;
+                    toggled => {
+                        demo-anchored.close();
+                    }
+                }
+            }
+        }
+    }
+}

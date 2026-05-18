@@ -12,6 +12,11 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         "Action list",
         &[("action-list-playground", "Playground")],
     ),
+    (
+        "folder-anchored-overlay",
+        "Anchored overlay",
+        &[("anchored-overlay-playground", "Playground")],
+    ),
     ("folder-avatar", "Avatar", &[("avatar-playground", "Playground")]),
     ("folder-banner", "Banner", &[("banner-playground", "Playground")]),
     (
