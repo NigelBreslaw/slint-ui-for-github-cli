@@ -1,6 +1,7 @@
 // ActionList2 — vertical list of rows (upstream: Primer ActionList).
 
 import { ActionList2Row } from "./action-list2-row.slint";
+import { ActionList2Tokens } from "../tokens.slint";
 import {
   ActionList2Line,
   ActionList2LineKind,
@@ -20,14 +21,28 @@ export component ActionList2 {
   in property <bool> fill-width: true;
   callback item-activated(int);
 
+  property <length> list-padding-top:
+    root.list-variant == ActionList2ListVariant.inset ? ActionList2Tokens.list-padding-block-inset : 0px;
+  property <length> list-padding-bottom:
+    root.list-variant == ActionList2ListVariant.inset ? ActionList2Tokens.list-padding-block-inset
+    : root.list-variant == ActionList2ListVariant.horizontal_inset ? ActionList2Tokens.list-padding-block-horizontal-inset-end : 0px;
+  property <length> item-margin-inline:
+    root.list-variant == ActionList2ListVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
+
   list-body := VerticalLayout {
     alignment: start;
+    padding-top: root.list-padding-top;
+    padding-bottom: root.list-padding-bottom;
+    width: root.fill-width ? 0px : self.preferred-width;
 
     for line[ix] in root.lines: VerticalLayout {
       alignment: start;
+      horizontal-stretch: root.fill-width ? 1 : 0;
 
       if line.kind == ActionList2LineKind.row: ActionList2Row {
+        fill-width: root.fill-width;
         label: line.label;
+        margin-inline: root.item-margin-inline;
         clicked => {
           root.item-activated(ix);
         }

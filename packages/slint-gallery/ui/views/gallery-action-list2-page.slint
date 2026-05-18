@@ -1,8 +1,9 @@
-// **ActionList2** gallery — PR1 spike (Default scenario).
+// **ActionList2** gallery — PR2 list variant + tokens.
 import {
   ActionList2,
   ActionList2Line,
   ActionList2LineKind,
+  ActionList2ListVariant,
   Select,
   SelectOption,
   ValidationStatus,
@@ -12,12 +13,24 @@ import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-si
 
 export component GalleryActionList2Page {
   property <int> scenario-ix: 0;
+  property <int> list-variant-ix: 0;
 
   property <[SelectOption]> scenario-options: [
     { value: "0", label: "Default", enabled: true },
   ];
 
+  property <[SelectOption]> list-variant-options: [
+    { value: "0", label: "inset", enabled: true },
+    { value: "1", label: "horizontal-inset", enabled: true },
+    { value: "2", label: "full", enabled: true },
+  ];
+
   property <string> last-action: "";
+
+  property <ActionList2ListVariant> preview-list-variant:
+    root.list-variant-ix == 1 ? ActionList2ListVariant.horizontal_inset
+    : root.list-variant-ix == 2 ? ActionList2ListVariant.full
+    : ActionList2ListVariant.inset;
 
   property <[ActionList2Line]> lines-default: [
     { kind: ActionList2LineKind.row, label: "Copy link" },
@@ -43,18 +56,26 @@ export component GalleryActionList2Page {
       }
 
       Text {
-        text: "Upstream: ActionList — Default";
+        text: "Upstream: ActionList — Default (Playground list variant)";
         color: PrimerColors.fgColor-muted;
         font-size: LayoutTokens.text-body-size-small;
         wrap: word-wrap;
       }
 
-      ActionList2 {
+      preview-chrome := Rectangle {
         horizontal-stretch: 0;
-        fill-width: false;
-        lines: root.preview-lines;
-        item-activated(ix) => {
-          root.last-action = "Activated line " + ix;
+        border-width: 1px;
+        border-color: PrimerColors.borderColor-muted;
+        border-radius: LayoutTokens.borderRadius-medium;
+        background: PrimerColors.bgColor-default;
+
+        ActionList2 {
+          fill-width: false;
+          list-variant: root.preview-list-variant;
+          lines: root.preview-lines;
+          item-activated(ix) => {
+            root.last-action = "Activated line " + ix;
+          }
         }
       }
 
@@ -89,6 +110,36 @@ export component GalleryActionList2Page {
           validation-status: ValidationStatus.none;
           selected-changed(_i) => {
           }
+        }
+      }
+
+      VerticalLayout {
+        spacing: 8px;
+        alignment: start;
+
+        Text {
+          text: "List";
+          font-size: LayoutTokens.text-body-size-medium;
+          font-weight: LayoutTokens.base-text-weight-semibold;
+          color: PrimerColors.fgColor-default;
+        }
+
+        Select {
+          horizontal-stretch: 1;
+          label-text: "variant";
+          placeholder: "Choose…";
+          options: root.list-variant-options;
+          selected-index <=> list-variant-ix;
+          validation-status: ValidationStatus.none;
+          selected-changed(_i) => {
+          }
+        }
+
+        Text {
+          text: "inset: vertical padding + item inset. horizontal-inset: bottom padding + item inset. full: flush edges.";
+          font-size: LayoutTokens.text-body-size-small;
+          color: PrimerColors.fgColor-muted;
+          wrap: word-wrap;
         }
       }
     }

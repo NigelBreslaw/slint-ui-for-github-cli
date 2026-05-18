@@ -4,32 +4,46 @@ import { LayoutTokens, PrimerColors } from "../tokens.slint";
 
 export component ActionList2Row {
   in property <string> label: "";
+  /// Primer `.ActionListItem` `margin-inline` when list variant is inset / horizontal-inset.
+  in property <length> margin-inline: 0px;
+  /// When true, row spans the list width (menus). When false, hugs label width (gallery hug layout).
+  in property <bool> fill-width: false;
   callback clicked;
 
+  horizontal-stretch: root.fill-width ? 1 : 0;
+  width: root.fill-width ? 0px : row-shell.preferred-width;
   min-height: LayoutTokens.action-list-item-min-height;
   vertical-stretch: 0;
 
-  ta := TouchArea {
-    min-height: parent.min-height;
-    clicked => {
-      root.clicked();
-    }
+  row-shell := VerticalLayout {
+    alignment: start;
+    padding-left: root.margin-inline;
+    padding-right: root.margin-inline;
 
-    HorizontalLayout {
-      padding-left: LayoutTokens.action-list-item-padding-inline;
-      padding-right: LayoutTokens.action-list-item-padding-inline;
-      padding-top: LayoutTokens.action-list-item-padding-block;
-      padding-bottom: LayoutTokens.action-list-item-padding-block;
-      alignment: center;
+    ta := TouchArea {
+      min-height: root.min-height;
+      horizontal-stretch: root.fill-width ? 1 : 0;
+      width: root.fill-width ? 0px : content-row.preferred-width;
+      clicked => {
+        root.clicked();
+      }
 
-      Text {
-        horizontal-stretch: 1;
-        text: root.label;
-        color: PrimerColors.fgColor-default;
-        font-size: LayoutTokens.text-body-size-medium;
-        font-weight: LayoutTokens.base-text-weight-medium;
-        wrap: word-wrap;
-        vertical-alignment: center;
+      content-row := HorizontalLayout {
+        alignment: start;
+        align-items: center;
+        width: self.preferred-width;
+        padding-left: LayoutTokens.action-list-item-padding-inline;
+        padding-right: LayoutTokens.action-list-item-padding-inline;
+        padding-top: LayoutTokens.action-list-item-padding-block;
+        padding-bottom: LayoutTokens.action-list-item-padding-block;
+
+        Text {
+          text: root.label;
+          color: PrimerColors.fgColor-default;
+          font-size: LayoutTokens.text-body-size-medium;
+          font-weight: LayoutTokens.base-text-weight-medium;
+          wrap: word-wrap;
+        }
       }
     }
   }
