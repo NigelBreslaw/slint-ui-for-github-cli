@@ -47,8 +47,6 @@ export component ActionListRow {
     in property <image> trailing-icon: Icons.dot_fill;
     /// Primer **`ActionList.TrailingVisual`** shortcut / auxiliary text (e.g. **`⌘C`**).
     in property <string> trailing-text: "";
-    /// When **`false`**, row sizes to content (used with **`ActionList.fill-width`** for **`auto`** overlay width).
-    in property <bool> fill-width: true;
 
     callback clicked;
 
@@ -106,8 +104,7 @@ export component ActionListRow {
         root.is-loading-row ? LayoutTokens.base-text-weight-medium : !root.disabled && (root.use-selected-surface || root.show-active-chrome) ? LayoutTokens.base-text-weight-semibold : LayoutTokens.base-text-weight-medium;
 
     min-height: root.cell-min-height + (root.show-top-seam ? LayoutTokens.table-border-width : 0px);
-    horizontal-stretch: root.fill-width ? 1 : 0;
-    width: root.fill-width ? 0px : self.preferred-width;
+    horizontal-stretch: 1;
 
     VerticalLayout {
         alignment: start;
@@ -162,8 +159,7 @@ export component ActionListRow {
                             padding-bottom: root.cell-padding-block;
                             spacing: 2px;
                             hl := HorizontalLayout {
-                        // min-height: root.cell-min-height;
-                        padding-left: LayoutTokens.action-list-item-padding-inline;
+                                padding-left: LayoutTokens.action-list-item-padding-inline;
                                 padding-right: LayoutTokens.action-list-item-padding-inline;
                                 spacing: LayoutTokens.button-content-gap;
                                 alignment: start;
