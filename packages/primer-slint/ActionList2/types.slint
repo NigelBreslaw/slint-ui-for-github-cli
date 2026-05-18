@@ -43,8 +43,13 @@ export enum ActionList2LineKind {
   section_heading,
 }
 
-/// One list entry. Unused fields ignored per **`kind`** (expanded in later PRs).
+/// One list entry. Unused fields ignored per **`kind`**.
 export struct ActionList2Line {
   kind: ActionList2LineKind,
   label: string,
+  row-variant: ActionList2RowVariant,
+  disabled: bool,
+  has-leading-visual: bool,
+  leading-icon: image,
+  trailing-text: string,
 }

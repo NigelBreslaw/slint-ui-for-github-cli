@@ -1,9 +1,11 @@
-// **ActionList2** gallery — PR2 list variant + tokens.
+// **ActionList2** gallery — PR3 default row + interaction.
 import {
   ActionList2,
   ActionList2Line,
   ActionList2LineKind,
   ActionList2ListVariant,
+  ActionList2RowVariant,
+  Icons,
   Select,
   SelectOption,
   ValidationStatus,
@@ -17,6 +19,7 @@ export component GalleryActionList2Page {
 
   property <[SelectOption]> scenario-options: [
     { value: "0", label: "Default", enabled: true },
+    { value: "1", label: "SimpleList", enabled: true },
   ];
 
   property <[SelectOption]> list-variant-options: [
@@ -33,12 +36,71 @@ export component GalleryActionList2Page {
     : ActionList2ListVariant.inset;
 
   property <[ActionList2Line]> lines-default: [
-    { kind: ActionList2LineKind.row, label: "Copy link" },
-    { kind: ActionList2LineKind.row, label: "Quote reply" },
-    { kind: ActionList2LineKind.row, label: "Edit comment" },
+    {
+      kind: ActionList2LineKind.row,
+      label: "Copy link",
+      row-variant: ActionList2RowVariant.default,
+      disabled: false,
+      has-leading-visual: false,
+      leading-icon: Icons.dot_fill,
+      trailing-text: "",
+    },
+    {
+      kind: ActionList2LineKind.row,
+      label: "Quote reply",
+      row-variant: ActionList2RowVariant.default,
+      disabled: false,
+      has-leading-visual: false,
+      leading-icon: Icons.dot_fill,
+      trailing-text: "",
+    },
+    {
+      kind: ActionList2LineKind.row,
+      label: "Edit comment",
+      row-variant: ActionList2RowVariant.default,
+      disabled: false,
+      has-leading-visual: false,
+      leading-icon: Icons.dot_fill,
+      trailing-text: "",
+    },
   ];
 
-  property <[ActionList2Line]> preview-lines: root.scenario-ix == 0 ? root.lines-default : [];
+  property <[ActionList2Line]> lines-simple-list: [
+    {
+      kind: ActionList2LineKind.row,
+      label: "Copy link",
+      row-variant: ActionList2RowVariant.default,
+      disabled: false,
+      has-leading-visual: false,
+      leading-icon: Icons.dot_fill,
+      trailing-text: "⌘C",
+    },
+    {
+      kind: ActionList2LineKind.row,
+      label: "Quote reply",
+      row-variant: ActionList2RowVariant.default,
+      disabled: false,
+      has-leading-visual: false,
+      leading-icon: Icons.dot_fill,
+      trailing-text: "⌘Q",
+    },
+    {
+      kind: ActionList2LineKind.row,
+      label: "Edit comment",
+      row-variant: ActionList2RowVariant.default,
+      disabled: false,
+      has-leading-visual: false,
+      leading-icon: Icons.dot_fill,
+      trailing-text: "⌘E",
+    },
+  ];
+
+  property <[ActionList2Line]> preview-lines:
+    root.scenario-ix == 1 ? root.lines-simple-list : root.lines-default;
+
+  property <string> scenario-caption:
+    root.scenario-ix == 1 ? "Upstream: SimpleList (shortcuts; divider + danger in PR4)"
+    : "Upstream: Default";
 
   vertical-stretch: 1;
 
@@ -56,7 +118,7 @@ export component GalleryActionList2Page {
       }
 
       Text {
-        text: "Upstream: ActionList — Default (Playground list variant)";
+        text: root.scenario-caption;
         color: PrimerColors.fgColor-muted;
         font-size: LayoutTokens.text-body-size-small;
         wrap: word-wrap;
@@ -136,7 +198,7 @@ export component GalleryActionList2Page {
         }
 
         Text {
-          text: "inset: vertical padding + item inset. horizontal-inset: bottom padding + item inset. full: flush edges.";
+          text: "Tab to a row for focus ring. Hover and press for row background.";
           font-size: LayoutTokens.text-body-size-small;
           color: PrimerColors.fgColor-muted;
           wrap: word-wrap;

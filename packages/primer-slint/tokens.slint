@@ -640,6 +640,9 @@ export global ActionList2Tokens {
     out property <length> list-padding-block-inset: LayoutTokens.base-size-8;
     out property <length> list-padding-block-horizontal-inset-end: LayoutTokens.base-size-8;
     out property <length> item-margin-inline-inset: LayoutTokens.base-size-8;
+    /// **ActionList.module.css** `:focus-visible` — `@mixin focusOutline` / **`--fgColor-accent`** ring.
+    out property <color> item-focus-ring-color: PrimerColors.fgColor-link;
+    out property <length> item-focus-ring-width: LayoutTokens.table-border-width + LayoutTokens.table-border-width;
 }
 
 export global ActionListTokens {
