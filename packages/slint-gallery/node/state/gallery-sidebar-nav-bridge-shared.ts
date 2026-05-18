@@ -2,7 +2,7 @@ import { assignProperties } from "slint-bridge-kit";
 import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 
-/** One folder and one or more nav leaves. Order matches [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint) fallback. Keep in sync with **`GALLERY_SIDEBAR_NAV`** in [`rust/src/lib.rs`](../../rust/src/lib.rs). */
+/** One folder and one or more nav leaves. Folders are sorted **alphabetically** by `label` (ASCII). Order matches [`gallery-sidebar.slint`](../../ui/components/gallery-sidebar.slint) fallback. Keep in sync with **`GALLERY_SIDEBAR_NAV`** in [`rust/src/lib.rs`](../../rust/src/lib.rs). */
 const GALLERY_SIDEBAR_NAV: readonly {
     folderId: string;
     label: string;
@@ -32,6 +32,11 @@ const GALLERY_SIDEBAR_NAV: readonly {
         ],
     },
     {
+        folderId: "folder-checkbox",
+        label: "Checkbox",
+        leaves: [{ id: "checkbox-playground", label: "Checkbox" }],
+    },
+    {
         folderId: "folder-counter-label",
         label: "Counter label",
         leaves: [{ id: "counter-label-playground", label: "Playground" }],
@@ -44,20 +49,24 @@ const GALLERY_SIDEBAR_NAV: readonly {
             { id: "dialogs-playground", label: "Playground" },
         ],
     },
-    { folderId: "folder-sheets", label: "Sheets", leaves: [{ id: "sheets-playground", label: "Playground" }] },
-    { folderId: "folder-forms", label: "Forms", leaves: [{ id: "forms-playground", label: "Playground" }] },
     { folderId: "folder-label", label: "Label", leaves: [{ id: "label-playground", label: "Playground" }] },
     { folderId: "folder-navs", label: "Navs", leaves: [{ id: "navs-playground", label: "Playground" }] },
     {
-        folderId: "folder-select",
-        label: "Select",
-        leaves: [{ id: "select-playground", label: "Playground" }],
+        folderId: "folder-radio",
+        label: "Radio",
+        leaves: [{ id: "radio-playground", label: "Radio" }],
     },
     {
         folderId: "folder-segmented-control",
         label: "Segmented control",
         leaves: [{ id: "segmented-control-playground", label: "Playground" }],
     },
+    {
+        folderId: "folder-select",
+        label: "Select",
+        leaves: [{ id: "select-playground", label: "Playground" }],
+    },
+    { folderId: "folder-sheets", label: "Sheets", leaves: [{ id: "sheets-playground", label: "Playground" }] },
     {
         folderId: "folder-skeleton-box",
         label: "Skeleton box",

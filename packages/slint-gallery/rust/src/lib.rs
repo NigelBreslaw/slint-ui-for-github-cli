@@ -5,7 +5,7 @@ use std::cell::RefCell;
 use std::collections::BTreeSet;
 use std::rc::Rc;
 
-/// Keep in sync with **`packages/slint-gallery/node/state/gallery-sidebar-nav-bridge-shared.ts`** (`GALLERY_SIDEBAR_NAV`).
+/// Keep in sync with **`packages/slint-gallery/node/state/gallery-sidebar-nav-bridge-shared.ts`** (`GALLERY_SIDEBAR_NAV`). Folders are sorted **alphabetically** by display label (ASCII).
 const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
     (
         "folder-action-list",
@@ -23,6 +23,11 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         ],
     ),
     (
+        "folder-checkbox",
+        "Checkbox",
+        &[("checkbox-playground", "Checkbox")],
+    ),
+    (
         "folder-counter-label",
         "Counter label",
         &[("counter-label-playground", "Playground")],
@@ -35,19 +40,19 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
             ("dialogs-playground", "Playground"),
         ],
     ),
-    (
-        "folder-sheets",
-        "Sheets",
-        &[("sheets-playground", "Playground")],
-    ),
-    ("folder-forms", "Forms", &[("forms-playground", "Playground")]),
     ("folder-label", "Label", &[("label-playground", "Playground")]),
     ("folder-navs", "Navs", &[("navs-playground", "Playground")]),
-    ("folder-select", "Select", &[("select-playground", "Playground")]),
+    ("folder-radio", "Radio", &[("radio-playground", "Radio")]),
     (
         "folder-segmented-control",
         "Segmented control",
         &[("segmented-control-playground", "Playground")],
+    ),
+    ("folder-select", "Select", &[("select-playground", "Playground")]),
+    (
+        "folder-sheets",
+        "Sheets",
+        &[("sheets-playground", "Playground")],
     ),
     (
         "folder-skeleton-box",

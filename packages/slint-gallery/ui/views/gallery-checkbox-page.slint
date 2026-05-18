@@ -1,0 +1,121 @@
+import {
+    Checkbox,
+    PrimerTextInput,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+/// Single **Checkbox** with options in **`GalleryDemoOptionsSidebar`**.
+export component GalleryCheckboxPage {
+    property <bool> preview-checked: false;
+    property <bool> preview-indeterminate: false;
+    property <bool> preview-disabled: false;
+    property <bool> preview-interactive: true;
+    property <string> preview-label: "Send email notifications";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "Checkbox";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            Checkbox {
+                label: preview-label;
+                checked <=> preview-checked;
+                indeterminate <=> preview-indeterminate;
+                disabled: preview-disabled;
+                interactive: preview-interactive;
+                toggled => {
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "State";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Checked";
+                    checked <=> preview-checked;
+                    toggled => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Indeterminate";
+                    checked <=> preview-indeterminate;
+                    toggled => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Disabled";
+                    checked <=> preview-disabled;
+                    toggled => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Interactive";
+                    checked <=> preview-interactive;
+                    toggled => {
+                    }
+                }
+
+                Text {
+                    text: "When off, the box is display-only.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "label";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Empty string shows the control only.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "text";
+                    placeholder: "Label…";
+                    text <=> preview-label;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+        }
+    }
+}

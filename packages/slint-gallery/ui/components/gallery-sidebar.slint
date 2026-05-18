@@ -7,7 +7,7 @@ export component GallerySidebar {
     width: 240px;
     vertical-stretch: 1;
 
-    /// **slint-viewer** / Rust before bridge: use built-in flat nav. Node + Rust **`wireGallerySidebarNav`** assign non-empty **`GallerySidebarNav.rows`** and take over.
+    /// **slint-viewer** / Rust before bridge: use built-in flat nav. Node + Rust **`wireGallerySidebarNav`** assign non-empty **`GallerySidebarNav.rows`** and take over. Folders are **alphabetical** by `label` (same order as **`GALLERY_SIDEBAR_NAV`** in Node + Rust).
     property <bool> nav-from-host: GallerySidebarNav.rows.length > 0;
 
     property <[TreeViewRow]> fallback-nav-rows: [
@@ -183,6 +183,44 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
+    id: "folder-checkbox",
+    label: "Checkbox",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "checkbox-playground",
+    label: "Checkbox",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "checkbox-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
     id: "folder-counter-label",
     label: "Counter label",
     level: 1,
@@ -297,82 +335,6 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "folder-sheets",
-    label: "Sheets",
-    level: 1,
-    has-children: true,
-    expanded: true,
-    current: false,
-    leading-is-directory: true,
-    has-leading-visual: true,
-    trailing: TreeViewTrailingVisual.none,
-    has-leading-action: false,
-    show-leading-action-icon: false,
-    leading-action-icon: Icons.dot_fill,
-    leading-file-icon: Icons.file,
-    interactive: true,
-    is-skeleton: false,
-    has-secondary-actions: false,
-    secondary-actions-badge: "",
-    loading-children-badge: "",
-},{
-    id: "sheets-playground",
-    label: "Playground",
-    level: 2,
-    has-children: false,
-    expanded: false,
-    current: GalleryState.selected-page-id == "sheets-playground",
-    leading-is-directory: false,
-    has-leading-visual: true,
-    trailing: TreeViewTrailingVisual.none,
-    has-leading-action: false,
-    show-leading-action-icon: false,
-    leading-action-icon: Icons.dot_fill,
-    leading-file-icon: Icons.file,
-    interactive: true,
-    is-skeleton: false,
-    has-secondary-actions: false,
-    secondary-actions-badge: "",
-    loading-children-badge: "",
-},{
-    id: "folder-forms",
-    label: "Forms",
-    level: 1,
-    has-children: true,
-    expanded: true,
-    current: false,
-    leading-is-directory: true,
-    has-leading-visual: true,
-    trailing: TreeViewTrailingVisual.none,
-    has-leading-action: false,
-    show-leading-action-icon: false,
-    leading-action-icon: Icons.dot_fill,
-    leading-file-icon: Icons.file,
-    interactive: true,
-    is-skeleton: false,
-    has-secondary-actions: false,
-    secondary-actions-badge: "",
-    loading-children-badge: "",
-},{
-    id: "forms-playground",
-    label: "Playground",
-    level: 2,
-    has-children: false,
-    expanded: false,
-    current: GalleryState.selected-page-id == "forms-playground",
-    leading-is-directory: false,
-    has-leading-visual: true,
-    trailing: TreeViewTrailingVisual.none,
-    has-leading-action: false,
-    show-leading-action-icon: false,
-    leading-action-icon: Icons.dot_fill,
-    leading-file-icon: Icons.file,
-    interactive: true,
-    is-skeleton: false,
-    has-secondary-actions: false,
-    secondary-actions-badge: "",
-    loading-children-badge: "",
-},{
     id: "folder-label",
     label: "Label",
     level: 1,
@@ -449,8 +411,8 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "folder-select",
-    label: "Select",
+    id: "folder-radio",
+    label: "Radio",
     level: 1,
     has-children: true,
     expanded: true,
@@ -468,12 +430,12 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "select-playground",
-    label: "Playground",
+    id: "radio-playground",
+    label: "Radio",
     level: 2,
     has-children: false,
     expanded: false,
-    current: GalleryState.selected-page-id == "select-playground",
+    current: GalleryState.selected-page-id == "radio-playground",
     leading-is-directory: false,
     has-leading-visual: true,
     trailing: TreeViewTrailingVisual.none,
@@ -512,6 +474,82 @@ export component GallerySidebar {
     has-children: false,
     expanded: false,
     current: GalleryState.selected-page-id == "segmented-control-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "folder-select",
+    label: "Select",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "select-playground",
+    label: "Playground",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "select-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "folder-sheets",
+    label: "Sheets",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "sheets-playground",
+    label: "Playground",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "sheets-playground",
     leading-is-directory: false,
     has-leading-visual: true,
     trailing: TreeViewTrailingVisual.none,
@@ -790,7 +828,8 @@ export component GallerySidebar {
     has-secondary-actions: false,
     secondary-actions-badge: "",
     loading-children-badge: "",
-},    ];
+},
+    ];
 
     Rectangle {
         background: PrimerColors.bgColor-inset;
@@ -837,16 +876,17 @@ export component GallerySidebar {
                                 || id == "avatar-playground"
                                 || id == "banner-playground"
                                 || id == "buttons-playground"
-                                || id == "icon-button-playground"
+                                || id == "checkbox-playground"
                                 || id == "counter-label-playground"
                                 || id == "data-playground"
                                 || id == "dialogs-playground"
-                                || id == "sheets-playground"
-                                || id == "forms-playground"
+                                || id == "icon-button-playground"
                                 || id == "label-playground"
                                 || id == "navs-playground"
-                                || id == "select-playground"
+                                || id == "radio-playground"
                                 || id == "segmented-control-playground"
+                                || id == "select-playground"
+                                || id == "sheets-playground"
                                 || id == "skeleton-box-playground"
                                 || id == "spinner-playground"
                                 || id == "state-label-playground"

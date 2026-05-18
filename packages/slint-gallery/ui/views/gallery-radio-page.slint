@@ -1,0 +1,216 @@
+import {
+    Button,
+    Checkbox,
+    PrimerTextInput,
+    Radio,
+    RadioGroup,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+/// Single **RadioGroup** (three radios) with options in **`GalleryDemoOptionsSidebar`**.
+export component GalleryRadioPage {
+    property <string> preview-mutex: "beta";
+    property <string> preview-group-label: "Mutex (one selected value)";
+    property <string> preview-caption: "Legend + caption on the group; each radio binds to page state.";
+    property <bool> preview-required: false;
+    property <bool> preview-disabled: false;
+    property <bool> preview-label-vh: false;
+    /// Sidebar: **none** | **pick** (error until a value) | **success** (success when a value is chosen).
+    property <string> preview-validation-preset: "none";
+
+    property <ValidationStatus> effective-validation-status:
+        preview-validation-preset == "none" ? ValidationStatus.none
+        : preview-validation-preset == "pick" && preview-mutex == "" ? ValidationStatus.error
+        : preview-validation-preset == "pick" ? ValidationStatus.success
+        : preview-mutex == "" ? ValidationStatus.none
+        : ValidationStatus.success;
+
+    property <string> effective-validation-message:
+        preview-validation-preset == "none" ? ""
+        : preview-validation-preset == "pick" && preview-mutex == "" ? "Select an option."
+        : preview-validation-preset == "pick" ? "Looks good."
+        : preview-mutex == "" ? ""
+        : "Looks good.";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "RadioGroup";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            RadioGroup {
+                label: preview-group-label;
+                caption: preview-caption;
+                required: preview-required;
+                disabled: preview-disabled;
+                label-visually-hidden: preview-label-vh;
+                validation-status: effective-validation-status;
+                validation-message: effective-validation-message;
+
+                Radio {
+                    value: "alpha";
+                    label: "Alpha";
+                    disabled: preview-disabled;
+                    checked: preview-mutex == "alpha";
+                    toggled => {
+                        preview-mutex = "alpha";
+                    }
+                }
+
+                Radio {
+                    value: "beta";
+                    label: "Beta";
+                    disabled: preview-disabled;
+                    checked: preview-mutex == "beta";
+                    toggled => {
+                        preview-mutex = "beta";
+                    }
+                }
+
+                Radio {
+                    value: "gamma";
+                    label: "Gamma";
+                    disabled: preview-disabled;
+                    checked: preview-mutex == "gamma";
+                    toggled => {
+                        preview-mutex = "gamma";
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Group";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "label";
+                    placeholder: "Legend…";
+                    text <=> preview-group-label;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "caption";
+                    placeholder: "Caption…";
+                    text <=> preview-caption;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Required (asterisk on legend)";
+                    checked <=> preview-required;
+                    toggled => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Disabled (mirrored on each Radio)";
+                    checked <=> preview-disabled;
+                    toggled => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Legend visually hidden";
+                    checked <=> preview-label-vh;
+                    toggled => {
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Validation";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "**pick** uses empty selection — choose **Clear selection** below, then a radio.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "none";
+                        label: "None";
+                        checked: preview-validation-preset == "none";
+                        toggled => {
+                            preview-validation-preset = "none";
+                        }
+                    }
+
+                    Radio {
+                        value: "pick";
+                        label: "Error until selection";
+                        checked: preview-validation-preset == "pick";
+                        toggled => {
+                            preview-validation-preset = "pick";
+                        }
+                    }
+
+                    Radio {
+                        value: "success";
+                        label: "Success when selected";
+                        checked: preview-validation-preset == "success";
+                        toggled => {
+                            preview-validation-preset = "success";
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Selection";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Button {
+                    label: "Clear selection";
+                    clicked => {
+                        preview-mutex = "";
+                    }
+                }
+            }
+        }
+    }
+}

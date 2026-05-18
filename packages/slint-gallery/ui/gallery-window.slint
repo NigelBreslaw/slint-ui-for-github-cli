@@ -10,7 +10,8 @@ import { GalleryLabelPage } from "./views/gallery-label-page.slint";
 import { GallerySkeletonBoxPage } from "./views/gallery-skeleton-box-page.slint";
 import { GallerySpinnerPage } from "./views/gallery-spinner-page.slint";
 import { GalleryBannerPage } from "./views/gallery-banner-page.slint";
-import { GalleryFormsPage } from "./views/gallery-forms-page.slint";
+import { GalleryCheckboxPage } from "./views/gallery-checkbox-page.slint";
+import { GalleryRadioPage } from "./views/gallery-radio-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryDialogsPlaygroundPage } from "./views/gallery-dialog-playground-page.slint";
@@ -126,7 +127,13 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id == "forms-playground": GalleryFormsPage { }
+                        if GalleryState.selected-page-id == "checkbox-playground": GalleryCheckboxPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "radio-playground": GalleryRadioPage {
+                            height: main-scroll.height;
+                        }
 
                         if GalleryState.selected-page-id == "label-playground": GalleryLabelPage {
                             height: main-scroll.height;
