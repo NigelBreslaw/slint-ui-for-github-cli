@@ -125,18 +125,24 @@ export component GalleryActionList2Page {
       }
 
       preview-chrome := Rectangle {
-        horizontal-stretch: 0;
+        width: 240px;
         border-width: 1px;
         border-color: PrimerColors.borderColor-muted;
         border-radius: LayoutTokens.borderRadius-medium;
         background: PrimerColors.bgColor-default;
 
-        ActionList2 {
-          fill-width: false;
-          list-variant: root.preview-list-variant;
-          lines: root.preview-lines;
-          item-activated(ix) => {
-            root.last-action = "Activated line " + ix;
+        // `Rectangle` paints chrome only — it does not lay out children. A layout inside receives `parent.width`.
+        preview-layout := VerticalLayout {
+          width: parent.width;
+          alignment: start;
+
+          ActionList2 {
+            horizontal-stretch: 1;
+            list-variant: root.preview-list-variant;
+            lines: root.preview-lines;
+            item-activated(ix) => {
+              root.last-action = "Activated line " + ix;
+            }
           }
         }
       }
