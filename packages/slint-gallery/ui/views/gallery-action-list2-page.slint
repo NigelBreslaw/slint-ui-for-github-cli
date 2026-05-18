@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR3 default row + interaction.
+// **ActionList2** gallery — PR4 danger + dividers.
 import {
     ActionList2,
     ActionList2Line,
@@ -22,6 +22,7 @@ export component GalleryActionList2Page {
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
         { value: "1", label: "SimpleList", enabled: true },
+        { value: "2", label: "ItemDividers", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -93,13 +94,35 @@ export component GalleryActionList2Page {
             leading-icon: Icons.dot_fill,
             trailing-text: "⌘E",
         },
+        {
+            kind: ActionList2LineKind.item_divider,
+            label: "",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Delete file",
+            row-variant: ActionList2RowVariant.danger,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
     ];
 
     property <[ActionList2Line]> preview-lines:
-    root.scenario-ix == 1 ? root.lines-simple-list : root.lines-default;
+        root.scenario-ix == 1 ? root.lines-simple-list : root.lines-default;
+
+    property <bool> preview-show-dividers: root.scenario-ix == 2;
 
     property <string> scenario-caption:
-    root.scenario-ix == 1 ? "Upstream: SimpleList (shortcuts; divider + danger in PR4)" : "Upstream: Default";
+        root.scenario-ix == 1 ? "Upstream: ActionList/Features — SimpleList"
+        : root.scenario-ix == 2 ? "Upstream: ActionList/Features — ItemDividers (`showDividers`)"
+        : "Upstream: ActionList — Default";
 
     vertical-stretch: 1;
 
@@ -131,10 +154,12 @@ export component GalleryActionList2Page {
                 background: PrimerColors.bgColor-default;
 
                 preview-layout := VerticalLayout {
+                    width: parent.width;
                     alignment: start;
 
                     ActionList2 {
                         list-variant: root.preview-list-variant;
+                        show-dividers: root.preview-show-dividers;
                         lines: root.preview-lines;
                         item-activated(ix) => {
                             root.last-action = "Activated line " + ix;

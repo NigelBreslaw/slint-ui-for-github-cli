@@ -1,6 +1,7 @@
 // ActionList2 — vertical list of rows (upstream: Primer ActionList).
-// List width is determined by the parent layout; set `horizontal-stretch: 1` on the instance to fill a panel.
+// Width comes from the parent layout (`VerticalLayout` / overlay panel), not from `horizontal-stretch` on every child.
 
+import { ActionList2ItemDivider } from "./action-list2-item-divider.slint";
 import { ActionList2Row } from "./action-list2-row.slint";
 import { ActionList2Tokens } from "../tokens.slint";
 import {
@@ -14,6 +15,7 @@ import {
 export component ActionList2 {
     in property <[ActionList2Line]> lines: [];
     in property <ActionList2ListVariant> list-variant: ActionList2ListVariant.inset;
+    /// Primer **`showDividers`**: muted seam between consecutive **rows** (not after the last row).
     in property <bool> show-dividers: false;
     in property <ActionList2ListRole> list-role: ActionList2ListRole.none;
     in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.none;
@@ -29,14 +31,12 @@ export component ActionList2 {
     property <length> item-margin-inline:
         root.list-variant == ActionList2ListVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
 
-
     list-body := VerticalLayout {
         alignment: start;
         padding-top: root.list-padding-top;
         padding-bottom: root.list-padding-bottom;
 
         for line[ix] in root.lines: VerticalLayout {
-            horizontal-stretch: 1;
             alignment: start;
 
             if line.kind == ActionList2LineKind.row: ActionList2Row {
@@ -47,11 +47,17 @@ export component ActionList2 {
                 leading-icon: line.leading-icon;
                 trailing-text: line.trailing-text;
                 margin-inline: root.item-margin-inline;
+                show-top-seam:
+                    root.show-dividers && ix > 0 && root.lines[ix - 1].kind == ActionList2LineKind.row;
                 clicked => {
                     if !line.disabled {
                         root.item-activated(ix);
                     }
                 }
+            }
+
+            if line.kind == ActionList2LineKind.item_divider: ActionList2ItemDivider {
+                margin-inline: root.item-margin-inline;
             }
         }
     }

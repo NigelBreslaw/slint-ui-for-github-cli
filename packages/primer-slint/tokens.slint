@@ -643,6 +643,14 @@ export global ActionList2Tokens {
     /// **ActionList.module.css** `:focus-visible` — `@mixin focusOutline` / **`--fgColor-accent`** ring.
     out property <color> item-focus-ring-color: PrimerColors.fgColor-link;
     out property <length> item-focus-ring-width: LayoutTokens.table-border-width + LayoutTokens.table-border-width;
+    /// **`.Divider`** hairline — same semantics as **`ActionListTokens.item-divider-borderColor`**.
+    out property <color> item-divider-borderColor: PrimerColors.borderColor-default;
+    /// **`showDividers`** seam between rows — `--borderColor-muted`.
+    out property <color> item-seam-borderColor: PrimerColors.borderColor-muted;
+    out property <color> item-danger-fgColor-rest: PrimerColors.fgColor-danger;
+    out property <color> item-danger-fgColor-disabled: ButtonTokens.color-btn-danger-disabled-text;
+    out property <color> item-danger-bgColor-hover: PrimerColors.bgColor-danger-muted;
+    out property <color> item-danger-bgColor-active: ButtonTokens.color-action-list-item-default-active-bg;
 }
 
 export global ActionListTokens {

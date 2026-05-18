@@ -1,5 +1,4 @@
-// ActionList2 row — default item visuals + interaction (PR3).
-// Width comes from the parent list; rows stretch to that width (Primer `.ActionListItem` in a full-width `<ul>`).
+// ActionList2 row — default + danger visuals; optional `showDividers` seam above.
 
 import { Icons } from "../assets/icons.slint";
 import {
@@ -18,18 +17,38 @@ export component ActionList2Row {
     in property <image> leading-icon: Icons.dot_fill;
     in property <string> trailing-text;
     in property <length> margin-inline;
+    /// Primer **`showDividers`** seam hairline above this row (`borderColor-muted`, no block margins).
+    in property <bool> show-top-seam: false;
     callback clicked;
 
-    property <color> label-color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
-    property <color> leading-icon-tint: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
-    property <color> trailing-text-color: root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+    property <bool> is-danger: root.row-variant == ActionList2RowVariant.danger;
 
-    min-height: LayoutTokens.action-list-item-min-height;
+    property <color> label-color:
+        root.disabled
+        ? (root.is-danger ? ActionList2Tokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled)
+        : (root.is-danger ? ActionList2Tokens.item-danger-fgColor-rest : PrimerColors.fgColor-default);
+
+    property <color> leading-icon-tint:
+        root.disabled
+        ? ButtonTokens.control-fgColor-disabled
+        : (root.is-danger ? ActionList2Tokens.item-danger-fgColor-rest : PrimerColors.fgColor-muted);
+
+    property <color> trailing-text-color:
+        root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+
+    property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
+
+    min-height: root.cell-min-height + (root.show-top-seam ? LayoutTokens.table-border-width : 0px);
 
     row-shell := VerticalLayout {
         alignment: start;
         padding-left: root.margin-inline;
         padding-right: root.margin-inline;
+
+        if root.show-top-seam: Rectangle {
+            height: LayoutTokens.table-border-width;
+            background: ActionList2Tokens.item-seam-borderColor;
+        }
 
         fs := FocusScope {
             enabled: !root.disabled;
@@ -53,7 +72,7 @@ export component ActionList2Row {
 
                 ta := TouchArea {
                     enabled: !root.disabled;
-                    min-height: root.min-height;
+                    min-height: root.cell-min-height;
                     mouse-cursor: root.disabled ? default : pointer;
                     clicked => {
                         root.clicked();
@@ -79,6 +98,7 @@ export component ActionList2Row {
                             }
 
                             Text {
+                                horizontal-stretch: 1;
                                 text: root.label;
                                 color: root.label-color;
                                 font-size: LayoutTokens.text-body-size-medium;
@@ -86,9 +106,6 @@ export component ActionList2Row {
                                 wrap: word-wrap;
                                 vertical-alignment: center;
                             }
-
-                            // Add this to fill the remaining space
-                            Rectangle { }
 
                             if root.trailing-text != "": Text {
                                 text: root.trailing-text;
@@ -103,10 +120,16 @@ export component ActionList2Row {
                             disabled when root.disabled: {
                                 row-bg.background: transparent;
                             }
-                            pressed when !root.disabled && ta.pressed: {
+                            danger-pressed when !root.disabled && root.is-danger && ta.pressed: {
+                                row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
+                            }
+                            danger-hover when !root.disabled && root.is-danger && !ta.pressed && ta.has-hover: {
+                                row-bg.background: ActionList2Tokens.item-danger-bgColor-hover;
+                            }
+                            default-pressed when !root.disabled && !root.is-danger && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
-                            hover when !root.disabled && !ta.pressed && ta.has-hover: {
+                            default-hover when !root.disabled && !root.is-danger && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                             }
                         ]

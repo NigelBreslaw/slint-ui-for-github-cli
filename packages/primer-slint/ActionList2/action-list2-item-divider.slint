@@ -1,0 +1,20 @@
+// Primer **ActionList.Divider** — block margins + hairline (not `showDividers` seam).
+
+import { ActionList2Tokens, LayoutTokens } from "../tokens.slint";
+
+export component ActionList2ItemDivider {
+    in property <length> margin-inline: 0px;
+
+    VerticalLayout {
+        padding-left: root.margin-inline;
+        padding-right: root.margin-inline;
+        padding-top: LayoutTokens.action-list-item-divider-margin-block-start;
+        padding-bottom: LayoutTokens.action-list-item-divider-margin-block-end;
+        alignment: start;
+
+        Rectangle {
+            height: LayoutTokens.table-border-width;
+            background: ActionList2Tokens.item-divider-borderColor;
+        }
+    }
+}

@@ -32,8 +32,15 @@ Pick **one** existing Primer component closest to the new port (e.g. **Button**,
 
 ## Layout / width (no Primer `block` mirror)
 
-- **Fill a row** in `HorizontalLayout` / stretched columns: set **`horizontal-stretch: 1`** on the component **instance** (and/or **`width: 100%`** / explicit **`width`** on the instance). Do **not** add an upstream-style **`block`** boolean to the Slint API.
-- **Hug content:** leave the default **`horizontal-stretch: 0`** on the instance; inner layouts use **preferred width** unless the component implements stretch-aware inner width (see **[`PrimerTextInput/primer-text-input.slint`](../../../packages/primer-slint/PrimerTextInput/primer-text-input.slint)** — inner column uses **`root.horizontal-stretch > 0 ? root.width : self.preferred-width`**).
+- **Do not** add an upstream-style **`block`** boolean to the Slint API.
+- **`Rectangle` is not a layout parent.** It paints (background, border). A child of `Rectangle` does **not** automatically get the rectangle’s width. Put a **`VerticalLayout`** (or other layout) inside the rectangle and give **that** layout `width: parent.width` when you need a fixed panel width.
+- **Do not sprinkle `horizontal-stretch: 1`** on every inner `Rectangle`, `TouchArea`, `FocusScope`, and layout wrapper. That is a React “`width: 100%` on every div” habit and is usually redundant.
+- **When `horizontal-stretch` is appropriate:**
+  - **Caller** sets **`horizontal-stretch: 1`** on the component **instance** when it should participate in a parent `HorizontalLayout` / stretched column (optional; many lists only need a layout parent with a defined width).
+  - **Inside `HorizontalLayout`:** **`horizontal-stretch: 1`** on the **label** (or spacer) so trailing text/icons stay at the end — same as flex-grow on one child.
+- **When width comes for free:** a **`VerticalLayout`** parent with a defined width assigns that width to its children. Rows, dividers, and `TouchArea` backgrounds then fill the row without cascading stretch on each layer.
+- **Hug content:** default **`horizontal-stretch: 0`** on the instance; optional inner branch like **[`PrimerTextInput`](../../../packages/primer-slint/PrimerTextInput/primer-text-input.slint)** — **`root.horizontal-stretch > 0 ? root.width : self.preferred-width`** — only when the component must support both hug and fill modes.
+- **Never** fix layout with **`width: preferred-width`** on list rows or **`width: 100%`** on every nested element unless you have measured proof it is required.
 
 ## gb-slint clone (optional but valuable)
 
