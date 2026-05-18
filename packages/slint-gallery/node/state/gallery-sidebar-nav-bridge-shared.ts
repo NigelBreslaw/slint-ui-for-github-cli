@@ -11,7 +11,10 @@ const GALLERY_SIDEBAR_NAV: readonly {
     {
         folderId: "folder-action-list",
         label: "Action list",
-        leaves: [{ id: "action-list-playground", label: "Playground" }],
+        leaves: [
+            { id: "action-list-playground", label: "ActionList" },
+            { id: "filtered-action-list-playground", label: "FilteredActionList" },
+        ],
     },
     {
         folderId: "folder-action-menu",

@@ -1,0 +1,345 @@
+// **FilteredActionList** gallery — Storybook Default / Examples + API slices (loading, message, select-all).
+import {
+    ActionListDescriptionLayout,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListRowVariant,
+    ActionListSelectionMode,
+    Button,
+    FilteredActionList,
+    FilteredActionListLoadingKind,
+    Icons,
+    Select,
+    SelectOption,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import {
+    GalleryFilteredActionListDefault,
+    GalleryFilteredActionListLong,
+} from "../state/gallery-filtered-action-list-state.slint";
+import { GalleryFilteredActionListSelectAll } from "../state/gallery-filtered-action-list-select-all-state.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryFilteredActionListPage {
+    property <int> scenario-ix: 0;
+
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default", enabled: true },
+        { value: "1", label: "WithLongItems", enabled: true },
+        { value: "2", label: "LoadingInput", enabled: true },
+        { value: "3", label: "LoadingBodySpinner", enabled: true },
+        { value: "4", label: "LoadingBodySkeleton", enabled: true },
+        { value: "5", label: "MessageVsList", enabled: true },
+        { value: "6", label: "EmptyBody", enabled: true },
+        { value: "7", label: "SelectAll", enabled: true },
+    ];
+
+    property <string> filtered-action-list-filter: "";
+    property <string> filtered-action-list-last-edit: "";
+    property <string> filtered-action-list-long-filter: "";
+    property <string> fal-loading-input-filter: "";
+    property <string> fal-loading-spinner-filter: "";
+    property <string> fal-loading-skeleton-filter: "";
+    property <string> fal-select-all-filter: "";
+    property <string> fal-message-vs-list-filter: "";
+    property <bool> fal-message-vs-list-show-message: false;
+    property <string> fal-empty-body-filter: "";
+
+    property <string> scenario-caption:
+        root.scenario-ix == 0 ? "Upstream Default — prefix filter on label text; bridge-backed label rows."
+        : root.scenario-ix == 1 ? "Upstream Examples WithLongItems — taller scroll region (`body-region-height` 320px)."
+        : root.scenario-ix == 2 ? "Loading input — spinner in the filter field; list stays visible."
+        : root.scenario-ix == 3 ? "Loading body_spinner — centered spinner + message; replaces list."
+        : root.scenario-ix == 4 ? "Loading body_skeleton — SkeletonBox shimmer rows."
+        : root.scenario-ix == 5 ? "Toggle **`show-message`** vs filtered **`ActionList`** body (upstream message wins after loading)."
+        : root.scenario-ix == 6 ? "Empty filtered result — **`lines: []`** with **`empty-message`**."
+        : "Select-all strip — multi-select with tri-state checkbox (gallery bridge).";
+
+    property <bool> show-storybook-page-chrome: root.scenario-ix == 0 || root.scenario-ix == 1 || root.scenario-ix == 7;
+
+    /// Static rows for loading / message demos (isolated from bridge state).
+    property <[ActionListLine]> fal-loading-demo-lines: [
+        {
+            kind: ActionListLineKind.row,
+            label: "enhancement",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "bug",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "design",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+            trailing-text: "",
+        },
+    ];
+
+    changed scenario-ix => {
+        root.fal-message-vs-list-show-message = false;
+    }
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "FilteredActionList";
+                color: PrimerColors.fgColor-default;
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            Text {
+                text: root.scenario-caption;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 5: Button {
+                label: root.fal-message-vs-list-show-message ? "Show list body" : "Show message body";
+                clicked => {
+                    root.fal-message-vs-list-show-message = !root.fal-message-vs-list-show-message;
+                }
+            }
+
+            Rectangle {
+                horizontal-stretch: 0;
+                width: 320px;
+                background: PrimerColors.bgColor-default;
+                border-radius: 6px;
+
+                VerticalLayout {
+                    padding: 16px;
+                    spacing: 12px;
+                    width: 100%;
+                    alignment: start;
+
+                    if root.show-storybook-page-chrome: Text {
+                        text:
+                            root.scenario-ix == 7
+                            ? "Filtered Action List"
+                            : root.scenario-ix == 1
+                            ? "Filtered Action List with Long Items"
+                            : "Filtered Action List";
+                        color: PrimerColors.fgColor-default;
+                        font-size: 18px;
+                        font-weight: 700;
+                        wrap: word-wrap;
+                    }
+
+                    if root.show-storybook-page-chrome: Text {
+                        text:
+                            root.scenario-ix == 7
+                            ? "Multi-select rows; use the strip to toggle all visible labels."
+                            : "Please select labels that describe your issue:";
+                        color: PrimerColors.fgColor-default;
+                        font-size: 14px;
+                        font-weight: 400;
+                        wrap: word-wrap;
+                    }
+
+                    if root.scenario-ix == 0: FilteredActionList {
+                        width: 100%;
+                        filter-text <=> root.filtered-action-list-filter;
+                        placeholder: "Filter Labels";
+                        lines: GalleryFilteredActionListDefault.lines;
+                        filter-changed(t) => {
+                            root.filtered-action-list-last-edit = t;
+                            GalleryFilteredActionListDefault.filter-changed(t);
+                        }
+                    }
+
+                    if root.scenario-ix == 1: FilteredActionList {
+                        width: 100%;
+                        filter-text <=> root.filtered-action-list-long-filter;
+                        placeholder: "Filter Labels";
+                        body-region-height: 320px;
+                        lines: GalleryFilteredActionListLong.lines;
+                        filter-changed(t) => {
+                            GalleryFilteredActionListLong.filter-changed(t);
+                        }
+                    }
+
+                    if root.scenario-ix == 2: FilteredActionList {
+                        width: 100%;
+                        loading: true;
+                        loading-kind: FilteredActionListLoadingKind.input;
+                        filter-text <=> root.fal-loading-input-filter;
+                        placeholder: "Filter Labels";
+                        lines: root.fal-loading-demo-lines;
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 3: FilteredActionList {
+                        width: 100%;
+                        loading: true;
+                        loading-kind: FilteredActionListLoadingKind.body_spinner;
+                        loading-message: "Loading labels…";
+                        filter-text <=> root.fal-loading-spinner-filter;
+                        placeholder: "Filter Labels";
+                        lines: root.fal-loading-demo-lines;
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 4: FilteredActionList {
+                        width: 100%;
+                        loading: true;
+                        loading-kind: FilteredActionListLoadingKind.body_skeleton;
+                        filter-text <=> root.fal-loading-skeleton-filter;
+                        placeholder: "Filter Labels";
+                        lines: [];
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 5: FilteredActionList {
+                        width: 100%;
+                        filter-text <=> root.fal-message-vs-list-filter;
+                        placeholder: "Filter Labels";
+                        lines: root.fal-message-vs-list-show-message ? [] : root.fal-loading-demo-lines;
+                        show-message: root.fal-message-vs-list-show-message;
+                        message-title: "No access";
+                        message-description: "You do not have permission to view these labels.";
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 6: FilteredActionList {
+                        width: 100%;
+                        filter-text <=> root.fal-empty-body-filter;
+                        placeholder: "Filter Labels";
+                        lines: [];
+                        empty-message: "No labels match your filter.";
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 7: FilteredActionList {
+                        width: 100%;
+                        select-all-visible: true;
+                        selection-mode: ActionListSelectionMode.multiple;
+                        filter-text <=> root.fal-select-all-filter;
+                        placeholder: "Filter Labels";
+                        lines: GalleryFilteredActionListSelectAll.lines;
+                        multi-selected: GalleryFilteredActionListSelectAll.multi-selected;
+                        select-all-checked <=> GalleryFilteredActionListSelectAll.select-all-checked;
+                        select-all-indeterminate <=> GalleryFilteredActionListSelectAll.select-all-indeterminate;
+                        filter-changed(t) => {
+                            GalleryFilteredActionListSelectAll.filter-changed(t);
+                        }
+                        item-activated(ix) => {
+                            GalleryFilteredActionListSelectAll.item-activated(ix);
+                        }
+                        select-all-changed(on) => {
+                            GalleryFilteredActionListSelectAll.select-all-changed(on);
+                        }
+                    }
+                }
+            }
+
+            if root.scenario-ix == 0: Text {
+                text: "Filter: \"" + root.filtered-action-list-filter + "\" — Last callback: \"" + root.filtered-action-list-last-edit + "\"";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 1: Text {
+                text: "Filter: \"" + root.filtered-action-list-long-filter + "\"";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 7: Text {
+                text: "Filter: \"" + root.fal-select-all-filter + "\" — checked rows persist by label when the list narrows.";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 16px;
+                alignment: start;
+
+                Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "Filtered list options";
+                    placeholder: "Choose…";
+                    options: root.scenario-options;
+                    selected-index <=> scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
+                    }
+                }
+            }
+        }
+    }
+}

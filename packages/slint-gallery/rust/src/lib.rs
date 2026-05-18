@@ -10,7 +10,10 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
     (
         "folder-action-list",
         "Action list",
-        &[("action-list-playground", "Playground")],
+        &[
+            ("action-list-playground", "ActionList"),
+            ("filtered-action-list-playground", "FilteredActionList"),
+        ],
     ),
     (
         "folder-action-menu",
