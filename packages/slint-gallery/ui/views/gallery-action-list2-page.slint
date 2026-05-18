@@ -5,6 +5,7 @@ import {
     ActionList2LineKind,
     ActionList2ListVariant,
     ActionList2RowVariant,
+    Checkbox,
     Icons,
     Select,
     SelectOption,
@@ -18,6 +19,7 @@ import {
 export component GalleryActionList2Page {
     property <int> scenario-ix: 0;
     property <int> list-variant-ix: 0;
+    property <bool> preview-has-leading-icon: false;
 
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
@@ -42,8 +44,8 @@ export component GalleryActionList2Page {
             label: "Copy link",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
+            has-leading-visual: root.preview-has-leading-icon,
+            leading-icon: Icons.copy_icon,
             trailing-text: "",
         },
         {
@@ -51,8 +53,8 @@ export component GalleryActionList2Page {
             label: "Quote reply",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
+            has-leading-visual: root.preview-has-leading-icon,
+            leading-icon: Icons.link,
             trailing-text: "",
         },
         {
@@ -60,8 +62,8 @@ export component GalleryActionList2Page {
             label: "Edit comment",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
+            has-leading-visual: root.preview-has-leading-icon,
+            leading-icon: Icons.diff_modified,
             trailing-text: "",
         },
     ];
@@ -72,8 +74,8 @@ export component GalleryActionList2Page {
             label: "Copy link",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
+            has-leading-visual: root.preview-has-leading-icon,
+            leading-icon: Icons.copy_icon,
             trailing-text: "⌘C",
         },
         {
@@ -81,8 +83,8 @@ export component GalleryActionList2Page {
             label: "Quote reply",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
+            has-leading-visual: root.preview-has-leading-icon,
+            leading-icon: Icons.link,
             trailing-text: "⌘Q",
         },
         {
@@ -90,8 +92,8 @@ export component GalleryActionList2Page {
             label: "Edit comment",
             row-variant: ActionList2RowVariant.default,
             disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
+            has-leading-visual: root.preview-has-leading-icon,
+            leading-icon: Icons.diff_modified,
             trailing-text: "⌘E",
         },
         {
@@ -108,8 +110,8 @@ export component GalleryActionList2Page {
             label: "Delete file",
             row-variant: ActionList2RowVariant.danger,
             disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
+            has-leading-visual: root.preview-has-leading-icon,
+            leading-icon: Icons.x,
             trailing-text: "",
         },
     ];
@@ -222,6 +224,11 @@ export component GalleryActionList2Page {
                     validation-status: ValidationStatus.none;
                     selected-changed(_i) => {
                     }
+                }
+
+                Checkbox {
+                    label: "Leading icon";
+                    checked <=> preview-has-leading-icon;
                 }
 
                 Text {
