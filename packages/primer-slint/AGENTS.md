@@ -19,6 +19,10 @@ Full **procedure** (research → matrix → tokens → states → PRs) lives in 
 - **Tokens** — one file, [`slint/tokens.slint`](slint/tokens.slint). **Order** of `export global` blocks and composition rules: [Design tokens](readme.md#design-tokens) in the readme, the [`primer-slint-token-layers`](../../.cursor/skills/primer-slint-token-layers/SKILL.md) skill, and audit/comment blocks in `tokens.slint` itself. **Rule:** use other globals’ **`out`** bindings only — not their private fields.
 - **Icons** — single registry, [`slint/assets/icons.slint`](slint/assets/icons.slint); how to add icons and the TS bridge: [`primer-slint-icons-registry/SKILL.md`](../../.cursor/skills/primer-slint-icons-registry/SKILL.md).
 
+## ActionList2 API
+
+Compose-first list chrome + leaf rows (see [`ActionList2/README.md`](ActionList2/README.md)). **`ActionList2`** = `@children` only; **`ActionList2Lines`** = `[ActionList2Line]` adapter for model-driven menus. Row features go on **`ActionList2Row`**, not the line struct.
+
 ## New component (short path)
 
 1. Upstream: closest **primer-ui-react** + **primer-tokens** (orchestrator and [`primer-port-upstream-research/SKILL.md`](../../.cursor/skills/primer-port-upstream-research/SKILL.md)).

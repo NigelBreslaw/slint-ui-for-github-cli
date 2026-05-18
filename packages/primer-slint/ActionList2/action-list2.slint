@@ -1,66 +1,23 @@
-// ActionList2 — vertical list of rows (upstream: Primer ActionList).
+// ActionList2 — list chrome (variant padding). Place **`ActionList2Row`**, dividers, or **`ActionList2Lines`** as **`@children`**.
 // Width comes from the parent layout (`VerticalLayout` / overlay panel), not from `horizontal-stretch` on every child.
 
-import { ActionList2ItemDivider } from "./action-list2-item-divider.slint";
-import { ActionList2Row } from "./action-list2-row.slint";
 import { ActionList2Tokens } from "../tokens.slint";
-import {
-    ActionList2Line,
-    ActionList2LineKind,
-    ActionList2ListRole,
-    ActionList2ListVariant,
-    ActionList2SelectionMode,
-} from "./types.slint";
+import { ActionList2ListVariant } from "./types.slint";
 
 export component ActionList2 {
-    in property <[ActionList2Line]> lines: [];
     in property <ActionList2ListVariant> list-variant: ActionList2ListVariant.inset;
-    /// Primer **`showDividers`**: muted seam between consecutive **rows** (not after the last row).
-    in property <bool> show-dividers: false;
-    in property <ActionList2ListRole> list-role: ActionList2ListRole.none;
-    in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.none;
-    in property <int> selected-index: -1;
-    in property <[bool]> multi-selected: [];
-    callback item-activated(int);
 
     property <length> list-padding-top:
         root.list-variant == ActionList2ListVariant.inset ? ActionList2Tokens.list-padding-block-inset : 0px;
     property <length> list-padding-bottom:
         root.list-variant == ActionList2ListVariant.inset ? ActionList2Tokens.list-padding-block-inset
         : root.list-variant == ActionList2ListVariant.horizontal_inset ? ActionList2Tokens.list-padding-block-horizontal-inset-end : 0px;
-    property <length> item-margin-inline:
-        root.list-variant == ActionList2ListVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
 
     list-body := VerticalLayout {
         alignment: start;
         padding-top: root.list-padding-top;
         padding-bottom: root.list-padding-bottom;
 
-        for line[ix] in root.lines: VerticalLayout {
-            alignment: start;
-
-            if line.kind == ActionList2LineKind.row: ActionList2Row {
-                label: line.label;
-                row-variant: line.row-variant;
-                disabled: line.disabled;
-                has-leading-visual: line.has-leading-visual;
-                leading-icon: line.leading-icon;
-                description: line.description;
-                description-layout: line.description-layout;
-                trailing-text: line.trailing-text;
-                margin-inline: root.item-margin-inline;
-                show-top-seam:
-                    root.show-dividers && ix > 0 && root.lines[ix - 1].kind == ActionList2LineKind.row;
-                clicked => {
-                    if !line.disabled {
-                        root.item-activated(ix);
-                    }
-                }
-            }
-
-            if line.kind == ActionList2LineKind.item_divider: ActionList2ItemDivider {
-                margin-inline: root.item-margin-inline;
-            }
-        }
+        @children
     }
 }

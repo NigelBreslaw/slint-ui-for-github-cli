@@ -42,6 +42,12 @@ Pick **one** existing Primer component closest to the new port (e.g. **Button**,
 - **Hug content:** default **`horizontal-stretch: 0`** on the instance; optional inner branch like **[`PrimerTextInput`](../../../packages/primer-slint/PrimerTextInput/primer-text-input.slint)** — **`root.horizontal-stretch > 0 ? root.width : self.preferred-width`** — only when the component must support both hug and fill modes.
 - **Never** fix layout with **`width: preferred-width`** on list rows or **`width: 100%`** on every nested element unless you have measured proof it is required.
 
+## ActionList2 (compose-first)
+
+- **`ActionList2`** = list chrome + **`@children`** only ([`ActionList2/README.md`](../../../packages/primer-slint/ActionList2/README.md)).
+- Prefer **`ActionList2Row`** / **`ActionList2ItemDivider`** as children (static or `for ix in model`); set **`margin-inline`** per item for inset variants.
+- **`ActionList2Lines`** = `[ActionList2Line]` adapter for TS/model menus — do not add row features to the struct.
+
 ## gb-slint clone (optional but valuable)
 
 If `~/gb-slint` (or your local Slint checkout) exists, use it for **idioms**, not for Primer colors:

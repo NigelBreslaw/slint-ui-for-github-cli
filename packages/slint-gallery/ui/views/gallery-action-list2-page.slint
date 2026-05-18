@@ -1,10 +1,13 @@
-// **ActionList2** gallery — PR5 inline + block descriptions.
+// **ActionList2** gallery — compose-first API + **ActionList2Lines** adapter scenario.
 import {
     ActionList2,
     ActionList2DescriptionLayout,
+    ActionList2ItemDivider,
     ActionList2Line,
     ActionList2LineKind,
+    ActionList2Lines,
     ActionList2ListVariant,
+    ActionList2Row,
     ActionList2RowVariant,
     Checkbox,
     Icons,
@@ -12,7 +15,7 @@ import {
     SelectOption,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
-import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { ActionList2Tokens, LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import {
     GalleryDemoOptionsSidebar,
 } from "../components/gallery-demo-options-sidebar.slint";
@@ -28,6 +31,7 @@ export component GalleryActionList2Page {
         { value: "2", label: "ItemDividers", enabled: true },
         { value: "3", label: "BlockDescription", enabled: true },
         { value: "4", label: "InlineDescription", enabled: true },
+        { value: "5", label: "LinesAdapter", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -41,7 +45,10 @@ export component GalleryActionList2Page {
     property <ActionList2ListVariant> preview-list-variant:
     root.list-variant-ix == 1 ? ActionList2ListVariant.horizontal_inset : root.list-variant-ix == 2 ? ActionList2ListVariant.full : ActionList2ListVariant.inset;
 
-    property <[ActionList2Line]> lines-default: [
+    property <length> preview-item-margin-inline:
+        root.preview-list-variant == ActionList2ListVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
+
+    property <[ActionList2Line]> lines-adapter-demo: [
         {
             kind: ActionList2LineKind.row,
             label: "Copy link",
@@ -76,173 +83,14 @@ export component GalleryActionList2Page {
             trailing-text: "",
         },
     ];
-
-    property <[ActionList2Line]> lines-simple-list: [
-        {
-            kind: ActionList2LineKind.row,
-            label: "Copy link",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: root.preview-has-leading-icon,
-            leading-icon: Icons.copy_icon,
-            description: "",
-            description-layout: ActionList2DescriptionLayout.none,
-            trailing-text: "⌘C",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Quote reply",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: root.preview-has-leading-icon,
-            leading-icon: Icons.link,
-            description: "",
-            description-layout: ActionList2DescriptionLayout.none,
-            trailing-text: "⌘Q",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Edit comment",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: root.preview-has-leading-icon,
-            leading-icon: Icons.diff_modified,
-            description: "",
-            description-layout: ActionList2DescriptionLayout.none,
-            trailing-text: "⌘E",
-        },
-        {
-            kind: ActionList2LineKind.item_divider,
-            label: "",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: false,
-            leading-icon: Icons.dot_fill,
-            description: "",
-            description-layout: ActionList2DescriptionLayout.none,
-            trailing-text: "",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Delete file",
-            row-variant: ActionList2RowVariant.danger,
-            disabled: false,
-            has-leading-visual: root.preview-has-leading-icon,
-            leading-icon: Icons.x,
-            description: "",
-            description-layout: ActionList2DescriptionLayout.none,
-            trailing-text: "",
-        },
-    ];
-
-    property <[ActionList2Line]> lines-block-description: [
-        {
-            kind: ActionList2LineKind.row,
-            label: "Primer Backlog",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.block,
-            trailing-text: "",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Accessibility",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.block,
-            trailing-text: "",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Octicons",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.block,
-            trailing-text: "",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Primer React",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.block,
-            trailing-text: "",
-        },
-    ];
-
-    property <[ActionList2Line]> lines-inline-description: [
-        {
-            kind: ActionList2LineKind.row,
-            label: "Primer Backlog",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.inline,
-            trailing-text: "",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Accessibility",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.inline,
-            trailing-text: "",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Octicons",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.inline,
-            trailing-text: "",
-        },
-        {
-            kind: ActionList2LineKind.row,
-            label: "Primer React",
-            row-variant: ActionList2RowVariant.default,
-            disabled: false,
-            has-leading-visual: true,
-            leading-icon: Icons.table,
-            description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.inline,
-            trailing-text: "",
-        },
-    ];
-
-    property <[ActionList2Line]> preview-lines:
-        root.scenario-ix == 1 ? root.lines-simple-list
-        : root.scenario-ix == 3 ? root.lines-block-description
-        : root.scenario-ix == 4 ? root.lines-inline-description
-        : root.lines-default;
-
-    property <bool> preview-show-dividers: root.scenario-ix == 2;
 
     property <string> scenario-caption:
-        root.scenario-ix == 1 ? "Upstream: ActionList/Features — SimpleList"
-        : root.scenario-ix == 2 ? "Upstream: ActionList/Features — ItemDividers (`showDividers`)"
-        : root.scenario-ix == 3 ? "Upstream: ActionList/Features — BlockDescription"
-        : root.scenario-ix == 4 ? "Upstream: ActionList/Features — InlineDescription"
-        : "Upstream: ActionList — Default";
+        root.scenario-ix == 1 ? "Upstream: ActionList/Features — SimpleList (composed **ActionList2Row**)"
+        : root.scenario-ix == 2 ? "Upstream: ItemDividers — **`show-top-seam`** on rows"
+        : root.scenario-ix == 3 ? "Upstream: BlockDescription (composed rows)"
+        : root.scenario-ix == 4 ? "Upstream: InlineDescription (composed rows)"
+        : root.scenario-ix == 5 ? "**ActionList2Lines** — `[ActionList2Line]` adapter for model-driven hosts"
+        : "Upstream: ActionList — Default (composed rows)";
 
     vertical-stretch: 1;
 
@@ -279,10 +127,220 @@ export component GalleryActionList2Page {
 
                     ActionList2 {
                         list-variant: root.preview-list-variant;
-                        show-dividers: root.preview-show-dividers;
-                        lines: root.preview-lines;
-                        item-activated(ix) => {
-                            root.last-action = "Activated line " + ix;
+
+                        if root.scenario-ix == 0: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Copy link";
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.copy_icon;
+                                clicked => {
+                                    root.last-action = "Activated Copy link";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Quote reply";
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.link;
+                                clicked => {
+                                    root.last-action = "Activated Quote reply";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Edit comment";
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.diff_modified;
+                                clicked => {
+                                    root.last-action = "Activated Edit comment";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 1: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Copy link";
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.copy_icon;
+                                trailing-text: "⌘C";
+                                clicked => {
+                                    root.last-action = "Activated line 0";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Quote reply";
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.link;
+                                trailing-text: "⌘Q";
+                                clicked => {
+                                    root.last-action = "Activated line 1";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Edit comment";
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.diff_modified;
+                                trailing-text: "⌘E";
+                                clicked => {
+                                    root.last-action = "Activated line 2";
+                                }
+                            }
+                            ActionList2ItemDivider {
+                                margin-inline: root.preview-item-margin-inline;
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Delete file";
+                                row-variant: ActionList2RowVariant.danger;
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.x;
+                                clicked => {
+                                    root.last-action = "Activated line 4";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 2: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Copy link";
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.copy_icon;
+                                clicked => {
+                                    root.last-action = "Activated line 0";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Quote reply";
+                                show-top-seam: true;
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.link;
+                                clicked => {
+                                    root.last-action = "Activated line 1";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Edit comment";
+                                show-top-seam: true;
+                                has-leading-visual: root.preview-has-leading-icon;
+                                leading-icon: Icons.diff_modified;
+                                clicked => {
+                                    root.last-action = "Activated line 2";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 3: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Primer Backlog";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Primer Backlog";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Accessibility";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Accessibility";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Octicons";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "github/primer";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Octicons";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Primer React";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "github/primer";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Primer React";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 4: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Primer Backlog";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                clicked => {
+                                    root.last-action = "Activated Primer Backlog";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Accessibility";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                clicked => {
+                                    root.last-action = "Activated Accessibility";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Octicons";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "github/primer";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                clicked => {
+                                    root.last-action = "Activated Octicons";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Primer React";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "github/primer";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                clicked => {
+                                    root.last-action = "Activated Primer React";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 5: ActionList2Lines {
+                            list-variant: root.preview-list-variant;
+                            lines: root.lines-adapter-demo;
+                            item-activated(ix) => {
+                                root.last-action = "Activated line " + ix;
+                            }
                         }
                     }
                 }
