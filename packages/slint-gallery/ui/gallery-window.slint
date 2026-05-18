@@ -98,7 +98,9 @@ export component GalleryWindow inherits Window {
                         min-height: gallery-flick.height;
                         alignment: start;
 
-                        if GalleryState.selected-page-id == "action-list-playground": GalleryActionListPage { }
+                        if GalleryState.selected-page-id == "action-list-playground": GalleryActionListPage {
+                            height: main-scroll.height;
+                        }
 
                         if GalleryState.selected-page-id == "filtered-action-list-playground": GalleryFilteredActionListPage {
                             height: main-scroll.height;

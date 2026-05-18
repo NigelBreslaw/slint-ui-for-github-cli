@@ -1,3 +1,4 @@
+// **ActionList** gallery — Storybook Features scenarios in one playground (sidebar picker).
 import {
     ActionList,
     ActionListDescriptionLayout,
@@ -8,15 +9,37 @@ import {
     Button,
     ButtonAlignContent,
     Icons,
+    Select,
+    SelectOption,
+    ValidationStatus,
 } from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import { GalleryActionListListboxMultiSelect } from "../state/gallery-action-list-listbox-multi-select-state.slint";
 import { GalleryActionListMultiSelect } from "../state/gallery-action-list-multi-select-state.slint";
-import { PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
-export component GalleryActionListPage inherits VerticalLayout {
-    spacing: 28px;
-    alignment: start;
-    padding: 24px;
+export component GalleryActionListPage {
+    property <int> scenario-ix: 0;
+
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Active", enabled: true },
+        { value: "1", label: "InsideOverlay", enabled: true },
+        { value: "2", label: "LoadingItem", enabled: true },
+        { value: "3", label: "WithDynamicContent", enabled: true },
+        { value: "4", label: "ListboxMultiSelect", enabled: true },
+        { value: "5", label: "ListboxSingleSelect", enabled: true },
+        { value: "6", label: "MultiSelect", enabled: true },
+        { value: "7", label: "InactiveSingleSelect", enabled: true },
+        { value: "8", label: "SingleSelect", enabled: true },
+        { value: "9", label: "BlockDescription", enabled: true },
+        { value: "10", label: "InlineDescription", enabled: true },
+        { value: "11", label: "ItemDividers", enabled: true },
+        { value: "12", label: "WithAvatars", enabled: true },
+        { value: "13", label: "WithIcons", enabled: true },
+        { value: "14", label: "WithCustomHeading", enabled: true },
+        { value: "15", label: "SingleDivider", enabled: true },
+        { value: "16", label: "WithVisualListHeading", enabled: true },
+    ];
 
     property <int> single-select-index: 0;
     property <string> single-select-last: "";
@@ -1714,761 +1737,397 @@ export component GalleryActionListPage inherits VerticalLayout {
         },
     ];
 
-    Text {
-        text: "ActionList";
-        color: PrimerColors.fgColor-default;
-        font-size: 22px;
-        font-weight: 600;
+    property <string> scenario-caption:
+        root.scenario-ix == 0 ? "Primer **`data-active`** row — left accent + surface."
+        : root.scenario-ix == 1 ? "Inside overlay — toggle opens an **`ActionList`** under the trigger (Storybook **InsideOverlay**)."
+        : root.scenario-ix == 2 ? "Loading row uses **`show-trailing-loading`** — no activation or row hover (**`data-is-disabled`**)."
+        : root.scenario-ix == 3 ? "First row label toggles on activate (**WithDynamicContent**)."
+        : root.scenario-ix == 4 ? "Listbox **`multiple`** — last row **`disabled`** (no hover)."
+        : root.scenario-ix == 5 ? "Listbox **`single`** selection."
+        : root.scenario-ix == 6 ? "Multi select with seam dividers — **`disabled`** rows have no hover."
+        : root.scenario-ix == 7 ? "Single select with **`inactive-text`** row — no hover on inactive item."
+        : root.scenario-ix == 8 ? "Single select with seam dividers."
+        : root.scenario-ix == 9 ? "Block description layout."
+        : root.scenario-ix == 10 ? "Inline description layout."
+        : root.scenario-ix == 11 ? "**`show-dividers`** seam hairlines between rows."
+        : root.scenario-ix == 12 ? "Leading avatars."
+        : root.scenario-ix == 13 ? "Leading icons."
+        : root.scenario-ix == 14 ? "Custom heading line kind."
+        : root.scenario-ix == 15 ? "Explicit item divider between rows."
+        : "List visual heading line kind.";
+
+    changed scenario-ix => {
+        root.inside-overlay-open = false;
+        root.with-dynamic-is-true = false;
     }
 
+    vertical-stretch: 1;
 
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
 
-        Text {
-            text: "Active (Primer data-active)";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
+            Text {
+                text: "ActionList";
+                color: PrimerColors.fgColor-default;
+                font-size: 22px;
+                font-weight: 600;
+            }
 
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
+            Text {
+                text: root.scenario-caption;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
 
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
+            if root.scenario-ix == 1: VerticalLayout {
+                spacing: 8px;
                 alignment: start;
+                width: 320px;
 
-                ActionList {
+                btn-inside-overlay := Button {
                     width: 100%;
-                    lines: root.active-demo-lines;
-                    item-activated(ix) => {
-                        root.active-demo-last = root.active-demo-lines[ix].label;
+                    align-content: ButtonAlignContent.start;
+                    label: "toggle overlay";
+                    has-trailing-icon: true;
+                    trailing-icon: Icons.triangle_down;
+                    clicked => {
+                        root.inside-overlay-open = true;
                     }
                 }
 
-                Text {
-                    visible: root.active-demo-last != "";
-                    text: "Last activated: " + root.active-demo-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Inside overlay";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        btn-inside-overlay := Button {
-            width: 100%;
-            max-width: 320px;
-            align-content: ButtonAlignContent.start;
-            label: "toggle overlay";
-            has-trailing-icon: true;
-            trailing-icon: Icons.triangle_down;
-            clicked => {
-                root.inside-overlay-open = true;
-            }
-        }
-
-        if root.inside-overlay-open: VerticalLayout {
-            spacing: 0px;
-            width: 100%;
-            max-width: 320px;
-
-            ActionList {
-                width: 100%;
-                show-dividers: false;
-                selection-mode: ActionListSelectionMode.none;
-                lines: root.inside-overlay-lines;
-                item-activated(ix) => {
-                    root.inside-overlay-last = root.inside-overlay-lines[ix].label;
-                    root.inside-overlay-open = false;
-                }
-            }
-        }
-
-        Text {
-            visible: root.inside-overlay-last != "";
-            text: "Last activated: " + root.inside-overlay-last;
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Loading item";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    show-dividers: false;
-                    lines: root.loading-item-lines;
-                    item-activated(ix) => {
-                        root.loading-item-last = root.loading-item-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.loading-item-last != "";
-                    text: "Last activated: " + root.loading-item-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "With dynamic content";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
+                if root.inside-overlay-open: ActionList {
+                    vertical-stretch: 0;
                     width: 100%;
                     show-dividers: false;
                     selection-mode: ActionListSelectionMode.none;
-                    lines: root.with-dynamic-content-lines;
+                    lines: root.inside-overlay-lines;
                     item-activated(ix) => {
-                        if ix == 0 {
-                            root.with-dynamic-is-true = !root.with-dynamic-is-true;
+                        root.inside-overlay-last = root.inside-overlay-lines[ix].label;
+                        root.inside-overlay-open = false;
+                    }
+                }
+
+                if root.inside-overlay-last != "": Text {
+                    text: "Last activated: " + root.inside-overlay-last;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 12px;
+                    wrap: word-wrap;
+                }
+            }
+
+            if root.scenario-ix != 1: Rectangle {
+                horizontal-stretch: 0;
+                width: 320px;
+                background: PrimerColors.bgColor-default;
+                border-radius: 6px;
+
+                VerticalLayout {
+                    padding: 16px;
+                    spacing: 12px;
+                    width: 100%;
+                    alignment: start;
+
+                    if root.scenario-ix == 0: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.active-demo-lines;
+                        item-activated(ix) => {
+                            root.active-demo-last = root.active-demo-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 2: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        show-dividers: false;
+                        lines: root.loading-item-lines;
+                        item-activated(ix) => {
+                            root.loading-item-last = root.loading-item-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 3: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        show-dividers: false;
+                        selection-mode: ActionListSelectionMode.none;
+                        lines: root.with-dynamic-content-lines;
+                        item-activated(ix) => {
+                            if ix == 0 {
+                                root.with-dynamic-is-true = !root.with-dynamic-is-true;
+                            }
+                        }
+                    }
+
+                    if root.scenario-ix == 4: ActionList {
+                        show-dividers: false;
+                        selection-mode: ActionListSelectionMode.multiple;
+                        multi-selected: GalleryActionListListboxMultiSelect.row-checked;
+                        lines: root.listbox-multi-select-lines;
+                        item-activated(ix) => {
+                            GalleryActionListListboxMultiSelect.row-activated(ix);
+                        }
+                    }
+
+                    if root.scenario-ix == 5: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        show-dividers: false;
+                        selection-mode: ActionListSelectionMode.single;
+                        selected-index: root.listbox-single-select-index;
+                        lines: root.listbox-single-select-lines;
+                        item-activated(ix) => {
+                            root.listbox-single-select-index = ix;
+                            root.listbox-single-select-last = root.listbox-single-select-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 6: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        show-dividers: true;
+                        selection-mode: ActionListSelectionMode.multiple;
+                        multi-selected: GalleryActionListMultiSelect.row-checked;
+                        lines: root.multi-select-lines;
+                        item-activated(ix) => {
+                            GalleryActionListMultiSelect.row-activated(ix);
+                        }
+                    }
+
+                    if root.scenario-ix == 7: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        show-dividers: true;
+                        selection-mode: ActionListSelectionMode.single;
+                        selected-index: root.inactive-single-select-index;
+                        lines: root.inactive-single-select-lines;
+                        item-activated(ix) => {
+                            root.inactive-single-select-index = ix;
+                            root.inactive-single-select-last = root.inactive-single-select-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 8: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        show-dividers: true;
+                        selection-mode: ActionListSelectionMode.single;
+                        selected-index: root.single-select-index;
+                        lines: root.single-select-lines;
+                        item-activated(ix) => {
+                            root.single-select-index = ix;
+                            root.single-select-last = root.single-select-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 9: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.block-description-lines;
+                        item-activated(ix) => {
+                            root.block-description-last = root.block-description-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 10: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.inline-description-lines;
+                        item-activated(ix) => {
+                            root.inline-description-last = root.inline-description-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 11: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        show-dividers: true;
+                        lines: root.item-dividers-lines;
+                        item-activated(ix) => {
+                            root.item-dividers-last = root.item-dividers-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 12: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.with-avatars-lines;
+                        item-activated(ix) => {
+                            root.with-avatars-last = root.with-avatars-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 13: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.with-icons-lines;
+                        item-activated(ix) => {
+                            root.with-icons-last = root.with-icons-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 14: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.custom-heading-lines;
+                        item-activated(ix) => {
+                            root.custom-heading-last = root.custom-heading-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 15: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.simple-list-lines;
+                        item-activated(ix) => {
+                            root.simple-list-last = root.simple-list-lines[ix].label;
+                        }
+                    }
+
+                    if root.scenario-ix == 16: ActionList {
+                        vertical-stretch: 0;
+                        width: 100%;
+                        lines: root.visual-heading-lines;
+                        item-activated(ix) => {
+                            root.visual-heading-last = root.visual-heading-lines[ix].label;
                         }
                     }
                 }
             }
-        }
-    }
 
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
+            if root.scenario-ix == 0 && root.active-demo-last != "": Text {
+                text: "Last activated: " + root.active-demo-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
 
-        Text {
-            text: "Listbox multi select";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
+            if root.scenario-ix == 2 && root.loading-item-last != "": Text {
+                text: "Last activated: " + root.loading-item-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
 
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
+            if root.scenario-ix == 4: Text {
+                text: "Last row: \{GalleryActionListListboxMultiSelect.last-activated-label} — selected: \{GalleryActionListListboxMultiSelect.selection-summary}";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
 
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
+            if root.scenario-ix == 5 && root.listbox-single-select-last != "": Text {
+                text: "Last activated: " + root.listbox-single-select-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
 
-                ActionList {
-                    width: 100%;
-                    show-dividers: false;
-                    selection-mode: ActionListSelectionMode.multiple;
-                    multi-selected: GalleryActionListListboxMultiSelect.row-checked;
-                    lines: root.listbox-multi-select-lines;
-                    item-activated(ix) => {
-                        GalleryActionListListboxMultiSelect.row-activated(ix);
-                    }
-                }
+            if root.scenario-ix == 6: Text {
+                text: "Last row: \{GalleryActionListMultiSelect.last-activated-label} — selected: \{GalleryActionListMultiSelect.selection-summary}";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
 
-                Text {
-                    text: "Last row: \{GalleryActionListListboxMultiSelect.last-activated-label} — selected: \{GalleryActionListListboxMultiSelect.selection-summary}";
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
+            if root.scenario-ix == 7 && root.inactive-single-select-last != "": Text {
+                text: "Last activated: " + root.inactive-single-select-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 8 && root.single-select-last != "": Text {
+                text: "Last activated: " + root.single-select-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 9 && root.block-description-last != "": Text {
+                text: "Last activated: " + root.block-description-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 10 && root.inline-description-last != "": Text {
+                text: "Last activated: " + root.inline-description-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 11 && root.item-dividers-last != "": Text {
+                text: "Last activated: " + root.item-dividers-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 12 && root.with-avatars-last != "": Text {
+                text: "Last activated: " + root.with-avatars-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 13 && root.with-icons-last != "": Text {
+                text: "Last activated: " + root.with-icons-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 14 && root.custom-heading-last != "": Text {
+                text: "Last activated: " + root.custom-heading-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 15 && root.simple-list-last != "": Text {
+                text: "Last activated: " + root.simple-list-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            if root.scenario-ix == 16 && root.visual-heading-last != "": Text {
+                text: "Last activated: " + root.visual-heading-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
             }
         }
-    }
 
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
+        Rectangle { }
 
-        Text {
-            text: "Listbox single select";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
+        GalleryDemoOptionsSidebar {
             VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
+                spacing: 16px;
                 alignment: start;
 
-                ActionList {
-                    width: 100%;
-                    show-dividers: false;
-                    selection-mode: ActionListSelectionMode.single;
-                    selected-index: root.listbox-single-select-index;
-                    lines: root.listbox-single-select-lines;
-                    item-activated(ix) => {
-                        root.listbox-single-select-index = ix;
-                        root.listbox-single-select-last = root.listbox-single-select-lines[ix].label;
-                    }
-                }
-
                 Text {
-                    visible: root.listbox-single-select-last != "";
-                    text: "Last activated: " + root.listbox-single-select-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
                 }
-            }
-        }
-    }
 
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Multi select";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    show-dividers: true;
-                    selection-mode: ActionListSelectionMode.multiple;
-                    multi-selected: GalleryActionListMultiSelect.row-checked;
-                    lines: root.multi-select-lines;
-                    item-activated(ix) => {
-                        GalleryActionListMultiSelect.row-activated(ix);
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "List options";
+                    placeholder: "Choose…";
+                    options: root.scenario-options;
+                    selected-index <=> scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
                     }
-                }
-
-                Text {
-                    text: "Last row: \{GalleryActionListMultiSelect.last-activated-label} — selected: \{GalleryActionListMultiSelect.selection-summary}";
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Inactive single select";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    show-dividers: true;
-                    selection-mode: ActionListSelectionMode.single;
-                    selected-index: root.inactive-single-select-index;
-                    lines: root.inactive-single-select-lines;
-                    item-activated(ix) => {
-                        root.inactive-single-select-index = ix;
-                        root.inactive-single-select-last = root.inactive-single-select-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.inactive-single-select-last != "";
-                    text: "Last activated: " + root.inactive-single-select-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Single select";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    show-dividers: true;
-                    selection-mode: ActionListSelectionMode.single;
-                    selected-index: root.single-select-index;
-                    lines: root.single-select-lines;
-                    item-activated(ix) => {
-                        root.single-select-index = ix;
-                        root.single-select-last = root.single-select-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.single-select-last != "";
-                    text: "Last activated: " + root.single-select-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Block description";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    lines: root.block-description-lines;
-                    item-activated(ix) => {
-                        root.block-description-last = root.block-description-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.block-description-last != "";
-                    text: "Last activated: " + root.block-description-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Inline description";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    lines: root.inline-description-lines;
-                    item-activated(ix) => {
-                        root.inline-description-last = root.inline-description-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.inline-description-last != "";
-                    text: "Last activated: " + root.inline-description-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Item Dividers";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    show-dividers: true;
-                    lines: root.item-dividers-lines;
-                    item-activated(ix) => {
-                        root.item-dividers-last = root.item-dividers-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.item-dividers-last != "";
-                    text: "Last activated: " + root.item-dividers-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "With Avatars";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    lines: root.with-avatars-lines;
-                    item-activated(ix) => {
-                        root.with-avatars-last = root.with-avatars-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.with-avatars-last != "";
-                    text: "Last activated: " + root.with-avatars-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "With Icons";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    lines: root.with-icons-lines;
-                    item-activated(ix) => {
-                        root.with-icons-last = root.with-icons-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.with-icons-last != "";
-                    text: "Last activated: " + root.with-icons-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "With Custom Heading";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    lines: root.custom-heading-lines;
-                    item-activated(ix) => {
-                        root.custom-heading-last = root.custom-heading-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.custom-heading-last != "";
-                    text: "Last activated: " + root.custom-heading-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "Single Divider";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    lines: root.simple-list-lines;
-                    item-activated(ix) => {
-                        root.simple-list-last = root.simple-list-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.simple-list-last != "";
-                    text: "Last activated: " + root.simple-list-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "With Visual List Heading";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 320px;
-            background: PrimerColors.bgColor-default;
-            border-radius: 6px;
-
-            VerticalLayout {
-                padding: 16px;
-                spacing: 12px;
-                width: 100%;
-                alignment: start;
-
-                ActionList {
-                    width: 100%;
-                    lines: root.visual-heading-lines;
-                    item-activated(ix) => {
-                        root.visual-heading-last = root.visual-heading-lines[ix].label;
-                    }
-                }
-
-                Text {
-                    visible: root.visual-heading-last != "";
-                    text: "Last activated: " + root.visual-heading-last;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: 12px;
-                    wrap: word-wrap;
                 }
             }
         }

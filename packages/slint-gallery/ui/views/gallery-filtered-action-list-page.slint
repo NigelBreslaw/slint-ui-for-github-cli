@@ -49,11 +49,11 @@ export component GalleryFilteredActionListPage {
     property <string> scenario-caption:
         root.scenario-ix == 0 ? "Upstream Default — prefix filter on label text; bridge-backed label rows."
         : root.scenario-ix == 1 ? "Upstream Examples WithLongItems — taller scroll region (`body-region-height` 320px)."
-        : root.scenario-ix == 2 ? "Loading input — spinner in the filter field; list stays visible."
-        : root.scenario-ix == 3 ? "Loading body_spinner — centered spinner + message; replaces list."
-        : root.scenario-ix == 4 ? "Loading body_skeleton — SkeletonBox shimmer rows."
+        : root.scenario-ix == 2 ? "Loading input — spinner in the filter field; list rows keep normal hover. No row hover on loading/inactive/disabled items when the list is shown."
+        : root.scenario-ix == 3 ? "Loading body_spinner — list body replaced; no **`ActionList`** rows to hover."
+        : root.scenario-ix == 4 ? "Loading body_skeleton — skeleton placeholders only; no interactive rows."
         : root.scenario-ix == 5 ? "Toggle **`show-message`** vs filtered **`ActionList`** body (upstream message wins after loading)."
-        : root.scenario-ix == 6 ? "Empty filtered result — **`lines: []`** with **`empty-message`**."
+        : root.scenario-ix == 6 ? "Empty filtered result — **`lines: []`** with **`empty-message`**; no rows."
         : "Select-all strip — multi-select with tri-state checkbox (gallery bridge).";
 
     property <bool> show-storybook-page-chrome: root.scenario-ix == 0 || root.scenario-ix == 1 || root.scenario-ix == 7;

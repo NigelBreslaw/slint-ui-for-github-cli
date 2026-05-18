@@ -29,12 +29,12 @@ export component ActionList {
     /// Fired with index into `lines` when a non-disabled **row** is activated (not for dividers, **inactive**, or **`show-trailing-loading`** rows).
     callback item-activated(int);
 
+
     list-body := VerticalLayout {
         alignment: start;
 
         for line[ix] in root.lines: VerticalLayout {
             alignment: start;
-            horizontal-stretch: 1;
 
             if line.kind == ActionListLineKind.row: ActionListRow {
                 inactive-text: line.inactive-text;
