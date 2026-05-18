@@ -28,7 +28,8 @@ export component Checkbox {
 
         hl := HorizontalLayout {
             spacing: LayoutTokens.button-content-gap;
-            alignment: center;
+            alignment: start;
+            align-items: center;
             width: self.preferred-width;
 
             check-visuals := Rectangle {
@@ -84,7 +85,7 @@ export component Checkbox {
                 ]
             }
 
-            if label != "": Text {
+            Text {
                 text: label;
                 color: root.disabled ? CheckboxTokens.checkbox-iconColor-disabled : PrimerColors.fgColor-default;
                 font-size: LayoutTokens.text-body-size-medium;
