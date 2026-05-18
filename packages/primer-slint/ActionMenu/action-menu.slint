@@ -1,0 +1,105 @@
+// Primer **ActionMenu** — menu **`Button`** + **`AnchoredOverlay`** shell; body is **`@children`** (typically **`ActionList`**).
+// Upstream: `ActionMenu.tsx` + `AnchoredOverlay` + `ActionList`. Trailing caret matches **`ActionMenu.Button`** (**`TriangleDownIcon`**).
+
+import {
+    AnchoredOverlay,
+    AnchoredOverlayAlign,
+    AnchoredOverlayHeight,
+    AnchoredOverlaySide,
+    AnchoredOverlayWidth,
+} from "../AnchoredOverlay/anchored-overlay.slint";
+import { Button, ButtonVariant } from "../Buttons/buttons.slint";
+import { Icons } from "../assets/icons.slint";
+import { LayoutTokens } from "../tokens.slint";
+
+export component ActionMenu {
+    /// **`Button`** label (Primer **`ActionMenu.Button`** children text).
+    in property <string> button-label: "Menu";
+    in property <ButtonVariant> button-variant: ButtonVariant.default;
+    in property <bool> button-disabled: false;
+    in property <bool> button-has-trailing-icon: true;
+    in property <image> button-trailing-icon: Icons.triangle_down;
+    in property <AnchoredOverlaySide> side: AnchoredOverlaySide.outside_bottom;
+    in property <AnchoredOverlayAlign> align: AnchoredOverlayAlign.start;
+    in property <AnchoredOverlayWidth> width-preset: AnchoredOverlayWidth.medium;
+    in property <AnchoredOverlayHeight> height-preset: AnchoredOverlayHeight.auto;
+    in property <bool> prevent-overflow: true;
+    in property <bool> show-backdrop: false;
+    in property <bool> allow-dismiss: true;
+    in property <bool> reduce-motion: false;
+    in property <length> margin: LayoutTokens.base-size-4;
+    in property <length> anchor-offset: 0px;
+    in property <length> alignment-offset: 0px;
+
+    /// Mirrors overlay visibility — host may set **`true`** to open (**ShortcutMenu**); clears on dismiss.
+    in-out property <bool> open: false;
+    /// True while the popup is presented (avoids **`changed open`** double-**`show()`** when the trigger opens the menu).
+    property <bool> popup-visible: false;
+
+    callback opened();
+    callback closed();
+    callback close-requested();
+
+    changed open => {
+        if root.open && !root.popup-visible {
+            menu-popup.show();
+        } else if !root.open && root.popup-visible {
+            menu-popup.close();
+        }
+    }
+
+    VerticalLayout {
+        alignment: start;
+
+        trigger := Button {
+            variant: root.button-variant;
+            disabled: root.button-disabled;
+            label: root.button-label;
+            has-trailing-icon: root.button-has-trailing-icon;
+            trailing-icon: root.button-trailing-icon;
+            clicked => {
+                if root.popup-visible {
+                    menu-popup.close();
+                } else {
+                    menu-popup.show();
+                }
+            }
+        }
+
+        menu-popup := AnchoredOverlay {
+            position-props: {
+                absolute-position: trigger.absolute-position,
+                source-size: { width: trigger.width, height: trigger.height },
+            };
+            side: root.side;
+            align: root.align;
+            width-preset: root.width-preset;
+            height-preset: root.height-preset;
+            prevent-overflow: root.prevent-overflow;
+            show-backdrop: root.show-backdrop;
+            allow-dismiss: root.allow-dismiss;
+            reduce-motion: root.reduce-motion;
+            margin: root.margin;
+            anchor-offset: root.anchor-offset;
+            alignment-offset: root.alignment-offset;
+
+            close-requested => {
+                root.close-requested();
+            }
+
+            opened => {
+                root.popup-visible = true;
+                root.open = true;
+                root.opened();
+            }
+
+            closed => {
+                root.popup-visible = false;
+                root.open = false;
+                root.closed();
+            }
+
+            @children
+        }
+    }
+}

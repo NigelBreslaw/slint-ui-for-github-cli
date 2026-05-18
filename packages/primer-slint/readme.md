@@ -319,6 +319,14 @@ Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there i
 
 Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group).
 
+## ActionMenu
+
+**ActionMenu** ([`ActionMenu/action-menu.slint`](slint/ActionMenu/action-menu.slint)) composes a menu **`Button`** (default trailing **`Icons.triangle_down`**; override with **`button-trailing-icon`**) and **`AnchoredOverlay`**; put **`ActionList`** (or nested **`ActionMenu`** shells) in **`@children`**. **`in-out property <bool> open`** mirrors the popup and supports programmatic open/close. Callbacks **`opened`**, **`closed`**, **`close-requested`** follow **`AnchoredOverlay`**.
+
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionMenu`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayWidth`**, **`AnchoredOverlayAlign`**, **`AnchoredOverlayHeight`**, **`LayoutTokens`**, **`Icons`**.
+
+Examples: **standalone gallery** — **Action menu → Playground** (13 Storybook-aligned scenarios).
+
 ## FilteredActionList
 
 Slint host for Primer **FilteredActionList** (filter field, header hairline, optional **select-all** row, scrollable **`ActionList`**). Upstream: [`FilteredActionList.tsx`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/FilteredActionList/FilteredActionList.tsx), [`FilteredActionList.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/FilteredActionList/FilteredActionList.module.css), loaders in the same folder. This component is **not** **`SelectPanel`**: it embeds **`ActionList`** with parent-built **`[ActionListLine]`** and parent-owned filtering (bind **`filter-text`** and react to **`filter-changed`**). **`loading`** + **`FilteredActionListLoadingKind`** (**`input`**, **`body_spinner`**, **`body_skeleton`**) mirror upstream loading modes; **`show-message`** + **`message-*`** replace the list after loading (upstream message wins). Empty filtered state uses **`empty-title`** / **`empty-message`** when **`lines`** is empty. **v1 non-goals** (virtualization, roving tabindex / `aria-activedescendant`, custom render nodes) are listed in [`FilteredActionList/VARIANT_MATRIX.md`](slint/FilteredActionList/VARIANT_MATRIX.md).

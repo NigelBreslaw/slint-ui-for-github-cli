@@ -20,6 +20,7 @@
 | `PrimerTextInput` | `TextInputTokens`, `ButtonTokens` (disabled + counter danger) |
 | `ModalOverlay` / `Dialog` | `OverlayTokens`, `DialogTokens`; anchored `PopupWindow` notes in [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) |
 | **`AnchoredOverlay`** (floating panel vs anchor) | `OverlayTokens`, `LayoutTokens` (gap); gallery: [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) |
+| **`ActionMenu`** (menu button + anchored panel) | `LayoutTokens`, `Icons` (trailing caret / chevron); gallery **Action menu → Playground** |
 | `ActionList` / `SelectPanel` / `FilteredActionList` | `ActionListTokens` / `SelectPanelTokens` / `FilteredActionListTokens` as in the entry `.slint` |
 
 **Reuse (grep before duplicating):** `ValidationStatus` and friends — import from [`Select/select.slint`](Select/select.slint) for inputs and groups. **`DialogFooter`:** custom actions use `visible:` branches, not `if`, around `@children` (Slint limitation).

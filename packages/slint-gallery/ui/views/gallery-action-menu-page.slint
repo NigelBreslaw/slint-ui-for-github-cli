@@ -1,0 +1,1095 @@
+// **ActionMenu** gallery — 13 upstream Storybook scenarios (see plan). Out-of-scope stories are listed in the sidebar footer.
+import {
+    ActionList,
+    ActionListDescriptionLayout,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListRowVariant,
+    ActionListSelectionMode,
+    ActionMenu,
+    AnchoredOverlaySide,
+    AnchoredOverlayWidth,
+    Button,
+    ButtonVariant,
+    Icons,
+    PrimerTextInput,
+    Select,
+    SelectOption,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryActionMenuPage {
+    property <int> scenario-ix: 0;
+
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default", enabled: true },
+        { value: "1", label: "LinksAndActions", enabled: true },
+        { value: "2", label: "SingleSelect", enabled: true },
+        { value: "3", label: "MultiSelect", enabled: true },
+        { value: "4", label: "InactiveItems", enabled: true },
+        { value: "5", label: "LoadingItems", enabled: true },
+        { value: "6", label: "Submenus", enabled: true },
+        { value: "7", label: "DisabledItems", enabled: true },
+        { value: "8", label: "GroupsAndDescriptions", enabled: true },
+        { value: "9", label: "ShortcutMenu", enabled: true },
+        { value: "10", label: "MixedSelection", enabled: true },
+        { value: "11", label: "DelayedMenuClose", enabled: true },
+        { value: "12", label: "OnRightSide", enabled: true },
+    ];
+
+    property <string> last-action: "";
+    property <int> demo-sel-ix: 0;
+    property <bool> m0: false;
+    property <bool> m1: true;
+    property <bool> m2: false;
+
+    property <int> mix-single-ix: 1;
+    property <bool> mx0: true;
+    property <bool> mx1: false;
+    property <bool> mx2: false;
+
+    property <bool> shortcut-menu-open: false;
+    property <string> shortcut-field: "";
+
+    property <bool> delayed-copy-done: false;
+    property <bool> delayed-menu-open: false;
+
+    changed scenario-ix => {
+        root.demo-sel-ix = 0;
+        root.m0 = false;
+        root.m1 = true;
+        root.m2 = false;
+        root.mix-single-ix = 1;
+        root.mx0 = true;
+        root.mx1 = false;
+        root.mx2 = false;
+        root.shortcut-menu-open = false;
+        root.delayed-copy-done = false;
+        root.delayed-menu-open = false;
+        root.last-action = "";
+        if root.scenario-ix == 8 {
+            root.demo-sel-ix = 1;
+        }
+    }
+
+    // --- Default / OnRightSide / common rows
+    property <[ActionListLine]> lines-default: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Copy link",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: true,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Quote reply",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: true,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.item_divider,
+            label: "",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Delete file",
+            row-variant: ActionListRowVariant.danger,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: true,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <AnchoredOverlaySide> overlay-side: root.scenario-ix == 12 ? AnchoredOverlaySide.outside_right : AnchoredOverlaySide.outside_bottom;
+    property <AnchoredOverlayWidth> overlay-width: root.scenario-ix == 1 ? AnchoredOverlayWidth.auto : AnchoredOverlayWidth.medium;
+
+    property <ActionListSelectionMode> overlay-sel-mode:
+        root.scenario-ix == 2 || root.scenario-ix == 8 ? ActionListSelectionMode.single
+        : root.scenario-ix == 3 ? ActionListSelectionMode.multiple
+        : ActionListSelectionMode.none;
+
+    property <[ActionListLine]> overlay-lines:
+        root.scenario-ix == 0 || root.scenario-ix == 12 ? root.lines-default
+        : root.scenario-ix == 1 ? root.lines-links
+        : root.scenario-ix == 2 ? root.lines-single
+        : root.scenario-ix == 3 ? root.lines-multi
+        : root.scenario-ix == 4 ? root.lines-inactive
+        : root.scenario-ix == 5 ? root.lines-loading
+        : root.scenario-ix == 7 ? root.lines-disabled
+        : root.scenario-ix == 8 ? root.lines-groups
+        : root.lines-default;
+
+    property <[ActionListLine]> lines-links: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Workflows (link → row)",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Settings (LinkItem not ported — same as row)",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.gear_24,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.section_heading,
+            label: "GitHub projects",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "GitHub Docs (link row)",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.book,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-single: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Fast forward",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Recursive",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Octopus",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-multi: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Show code folding buttons",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Wrap lines",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Center content",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-inactive: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Workflows",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "Unavailable due to an outage",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Archived items",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.archive,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-loading: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Workflows",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: true,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Archived items",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.archive,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: true,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-disabled: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Workflows (disabled)",
+            row-variant: ActionListRowVariant.default,
+            disabled: true,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Settings",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.gear_24,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-groups: [
+        {
+            kind: ActionListLineKind.section_heading,
+            label: "Open",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "FY23 - Q1",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            description: "Due by June 30, 2022",
+            description-layout: ActionListDescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "FY23 - Q2",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            description: "Due by December 30, 2022",
+            description-layout: ActionListDescriptionLayout.block,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-mix-single: [
+        {
+            kind: ActionListLineKind.section_heading,
+            label: "Group by",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Status",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.issue_opened,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Stage",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.table,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-mix-multi: [
+        {
+            kind: ActionListLineKind.section_heading,
+            label: "View options (second ActionList)",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Show minimap",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+        {
+            kind: ActionListLineKind.row,
+            label: "Word wrap",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-delayed-before: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Copy link",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.copy_icon,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> lines-delayed-after: [
+        {
+            kind: ActionListLineKind.row,
+            label: "Copied!",
+            row-variant: ActionListRowVariant.default,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: true,
+            leading-icon: Icons.check,
+            description: "",
+            description-layout: ActionListDescriptionLayout.none,
+            has-markdown: false,
+            label-markdown: @markdown(""),
+            inactive-text: "",
+            active: false,
+            show-trailing-loading: false,
+            has-trailing-visual: false,
+            trailing-icon: Icons.dot_fill,
+        },
+    ];
+
+    property <[ActionListLine]> delayed-lines-view: root.delayed-copy-done ? root.lines-delayed-after : root.lines-delayed-before;
+    delayed-close-timer := Timer {
+        interval: 700ms;
+        running: false;
+        triggered() => {
+            root.delayed-copy-done = false;
+            root.delayed-menu-open = false;
+            self.stop();
+        }
+    }
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "ActionMenu";
+                color: PrimerColors.fgColor-default;
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            if root.scenario-ix == 9: VerticalLayout {
+                spacing: 12px;
+                alignment: start;
+
+                Text {
+                    text: "ShortcutMenu: global Shift+C is not wired in Slint; use the button. Clicks outside dismiss the overlay (no ignoreClickRefs).";
+                    color: PrimerColors.fgColor-attention;
+                    font-size: LayoutTokens.text-body-size-small;
+                    wrap: word-wrap;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "Sample field";
+                    placeholder: "Type here…";
+                    text <=> shortcut-field;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                Button {
+                    label: "Open menu (simulated shortcut)";
+                    clicked => {
+                        root.shortcut-menu-open = true;
+                    }
+                }
+
+                shortcut-am := ActionMenu {
+                    button-label: "Anchor";
+                    open <=> shortcut-menu-open;
+                    width-preset: AnchoredOverlayWidth.medium;
+                    ActionList {
+                        lines: root.lines-default;
+                        selection-mode: ActionListSelectionMode.none;
+                        item-activated(ix) => {
+                            root.last-action = "Shortcut row " + ix;
+                            root.shortcut-menu-open = false;
+                        }
+                    }
+                }
+            }
+
+            if root.scenario-ix == 6: VerticalLayout {
+                spacing: 12px;
+                alignment: start;
+
+                sub-root := ActionMenu {
+                    button-label: "Edit";
+                    width-preset: AnchoredOverlayWidth.medium;
+                    VerticalLayout {
+                        spacing: 0px;
+                        alignment: start;
+                        ActionList {
+                            lines: [
+                                {
+                                    kind: ActionListLineKind.row,
+                                    label: "Cut",
+                                    row-variant: ActionListRowVariant.default,
+                                    disabled: false,
+                                    has-leading-avatar: false,
+                                    avatar-source: Icons.dot_fill,
+                                    has-leading-visual: false,
+                                    leading-icon: Icons.dot_fill,
+                                    description: "",
+                                    description-layout: ActionListDescriptionLayout.none,
+                                    has-markdown: false,
+                                    label-markdown: @markdown(""),
+                                    inactive-text: "",
+                                    active: false,
+                                    show-trailing-loading: false,
+                                    has-trailing-visual: false,
+                                    trailing-icon: Icons.dot_fill,
+                                },
+                                {
+                                    kind: ActionListLineKind.row,
+                                    label: "Copy",
+                                    row-variant: ActionListRowVariant.default,
+                                    disabled: false,
+                                    has-leading-avatar: false,
+                                    avatar-source: Icons.dot_fill,
+                                    has-leading-visual: false,
+                                    leading-icon: Icons.dot_fill,
+                                    description: "",
+                                    description-layout: ActionListDescriptionLayout.none,
+                                    has-markdown: false,
+                                    label-markdown: @markdown(""),
+                                    inactive-text: "",
+                                    active: false,
+                                    show-trailing-loading: false,
+                                    has-trailing-visual: false,
+                                    trailing-icon: Icons.dot_fill,
+                                },
+                                {
+                                    kind: ActionListLineKind.row,
+                                    label: "Paste",
+                                    row-variant: ActionListRowVariant.default,
+                                    disabled: false,
+                                    has-leading-avatar: false,
+                                    avatar-source: Icons.dot_fill,
+                                    has-leading-visual: false,
+                                    leading-icon: Icons.dot_fill,
+                                    description: "",
+                                    description-layout: ActionListDescriptionLayout.none,
+                                    has-markdown: false,
+                                    label-markdown: @markdown(""),
+                                    inactive-text: "",
+                                    active: false,
+                                    show-trailing-loading: false,
+                                    has-trailing-visual: false,
+                                    trailing-icon: Icons.dot_fill,
+                                },
+                            ];
+                            selection-mode: ActionListSelectionMode.none;
+                            item-activated(ix) => {
+                                root.last-action = "Submenu root " + ix;
+                            }
+                        }
+
+                        sub-paste := ActionMenu {
+                            button-variant: ButtonVariant.invisible;
+                            button-label: "Paste special";
+                            button-has-trailing-icon: true;
+                            button-trailing-icon: Icons.chevron_right;
+                            side: AnchoredOverlaySide.outside_right;
+                            width-preset: AnchoredOverlayWidth.auto;
+                            VerticalLayout {
+                                ActionList {
+                                    lines: [
+                                        {
+                                            kind: ActionListLineKind.row,
+                                            label: "Paste plain text",
+                                            row-variant: ActionListRowVariant.default,
+                                            disabled: false,
+                                            has-leading-avatar: false,
+                                            avatar-source: Icons.dot_fill,
+                                            has-leading-visual: false,
+                                            leading-icon: Icons.dot_fill,
+                                            description: "",
+                                            description-layout: ActionListDescriptionLayout.none,
+                                            has-markdown: false,
+                                            label-markdown: @markdown(""),
+                                            inactive-text: "",
+                                            active: false,
+                                            show-trailing-loading: false,
+                                            has-trailing-visual: false,
+                                            trailing-icon: Icons.dot_fill,
+                                        },
+                                        {
+                                            kind: ActionListLineKind.row,
+                                            label: "Paste formulas",
+                                            row-variant: ActionListRowVariant.default,
+                                            disabled: false,
+                                            has-leading-avatar: false,
+                                            avatar-source: Icons.dot_fill,
+                                            has-leading-visual: false,
+                                            leading-icon: Icons.dot_fill,
+                                            description: "",
+                                            description-layout: ActionListDescriptionLayout.none,
+                                            has-markdown: false,
+                                            label-markdown: @markdown(""),
+                                            inactive-text: "",
+                                            active: false,
+                                            show-trailing-loading: false,
+                                            has-trailing-visual: false,
+                                            trailing-icon: Icons.dot_fill,
+                                        },
+                                    ];
+                                    selection-mode: ActionListSelectionMode.none;
+                                    item-activated(ix) => {
+                                        root.last-action = "Paste special " + ix;
+                                    }
+                                }
+
+                                sub-from := ActionMenu {
+                                    button-variant: ButtonVariant.invisible;
+                                    button-label: "Paste from";
+                                    button-has-trailing-icon: true;
+                                    button-trailing-icon: Icons.chevron_right;
+                                    side: AnchoredOverlaySide.outside_right;
+                                    width-preset: AnchoredOverlayWidth.auto;
+                                    ActionList {
+                                        lines: [
+                                            {
+                                                kind: ActionListLineKind.row,
+                                                label: "Current clipboard",
+                                                row-variant: ActionListRowVariant.default,
+                                                disabled: false,
+                                                has-leading-avatar: false,
+                                                avatar-source: Icons.dot_fill,
+                                                has-leading-visual: false,
+                                                leading-icon: Icons.dot_fill,
+                                                description: "",
+                                                description-layout: ActionListDescriptionLayout.none,
+                                                has-markdown: false,
+                                                label-markdown: @markdown(""),
+                                                inactive-text: "",
+                                                active: false,
+                                                show-trailing-loading: false,
+                                                has-trailing-visual: false,
+                                                trailing-icon: Icons.dot_fill,
+                                            },
+                                            {
+                                                kind: ActionListLineKind.row,
+                                                label: "History",
+                                                row-variant: ActionListRowVariant.default,
+                                                disabled: false,
+                                                has-leading-avatar: false,
+                                                avatar-source: Icons.dot_fill,
+                                                has-leading-visual: false,
+                                                leading-icon: Icons.dot_fill,
+                                                description: "",
+                                                description-layout: ActionListDescriptionLayout.none,
+                                                has-markdown: false,
+                                                label-markdown: @markdown(""),
+                                                inactive-text: "",
+                                                active: false,
+                                                show-trailing-loading: false,
+                                                has-trailing-visual: false,
+                                                trailing-icon: Icons.dot_fill,
+                                            },
+                                        ];
+                                        selection-mode: ActionListSelectionMode.none;
+                                        item-activated(ix) => {
+                                            root.last-action = "Paste from " + ix;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if root.scenario-ix == 10: ActionMenu {
+                button-label: "Group items by";
+                width-preset: AnchoredOverlayWidth.medium;
+                VerticalLayout {
+                    spacing: 8px;
+                    alignment: start;
+                    ActionList {
+                        lines: root.lines-mix-single;
+                        selection-mode: ActionListSelectionMode.single;
+                        selected-index <=> mix-single-ix;
+                        show-dividers: true;
+                        item-activated(ix) => {
+                            root.mix-single-ix = ix;
+                            root.last-action = "Mixed single ix " + ix;
+                        }
+                    }
+
+                    ActionList {
+                        lines: root.lines-mix-multi;
+                        selection-mode: ActionListSelectionMode.multiple;
+                        multi-selected: [root.mx0, root.mx1, root.mx2];
+                        item-activated(ix) => {
+                            if ix == 0 {
+                                root.mx0 = !root.mx0;
+                            }
+                            if ix == 1 {
+                                root.mx1 = !root.mx1;
+                            }
+                            if ix == 2 {
+                                root.mx2 = !root.mx2;
+                            }
+                            root.last-action = "Mixed multi toggled " + ix;
+                        }
+                    }
+                }
+            }
+
+            if root.scenario-ix == 11: ActionMenu {
+                button-label: "Anchor";
+                open <=> delayed-menu-open;
+                width-preset: AnchoredOverlayWidth.medium;
+                ActionList {
+                    lines: root.delayed-lines-view;
+                    selection-mode: ActionListSelectionMode.none;
+                    item-activated(ix) => {
+                        if ix == 0 {
+                            root.delayed-copy-done = true;
+                            delayed-close-timer.start();
+                        }
+                        root.last-action = "Delayed activate " + ix;
+                    }
+                }
+            }
+
+            if root.scenario-ix != 6 && root.scenario-ix != 9 && root.scenario-ix != 10 && root.scenario-ix != 11: demo-am := ActionMenu {
+                button-label: root.scenario-ix == 2 || root.scenario-ix == 8 ? "Milestone: pick one" : root.scenario-ix == 3 ? "Display" : "Open menu";
+                side: root.overlay-side;
+                width-preset: root.overlay-width;
+                ActionList {
+                    lines: root.overlay-lines;
+                    selection-mode: root.overlay-sel-mode;
+                    selected-index <=> demo-sel-ix;
+                    multi-selected: [root.m0, root.m1, root.m2];
+                    show-dividers: root.scenario-ix == 8;
+                    item-activated(ix) => {
+                        root.last-action = "Activated line " + ix;
+                        if root.scenario-ix == 2 || root.scenario-ix == 8 {
+                            root.demo-sel-ix = ix;
+                        }
+                        if root.scenario-ix == 3 {
+                            if ix == 0 {
+                                root.m0 = !root.m0;
+                            }
+                            if ix == 1 {
+                                root.m1 = !root.m1;
+                            }
+                            if ix == 2 {
+                                root.m2 = !root.m2;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 16px;
+                alignment: start;
+
+                Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "Menu options";
+                    placeholder: "Choose…";
+                    options: root.scenario-options;
+                    selected-index <=> scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
+                    }
+                }
+            }
+        }
+    }
+}
