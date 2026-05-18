@@ -6,6 +6,12 @@ export struct PositionProps {
     source-size: Size,
 }
 
+/// Pixel offset from the **final** clamped position at enter start (Primer `Overlay.tsx` `getSlideAnimationStartingVector` × `base-size-8`).
+export struct AnchoredOverlayEnterSlideDelta {
+    dx: length,
+    dy: length,
+}
+
 export enum AnchoredOverlaySide {
     outside_bottom,
     outside_top,
@@ -42,6 +48,8 @@ export component AnchoredOverlay {
     height: 0px;
 
     property <bool> open: false;
+    /// True after `show()` until `open` is set (one-frame arm so enter `states` can start from slide offset).
+    property <bool> enter-armed: false;
     in property <PositionProps> position-props;
     in property <AnchoredOverlaySide> side: AnchoredOverlaySide.outside_bottom;
     in property <AnchoredOverlayAlign> align: AnchoredOverlayAlign.start;
@@ -58,31 +66,26 @@ export component AnchoredOverlay {
     /// Optional dimmed scrim behind the panel (anchored popovers are often undimmed).
     in property <bool> show-backdrop: false;
     in property <length> panel-padding: 16px;
-    /// When true, skip the opacity enter animation (matches `prefers-reduced-motion`).
+    /// When true, skip enter motion (matches `prefers-reduced-motion`).
     in property <bool> reduce-motion: false;
 
-    property <float> presented: 0.0;
+    pure function enter-slide-delta(side: AnchoredOverlaySide) -> AnchoredOverlayEnterSlideDelta {
+        return {
+            dx: side == AnchoredOverlaySide.outside_right ? 0px - LayoutTokens.base-size-8
+                : side == AnchoredOverlaySide.outside_left ? LayoutTokens.base-size-8
+                : 0px,
+            dy: side == AnchoredOverlaySide.outside_bottom ? 0px - LayoutTokens.base-size-8
+                : side == AnchoredOverlaySide.outside_top ? LayoutTokens.base-size-8
+                : 0px,
+        };
+    }
 
-    states [
-        pane-reveal when root.open && !root.reduce-motion: {
-            presented: 1.0;
-            in {
-                animate presented {
-                    duration: DialogTokens.overlay-enter-duration;
-                    easing: cubic-bezier(0.33, 1, 0.68, 1);
-                }
-            }
-        }
-        pane-reveal-instant when root.open && root.reduce-motion: {
-            presented: 1.0;
-        }
-    ]
-
-    presented-enter-arm := Timer {
+    open-enter-delay := Timer {
         interval: 1ms;
         running: false;
         triggered() => {
             root.open = true;
+            root.enter-armed = false;
             root.opened();
             self.stop();
         }
@@ -110,17 +113,19 @@ export component AnchoredOverlay {
         : 960px;
 
     show => {
+        root.enter-armed = !root.reduce-motion;
         popup.show();
         if root.reduce-motion {
             root.open = true;
             root.opened();
         } else {
-            presented-enter-arm.start();
+            open-enter-delay.start();
         }
     }
 
     close => {
         root.open = false;
+        root.enter-armed = false;
         popup.close();
         root.closed();
     }
@@ -160,7 +165,6 @@ export component AnchoredOverlay {
             }
 
             pane := Rectangle {
-                opacity: root.presented;
                 width: root.panel-width;
                 height: root.height-preset == AnchoredOverlayHeight.auto ? min(panel-chrome.chrome-preferred-height, OverlayTokens.modal-viewport-max-height)
                     : root.height-preset == AnchoredOverlayHeight.xsmall ? 192px
@@ -185,8 +189,37 @@ export component AnchoredOverlay {
                     : root.side == AnchoredOverlaySide.outside_top ? root.ay - root.margin - root.anchor-offset - self.height
                     : self.align-v + root.alignment-offset;
 
-                x: root.prevent-overflow ? max(0px, min(self.raw-x, root.vw - self.width)) : self.raw-x;
-                y: root.prevent-overflow ? max(0px, min(self.raw-y, root.vh - self.height)) : self.raw-y;
+                property <length> final-x: root.prevent-overflow ? max(0px, min(self.raw-x, root.vw - self.width)) : self.raw-x;
+                property <length> final-y: root.prevent-overflow ? max(0px, min(self.raw-y, root.vh - self.height)) : self.raw-y;
+
+                states [
+                    pane-open-animated when root.open && !root.reduce-motion: {
+                        x: self.final-x;
+                        y: self.final-y;
+                        opacity: 1.0;
+                        in {
+                            animate x, y, opacity {
+                                duration: DialogTokens.overlay-enter-duration;
+                                easing: cubic-bezier(0.33, 1, 0.68, 1);
+                            }
+                        }
+                    }
+                    pane-arm when root.enter-armed && !root.open: {
+                        x: self.final-x + enter-slide-delta(root.side).dx;
+                        y: self.final-y + enter-slide-delta(root.side).dy;
+                        opacity: 0.0;
+                    }
+                    pane-open-instant when root.open && root.reduce-motion: {
+                        x: self.final-x;
+                        y: self.final-y;
+                        opacity: 1.0;
+                    }
+                    pane-idle when !root.open: {
+                        x: self.final-x;
+                        y: self.final-y;
+                        opacity: 0.0;
+                    }
+                ]
 
                 touch-blocker := TouchArea { }
 
