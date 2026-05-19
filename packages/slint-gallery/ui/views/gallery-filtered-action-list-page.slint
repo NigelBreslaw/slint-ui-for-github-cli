@@ -165,7 +165,6 @@ export component GalleryFilteredActionListPage {
                 VerticalLayout {
                     padding: 16px;
                     spacing: 12px;
-                    width: 100%;
                     alignment: start;
 
                     if root.show-storybook-page-chrome: Text {
@@ -193,7 +192,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 0: FilteredActionList {
-                        width: 100%;
                         filter-text <=> root.filtered-action-list-filter;
                         placeholder: "Filter Labels";
                         lines: GalleryFilteredActionListDefault.lines;
@@ -204,7 +202,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 1: FilteredActionList {
-                        width: 100%;
                         filter-text <=> root.filtered-action-list-long-filter;
                         placeholder: "Filter Labels";
                         body-region-height: 320px;
@@ -215,7 +212,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 2: FilteredActionList {
-                        width: 100%;
                         loading: true;
                         loading-kind: FilteredActionListLoadingKind.input;
                         filter-text <=> root.fal-loading-input-filter;
@@ -226,7 +222,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 3: FilteredActionList {
-                        width: 100%;
                         loading: true;
                         loading-kind: FilteredActionListLoadingKind.body_spinner;
                         loading-message: "Loading labels…";
@@ -238,7 +233,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 4: FilteredActionList {
-                        width: 100%;
                         loading: true;
                         loading-kind: FilteredActionListLoadingKind.body_skeleton;
                         filter-text <=> root.fal-loading-skeleton-filter;
@@ -249,7 +243,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 5: FilteredActionList {
-                        width: 100%;
                         filter-text <=> root.fal-message-vs-list-filter;
                         placeholder: "Filter Labels";
                         lines: root.fal-message-vs-list-show-message ? [] : root.fal-loading-demo-lines;
@@ -261,7 +254,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 6: FilteredActionList {
-                        width: 100%;
                         filter-text <=> root.fal-empty-body-filter;
                         placeholder: "Filter Labels";
                         lines: [];
@@ -271,7 +263,6 @@ export component GalleryFilteredActionListPage {
                     }
 
                     if root.scenario-ix == 7: FilteredActionList {
-                        width: 100%;
                         select-all-visible: true;
                         selection-mode: ActionListSelectionMode.multiple;
                         filter-text <=> root.fal-select-all-filter;
@@ -291,27 +282,6 @@ export component GalleryFilteredActionListPage {
                         }
                     }
                 }
-            }
-
-            if root.scenario-ix == 0: Text {
-                text: "Filter: \"" + root.filtered-action-list-filter + "\" — Last callback: \"" + root.filtered-action-list-last-edit + "\"";
-                color: PrimerColors.fgColor-muted;
-                font-size: 12px;
-                wrap: word-wrap;
-            }
-
-            if root.scenario-ix == 1: Text {
-                text: "Filter: \"" + root.filtered-action-list-long-filter + "\"";
-                color: PrimerColors.fgColor-muted;
-                font-size: 12px;
-                wrap: word-wrap;
-            }
-
-            if root.scenario-ix == 7: Text {
-                text: "Filter: \"" + root.fal-select-all-filter + "\" — checked rows persist by label when the list narrows.";
-                color: PrimerColors.fgColor-muted;
-                font-size: 12px;
-                wrap: word-wrap;
             }
         }
 
