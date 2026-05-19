@@ -4,7 +4,7 @@ Primer **ActionList** port with a **compose-first** API (like **Dialog** / **Sel
 
 ## Compose-first (preferred)
 
-[`ActionList2`](action-list2.slint) is list chrome only (`list-variant` padding). Place leaf components as **`@children`**:
+[`ActionList2`](action-list2.slint) is list chrome only (`list-variant` padding, **`fill-width`**). Place leaf components as **`@children`**:
 
 - [`ActionList2Row`](action-list2-row.slint) — row visuals, **`row-size`** (`medium` | `large`), leading **avatar** or **icon**, descriptions, danger, disabled/inactive/loading, **`active`**, focus, hover
 - [`ActionList2ItemDivider`](action-list2-item-divider.slint) — explicit block divider
@@ -23,13 +23,15 @@ ActionList2 {
     ActionList2Row {
         margin-inline: item-margin;
         label: "Copy link";
-        show-top-seam: false;
+        show-divider: false;
         clicked => { }
     }
 }
 ```
 
-For **`show-dividers`** seams, set **`show-top-seam: true`** on each row after the first row (see legacy **dashboard** `ActionListRow` pattern).
+For **`show-dividers`** seams, set **`show-divider: true`** on each row after the first row.
+
+**`truncate-inline-description: true`** on a row with **inline** description — description ellipsizes; without it, label and description **word-wrap**.
 
 Dynamic data: `for row[ix] in model: ActionList2Row { ... }` inside **`ActionList2`**.
 

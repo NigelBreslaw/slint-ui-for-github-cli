@@ -29,17 +29,14 @@ export component ActionList2Row {
     in property <image> leading-icon: Icons.dot_fill;
     in property <string> description: "";
     in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
+    in property <bool> truncate-inline-description: false;
     in property <string> trailing-text;
-    /// Primer **`inactiveText`** — non-empty: no activation; **`.InactiveWarning`** (attention) under the label.
     in property <string> inactive-text: "";
-    /// Primer **`loading`**: trailing **`Spinner`**; row not activatable; muted label/description.
     in property <bool> show-trailing-loading: false;
-    /// Primer **`active`** / **`[data-active]`** — left accent bar + surface (orthogonal to **`selected`**).
     in property <bool> active: false;
     in property <length> margin-inline;
     in property <bool> show-divider: false;
     in property <bool> selected: false;
-    /// Leading selection column — only one of **none** / **checkmark** / **checkbox** (see **`ActionList2SelectionLead`**).
     in property <ActionList2SelectionLead> selection-lead: ActionList2SelectionLead.none;
     callback clicked;
 
@@ -280,7 +277,36 @@ export component ActionList2Row {
                                         colorize: root.leading-icon-tint;
                                     }
 
-                                    if root.show-inline-description: HorizontalLayout {
+                                    if root.show-inline-description && root.truncate-inline-description: HorizontalLayout {
+                                        horizontal-stretch: 1;
+                                        spacing: LayoutTokens.button-content-gap;
+                                        alignment: center;
+                                        align-items: center;
+
+                                        Text {
+                                            horizontal-stretch: 0;
+                                            text: root.label;
+                                            color: root.label-color;
+                                            font-size: LayoutTokens.text-body-size-medium;
+                                            font-weight: root.label-font-weight;
+                                            overflow: elide;
+                                            wrap: no-wrap;
+                                            vertical-alignment: center;
+                                        }
+
+                                        Text {
+                                            horizontal-stretch: 1;
+                                            text: root.description;
+                                            color: root.description-color;
+                                            font-size: LayoutTokens.text-body-size-small;
+                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            overflow: elide;
+                                            wrap: no-wrap;
+                                            vertical-alignment: center;
+                                        }
+                                    }
+
+                                    if root.show-inline-description && !root.truncate-inline-description: HorizontalLayout {
                                         horizontal-stretch: 1;
                                         spacing: LayoutTokens.button-content-gap;
                                         alignment: center;
@@ -297,6 +323,7 @@ export component ActionList2Row {
                                         }
 
                                         Text {
+                                            horizontal-stretch: 1;
                                             text: root.description;
                                             color: root.description-color;
                                             font-size: LayoutTokens.text-body-size-small;

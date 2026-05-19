@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR12 large rows + full variant + prior scenarios.
+// **ActionList2** gallery — PR13 truncation + fill-width + prior scenarios.
 import {
     ActionList2,
     ActionList2CustomHeading,
@@ -37,6 +37,7 @@ export component GalleryActionList2Page {
         : "0";
     property <int> list-variant-ix: 0;
     property <bool> preview-has-leading-icon: false;
+    property <bool> preview-fill-width: true;
 
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
@@ -62,6 +63,7 @@ export component GalleryActionList2Page {
         { value: "21", label: "WithIcons", enabled: true },
         { value: "22", label: "LargeItem", enabled: true },
         { value: "23", label: "FullVariant", enabled: true },
+        { value: "24", label: "TextWrapAndTruncation", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -92,6 +94,8 @@ export component GalleryActionList2Page {
     property <length> effective-item-margin-inline:
         root.effective-list-variant == ALVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
 
+    property <length> preview-chrome-width: root.scenario-key == "24" ? 300px : 240px;
+
     property <[ActionList2Line]> lines-adapter-demo: [
         {
             kind: ActionList2LineKind.row,
@@ -105,6 +109,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.copy_icon,
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -123,6 +128,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.link,
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -141,6 +147,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.diff_modified,
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             trailing-text: "",
             show-trailing-loading: false,
             active: false,
@@ -161,6 +168,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -179,6 +187,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -197,6 +206,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -215,6 +225,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -236,6 +247,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -254,6 +266,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -272,6 +285,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -287,6 +301,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.table,
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -308,6 +323,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.dot_fill,
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -326,6 +342,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.dot_fill,
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -344,6 +361,7 @@ export component GalleryActionList2Page {
             leading-icon: Icons.dot_fill,
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
@@ -375,6 +393,7 @@ export component GalleryActionList2Page {
         : root.scenario-key == "21" ? "Upstream **WithIcons** — leading octicons incl. **danger** row"
         : root.scenario-key == "22" ? "Upstream **LargeItem** — **`row-size: large`** (plain, inline, block description)"
         : root.scenario-key == "23" ? "Upstream **FullVariant** — list **`variant: full`** (no inset margins)"
+        : root.scenario-key == "24" ? "Upstream **TextWrapAndTruncation** — 300px panel; **`truncate-inline-description`**; toggle **Fill width**"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -393,7 +412,7 @@ export component GalleryActionList2Page {
             }
 
             preview-chrome := Rectangle {
-                width: 240px;
+                width: root.preview-chrome-width;
                 border-width: 1px;
                 border-color: PrimerColors.borderColor-muted;
                 border-radius: LayoutTokens.borderRadius-medium;
@@ -1260,6 +1279,81 @@ export component GalleryActionList2Page {
                                 }
                             }
                         }
+
+                        if root.scenario-key == "24": VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Block Description. Long text should wrap";
+                                has-leading-visual: true;
+                                leading-icon: Icons.arrow_up;
+                                description: "This description is long, but it is block so it wraps";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated block wrap";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Inline Description";
+                                has-leading-visual: true;
+                                leading-icon: Icons.arrow_up;
+                                description: "This description gets truncated because it is inline with truncation";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                truncate-inline-description: true;
+                                show-divider: true;
+                                clicked => {
+                                    root.last-action = "Activated inline truncate";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Description with truncation";
+                                has-leading-visual: true;
+                                leading-icon: Icons.arrow_up;
+                                description:
+                                    "With bold and italic text, and it should truncate if it is too long";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                truncate-inline-description: true;
+                                show-divider: true;
+                                clicked => {
+                                    root.last-action = "Activated complex truncate";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Inline Description";
+                                has-leading-visual: true;
+                                leading-icon: Icons.arrow_up;
+                                description:
+                                    "This description wraps because it is inline without truncation";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                truncate-inline-description: false;
+                                show-divider: true;
+                                clicked => {
+                                    root.last-action = "Activated inline wrap";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Really long text without a description should wrap so it wraps";
+                                has-leading-visual: true;
+                                leading-icon: Icons.arrow_up;
+                                show-divider: true;
+                                clicked => {
+                                    root.last-action = "Activated long label wrap";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "SomethingSomething/SomethingElse.Some.Thing.Lalala.la";
+                                has-leading-visual: true;
+                                leading-icon: Icons.arrow_up;
+                                clicked => {
+                                    root.last-action = "Activated long path";
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -1316,6 +1410,11 @@ export component GalleryActionList2Page {
                 Checkbox {
                     label: "Leading icon";
                     checked <=> preview-has-leading-icon;
+                }
+
+                Checkbox {
+                    label: "Fill width";
+                    checked <=> preview-fill-width;
                 }
             }
         }
