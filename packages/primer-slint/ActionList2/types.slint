@@ -65,4 +65,8 @@ export struct ActionList2Line {
   description: string,
   description-layout: ActionList2DescriptionLayout,
   trailing-text: string,
+  /// Non-empty → Primer **`inactiveText`**: no activation; **`.InactiveWarning`** under the label.
+  inactive-text: string,
+  /// Primer **`loading`**: trailing spinner; row not activatable; muted label/description.
+  show-trailing-loading: bool,
 }

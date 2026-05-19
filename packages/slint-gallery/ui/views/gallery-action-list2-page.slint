@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR7 multiple selection + prior scenarios.
+// **ActionList2** gallery — PR8 disabled / inactive / loading + prior scenarios.
 import {
     ActionList2,
     ActionList2DescriptionLayout,
@@ -41,6 +41,10 @@ export component GalleryActionList2Page {
         { value: "8", label: "MultiSelect", enabled: true },
         { value: "9", label: "MultiSelectLines", enabled: true },
         { value: "10", label: "ListboxMultiSelect", enabled: true },
+        { value: "12", label: "DisabledItem", enabled: true },
+        { value: "13", label: "InactiveItem", enabled: true },
+        { value: "14", label: "LoadingItem", enabled: true },
+        { value: "15", label: "InactiveSingleSelect", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -51,6 +55,8 @@ export component GalleryActionList2Page {
 
     property <string> last-action: "";
     property <int> single-select-ix: 0;
+    property <int> disabled-select-ix: 0;
+    property <int> inactive-single-select-ix: 1;
     property <bool> multi-checked-0: true;
     property <bool> multi-checked-1: false;
     property <bool> multi-checked-2: false;
@@ -76,6 +82,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -87,6 +95,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -98,6 +108,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.item_divider,
@@ -109,6 +121,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -120,6 +134,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
     ];
 
@@ -134,6 +150,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -145,6 +163,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -156,6 +176,7 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            show-trailing-loading: false,
         },
     ];
 
@@ -170,6 +191,8 @@ export component GalleryActionList2Page {
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -181,6 +204,8 @@ export component GalleryActionList2Page {
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -192,6 +217,8 @@ export component GalleryActionList2Page {
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -203,6 +230,8 @@ export component GalleryActionList2Page {
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
     ];
 
@@ -217,6 +246,8 @@ export component GalleryActionList2Page {
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -228,6 +259,8 @@ export component GalleryActionList2Page {
             description: "GitHub",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -239,6 +272,8 @@ export component GalleryActionList2Page {
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -250,6 +285,8 @@ export component GalleryActionList2Page {
             description: "github/primer",
             description-layout: ActionList2DescriptionLayout.block,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
     ];
 
@@ -264,6 +301,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -275,6 +314,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -286,6 +327,8 @@ export component GalleryActionList2Page {
             description: "",
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
         },
     ];
 
@@ -301,6 +344,10 @@ export component GalleryActionList2Page {
         : root.scenario-ix == 8 ? "Upstream **MultiSelect** — `role=menu`, **`selection-lead: checkmark`**"
         : root.scenario-ix == 9 ? "Upstream **MultiSelect** — **`ActionList2Lines`** + **`list-role: menu`** → checkmark"
         : root.scenario-ix == 10 ? "True listbox multi — **`list-role: listbox`** → **`selection-lead: checkbox`** (Storybook **ListboxMultiSelect** name is misleading; it uses menu)"
+        : root.scenario-ix == 12 ? "Upstream **DisabledItem** — middle row **`disabled`** (no hover/activation)"
+        : root.scenario-ix == 13 ? "Upstream **InactiveItem** — **`inactive-text`** warning under block description"
+        : root.scenario-ix == 14 ? "Upstream **LoadingItem** — **`show-trailing-loading`** spinner; no activation"
+        : root.scenario-ix == 15 ? "Upstream **InactiveSingleSelect** — inactive row in single-select menu"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -674,6 +721,136 @@ export component GalleryActionList2Page {
                                     root.multi-checked-3 = !root.multi-checked-3;
                                 }
                                 root.last-action = "Toggled " + root.lines-listbox-multi-select[ix].label;
+                            }
+                        }
+
+                        if root.scenario-ix == 12: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Primer Backlog";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selected: root.disabled-select-ix == 0;
+                                clicked => {
+                                    root.disabled-select-ix = 0;
+                                    root.last-action = "Selected Primer Backlog";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Accessibility";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                disabled: true;
+                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selected: root.disabled-select-ix == 1;
+                                show-divider: true;
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Octicons";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "github/primer";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selected: root.disabled-select-ix == 2;
+                                show-divider: true;
+                                clicked => {
+                                    root.disabled-select-ix = 2;
+                                    root.last-action = "Selected Octicons";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 13: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Primer Backlog";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Primer Backlog";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Accessibility";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                inactive-text: "Unavailable due to an outage";
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Octicons";
+                                has-leading-visual: true;
+                                leading-icon: Icons.table;
+                                description: "github/primer";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Octicons";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 14: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Primer Backlog";
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Primer Backlog";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Accessibility";
+                                description: "GitHub";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                show-trailing-loading: true;
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Octicons";
+                                description: "github/primer";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated Octicons";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 15: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Inactive item";
+                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selected: false;
+                                inactive-text: "Unavailable due to an outage";
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Item 2";
+                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selected: root.inactive-single-select-ix == 1;
+                                clicked => {
+                                    root.inactive-single-select-ix = 1;
+                                    root.last-action = "Selected Item 2";
+                                }
                             }
                         }
                     }

@@ -1,12 +1,14 @@
 // ActionList2 row — default + danger visuals; optional `showDividers` seam above.
 
 import { Icons } from "../assets/icons.slint";
+import { Spinner } from "../Progress/spinner.slint";
 import {
     ActionList2Tokens,
     ButtonTokens,
     CheckboxTokens,
     LayoutTokens,
     PrimerColors,
+    Size,
 } from "../tokens.slint";
 import {
     ActionList2DescriptionLayout,
@@ -23,6 +25,10 @@ export component ActionList2Row {
     in property <string> description: "";
     in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
     in property <string> trailing-text;
+    /// Primer **`inactiveText`** — non-empty: no activation; **`.InactiveWarning`** (attention) under the label.
+    in property <string> inactive-text: "";
+    /// Primer **`loading`**: trailing **`Spinner`**; row not activatable; muted label/description.
+    in property <bool> show-trailing-loading: false;
     in property <length> margin-inline;
     in property <bool> show-divider: false;
     in property <bool> selected: false;
@@ -34,9 +40,15 @@ export component ActionList2Row {
     property <bool> show-selection-checkbox: root.selection-lead == ActionList2SelectionLead.checkbox;
 
     property <bool> is-danger: root.row-variant == ActionList2RowVariant.danger;
+    property <bool> is-inactive: root.inactive-text != "";
+    property <bool> is-loading-row: root.show-trailing-loading;
+    property <bool> is-interactive: !root.disabled && !root.is-inactive && !root.is-loading-row;
 
     property <color> single-select-check-tint:
-        root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+        root.disabled
+        ? ButtonTokens.control-fgColor-disabled
+        : root.is-inactive ? PrimerColors.fgColor-muted
+        : PrimerColors.fgColor-default;
 
     property <color> multi-select-lead-bg:
         root.disabled
@@ -51,22 +63,31 @@ export component ActionList2Row {
         root.selected && root.selection-lead == ActionList2SelectionLead.none;
 
     property <int> label-font-weight:
-        !root.disabled && root.use-selected-surface
+        root.is-loading-row
+        ? LayoutTokens.base-text-weight-medium
+        : !root.disabled && root.use-selected-surface
         ? LayoutTokens.base-text-weight-semibold
         : LayoutTokens.base-text-weight-medium;
 
     property <color> label-color:
-        root.disabled
+        root.is-loading-row
+        ? ActionList2Tokens.item-loading-label-fgColor
+        : root.disabled
         ? (root.is-danger ? ActionList2Tokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled)
+        : root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor
         : (root.is-danger ? ActionList2Tokens.item-danger-fgColor-rest : PrimerColors.fgColor-default);
 
     property <color> leading-icon-tint:
         root.disabled
         ? ButtonTokens.control-fgColor-disabled
+        : root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor
         : (root.is-danger ? ActionList2Tokens.item-danger-fgColor-rest : PrimerColors.fgColor-muted);
 
     property <color> trailing-text-color:
-        root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-muted;
+        root.disabled
+        ? ButtonTokens.control-fgColor-disabled
+        : root.is-inactive ? ActionList2Tokens.item-inactive-trailing-fgColor
+        : PrimerColors.fgColor-muted;
 
     property <bool> show-inline-description:
         root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
@@ -75,45 +96,57 @@ export component ActionList2Row {
         root.description != "" && root.description-layout == ActionList2DescriptionLayout.block;
 
     property <color> description-color:
-        root.disabled ? ButtonTokens.control-fgColor-disabled : ActionList2Tokens.item-description-fgColor;
+        root.is-loading-row
+        ? ActionList2Tokens.item-loading-label-fgColor
+        : root.disabled
+        ? ButtonTokens.control-fgColor-disabled
+        : root.is-inactive ? ActionList2Tokens.item-inactive-description-fgColor
+        : ActionList2Tokens.item-description-fgColor;
 
     property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
 
     min-height: root.cell-min-height + (root.show-divider ? LayoutTokens.table-border-width : 0px);
 
+    if root.show-divider: HorizontalLayout {
+        y: -1px;
+        padding-left: root.margin-inline;
+        padding-right: root.margin-inline;
+        spacing: LayoutTokens.button-content-gap;
+        height: 0px;
+
+        if root.show-selection-checkmark: Rectangle {
+            width: LayoutTokens.iconButton-icon-size-medium;
+        }
+
+        if root.show-selection-checkbox: Rectangle {
+            width: LayoutTokens.iconButton-icon-size-medium;
+        }
+
+        Rectangle {
+            width: LayoutTokens.action-list-item-padding-inline - root.margin-inline;
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            height: LayoutTokens.table-border-width;
+            background: ActionList2Tokens.item-seam-borderColor;
+        }
+
+        Rectangle {
+            width: LayoutTokens.action-list-item-padding-inline - root.margin-inline;
+        }
+    }
     row-shell := VerticalLayout {
         alignment: start;
         padding-left: root.margin-inline;
         padding-right: root.margin-inline;
 
-        if root.show-divider: HorizontalLayout {
-            spacing: LayoutTokens.button-content-gap;
-            alignment: start;
-            align-items: center;
-
-            if root.show-selection-checkmark: Rectangle {
-                width: LayoutTokens.iconButton-icon-size-medium;
-                height: LayoutTokens.table-border-width;
-            }
-
-            if root.show-selection-checkbox: Rectangle {
-                width: LayoutTokens.iconButton-icon-size-medium;
-                height: LayoutTokens.table-border-width;
-            }
-
-            Rectangle {
-                width: parent.width;
-                height: LayoutTokens.table-border-width;
-                background: ActionList2Tokens.item-seam-borderColor;
-            }
-        }
-
         fs := FocusScope {
-            enabled: !root.disabled;
+            enabled: root.is-interactive;
             focus-on-click: false;
 
             key-pressed(event) => {
-                if root.disabled {
+                if !root.is-interactive {
                     return reject;
                 }
                 if event.text == Key.Return || event.text == Key.Space {
@@ -124,16 +157,21 @@ export component ActionList2Row {
             }
 
             focus-chrome := Rectangle {
-                border-width: fs.has-focus && !root.disabled ? ActionList2Tokens.item-focus-ring-width : 0px;
+                border-width: fs.has-focus && root.is-interactive ? ActionList2Tokens.item-focus-ring-width : 0px;
                 border-color: ActionList2Tokens.item-focus-ring-color;
                 border-radius: LayoutTokens.borderRadius-medium;
 
                 ta := TouchArea {
-                    enabled: !root.disabled;
+                    enabled: root.is-interactive;
                     min-height: root.cell-min-height;
-                    mouse-cursor: root.disabled ? default : pointer;
+                    mouse-cursor: root.is-interactive ? pointer : default;
                     clicked => {
                         root.clicked();
+                    }
+
+                    if root.disabled: TouchArea {
+                        enabled: true;
+                        mouse-cursor: not-allowed;
                     }
 
                     row-bg := Rectangle {
@@ -283,14 +321,53 @@ export component ActionList2Row {
                                         wrap: word-wrap;
                                     }
                                 }
+
+                                if root.inactive-text != "": HorizontalLayout {
+                                    spacing: LayoutTokens.button-content-gap;
+                                    alignment: start;
+                                    align-items: center;
+
+                                    if root.show-selection-checkmark: Rectangle {
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: LayoutTokens.iconButton-icon-size-medium;
+                                    }
+
+                                    if root.show-selection-checkbox: Rectangle {
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: LayoutTokens.iconButton-icon-size-medium;
+                                    }
+
+                                    if root.has-leading-visual: Rectangle {
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: LayoutTokens.iconButton-icon-size-medium;
+                                    }
+
+                                    Text {
+                                        horizontal-stretch: 1;
+                                        text: root.inactive-text;
+                                        color: PrimerColors.fgColor-attention;
+                                        font-size: LayoutTokens.text-body-size-small;
+                                        font-weight: LayoutTokens.base-text-weight-medium;
+                                        wrap: word-wrap;
+                                    }
+                                }
                             }
 
-                            if root.trailing-text != "": Text {
+                            if root.trailing-text != "" && !root.show-trailing-loading: Text {
                                 text: root.trailing-text;
                                 color: root.trailing-text-color;
                                 font-size: LayoutTokens.text-body-size-medium;
                                 font-weight: LayoutTokens.base-text-weight-medium;
                                 vertical-alignment: center;
+                            }
+
+                            if root.show-trailing-loading: HorizontalLayout {
+                                horizontal-stretch: 0;
+                                alignment: center;
+                                Spinner {
+                                    size: Size.small;
+                                    segment-color: ActionList2Tokens.item-loading-label-fgColor;
+                                }
                             }
                         }
 
@@ -301,34 +378,40 @@ export component ActionList2Row {
                                     ? ButtonTokens.color-action-list-item-default-selected-bg
                                     : transparent;
                             }
-                            danger-selected-pressed when !root.disabled && root.is-danger && root.use-selected-surface && ta.pressed: {
+                            inactive when !root.disabled && root.is-inactive: {
+                                row-bg.background: transparent;
+                            }
+                            loading when !root.disabled && root.is-loading-row: {
+                                row-bg.background: transparent;
+                            }
+                            danger-selected-pressed when root.is-interactive && root.is-danger && root.use-selected-surface && ta.pressed: {
                                 row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
                             }
-                            danger-selected-hover when !root.disabled && root.is-danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                            danger-selected-hover when root.is-interactive && root.is-danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ActionList2Tokens.item-danger-bgColor-hover;
                             }
-                            danger-selected-rest when !root.disabled && root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                            danger-selected-rest when root.is-interactive && root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
                             }
-                            danger-pressed when !root.disabled && root.is-danger && !root.use-selected-surface && ta.pressed: {
+                            danger-pressed when root.is-interactive && root.is-danger && !root.use-selected-surface && ta.pressed: {
                                 row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
                             }
-                            danger-hover when !root.disabled && root.is-danger && !root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                            danger-hover when root.is-interactive && root.is-danger && !root.use-selected-surface && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ActionList2Tokens.item-danger-bgColor-hover;
                             }
-                            default-selected-pressed when !root.disabled && !root.is-danger && root.use-selected-surface && ta.pressed: {
+                            default-selected-pressed when root.is-interactive && !root.is-danger && root.use-selected-surface && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
-                            default-selected-hover when !root.disabled && !root.is-danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                            default-selected-hover when root.is-interactive && !root.is-danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                             }
-                            default-selected-rest when !root.disabled && !root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                            default-selected-rest when root.is-interactive && !root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
                             }
-                            default-pressed when !root.disabled && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && ta.pressed: {
+                            default-pressed when root.is-interactive && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
-                            default-hover when !root.disabled && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && !ta.pressed && ta.has-hover: {
+                            default-hover when root.is-interactive && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                             }
                         ]
