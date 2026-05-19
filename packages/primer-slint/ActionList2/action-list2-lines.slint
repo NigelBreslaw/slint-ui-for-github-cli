@@ -8,14 +8,14 @@ import {
     ActionList2Line,
     ActionList2LineKind,
     ActionList2ListRole,
-    ActionList2ListVariant,
+    ALVariant,
     ActionList2SelectionLead,
     ActionList2SelectionMode,
 } from "./types.slint";
 
 export component ActionList2Lines {
     in property <[ActionList2Line]> lines: [];
-    in property <ActionList2ListVariant> list-variant: ActionList2ListVariant.inset;
+    in property <ALVariant> list-variant: ALVariant.inset;
     /// Primer **`showDividers`**: muted seam between consecutive **rows** (not after the last row).
     in property <bool> show-dividers: false;
     in property <ActionList2ListRole> list-role: ActionList2ListRole.none;
@@ -25,7 +25,7 @@ export component ActionList2Lines {
     callback item-activated(int);
 
     property <length> item-margin-inline:
-        root.list-variant == ActionList2ListVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
+        root.list-variant == ALVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
 
     /// Upstream `ActionList/Selection.tsx`: single or menu → checkmark; listbox + multiple → checkbox.
     property <ActionList2SelectionLead> row-selection-lead:

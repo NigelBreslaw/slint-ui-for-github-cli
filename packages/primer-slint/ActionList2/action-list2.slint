@@ -2,16 +2,16 @@
 // Width comes from the parent layout (`VerticalLayout` / overlay panel), not from `horizontal-stretch` on every child.
 
 import { ActionList2Tokens } from "../tokens.slint";
-import { ActionList2ListVariant } from "./types.slint";
+import { ALVariant } from "./types.slint";
 
 export component ActionList2 {
-    in property <ActionList2ListVariant> list-variant: ActionList2ListVariant.inset;
+    in property <ALVariant> list-variant: ALVariant.inset;
 
     property <length> list-padding-top:
-        root.list-variant == ActionList2ListVariant.inset ? ActionList2Tokens.list-padding-block-inset : 0px;
+        root.list-variant == ALVariant.inset ? ActionList2Tokens.list-padding-block-inset : 0px;
     property <length> list-padding-bottom:
-        root.list-variant == ActionList2ListVariant.inset ? ActionList2Tokens.list-padding-block-inset
-        : root.list-variant == ActionList2ListVariant.horizontal_inset ? ActionList2Tokens.list-padding-block-horizontal-inset-end : 0px;
+        root.list-variant == ALVariant.inset ? ActionList2Tokens.list-padding-block-inset
+        : root.list-variant == ALVariant.horizontal_inset ? ActionList2Tokens.list-padding-block-horizontal-inset-end : 0px;
 
     list-body := VerticalLayout {
         alignment: start;

@@ -7,7 +7,7 @@ import {
     ActionList2LineKind,
     ActionList2Lines,
     ActionList2ListRole,
-    ActionList2ListVariant,
+    ALVariant,
     ActionList2Row,
     ActionList2RowVariant,
     ActionList2SelectionLead,
@@ -58,11 +58,11 @@ export component GalleryActionList2Page {
     property <[bool]> multi-selected-state:
         [root.multi-checked-0, root.multi-checked-1, root.multi-checked-2, root.multi-checked-3];
 
-    property <ActionList2ListVariant> preview-list-variant:
-    root.list-variant-ix == 1 ? ActionList2ListVariant.horizontal_inset : root.list-variant-ix == 2 ? ActionList2ListVariant.full : ActionList2ListVariant.inset;
+    property <ALVariant> preview-list-variant:
+    root.list-variant-ix == 1 ? ALVariant.horizontal_inset : root.list-variant-ix == 2 ? ALVariant.full : ALVariant.inset;
 
     property <length> preview-item-margin-inline:
-        root.preview-list-variant == ActionList2ListVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
+        root.preview-list-variant == ALVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
 
     property <[ActionList2Line]> lines-adapter-demo: [
         {
@@ -618,13 +618,6 @@ export component GalleryActionList2Page {
                     }
                 }
             }
-
-            // if root.last-action != "": Text {
-            //     text: "Last activated: " + root.last-action;
-            //     color: PrimerColors.fgColor-muted;
-            //     font-size: LayoutTokens.text-body-size-small;
-            //     wrap: word-wrap;
-            // }
         }
 
         Rectangle { }
@@ -678,13 +671,6 @@ export component GalleryActionList2Page {
                 Checkbox {
                     label: "Leading icon";
                     checked <=> preview-has-leading-icon;
-                }
-
-                Text {
-                    text: "Tab to a row for focus ring. Hover and press for row background.";
-                    font-size: LayoutTokens.text-body-size-small;
-                    color: PrimerColors.fgColor-muted;
-                    wrap: word-wrap;
                 }
             }
         }
