@@ -21,7 +21,7 @@ Full **procedure** (research → matrix → tokens → states → PRs) lives in 
 
 ## ActionList2 API
 
-Compose-first list chrome + leaf rows (see [`ActionList2/README.md`](ActionList2/README.md)). **`ActionList2`** = `@children` only; **`ActionList2Lines`** = `[ActionList2Line]` adapter for model-driven menus. Row features go on **`ActionList2Row`**, not the line struct.
+Compose-first list chrome + leaf rows (see [`ActionList2/README.md`](ActionList2/README.md)). **`ActionList2`** = `@children` only; **`ActionList2Lines`** = `[ActionList2Line]` adapter for model-driven menus. Row features go on **`ActionList2Row`**, not the line struct. **`FilteredActionList2`** ([`FilteredActionList2/README.md`](FilteredActionList2/README.md)) composes **`ActionList2`** + **`ActionList2Lines`** under a filter field for the upstream **FilteredActionList** shell.
 
 ## New component (short path)
 

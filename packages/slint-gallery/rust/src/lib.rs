@@ -1,6 +1,6 @@
 //! Primer gallery — shared wiring (native binary and future WASM entry).
 
-use slint::{ComponentHandle, Image, ModelRc, SharedString, VecModel};
+use slint::{ComponentHandle, Image, ModelRc, SharedPixelBuffer, SharedString, VecModel};
 use std::cell::RefCell;
 use std::collections::BTreeSet;
 use std::rc::Rc;
@@ -13,7 +13,7 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         &[
             ("action-list-playground", "ActionList"),
             ("action-list2-playground", "ActionList2"),
-            ("filtered-action-list-playground", "FilteredActionList"),
+            ("filtered-action-list2-playground", "FilteredActionList2"),
         ],
     ),
     (
@@ -504,7 +504,7 @@ fn wire_gallery_action_list_listbox_multi_select(window: &GalleryWindow) {
     g.set_selection_summary(action_list_selection_summary(&s));
 }
 
-const FILTERED_ACTION_LIST_DEFAULT_LABELS: [&str; 7] = [
+const FILTERED_ACTION_LIST2_DEFAULT_LABELS: [&str; 7] = [
     "enhancement",
     "bug",
     "good first issue",
@@ -514,11 +514,22 @@ const FILTERED_ACTION_LIST_DEFAULT_LABELS: [&str; 7] = [
     "frontend",
 ];
 
-const FILTERED_ACTION_LIST_LONG_LABELS: [&str; 4] = [
+const FILTERED_ACTION_LIST2_LONG_LABELS: [&str; 4] = [
     "enhancement with a very long label that might wrap. enhancement with a very long label that might wrap. enhancement with a very long label that might wrap. ",
     "bug with an excessively verbose description that goes on and on. bug with an excessively verbose description that goes on and on. bug with an excessively verbose description that goes on and on.",
     "good first issue that is intended to be approachable for newcomers",
     "design related task that involves multiple stakeholders and considerations",
+];
+
+/// Upstream **`FilteredActionList.stories.tsx`** leading circle colors (RGB).
+const FILTERED_ACTION_LIST2_DEFAULT_LEADING_RGB: [(u8, u8, u8); 7] = [
+    (0xa2, 0xee, 0xef),
+    (0xd7, 0x3a, 0x4a),
+    (0x0c, 0xf4, 0x78),
+    (0xff, 0xd7, 0x8e),
+    (0xff, 0x00, 0x00),
+    (0xa4, 0xf2, 0x87),
+    (0x8d, 0xc6, 0xfc),
 ];
 
 fn filter_prefix_labels<'a>(labels: &[&'a str], filter: &str) -> Vec<&'a str> {
@@ -530,178 +541,142 @@ fn filter_prefix_labels<'a>(labels: &[&'a str], filter: &str) -> Vec<&'a str> {
         .collect()
 }
 
-fn action_list_line_from_label(label: &str) -> ActionListLine {
-    ActionListLine {
-        kind: ActionListLineKind::Row,
+fn rgba_circle_image(r: u8, g: u8, b: u8, size: u32) -> Image {
+    let mut buf = vec![0u8; (size * size * 4) as usize];
+    let cx = (size as f32 - 1.0) * 0.5;
+    let cy = (size as f32 - 1.0) * 0.5;
+    let rad = size as f32 * 0.5 - 1.0;
+    for y in 0..size {
+        for x in 0..size {
+            let dx = x as f32 - cx;
+            let dy = y as f32 - cy;
+            if dx * dx + dy * dy <= rad * rad {
+                let i = ((y * size + x) * 4) as usize;
+                buf[i] = r;
+                buf[i + 1] = g;
+                buf[i + 2] = b;
+                buf[i + 3] = 255;
+            }
+        }
+    }
+    Image::from_rgba8(SharedPixelBuffer::clone_from_slice(&buf, size, size))
+}
+
+fn action_list2_line_long_story(label: &str) -> ActionList2Line {
+    ActionList2Line {
+        kind: ActionList2LineKind::Row,
         label: label.into(),
-        row_variant: ActionListRowVariant::Default,
+        row_variant: ActionList2RowVariant::Default,
+        row_size: ActionList2RowSize::Medium,
         disabled: false,
         has_leading_avatar: false,
-        avatar_source: Default::default(),
+        avatar_source: Image::default(),
         has_leading_visual: false,
-        leading_icon: Default::default(),
+        leading_icon: Image::default(),
         description: SharedString::new(),
-        description_layout: ActionListDescriptionLayout::None,
-        has_markdown: false,
-        label_markdown: Default::default(),
-        inactive_text: SharedString::new(),
-        active: false,
-        show_trailing_loading: false,
-        has_trailing_visual: false,
-        trailing_icon: Default::default(),
+        description_layout: ActionList2DescriptionLayout::None,
+        truncate_inline_description: false,
         trailing_text: SharedString::new(),
+        inactive_text: SharedString::new(),
+        show_trailing_loading: false,
+        active: false,
+        section_heading_variant: ActionList2SectionHeadingVariant::Subtle,
     }
 }
 
-fn action_list_lines_from_labels(labels: &[&str]) -> Vec<ActionListLine> {
-    labels.iter().map(|&l| action_list_line_from_label(l)).collect()
+fn action_list2_line_default_story(label: &str, color_ix: usize) -> ActionList2Line {
+    let (r, g, b) = FILTERED_ACTION_LIST2_DEFAULT_LEADING_RGB
+        .get(color_ix)
+        .copied()
+        .unwrap_or(FILTERED_ACTION_LIST2_DEFAULT_LEADING_RGB[6]);
+    let circle = rgba_circle_image(r, g, b, 16);
+    ActionList2Line {
+        kind: ActionList2LineKind::Row,
+        label: label.into(),
+        row_variant: ActionList2RowVariant::Default,
+        row_size: ActionList2RowSize::Medium,
+        disabled: false,
+        has_leading_avatar: false,
+        avatar_source: circle.clone(),
+        has_leading_visual: true,
+        leading_icon: circle,
+        description: SharedString::new(),
+        description_layout: ActionList2DescriptionLayout::None,
+        truncate_inline_description: false,
+        trailing_text: SharedString::new(),
+        inactive_text: SharedString::new(),
+        show_trailing_loading: false,
+        active: false,
+        section_heading_variant: ActionList2SectionHeadingVariant::Subtle,
+    }
 }
 
-fn wire_gallery_filtered_action_list_default(window: &GalleryWindow) {
+fn wire_gallery_filtered_action_list2_default(window: &GalleryWindow) {
     let window_weak = window.as_weak();
     window
-        .global::<GalleryFilteredActionListDefault>()
+        .global::<GalleryFilteredActionList2Default>()
         .on_filter_changed({
             let window_weak = window_weak.clone();
             move |filter: SharedString| {
-                let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.as_str());
-                let lines = action_list_lines_from_labels(&picked);
+                let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter.as_str());
+                let lines: Vec<ActionList2Line> = picked
+                    .iter()
+                    .map(|&l| {
+                        let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                            .iter()
+                            .position(|&x| x == l)
+                            .unwrap_or(0);
+                        action_list2_line_default_story(l, color_ix)
+                    })
+                    .collect();
                 let Some(w) = window_weak.upgrade() else {
                     return;
                 };
-                w.global::<GalleryFilteredActionListDefault>()
+                w.global::<GalleryFilteredActionList2Default>()
                     .set_lines(ModelRc::new(VecModel::from(lines)));
             }
         });
-    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, "");
-    let lines = action_list_lines_from_labels(&picked);
-    window
-        .global::<GalleryFilteredActionListDefault>()
-        .set_lines(ModelRc::new(VecModel::from(lines)));
-}
-
-fn wire_gallery_filtered_action_list_long(window: &GalleryWindow) {
-    let window_weak = window.as_weak();
-    window
-        .global::<GalleryFilteredActionListLong>()
-        .on_filter_changed({
-            let window_weak = window_weak.clone();
-            move |filter: SharedString| {
-                let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_LONG_LABELS, filter.as_str());
-                let lines = action_list_lines_from_labels(&picked);
-                let Some(w) = window_weak.upgrade() else {
-                    return;
-                };
-                w.global::<GalleryFilteredActionListLong>()
-                    .set_lines(ModelRc::new(VecModel::from(lines)));
-            }
-        });
-    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_LONG_LABELS, "");
-    let lines = action_list_lines_from_labels(&picked);
-    window
-        .global::<GalleryFilteredActionListLong>()
-        .set_lines(ModelRc::new(VecModel::from(lines)));
-}
-
-fn sync_gallery_filtered_action_list_select_all(
-    window: &GalleryWindow,
-    selected: &RefCell<BTreeSet<String>>,
-    filter: &RefCell<String>,
-) {
-    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.borrow().as_str());
-    let sel = selected.borrow();
-    let lines: Vec<ActionListLine> = picked
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, "");
+    let lines: Vec<ActionList2Line> = picked
         .iter()
-        .map(|&l| action_list_line_from_label(l))
+        .map(|&l| {
+            let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                .iter()
+                .position(|&x| x == l)
+                .unwrap_or(0);
+            action_list2_line_default_story(l, color_ix)
+        })
         .collect();
-    let multi: Vec<bool> = picked.iter().map(|l| sel.contains(*l)).collect();
-    let all = !picked.is_empty() && picked.iter().all(|l| sel.contains(*l));
-    let some = picked.iter().any(|l| sel.contains(*l));
-    let indeterminate = !all && some;
-    let g = window.global::<GalleryFilteredActionListSelectAll>();
-    g.set_lines(ModelRc::new(VecModel::from(lines)));
-    g.set_multi_selected(ModelRc::new(VecModel::from(multi)));
-    g.set_select_all_checked(all);
-    g.set_select_all_indeterminate(indeterminate);
+    window
+        .global::<GalleryFilteredActionList2Default>()
+        .set_lines(ModelRc::new(VecModel::from(lines)));
 }
 
-fn wire_gallery_filtered_action_list_select_all(window: &GalleryWindow) {
-    let selected = Rc::new(RefCell::new(BTreeSet::<String>::new()));
-    let filter = Rc::new(RefCell::new(String::new()));
+fn wire_gallery_filtered_action_list2_long(window: &GalleryWindow) {
     let window_weak = window.as_weak();
-
     window
-        .global::<GalleryFilteredActionListSelectAll>()
+        .global::<GalleryFilteredActionList2Long>()
         .on_filter_changed({
-            let selected = Rc::clone(&selected);
-            let filter = Rc::clone(&filter);
             let window_weak = window_weak.clone();
-            move |t: SharedString| {
-                *filter.borrow_mut() = t.to_string();
+            move |filter: SharedString| {
+                let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_LONG_LABELS, filter.as_str());
+                let lines: Vec<ActionList2Line> =
+                    picked.iter().map(|&l| action_list2_line_long_story(l)).collect();
                 let Some(w) = window_weak.upgrade() else {
                     return;
                 };
-                sync_gallery_filtered_action_list_select_all(&w, &selected, &filter);
+                w.global::<GalleryFilteredActionList2Long>()
+                    .set_lines(ModelRc::new(VecModel::from(lines)));
             }
         });
-
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_LONG_LABELS, "");
+    let lines: Vec<ActionList2Line> = picked
+        .iter()
+        .map(|&l| action_list2_line_long_story(l))
+        .collect();
     window
-        .global::<GalleryFilteredActionListSelectAll>()
-        .on_item_activated({
-            let selected = Rc::clone(&selected);
-            let filter = Rc::clone(&filter);
-            let window_weak = window_weak.clone();
-            move |ix: i32| {
-                let ix = ix as usize;
-                let picked =
-                    filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.borrow().as_str());
-                if ix >= picked.len() {
-                    return;
-                }
-                let label = picked[ix];
-                {
-                    let mut s = selected.borrow_mut();
-                    if s.contains(label) {
-                        s.remove(label);
-                    } else {
-                        s.insert(label.to_string());
-                    }
-                }
-                let Some(w) = window_weak.upgrade() else {
-                    return;
-                };
-                sync_gallery_filtered_action_list_select_all(&w, &selected, &filter);
-            }
-        });
-
-    window
-        .global::<GalleryFilteredActionListSelectAll>()
-        .on_select_all_changed({
-            let selected = Rc::clone(&selected);
-            let filter = Rc::clone(&filter);
-            let window_weak = window_weak.clone();
-            move |on: bool| {
-                let picked =
-                    filter_prefix_labels(&FILTERED_ACTION_LIST_DEFAULT_LABELS, filter.borrow().as_str());
-                let mut s = selected.borrow_mut();
-                if on {
-                    for l in picked {
-                        s.insert(l.to_string());
-                    }
-                } else {
-                    for l in picked {
-                        s.remove(l);
-                    }
-                }
-                drop(s);
-                let Some(w) = window_weak.upgrade() else {
-                    return;
-                };
-                sync_gallery_filtered_action_list_select_all(&w, &selected, &filter);
-            }
-        });
-
-    sync_gallery_filtered_action_list_select_all(window, &selected, &filter);
+        .global::<GalleryFilteredActionList2Long>()
+        .set_lines(ModelRc::new(VecModel::from(lines)));
 }
 
 fn wire_gallery_select_panel_multi(window: &GalleryWindow) {
@@ -745,9 +720,8 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_action_list_multi_select(&window);
     wire_gallery_action_list_listbox_multi_select(&window);
     wire_gallery_select_panel_multi(&window);
-    wire_gallery_filtered_action_list_default(&window);
-    wire_gallery_filtered_action_list_long(&window);
-    wire_gallery_filtered_action_list_select_all(&window);
+    wire_gallery_filtered_action_list2_default(&window);
+    wire_gallery_filtered_action_list2_long(&window);
 
     fill_gallery_tree_view_list_models(&window);
     wire_gallery_sidebar_nav(&window);

@@ -25,7 +25,7 @@ specified in detail.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
 - **StateLabelTokens** — [StateLabel](slint/StateLabel/state-label.slint) padding, pill radius, semibold text size, and **onEmphasis** fg; composes **LayoutTokens** + **PrimerColors** only. Emphasis **bg** / **border** pairs: **PrimerColors** (`bgColor-open-emphasis`, `borderColor-done-emphasis`, …) in the **`StateLabel.module.css`** audit block.
 - **ActionListTokens** — [**ActionList**](https://primer.style/product/components/action-list/) row and section-heading colors (danger, inactive, link, filled heading, divider, loading label fg): **only** **PrimerColors** + **ButtonTokens** `out` bindings. PR2 audit comment block in [`tokens.slint`](slint/tokens.slint) above **`ActionListTokens`**.
-- **FilteredActionListTokens** — [**FilteredActionList**](slint/FilteredActionList/filtered-action-list.slint) select-all strip padding/gaps and body skeleton bar spacing; composes **LayoutTokens** only. See [`FilteredActionList/VARIANT_MATRIX.md`](slint/FilteredActionList/VARIANT_MATRIX.md) for coverage and v1 non-goals.
+- **FilteredActionListTokens** — [**FilteredActionList**](slint/FilteredActionList/filtered-action-list.slint) select-all strip padding/gaps and body skeleton bar spacing; composes **LayoutTokens** only. **FilteredActionList2** does not use this global in the minimal port.
 - **CheckboxTokens** — unchecked rest/hover/pressed, checked/indeterminate accent fill + hover/active, and disabled colors; composes from **PrimerColors** and **ButtonTokens**. **`LayoutTokens.checkbox-border-radius`** matches Primer **`borderRadius-small`** (2px).
 - **RadioTokens** — unchecked base + checked inner dot (**`control.checked.fgColor`**) and outer ring (**`control.checked.bgColor`**) + disabled branches; composes **PrimerColors** / **ButtonTokens** (see audit block in [`tokens.slint`](slint/tokens.slint)).
 - **OverlayTokens** — **`backdrop-scrim`** for modal-style dimmers; **`panel-background`** / **`panel-border`** / **`panel-border-width`** / **`panel-border-radius`**, **`panel-elevation-shadow`** (`shadow.floating.small` via **ShadowTokens**) for floating panels (**`ModalOverlay`**, **`SheetOverlay`**, **`AnchoredOverlay`**, and host-owned menus use these values). **ModalOverlay** and **`SheetOverlay`** also use **`backdrop-scrim`** (**`AnchoredOverlay`** optional). **No literals** — composes **PrimerColors**, **LayoutTokens**, **ShadowTokens**.
@@ -345,7 +345,23 @@ Slint host for Primer **FilteredActionList** (filter field, header hairline, opt
 
 **Imports for views:** [`primer.slint`](slint/primer.slint) — **`FilteredActionList`**, **`FilteredActionListLoadingKind`**, **`ActionListLine`**, **`ActionListSelectionMode`**, **`FilteredActionListTokens`**, **`SelectPanelTokens`** (default list height), **`LayoutTokens`**, **`PrimerColors`**.
 
-Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group, **FilteredActionList** subsections).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group, **FilteredActionList2**; legacy **FilteredActionList** v1 page is no longer linked).
+
+## FilteredActionList2
+
+**FilteredActionList2** ([`FilteredActionList2/filtered-action-list2.slint`](slint/FilteredActionList2/filtered-action-list2.slint)) is the **ActionList2**-based host for upstream **FilteredActionList**: **`PrimerTextInput`** filter, hairline, bounded **`Flickable`** body with **`ActionList2`** + **`ActionList2Lines`**. Parent-owned filtering: **`[ActionList2Line]`** on **`lines`**, **`filter-text`**, **`filter-changed`**. Matches Storybook **`Default`** and **`WithLongItems`** only; loading, select-all, message/empty, and **`aria-activedescendant`** are **non-goals** for now — see [`FilteredActionList2/README.md`](slint/FilteredActionList2/README.md) and [`FilteredActionList2/VARIANT_MATRIX.md`](slint/FilteredActionList2/VARIANT_MATRIX.md).
+
+| Property | Notes |
+| -------- | ----- |
+| `filter-text` | **in-out** `string`; **`filter-changed(string)`** on edit. |
+| `placeholder`, `disabled` | Filter field. |
+| `lines` | **`[ActionList2Line]`** — parent narrows by query. |
+| `list-variant` | **`ALVariant`** (default **`inset`**). |
+| `show-dividers` | Passed to **`ActionList2Lines`**. |
+| `body-region-height` | Default **`SelectPanelTokens.list-max-height-default`**. |
+| `item-activated` | Forwarded from **`ActionList2Lines`**. |
+
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`FilteredActionList2`**, **`ActionList2Line`**, **`ActionList2LineKind`**, **`ALVariant`**, **`SelectPanelTokens`**, **`LayoutTokens`**, **`PrimerColors`**.
 
 ## Select
 

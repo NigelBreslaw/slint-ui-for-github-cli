@@ -5,12 +5,10 @@ import {
   type ActionListGalleryMultiSelectHandle,
 } from "./state/gallery-action-list-multi-select-bridge-shared.ts";
 import {
-    wireGalleryFilteredActionListDefault,
-    wireGalleryFilteredActionListLong,
-    wireGalleryFilteredActionListSelectAll,
-    type GalleryFilteredActionListHandle,
-    type GalleryFilteredActionListSelectAllHandle,
-} from "./state/gallery-filtered-action-list-bridge-shared.ts";
+  wireGalleryFilteredActionList2Default,
+  wireGalleryFilteredActionList2Long,
+  type GalleryFilteredActionList2Handle,
+} from "./state/gallery-filtered-action-list2-bridge-shared.ts";
 import {
   wireGallerySelectPanelMultiSelect,
   type GallerySelectPanelMultiHandle,
@@ -35,9 +33,8 @@ type GalleryWindowModule = {
     GalleryActionListMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
     GallerySelectPanelMulti: GallerySelectPanelMultiHandle;
-    GalleryFilteredActionListDefault: GalleryFilteredActionListHandle;
-    GalleryFilteredActionListLong: GalleryFilteredActionListHandle;
-    GalleryFilteredActionListSelectAll: GalleryFilteredActionListSelectAllHandle;
+    GalleryFilteredActionList2Default: GalleryFilteredActionList2Handle;
+    GalleryFilteredActionList2Long: GalleryFilteredActionList2Handle;
     GalleryTreeViewListModels: GalleryTreeViewListModelsHandle;
     Icons: {
       dot_fill: ImageData;
@@ -57,16 +54,9 @@ wireActionListGalleryMultiSelect(
   window.GalleryActionListListboxMultiSelect,
 );
 wireGallerySelectPanelMultiSelect(window.GallerySelectPanelMulti);
-wireGalleryFilteredActionListDefault(
-  window.GalleryFilteredActionListDefault,
-  window.Icons.dot_fill,
-);
-wireGalleryFilteredActionListLong(
-  window.GalleryFilteredActionListLong,
-  window.Icons.dot_fill,
-);
-wireGalleryFilteredActionListSelectAll(
-  window.GalleryFilteredActionListSelectAll,
+wireGalleryFilteredActionList2Default(window.GalleryFilteredActionList2Default);
+wireGalleryFilteredActionList2Long(
+  window.GalleryFilteredActionList2Long,
   window.Icons.dot_fill,
 );
 wireGalleryTreeViewListModels(

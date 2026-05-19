@@ -1,0 +1,134 @@
+// **FilteredActionList2** gallery — upstream Storybook **Default** + **WithLongItems** only.
+import {
+    FilteredActionList2,
+    Select,
+    SelectOption,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import {
+    GalleryFilteredActionList2Default,
+    GalleryFilteredActionList2Long,
+} from "../state/gallery-filtered-action-list2-state.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryFilteredActionList2Page {
+    property <int> scenario-ix: 0;
+
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default", enabled: true },
+        { value: "1", label: "WithLongItems", enabled: true },
+    ];
+
+    property <string> scenario-caption:
+        root.scenario-ix == 0
+        ? "Upstream Default — prefix filter on label text; bridge-backed rows with Storybook leading colors."
+        : "Upstream Examples WithLongItems — taller scroll region (`body-region-height` 320px).";
+
+    property <string> fal2-default-filter: "";
+    property <string> fal2-long-filter: "";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            horizontal-stretch: 1;
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "FilteredActionList2";
+                color: PrimerColors.fgColor-default;
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            Text {
+                text: root.scenario-caption;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+
+            Rectangle {
+                horizontal-stretch: 0;
+                width: 320px;
+                background: PrimerColors.bgColor-default;
+                border-radius: 6px;
+
+                VerticalLayout {
+                    padding: 16px;
+                    spacing: 12px;
+                    alignment: start;
+
+                    Text {
+                        text:
+                            root.scenario-ix == 1
+                            ? "Filtered Action List with Long Items"
+                            : "Filtered Action List";
+                        color: PrimerColors.fgColor-default;
+                        font-size: 18px;
+                        font-weight: 700;
+                        wrap: word-wrap;
+                    }
+
+                    Text {
+                        text: "Please select labels that describe your issue:";
+                        color: PrimerColors.fgColor-default;
+                        font-size: 14px;
+                        font-weight: 400;
+                        wrap: word-wrap;
+                    }
+
+                    if root.scenario-ix == 0: FilteredActionList2 {
+                        filter-text <=> root.fal2-default-filter;
+                        placeholder: "Filter Labels";
+                        lines: GalleryFilteredActionList2Default.lines;
+                        filter-changed(t) => {
+                            GalleryFilteredActionList2Default.filter-changed(t);
+                        }
+                    }
+
+                    if root.scenario-ix == 1: FilteredActionList2 {
+                        filter-text <=> root.fal2-long-filter;
+                        placeholder: "Filter Labels";
+                        body-region-height: 320px;
+                        lines: GalleryFilteredActionList2Long.lines;
+                        filter-changed(t) => {
+                            GalleryFilteredActionList2Long.filter-changed(t);
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 16px;
+                alignment: start;
+
+                Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "Filtered list options";
+                    placeholder: "Choose…";
+                    options: root.scenario-options;
+                    selected-index <=> root.scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
+                    }
+                }
+            }
+        }
+    }
+}

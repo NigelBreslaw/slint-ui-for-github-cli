@@ -69,12 +69,12 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "filtered-action-list-playground",
-    label: "FilteredActionList",
+    id: "filtered-action-list2-playground",
+    label: "FilteredActionList2",
     level: 2,
     has-children: false,
     expanded: false,
-    current: GalleryState.selected-page-id == "filtered-action-list-playground",
+    current: GalleryState.selected-page-id == "filtered-action-list2-playground",
     leading-is-directory: false,
     has-leading-visual: true,
     trailing: TreeViewTrailingVisual.none,
@@ -988,7 +988,7 @@ export component GallerySidebar {
                                 GallerySidebarNav.row-current-requested(id);
                             } else if id == "action-list-playground"
                                 || id == "action-list2-playground"
-                                || id == "filtered-action-list-playground"
+                                || id == "filtered-action-list2-playground"
                                 || id == "action-menu-playground"
                                 || id == "anchored-overlay-playground"
                                 || id == "avatar-playground"

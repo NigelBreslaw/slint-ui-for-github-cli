@@ -16,7 +16,7 @@ import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryAnchoredOverlayPage } from "./views/gallery-anchored-overlay-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryActionList2Page } from "./views/gallery-action-list2-page.slint";
-import { GalleryFilteredActionListPage } from "./views/gallery-filtered-action-list-page.slint";
+import { GalleryFilteredActionList2Page } from "./views/gallery-filtered-action-list2-page.slint";
 import { GalleryActionMenuPage } from "./views/gallery-action-menu-page.slint";
 import { GalleryDialogsPlaygroundPage } from "./views/gallery-dialog-playground-page.slint";
 import { GallerySheetsPage } from "./views/gallery-sheets-page.slint";
@@ -41,10 +41,9 @@ export { GalleryActionListMultiSelect } from "./state/gallery-action-list-multi-
 export { GalleryActionListListboxMultiSelect } from "./state/gallery-action-list-listbox-multi-select-state.slint";
 export { GallerySelectPanelMulti } from "./state/gallery-select-panel-multi-state.slint";
 export {
-    GalleryFilteredActionListDefault,
-    GalleryFilteredActionListLong,
-} from "./state/gallery-filtered-action-list-state.slint";
-export { GalleryFilteredActionListSelectAll } from "./state/gallery-filtered-action-list-select-all-state.slint";
+    GalleryFilteredActionList2Default,
+    GalleryFilteredActionList2Long,
+} from "./state/gallery-filtered-action-list2-state.slint";
 export { GalleryTreeViewListModels } from "./state/gallery-tree-view-list-models.slint";
 export { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 export { GalleryState } from "./state/gallery-state.slint";
@@ -107,7 +106,7 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id == "filtered-action-list-playground": GalleryFilteredActionListPage {
+                        if GalleryState.selected-page-id == "filtered-action-list2-playground": GalleryFilteredActionList2Page {
                             height: main-scroll.height;
                         }
 

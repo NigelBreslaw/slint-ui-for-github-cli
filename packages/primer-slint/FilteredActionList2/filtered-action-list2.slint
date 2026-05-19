@@ -1,0 +1,94 @@
+// Filtered **ActionList2** host: filter field, header hairline, scrollable **`ActionList2`** body (upstream: Primer **`FilteredActionList`**).
+
+import { Icons } from "../assets/icons.slint";
+import { ActionList2 } from "../ActionList2/action-list2.slint";
+import { ActionList2Lines } from "../ActionList2/action-list2-lines.slint";
+import {
+    ActionList2Line,
+    ActionList2LineKind,
+    ActionList2ListRole,
+    ALVariant,
+    ActionList2SelectionMode,
+} from "../ActionList2/types.slint";
+import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
+import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../tokens.slint";
+
+export component FilteredActionList2 {
+    in-out property <string> filter-text: "";
+    in property <string> placeholder: "Filter Labels";
+    in property <bool> disabled: false;
+    /// Parent supplies rows already narrowed by filter query.
+    in property <[ActionList2Line]> lines: [];
+    in property <ALVariant> list-variant: ALVariant.inset;
+    in property <bool> show-dividers: false;
+    /// Scroll region height (`SelectPanel`-aligned default).
+    in property <length> body-region-height: SelectPanelTokens.list-max-height-default;
+
+    callback filter-changed(string);
+    callback item-activated(int);
+
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        spacing: SelectPanelTokens.wrapper-stack-gap;
+
+        PrimerTextInput {
+            horizontal-stretch: 1;
+            placeholder: root.placeholder;
+            text <=> root.filter-text;
+            disabled: root.disabled;
+            has-leading-visual: true;
+            leading-visual: Icons.search;
+            edited(t) => {
+                root.filter-changed(t);
+            }
+        }
+
+        Rectangle {
+            height: 1px;
+            background: PrimerColors.borderColor-default;
+        }
+
+        Rectangle {
+            height: root.body-region-height;
+            background: PrimerColors.bgColor-canvas-subtle;
+            border-radius: LayoutTokens.borderRadius-medium;
+            border-width: 1px;
+            border-color: PrimerColors.borderColor-muted;
+            clip: true;
+
+            VerticalLayout {
+                vertical-stretch: 1;
+
+                Flickable {
+                    vertical-stretch: 1;
+                    width: parent.width;
+                    height: parent.height;
+                    viewport-width: parent.width;
+                    viewport-height: body-vl.preferred-height;
+
+                    body-vl := VerticalLayout {
+                        width: parent.width;
+
+                        ActionList2 {
+                            width: 100%;
+                            list-variant: root.list-variant;
+
+                            ActionList2Lines {
+                                width: 100%;
+                                lines: root.lines;
+                                list-variant: root.list-variant;
+                                show-dividers: root.show-dividers;
+                                list-role: ActionList2ListRole.none;
+                                selection-mode: ActionList2SelectionMode.none;
+                                item-activated(ix) => {
+                                    root.item-activated(ix);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

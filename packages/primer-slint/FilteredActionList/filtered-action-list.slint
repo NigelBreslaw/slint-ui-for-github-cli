@@ -19,7 +19,7 @@ export component FilteredActionList {
     in-out property <string> filter-text: "";
     in property <string> placeholder: "Filter Labels";
     in property <bool> disabled: false;
-    /// Parent supplies rows already narrowed by filter query (see gallery **`GalleryFilteredActionList*`** wiring).
+    /// Parent supplies rows already narrowed by filter query (see gallery **`GalleryFilteredActionList*`** for v1; **`GalleryFilteredActionList2*`** for **ActionList2**).
     in property <[ActionListLine]> lines: [];
     in property <bool> show-dividers: false;
     in property <ActionListSelectionMode> selection-mode: ActionListSelectionMode.none;
