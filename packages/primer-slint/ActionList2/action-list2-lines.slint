@@ -34,6 +34,8 @@ export component ActionList2Lines {
         : root.list-role == ActionList2ListRole.menu ? ActionList2SelectionLead.checkmark
         : ActionList2SelectionLead.checkbox;
 
+    horizontal-stretch: 1;
+
     lines-body := VerticalLayout {
         alignment: start;
 
@@ -50,7 +52,7 @@ export component ActionList2Lines {
                 description-layout: line.description-layout;
                 trailing-text: line.trailing-text;
                 margin-inline: root.item-margin-inline;
-                show-top-seam:
+                show-divider:
                     root.show-dividers && ix > 0 && root.lines[ix - 1].kind == ActionList2LineKind.row;
                 selected:
                     (root.selection-mode == ActionList2SelectionMode.single && root.selected-index == ix)
