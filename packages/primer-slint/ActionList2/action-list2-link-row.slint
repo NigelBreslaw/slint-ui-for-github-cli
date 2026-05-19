@@ -1,0 +1,321 @@
+// **ActionList.LinkItem** — anchor row (default visuals only; no selection / danger / loading).
+
+import { Icons } from "../assets/icons.slint";
+import {
+    ActionList2Tokens,
+    ButtonTokens,
+    LayoutTokens,
+    PrimerColors,
+} from "../tokens.slint";
+import { ActionList2DescriptionLayout, ActionList2RowSize } from "./types.slint";
+
+export component ActionList2LinkRow {
+    in property <string> label;
+    in property <string> href: "";
+    in property <ActionList2RowSize> row-size: ActionList2RowSize.medium;
+    in property <bool> has-leading-visual: false;
+    in property <image> leading-icon: Icons.dot_fill;
+    in property <string> description: "";
+    in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
+    in property <bool> truncate-inline-description: false;
+    in property <string> inactive-text: "";
+    in property <bool> active: false;
+    in property <length> margin-inline;
+    in property <bool> show-divider: false;
+    in property <bool> roving-focused: false;
+    /// Fires on pointer / keyboard activation when not **inactive** (host opens **`href`**).
+    callback clicked;
+    callback focus-claimed();
+
+    changed roving-focused => {
+        if root.roving-focused {
+            row-fs.focus();
+        }
+    }
+
+    property <bool> is-inactive: root.inactive-text != "";
+    property <bool> is-interactive: !root.is-inactive;
+    property <bool> show-active-chrome: root.active && root.is-interactive;
+
+    property <int> label-font-weight:
+        root.show-active-chrome
+        ? LayoutTokens.base-text-weight-semibold
+        : LayoutTokens.base-text-weight-medium;
+
+    property <color> label-color:
+        root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor
+        : root.show-active-chrome ? ActionList2Tokens.item-active-label-fgColor-rest
+        : ActionList2Tokens.item-link-fgColor-rest;
+
+    property <color> leading-icon-tint:
+        root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor : PrimerColors.fgColor-muted;
+
+    property <bool> show-inline-description:
+        root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
+    property <bool> show-block-description:
+        root.description != "" && root.description-layout == ActionList2DescriptionLayout.block;
+
+    property <color> description-color:
+        root.is-inactive ? ActionList2Tokens.item-inactive-description-fgColor
+        : ActionList2Tokens.item-description-fgColor;
+
+    property <length> cell-padding-block:
+        root.row-size == ActionList2RowSize.large
+        ? LayoutTokens.action-list-item-padding-block-large
+        : LayoutTokens.action-list-item-padding-block;
+    property <length> cell-min-height:
+        root.row-size == ActionList2RowSize.large
+        ? LayoutTokens.action-list-item-min-height-large
+        : LayoutTokens.action-list-item-min-height;
+
+    min-height: root.cell-min-height + (root.show-divider ? LayoutTokens.table-border-width : 0px);
+
+    if root.show-divider: HorizontalLayout {
+        y: 0px;
+        padding-left: root.margin-inline;
+        padding-right: root.margin-inline;
+        spacing: LayoutTokens.button-content-gap;
+        height: 0px;
+
+        Rectangle {
+            width: LayoutTokens.action-list-item-padding-inline - root.margin-inline;
+        }
+
+        Rectangle {
+            horizontal-stretch: 1;
+            height: LayoutTokens.table-border-width;
+            background: ActionList2Tokens.item-seam-borderColor;
+        }
+
+        Rectangle {
+            width: LayoutTokens.action-list-item-padding-inline - root.margin-inline;
+        }
+    }
+
+    row-fs := FocusScope {
+        enabled: true;
+        focus-on-click: false;
+        focus-on-tab-navigation: root.is-interactive;
+
+        focus-gained => {
+            root.focus-claimed();
+        }
+
+        key-pressed(event) => {
+            if !root.is-interactive {
+                return reject;
+            }
+            if event.text == Key.Return || event.text == Key.Space {
+                root.clicked();
+                return accept;
+            }
+            return reject;
+        }
+
+        row-shell := VerticalLayout {
+            alignment: start;
+            padding-left: root.margin-inline;
+            padding-right: root.margin-inline;
+
+            focus-chrome := Rectangle {
+                border-width: (row-fs.has-focus || root.roving-focused) ? ActionList2Tokens.item-focus-ring-width : 0px;
+                border-color: ActionList2Tokens.item-focus-ring-color;
+                border-radius: LayoutTokens.borderRadius-medium;
+
+                row-chrome-shell := Rectangle {
+                    if root.show-active-chrome: Rectangle {
+                        x: -LayoutTokens.button-content-gap;
+                        y: LayoutTokens.base-size-4;
+                        width: LayoutTokens.base-size-4;
+                        height: parent.height - LayoutTokens.button-content-gap;
+                        background: ActionList2Tokens.item-active-indicator-bgColor;
+                        border-radius: LayoutTokens.borderRadius-medium;
+                    }
+
+                    ta := TouchArea {
+                        enabled: root.is-interactive;
+                        min-height: root.cell-min-height;
+                        mouse-cursor: root.is-interactive ? pointer : default;
+                        clicked => {
+                            root.clicked();
+                        }
+
+                        row-bg := Rectangle {
+                            border-radius: LayoutTokens.borderRadius-medium;
+
+                            content-row := HorizontalLayout {
+                                align-items: center;
+                                padding-left: LayoutTokens.action-list-item-padding-inline;
+                                padding-right: LayoutTokens.action-list-item-padding-inline;
+                                padding-top: root.cell-padding-block;
+                                padding-bottom: root.cell-padding-block;
+                                spacing: LayoutTokens.button-content-gap;
+
+                                primary-column := VerticalLayout {
+                                    horizontal-stretch: 1;
+                                    spacing: root.show-block-description ? 2px : 0px;
+                                    alignment: start;
+
+                                    primary-line := HorizontalLayout {
+                                        spacing: LayoutTokens.button-content-gap;
+                                        alignment: start;
+                                        align-items: center;
+
+                                        if root.has-leading-visual: Image {
+                                            width: LayoutTokens.iconButton-icon-size-medium;
+                                            height: LayoutTokens.iconButton-icon-size-medium;
+                                            vertical-alignment: center;
+                                            source: root.leading-icon;
+                                            colorize: root.leading-icon-tint;
+                                        }
+
+                                        if root.show-inline-description && root.truncate-inline-description: HorizontalLayout {
+                                            horizontal-stretch: 1;
+                                            spacing: LayoutTokens.button-content-gap;
+                                            alignment: center;
+                                            align-items: center;
+
+                                            Text {
+                                                horizontal-stretch: 0;
+                                                text: root.label;
+                                                color: root.label-color;
+                                                font-size: LayoutTokens.text-body-size-medium;
+                                                font-weight: root.label-font-weight;
+                                                overflow: elide;
+                                                wrap: no-wrap;
+                                                vertical-alignment: center;
+                                            }
+
+                                            Text {
+                                                horizontal-stretch: 1;
+                                                text: root.description;
+                                                color: root.description-color;
+                                                font-size: LayoutTokens.text-body-size-small;
+                                                font-weight: LayoutTokens.base-text-weight-medium;
+                                                overflow: elide;
+                                                wrap: no-wrap;
+                                                vertical-alignment: center;
+                                            }
+                                        }
+
+                                        if root.show-inline-description && !root.truncate-inline-description: HorizontalLayout {
+                                            horizontal-stretch: 1;
+                                            spacing: LayoutTokens.button-content-gap;
+                                            alignment: center;
+                                            align-items: center;
+
+                                            Text {
+                                                horizontal-stretch: 1;
+                                                text: root.label;
+                                                color: root.label-color;
+                                                font-size: LayoutTokens.text-body-size-medium;
+                                                font-weight: root.label-font-weight;
+                                                wrap: word-wrap;
+                                                vertical-alignment: center;
+                                            }
+
+                                            Text {
+                                                horizontal-stretch: 1;
+                                                text: root.description;
+                                                color: root.description-color;
+                                                font-size: LayoutTokens.text-body-size-small;
+                                                font-weight: LayoutTokens.base-text-weight-medium;
+                                                wrap: word-wrap;
+                                                vertical-alignment: center;
+                                            }
+                                        }
+
+                                        if root.show-block-description: VerticalLayout {
+                                            horizontal-stretch: 1;
+                                            spacing: 2px;
+                                            alignment: start;
+
+                                            Text {
+                                                text: root.label;
+                                                color: root.label-color;
+                                                font-size: LayoutTokens.text-body-size-medium;
+                                                font-weight: root.label-font-weight;
+                                                wrap: word-wrap;
+                                            }
+                                        }
+
+                                        if !root.show-inline-description && !root.show-block-description: Text {
+                                            horizontal-stretch: 1;
+                                            text: root.label;
+                                            color: root.label-color;
+                                            font-size: LayoutTokens.text-body-size-medium;
+                                            font-weight: root.label-font-weight;
+                                            wrap: word-wrap;
+                                            vertical-alignment: center;
+                                        }
+                                    }
+
+                                    if root.show-block-description: HorizontalLayout {
+                                        spacing: LayoutTokens.button-content-gap;
+                                        alignment: start;
+                                        align-items: center;
+
+                                        if root.has-leading-visual: Rectangle {
+                                            width: LayoutTokens.iconButton-icon-size-medium;
+                                            height: LayoutTokens.iconButton-icon-size-medium;
+                                        }
+
+                                        Text {
+                                            horizontal-stretch: 1;
+                                            text: root.description;
+                                            color: root.description-color;
+                                            font-size: LayoutTokens.text-body-size-small;
+                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            wrap: word-wrap;
+                                        }
+                                    }
+
+                                    if root.inactive-text != "": HorizontalLayout {
+                                        spacing: LayoutTokens.button-content-gap;
+                                        alignment: start;
+                                        align-items: center;
+
+                                        if root.has-leading-visual: Rectangle {
+                                            width: LayoutTokens.iconButton-icon-size-medium;
+                                            height: LayoutTokens.iconButton-icon-size-medium;
+                                        }
+
+                                        Text {
+                                            horizontal-stretch: 1;
+                                            text: root.inactive-text;
+                                            color: PrimerColors.fgColor-attention;
+                                            font-size: LayoutTokens.text-body-size-small;
+                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            wrap: word-wrap;
+                                        }
+                                    }
+                                }
+                            }
+
+                            states [
+                                inactive when root.is-inactive: {
+                                    row-bg.background: transparent;
+                                }
+                                active-pressed when root.is-interactive && root.show-active-chrome && ta.pressed: {
+                                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                                }
+                                active-hover when root.is-interactive && root.show-active-chrome && !ta.pressed && ta.has-hover: {
+                                    row-bg.background: ActionList2Tokens.item-active-bgColor-hover;
+                                }
+                                active-rest when root.is-interactive && root.show-active-chrome && !ta.pressed && !ta.has-hover: {
+                                    row-bg.background: ActionList2Tokens.item-active-bgColor-rest;
+                                }
+                                default-pressed when root.is-interactive && ta.pressed: {
+                                    row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                                }
+                                default-hover when root.is-interactive && !ta.pressed && ta.has-hover: {
+                                    row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

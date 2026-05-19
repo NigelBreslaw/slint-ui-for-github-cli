@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR14 focus zone + prior scenarios.
+// **ActionList2** gallery — PR15 LinkItem + prior scenarios.
 import {
     ActionList2,
     ActionList2CustomHeading,
@@ -7,6 +7,7 @@ import {
     ActionList2Line,
     ActionList2LineKind,
     ActionList2Lines,
+    ActionList2LinkRow,
     ActionList2ListRole,
     ActionList2ListVisualHeading,
     ALVariant,
@@ -488,7 +489,7 @@ export component GalleryActionList2Page {
         : root.scenario-key == "15" ? "Upstream **InactiveSingleSelect** — inactive row in single-select menu"
         : root.scenario-key == "16" ? "Upstream **Active** — **`active`** row: left accent bar + selected surface"
         : root.scenario-key == "17" ? "Upstream **WithVisualListHeading** — **`ActionList.Heading`** + **GroupHeading** groups"
-        : root.scenario-key == "18" ? "Upstream **WithCustomHeading** — large **Details** title outside list + link rows (LinkItem in PR 15)"
+        : root.scenario-key == "18" ? "Upstream **WithCustomHeading** — **Details** title + **`ActionList2LinkRow`** (`href` → **`last-action`**)"
         : root.scenario-key == "19" ? "Upstream **GroupWithFilledTitle** — filled **GroupHeading** + multi-select menu rows"
         : root.scenario-key == "20" ? "Upstream **WithAvatars** — **`Avatar`** leading visual (20px)"
         : root.scenario-key == "21" ? "Upstream **WithIcons** — leading octicons incl. **danger** row"
@@ -1117,49 +1118,54 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "18": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionList2LinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Readme";
+                                href: "https://github.com/primer/react#readme";
                                 has-leading-visual: true;
                                 leading-icon: Icons.book;
                                 clicked => {
-                                    root.last-action = "Activated Readme";
+                                    root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2Row {
+                            ActionList2LinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "MIT License";
+                                href: "https://github.com/primer/react/blob/main/LICENSE";
                                 has-leading-visual: true;
                                 leading-icon: Icons.law;
                                 clicked => {
-                                    root.last-action = "Activated MIT License";
+                                    root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2Row {
+                            ActionList2LinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "1.5k stars";
+                                href: "https://github.com/primer/react/stargazers";
                                 has-leading-visual: true;
                                 leading-icon: Icons.star;
                                 clicked => {
-                                    root.last-action = "Activated stars";
+                                    root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2Row {
+                            ActionList2LinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "21 watching";
+                                href: "https://github.com/primer/react/watchers";
                                 has-leading-visual: true;
                                 leading-icon: Icons.eye;
                                 clicked => {
-                                    root.last-action = "Activated watching";
+                                    root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2Row {
+                            ActionList2LinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "225 forks";
+                                href: "https://github.com/primer/react/network/members";
                                 has-leading-visual: true;
                                 leading-icon: Icons.repo_forked;
                                 clicked => {
-                                    root.last-action = "Activated forks";
+                                    root.last-action = "Link: " + self.href;
                                 }
                             }
                         }
