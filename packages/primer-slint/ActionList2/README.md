@@ -8,6 +8,9 @@ Primer **ActionList** port with a **compose-first** API (like **Dialog** / **Sel
 
 - [`ActionList2Row`](action-list2-row.slint) — row visuals, descriptions, danger, disabled/inactive/loading, **`active`**, focus, hover
 - [`ActionList2ItemDivider`](action-list2-item-divider.slint) — explicit block divider
+- [`ActionList2ListVisualHeading`](action-list2-list-visual-heading.slint) — list title (**WithVisualListHeading**)
+- [`ActionList2CustomHeading`](action-list2-custom-heading.slint) — medium custom title
+- [`ActionList2SectionHeading`](action-list2-section-heading.slint) — group title (**subtle** | **filled**)
 
 Set **`margin-inline`** on each row/divider when using **inset** or **horizontal-inset** (use `0px` for **full**). Match list variant:
 

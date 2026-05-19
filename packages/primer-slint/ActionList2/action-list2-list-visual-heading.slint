@@ -1,0 +1,24 @@
+// Primer **ActionList.Heading** (list visual) — Storybook **WithVisualListHeading**.
+
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export component ActionList2ListVisualHeading {
+    in property <string> title: "";
+    in property <length> margin-inline: 0px;
+
+    VerticalLayout {
+        horizontal-stretch: 1;
+        padding-left: root.margin-inline + LayoutTokens.action-list-item-padding-inline;
+        padding-right: root.margin-inline + LayoutTokens.action-list-item-padding-inline;
+        padding-bottom: LayoutTokens.button-content-gap;
+
+        Text {
+            horizontal-stretch: 1;
+            text: root.title;
+            color: PrimerColors.fgColor-default;
+            font-size: LayoutTokens.text-body-size-large;
+            font-weight: LayoutTokens.base-text-weight-semibold;
+            wrap: word-wrap;
+        }
+    }
+}

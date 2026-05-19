@@ -1,8 +1,11 @@
 // Model-driven **`ActionList2`** body — maps **`ActionList2Line`** arrays to row/divider instances.
 // Prefer composing **`ActionList2Row`** directly when static; use this for TS **`ArrayModel`** / menu data.
 
+import { ActionList2CustomHeading } from "./action-list2-custom-heading.slint";
 import { ActionList2ItemDivider } from "./action-list2-item-divider.slint";
+import { ActionList2ListVisualHeading } from "./action-list2-list-visual-heading.slint";
 import { ActionList2Row } from "./action-list2-row.slint";
+import { ActionList2SectionHeading } from "./action-list2-section-heading.slint";
 import { ActionList2Tokens } from "../tokens.slint";
 import {
     ActionList2Line,
@@ -73,6 +76,22 @@ export component ActionList2Lines {
             }
 
             if line.kind == ActionList2LineKind.item_divider: ActionList2ItemDivider {
+                margin-inline: root.item-margin-inline;
+            }
+
+            if line.kind == ActionList2LineKind.list_visual_heading: ActionList2ListVisualHeading {
+                title: line.label;
+                margin-inline: root.item-margin-inline;
+            }
+
+            if line.kind == ActionList2LineKind.custom_heading: ActionList2CustomHeading {
+                title: line.label;
+                margin-inline: root.item-margin-inline;
+            }
+
+            if line.kind == ActionList2LineKind.section_heading: ActionList2SectionHeading {
+                title: line.label;
+                variant: line.section-heading-variant;
                 margin-inline: root.item-margin-inline;
             }
         }

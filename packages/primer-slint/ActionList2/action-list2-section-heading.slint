@@ -1,0 +1,62 @@
+// Primer **ActionList.GroupHeading** — **subtle** (default) or **filled** variant.
+
+import { ActionList2Tokens, LayoutTokens } from "../tokens.slint";
+import { ActionList2SectionHeadingVariant } from "./types.slint";
+
+export component ActionList2SectionHeading {
+    in property <string> title: "";
+    in property <ActionList2SectionHeadingVariant> variant: ActionList2SectionHeadingVariant.subtle;
+    in property <length> margin-inline: 0px;
+
+    VerticalLayout {
+        horizontal-stretch: 1;
+        padding-left: root.margin-inline;
+        padding-right: root.margin-inline;
+
+        if root.variant == ActionList2SectionHeadingVariant.filled: VerticalLayout {
+            horizontal-stretch: 1;
+            padding-top: LayoutTokens.base-size-8 - LayoutTokens.table-border-width;
+            padding-bottom: LayoutTokens.base-size-8;
+
+            filled-shell := Rectangle {
+                horizontal-stretch: 1;
+                background: ActionList2Tokens.section-heading-filled-bgColor;
+                border-width: LayoutTokens.table-border-width;
+                border-color: ActionList2Tokens.section-heading-filled-borderColor;
+
+                VerticalLayout {
+                    padding-left: LayoutTokens.action-list-item-padding-inline;
+                    padding-right: LayoutTokens.action-list-item-padding-inline;
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+
+                    Text {
+                        horizontal-stretch: 1;
+                        text: root.title;
+                        color: ActionList2Tokens.section-heading-filled-title-fgColor;
+                        font-size: LayoutTokens.text-body-size-small;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        wrap: word-wrap;
+                    }
+                }
+            }
+        }
+
+        if root.variant == ActionList2SectionHeadingVariant.subtle: VerticalLayout {
+            horizontal-stretch: 1;
+            padding-top: LayoutTokens.base-size-8;
+            padding-bottom: LayoutTokens.base-size-4;
+            padding-left: LayoutTokens.action-list-item-padding-inline;
+            padding-right: LayoutTokens.action-list-item-padding-inline;
+
+            Text {
+                horizontal-stretch: 1;
+                text: root.title;
+                color: ActionList2Tokens.section-heading-subtle-fgColor;
+                font-size: LayoutTokens.text-body-size-small;
+                font-weight: LayoutTokens.base-text-weight-semibold;
+                wrap: word-wrap;
+            }
+        }
+    }
+}

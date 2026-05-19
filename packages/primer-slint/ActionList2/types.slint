@@ -33,6 +33,12 @@ export enum ActionList2ListRole {
   listbox,
 }
 
+/// **ActionList.GroupHeading** variant (`Group.module.css` **`data-variant`**).
+export enum ActionList2SectionHeadingVariant {
+  subtle,
+  filled,
+}
+
 /// Leading selection affordance — mutually exclusive per row (upstream `ActionList/Selection.tsx`).
 /// Derive from **`selection-mode`** + **`list-role`** on **`ActionList2Lines`**, or set explicitly when composing rows.
 export enum ActionList2SelectionLead {
@@ -71,4 +77,6 @@ export struct ActionList2Line {
   show-trailing-loading: bool,
   /// Primer **`active`** / **`[data-active]`** — accent bar + surface (orthogonal to **`selected`**).
   active: bool,
+  /// Used when **`kind`** is **`section_heading`** — subtle (default) or **filled** group title.
+  section-heading-variant: ActionList2SectionHeadingVariant,
 }

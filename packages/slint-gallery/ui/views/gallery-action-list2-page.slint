@@ -1,15 +1,19 @@
-// **ActionList2** gallery — PR9 active row + prior scenarios.
+// **ActionList2** gallery — PR10 headings + prior scenarios.
 import {
     ActionList2,
+    ActionList2CustomHeading,
     ActionList2DescriptionLayout,
     ActionList2ItemDivider,
     ActionList2Line,
     ActionList2LineKind,
     ActionList2Lines,
     ActionList2ListRole,
+    ActionList2ListVisualHeading,
     ALVariant,
     ActionList2Row,
     ActionList2RowVariant,
+    ActionList2SectionHeading,
+    ActionList2SectionHeadingVariant,
     ActionList2SelectionLead,
     ActionList2SelectionMode,
     Checkbox,
@@ -45,6 +49,9 @@ export component GalleryActionList2Page {
         { value: "14", label: "LoadingItem", enabled: true },
         { value: "15", label: "InactiveSingleSelect", enabled: true },
         { value: "16", label: "Active", enabled: true },
+        { value: "17", label: "WithVisualListHeading", enabled: true },
+        { value: "18", label: "WithCustomHeading", enabled: true },
+        { value: "19", label: "GroupFilled", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -85,6 +92,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -99,6 +107,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -112,6 +121,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
     ];
 
@@ -129,6 +139,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -143,6 +154,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -157,6 +169,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -171,6 +184,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
     ];
 
@@ -188,6 +202,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -202,6 +217,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -216,6 +232,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -230,6 +247,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
     ];
 
@@ -247,6 +265,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -261,6 +280,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
             kind: ActionList2LineKind.row,
@@ -275,6 +295,7 @@ export component GalleryActionList2Page {
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
     ];
 
@@ -294,6 +315,9 @@ export component GalleryActionList2Page {
         : root.scenario-ix == 14 ? "Upstream **LoadingItem** — **`show-trailing-loading`** spinner; no activation"
         : root.scenario-ix == 15 ? "Upstream **InactiveSingleSelect** — inactive row in single-select menu"
         : root.scenario-ix == 16 ? "Upstream **Active** — **`active`** row: left accent bar + selected surface"
+        : root.scenario-ix == 17 ? "Upstream **WithVisualListHeading** — list title + subtle **section** groups"
+        : root.scenario-ix == 18 ? "Upstream **WithCustomHeading** — medium custom title + rows"
+        : root.scenario-ix == 19 ? "Upstream **GroupWithFilledTitle** — **`section-heading-variant: filled`**"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -814,6 +838,108 @@ export component GalleryActionList2Page {
                                 label: "Third row";
                                 clicked => {
                                     root.last-action = "Activated Third row";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 17: VerticalLayout {
+                            alignment: start;
+                            ActionList2ListVisualHeading {
+                                margin-inline: root.preview-item-margin-inline;
+                                title: "Filter by";
+                            }
+                            ActionList2SectionHeading {
+                                margin-inline: root.preview-item-margin-inline;
+                                title: "Repositories";
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "app/assets/modules";
+                                has-leading-visual: true;
+                                leading-icon: Icons.file_directory_fill;
+                                clicked => {
+                                    root.last-action = "Activated app/assets/modules";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "src/react/components";
+                                has-leading-visual: true;
+                                leading-icon: Icons.file_directory_fill;
+                                clicked => {
+                                    root.last-action = "Activated src/react/components";
+                                }
+                            }
+                            ActionList2SectionHeading {
+                                margin-inline: root.preview-item-margin-inline;
+                                title: "Advanced";
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Owner";
+                                has-leading-visual: true;
+                                leading-icon: Icons.plus_circle;
+                                clicked => {
+                                    root.last-action = "Activated Owner";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 18: VerticalLayout {
+                            alignment: start;
+                            ActionList2CustomHeading {
+                                margin-inline: root.preview-item-margin-inline;
+                                title: "Details";
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Readme";
+                                has-leading-visual: true;
+                                leading-icon: Icons.book;
+                                clicked => {
+                                    root.last-action = "Activated Readme";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "License";
+                                has-leading-visual: true;
+                                leading-icon: Icons.law;
+                                clicked => {
+                                    root.last-action = "Activated License";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 19: VerticalLayout {
+                            alignment: start;
+                            ActionList2SectionHeading {
+                                margin-inline: root.preview-item-margin-inline;
+                                title: "Everyone";
+                                variant: ActionList2SectionHeadingVariant.filled;
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "octocat";
+                                description: "Mona Lisa";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selected: root.multi-checked-0;
+                                clicked => {
+                                    root.multi-checked-0 = !root.multi-checked-0;
+                                    root.last-action = "Toggled octocat";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "hubot";
+                                description: "Hubot";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selected: root.multi-checked-1;
+                                clicked => {
+                                    root.multi-checked-1 = !root.multi-checked-1;
+                                    root.last-action = "Toggled hubot";
                                 }
                             }
                         }
