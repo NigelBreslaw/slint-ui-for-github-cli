@@ -321,9 +321,9 @@ Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list** group).
 
 ## ActionMenu
 
-**ActionMenu** ([`ActionMenu/action-menu.slint`](slint/ActionMenu/action-menu.slint)) composes a menu **`Button`** (default trailing **`Icons.triangle_down`**; override with **`button-trailing-icon`**) and **`AnchoredOverlay`**; put **`ActionList`** (or nested **`ActionMenu`** shells) in **`@children`**. Set **`ActionList.list-role: menu`** on lists inside the overlay (upstream **`listRole: 'menu'`** from **`ActionListContainerContext`**). **`in-out property <bool> open`** mirrors the popup and supports programmatic open/close. Callbacks **`opened`**, **`closed`**, **`close-requested`** follow **`AnchoredOverlay`**.
+**ActionMenu** ([`ActionMenu/action-menu.slint`](slint/ActionMenu/action-menu.slint)) composes a menu **`Button`** (default trailing **`Icons.triangle_down`**; override with **`button-trailing-icon`**) and **`AnchoredOverlay`** (**`panel-padding`** default **`0px`** — Primer overlay has no inner padding around the list). Put **`ActionList2`** + **`ActionList2Lines`** with **`list-role: menu`** in **`@children`** (or nested **`ActionMenu`** shells). For content-sized **`auto`** overlays, set the wrapper **`width: menuList.preferred-width`**. **`in-out property <bool> open`** mirrors the popup and supports programmatic open/close. Callbacks **`opened`**, **`closed`**, **`close-requested`** follow **`AnchoredOverlay`**.
 
-**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionMenu`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayWidth`**, **`AnchoredOverlayAlign`**, **`AnchoredOverlayHeight`**, **`LayoutTokens`**, **`Icons`**.
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionMenu`**, **`ActionList2`**, **`ActionList2Lines`**, **`ActionList2Line`**, **`ActionList2ListRole`**, **`ALVariant`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayWidth`**, **`AnchoredOverlayAlign`**, **`AnchoredOverlayHeight`**, **`LayoutTokens`**, **`Icons`**.
 
 Examples: **standalone gallery** — **Action menu → Playground** (13 Storybook-aligned scenarios).
 
