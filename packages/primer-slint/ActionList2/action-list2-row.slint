@@ -13,6 +13,7 @@ import {
 } from "../tokens.slint";
 import {
     ActionList2DescriptionLayout,
+    ActionList2RowSize,
     ActionList2RowVariant,
     ActionList2SelectionLead,
 } from "./types.slint";
@@ -20,6 +21,7 @@ import {
 export component ActionList2Row {
     in property <string> label;
     in property <ActionList2RowVariant> row-variant: ActionList2RowVariant.default;
+    in property <ActionList2RowSize> row-size: ActionList2RowSize.medium;
     in property <bool> disabled: false;
     in property <bool> has-leading-avatar: false;
     in property <image> avatar-source: Icons.dot_fill;
@@ -112,8 +114,18 @@ export component ActionList2Row {
         : root.is-inactive ? ActionList2Tokens.item-inactive-description-fgColor
         : ActionList2Tokens.item-description-fgColor;
 
-    property <length> cell-min-height: LayoutTokens.action-list-item-min-height;
-    property <length> avatar-diameter: LayoutTokens.action-list-avatar-diameter;
+    property <length> cell-padding-block:
+        root.row-size == ActionList2RowSize.large
+        ? LayoutTokens.action-list-item-padding-block-large
+        : LayoutTokens.action-list-item-padding-block;
+    property <length> cell-min-height:
+        root.row-size == ActionList2RowSize.large
+        ? LayoutTokens.action-list-item-min-height-large
+        : LayoutTokens.action-list-item-min-height;
+    property <length> avatar-diameter:
+        root.row-size == ActionList2RowSize.large
+        ? LayoutTokens.action-list-avatar-diameter-large
+        : LayoutTokens.action-list-avatar-diameter;
 
     min-height: root.cell-min-height + (root.show-divider ? LayoutTokens.table-border-width : 0px);
 
@@ -201,8 +213,8 @@ export component ActionList2Row {
                             align-items: center;
                             padding-left: LayoutTokens.action-list-item-padding-inline;
                             padding-right: LayoutTokens.action-list-item-padding-inline;
-                            padding-top: LayoutTokens.action-list-item-padding-block;
-                            padding-bottom: LayoutTokens.action-list-item-padding-block;
+                            padding-top: root.cell-padding-block;
+                            padding-bottom: root.cell-padding-block;
                             spacing: LayoutTokens.button-content-gap;
 
                             primary-column := VerticalLayout {

@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR11 avatars + leading icons + prior scenarios.
+// **ActionList2** gallery — PR12 large rows + full variant + prior scenarios.
 import {
     ActionList2,
     ActionList2CustomHeading,
@@ -11,6 +11,7 @@ import {
     ActionList2ListVisualHeading,
     ALVariant,
     ActionList2Row,
+    ActionList2RowSize,
     ActionList2RowVariant,
     ActionList2SectionHeading,
     ActionList2SectionHeadingVariant,
@@ -59,6 +60,8 @@ export component GalleryActionList2Page {
         { value: "19", label: "GroupWithFilledTitle", enabled: true },
         { value: "20", label: "WithAvatars", enabled: true },
         { value: "21", label: "WithIcons", enabled: true },
+        { value: "22", label: "LargeItem", enabled: true },
+        { value: "23", label: "FullVariant", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -82,14 +85,19 @@ export component GalleryActionList2Page {
     property <ALVariant> preview-list-variant:
     root.list-variant-ix == 1 ? ALVariant.horizontal_inset : root.list-variant-ix == 2 ? ALVariant.full : ALVariant.inset;
 
-    property <length> preview-item-margin-inline:
-        root.preview-list-variant == ALVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
+    /// **FullVariant** scenario forces **`variant="full"`** regardless of sidebar list variant.
+    property <ALVariant> effective-list-variant:
+        root.scenario-key == "23" ? ALVariant.full : root.preview-list-variant;
+
+    property <length> effective-item-margin-inline:
+        root.effective-list-variant == ALVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
 
     property <[ActionList2Line]> lines-adapter-demo: [
         {
             kind: ActionList2LineKind.row,
             label: "Copy link",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -107,6 +115,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Quote reply",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -124,6 +133,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Edit comment",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -143,6 +153,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Primer Backlog",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -160,6 +171,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Accessibility",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -177,6 +189,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Octicons",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -194,6 +207,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Primer React",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -214,6 +228,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Primer Backlog",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -231,6 +246,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Accessibility",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -248,6 +264,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Octicons",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -283,6 +300,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Copy link",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -300,6 +318,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Quote reply",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -317,6 +336,7 @@ export component GalleryActionList2Page {
             kind: ActionList2LineKind.row,
             label: "Edit comment",
             row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
@@ -353,6 +373,8 @@ export component GalleryActionList2Page {
         : root.scenario-key == "19" ? "Upstream **GroupWithFilledTitle** — filled **GroupHeading** + multi-select menu rows"
         : root.scenario-key == "20" ? "Upstream **WithAvatars** — **`Avatar`** leading visual (20px)"
         : root.scenario-key == "21" ? "Upstream **WithIcons** — leading octicons incl. **danger** row"
+        : root.scenario-key == "22" ? "Upstream **LargeItem** — **`row-size: large`** (plain, inline, block description)"
+        : root.scenario-key == "23" ? "Upstream **FullVariant** — list **`variant: full`** (no inset margins)"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -382,9 +404,9 @@ export component GalleryActionList2Page {
 
                     if root.scenario-key == "18": VerticalLayout {
                         padding-left:
-                            root.preview-item-margin-inline + LayoutTokens.action-list-item-padding-inline;
+                            root.effective-item-margin-inline + LayoutTokens.action-list-item-padding-inline;
                         padding-right:
-                            root.preview-item-margin-inline + LayoutTokens.action-list-item-padding-inline;
+                            root.effective-item-margin-inline + LayoutTokens.action-list-item-padding-inline;
                         padding-bottom: LayoutTokens.button-content-gap;
 
                         Text {
@@ -397,12 +419,12 @@ export component GalleryActionList2Page {
                     }
 
                     al := ActionList2 {
-                        list-variant: root.preview-list-variant;
+                        list-variant: root.effective-list-variant;
 
                         if root.scenario-key == "0": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Copy link";
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.copy_icon;
@@ -411,7 +433,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Quote reply";
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.link;
@@ -420,7 +442,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Edit comment";
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.diff_modified;
@@ -433,7 +455,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "1": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Copy link";
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.copy_icon;
@@ -443,7 +465,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Quote reply";
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.link;
@@ -453,7 +475,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Edit comment";
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.diff_modified;
@@ -463,10 +485,10 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2ItemDivider {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Delete file";
                                 row-variant: ActionList2RowVariant.danger;
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -480,7 +502,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "2": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Copy link";
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.copy_icon;
@@ -489,7 +511,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Quote reply";
                                 show-divider: true;
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -499,7 +521,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Edit comment";
                                 show-divider: true;
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -513,7 +535,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "3": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -524,7 +546,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -535,7 +557,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -546,7 +568,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primer React";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -561,7 +583,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "4": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -572,7 +594,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -583,7 +605,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -594,7 +616,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primer React";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -607,7 +629,7 @@ export component GalleryActionList2Page {
                         }
 
                         if root.scenario-key == "11": ActionList2Lines {
-                            list-variant: root.preview-list-variant;
+                            list-variant: root.effective-list-variant;
                             lines: root.lines-adapter-demo;
                             item-activated(ix) => {
                                 root.last-action = "Activated line " + ix;
@@ -617,7 +639,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "6": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Inbox";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.single-select-ix == 0;
@@ -627,7 +649,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primary";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.single-select-ix == 1;
@@ -637,7 +659,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Calendar";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.single-select-ix == 2;
@@ -649,7 +671,7 @@ export component GalleryActionList2Page {
                         }
 
                         if root.scenario-key == "7": ActionList2Lines {
-                            list-variant: root.preview-list-variant;
+                            list-variant: root.effective-list-variant;
                             selection-mode: ActionList2SelectionMode.single;
                             selected-index: root.single-select-ix;
                             lines: root.lines-single-select;
@@ -662,7 +684,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "8": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Build";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.multi-checked-0;
@@ -672,10 +694,10 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2ItemDivider {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Test";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.multi-checked-1;
@@ -685,10 +707,10 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2ItemDivider {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Release";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.multi-checked-2;
@@ -700,7 +722,7 @@ export component GalleryActionList2Page {
                         }
 
                         if root.scenario-key == "9": ActionList2Lines {
-                            list-variant: root.preview-list-variant;
+                            list-variant: root.effective-list-variant;
                             list-role: ActionList2ListRole.menu;
                             selection-mode: ActionList2SelectionMode.multiple;
                             multi-selected: root.multi-selected-state;
@@ -718,7 +740,7 @@ export component GalleryActionList2Page {
                         }
 
                         if root.scenario-key == "10": ActionList2Lines {
-                            list-variant: root.preview-list-variant;
+                            list-variant: root.effective-list-variant;
                             list-role: ActionList2ListRole.listbox;
                             selection-mode: ActionList2SelectionMode.multiple;
                             multi-selected: root.multi-selected-state;
@@ -740,7 +762,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "12": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -754,7 +776,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -766,7 +788,7 @@ export component GalleryActionList2Page {
                                 show-divider: true;
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -785,7 +807,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "13": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -796,7 +818,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -805,7 +827,7 @@ export component GalleryActionList2Page {
                                 inactive-text: "Unavailable due to an outage";
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
@@ -820,7 +842,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "14": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 description: "GitHub";
                                 description-layout: ActionList2DescriptionLayout.block;
@@ -829,14 +851,14 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 description: "GitHub";
                                 description-layout: ActionList2DescriptionLayout.block;
                                 show-trailing-loading: true;
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 description: "github/primer";
                                 description-layout: ActionList2DescriptionLayout.block;
@@ -849,14 +871,14 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "15": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Inactive item";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: false;
                                 inactive-text: "Unavailable due to an outage";
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Item 2";
                                 selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.inactive-single-select-ix == 1;
@@ -870,7 +892,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "16": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Active item";
                                 active: true;
                                 clicked => {
@@ -878,14 +900,14 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Second row";
                                 clicked => {
                                     root.last-action = "Activated Second row";
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Third row";
                                 clicked => {
                                     root.last-action = "Activated Third row";
@@ -896,15 +918,15 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "17": VerticalLayout {
                             alignment: start;
                             ActionList2ListVisualHeading {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 title: "Filter by";
                             }
                             ActionList2SectionHeading {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 title: "Repositories";
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "app/assets/modules";
                                 has-leading-visual: true;
                                 leading-icon: Icons.file_directory_fill;
@@ -913,7 +935,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "src/react/components";
                                 has-leading-visual: true;
                                 leading-icon: Icons.file_directory_fill;
@@ -922,7 +944,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "memex/shared-ui/components";
                                 has-leading-visual: true;
                                 leading-icon: Icons.file_directory_fill;
@@ -931,7 +953,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "views/assets/modules";
                                 has-leading-visual: true;
                                 leading-icon: Icons.file_directory_fill;
@@ -940,11 +962,11 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2SectionHeading {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 title: "Advanced";
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Owner";
                                 has-leading-visual: true;
                                 leading-icon: Icons.plus_circle;
@@ -953,7 +975,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Symbol";
                                 has-leading-visual: true;
                                 leading-icon: Icons.plus_circle;
@@ -962,7 +984,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Exclude archived";
                                 has-leading-visual: true;
                                 leading-icon: Icons.plus_circle;
@@ -975,7 +997,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "18": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "Readme";
                                 has-leading-visual: true;
                                 leading-icon: Icons.book;
@@ -984,7 +1006,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "MIT License";
                                 has-leading-visual: true;
                                 leading-icon: Icons.law;
@@ -993,7 +1015,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "1.5k stars";
                                 has-leading-visual: true;
                                 leading-icon: Icons.star;
@@ -1002,7 +1024,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "21 watching";
                                 has-leading-visual: true;
                                 leading-icon: Icons.eye;
@@ -1011,7 +1033,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "225 forks";
                                 has-leading-visual: true;
                                 leading-icon: Icons.repo_forked;
@@ -1024,12 +1046,12 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "19": VerticalLayout {
                             alignment: start;
                             ActionList2SectionHeading {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 title: "Everyone";
                                 variant: ActionList2SectionHeadingVariant.filled;
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "octocat";
                                 description: "Mona Lisa";
                                 description-layout: ActionList2DescriptionLayout.block;
@@ -1041,7 +1063,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "hubot";
                                 description: "Hubot";
                                 description-layout: ActionList2DescriptionLayout.block;
@@ -1057,7 +1079,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "20": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "pksjce";
                                 has-leading-avatar: true;
                                 avatar-source: @image-url("../../../primer-slint/assets/16px/person-fill.svg");
@@ -1066,7 +1088,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "jfuchs";
                                 has-leading-avatar: true;
                                 avatar-source: @image-url("../../../primer-slint/assets/16px/hubot.svg");
@@ -1075,7 +1097,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "colebemis";
                                 has-leading-avatar: true;
                                 avatar-source: @image-url("../../../primer-slint/assets/16px/beaker.svg");
@@ -1084,7 +1106,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "mperrotti";
                                 has-leading-avatar: true;
                                 avatar-source: @image-url("../../../primer-slint/assets/16px/smiley.svg");
@@ -1093,7 +1115,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "dgreif";
                                 has-leading-avatar: true;
                                 avatar-source: @image-url("../../../primer-slint/assets/16px/heart-fill.svg");
@@ -1102,7 +1124,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "smockle";
                                 has-leading-avatar: true;
                                 avatar-source: @image-url("../../../primer-slint/assets/16px/star-fill.svg");
@@ -1111,7 +1133,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "siddharthkp";
                                 has-leading-avatar: true;
                                 avatar-source: @image-url("../../../primer-slint/assets/16px/flame.svg");
@@ -1124,7 +1146,7 @@ export component GalleryActionList2Page {
                         if root.scenario-key == "21": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "github.com/primer";
                                 has-leading-visual: true;
                                 leading-icon: Icons.link;
@@ -1133,7 +1155,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "MIT License";
                                 has-leading-visual: true;
                                 leading-icon: Icons.law;
@@ -1142,7 +1164,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "256 stars";
                                 has-leading-visual: true;
                                 leading-icon: Icons.star;
@@ -1151,7 +1173,7 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "3 forks";
                                 has-leading-visual: true;
                                 leading-icon: Icons.repo_forked;
@@ -1160,13 +1182,81 @@ export component GalleryActionList2Page {
                                 }
                             }
                             ActionList2Row {
-                                margin-inline: root.preview-item-margin-inline;
+                                margin-inline: root.effective-item-margin-inline;
                                 label: "4 vulnerabilities";
                                 row-variant: ActionList2RowVariant.danger;
                                 has-leading-visual: true;
                                 leading-icon: Icons.alert;
                                 clicked => {
                                     root.last-action = "Activated vulnerabilities";
+                                }
+                            }
+                        }
+
+                        if root.scenario-key == "22": VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Large item";
+                                row-size: ActionList2RowSize.large;
+                                clicked => {
+                                    root.last-action = "Activated large item";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Large item";
+                                row-size: ActionList2RowSize.large;
+                                description: "With inline description";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                clicked => {
+                                    root.last-action = "Activated large inline";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Large item";
+                                row-size: ActionList2RowSize.large;
+                                description: "With block description";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                clicked => {
+                                    root.last-action = "Activated large block";
+                                }
+                            }
+                        }
+
+                        if root.scenario-key == "23": VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Copy link";
+                                clicked => {
+                                    root.last-action = "Activated Copy link";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Quote reply";
+                                clicked => {
+                                    root.last-action = "Activated Quote reply";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Edit comment";
+                                clicked => {
+                                    root.last-action = "Activated Edit comment";
+                                }
+                            }
+                            ActionList2ItemDivider {
+                                margin-inline: root.effective-item-margin-inline;
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Delete file";
+                                row-variant: ActionList2RowVariant.danger;
+                                clicked => {
+                                    root.last-action = "Activated Delete file";
                                 }
                             }
                         }

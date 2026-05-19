@@ -13,6 +13,12 @@ export enum ActionList2RowVariant {
   danger,
 }
 
+/// Primer **`ActionList.Item`** **`size`** — `medium` (default) or `large`.
+export enum ActionList2RowSize {
+  medium,
+  large,
+}
+
 /// Primary label vs optional **Description**.
 export enum ActionList2DescriptionLayout {
   none,
@@ -64,6 +70,7 @@ export struct ActionList2Line {
   kind: ActionList2LineKind,
   label: string,
   row-variant: ActionList2RowVariant,
+  row-size: ActionList2RowSize,
   disabled: bool,
   has-leading-avatar: bool,
   avatar-source: image,
