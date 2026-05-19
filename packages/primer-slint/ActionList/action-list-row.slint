@@ -138,6 +138,11 @@ export component ActionListRow {
                     root.clicked();
                 }
 
+                TouchArea {
+                    enabled: root.disabled;
+                    mouse-cursor: not-allowed;
+                }
+
                 row-bg := Rectangle {
                     border-radius: LayoutTokens.borderRadius-medium;
 
