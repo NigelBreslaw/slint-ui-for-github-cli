@@ -6,7 +6,7 @@ Primer **ActionList** port with a **compose-first** API (like **Dialog** / **Sel
 
 [`ActionList2`](action-list2.slint) is list chrome only (`list-variant` padding). Place leaf components as **`@children`**:
 
-- [`ActionList2Row`](action-list2-row.slint) — row visuals, descriptions, danger, disabled/inactive/loading, **`active`**, focus, hover
+- [`ActionList2Row`](action-list2-row.slint) — row visuals, leading **avatar** or **icon**, descriptions, danger, disabled/inactive/loading, **`active`**, focus, hover
 - [`ActionList2ItemDivider`](action-list2-item-divider.slint) — explicit block divider
 - [`ActionList2ListVisualHeading`](action-list2-list-visual-heading.slint) — list title (**WithVisualListHeading**)
 - [`ActionList2CustomHeading`](action-list2-custom-heading.slint) — medium custom title
