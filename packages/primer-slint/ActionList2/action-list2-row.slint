@@ -8,7 +8,11 @@ import {
     LayoutTokens,
     PrimerColors,
 } from "../tokens.slint";
-import { ActionList2DescriptionLayout, ActionList2RowVariant } from "./types.slint";
+import {
+    ActionList2DescriptionLayout,
+    ActionList2RowVariant,
+    ActionList2SelectionLead,
+} from "./types.slint";
 
 export component ActionList2Row {
     in property <string> label;
@@ -23,10 +27,12 @@ export component ActionList2Row {
     /// Primer **`showDividers`** seam hairline above this row (`borderColor-muted`, no block margins).
     in property <bool> show-top-seam: false;
     in property <bool> selected: false;
-    in property <bool> show-single-select-check: false;
-    /// Primer **`.MultiSelectCheckbox`** lead cell (listbox **`multiple`**; not used when **`show-single-select-check`** is menu multi).
-    in property <bool> show-multi-select-checkbox: false;
+    /// Leading selection column — only one of **none** / **checkmark** / **checkbox** (see **`ActionList2SelectionLead`**).
+    in property <ActionList2SelectionLead> selection-lead: ActionList2SelectionLead.none;
     callback clicked;
+
+    property <bool> show-selection-checkmark: root.selection-lead == ActionList2SelectionLead.checkmark;
+    property <bool> show-selection-checkbox: root.selection-lead == ActionList2SelectionLead.checkbox;
 
     property <bool> is-danger: root.row-variant == ActionList2RowVariant.danger;
 
@@ -43,7 +49,7 @@ export component ActionList2Row {
         : (root.selected ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
 
     property <bool> use-selected-surface:
-        root.selected && !root.show-single-select-check && !root.show-multi-select-checkbox;
+        root.selected && root.selection-lead == ActionList2SelectionLead.none;
 
     property <int> label-font-weight:
         !root.disabled && root.use-selected-surface
@@ -86,12 +92,12 @@ export component ActionList2Row {
             alignment: start;
             align-items: center;
 
-            if root.show-single-select-check: Rectangle {
+            if root.show-selection-checkmark: Rectangle {
                 width: LayoutTokens.iconButton-icon-size-medium;
                 height: LayoutTokens.table-border-width;
             }
 
-            if root.show-multi-select-checkbox: Rectangle {
+            if root.show-selection-checkbox: Rectangle {
                 width: LayoutTokens.iconButton-icon-size-medium;
                 height: LayoutTokens.table-border-width;
             }
@@ -152,7 +158,7 @@ export component ActionList2Row {
                                     alignment: start;
                                     align-items: center;
 
-                                    if root.show-single-select-check: HorizontalLayout {
+                                    if root.show-selection-checkmark: HorizontalLayout {
                                         horizontal-stretch: 0;
                                         min-height: LayoutTokens.iconButton-icon-size-medium;
                                         width: LayoutTokens.iconButton-icon-size-medium;
@@ -167,7 +173,7 @@ export component ActionList2Row {
                                         }
                                     }
 
-                                    if root.show-multi-select-checkbox: Rectangle {
+                                    if root.show-selection-checkbox: Rectangle {
                                         horizontal-stretch: 0;
                                         width: LayoutTokens.iconButton-icon-size-medium;
                                         height: self.width;
@@ -254,12 +260,12 @@ export component ActionList2Row {
                                     alignment: start;
                                     align-items: center;
 
-                                    if root.show-single-select-check: Rectangle {
+                                    if root.show-selection-checkmark: Rectangle {
                                         width: LayoutTokens.iconButton-icon-size-medium;
                                         height: LayoutTokens.iconButton-icon-size-medium;
                                     }
 
-                                    if root.show-multi-select-checkbox: Rectangle {
+                                    if root.show-selection-checkbox: Rectangle {
                                         width: LayoutTokens.iconButton-icon-size-medium;
                                         height: LayoutTokens.iconButton-icon-size-medium;
                                     }
@@ -320,10 +326,10 @@ export component ActionList2Row {
                             default-selected-rest when !root.disabled && !root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
                             }
-                            default-pressed when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && ta.pressed: {
+                            default-pressed when !root.disabled && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
-                            default-hover when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && !ta.pressed && ta.has-hover: {
+                            default-hover when !root.disabled && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                             }
                         ]

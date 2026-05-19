@@ -10,6 +10,7 @@ import {
     ActionList2ListVariant,
     ActionList2Row,
     ActionList2RowVariant,
+    ActionList2SelectionLead,
     ActionList2SelectionMode,
     Checkbox,
     Icons,
@@ -36,9 +37,9 @@ export component GalleryActionList2Page {
         { value: "5", label: "LinesAdapter", enabled: true },
         { value: "6", label: "SingleSelect", enabled: true },
         { value: "7", label: "SingleSelectLines", enabled: true },
-        { value: "8", label: "ListboxMultiSelect", enabled: true },
-        { value: "9", label: "MultiSelectMenu", enabled: true },
-        { value: "10", label: "ListboxMultiSelectLines", enabled: true },
+        { value: "8", label: "MultiSelect", enabled: true },
+        { value: "9", label: "MultiSelectLines", enabled: true },
+        { value: "10", label: "ListboxMultiSelect", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -235,11 +236,11 @@ export component GalleryActionList2Page {
         : root.scenario-ix == 3 ? "Upstream: BlockDescription (composed rows)"
         : root.scenario-ix == 4 ? "Upstream: InlineDescription (composed rows)"
         : root.scenario-ix == 5 ? "**ActionList2Lines** — `[ActionList2Line]` adapter for model-driven hosts"
-        : root.scenario-ix == 6 ? "Single select — composed rows with **`show-single-select-check`**"
-        : root.scenario-ix == 7 ? "Single select — **`ActionList2Lines`** + **`selection-mode: single`**"
-        : root.scenario-ix == 8 ? "Listbox multi — composed rows with **`show-multi-select-checkbox`**"
-        : root.scenario-ix == 9 ? "Menu multi — **`ActionList2Lines`** + **`list-role: menu`** (checkmarks, not checkboxes)"
-        : root.scenario-ix == 10 ? "Listbox multi — **`ActionList2Lines`** + **`multi-selected`**"
+        : root.scenario-ix == 6 ? "Single select — **`selection-lead: checkmark`**"
+        : root.scenario-ix == 7 ? "Single select — **`ActionList2Lines`** (`selection-mode: single` → checkmark)"
+        : root.scenario-ix == 8 ? "Upstream **MultiSelect** — `role=menu`, **`selection-lead: checkmark`**"
+        : root.scenario-ix == 9 ? "Upstream **MultiSelect** — **`ActionList2Lines`** + **`list-role: menu`** → checkmark"
+        : root.scenario-ix == 10 ? "True listbox multi — **`list-role: listbox`** → **`selection-lead: checkbox`** (Storybook **ListboxMultiSelect** name is misleading; it uses menu)"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -497,7 +498,7 @@ export component GalleryActionList2Page {
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
                                 label: "Inbox";
-                                show-single-select-check: true;
+                                selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.single-select-ix == 0;
                                 clicked => {
                                     root.single-select-ix = 0;
@@ -507,7 +508,7 @@ export component GalleryActionList2Page {
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
                                 label: "Primary";
-                                show-single-select-check: true;
+                                selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.single-select-ix == 1;
                                 clicked => {
                                     root.single-select-ix = 1;
@@ -517,7 +518,7 @@ export component GalleryActionList2Page {
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
                                 label: "Calendar";
-                                show-single-select-check: true;
+                                selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.single-select-ix == 2;
                                 clicked => {
                                     root.single-select-ix = 2;
@@ -542,7 +543,7 @@ export component GalleryActionList2Page {
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
                                 label: "Build";
-                                show-multi-select-checkbox: true;
+                                selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.multi-checked-0;
                                 clicked => {
                                     root.multi-checked-0 = !root.multi-checked-0;
@@ -555,7 +556,7 @@ export component GalleryActionList2Page {
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
                                 label: "Test";
-                                show-multi-select-checkbox: true;
+                                selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.multi-checked-1;
                                 clicked => {
                                     root.multi-checked-1 = !root.multi-checked-1;
@@ -568,7 +569,7 @@ export component GalleryActionList2Page {
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
                                 label: "Release";
-                                show-multi-select-checkbox: true;
+                                selection-lead: ActionList2SelectionLead.checkmark;
                                 selected: root.multi-checked-2;
                                 clicked => {
                                     root.multi-checked-2 = !root.multi-checked-2;
@@ -597,6 +598,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-ix == 10: ActionList2Lines {
                             list-variant: root.preview-list-variant;
+                            list-role: ActionList2ListRole.listbox;
                             selection-mode: ActionList2SelectionMode.multiple;
                             multi-selected: root.multi-selected-state;
                             lines: root.lines-listbox-multi-select;

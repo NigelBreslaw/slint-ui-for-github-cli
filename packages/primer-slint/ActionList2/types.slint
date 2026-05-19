@@ -27,11 +27,21 @@ export enum ActionList2SelectionMode {
   multiple,
 }
 
-/// Mirrors upstream **`role`** / list container context.
 export enum ActionList2ListRole {
   none,
   menu,
   listbox,
+}
+
+/// Leading selection affordance — mutually exclusive per row (upstream `ActionList/Selection.tsx`).
+/// Derive from **`selection-mode`** + **`list-role`** on **`ActionList2Lines`**, or set explicitly when composing rows.
+export enum ActionList2SelectionLead {
+  /// No selection column.
+  none,
+  /// **`.SingleSelectCheckmark`** — `CheckIcon`; **`single`**, or **`multiple`** + **`menu`** (incl. Storybook **ListboxMultiSelect**).
+  checkmark,
+  /// **`.MultiSelectCheckbox`** — boxed control; **`multiple`** + **`listbox`** (true listbox, not menu).
+  checkbox,
 }
 
 /// Line kind in [`ActionList2`](action-list2.slint).

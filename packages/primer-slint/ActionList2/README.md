@@ -47,19 +47,46 @@ ActionList2 {
 }
 ```
 
-## Single selection (PR 6)
+## Selection lead (`ActionList2SelectionLead`)
 
-On **`ActionList2Row`**: **`show-single-select-check: true`**, **`selected: ix == selected-ix`**, per-row **`clicked`** to update index.
+One enum per row — do not combine separate booleans. Matches upstream [`ActionList/Selection.tsx`](../../../../primer-ui-react/packages/react/src/ActionList/Selection.tsx).
 
-With **`ActionList2Lines`**: set **`selection-mode: single`** and **`selected-index`**; adapter sets check column + **`selected`** on each row.
+| `ActionList2SelectionLead` | Upstream | When |
+|----------------------------|----------|------|
+| **`none`** | (no column) | `selection-mode: none` |
+| **`checkmark`** | `.SingleSelectCheckmark` | `single`, or `multiple` + **`list-role: menu`** |
+| **`checkbox`** | `.MultiSelectCheckbox` | `multiple` + **`list-role: listbox`** |
 
-## Multiple selection (PR 7)
+**Storybook naming trap:** **ListboxMultiSelect** in primer-ui-react still uses **`role="menu"`**, so it shows **checkmarks** like **MultiSelect** — not checkboxes. Use **`list-role: listbox`** when you want boxed checkboxes.
 
-- **Listbox** (`list-role` not **`menu`**): **`show-multi-select-checkbox`** + toggle **`selected`** on click.
-- **Menu** (`list-role: menu`): **`show-single-select-check`** (checkmarks, not checkboxes) with **`selection-mode: multiple`**.
-- **`ActionList2Lines`**: pass **`multi-selected: [bool, …]`** aligned with row indices; adapter sets lead affordance per **`list-role`**.
+### Composed rows
+
+```slint
+ActionList2Row {
+    selection-lead: ActionList2SelectionLead.checkmark;
+    selected: ix == selected-ix;
+    clicked => { selected-ix = ix; }
+}
+```
+
+### `ActionList2Lines` derives lead from list props
+
+```slint
+ActionList2Lines {
+    list-role: ActionList2ListRole.menu;       // → checkmark when multiple
+    selection-mode: ActionList2SelectionMode.multiple;
+    multi-selected: flags;
+}
+
+ActionList2Lines {
+    list-role: ActionList2ListRole.listbox;    // → checkbox when multiple
+    selection-mode: ActionList2SelectionMode.multiple;
+    multi-selected: flags;
+}
+```
 
 ## Do not
 
 - Add row-only features to **`ActionList2Line`** when they belong on **`ActionList2Row`**.
 - Grow **`ActionList2`** with `if line.kind` branches — add leaf components or extend **`ActionList2Lines`** only.
+- Set **`checkmark`** and **`checkbox`** at once — use **`ActionList2SelectionLead`** only.
