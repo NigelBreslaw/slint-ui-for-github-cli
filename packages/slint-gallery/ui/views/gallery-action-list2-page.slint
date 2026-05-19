@@ -29,6 +29,11 @@ import {
 
 export component GalleryActionList2Page {
     property <int> scenario-ix: 0;
+    /// **`Select`** binds **option index**; match previews via **`scenario-options[ix].value`** (not the index).
+    property <string> scenario-key:
+        root.scenario-ix >= 0 && root.scenario-ix < root.scenario-options.length
+        ? root.scenario-options[root.scenario-ix].value
+        : "0";
     property <int> list-variant-ix: 0;
     property <bool> preview-has-leading-icon: false;
 
@@ -51,7 +56,7 @@ export component GalleryActionList2Page {
         { value: "16", label: "Active", enabled: true },
         { value: "17", label: "WithVisualListHeading", enabled: true },
         { value: "18", label: "WithCustomHeading", enabled: true },
-        { value: "19", label: "GroupFilled", enabled: true },
+        { value: "19", label: "GroupWithFilledTitle", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -300,24 +305,24 @@ export component GalleryActionList2Page {
     ];
 
     property <string> scenario-caption:
-        root.scenario-ix == 1 ? "Upstream: ActionList/Features — SimpleList (composed **ActionList2Row**)"
-        : root.scenario-ix == 2 ? "Upstream: ItemDividers — **`show-top-seam`** on rows"
-        : root.scenario-ix == 3 ? "Upstream: BlockDescription (composed rows)"
-        : root.scenario-ix == 4 ? "Upstream: InlineDescription (composed rows)"
-        : root.scenario-ix == 11 ? "**ActionList2Lines** — plain rows (no **`item_divider`**)"
-        : root.scenario-ix == 6 ? "Single select — **`selection-lead: checkmark`**"
-        : root.scenario-ix == 7 ? "Single select — **`ActionList2Lines`** (`selection-mode: single` → checkmark)"
-        : root.scenario-ix == 8 ? "Upstream **MultiSelect** — `role=menu`, **`selection-lead: checkmark`**"
-        : root.scenario-ix == 9 ? "Upstream **MultiSelect** — **`ActionList2Lines`** + **`list-role: menu`** → checkmark"
-        : root.scenario-ix == 10 ? "True listbox multi — **`list-role: listbox`** → **`selection-lead: checkbox`** (Storybook **ListboxMultiSelect** name is misleading; it uses menu)"
-        : root.scenario-ix == 12 ? "Upstream **DisabledItem** — middle row **`disabled`** (no hover/activation)"
-        : root.scenario-ix == 13 ? "Upstream **InactiveItem** — **`inactive-text`** warning under block description"
-        : root.scenario-ix == 14 ? "Upstream **LoadingItem** — **`show-trailing-loading`** spinner; no activation"
-        : root.scenario-ix == 15 ? "Upstream **InactiveSingleSelect** — inactive row in single-select menu"
-        : root.scenario-ix == 16 ? "Upstream **Active** — **`active`** row: left accent bar + selected surface"
-        : root.scenario-ix == 17 ? "Upstream **WithVisualListHeading** — list title + subtle **section** groups"
-        : root.scenario-ix == 18 ? "Upstream **WithCustomHeading** — medium custom title + rows"
-        : root.scenario-ix == 19 ? "Upstream **GroupWithFilledTitle** — **`section-heading-variant: filled`**"
+        root.scenario-key == "1" ? "Upstream: ActionList/Features — SimpleList (composed **ActionList2Row**)"
+        : root.scenario-key == "2" ? "Upstream: ItemDividers — **`show-top-seam`** on rows"
+        : root.scenario-key == "3" ? "Upstream: BlockDescription (composed rows)"
+        : root.scenario-key == "4" ? "Upstream: InlineDescription (composed rows)"
+        : root.scenario-key == "11" ? "**ActionList2Lines** — plain rows (no **`item_divider`**)"
+        : root.scenario-key == "6" ? "Single select — **`selection-lead: checkmark`**"
+        : root.scenario-key == "7" ? "Single select — **`ActionList2Lines`** (`selection-mode: single` → checkmark)"
+        : root.scenario-key == "8" ? "Upstream **MultiSelect** — `role=menu`, **`selection-lead: checkmark`**"
+        : root.scenario-key == "9" ? "Upstream **MultiSelect** — **`ActionList2Lines`** + **`list-role: menu`** → checkmark"
+        : root.scenario-key == "10" ? "True listbox multi — **`list-role: listbox`** → **`selection-lead: checkbox`** (Storybook **ListboxMultiSelect** name is misleading; it uses menu)"
+        : root.scenario-key == "12" ? "Upstream **DisabledItem** — middle row **`disabled`** (no hover/activation)"
+        : root.scenario-key == "13" ? "Upstream **InactiveItem** — **`inactive-text`** warning under block description"
+        : root.scenario-key == "14" ? "Upstream **LoadingItem** — **`show-trailing-loading`** spinner; no activation"
+        : root.scenario-key == "15" ? "Upstream **InactiveSingleSelect** — inactive row in single-select menu"
+        : root.scenario-key == "16" ? "Upstream **Active** — **`active`** row: left accent bar + selected surface"
+        : root.scenario-key == "17" ? "Upstream **WithVisualListHeading** — **`ActionList.Heading`** + **GroupHeading** groups"
+        : root.scenario-key == "18" ? "Upstream **WithCustomHeading** — large **Details** title outside list + link rows (LinkItem in PR 15)"
+        : root.scenario-key == "19" ? "Upstream **GroupWithFilledTitle** — filled **GroupHeading** + multi-select menu rows"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -345,10 +350,26 @@ export component GalleryActionList2Page {
                 preview-layout := VerticalLayout {
                     alignment: start;
 
+                    if root.scenario-key == "18": VerticalLayout {
+                        padding-left:
+                            root.preview-item-margin-inline + LayoutTokens.action-list-item-padding-inline;
+                        padding-right:
+                            root.preview-item-margin-inline + LayoutTokens.action-list-item-padding-inline;
+                        padding-bottom: LayoutTokens.button-content-gap;
+
+                        Text {
+                            text: "Details";
+                            color: PrimerColors.fgColor-default;
+                            font-size: LayoutTokens.text-body-size-large;
+                            font-weight: LayoutTokens.base-text-weight-semibold;
+                            wrap: word-wrap;
+                        }
+                    }
+
                     al := ActionList2 {
                         list-variant: root.preview-list-variant;
 
-                        if root.scenario-ix == 0: VerticalLayout {
+                        if root.scenario-key == "0": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -379,7 +400,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 1: VerticalLayout {
+                        if root.scenario-key == "1": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -426,7 +447,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 2: VerticalLayout {
+                        if root.scenario-key == "2": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -459,7 +480,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 3: VerticalLayout {
+                        if root.scenario-key == "3": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -507,7 +528,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 4: VerticalLayout {
+                        if root.scenario-key == "4": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -555,7 +576,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 11: ActionList2Lines {
+                        if root.scenario-key == "11": ActionList2Lines {
                             list-variant: root.preview-list-variant;
                             lines: root.lines-adapter-demo;
                             item-activated(ix) => {
@@ -563,7 +584,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 6: VerticalLayout {
+                        if root.scenario-key == "6": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -597,7 +618,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 7: ActionList2Lines {
+                        if root.scenario-key == "7": ActionList2Lines {
                             list-variant: root.preview-list-variant;
                             selection-mode: ActionList2SelectionMode.single;
                             selected-index: root.single-select-ix;
@@ -608,7 +629,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 8: VerticalLayout {
+                        if root.scenario-key == "8": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -648,7 +669,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 9: ActionList2Lines {
+                        if root.scenario-key == "9": ActionList2Lines {
                             list-variant: root.preview-list-variant;
                             list-role: ActionList2ListRole.menu;
                             selection-mode: ActionList2SelectionMode.multiple;
@@ -666,7 +687,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 10: ActionList2Lines {
+                        if root.scenario-key == "10": ActionList2Lines {
                             list-variant: root.preview-list-variant;
                             list-role: ActionList2ListRole.listbox;
                             selection-mode: ActionList2SelectionMode.multiple;
@@ -686,7 +707,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 12: VerticalLayout {
+                        if root.scenario-key == "12": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -731,7 +752,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 13: VerticalLayout {
+                        if root.scenario-key == "13": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -766,7 +787,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 14: VerticalLayout {
+                        if root.scenario-key == "14": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -795,7 +816,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 15: VerticalLayout {
+                        if root.scenario-key == "15": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -816,7 +837,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 16: VerticalLayout {
+                        if root.scenario-key == "16": VerticalLayout {
                             alignment: start;
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
@@ -842,7 +863,7 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-ix == 17: VerticalLayout {
+                        if root.scenario-key == "17": VerticalLayout {
                             alignment: start;
                             ActionList2ListVisualHeading {
                                 margin-inline: root.preview-item-margin-inline;
@@ -870,6 +891,24 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated src/react/components";
                                 }
                             }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "memex/shared-ui/components";
+                                has-leading-visual: true;
+                                leading-icon: Icons.file_directory_fill;
+                                clicked => {
+                                    root.last-action = "Activated memex/shared-ui/components";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "views/assets/modules";
+                                has-leading-visual: true;
+                                leading-icon: Icons.file_directory_fill;
+                                clicked => {
+                                    root.last-action = "Activated views/assets/modules";
+                                }
+                            }
                             ActionList2SectionHeading {
                                 margin-inline: root.preview-item-margin-inline;
                                 title: "Advanced";
@@ -883,14 +922,28 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated Owner";
                                 }
                             }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Symbol";
+                                has-leading-visual: true;
+                                leading-icon: Icons.plus_circle;
+                                clicked => {
+                                    root.last-action = "Activated Symbol";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Exclude archived";
+                                has-leading-visual: true;
+                                leading-icon: Icons.plus_circle;
+                                clicked => {
+                                    root.last-action = "Activated Exclude archived";
+                                }
+                            }
                         }
 
-                        if root.scenario-ix == 18: VerticalLayout {
+                        if root.scenario-key == "18": VerticalLayout {
                             alignment: start;
-                            ActionList2CustomHeading {
-                                margin-inline: root.preview-item-margin-inline;
-                                title: "Details";
-                            }
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
                                 label: "Readme";
@@ -902,16 +955,43 @@ export component GalleryActionList2Page {
                             }
                             ActionList2Row {
                                 margin-inline: root.preview-item-margin-inline;
-                                label: "License";
+                                label: "MIT License";
                                 has-leading-visual: true;
                                 leading-icon: Icons.law;
                                 clicked => {
-                                    root.last-action = "Activated License";
+                                    root.last-action = "Activated MIT License";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "1.5k stars";
+                                has-leading-visual: true;
+                                leading-icon: Icons.star;
+                                clicked => {
+                                    root.last-action = "Activated stars";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "21 watching";
+                                has-leading-visual: true;
+                                leading-icon: Icons.eye;
+                                clicked => {
+                                    root.last-action = "Activated watching";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "225 forks";
+                                has-leading-visual: true;
+                                leading-icon: Icons.repo_forked;
+                                clicked => {
+                                    root.last-action = "Activated forks";
                                 }
                             }
                         }
 
-                        if root.scenario-ix == 19: VerticalLayout {
+                        if root.scenario-key == "19": VerticalLayout {
                             alignment: start;
                             ActionList2SectionHeading {
                                 margin-inline: root.preview-item-margin-inline;
