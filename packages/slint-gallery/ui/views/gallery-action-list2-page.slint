@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR13 truncation + fill-width + prior scenarios.
+// **ActionList2** gallery — PR14 focus zone + prior scenarios.
 import {
     ActionList2,
     ActionList2CustomHeading,
@@ -37,7 +37,8 @@ export component GalleryActionList2Page {
         : "0";
     property <int> list-variant-ix: 0;
     property <bool> preview-has-leading-icon: false;
-    property <bool> preview-fill-width: true;
+    property <bool> preview-disable-focus-zone: false;
+    property <int> keyboard-nav-focused: -1;
 
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
@@ -64,6 +65,7 @@ export component GalleryActionList2Page {
         { value: "22", label: "LargeItem", enabled: true },
         { value: "23", label: "FullVariant", enabled: true },
         { value: "24", label: "TextWrapAndTruncation", enabled: true },
+        { value: "25", label: "KeyboardNavigation", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -370,6 +372,105 @@ export component GalleryActionList2Page {
         },
     ];
 
+    /// Upstream **`ActionList.test`** listbox arrow navigation (disabled + inactive rows stay focusable).
+    property <[ActionList2Line]> lines-keyboard-nav: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Option 1",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Option 2",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Option 3",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: true,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Option 4",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Option 5",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "Unavailable due to an outage",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+    ];
+
     property <string> scenario-caption:
         root.scenario-key == "1" ? "Upstream: ActionList/Features — SimpleList (composed **ActionList2Row**)"
         : root.scenario-key == "2" ? "Upstream: ItemDividers — **`show-top-seam`** on rows"
@@ -393,7 +494,8 @@ export component GalleryActionList2Page {
         : root.scenario-key == "21" ? "Upstream **WithIcons** — leading octicons incl. **danger** row"
         : root.scenario-key == "22" ? "Upstream **LargeItem** — **`row-size: large`** (plain, inline, block description)"
         : root.scenario-key == "23" ? "Upstream **FullVariant** — list **`variant: full`** (no inset margins)"
-        : root.scenario-key == "24" ? "Upstream **TextWrapAndTruncation** — 300px panel; **`truncate-inline-description`**; toggle **Fill width**"
+        : root.scenario-key == "24" ? "Upstream **TextWrapAndTruncation** — 300px panel; **`truncate-inline-description`**"
+        : root.scenario-key == "25" ? "Upstream listbox focus zone — Tab then **↑**/**↓**/**Home**/**End**; toggle **Disable focus zone**; disabled/inactive rows focusable"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -1354,6 +1456,17 @@ export component GalleryActionList2Page {
                                 }
                             }
                         }
+
+                        if root.scenario-key == "25": ActionList2Lines {
+                            list-variant: root.effective-list-variant;
+                            list-role: ActionList2ListRole.listbox;
+                            disable-focus-zone: root.preview-disable-focus-zone;
+                            focused-index <=> keyboard-nav-focused;
+                            lines: root.lines-keyboard-nav;
+                            item-activated(ix) => {
+                                root.last-action = "Activated " + root.lines-keyboard-nav[ix].label;
+                            }
+                        }
                     }
                 }
             }
@@ -1413,8 +1526,9 @@ export component GalleryActionList2Page {
                 }
 
                 Checkbox {
-                    label: "Fill width";
-                    checked <=> preview-fill-width;
+                    label: "Disable focus zone";
+                    disabled: root.scenario-key != "25";
+                    checked <=> preview-disable-focus-zone;
                 }
             }
         }

@@ -38,10 +38,18 @@ export component ActionList2Row {
     in property <bool> show-divider: false;
     in property <bool> selected: false;
     in property <ActionList2SelectionLead> selection-lead: ActionList2SelectionLead.none;
+    in property <bool> roving-focused: false;
     callback clicked;
+    callback focus-claimed();
 
     property <bool> show-selection-checkmark: root.selection-lead == ActionList2SelectionLead.checkmark;
     property <bool> show-selection-checkbox: root.selection-lead == ActionList2SelectionLead.checkbox;
+
+    changed roving-focused => {
+        if root.roving-focused {
+            row-fs.focus();
+        }
+    }
 
     property <bool> is-danger: root.row-variant == ActionList2RowVariant.danger;
     property <bool> is-inactive: root.inactive-text != "";
@@ -155,28 +163,33 @@ export component ActionList2Row {
             width: LayoutTokens.action-list-item-padding-inline - root.margin-inline;
         }
     }
-    row-shell := VerticalLayout {
-        alignment: start;
-        padding-left: root.margin-inline;
-        padding-right: root.margin-inline;
+    row-fs := FocusScope {
+        enabled: !root.is-loading-row;
+        focus-on-click: false;
+        focus-on-tab-navigation: root.is-interactive;
 
-        fs := FocusScope {
-            enabled: root.is-interactive;
-            focus-on-click: false;
+        focus-gained => {
+            root.focus-claimed();
+        }
 
-            key-pressed(event) => {
-                if !root.is-interactive {
-                    return reject;
-                }
-                if event.text == Key.Return || event.text == Key.Space {
-                    root.clicked();
-                    return accept;
-                }
+        key-pressed(event) => {
+            if !root.is-interactive {
                 return reject;
             }
+            if event.text == Key.Return || event.text == Key.Space {
+                root.clicked();
+                return accept;
+            }
+            return reject;
+        }
+
+        row-shell := VerticalLayout {
+            alignment: start;
+            padding-left: root.margin-inline;
+            padding-right: root.margin-inline;
 
             focus-chrome := Rectangle {
-                border-width: fs.has-focus && root.is-interactive ? ActionList2Tokens.item-focus-ring-width : 0px;
+                border-width: (row-fs.has-focus || root.roving-focused) && !root.is-loading-row ? ActionList2Tokens.item-focus-ring-width : 0px;
                 border-color: ActionList2Tokens.item-focus-ring-color;
                 border-radius: LayoutTokens.borderRadius-medium;
 

@@ -1,0 +1,218 @@
+// Roving focus index math for **`ActionList2Lines`** (fixed-depth scan — no recursion).
+
+import { ActionList2Line, ActionList2LineKind } from "./types.slint";
+
+export global ActionList2FocusLogic {
+    public pure function line-is-row(lines: [ActionList2Line], ix: int) -> bool {
+        ix >= 0 && ix < lines.length && lines[ix].kind == ActionList2LineKind.row;
+    }
+
+    public pure function wrap-candidate(candidate: int, len: int, wrap: bool) -> int {
+        if len <= 0 {
+            -1
+        } else if candidate < 0 {
+            if wrap {
+                len - 1
+            } else {
+                -1
+            }
+        } else if candidate >= len {
+            if wrap {
+                0
+            } else {
+                -1
+            }
+        } else {
+            candidate
+        }
+    }
+
+    public pure function try-at(lines: [ActionList2Line], ix: int) -> int {
+        if ActionList2FocusLogic.line-is-row(lines, ix) {
+            ix
+        } else {
+            -1
+        }
+    }
+
+    public pure function next-candidate(from: int, delta: int, len: int, wrap: bool) -> int {
+        ActionList2FocusLogic.wrap-candidate(from + delta, len, wrap)
+    }
+
+    public pure function first-row(lines: [ActionList2Line]) -> int {
+        ActionList2FocusLogic.try-at(lines, 0) >= 0 ? 0
+        : ActionList2FocusLogic.try-at(lines, 1) >= 0 ? 1
+        : ActionList2FocusLogic.try-at(lines, 2) >= 0 ? 2
+        : ActionList2FocusLogic.try-at(lines, 3) >= 0 ? 3
+        : ActionList2FocusLogic.try-at(lines, 4) >= 0 ? 4
+        : ActionList2FocusLogic.try-at(lines, 5) >= 0 ? 5
+        : ActionList2FocusLogic.try-at(lines, 6) >= 0 ? 6
+        : ActionList2FocusLogic.try-at(lines, 7) >= 0 ? 7
+        : ActionList2FocusLogic.try-at(lines, 8) >= 0 ? 8
+        : ActionList2FocusLogic.try-at(lines, 9) >= 0 ? 9
+        : ActionList2FocusLogic.try-at(lines, 10) >= 0 ? 10
+        : ActionList2FocusLogic.try-at(lines, 11) >= 0 ? 11
+        : ActionList2FocusLogic.try-at(lines, 12) >= 0 ? 12
+        : ActionList2FocusLogic.try-at(lines, 13) >= 0 ? 13
+        : ActionList2FocusLogic.try-at(lines, 14) >= 0 ? 14
+        : ActionList2FocusLogic.try-at(lines, 15) >= 0 ? 15
+        : ActionList2FocusLogic.try-at(lines, 16) >= 0 ? 16
+        : ActionList2FocusLogic.try-at(lines, 17) >= 0 ? 17
+        : ActionList2FocusLogic.try-at(lines, 18) >= 0 ? 18
+        : ActionList2FocusLogic.try-at(lines, 19) >= 0 ? 19
+        : ActionList2FocusLogic.try-at(lines, 20) >= 0 ? 20
+        : ActionList2FocusLogic.try-at(lines, 21) >= 0 ? 21
+        : ActionList2FocusLogic.try-at(lines, 22) >= 0 ? 22
+        : ActionList2FocusLogic.try-at(lines, 23) >= 0 ? 23
+        : ActionList2FocusLogic.try-at(lines, 24) >= 0 ? 24
+        : ActionList2FocusLogic.try-at(lines, 25) >= 0 ? 25
+        : ActionList2FocusLogic.try-at(lines, 26) >= 0 ? 26
+        : ActionList2FocusLogic.try-at(lines, 27) >= 0 ? 27
+        : ActionList2FocusLogic.try-at(lines, 28) >= 0 ? 28
+        : ActionList2FocusLogic.try-at(lines, 29) >= 0 ? 29
+        : ActionList2FocusLogic.try-at(lines, 30) >= 0 ? 30
+        : ActionList2FocusLogic.try-at(lines, 31) >= 0 ? 31
+        : -1
+    }
+
+    public pure function last-row(lines: [ActionList2Line]) -> int {
+        ActionList2FocusLogic.try-at(lines, lines.length - 1) >= 0 ? lines.length - 1
+        : ActionList2FocusLogic.try-at(lines, lines.length - 2) >= 0 ? lines.length - 2
+        : ActionList2FocusLogic.try-at(lines, lines.length - 3) >= 0 ? lines.length - 3
+        : ActionList2FocusLogic.try-at(lines, lines.length - 4) >= 0 ? lines.length - 4
+        : ActionList2FocusLogic.try-at(lines, lines.length - 5) >= 0 ? lines.length - 5
+        : ActionList2FocusLogic.try-at(lines, lines.length - 6) >= 0 ? lines.length - 6
+        : ActionList2FocusLogic.try-at(lines, lines.length - 7) >= 0 ? lines.length - 7
+        : ActionList2FocusLogic.try-at(lines, lines.length - 8) >= 0 ? lines.length - 8
+        : ActionList2FocusLogic.try-at(lines, lines.length - 9) >= 0 ? lines.length - 9
+        : ActionList2FocusLogic.try-at(lines, lines.length - 10) >= 0 ? lines.length - 10
+        : ActionList2FocusLogic.try-at(lines, lines.length - 11) >= 0 ? lines.length - 11
+        : ActionList2FocusLogic.try-at(lines, lines.length - 12) >= 0 ? lines.length - 12
+        : ActionList2FocusLogic.try-at(lines, lines.length - 13) >= 0 ? lines.length - 13
+        : ActionList2FocusLogic.try-at(lines, lines.length - 14) >= 0 ? lines.length - 14
+        : ActionList2FocusLogic.try-at(lines, lines.length - 15) >= 0 ? lines.length - 15
+        : ActionList2FocusLogic.try-at(lines, lines.length - 16) >= 0 ? lines.length - 16
+        : ActionList2FocusLogic.try-at(lines, lines.length - 17) >= 0 ? lines.length - 17
+        : ActionList2FocusLogic.try-at(lines, lines.length - 18) >= 0 ? lines.length - 18
+        : ActionList2FocusLogic.try-at(lines, lines.length - 19) >= 0 ? lines.length - 19
+        : ActionList2FocusLogic.try-at(lines, lines.length - 20) >= 0 ? lines.length - 20
+        : ActionList2FocusLogic.try-at(lines, lines.length - 21) >= 0 ? lines.length - 21
+        : ActionList2FocusLogic.try-at(lines, lines.length - 22) >= 0 ? lines.length - 22
+        : ActionList2FocusLogic.try-at(lines, lines.length - 23) >= 0 ? lines.length - 23
+        : ActionList2FocusLogic.try-at(lines, lines.length - 24) >= 0 ? lines.length - 24
+        : ActionList2FocusLogic.try-at(lines, lines.length - 25) >= 0 ? lines.length - 25
+        : ActionList2FocusLogic.try-at(lines, lines.length - 26) >= 0 ? lines.length - 26
+        : ActionList2FocusLogic.try-at(lines, lines.length - 27) >= 0 ? lines.length - 27
+        : ActionList2FocusLogic.try-at(lines, lines.length - 28) >= 0 ? lines.length - 28
+        : ActionList2FocusLogic.try-at(lines, lines.length - 29) >= 0 ? lines.length - 29
+        : ActionList2FocusLogic.try-at(lines, lines.length - 30) >= 0 ? lines.length - 30
+        : ActionList2FocusLogic.try-at(lines, lines.length - 31) >= 0 ? lines.length - 31
+        : -1
+    }
+
+    public pure function step-from(lines: [ActionList2Line], from: int, delta: int, wrap: bool) -> int {
+        ActionList2FocusLogic.step-at(
+            lines,
+            ActionList2FocusLogic.next-candidate(from, delta, lines.length, wrap),
+            delta,
+            wrap,
+        )
+    }
+
+    public pure function step-at(lines: [ActionList2Line], c0: int, delta: int, wrap: bool) -> int {
+        ActionList2FocusLogic.try-at(lines, c0) >= 0 ? ActionList2FocusLogic.try-at(lines, c0)
+        : ActionList2FocusLogic.try-at(
+            lines,
+            ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+        ) >= 0
+            ? ActionList2FocusLogic.try-at(
+                lines,
+                ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+            )
+        : ActionList2FocusLogic.try-at(
+            lines,
+            ActionList2FocusLogic.next-candidate(
+                ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+                delta,
+                lines.length,
+                wrap,
+            ),
+        ) >= 0
+            ? ActionList2FocusLogic.try-at(
+                lines,
+                ActionList2FocusLogic.next-candidate(
+                    ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+                    delta,
+                    lines.length,
+                    wrap,
+                ),
+            )
+        : ActionList2FocusLogic.try-at(
+            lines,
+            ActionList2FocusLogic.next-candidate(
+                ActionList2FocusLogic.next-candidate(
+                    ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+                    delta,
+                    lines.length,
+                    wrap,
+                ),
+                delta,
+                lines.length,
+                wrap,
+            ),
+        ) >= 0
+            ? ActionList2FocusLogic.try-at(
+                lines,
+                ActionList2FocusLogic.next-candidate(
+                    ActionList2FocusLogic.next-candidate(
+                        ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+                        delta,
+                        lines.length,
+                        wrap,
+                    ),
+                    delta,
+                    lines.length,
+                    wrap,
+                ),
+            )
+        : ActionList2FocusLogic.try-at(
+            lines,
+            ActionList2FocusLogic.next-candidate(
+                ActionList2FocusLogic.next-candidate(
+                    ActionList2FocusLogic.next-candidate(
+                        ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+                        delta,
+                        lines.length,
+                        wrap,
+                    ),
+                    delta,
+                    lines.length,
+                    wrap,
+                ),
+                delta,
+                lines.length,
+                wrap,
+            ),
+        ) >= 0
+            ? ActionList2FocusLogic.try-at(
+                lines,
+                ActionList2FocusLogic.next-candidate(
+                    ActionList2FocusLogic.next-candidate(
+                        ActionList2FocusLogic.next-candidate(
+                            ActionList2FocusLogic.next-candidate(c0, delta, lines.length, wrap),
+                            delta,
+                            lines.length,
+                            wrap,
+                        ),
+                        delta,
+                        lines.length,
+                        wrap,
+                    ),
+                    delta,
+                    lines.length,
+                    wrap,
+                ),
+            )
+        : -1
+    }
+}

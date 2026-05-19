@@ -4,7 +4,7 @@ Primer **ActionList** port with a **compose-first** API (like **Dialog** / **Sel
 
 ## Compose-first (preferred)
 
-[`ActionList2`](action-list2.slint) is list chrome only (`list-variant` padding, **`fill-width`**). Place leaf components as **`@children`**:
+[`ActionList2`](action-list2.slint) is list chrome only (`list-variant` padding). Place leaf components as **`@children`**:
 
 - [`ActionList2Row`](action-list2-row.slint) — row visuals, **`row-size`** (`medium` | `large`), leading **avatar** or **icon**, descriptions, danger, disabled/inactive/loading, **`active`**, focus, hover
 - [`ActionList2ItemDivider`](action-list2-item-divider.slint) — explicit block divider
@@ -35,6 +35,8 @@ For **`show-dividers`** seams, set **`show-divider: true`** on each row after th
 
 Dynamic data: `for row[ix] in model: ActionList2Row { ... }` inside **`ActionList2`**.
 
+Composed rows support Tab focus and **Space** / **Enter** per row; use **`ActionList2Lines`** for arrow-key roving (upstream focus zone).
+
 ## Lines adapter (model / TS hosts)
 
 [`ActionList2Lines`](action-list2-lines.slint) maps **`[ActionList2Line]`** to rows/dividers:
@@ -44,6 +46,7 @@ ActionList2 {
     list-variant: ActionList2ListVariant.inset;
     ActionList2Lines {
         lines: menu-lines;
+        list-role: ActionList2ListRole.listbox;
         selection-mode: ActionList2SelectionMode.single;
         selected-index: selected-ix;
         show-dividers: true;
@@ -51,6 +54,10 @@ ActionList2 {
     }
 }
 ```
+
+### Focus zone (keyboard)
+
+When **`list-role`** is **`menu`** or **`listbox`**, **`ActionList2Lines`** enables Primer-style arrow navigation (**Up** / **Down**, **Home** / **End**). **`menu`** wraps at the ends; **`listbox`** stops at the first/last row. Set **`disable-focus-zone: true`** to opt out (upstream **`disableFocusZone`**). Skips dividers and headings; disabled and inactive rows remain focusable (matches React tests). **`focused-index`** tracks the roving row; **`Space`** / **Enter** on a focused row still fire **`clicked`** / **`item-activated`**. Page Up/Down and typeahead are not implemented.
 
 ## Selection lead (`ActionList2SelectionLead`)
 
