@@ -29,6 +29,8 @@ export component ActionList2Row {
     in property <string> inactive-text: "";
     /// Primer **`loading`**: trailing **`Spinner`**; row not activatable; muted label/description.
     in property <bool> show-trailing-loading: false;
+    /// Primer **`active`** / **`[data-active]`** — left accent bar + surface (orthogonal to **`selected`**).
+    in property <bool> active: false;
     in property <length> margin-inline;
     in property <bool> show-divider: false;
     in property <bool> selected: false;
@@ -43,6 +45,9 @@ export component ActionList2Row {
     property <bool> is-inactive: root.inactive-text != "";
     property <bool> is-loading-row: root.show-trailing-loading;
     property <bool> is-interactive: !root.disabled && !root.is-inactive && !root.is-loading-row;
+    /// Accent bar + active surface; not combined with inactive / loading / disabled.
+    property <bool> show-active-chrome:
+        root.active && !root.disabled && !root.is-inactive && !root.is-loading-row;
 
     property <color> single-select-check-tint:
         root.disabled
@@ -65,7 +70,7 @@ export component ActionList2Row {
     property <int> label-font-weight:
         root.is-loading-row
         ? LayoutTokens.base-text-weight-medium
-        : !root.disabled && root.use-selected-surface
+        : !root.disabled && (root.use-selected-surface || root.show-active-chrome)
         ? LayoutTokens.base-text-weight-semibold
         : LayoutTokens.base-text-weight-medium;
 
@@ -75,6 +80,7 @@ export component ActionList2Row {
         : root.disabled
         ? (root.is-danger ? ActionList2Tokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled)
         : root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor
+        : root.show-active-chrome ? ActionList2Tokens.item-active-label-fgColor-rest
         : (root.is-danger ? ActionList2Tokens.item-danger-fgColor-rest : PrimerColors.fgColor-default);
 
     property <color> leading-icon-tint:
@@ -161,7 +167,17 @@ export component ActionList2Row {
                 border-color: ActionList2Tokens.item-focus-ring-color;
                 border-radius: LayoutTokens.borderRadius-medium;
 
-                ta := TouchArea {
+                row-chrome-shell := Rectangle {
+                    if root.show-active-chrome: Rectangle {
+                        x: -LayoutTokens.button-content-gap;
+                        y: LayoutTokens.base-size-4;
+                        width: LayoutTokens.base-size-4;
+                        height: parent.height - LayoutTokens.button-content-gap;
+                        background: ActionList2Tokens.item-active-indicator-bgColor;
+                        border-radius: LayoutTokens.borderRadius-medium;
+                    }
+
+                    ta := TouchArea {
                     enabled: root.is-interactive;
                     min-height: root.cell-min-height;
                     mouse-cursor: root.is-interactive ? pointer : default;
@@ -384,6 +400,15 @@ export component ActionList2Row {
                             loading when !root.disabled && root.is-loading-row: {
                                 row-bg.background: transparent;
                             }
+                            active-pressed when root.is-interactive && root.show-active-chrome && ta.pressed: {
+                                row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                            }
+                            active-hover when root.is-interactive && root.show-active-chrome && !ta.pressed && ta.has-hover: {
+                                row-bg.background: ActionList2Tokens.item-active-bgColor-hover;
+                            }
+                            active-rest when root.is-interactive && root.show-active-chrome && !ta.pressed && !ta.has-hover: {
+                                row-bg.background: ActionList2Tokens.item-active-bgColor-rest;
+                            }
                             danger-selected-pressed when root.is-interactive && root.is-danger && root.use-selected-surface && ta.pressed: {
                                 row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
                             }
@@ -416,6 +441,7 @@ export component ActionList2Row {
                             }
                         ]
                     }
+                }
                 }
             }
         }

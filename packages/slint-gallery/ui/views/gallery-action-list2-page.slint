@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR8 disabled / inactive / loading + prior scenarios.
+// **ActionList2** gallery — PR9 active row + prior scenarios.
 import {
     ActionList2,
     ActionList2DescriptionLayout,
@@ -44,6 +44,7 @@ export component GalleryActionList2Page {
         { value: "13", label: "InactiveItem", enabled: true },
         { value: "14", label: "LoadingItem", enabled: true },
         { value: "15", label: "InactiveSingleSelect", enabled: true },
+        { value: "16", label: "Active", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -83,6 +84,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -96,6 +98,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -108,6 +111,7 @@ export component GalleryActionList2Page {
             description-layout: ActionList2DescriptionLayout.none,
             trailing-text: "",
             show-trailing-loading: false,
+            active: false,
         },
     ];
 
@@ -124,6 +128,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -137,6 +142,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -150,6 +156,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -163,6 +170,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
     ];
 
@@ -179,6 +187,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -192,6 +201,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -205,6 +215,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -218,6 +229,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
     ];
 
@@ -234,6 +246,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -247,6 +260,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
         {
             kind: ActionList2LineKind.row,
@@ -260,6 +274,7 @@ export component GalleryActionList2Page {
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
+            active: false,
         },
     ];
 
@@ -278,6 +293,7 @@ export component GalleryActionList2Page {
         : root.scenario-ix == 13 ? "Upstream **InactiveItem** — **`inactive-text`** warning under block description"
         : root.scenario-ix == 14 ? "Upstream **LoadingItem** — **`show-trailing-loading`** spinner; no activation"
         : root.scenario-ix == 15 ? "Upstream **InactiveSingleSelect** — inactive row in single-select menu"
+        : root.scenario-ix == 16 ? "Upstream **Active** — **`active`** row: left accent bar + selected surface"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -772,6 +788,32 @@ export component GalleryActionList2Page {
                                 clicked => {
                                     root.inactive-single-select-ix = 1;
                                     root.last-action = "Selected Item 2";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 16: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Active item";
+                                active: true;
+                                clicked => {
+                                    root.last-action = "Activated Active item";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Second row";
+                                clicked => {
+                                    root.last-action = "Activated Second row";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Third row";
+                                clicked => {
+                                    root.last-action = "Activated Third row";
                                 }
                             }
                         }
