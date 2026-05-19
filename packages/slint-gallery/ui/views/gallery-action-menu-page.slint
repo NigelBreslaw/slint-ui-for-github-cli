@@ -1,12 +1,23 @@
 // **ActionMenu** gallery — 13 upstream Storybook scenarios (see plan). Out-of-scope stories are listed in the sidebar footer.
 import {
     ActionList,
+    ActionList2,
+    ActionList2DescriptionLayout,
+    ActionList2Line,
+    ActionList2LineKind,
+    ActionList2Lines,
+    ActionList2ListRole,
+    ActionList2RowSize,
+    ActionList2RowVariant,
+    ActionList2SectionHeadingVariant,
+    ActionList2SelectionMode,
     ActionListDescriptionLayout,
     ActionListLine,
     ActionListLineKind,
     ActionListListRole,
     ActionListRowVariant,
     ActionListSelectionMode,
+    ALVariant,
     ActionMenu,
     AnchoredOverlaySide,
     AnchoredOverlayWidth,
@@ -176,6 +187,105 @@ export component GalleryActionMenuPage {
             has-trailing-visual: false,
             trailing-icon: Icons.dot_fill,
             trailing-text: "⌘D",
+        },
+    ];
+
+    /// **Default** scenario (PR 1) — **ActionList2** line model; shared with **OnRightSide** in PR 2.
+    property <[ActionList2Line]> lines-default-v2: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Copy link",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "⌘C",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Quote reply",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "⌘Q",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Edit comment",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "⌘E",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.item_divider,
+            label: "",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Delete file",
+            row-variant: ActionList2RowVariant.danger,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "⌘D",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
     ];
 
@@ -1152,7 +1262,25 @@ export component GalleryActionMenuPage {
                 }
             }
 
-            if root.scenario-ix != 6 && root.scenario-ix != 9 && root.scenario-ix != 10 && root.scenario-ix != 11: demo-am := ActionMenu {
+            if root.scenario-ix == 0: demo-am-default := ActionMenu {
+                button-label: "Open menu";
+                side: root.overlay-side;
+                width-preset: root.overlay-width;
+                ActionList2 {
+                    // Upstream **ActionList** default variant is **inset** (`List.tsx`); overlay has no extra padding.
+                    list-variant: ALVariant.inset;
+                    ActionList2Lines {
+                        list-role: ActionList2ListRole.menu;
+                        lines: root.lines-default-v2;
+                        selection-mode: ActionList2SelectionMode.none;
+                        item-activated(ix) => {
+                            root.last-action = "Activated line " + ix;
+                        }
+                    }
+                }
+            }
+
+            if root.scenario-ix != 0 && root.scenario-ix != 6 && root.scenario-ix != 9 && root.scenario-ix != 10 && root.scenario-ix != 11: demo-am := ActionMenu {
                 button-label: root.scenario-ix == 2 || root.scenario-ix == 8 ? "Milestone: pick one" : root.scenario-ix == 3 ? "Display" : "Open menu";
                 side: root.overlay-side;
                 width-preset: root.overlay-width;

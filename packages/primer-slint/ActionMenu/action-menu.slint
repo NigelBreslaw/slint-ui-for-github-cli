@@ -1,4 +1,4 @@
-// Primer **ActionMenu** — menu **`Button`** + **`AnchoredOverlay`** shell; body is **`@children`** (typically **`ActionList`**).
+// Primer **ActionMenu** — menu **`Button`** + **`AnchoredOverlay`** shell; body is **`@children`** (typically **`ActionList2`** + **`ActionList2Lines`** with **`list-role: menu`**).
 // Upstream: `ActionMenu.tsx` + `AnchoredOverlay` + `ActionList`. Trailing caret matches **`ActionMenu.Button`** (**`TriangleDownIcon`**).
 
 import {
@@ -30,6 +30,8 @@ export component ActionMenu {
     in property <length> margin: LayoutTokens.base-size-4;
     in property <length> anchor-offset: 0px;
     in property <length> alignment-offset: 0px;
+    /// Primer **Overlay** has no inner padding around **ActionList** menu bodies (unlike modal shells). Default **0**.
+    in property <length> panel-padding: 0px;
 
     /// Mirrors overlay visibility — host may set **`true`** to open (**ShortcutMenu**); clears on dismiss.
     in-out property <bool> open: false;
@@ -82,6 +84,7 @@ export component ActionMenu {
             margin: root.margin;
             anchor-offset: root.anchor-offset;
             alignment-offset: root.alignment-offset;
+            panel-padding: root.panel-padding;
 
             close-requested => {
                 root.close-requested();
