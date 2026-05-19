@@ -32,18 +32,26 @@ Dynamic data: `for row[ix] in model: ActionList2Row { ... }` inside **`ActionLis
 
 ## Lines adapter (model / TS hosts)
 
-[`ActionList2Lines`](action-list2-lines.slint) maps **`[ActionList2Line]`** to rows/dividers (selection wiring lands in PR 6+):
+[`ActionList2Lines`](action-list2-lines.slint) maps **`[ActionList2Line]`** to rows/dividers:
 
 ```slint
 ActionList2 {
     list-variant: ActionList2ListVariant.inset;
     ActionList2Lines {
         lines: menu-lines;
+        selection-mode: ActionList2SelectionMode.single;
+        selected-index: selected-ix;
         show-dividers: true;
-        item-activated(ix) => { }
+        item-activated(ix) => { selected-ix = ix; }
     }
 }
 ```
+
+## Single selection (PR 6)
+
+On **`ActionList2Row`**: **`show-single-select-check: true`**, **`selected: ix == selected-ix`**, per-row **`clicked`** to update index.
+
+With **`ActionList2Lines`**: set **`selection-mode: single`** and **`selected-index`**; adapter sets check column + **`selected`** on each row.
 
 ## Do not
 

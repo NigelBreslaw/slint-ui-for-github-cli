@@ -21,9 +21,22 @@ export component ActionList2Row {
     in property <length> margin-inline;
     /// Primer **`showDividers`** seam hairline above this row (`borderColor-muted`, no block margins).
     in property <bool> show-top-seam: false;
+    in property <bool> selected: false;
+    in property <bool> show-single-select-check: false;
     callback clicked;
 
     property <bool> is-danger: root.row-variant == ActionList2RowVariant.danger;
+
+    property <color> single-select-check-tint:
+        root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
+
+    property <bool> use-selected-surface:
+        root.selected && !root.show-single-select-check;
+
+    property <int> label-font-weight:
+        !root.disabled && root.use-selected-surface
+        ? LayoutTokens.base-text-weight-semibold
+        : LayoutTokens.base-text-weight-medium;
 
     property <color> label-color:
         root.disabled
@@ -56,9 +69,21 @@ export component ActionList2Row {
         padding-left: root.margin-inline;
         padding-right: root.margin-inline;
 
-        if root.show-top-seam: Rectangle {
-            height: LayoutTokens.table-border-width;
-            background: ActionList2Tokens.item-seam-borderColor;
+        if root.show-top-seam: HorizontalLayout {
+            spacing: LayoutTokens.button-content-gap;
+            alignment: start;
+            align-items: center;
+
+            if root.show-single-select-check: Rectangle {
+                width: LayoutTokens.iconButton-icon-size-medium;
+                height: LayoutTokens.table-border-width;
+            }
+
+            Rectangle {
+                horizontal-stretch: 1;
+                height: LayoutTokens.table-border-width;
+                background: ActionList2Tokens.item-seam-borderColor;
+            }
         }
 
         fs := FocusScope {
@@ -110,6 +135,21 @@ export component ActionList2Row {
                                     alignment: start;
                                     align-items: center;
 
+                                    if root.show-single-select-check: HorizontalLayout {
+                                        horizontal-stretch: 0;
+                                        min-height: LayoutTokens.iconButton-icon-size-medium;
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        alignment: center;
+
+                                        if root.selected: Image {
+                                            width: 16px;
+                                            height: 16px;
+                                            vertical-alignment: center;
+                                            source: Icons.check;
+                                            colorize: root.single-select-check-tint;
+                                        }
+                                    }
+
                                     if root.has-leading-visual: Image {
                                         width: LayoutTokens.iconButton-icon-size-medium;
                                         height: LayoutTokens.iconButton-icon-size-medium;
@@ -129,7 +169,7 @@ export component ActionList2Row {
                                             text: root.label;
                                             color: root.label-color;
                                             font-size: LayoutTokens.text-body-size-medium;
-                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            font-weight: root.label-font-weight;
                                             wrap: word-wrap;
                                             vertical-alignment: center;
                                         }
@@ -153,7 +193,7 @@ export component ActionList2Row {
                                             text: root.label;
                                             color: root.label-color;
                                             font-size: LayoutTokens.text-body-size-medium;
-                                            font-weight: LayoutTokens.base-text-weight-medium;
+                                            font-weight: root.label-font-weight;
                                             wrap: word-wrap;
                                         }
                                     }
@@ -163,7 +203,7 @@ export component ActionList2Row {
                                         text: root.label;
                                         color: root.label-color;
                                         font-size: LayoutTokens.text-body-size-medium;
-                                        font-weight: LayoutTokens.base-text-weight-medium;
+                                        font-weight: root.label-font-weight;
                                         wrap: word-wrap;
                                         vertical-alignment: center;
                                     }
@@ -173,6 +213,11 @@ export component ActionList2Row {
                                     spacing: LayoutTokens.button-content-gap;
                                     alignment: start;
                                     align-items: center;
+
+                                    if root.show-single-select-check: Rectangle {
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: LayoutTokens.iconButton-icon-size-medium;
+                                    }
 
                                     if root.has-leading-visual: Rectangle {
                                         width: LayoutTokens.iconButton-icon-size-medium;
@@ -201,18 +246,39 @@ export component ActionList2Row {
 
                         states [
                             disabled when root.disabled: {
-                                row-bg.background: transparent;
+                                row-bg.background:
+                                    root.use-selected-surface
+                                    ? ButtonTokens.color-action-list-item-default-selected-bg
+                                    : transparent;
                             }
-                            danger-pressed when !root.disabled && root.is-danger && ta.pressed: {
+                            danger-selected-pressed when !root.disabled && root.is-danger && root.use-selected-surface && ta.pressed: {
                                 row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
                             }
-                            danger-hover when !root.disabled && root.is-danger && !ta.pressed && ta.has-hover: {
+                            danger-selected-hover when !root.disabled && root.is-danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ActionList2Tokens.item-danger-bgColor-hover;
                             }
-                            default-pressed when !root.disabled && !root.is-danger && ta.pressed: {
+                            danger-selected-rest when !root.disabled && root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                                row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
+                            }
+                            danger-pressed when !root.disabled && root.is-danger && !root.use-selected-surface && ta.pressed: {
+                                row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
+                            }
+                            danger-hover when !root.disabled && root.is-danger && !root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                                row-bg.background: ActionList2Tokens.item-danger-bgColor-hover;
+                            }
+                            default-selected-pressed when !root.disabled && !root.is-danger && root.use-selected-surface && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
-                            default-hover when !root.disabled && !root.is-danger && !ta.pressed && ta.has-hover: {
+                            default-selected-hover when !root.disabled && !root.is-danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
+                                row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
+                            }
+                            default-selected-rest when !root.disabled && !root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
+                                row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
+                            }
+                            default-pressed when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check) && ta.pressed: {
+                                row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
+                            }
+                            default-hover when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check) && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                             }
                         ]
