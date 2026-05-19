@@ -11,6 +11,7 @@ import {
     PrimerColors,
     Size,
 } from "../tokens.slint";
+import { ActionList2TrailingAction } from "./action-list2-trailing-action.slint";
 import {
     ActionList2DescriptionLayout,
     ActionList2RowSize,
@@ -39,7 +40,13 @@ export component ActionList2Row {
     in property <bool> selected: false;
     in property <ActionList2SelectionLead> selection-lead: ActionList2SelectionLead.none;
     in property <bool> roving-focused: false;
+    in property <bool> has-trailing-action: false;
+    in property <bool> trailing-action-has-icon: false;
+    in property <image> trailing-action-icon: Icons.dot_fill;
+    in property <string> trailing-action-label: "";
+    in property <bool> trailing-action-loading: false;
     callback clicked;
+    callback trailing-action-clicked();
     callback focus-claimed();
 
     property <bool> show-selection-checkmark: root.selection-lead == ActionList2SelectionLead.checkmark;
@@ -193,30 +200,40 @@ export component ActionList2Row {
                 border-color: ActionList2Tokens.item-focus-ring-color;
                 border-radius: LayoutTokens.borderRadius-medium;
 
-                row-chrome-shell := Rectangle {
-                    if root.show-active-chrome: Rectangle {
-                        x: -LayoutTokens.button-content-gap;
-                        y: LayoutTokens.base-size-4;
-                        width: LayoutTokens.base-size-4;
-                        height: parent.height - LayoutTokens.button-content-gap;
-                        background: ActionList2Tokens.item-active-indicator-bgColor;
-                        border-radius: LayoutTokens.borderRadius-medium;
-                    }
-
-                    ta := TouchArea {
-                    enabled: root.is-interactive;
+                row-chrome-shell := HorizontalLayout {
+                    alignment: stretch;
+                    spacing: 0px;
                     min-height: root.cell-min-height;
-                    mouse-cursor: root.is-interactive ? pointer : default;
-                    clicked => {
-                        root.clicked();
-                    }
 
-                    if root.disabled: TouchArea {
-                        enabled: true;
-                        mouse-cursor: not-allowed;
-                    }
+                    main-cell := Rectangle {
+                        horizontal-stretch: 1;
+                        min-height: root.cell-min-height;
 
-                    row-bg := Rectangle {
+                        if root.show-active-chrome: Rectangle {
+                            x: -LayoutTokens.button-content-gap;
+                            y: LayoutTokens.base-size-4;
+                            width: LayoutTokens.base-size-4;
+                            height: parent.height - LayoutTokens.button-content-gap;
+                            background: ActionList2Tokens.item-active-indicator-bgColor;
+                            border-radius: LayoutTokens.borderRadius-medium;
+                        }
+
+                        ta := TouchArea {
+                        enabled: root.is-interactive;
+                        width: 100%;
+                        height: 100%;
+                        min-height: root.cell-min-height;
+                        mouse-cursor: root.is-interactive ? pointer : default;
+                        clicked => {
+                            root.clicked();
+                        }
+
+                        if root.disabled: TouchArea {
+                            enabled: true;
+                            mouse-cursor: not-allowed;
+                        }
+
+                        row-bg := Rectangle {
                         border-radius: LayoutTokens.borderRadius-medium;
 
                         content-row := HorizontalLayout {
@@ -514,7 +531,19 @@ export component ActionList2Row {
                             }
                         ]
                     }
-                }
+                    }
+                    }
+
+                    if root.has-trailing-action: ActionList2TrailingAction {
+                        label: root.trailing-action-label;
+                        has-icon: root.trailing-action-has-icon;
+                        icon: root.trailing-action-icon;
+                        loading: root.trailing-action-loading;
+                        disabled: root.disabled;
+                        clicked => {
+                            root.trailing-action-clicked();
+                        }
+                    }
                 }
             }
         }

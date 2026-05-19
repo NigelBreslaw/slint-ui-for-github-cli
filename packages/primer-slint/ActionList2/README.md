@@ -8,6 +8,7 @@ Primer **ActionList** port with a **compose-first** API (like **Dialog** / **Sel
 
 - [`ActionList2Row`](action-list2-row.slint) — row visuals, **`row-size`** (`medium` | `large`), leading **avatar** or **icon**, descriptions, danger, disabled/inactive/loading, **`active`**, focus, hover
 - [`ActionList2LinkRow`](action-list2-link-row.slint) — **LinkItem** anchor row (`href`, link label color; **`inactive-text`** disables navigation)
+- [`ActionList2TrailingAction`](action-list2-trailing-action.slint) — **TrailingAction** invisible button (compose on **`ActionList2Row`** via **`has-trailing-action`**; not for menu/listbox hosts)
 - [`ActionList2ItemDivider`](action-list2-item-divider.slint) — explicit block divider
 - [`ActionList2ListVisualHeading`](action-list2-list-visual-heading.slint) — list title (**WithVisualListHeading**)
 - [`ActionList2CustomHeading`](action-list2-custom-heading.slint) — medium custom title

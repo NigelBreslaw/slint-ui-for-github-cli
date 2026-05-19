@@ -1,0 +1,109 @@
+// **ActionList.TrailingAction** — invisible control flush to the row end (not menu/listbox).
+// Upstream: TrailingAction.tsx + ActionList.module.css `.TrailingActionButton`.
+
+import { ButtonLogic } from "../Buttons/logic.slint";
+import { ButtonPaint, ButtonVariant } from "../Buttons/types.slint";
+import { Spinner } from "../Progress/spinner.slint";
+import { ButtonTokens, LayoutTokens, Size } from "../tokens.slint";
+import { Palette } from "std-widgets.slint";
+
+export component ActionList2TrailingAction {
+    in property <string> label: "";
+    in property <bool> has-icon: false;
+    in property <image> icon;
+    in property <bool> loading: false;
+    in property <bool> disabled: false;
+    callback clicked;
+
+    property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
+    property <ButtonPaint> paint: ButtonLogic.button-paint(ButtonVariant.invisible, disabled, ta.has-hover, ta.pressed);
+    property <color> spinner-track: is-dark ? #ffffff30 : #1f232830;
+
+    property <length> icon-slot-size: LayoutTokens.control-medium-size;
+    property <length> text-padding-inline: LayoutTokens.control-medium-paddingInline-normal;
+    property <length> text-loading-padding-left: LayoutTokens.base-size-12 * 2;
+
+    label-measure := Text {
+        visible: false;
+        text: root.label;
+        font-size: LayoutTokens.text-body-size-medium;
+        font-weight: LayoutTokens.base-text-weight-medium;
+    }
+
+    property <length> text-rest-width:
+        max(icon-slot-size, label-measure.preferred-width + 2 * text-padding-inline);
+
+    property <length> control-width: has-icon ? icon-slot-size : text-rest-width;
+
+    width: control-width;
+    vertical-stretch: 1;
+    min-height: LayoutTokens.control-medium-size;
+
+    ta := TouchArea {
+        enabled: !disabled;
+        width: 100%;
+        height: 100%;
+        mouse-cursor: disabled ? default : pointer;
+        clicked => {
+            root.clicked();
+        }
+
+        bg := Rectangle {
+            width: 100%;
+            height: 100%;
+            background: paint.bg;
+            border-top-left-radius: 0px;
+            border-bottom-left-radius: 0px;
+            border-top-right-radius: LayoutTokens.borderRadius-medium;
+            border-bottom-right-radius: LayoutTokens.borderRadius-medium;
+
+            if has-icon: HorizontalLayout {
+                width: 100%;
+                height: 100%;
+                alignment: center;
+
+                if loading: Spinner {
+                    size: Size.small;
+                    segment-color: paint.fg;
+                    track-color: spinner-track;
+                }
+
+                if !loading: Image {
+                    width: LayoutTokens.iconButton-icon-size-medium;
+                    height: LayoutTokens.iconButton-icon-size-medium;
+                    source: icon;
+                    colorize: paint.fg;
+                }
+            }
+
+            if !has-icon: HorizontalLayout {
+                width: 100%;
+                height: 100%;
+                alignment: center;
+                padding-left: loading ? text-loading-padding-left : text-padding-inline;
+                padding-right: text-padding-inline;
+
+                if !loading: Text {
+                    text: label;
+                    color: paint.fg;
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-medium;
+                    vertical-alignment: center;
+                }
+
+                if loading: Rectangle {
+                    horizontal-stretch: 1;
+                    height: 100%;
+
+                    Spinner {
+                        x: parent.width - icon-slot-size + (icon-slot-size - self.width) / 2;
+                        y: (parent.height - self.height) / 2;
+                        size: Size.small;
+                        segment-color: paint.fg;
+                        track-color: spinner-track;
+                    }
+                }
+            }
+        }
+    }
+}

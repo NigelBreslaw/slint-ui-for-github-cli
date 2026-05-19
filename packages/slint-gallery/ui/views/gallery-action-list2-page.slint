@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR15 LinkItem + prior scenarios.
+// **ActionList2** gallery — PR16 TrailingAction + prior scenarios.
 import {
     ActionList2,
     ActionList2CustomHeading,
@@ -67,7 +67,9 @@ export component GalleryActionList2Page {
         { value: "23", label: "FullVariant", enabled: true },
         { value: "24", label: "TextWrapAndTruncation", enabled: true },
         { value: "25", label: "KeyboardNavigation", enabled: true },
+        { value: "26", label: "WithTrailingAction", enabled: true },
     ];
+    property <bool> preview-trailing-action-loading: false;
 
     property <[SelectOption]> list-variant-options: [
         { value: "0", label: "inset", enabled: true },
@@ -497,6 +499,7 @@ export component GalleryActionList2Page {
         : root.scenario-key == "23" ? "Upstream **FullVariant** — list **`variant: full`** (no inset margins)"
         : root.scenario-key == "24" ? "Upstream **TextWrapAndTruncation** — 300px panel; **`truncate-inline-description`**"
         : root.scenario-key == "25" ? "Upstream listbox focus zone — Tab then **↑**/**↓**/**Home**/**End**; toggle **Disable focus zone**; disabled/inactive rows focusable"
+        : root.scenario-key == "26" ? "Upstream **WithTrailingAction** — icon/text **`ActionList2TrailingAction`**; row click vs trailing click (**not** for menu/listbox)"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -1463,6 +1466,149 @@ export component GalleryActionList2Page {
                             }
                         }
 
+                        if root.scenario-key == "26": VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Item 1 (with default TrailingAction)";
+                                has-leading-visual: true;
+                                leading-icon: Icons.file_directory_fill;
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_left;
+                                trailing-action-label: "Expand sidebar";
+                                clicked => {
+                                    root.last-action = "Activated row: Item 1";
+                                }
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Expand sidebar";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Item 2 (with link TrailingAction)";
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_right;
+                                trailing-action-label: "Some action 1";
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Some action 1";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Item 3";
+                                description: "This is an inline description.";
+                                description-layout: ActionList2DescriptionLayout.inline;
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.book;
+                                trailing-action-label: "Some action 2";
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Some action 2";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Item 4";
+                                description: "This is a block description.";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.book;
+                                trailing-action-label: "Some action 3";
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Some action 3";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Item 5";
+                                description: "This is a block description.";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                has-trailing-action: true;
+                                trailing-action-label: "Some action 4";
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Some action 4";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Item 6";
+                                has-trailing-action: true;
+                                trailing-action-label: "Some action 5";
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Some action 5";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Icon button loading state";
+                                description: "Shows how IconButton maintains width and centers spinner when loading";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_right;
+                                trailing-action-label: "Process item";
+                                trailing-action-loading: true;
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Process item (loading)";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Icon button with transitions";
+                                description: "Toggle loading in sidebar";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_right;
+                                trailing-action-label: "Toggle loading";
+                                trailing-action-loading: root.preview-trailing-action-loading;
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Toggle loading";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Text button loading state";
+                                description: "Spinner aligns to the right and preserves width";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                has-trailing-action: true;
+                                trailing-action-label: "Save changes";
+                                trailing-action-loading: true;
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Save changes (loading)";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Text button with transitions";
+                                description: "Toggle loading in sidebar";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                has-trailing-action: true;
+                                trailing-action-label: "Apply settings";
+                                trailing-action-loading: root.preview-trailing-action-loading;
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Apply settings";
+                                }
+                            }
+                            ActionList2Row {
+                                margin-inline: root.effective-item-margin-inline;
+                                label: "Inactive Item";
+                                description: "With TrailingAction";
+                                description-layout: ActionList2DescriptionLayout.block;
+                                inactive-text: "Unavailable due to an outage";
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_right;
+                                trailing-action-label: "Some action 8";
+                                trailing-action-clicked => {
+                                    root.last-action = "Trailing: Some action 8 (inactive row)";
+                                }
+                            }
+                        }
+
                         if root.scenario-key == "25": ActionList2Lines {
                             list-variant: root.effective-list-variant;
                             list-role: ActionList2ListRole.listbox;
@@ -1535,6 +1681,12 @@ export component GalleryActionList2Page {
                     label: "Disable focus zone";
                     disabled: root.scenario-key != "25";
                     checked <=> preview-disable-focus-zone;
+                }
+
+                Checkbox {
+                    label: "Trailing action loading";
+                    disabled: root.scenario-key != "26";
+                    checked <=> preview-trailing-action-loading;
                 }
             }
         }
