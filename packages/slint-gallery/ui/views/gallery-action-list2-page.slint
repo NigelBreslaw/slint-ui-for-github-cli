@@ -1,4 +1,4 @@
-// **ActionList2** gallery — PR6 single selection + compose / lines adapter.
+// **ActionList2** gallery — PR7 multiple selection + prior scenarios.
 import {
     ActionList2,
     ActionList2DescriptionLayout,
@@ -6,6 +6,7 @@ import {
     ActionList2Line,
     ActionList2LineKind,
     ActionList2Lines,
+    ActionList2ListRole,
     ActionList2ListVariant,
     ActionList2Row,
     ActionList2RowVariant,
@@ -35,6 +36,9 @@ export component GalleryActionList2Page {
         { value: "5", label: "LinesAdapter", enabled: true },
         { value: "6", label: "SingleSelect", enabled: true },
         { value: "7", label: "SingleSelectLines", enabled: true },
+        { value: "8", label: "ListboxMultiSelect", enabled: true },
+        { value: "9", label: "MultiSelectMenu", enabled: true },
+        { value: "10", label: "ListboxMultiSelectLines", enabled: true },
     ];
 
     property <[SelectOption]> list-variant-options: [
@@ -45,6 +49,13 @@ export component GalleryActionList2Page {
 
     property <string> last-action: "";
     property <int> single-select-ix: 0;
+    property <bool> multi-checked-0: true;
+    property <bool> multi-checked-1: false;
+    property <bool> multi-checked-2: false;
+    property <bool> multi-checked-3: false;
+
+    property <[bool]> multi-selected-state:
+        [root.multi-checked-0, root.multi-checked-1, root.multi-checked-2, root.multi-checked-3];
 
     property <ActionList2ListVariant> preview-list-variant:
     root.list-variant-ix == 1 ? ActionList2ListVariant.horizontal_inset : root.list-variant-ix == 2 ? ActionList2ListVariant.full : ActionList2ListVariant.inset;
@@ -135,6 +146,89 @@ export component GalleryActionList2Page {
         },
     ];
 
+    property <[ActionList2Line]> lines-listbox-multi-select: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Primer Backlog",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.table,
+            description: "GitHub",
+            description-layout: ActionList2DescriptionLayout.block,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Accessibility",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.table,
+            description: "GitHub",
+            description-layout: ActionList2DescriptionLayout.block,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Octicons",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: true,
+            leading-icon: Icons.table,
+            description: "github/primer",
+            description-layout: ActionList2DescriptionLayout.block,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Primer React",
+            row-variant: ActionList2RowVariant.default,
+            disabled: true,
+            has-leading-visual: true,
+            leading-icon: Icons.table,
+            description: "github/primer",
+            description-layout: ActionList2DescriptionLayout.block,
+            trailing-text: "",
+        },
+    ];
+
+    property <[ActionList2Line]> lines-menu-multi-select: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "Copy link",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Quote reply",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            trailing-text: "",
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "Edit comment",
+            row-variant: ActionList2RowVariant.default,
+            disabled: false,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            trailing-text: "",
+        },
+    ];
+
     property <string> scenario-caption:
         root.scenario-ix == 1 ? "Upstream: ActionList/Features — SimpleList (composed **ActionList2Row**)"
         : root.scenario-ix == 2 ? "Upstream: ItemDividers — **`show-top-seam`** on rows"
@@ -143,9 +237,12 @@ export component GalleryActionList2Page {
         : root.scenario-ix == 5 ? "**ActionList2Lines** — `[ActionList2Line]` adapter for model-driven hosts"
         : root.scenario-ix == 6 ? "Single select — composed rows with **`show-single-select-check`**"
         : root.scenario-ix == 7 ? "Single select — **`ActionList2Lines`** + **`selection-mode: single`**"
+        : root.scenario-ix == 8 ? "Listbox multi — composed rows with **`show-multi-select-checkbox`**"
+        : root.scenario-ix == 9 ? "Menu multi — **`ActionList2Lines`** + **`list-role: menu`** (checkmarks, not checkboxes)"
+        : root.scenario-ix == 10 ? "Listbox multi — **`ActionList2Lines`** + **`multi-selected`**"
         : "Upstream: ActionList — Default (composed rows)";
 
-    vertical-stretch: 1;
+    // vertical-stretch: 1;
 
     HorizontalLayout {
         VerticalLayout {
@@ -175,10 +272,9 @@ export component GalleryActionList2Page {
                 background: PrimerColors.bgColor-default;
 
                 preview-layout := VerticalLayout {
-                    width: parent.width;
                     alignment: start;
 
-                    ActionList2 {
+                    al := ActionList2 {
                         list-variant: root.preview-list-variant;
 
                         if root.scenario-ix == 0: VerticalLayout {
@@ -440,16 +536,93 @@ export component GalleryActionList2Page {
                                 root.last-action = "Selected " + root.lines-single-select[ix].label;
                             }
                         }
+
+                        if root.scenario-ix == 8: VerticalLayout {
+                            alignment: start;
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Build";
+                                show-multi-select-checkbox: true;
+                                selected: root.multi-checked-0;
+                                clicked => {
+                                    root.multi-checked-0 = !root.multi-checked-0;
+                                    root.last-action = "Toggled Build";
+                                }
+                            }
+                            ActionList2ItemDivider {
+                                margin-inline: root.preview-item-margin-inline;
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Test";
+                                show-multi-select-checkbox: true;
+                                selected: root.multi-checked-1;
+                                clicked => {
+                                    root.multi-checked-1 = !root.multi-checked-1;
+                                    root.last-action = "Toggled Test";
+                                }
+                            }
+                            ActionList2ItemDivider {
+                                margin-inline: root.preview-item-margin-inline;
+                            }
+                            ActionList2Row {
+                                margin-inline: root.preview-item-margin-inline;
+                                label: "Release";
+                                show-multi-select-checkbox: true;
+                                selected: root.multi-checked-2;
+                                clicked => {
+                                    root.multi-checked-2 = !root.multi-checked-2;
+                                    root.last-action = "Toggled Release";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 9: ActionList2Lines {
+                            list-variant: root.preview-list-variant;
+                            list-role: ActionList2ListRole.menu;
+                            selection-mode: ActionList2SelectionMode.multiple;
+                            multi-selected: root.multi-selected-state;
+                            lines: root.lines-menu-multi-select;
+                            item-activated(ix) => {
+                                if ix == 0 {
+                                    root.multi-checked-0 = !root.multi-checked-0;
+                                } else if ix == 1 {
+                                    root.multi-checked-1 = !root.multi-checked-1;
+                                } else if ix == 2 {
+                                    root.multi-checked-2 = !root.multi-checked-2;
+                                }
+                                root.last-action = "Toggled " + root.lines-menu-multi-select[ix].label;
+                            }
+                        }
+
+                        if root.scenario-ix == 10: ActionList2Lines {
+                            list-variant: root.preview-list-variant;
+                            selection-mode: ActionList2SelectionMode.multiple;
+                            multi-selected: root.multi-selected-state;
+                            lines: root.lines-listbox-multi-select;
+                            item-activated(ix) => {
+                                if ix == 0 {
+                                    root.multi-checked-0 = !root.multi-checked-0;
+                                } else if ix == 1 {
+                                    root.multi-checked-1 = !root.multi-checked-1;
+                                } else if ix == 2 {
+                                    root.multi-checked-2 = !root.multi-checked-2;
+                                } else if ix == 3 {
+                                    root.multi-checked-3 = !root.multi-checked-3;
+                                }
+                                root.last-action = "Toggled " + root.lines-listbox-multi-select[ix].label;
+                            }
+                        }
                     }
                 }
             }
 
-            if root.last-action != "": Text {
-                text: "Last activated: " + root.last-action;
-                color: PrimerColors.fgColor-muted;
-                font-size: LayoutTokens.text-body-size-small;
-                wrap: word-wrap;
-            }
+            // if root.last-action != "": Text {
+            //     text: "Last activated: " + root.last-action;
+            //     color: PrimerColors.fgColor-muted;
+            //     font-size: LayoutTokens.text-body-size-small;
+            //     wrap: word-wrap;
+            // }
         }
 
         Rectangle { }

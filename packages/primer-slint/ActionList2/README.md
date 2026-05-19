@@ -53,6 +53,12 @@ On **`ActionList2Row`**: **`show-single-select-check: true`**, **`selected: ix =
 
 With **`ActionList2Lines`**: set **`selection-mode: single`** and **`selected-index`**; adapter sets check column + **`selected`** on each row.
 
+## Multiple selection (PR 7)
+
+- **Listbox** (`list-role` not **`menu`**): **`show-multi-select-checkbox`** + toggle **`selected`** on click.
+- **Menu** (`list-role: menu`): **`show-single-select-check`** (checkmarks, not checkboxes) with **`selection-mode: multiple`**.
+- **`ActionList2Lines`**: pass **`multi-selected: [bool, …]`** aligned with row indices; adapter sets lead affordance per **`list-role`**.
+
 ## Do not
 
 - Add row-only features to **`ActionList2Line`** when they belong on **`ActionList2Row`**.

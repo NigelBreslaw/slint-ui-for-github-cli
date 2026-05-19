@@ -45,8 +45,21 @@ export component ActionList2Lines {
                 show-top-seam:
                     root.show-dividers && ix > 0 && root.lines[ix - 1].kind == ActionList2LineKind.row;
                 selected:
-                    root.selection-mode == ActionList2SelectionMode.single && root.selected-index == ix;
-                show-single-select-check: root.selection-mode == ActionList2SelectionMode.single;
+                    (root.selection-mode == ActionList2SelectionMode.single && root.selected-index == ix)
+                    || (
+                        root.selection-mode == ActionList2SelectionMode.multiple
+                        && ix < root.multi-selected.length
+                        && root.multi-selected[ix]
+                    );
+                show-single-select-check:
+                    root.selection-mode == ActionList2SelectionMode.single
+                    || (
+                        root.selection-mode == ActionList2SelectionMode.multiple
+                        && root.list-role == ActionList2ListRole.menu
+                    );
+                show-multi-select-checkbox:
+                    root.selection-mode == ActionList2SelectionMode.multiple
+                    && root.list-role != ActionList2ListRole.menu;
                 clicked => {
                     if !line.disabled {
                         root.item-activated(ix);

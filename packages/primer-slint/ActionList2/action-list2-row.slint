@@ -4,6 +4,7 @@ import { Icons } from "../assets/icons.slint";
 import {
     ActionList2Tokens,
     ButtonTokens,
+    CheckboxTokens,
     LayoutTokens,
     PrimerColors,
 } from "../tokens.slint";
@@ -23,6 +24,8 @@ export component ActionList2Row {
     in property <bool> show-top-seam: false;
     in property <bool> selected: false;
     in property <bool> show-single-select-check: false;
+    /// Primer **`.MultiSelectCheckbox`** lead cell (listbox **`multiple`**; not used when **`show-single-select-check`** is menu multi).
+    in property <bool> show-multi-select-checkbox: false;
     callback clicked;
 
     property <bool> is-danger: root.row-variant == ActionList2RowVariant.danger;
@@ -30,8 +33,17 @@ export component ActionList2Row {
     property <color> single-select-check-tint:
         root.disabled ? ButtonTokens.control-fgColor-disabled : PrimerColors.fgColor-default;
 
+    property <color> multi-select-lead-bg:
+        root.disabled
+        ? (root.selected ? CheckboxTokens.checkbox-bgColor-checked-disabled : CheckboxTokens.checkbox-bgColor-rest)
+        : (root.selected ? CheckboxTokens.checkbox-bgColor-checked : CheckboxTokens.checkbox-bgColor-rest);
+    property <color> multi-select-lead-border:
+        root.disabled
+        ? (root.selected ? CheckboxTokens.checkbox-borderColor-checked-disabled : CheckboxTokens.checkbox-borderColor-rest)
+        : (root.selected ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
+
     property <bool> use-selected-surface:
-        root.selected && !root.show-single-select-check;
+        root.selected && !root.show-single-select-check && !root.show-multi-select-checkbox;
 
     property <int> label-font-weight:
         !root.disabled && root.use-selected-surface
@@ -75,6 +87,11 @@ export component ActionList2Row {
             align-items: center;
 
             if root.show-single-select-check: Rectangle {
+                width: LayoutTokens.iconButton-icon-size-medium;
+                height: LayoutTokens.table-border-width;
+            }
+
+            if root.show-multi-select-checkbox: Rectangle {
                 width: LayoutTokens.iconButton-icon-size-medium;
                 height: LayoutTokens.table-border-width;
             }
@@ -150,6 +167,29 @@ export component ActionList2Row {
                                         }
                                     }
 
+                                    if root.show-multi-select-checkbox: Rectangle {
+                                        horizontal-stretch: 0;
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: self.width;
+                                        border-radius: LayoutTokens.checkbox-border-radius;
+                                        border-width: 1px;
+                                        border-color: root.multi-select-lead-border;
+                                        background: root.multi-select-lead-bg;
+                                        clip: true;
+
+                                        if root.selected: Image {
+                                            width: 12px;
+                                            height: 12px;
+                                            x: (parent.width - self.width) / 2;
+                                            y: (parent.height - self.height) / 2;
+                                            source: Icons.check;
+                                            colorize:
+                                                root.disabled
+                                                ? CheckboxTokens.checkbox-fgColor-checked-disabled
+                                                : PrimerColors.fgOnEmphasis;
+                                        }
+                                    }
+
                                     if root.has-leading-visual: Image {
                                         width: LayoutTokens.iconButton-icon-size-medium;
                                         height: LayoutTokens.iconButton-icon-size-medium;
@@ -219,6 +259,11 @@ export component ActionList2Row {
                                         height: LayoutTokens.iconButton-icon-size-medium;
                                     }
 
+                                    if root.show-multi-select-checkbox: Rectangle {
+                                        width: LayoutTokens.iconButton-icon-size-medium;
+                                        height: LayoutTokens.iconButton-icon-size-medium;
+                                    }
+
                                     if root.has-leading-visual: Rectangle {
                                         width: LayoutTokens.iconButton-icon-size-medium;
                                         height: LayoutTokens.iconButton-icon-size-medium;
@@ -275,10 +320,10 @@ export component ActionList2Row {
                             default-selected-rest when !root.disabled && !root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
                             }
-                            default-pressed when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check) && ta.pressed: {
+                            default-pressed when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
-                            default-hover when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check) && !ta.pressed && ta.has-hover: {
+                            default-hover when !root.disabled && !root.is-danger && (!root.selected || root.show-single-select-check || root.show-multi-select-checkbox) && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                             }
                         ]
