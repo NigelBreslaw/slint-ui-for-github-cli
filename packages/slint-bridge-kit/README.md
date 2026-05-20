@@ -54,6 +54,18 @@ You also need `**slint-ui**` and a TypeScript toolchain in the consuming app. Th
 | `slintEnumMembers(cases)`          | function | Readonly `{ [K in cases[number]]: K }` — dot access for Slint wire enum strings (`Authed.loggedIn`).                                                  |
 | `SlintEnumValues<M>`               | type     | Union of string values from a members object returned by `slintEnumMembers`.                                                                          |
 | `SLINT_BRIDGE_KIT_VERSION`         | constant | String equal to this package’s `version` in `package.json`.                                                                                           |
+| `SLINT_LIST_NO_SELECTION`          | constant | `-1` — empty single-select index for Slint lists.                                                                                                        |
+| `toggleIndexInSet`                   | function | Toggle row index in a `Set<number>`.                                                                                                                    |
+| `checkedFlagsForRowCount`            | function | Fixed-length `bool[]` from index set.                                                                                                                   |
+| `checkedFlagsForLabels`              | function | `bool[]` aligned to label array indices.                                                                                                                |
+| `formatSelectionSummary`             | function | Comma-separated selected labels or `"(none)"`.                                                                                                          |
+| `isRowIndexInRange`                  | function | Whether index is in `[0, rowCount)`.                                                                                                                    |
+| `rowIndexOrNone`                     | function | Valid index or `SLINT_LIST_NO_SELECTION`.                                                                                                               |
+| `toggleKeyInSet`                     | function | Toggle key in a `Set` (labels, node ids, etc.).                                                                                                         |
+| `checkedFlagsForVisibleKeys`         | function | `bool[]` for currently visible keys.                                                                                                                    |
+| `selectAllStripState`                | function | `{ checked, indeterminate, allSelected, someSelected }` for select-all strip.                                                                             |
+| `applySelectAllOnVisibleKeys`        | function | Select or clear all visible keys in a set.                                                                                                              |
+| `SelectAllStripState`                | type     | Return type of `selectAllStripState`.                                                                                                                   |
 
 
 ---
@@ -65,7 +77,10 @@ Public exports are available from the package root in one import:
 ```typescript
 import {
   assignProperties,
+  checkedFlagsForVisibleKeys,
+  selectAllStripState,
   slintEnumMembers,
+  toggleKeyInSet,
   wireFunctions,
   type ExhaustiveAllCallbacks,
   type ExhaustiveCallbacks,

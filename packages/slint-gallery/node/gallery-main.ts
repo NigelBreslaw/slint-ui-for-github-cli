@@ -2,6 +2,9 @@ import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 import {
   wireActionListGalleryMultiSelect,
+  wireIndexMultiSelect,
+  ACTION_LIST2_LISTBOX_MULTI_ROW_LABELS,
+  ACTION_LIST2_MENU_MULTI_ROW_LABELS,
   type ActionListGalleryMultiSelectHandle,
 } from "./state/gallery-action-list-multi-select-bridge-shared.ts";
 import {
@@ -36,6 +39,8 @@ type GalleryWindowModule = {
     GallerySidebarNav: GallerySidebarNavHandle;
     GalleryActionListMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
+    GalleryActionList2MenuMultiSelect: ActionListGalleryMultiSelectHandle;
+    GalleryActionList2ListboxMultiSelect: ActionListGalleryMultiSelectHandle;
     GallerySelectPanelMulti: GallerySelectPanelMultiHandle;
     GalleryFilteredActionList2Default: GalleryFilteredActionList2Handle;
     GalleryFilteredActionList2Long: GalleryFilteredActionList2Handle;
@@ -59,6 +64,16 @@ const window = new ui.GalleryWindow();
 wireActionListGalleryMultiSelect(window.GalleryActionListMultiSelect);
 wireActionListGalleryMultiSelect(
   window.GalleryActionListListboxMultiSelect,
+);
+wireIndexMultiSelect(
+  window.GalleryActionList2MenuMultiSelect,
+  ACTION_LIST2_MENU_MULTI_ROW_LABELS,
+  [],
+);
+wireIndexMultiSelect(
+  window.GalleryActionList2ListboxMultiSelect,
+  ACTION_LIST2_LISTBOX_MULTI_ROW_LABELS,
+  [0],
 );
 wireGallerySelectPanelMultiSelect(window.GallerySelectPanelMulti);
 wireGalleryFilteredActionList2Default(window.GalleryFilteredActionList2Default);

@@ -9,3 +9,17 @@ export type {
   KeysMatching,
 } from "./types.ts";
 export { wireFunctions } from "./wire-functions.ts";
+export {
+  SLINT_LIST_NO_SELECTION,
+  applySelectAllOnVisibleKeys,
+  checkedFlagsForLabels,
+  checkedFlagsForRowCount,
+  checkedFlagsForVisibleKeys,
+  formatSelectionSummary,
+  isRowIndexInRange,
+  rowIndexOrNone,
+  selectAllStripState,
+  toggleIndexInSet,
+  toggleKeyInSet,
+} from "./selection.ts";
+export type { SelectAllStripState } from "./selection.ts";

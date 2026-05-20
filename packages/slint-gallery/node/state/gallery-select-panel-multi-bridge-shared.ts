@@ -1,4 +1,9 @@
-import { assignProperties } from "slint-bridge-kit";
+import {
+    assignProperties,
+    checkedFlagsForRowCount,
+    isRowIndexInRange,
+    toggleIndexInSet,
+} from "slint-bridge-kit";
 
 /** Slint global handle: `row_checked` / `row_activated`. */
 export type GallerySelectPanelMultiHandle = {
@@ -7,12 +12,6 @@ export type GallerySelectPanelMultiHandle = {
 };
 
 const SELECT_PANEL_GALLERY_MULTI_ROW_COUNT = 5;
-
-function indicesToRowChecked(selected: ReadonlySet<number>): boolean[] {
-    return Array.from({ length: SELECT_PANEL_GALLERY_MULTI_ROW_COUNT }, (_, i) =>
-        selected.has(i),
-    );
-}
 
 /**
  * Wires `row_activated` to toggle membership in a `Set`; mirrors a bool[] into Slint for `SelectPanel.multi-selected`.
@@ -24,17 +23,16 @@ export function wireGallerySelectPanelMultiSelect(
 
     const pushToSlint = () => {
         assignProperties(g, {
-            row_checked: indicesToRowChecked(selected),
+            row_checked: checkedFlagsForRowCount(
+                SELECT_PANEL_GALLERY_MULTI_ROW_COUNT,
+                selected,
+            ),
         });
     };
 
     g.row_activated = (ix: number) => {
-        if (ix < 0 || ix >= SELECT_PANEL_GALLERY_MULTI_ROW_COUNT) return;
-        if (selected.has(ix)) {
-            selected.delete(ix);
-        } else {
-            selected.add(ix);
-        }
+        if (!isRowIndexInRange(ix, SELECT_PANEL_GALLERY_MULTI_ROW_COUNT)) return;
+        toggleIndexInSet(selected, ix);
         pushToSlint();
     };
 

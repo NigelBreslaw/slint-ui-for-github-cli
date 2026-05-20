@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file.
 
+## 0.4.0 — 2026-05-20
+
+- `SLINT_LIST_NO_SELECTION` — convention for empty single-select (`-1`).
+- Index multi-select: `toggleIndexInSet`, `checkedFlagsForRowCount`, `checkedFlagsForLabels`, `formatSelectionSummary`, `isRowIndexInRange`, `rowIndexOrNone`.
+- Key multi-select: `toggleKeyInSet`, `checkedFlagsForVisibleKeys`, `selectAllStripState`, `applySelectAllOnVisibleKeys`.
+- Type-only: `SelectAllStripState`.
+
 ## 0.3.0 — 2026-03-28
 
 **Breaking:** Removed `slintEnumLiterals` and `SlintEnumUnion`. Use `slintEnumMembers` and `SlintEnumValues` instead. Implementation lives in `slint-enum-members.ts` (the old `slint-enum-literals.ts` entry point is gone).

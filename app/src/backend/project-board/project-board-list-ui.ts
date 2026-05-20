@@ -1,5 +1,10 @@
 import * as slint from "slint-ui";
-import { assignProperties, type ExhaustiveAllCallbacks } from "slint-bridge-kit";
+import {
+  applySelectAllOnVisibleKeys,
+  assignProperties,
+  toggleKeyInSet,
+  type ExhaustiveAllCallbacks,
+} from "slint-bridge-kit";
 import {
   addProjectV2ItemsByContentIdsSequential,
   type AddProjectV2ItemOutcome,
@@ -399,18 +404,16 @@ export function buildProjectBoardListStateCallbacks(
     project_board_import_candidates_select_all_on_page: () => {
       const q = window.ProjectBoardListState.import_candidates_search;
       const filtered = filterCandidatesBySearch(importCandidatesAccumulated, q);
-      for (const r of filtered) {
-        importCandidateSelectedIds.add(r.nodeId);
-      }
+      applySelectAllOnVisibleKeys(
+        importCandidateSelectedIds,
+        filtered.map((r) => r.nodeId),
+        true,
+      );
       rebuildImportCandidateRowsModel(window);
     },
 
     project_board_import_candidate_toggled: (nodeId: string) => {
-      if (importCandidateSelectedIds.has(nodeId)) {
-        importCandidateSelectedIds.delete(nodeId);
-      } else {
-        importCandidateSelectedIds.add(nodeId);
-      }
+      toggleKeyInSet(importCandidateSelectedIds, nodeId);
       rebuildImportCandidateRowsModel(window);
     },
 

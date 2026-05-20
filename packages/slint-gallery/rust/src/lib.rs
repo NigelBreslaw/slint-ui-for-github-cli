@@ -111,6 +111,8 @@ use wasm_bindgen::prelude::*;
 
 slint::include_modules!();
 
+const ACTION_LIST2_MENU_ROW_LABELS: [&str; 3] = ["Copy link", "Quote reply", "Edit comment"];
+
 const ACTION_LIST_ROW_LABELS: [&str; 4] = [
     "Primer Backlog",
     "Accessibility",
@@ -415,16 +417,76 @@ fn row_checked_model(row_count: usize, selected: &BTreeSet<usize>) -> ModelRc<bo
     ModelRc::new(VecModel::from(v))
 }
 
-fn action_list_selection_summary(selected: &BTreeSet<usize>) -> SharedString {
-    let names: Vec<&str> = (0..ACTION_LIST_ROW_LABELS.len())
+fn toggle_usize_in_set(selected: &mut BTreeSet<usize>, index: usize) {
+    if selected.contains(&index) {
+        selected.remove(&index);
+    } else {
+        selected.insert(index);
+    }
+}
+
+fn index_selection_summary(row_labels: &[&str], selected: &BTreeSet<usize>) -> SharedString {
+    let names: Vec<&str> = (0..row_labels.len())
         .filter(|i| selected.contains(i))
-        .map(|i| ACTION_LIST_ROW_LABELS[i])
+        .map(|i| row_labels[i])
         .collect();
     SharedString::from(if names.is_empty() {
         "(none)".to_string()
     } else {
         names.join(", ")
     })
+}
+
+fn toggle_shared_string_label(selected: &mut BTreeSet<SharedString>, label: &str) {
+    let key = SharedString::from(label);
+    if selected.contains(&key) {
+        selected.remove(&key);
+    } else {
+        selected.insert(key);
+    }
+}
+
+fn multi_selected_flags_for_picked(
+    picked: &[&str],
+    selected_labels: &BTreeSet<SharedString>,
+) -> Vec<bool> {
+    picked
+        .iter()
+        .map(|&l| selected_labels.contains(&SharedString::from(l)))
+        .collect()
+}
+
+fn select_all_strip_state(
+    picked: &[&str],
+    selected_labels: &BTreeSet<SharedString>,
+) -> (bool, bool) {
+    let all_selected = !picked.is_empty()
+        && picked
+            .iter()
+            .all(|&l| selected_labels.contains(&SharedString::from(l)));
+    let some_selected = picked
+        .iter()
+        .any(|&l| selected_labels.contains(&SharedString::from(l)));
+    (
+        all_selected,
+        !all_selected && some_selected,
+    )
+}
+
+fn apply_select_all_on_picked(
+    selected_labels: &mut BTreeSet<SharedString>,
+    picked: &[&str],
+    on: bool,
+) {
+    if on {
+        for &l in picked {
+            selected_labels.insert(SharedString::from(l));
+        }
+    } else {
+        for &l in picked {
+            selected_labels.remove(&SharedString::from(l));
+        }
+    }
 }
 
 fn wire_gallery_action_list_multi_select(window: &GalleryWindow) {
@@ -443,12 +505,7 @@ fn wire_gallery_action_list_multi_select(window: &GalleryWindow) {
                     return;
                 }
                 {
-                    let mut s = selected.borrow_mut();
-                    if s.contains(&ix) {
-                        s.remove(&ix);
-                    } else {
-                        s.insert(ix);
-                    }
+                    toggle_usize_in_set(&mut selected.borrow_mut(), ix);
                 }
                 let Some(w) = window_weak.upgrade() else {
                     return;
@@ -457,7 +514,7 @@ fn wire_gallery_action_list_multi_select(window: &GalleryWindow) {
                 let s = selected.borrow();
                 g.set_row_checked(row_checked_model(row_count, &s));
                 g.set_last_activated_label(SharedString::from(ACTION_LIST_ROW_LABELS[ix]));
-                g.set_selection_summary(action_list_selection_summary(&s));
+                g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
             }
         });
 
@@ -465,7 +522,7 @@ fn wire_gallery_action_list_multi_select(window: &GalleryWindow) {
     let s = selected.borrow();
     g.set_row_checked(row_checked_model(row_count, &s));
     g.set_last_activated_label(SharedString::from(""));
-    g.set_selection_summary(action_list_selection_summary(&s));
+    g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
 }
 
 fn wire_gallery_action_list_listbox_multi_select(window: &GalleryWindow) {
@@ -484,12 +541,7 @@ fn wire_gallery_action_list_listbox_multi_select(window: &GalleryWindow) {
                     return;
                 }
                 {
-                    let mut s = selected.borrow_mut();
-                    if s.contains(&ix) {
-                        s.remove(&ix);
-                    } else {
-                        s.insert(ix);
-                    }
+                    toggle_usize_in_set(&mut selected.borrow_mut(), ix);
                 }
                 let Some(w) = window_weak.upgrade() else {
                     return;
@@ -498,7 +550,7 @@ fn wire_gallery_action_list_listbox_multi_select(window: &GalleryWindow) {
                 let s = selected.borrow();
                 g.set_row_checked(row_checked_model(row_count, &s));
                 g.set_last_activated_label(SharedString::from(ACTION_LIST_ROW_LABELS[ix]));
-                g.set_selection_summary(action_list_selection_summary(&s));
+                g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
             }
         });
 
@@ -506,7 +558,81 @@ fn wire_gallery_action_list_listbox_multi_select(window: &GalleryWindow) {
     let s = selected.borrow();
     g.set_row_checked(row_checked_model(row_count, &s));
     g.set_last_activated_label(SharedString::from(""));
-    g.set_selection_summary(action_list_selection_summary(&s));
+    g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
+}
+
+fn wire_gallery_action_list2_menu_multi_select(window: &GalleryWindow) {
+    let row_count = ACTION_LIST2_MENU_ROW_LABELS.len();
+    let selected = Rc::new(RefCell::new(BTreeSet::<usize>::new()));
+    let window_weak = window.as_weak();
+
+    window
+        .global::<GalleryActionList2MenuMultiSelect>()
+        .on_row_activated({
+            let selected = Rc::clone(&selected);
+            let window_weak = window_weak.clone();
+            move |ix: i32| {
+                let ix = ix as usize;
+                if ix >= row_count {
+                    return;
+                }
+                toggle_usize_in_set(&mut selected.borrow_mut(), ix);
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                let g = w.global::<GalleryActionList2MenuMultiSelect>();
+                let s = selected.borrow();
+                g.set_row_checked(row_checked_model(row_count, &s));
+                g.set_last_activated_label(SharedString::from(ACTION_LIST2_MENU_ROW_LABELS[ix]));
+                g.set_selection_summary(index_selection_summary(
+                    &ACTION_LIST2_MENU_ROW_LABELS,
+                    &s,
+                ));
+            }
+        });
+
+    let g = window.global::<GalleryActionList2MenuMultiSelect>();
+    let s = selected.borrow();
+    g.set_row_checked(row_checked_model(row_count, &s));
+    g.set_last_activated_label(SharedString::from(""));
+    g.set_selection_summary(index_selection_summary(
+        &ACTION_LIST2_MENU_ROW_LABELS,
+        &s,
+    ));
+}
+
+fn wire_gallery_action_list2_listbox_multi_select(window: &GalleryWindow) {
+    let row_count = ACTION_LIST_ROW_LABELS.len();
+    let selected = Rc::new(RefCell::new(BTreeSet::from([0usize])));
+    let window_weak = window.as_weak();
+
+    window
+        .global::<GalleryActionList2ListboxMultiSelect>()
+        .on_row_activated({
+            let selected = Rc::clone(&selected);
+            let window_weak = window_weak.clone();
+            move |ix: i32| {
+                let ix = ix as usize;
+                if ix >= row_count {
+                    return;
+                }
+                toggle_usize_in_set(&mut selected.borrow_mut(), ix);
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                let g = w.global::<GalleryActionList2ListboxMultiSelect>();
+                let s = selected.borrow();
+                g.set_row_checked(row_checked_model(row_count, &s));
+                g.set_last_activated_label(SharedString::from(ACTION_LIST_ROW_LABELS[ix]));
+                g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
+            }
+        });
+
+    let g = window.global::<GalleryActionList2ListboxMultiSelect>();
+    let s = selected.borrow();
+    g.set_row_checked(row_checked_model(row_count, &s));
+    g.set_last_activated_label(SharedString::from(""));
+    g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
 }
 
 const FILTERED_ACTION_LIST2_DEFAULT_LABELS: [&str; 7] = [
@@ -700,10 +826,8 @@ fn push_gallery_filtered_action_list2_multi(
             action_list2_line_default_story(l, color_ix)
         })
         .collect();
-    let multi_selected: Vec<bool> = picked
-        .iter()
-        .map(|&l| selected_labels.borrow().contains(&SharedString::from(l)))
-        .collect();
+    let multi_selected =
+        multi_selected_flags_for_picked(&picked, &selected_labels.borrow());
     let Some(w) = window_weak.upgrade() else {
         return;
     };
@@ -755,14 +879,7 @@ fn wire_gallery_filtered_action_list2_multi(window: &GalleryWindow) {
             if label.is_empty() {
                 return;
             }
-            {
-                let mut s = selected_labels.borrow_mut();
-                if s.contains(&label) {
-                    s.remove(&label);
-                } else {
-                    s.insert(label);
-                }
-            }
+            toggle_shared_string_label(&mut selected_labels.borrow_mut(), label.as_str());
             push_gallery_filtered_action_list2_multi(
                 window_weak.clone(),
                 &selected_labels,
@@ -794,10 +911,8 @@ fn push_gallery_select_panel2_default(
             action_list2_line_default_story(l, color_ix)
         })
         .collect();
-    let multi_selected: Vec<bool> = picked
-        .iter()
-        .map(|&l| selected_labels.borrow().contains(&SharedString::from(l)))
-        .collect();
+    let multi_selected =
+        multi_selected_flags_for_picked(&picked, &selected_labels.borrow());
     let Some(w) = window_weak.upgrade() else {
         return;
     };
@@ -842,15 +957,7 @@ fn wire_gallery_filtered_action_list2_multi_as_select_panel2_default(window: &Ga
             let Some(&label) = picked.get(ix as usize) else {
                 return;
             };
-            {
-                let mut s = selected_labels.borrow_mut();
-                let key = SharedString::from(label);
-                if s.contains(&key) {
-                    s.remove(&key);
-                } else {
-                    s.insert(key);
-                }
-            }
+            toggle_shared_string_label(&mut selected_labels.borrow_mut(), label);
             push_gallery_select_panel2_default(
                 window_weak.clone(),
                 &selected_labels,
@@ -882,19 +989,10 @@ fn push_gallery_filtered_action_list2_select_all(
             action_list2_line_default_story(l, color_ix)
         })
         .collect();
-    let multi_selected: Vec<bool> = picked
-        .iter()
-        .map(|&l| selected_labels.borrow().contains(&SharedString::from(l)))
-        .collect();
-    let all_selected = !picked.is_empty()
-        && picked
-            .iter()
-            .all(|&l| selected_labels.borrow().contains(&SharedString::from(l)));
-    let some_selected = picked
-        .iter()
-        .any(|&l| selected_labels.borrow().contains(&SharedString::from(l)));
-    let select_all_checked = all_selected;
-    let select_all_indeterminate = !all_selected && some_selected;
+    let multi_selected =
+        multi_selected_flags_for_picked(&picked, &selected_labels.borrow());
+    let (select_all_checked, select_all_indeterminate) =
+        select_all_strip_state(&picked, &selected_labels.borrow());
     let Some(w) = window_weak.upgrade() else {
         return;
     };
@@ -938,15 +1036,7 @@ fn wire_gallery_filtered_action_list2_select_all(window: &GalleryWindow) {
                 let Some(&label) = picked.get(ix as usize) else {
                     return;
                 };
-                {
-                    let mut s = selected_labels.borrow_mut();
-                    let key = SharedString::from(label);
-                    if s.contains(&key) {
-                        s.remove(&key);
-                    } else {
-                        s.insert(key);
-                    }
-                }
+                toggle_shared_string_label(&mut selected_labels.borrow_mut(), label);
                 push_gallery_filtered_action_list2_select_all(
                     window_weak.clone(),
                     &selected_labels,
@@ -964,18 +1054,7 @@ fn wire_gallery_filtered_action_list2_select_all(window: &GalleryWindow) {
             move |on: bool| {
                 let picked =
                     filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, current_filter.borrow().as_str());
-                {
-                    let mut s = selected_labels.borrow_mut();
-                    if on {
-                        for &l in &picked {
-                            s.insert(SharedString::from(l));
-                        }
-                    } else {
-                        for &l in &picked {
-                            s.remove(&SharedString::from(l));
-                        }
-                    }
-                }
+                apply_select_all_on_picked(&mut selected_labels.borrow_mut(), &picked, on);
                 push_gallery_filtered_action_list2_select_all(
                     window_weak.clone(),
                     &selected_labels,
@@ -1003,14 +1082,7 @@ fn wire_gallery_select_panel_multi(window: &GalleryWindow) {
             if ix >= SELECT_PANEL_MULTI_ROW_COUNT {
                 return;
             }
-            {
-                let mut s = selected.borrow_mut();
-                if s.contains(&ix) {
-                    s.remove(&ix);
-                } else {
-                    s.insert(ix);
-                }
-            }
+            toggle_usize_in_set(&mut selected.borrow_mut(), ix);
             let Some(w) = window_weak.upgrade() else {
                 return;
             };
@@ -1031,6 +1103,8 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
 
     wire_gallery_action_list_multi_select(&window);
     wire_gallery_action_list_listbox_multi_select(&window);
+    wire_gallery_action_list2_menu_multi_select(&window);
+    wire_gallery_action_list2_listbox_multi_select(&window);
     wire_gallery_select_panel_multi(&window);
     wire_gallery_filtered_action_list2_default(&window);
     wire_gallery_filtered_action_list2_long(&window);

@@ -1,0 +1,7 @@
+/// **ActionList2** menu multi-select — **Node** `wireIndexMultiSelect` (Copy link / Quote reply / Edit comment).
+export global GalleryActionList2MenuMultiSelect {
+    in-out property <[bool]> row-checked: [false, false, false];
+    in-out property <string> last-activated-label: "";
+    in-out property <string> selection-summary: "";
+    callback row-activated(int);
+}

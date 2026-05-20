@@ -28,6 +28,8 @@ import { ActionList2Tokens, LayoutTokens, PrimerColors } from "../../../primer-s
 import {
     GalleryDemoOptionsSidebar,
 } from "../components/gallery-demo-options-sidebar.slint";
+import { GalleryActionList2ListboxMultiSelect } from "../state/gallery-action-list2-listbox-multi-select-state.slint";
+import { GalleryActionList2MenuMultiSelect } from "../state/gallery-action-list2-menu-multi-select-state.slint";
 
 export component GalleryActionList2Page {
     property <int> scenario-ix: 0;
@@ -78,11 +80,6 @@ export component GalleryActionList2Page {
     property <int> disabled-select-ix: 0;
     property <bool> multi-checked-0: true;
     property <bool> multi-checked-1: false;
-    property <bool> multi-checked-2: false;
-    property <bool> multi-checked-3: false;
-
-    property <[bool]> multi-selected-state:
-        [root.multi-checked-0, root.multi-checked-1, root.multi-checked-2, root.multi-checked-3];
 
     property <ALVariant> preview-list-variant:
     root.list-variant-ix == 1 ? ALVariant.horizontal_inset : root.list-variant-ix == 2 ? ALVariant.full : ALVariant.inset;
@@ -609,16 +606,10 @@ export component GalleryActionList2Page {
                             list-variant: root.effective-list-variant;
                             list-role: ActionList2ListRole.menu;
                             selection-mode: ActionList2SelectionMode.multiple;
-                            multi-selected: root.multi-selected-state;
+                            multi-selected: GalleryActionList2MenuMultiSelect.row-checked;
                             lines: root.lines-menu-multi-select;
                             item-activated(ix) => {
-                                if ix == 0 {
-                                    root.multi-checked-0 = !root.multi-checked-0;
-                                } else if ix == 1 {
-                                    root.multi-checked-1 = !root.multi-checked-1;
-                                } else if ix == 2 {
-                                    root.multi-checked-2 = !root.multi-checked-2;
-                                }
+                                GalleryActionList2MenuMultiSelect.row-activated(ix);
                                 root.last-action = "Toggled " + root.lines-menu-multi-select[ix].label;
                             }
                         }
@@ -627,18 +618,10 @@ export component GalleryActionList2Page {
                             list-variant: root.effective-list-variant;
                             list-role: ActionList2ListRole.listbox;
                             selection-mode: ActionList2SelectionMode.multiple;
-                            multi-selected: root.multi-selected-state;
+                            multi-selected: GalleryActionList2ListboxMultiSelect.row-checked;
                             lines: root.lines-listbox-multi-select;
                             item-activated(ix) => {
-                                if ix == 0 {
-                                    root.multi-checked-0 = !root.multi-checked-0;
-                                } else if ix == 1 {
-                                    root.multi-checked-1 = !root.multi-checked-1;
-                                } else if ix == 2 {
-                                    root.multi-checked-2 = !root.multi-checked-2;
-                                } else if ix == 3 {
-                                    root.multi-checked-3 = !root.multi-checked-3;
-                                }
+                                GalleryActionList2ListboxMultiSelect.row-activated(ix);
                                 root.last-action = "Toggled " + root.lines-listbox-multi-select[ix].label;
                             }
                         }

@@ -1,4 +1,10 @@
-import { assignProperties } from "slint-bridge-kit";
+import {
+    applySelectAllOnVisibleKeys,
+    assignProperties,
+    checkedFlagsForVisibleKeys,
+    selectAllStripState,
+    toggleKeyInSet,
+} from "slint-bridge-kit";
 import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 
@@ -230,10 +236,9 @@ export function wireGalleryFilteredActionList2Multi(
             const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
             return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
-        const multiSelected = picked.map((label) => selectedLabels.has(label));
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),
-            multi_selected: multiSelected,
+            multi_selected: checkedFlagsForVisibleKeys(picked, selectedLabels),
         });
     };
 
@@ -250,11 +255,7 @@ export function wireGalleryFilteredActionList2Multi(
         if (label === undefined) {
             return;
         }
-        if (selectedLabels.has(label)) {
-            selectedLabels.delete(label);
-        } else {
-            selectedLabels.add(label);
-        }
+        toggleKeyInSet(selectedLabels, label);
         push(currentFilter);
     };
 
@@ -275,18 +276,16 @@ export function wireGalleryFilteredActionList2SelectAll(
             FILTERED_ACTION_LIST2_DEFAULT_LABELS,
             filterText,
         );
-        const allSelected =
-            picked.length > 0 && picked.every((l) => selectedLabels.has(l));
-        const someSelected = picked.some((l) => selectedLabels.has(l));
+        const { checked, indeterminate } = selectAllStripState(picked, selectedLabels);
         const rows = picked.map((label) => {
             const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
             return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),
-            multi_selected: picked.map((l) => selectedLabels.has(l)),
-            select_all_checked: allSelected,
-            select_all_indeterminate: !allSelected && someSelected,
+            multi_selected: checkedFlagsForVisibleKeys(picked, selectedLabels),
+            select_all_checked: checked,
+            select_all_indeterminate: indeterminate,
         });
     };
 
@@ -304,11 +303,7 @@ export function wireGalleryFilteredActionList2SelectAll(
         if (label === undefined) {
             return;
         }
-        if (selectedLabels.has(label)) {
-            selectedLabels.delete(label);
-        } else {
-            selectedLabels.add(label);
-        }
+        toggleKeyInSet(selectedLabels, label);
         sync();
     };
 
@@ -317,15 +312,7 @@ export function wireGalleryFilteredActionList2SelectAll(
             FILTERED_ACTION_LIST2_DEFAULT_LABELS,
             filterText,
         );
-        if (on) {
-            for (const l of picked) {
-                selectedLabels.add(l);
-            }
-        } else {
-            for (const l of picked) {
-                selectedLabels.delete(l);
-            }
-        }
+        applySelectAllOnVisibleKeys(selectedLabels, picked, on);
         sync();
     };
 
