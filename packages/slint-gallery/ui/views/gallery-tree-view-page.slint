@@ -1,11 +1,16 @@
 // One scroll — sections mirror Storybook **Components/TreeView** (see `TreeView/UPSTREAM_INVENTORY.md`). Heavy stories are scaled.
 
 import {
-    ActionList,
-    ActionListDescriptionLayout,
-    ActionListLine,
-    ActionListLineKind,
-    ActionListRowVariant,
+    ActionList2,
+    ActionList2DescriptionLayout,
+    ActionList2Line,
+    ActionList2LineKind,
+    ActionList2Lines,
+    ActionList2ListRole,
+    ActionList2RowSize,
+    ActionList2RowVariant,
+    ActionList2SectionHeadingVariant,
+    ALVariant,
     Banner,
     BannerVariant,
     Button,
@@ -992,46 +997,44 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         },
     ];
 
-    property <[ActionListLine]> tv-trailing-menu-lines: [
+    property <[ActionList2Line]> tv-trailing-menu-lines: [
         {
-            kind: ActionListLineKind.row,
+            kind: ActionList2LineKind.row,
             label: "Open sample dialog",
-            row-variant: ActionListRowVariant.default,
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionListDescriptionLayout.none,
-            has-markdown: false,
-            label-markdown: @markdown(""),
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             inactive-text: "",
             active: false,
             show-trailing-loading: false,
-            has-trailing-visual: false,
-            trailing-icon: Icons.dot_fill,
             trailing-text: "",
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
         {
-            kind: ActionListLineKind.row,
+            kind: ActionList2LineKind.row,
             label: "Delete…",
-            row-variant: ActionListRowVariant.danger,
+            row-variant: ActionList2RowVariant.danger,
+            row-size: ActionList2RowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionListDescriptionLayout.none,
-            has-markdown: false,
-            label-markdown: @markdown(""),
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
             inactive-text: "",
             active: false,
             show-trailing-loading: false,
-            has-trailing-visual: false,
-            trailing-icon: Icons.dot_fill,
             trailing-text: "",
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
         },
     ];
 
@@ -1605,7 +1608,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     // --- TrailingActions (Examples)
     TreeViewSectionHeading {
         title: "TrailingActions";
-        note: "Kebab opens an **ActionList** below the tree; count badge on the first row. **Open sample dialog** exercises a nested **Dialog**.";
+        note: "Kebab opens an **ActionList2** below the tree; count badge on the first row. **Open sample dialog** exercises a nested **Dialog**.";
     }
     Rectangle {
         horizontal-stretch: 1;
@@ -1635,13 +1638,17 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 }
             }
 
-            if tv-trailing-menu-open: ActionList {
+            if tv-trailing-menu-open: ActionList2 {
                 width: 220px;
-                lines: tv-trailing-menu-lines;
-                item-activated(ix) => {
-                    tv-trailing-menu-open = false;
-                    if ix == 0 {
-                        tv-trailing-sample-dialog-open();
+                list-variant: ALVariant.inset;
+                ActionList2Lines {
+                    list-role: ActionList2ListRole.menu;
+                    lines: tv-trailing-menu-lines;
+                    item-activated(ix) => {
+                        tv-trailing-menu-open = false;
+                        if ix == 0 {
+                            tv-trailing-sample-dialog-open();
+                        }
                     }
                 }
             }
@@ -2082,11 +2089,15 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 }
             }
 
-            if fm-focus-menu-open: ActionList {
+            if fm-focus-menu-open: ActionList2 {
                 width: 200px;
-                lines: tv-trailing-menu-lines;
-                item-activated(_ix) => {
-                    fm-focus-menu-open = false;
+                list-variant: ALVariant.inset;
+                ActionList2Lines {
+                    list-role: ActionList2ListRole.menu;
+                    lines: tv-trailing-menu-lines;
+                    item-activated(_ix) => {
+                        fm-focus-menu-open = false;
+                    }
                 }
             }
         }
