@@ -54,7 +54,16 @@ const GALLERY_SIDEBAR_NAV: readonly {
         label: "Counter label",
         leaves: [{ id: "counter-label-playground", label: "Playground" }],
     },
-    { folderId: "folder-data", label: "Data", leaves: [{ id: "data-playground", label: "Playground" }] },
+    {
+        folderId: "folder-data-table",
+        label: "Data table",
+        leaves: [{ id: "data-table-playground", label: "DataTable" }],
+    },
+    {
+        folderId: "folder-pagination",
+        label: "Pagination",
+        leaves: [{ id: "pagination-playground", label: "Pagination" }],
+    },
     {
         folderId: "folder-dialogs",
         label: "Dialogs",

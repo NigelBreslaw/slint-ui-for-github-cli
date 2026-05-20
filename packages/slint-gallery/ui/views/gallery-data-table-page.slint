@@ -1,0 +1,160 @@
+import {
+    Checkbox,
+    DataTable,
+    DataTableCellAlign,
+    DataTableCellKind,
+    DataTableCellPadding,
+    DataTableColumn,
+    DataTableIconTint,
+    DataTableRow,
+    DataTableSortDirection,
+    Icons,
+    LabelSize,
+    LabelVariant,
+    Radio,
+    RadioGroup,
+    TableContainer,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GalleryDataTablePage {
+    property <DataTableCellPadding> preview-cell-padding: DataTableCellPadding.normal;
+    property <bool> preview-external-sorting: true;
+
+    property <[DataTableColumn]> demo-data-table-columns: [
+        { header: "Type", id: "kind", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.iconText, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Repository", id: "name", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Stars", id: "stars", sortable: true, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.text, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "License", id: "license", sortable: false, align: DataTableCellAlign.start, row-header: false, cell-kind: DataTableCellKind.label, horizontal-stretch: 1, min-width: 0px, width: 0px, monospace: false },
+        { header: "Actions", id: "actions", sortable: false, align: DataTableCellAlign.end, row-header: false, cell-kind: DataTableCellKind.action, horizontal-stretch: 0, min-width: 40px, width: 40px, monospace: false },
+    ];
+    property <[DataTableRow]> demo-data-table-rows: [
+        { id: "r1", cells: [{ kind: DataTableCellKind.iconText, text: "Pull request", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.pull_request, icon-tint: DataTableIconTint.success }, { kind: DataTableCellKind.text, text: "slint", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "2.4k", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.label, text: "MIT", label-variant: LabelVariant.success, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.action, text: "more", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.kebab_horizontal, icon-tint: DataTableIconTint.default }] },
+        { id: "r2", cells: [{ kind: DataTableCellKind.iconText, text: "Draft", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.git_pull_request_draft, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "github-app", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "120", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.label, text: "Apache-2.0", label-variant: LabelVariant.accent, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.action, text: "open-external", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.link_external, icon-tint: DataTableIconTint.default }] },
+        { id: "r3", cells: [{ kind: DataTableCellKind.iconText, text: "Issue", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.issue_opened, icon-tint: DataTableIconTint.done }, { kind: DataTableCellKind.text, text: "primer-ui-react", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.text, text: "890", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.label, text: "GPL-3.0", label-variant: LabelVariant.danger, label-size: LabelSize.small, icon: Icons.dot_fill, icon-tint: DataTableIconTint.default }, { kind: DataTableCellKind.action, text: "copy-link", label-variant: LabelVariant.default, label-size: LabelSize.small, icon: Icons.copy_icon, icon-tint: DataTableIconTint.default }] },
+    ];
+    property <string> demo-data-table-sorted-column: "";
+    property <string> demo-data-table-last-row-action: "";
+    property <string> demo-data-table-last-row-click: "";
+    property <DataTableSortDirection> demo-data-table-sort-direction: DataTableSortDirection.none;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            horizontal-stretch: 1;
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "DataTable";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            TableContainer {
+                width: 100%;
+                title: "Repositories";
+                subtitle: "Example rows for the gallery demo.";
+                primary-action-label: "Export";
+                primary-action => { }
+
+                DataTable {
+                    width: 100%;
+                    cell-padding: preview-cell-padding;
+                    external-sorting: preview-external-sorting;
+                    columns: demo-data-table-columns;
+                    rows: demo-data-table-rows;
+                    sorted-column-id: demo-data-table-sorted-column;
+                    sort-direction: demo-data-table-sort-direction;
+                    sort-toggled(cid, dir) => {
+                        demo-data-table-sorted-column = cid;
+                        demo-data-table-sort-direction = dir;
+                    }
+                    row-action(rid, cid, aid) => {
+                        demo-data-table-last-row-action = rid + " · " + cid + " · " + aid;
+                    }
+                    row-clicked(rid) => {
+                        demo-data-table-last-row-click = rid;
+                    }
+                }
+            }
+
+            if demo-data-table-last-row-action != "" || demo-data-table-last-row-click != "": Text {
+                text:
+                    (demo-data-table-last-row-action != "" ? "Last action: " + demo-data-table-last-row-action + "\n" : "")
+                    + (demo-data-table-last-row-click != "" ? "Last row click: " + demo-data-table-last-row-click : "");
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 4px;
+
+                Text {
+                    text: "Cell padding";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "condensed";
+                        label: "condensed";
+                        checked: preview-cell-padding == DataTableCellPadding.condensed;
+                        toggled => {
+                            preview-cell-padding = DataTableCellPadding.condensed;
+                        }
+                    }
+
+                    Radio {
+                        value: "normal";
+                        label: "normal";
+                        checked: preview-cell-padding == DataTableCellPadding.normal;
+                        toggled => {
+                            preview-cell-padding = DataTableCellPadding.normal;
+                        }
+                    }
+
+                    Radio {
+                        value: "spacious";
+                        label: "spacious";
+                        checked: preview-cell-padding == DataTableCellPadding.spacious;
+                        toggled => {
+                            preview-cell-padding = DataTableCellPadding.spacious;
+                        }
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 6px;
+
+                Text {
+                    text: "Sorting";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "External sorting (parent owns rows)";
+                    checked <=> preview-external-sorting;
+                    toggled => {
+                    }
+                }
+            }
+        }
+    }
+}

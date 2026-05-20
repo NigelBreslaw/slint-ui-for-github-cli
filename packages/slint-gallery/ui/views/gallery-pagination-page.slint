@@ -1,0 +1,143 @@
+import {
+    Pagination,
+    Select,
+    SelectOption,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { GalleryPaginationRangeFooter } from "../components/PaginationFooter.slint";
+
+export component GalleryPaginationPage {
+    property <int> scenario-ix: 0;
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default strip", enabled: true },
+        { value: "1", label: "Hide page numbers", enabled: true },
+        { value: "2", label: "Single page", enabled: true },
+        { value: "3", label: "Surrounding (ellipsis)", enabled: true },
+        { value: "4", label: "Zero pages", enabled: true },
+        { value: "5", label: "Table footer", enabled: true },
+    ];
+
+    property <int> demo-pagination-current-page: 1;
+    property <int> demo-p2-hide-numbers-page: 5;
+    property <int> demo-pagination-single-page: 1;
+    property <int> demo-pagination-ellipsis-page: 12;
+    property <int> demo-pagination-zero-page: 1;
+    property <int> demo-p2-footer-page-index: 0;
+
+    property <string> scenario-title:
+        scenario-ix == 0 ? "Default strip"
+        : scenario-ix == 1 ? "Hide page numbers"
+        : scenario-ix == 2 ? "Single page"
+        : scenario-ix == 3 ? "Surrounding (ellipsis)"
+        : scenario-ix == 4 ? "Zero pages"
+        : "Table footer";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            horizontal-stretch: 1;
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "Pagination — " + scenario-title;
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            if scenario-ix == 0: Pagination {
+                page-count: 10;
+                current-page: demo-pagination-current-page;
+                show-pages: true;
+                page-changed(idx) => {
+                    demo-pagination-current-page = idx + 1;
+                }
+            }
+
+            if scenario-ix == 1: Pagination {
+                page-count: 15;
+                current-page: demo-p2-hide-numbers-page;
+                show-pages: false;
+                page-changed(idx) => {
+                    demo-p2-hide-numbers-page = idx + 1;
+                }
+            }
+
+            if scenario-ix == 2: Pagination {
+                page-count: 1;
+                current-page: demo-pagination-single-page;
+                page-changed(idx) => {
+                    demo-pagination-single-page = idx + 1;
+                }
+            }
+
+            if scenario-ix == 3: Pagination {
+                page-count: 25;
+                current-page: demo-pagination-ellipsis-page;
+                margin-page-count: 2;
+                surrounding-page-count: 3;
+                page-changed(idx) => {
+                    demo-pagination-ellipsis-page = idx + 1;
+                }
+            }
+
+            if scenario-ix == 4: Pagination {
+                page-count: 0;
+                current-page: demo-pagination-zero-page;
+                page-changed(idx) => {
+                    demo-pagination-zero-page = idx + 1;
+                }
+            }
+
+            if scenario-ix == 5: GalleryPaginationRangeFooter {
+                width: 100%;
+                vertical-stretch: 0;
+                total-count: 47;
+                page-size: 10;
+                page-index: demo-p2-footer-page-index;
+                page-changed(idx) => {
+                    demo-p2-footer-page-index = idx;
+                }
+            }
+
+            if scenario-ix == 5: Text {
+                text: "Range label + bordered bar + Pagination nav (github-app board list / time-reporting picker).";
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 16px;
+                alignment: start;
+
+                Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "Variants";
+                    placeholder: "Choose…";
+                    options: scenario-options;
+                    selected-index <=> scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
+                    }
+                }
+            }
+        }
+    }
+}

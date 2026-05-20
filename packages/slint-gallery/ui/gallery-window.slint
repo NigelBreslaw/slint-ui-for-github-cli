@@ -12,7 +12,8 @@ import { GallerySpinnerPage } from "./views/gallery-spinner-page.slint";
 import { GalleryBannerPage } from "./views/gallery-banner-page.slint";
 import { GalleryCheckboxPage } from "./views/gallery-checkbox-page.slint";
 import { GalleryRadioPage } from "./views/gallery-radio-page.slint";
-import { GalleryDataPage } from "./views/gallery-data-page.slint";
+import { GalleryDataTablePage } from "./views/gallery-data-table-page.slint";
+import { GalleryPaginationPage } from "./views/gallery-pagination-page.slint";
 import { GalleryAnchoredOverlayPage } from "./views/gallery-anchored-overlay-page.slint";
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryFilteredActionListPage } from "./views/gallery-filtered-action-list-page.slint";
@@ -147,7 +148,13 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id == "data-playground": GalleryDataPage { }
+                        if GalleryState.selected-page-id == "data-table-playground": GalleryDataTablePage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "pagination-playground": GalleryPaginationPage {
+                            height: main-scroll.height;
+                        }
 
                         if GalleryState.selected-page-id == "dialogs-playground": GalleryDialogsPlaygroundPage {
                             height: main-scroll.height;

@@ -45,7 +45,16 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         "Counter label",
         &[("counter-label-playground", "Playground")],
     ),
-    ("folder-data", "Data", &[("data-playground", "Playground")]),
+    (
+        "folder-data-table",
+        "Data table",
+        &[("data-table-playground", "DataTable")],
+    ),
+    (
+        "folder-pagination",
+        "Pagination",
+        &[("pagination-playground", "Pagination")],
+    ),
     (
         "folder-dialogs",
         "Dialogs",

@@ -354,8 +354,8 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "folder-data",
-    label: "Data",
+    id: "folder-data-table",
+    label: "Data table",
     level: 1,
     has-children: true,
     expanded: true,
@@ -373,12 +373,50 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "data-playground",
-    label: "Playground",
+    id: "data-table-playground",
+    label: "DataTable",
     level: 2,
     has-children: false,
     expanded: false,
-    current: GalleryState.selected-page-id == "data-playground",
+    current: GalleryState.selected-page-id == "data-table-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "folder-pagination",
+    label: "Pagination",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "pagination-playground",
+    label: "Pagination",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "pagination-playground",
     leading-is-directory: false,
     has-leading-visual: true,
     trailing: TreeViewTrailingVisual.none,
@@ -1014,7 +1052,8 @@ export component GallerySidebar {
                                 || id == "buttons-playground"
                                 || id == "checkbox-playground"
                                 || id == "counter-label-playground"
-                                || id == "data-playground"
+                                || id == "data-table-playground"
+                                || id == "pagination-playground"
                                 || id == "dialogs-playground"
                                 || id == "icon-button-playground"
                                 || id == "label-playground"
