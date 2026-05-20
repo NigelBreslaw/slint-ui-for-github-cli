@@ -783,6 +783,47 @@ fn wire_gallery_filtered_action_list2_default(window: &GalleryWindow) {
         .set_lines(ModelRc::new(VecModel::from(lines)));
 }
 
+fn wire_gallery_select_panel2_single(window: &GalleryWindow) {
+    let window_weak = window.as_weak();
+    window
+        .global::<GallerySelectPanel2Single>()
+        .on_filter_changed({
+            let window_weak = window_weak.clone();
+            move |filter: SharedString| {
+                let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter.as_str());
+                let lines: Vec<ActionList2Line> = picked
+                    .iter()
+                    .map(|&l| {
+                        let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                            .iter()
+                            .position(|&x| x == l)
+                            .unwrap_or(0);
+                        action_list2_line_default_story(l, color_ix)
+                    })
+                    .collect();
+                let Some(w) = window_weak.upgrade() else {
+                    return;
+                };
+                w.global::<GallerySelectPanel2Single>()
+                    .set_lines(ModelRc::new(VecModel::from(lines)));
+            }
+        });
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, "");
+    let lines: Vec<ActionList2Line> = picked
+        .iter()
+        .map(|&l| {
+            let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                .iter()
+                .position(|&x| x == l)
+                .unwrap_or(0);
+            action_list2_line_default_story(l, color_ix)
+        })
+        .collect();
+    window
+        .global::<GallerySelectPanel2Single>()
+        .set_lines(ModelRc::new(VecModel::from(lines)));
+}
+
 fn wire_gallery_filtered_action_list2_long(window: &GalleryWindow) {
     let window_weak = window.as_weak();
     window
@@ -1111,6 +1152,7 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_filtered_action_list2_multi(&window);
     wire_gallery_filtered_action_list2_select_all(&window);
     wire_gallery_filtered_action_list2_multi_as_select_panel2_default(&window);
+    wire_gallery_select_panel2_single(&window);
 
     fill_gallery_tree_view_list_models(&window);
     wire_gallery_sidebar_nav(&window);

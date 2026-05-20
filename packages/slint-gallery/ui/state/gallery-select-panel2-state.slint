@@ -8,3 +8,9 @@ export global GallerySelectPanel2Default {
     callback filter-changed(string);
     callback item-activated(int);
 }
+
+/// **SingleSelect** — prefix-filtered label rows (initial pick **enhancement** in gallery UI).
+export global GallerySelectPanel2Single {
+    in-out property <[ActionList2Line]> lines: [];
+    callback filter-changed(string);
+}

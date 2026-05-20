@@ -49,11 +49,14 @@ export component SelectPanel2 {
     in property <[ActionList2Line]> lines: [];
     in property <ActionList2ListRole> list-role: ActionList2ListRole.listbox;
     in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.multiple;
-    in property <int> selected-index: -1;
+    in-out property <int> selected-index: -1;
     in property <[bool]> multi-selected: [];
+    /// When **`selection-mode`** is **`single`** and **`show-backdrop`** is false (anchored), close the overlay after **`item-activated`** (upstream anchored single-select).
+    in property <bool> close-on-single-select: true;
 
     callback filter-changed(string);
     callback item-activated(int);
+    callback single-selected-changed(int);
     callback opened();
     callback closed();
     callback close-requested();
@@ -63,6 +66,16 @@ export component SelectPanel2 {
             panel-popup.show();
         } else if !root.open && root.popup-visible {
             panel-popup.close();
+        }
+    }
+
+    /// Defer **`panel-popup.close()`** until after the list row **`item-activated`** handler returns (avoids interpreter reentrancy crashes on Node).
+    close-after-single-pick := Timer {
+        interval: 1ms;
+        running: false;
+        triggered() => {
+            panel-popup.close();
+            self.stop();
         }
     }
 
@@ -145,6 +158,12 @@ export component SelectPanel2 {
                     }
                     item-activated(ix) => {
                         root.item-activated(ix);
+                        if root.selection-mode == ActionList2SelectionMode.single {
+                            root.single-selected-changed(ix);
+                            if root.close-on-single-select && !root.show-backdrop {
+                                close-after-single-pick.start();
+                            }
+                        }
                     }
                 }
             }
