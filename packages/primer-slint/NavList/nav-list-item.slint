@@ -1,0 +1,29 @@
+// **NavList.Item** — flat link row (PR1). SubNav / expand parents come in PR2.
+
+import { ActionListLinkRow } from "../ActionList/action-list-link-row.slint";
+import { ActionListRowSize } from "../ActionList/types.slint";
+import { ActionListTokens } from "../tokens.slint";
+
+export component NavListItem {
+    in property <string> label;
+    /// Mirrors upstream **`aria-current`** → **`active`** on **ActionList.LinkItem**.
+    in property <bool> active: false;
+    in property <string> href: "#";
+    in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
+    in property <ActionListRowSize> row-size: ActionListRowSize.medium;
+    in property <string> inactive-text: "";
+    /// Fires on pointer / keyboard activation when not inactive (host opens **`href`**).
+    callback clicked;
+
+    ActionListLinkRow {
+        label: root.label;
+        active: root.active;
+        href: root.href;
+        margin-inline: root.margin-inline;
+        row-size: root.row-size;
+        inactive-text: root.inactive-text;
+        clicked => {
+            root.clicked();
+        }
+    }
+}

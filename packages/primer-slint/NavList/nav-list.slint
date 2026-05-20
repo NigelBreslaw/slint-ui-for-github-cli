@@ -1,0 +1,16 @@
+// **NavList** — side navigation chrome wrapping **ActionList** (upstream: `<nav>` + `ActionList`).
+
+import { ActionList } from "../ActionList/action-list.slint";
+import { ActionListVariant } from "../ActionList/types.slint";
+
+export component NavList {
+    /// For host / bridge accessibility (`aria-label` on `<nav>` upstream).
+    in property <string> aria-label: "";
+    in property <ActionListVariant> list-variant: ActionListVariant.inset;
+
+    ActionList {
+        list-variant: root.list-variant;
+
+        @children
+    }
+}

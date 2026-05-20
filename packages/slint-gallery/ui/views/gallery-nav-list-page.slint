@@ -1,0 +1,122 @@
+import {
+    NavList,
+    NavListItem,
+    Radio,
+    RadioGroup,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import {
+    GalleryDemoOptionsSidebar,
+} from "../components/gallery-demo-options-sidebar.slint";
+
+/// **NavList** — flat link items (upstream **Default** story).
+export component GalleryNavListPage {
+    property <int> preview-active-index: 0;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+
+            Text {
+                text: "NavList";
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
+
+            preview-chrome := Rectangle {
+                width: 240px;
+                border-width: 1px;
+                border-color: PrimerColors.borderColor-muted;
+                border-radius: LayoutTokens.borderRadius-medium;
+                background: PrimerColors.bgColor-default;
+
+                NavList {
+                    width: parent.width;
+                    aria-label: "Demo navigation";
+
+                    NavListItem {
+                        label: "Item 1";
+                        active: preview-active-index == 0;
+                        clicked => {
+                            preview-active-index = 0;
+                        }
+                    }
+
+                    NavListItem {
+                        label: "Item 2";
+                        active: preview-active-index == 1;
+                        clicked => {
+                            preview-active-index = 1;
+                        }
+                    }
+
+                    NavListItem {
+                        label: "Item 3";
+                        active: preview-active-index == 2;
+                        clicked => {
+                            preview-active-index = 2;
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "aria-current";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Which item is the current page (active indicator + semibold label).";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                RadioGroup {
+                    label: "";
+
+                    Radio {
+                        value: "0";
+                        label: "Item 1";
+                        checked: preview-active-index == 0;
+                        toggled => {
+                            preview-active-index = 0;
+                        }
+                    }
+
+                    Radio {
+                        value: "1";
+                        label: "Item 2";
+                        checked: preview-active-index == 1;
+                        toggled => {
+                            preview-active-index = 1;
+                        }
+                    }
+
+                    Radio {
+                        value: "2";
+                        label: "Item 3";
+                        checked: preview-active-index == 2;
+                        toggled => {
+                            preview-active-index = 2;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

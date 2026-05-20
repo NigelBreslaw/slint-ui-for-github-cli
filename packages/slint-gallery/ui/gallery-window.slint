@@ -27,6 +27,7 @@ import { GallerySegmentedControlPage } from "./views/gallery-segmented-control-p
 import { GallerySelectPage } from "./views/gallery-select-page.slint";
 import { GalleryTreeViewPage } from "./views/gallery-tree-view-page.slint";
 import { GalleryUnderlineNavPage } from "./views/gallery-underline-nav-page.slint";
+import { GalleryNavListPage } from "./views/gallery-nav-list-page.slint";
 import { AppWindow } from "../../primer-slint/tokens.slint";
 import { Icons } from "../../primer-slint/primer.slint";
 import { GalleryState } from "./state/gallery-state.slint";
@@ -112,6 +113,10 @@ export component GalleryWindow inherits Window {
                         }
 
                         if GalleryState.selected-page-id == "filtered-action-list-playground": GalleryFilteredActionListPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "nav-list-playground": GalleryNavListPage {
                             height: main-scroll.height;
                         }
 

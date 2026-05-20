@@ -14,6 +14,7 @@ const GALLERY_SIDEBAR_NAV: readonly {
         leaves: [
             { id: "action-list-playground", label: "ActionList" },
             { id: "filtered-action-list-playground", label: "FilteredActionList" },
+            { id: "nav-list-playground", label: "NavList" },
         ],
     },
     {
