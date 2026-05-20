@@ -160,7 +160,9 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id == "navs-playground": GalleryNavsPage { }
+                        if GalleryState.selected-page-id == "navs-playground": GalleryNavsPage {
+                            height: main-scroll.height;
+                        }
 
                         if GalleryState.selected-page-id == "select-playground": GallerySelectPage {
                             height: main-scroll.height;

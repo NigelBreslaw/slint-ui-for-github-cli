@@ -1,42 +1,73 @@
+// **NavList** gallery — scenarios aligned with Primer Storybook `Components/NavList` + `Features` (see sidebar footer for non-goals).
 import {
     Icons,
     NavList,
     NavListGroup,
     NavListGroupHeadingVariant,
     NavListItem,
+    Select,
+    SelectOption,
+    ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
-export component GalleryNavsPage inherits VerticalLayout {
-    spacing: 28px;
-    alignment: start;
-    padding: 24px;
+export component GalleryNavsPage {
+    property <int> scenario-ix: 0;
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default", enabled: true },
+        { value: "1", label: "WithSubItems", enabled: true },
+        { value: "2", label: "WithNestedSubItems", enabled: true },
+        { value: "3", label: "WithInactiveItems", enabled: true },
+        { value: "4", label: "WithGroup", enabled: true },
+        { value: "5", label: "WithDescription", enabled: true },
+        { value: "6", label: "SidebarCurrentIndicator", enabled: true },
+    ];
 
-    property <int> demo-nav-flat-selected: 0;
-    property <[NavListItem]> demo-nav-flat-items: [
+    property <int> demo-default-selected: 0;
+    property <int> demo-nav-sidebar-selected: 0;
+    property <string> demo-nav-last: "";
+
+    changed scenario-ix => {
+        root.demo-nav-last = "";
+        root.demo-default-selected = 0;
+        root.demo-nav-sidebar-selected = 0;
+    }
+
+    property <string> scenario-title:
+        root.scenario-ix == 0 ? "Default"
+        : root.scenario-ix == 1 ? "WithSubItems"
+        : root.scenario-ix == 2 ? "WithNestedSubItems"
+        : root.scenario-ix == 3 ? "WithInactiveItems"
+        : root.scenario-ix == 4 ? "WithGroup"
+        : root.scenario-ix == 5 ? "WithDescription"
+        : "SidebarCurrentIndicator";
+
+    property <string> scenario-description:
+        root.scenario-ix == 0
+        ? "Three top-level items; first row is current (upstream `aria-current` → active styling)."
+        : root.scenario-ix == 1
+        ? "Parent with SubNav: two nested rows, first nested row is current; parent starts expanded."
+        : root.scenario-ix == 2
+        ? "SubNav nesting and chevron expand/collapse; activation path is dot-separated indices (depth capped at four levels in Slint)."
+        : root.scenario-ix == 3
+        ? "Inactive top-level row plus inactive nested row with `inactiveText` (upstream `WithInactiveItems`)."
+        : root.scenario-ix == 4
+        ? "Two groups with filled and subtle headings and a divider between groups."
+        : root.scenario-ix == 5
+        ? "Leading icons with inline and block descriptions (upstream `WithDescription`)."
+        : "Product sidebar pattern: `sidebar-current-indicator` adds the blue vertical bar; current uses selected row chrome without double accent.";
+
+    property <[NavListItem]> items-default: [
         {
             data: {
-                label: "Dashboard",
-                current: demo-nav-flat-selected == 0,
-                inactive: false,
-                inactive-text: "",
-                description: "Overview and activity",
-                has-leading-visual: true,
-                leading-icon: Icons.layout_grid,
-                trailing-text: "New",
-            },
-            children: [],
-            subnav-default-open: false,
-        },
-        {
-            data: {
-                label: "Settings",
-                current: demo-nav-flat-selected == 1,
+                label: "Item 1",
+                current: demo-default-selected == 0,
                 inactive: false,
                 inactive-text: "",
                 description: "",
-                has-leading-visual: true,
-                leading-icon: Icons.gear_24,
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
                 trailing-text: "",
             },
             children: [],
@@ -44,33 +75,70 @@ export component GalleryNavsPage inherits VerticalLayout {
         },
         {
             data: {
-                label: "Billing (inactive)",
-                current: false,
-                inactive: true,
-                inactive-text: "Not available on your plan.",
-                description: "Payment method",
-                has-leading-visual: true,
-                leading-icon: Icons.stop,
-                trailing-text: "Pro",
+                label: "Item 2",
+                current: demo-default-selected == 1,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Item 3",
+                current: demo-default-selected == 2,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
             },
             children: [],
             subnav-default-open: false,
         },
     ];
-    property <[NavListGroup]> demo-nav-groups: [
+
+    property <[NavListItem]> items-with-sub-items: [
         {
-            title: "Repository",
-            heading-variant: NavListGroupHeadingVariant.filled,
-            items: [
+            data: {
+                label: "Item 1",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Item 2",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [
                 {
                     data: {
-                        label: "Code",
+                        label: "Sub item 1",
                         current: true,
                         inactive: false,
                         inactive-text: "",
-                        description: "Browse files and folders",
-                        has-leading-visual: true,
-                        leading-icon: Icons.layout_grid,
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
                         trailing-text: "",
                     },
                     children: [],
@@ -78,56 +146,38 @@ export component GalleryNavsPage inherits VerticalLayout {
                 },
                 {
                     data: {
-                        label: "Issues",
+                        label: "Sub item 2",
                         current: false,
                         inactive: false,
                         inactive-text: "",
                         description: "",
-                        has-leading-visual: true,
-                        leading-icon: Icons.issue_opened,
-                        trailing-text: "24",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
                     },
                     children: [],
                     subnav-default-open: false,
                 },
             ],
+            subnav-default-open: true,
         },
         {
-            title: "Organization",
-            heading-variant: NavListGroupHeadingVariant.subtle,
-            items: [
-                {
-                    data: {
-                        label: "People",
-                        current: false,
-                        inactive: false,
-                        inactive-text: "",
-                        description: "Members and roles",
-                        has-leading-visual: true,
-                        leading-icon: Icons.inbox,
-                        trailing-text: "8",
-                    },
-                    children: [],
-                    subnav-default-open: false,
-                },
-                {
-                    data: {
-                        label: "Teams",
-                        current: false,
-                        inactive: false,
-                        inactive-text: "",
-                        description: "",
-                        has-leading-visual: true,
-                        leading-icon: Icons.pull_request,
-                        trailing-text: "",
-                    },
-                    children: [],
-                    subnav-default-open: false,
-                },
-            ],
+            data: {
+                label: "Item 3",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
         },
     ];
-    property <[NavListItem]> demo-nav-subnav-items: [
+
+    property <[NavListItem]> items-nested-subnav: [
         {
             data: {
                 label: "Overview",
@@ -186,9 +236,254 @@ export component GalleryNavsPage inherits VerticalLayout {
             subnav-default-open: true,
         },
     ];
-    property <int> demo-nav-sidebar-selected: 0;
-    // Minimal labels — common Primer sidebar: blue accent bar + muted row for `current`.
-    property <[NavListItem]> demo-nav-sidebar-items: [
+
+    property <[NavListItem]> items-inactive: [
+        {
+            data: {
+                label: "Item 1",
+                current: false,
+                inactive: true,
+                inactive-text: "Unavailable due to an outage",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Item 2",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [
+                {
+                    data: {
+                        label: "Sub item 1",
+                        current: true,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Sub item 2",
+                        current: false,
+                        inactive: true,
+                        inactive-text: "Unavailable due to an outage",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+            ],
+            subnav-default-open: true,
+        },
+        {
+            data: {
+                label: "Item 3",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "",
+                has-leading-visual: false,
+                leading-icon: Icons.dot_fill,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+    ];
+
+    property <[NavListGroup]> demo-nav-groups: [
+        {
+            title: "Group 1",
+            heading-variant: NavListGroupHeadingVariant.filled,
+            items: [
+                {
+                    data: {
+                        label: "Item 1A",
+                        current: true,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Item 1B",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Item 1C",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+            ],
+        },
+        {
+            title: "Group 2",
+            heading-variant: NavListGroupHeadingVariant.subtle,
+            items: [
+                {
+                    data: {
+                        label: "Item 2A",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Item 2B",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+                {
+                    data: {
+                        label: "Item 2C",
+                        current: false,
+                        inactive: false,
+                        inactive-text: "",
+                        description: "",
+                        has-leading-visual: false,
+                        leading-icon: Icons.dot_fill,
+                        trailing-text: "",
+                    },
+                    children: [],
+                    subnav-default-open: false,
+                },
+            ],
+        },
+    ];
+
+    property <[NavListItem]> items-with-description: [
+        {
+            data: {
+                label: "Main Repository",
+                current: true,
+                inactive: false,
+                inactive-text: "",
+                description: "Primary project repository",
+                has-leading-visual: true,
+                leading-icon: Icons.repo,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Documentation",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "User guides and API documentation",
+                has-leading-visual: true,
+                leading-icon: Icons.book,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Bug Reports",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "Submit and track bug reports for the project. Include detailed steps to reproduce, expected behavior, and system information.",
+                has-leading-visual: true,
+                leading-icon: Icons.issue_opened,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Community",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "Connect with other developers, share ideas, and collaborate on features and improvements.",
+                has-leading-visual: true,
+                leading-icon: Icons.inbox,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+        {
+            data: {
+                label: "Recent Changes",
+                current: false,
+                inactive: false,
+                inactive-text: "",
+                description: "Latest commits and releases",
+                has-leading-visual: true,
+                leading-icon: Icons.history,
+                trailing-text: "",
+            },
+            children: [],
+            subnav-default-open: false,
+        },
+    ];
+
+    property <[NavListItem]> items-sidebar: [
         {
             data: {
                 label: "Item 1",
@@ -232,189 +527,112 @@ export component GalleryNavsPage inherits VerticalLayout {
             subnav-default-open: false,
         },
     ];
-    property <string> demo-nav-last: "";
 
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
+    property <[NavListItem]> preview-items:
+        root.scenario-ix == 0 ? root.items-default
+        : root.scenario-ix == 1 ? root.items-with-sub-items
+        : root.scenario-ix == 2 ? root.items-nested-subnav
+        : root.scenario-ix == 3 ? root.items-inactive
+        : root.scenario-ix == 4 ? [] : root.scenario-ix == 5 ? root.items-with-description : root.items-sidebar;
 
-        Text {
-            text: "NavList (flat)";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
+    property <[NavListGroup]> preview-groups: root.scenario-ix == 4 ? root.demo-nav-groups : [];
 
-        Text {
-            text: "Leading icons, optional description line, trailing text; current row, inactive row with explanation. Clicks report (group-index, path) — flat list uses group 0; path is dot-separated indices for SubNav.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
+    property <bool> preview-sidebar-indicator: root.scenario-ix == 6;
 
-        Text {
-            text: demo-nav-last == "" ? "Last activation: —" : "Last activation: " + demo-nav-last;
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
+    HorizontalLayout {
 
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 360px;
-            border-radius: LayoutTokens.borderRadius-medium;
-            border-width: 1px;
-            border-color: PrimerColors.borderColor-default;
-            background: PrimerColors.bgColor-canvas-subtle;
+        VerticalLayout {
+            horizontal-stretch: 1;
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
 
-            VerticalLayout {
-                padding: 8px;
-                width: 100%;
+            Text {
+                text: "NavList — " + root.scenario-title;
+                color: PrimerColors.fgColor-default;
+                font-size: 15px;
+                font-weight: 600;
+            }
 
-                NavList {
+            Text {
+                text: root.scenario-description;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            Text {
+                text: root.demo-nav-last == "" ? "Last activation: —" : "Last activation: " + root.demo-nav-last;
+                color: PrimerColors.fgColor-muted;
+                font-size: 12px;
+                wrap: word-wrap;
+            }
+
+            Rectangle {
+                horizontal-stretch: 0;
+                width: 360px;
+                border-radius: LayoutTokens.borderRadius-medium;
+                border-width: 1px;
+                border-color: PrimerColors.borderColor-default;
+                background: PrimerColors.bgColor-canvas-subtle;
+
+                VerticalLayout {
+                    padding: 8px;
                     width: 100%;
-                    items: demo-nav-flat-items;
-                    groups: [];
-                    item-activated(gi, path) => {
-                        demo-nav-last = "flat (" + gi + ", " + path + ")";
-                        demo-nav-flat-selected = path == "0"
-                            ? 0
-                            : path == "1" ? 1 : demo-nav-flat-selected;
+
+                    NavList {
+                        width: 100%;
+                        items: root.preview-items;
+                        groups: root.preview-groups;
+                        sidebar-current-indicator: root.preview-sidebar-indicator;
+                        item-activated(gi, path) => {
+                            root.demo-nav-last = "(" + gi + ", " + path + ")";
+                            if root.scenario-ix == 0 {
+                                root.demo-default-selected = path == "0"
+                                    ? 0
+                                    : path == "1" ? 1 : path == "2" ? 2 : root.demo-default-selected;
+                            }
+                            if root.scenario-ix == 6 {
+                                root.demo-nav-sidebar-selected = path == "0"
+                                    ? 0
+                                    : path == "1" ? 1 : path == "2" ? 2 : root.demo-nav-sidebar-selected;
+                            }
+                        }
                     }
                 }
             }
         }
-    }
 
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
+        Rectangle { }
 
-        Text {
-            text: "NavList (sidebar accent)";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Typical repo sidebar: sidebar-current-indicator adds a blue vertical bar on the current row, neutral muted background, and semibold label; other rows stay plain.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 360px;
-            border-radius: LayoutTokens.borderRadius-medium;
-            border-width: 1px;
-            border-color: PrimerColors.borderColor-default;
-            background: PrimerColors.bgColor-canvas-subtle;
-
+        GalleryDemoOptionsSidebar {
             VerticalLayout {
-                padding: 8px;
-                width: 100%;
+                spacing: 16px;
                 alignment: start;
 
-                NavList {
-                    items: demo-nav-sidebar-items;
-                    groups: [];
-                    sidebar-current-indicator: true;
-                    item-activated(gi, path) => {
-                        demo-nav-last = "sidebar (" + gi + ", " + path + ")";
-                        demo-nav-sidebar-selected = path == "0"
-                            ? 0
-                            : path == "1" ? 1 : path == "2" ? 2 : demo-nav-sidebar-selected;
+                Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "Storybook-aligned";
+                    placeholder: "Choose…";
+                    options: root.scenario-options;
+                    selected-index <=> scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
                     }
                 }
-            }
-        }
-    }
 
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "NavList (grouped)";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Filled and subtle group headings, divider between groups; items may show leading icon, description, and trailing count.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 360px;
-            border-radius: LayoutTokens.borderRadius-medium;
-            border-width: 1px;
-            border-color: PrimerColors.borderColor-default;
-            background: PrimerColors.bgColor-canvas-subtle;
-
-            VerticalLayout {
-                padding: 8px;
-                width: 100%;
-
-                NavList {
-                    width: 100%;
-                    items: [];
-                    groups: demo-nav-groups;
-                    item-activated(gi, path) => {
-                        demo-nav-last = "grouped (" + gi + ", " + path + ")";
-                    }
-                }
-            }
-        }
-    }
-
-    VerticalLayout {
-        spacing: 12px;
-        width: 100%;
-        alignment: start;
-
-        Text {
-            text: "NavList (SubNav)";
-            color: PrimerColors.fgColor-default;
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        Text {
-            text: "Parent rows with children show a chevron and expand/collapse; activation reports a dot-separated path (e.g. 1.0 for first nested item under the second top-level row). Nesting is capped at four levels.";
-            color: PrimerColors.fgColor-muted;
-            font-size: 12px;
-            wrap: word-wrap;
-        }
-
-        Rectangle {
-            horizontal-stretch: 0;
-            width: 360px;
-            border-radius: LayoutTokens.borderRadius-medium;
-            border-width: 1px;
-            border-color: PrimerColors.borderColor-default;
-            background: PrimerColors.bgColor-canvas-subtle;
-
-            VerticalLayout {
-                padding: 8px;
-                width: 100%;
-
-                NavList {
-                    width: 100%;
-                    items: demo-nav-subnav-items;
-                    groups: [];
-                    item-activated(gi, path) => {
-                        demo-nav-last = "subnav (" + gi + ", " + path + ")";
-                    }
+                Text {
+                    text: "Not in this gallery: WithReactRouterLink, WithNextJsLink, WithReloads, WithTrailingAction, WithGroupExpand / Expand stories, WithGroupHeadingLinks.";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: 11px;
+                    wrap: word-wrap;
                 }
             }
         }

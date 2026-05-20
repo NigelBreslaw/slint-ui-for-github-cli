@@ -1,9 +1,14 @@
 // Primer-style NavList — flat, grouped (PR4), SubNav expand/collapse (PR6). Upstream: https://primer.style/product/components/nav-list/
-// Interactive rows reuse [`ActionListRow`](../ActionList/action-list-row.slint); `current` maps to `selected`.
+// Interactive rows use [`ActionList2Row`](../ActionList2/action-list2-row.slint): upstream `aria-current` → `active`; `sidebar-current-indicator` uses `selected` + external bar.
 
 import { Icons } from "../assets/icons.slint";
-import { ActionListRow } from "../ActionList/action-list-row.slint";
-import { ActionListDescriptionLayout } from "../ActionList/types.slint";
+import { ActionList2Row } from "../ActionList2/action-list2-row.slint";
+import {
+    ActionList2DescriptionLayout,
+    ActionList2RowSize,
+    ActionList2RowVariant,
+    ActionList2SelectionLead,
+} from "../ActionList2/types.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     NavListGroup,
@@ -16,7 +21,66 @@ import {
     NavListSub3,
 } from "./types.slint";
 
-/// Single nav row — inactive (explanation) or interactive [`ActionListRow`].
+/// SubNav indent + optional sidebar accent + single [`ActionList2Row`]. Upstream `aria-current` maps to `active` when not using sidebar bar; with `sidebar-indicator`, `current` uses `selected` on the row so the inner accent does not double the external bar.
+component NavListActionRow {
+    in property <NavListRowData> nav-row;
+    in property <int> indent-depth: 0;
+    in property <bool> sidebar-indicator: false;
+    /// When true, sidebar accent bar stretches to row height (expandable parents); when false, fixed-height bar centered (leaf rows).
+    in property <bool> sidebar-bar-full-height: false;
+    in property <bool> force-leading: false;
+    in property <image> forced-leading-icon: Icons.chevron_right;
+    callback clicked;
+
+    HorizontalLayout {
+        horizontal-stretch: 1;
+        spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
+        padding-left: indent-depth * LayoutTokens.nav-list-subnav-indent;
+        alignment: sidebar-indicator ? stretch : start;
+
+        if sidebar-indicator && !sidebar-bar-full-height: Rectangle {
+            y: (parent.height - self.height) / 2;
+            horizontal-stretch: 0;
+            width: LayoutTokens.nav-list-sidebar-indicator-width;
+            height: LayoutTokens.nav-list-sidebar-indicator-height;
+            border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+            background: nav-row.current ? PrimerColors.bgColor-accent-emphasis : transparent;
+        }
+
+        if sidebar-indicator && sidebar-bar-full-height: Rectangle {
+            horizontal-stretch: 0;
+            vertical-stretch: 1;
+            width: LayoutTokens.nav-list-sidebar-indicator-width;
+            border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
+            background: nav-row.current ? PrimerColors.bgColor-accent-emphasis : transparent;
+        }
+
+        ActionList2Row {
+            horizontal-stretch: 1;
+            margin-inline: 0px;
+            label: nav-row.label;
+            row-variant: ActionList2RowVariant.default;
+            row-size: ActionList2RowSize.medium;
+            disabled: false;
+            has-leading-avatar: false;
+            has-leading-visual: force-leading || nav-row.has-leading-visual;
+            leading-icon: force-leading ? forced-leading-icon : nav-row.leading-icon;
+            description: nav-row.description;
+            description-layout: nav-row.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+            trailing-text: nav-row.trailing-text;
+            inactive-text: "";
+            active: nav-row.current && !sidebar-indicator;
+            selected: nav-row.current && sidebar-indicator;
+            selection-lead: ActionList2SelectionLead.none;
+            show-divider: false;
+            clicked => {
+                root.clicked();
+            }
+        }
+    }
+}
+
+/// Single nav row — inactive (explanation) or interactive [`ActionList2Row`].
 /// One root [`VerticalLayout`] so rows stack vertically (multiple root `if` branches overlap at 0×0).
 component NavListItemRow {
     in property <NavListRowData> nav-row;
@@ -29,7 +93,7 @@ component NavListItemRow {
     VerticalLayout {
         horizontal-stretch: 1;
 
-        if nav-row.inactive: Rectangle {
+        if nav-row.inactive && nav-row.inactive-text == "": Rectangle {
             horizontal-stretch: 1;
             border-radius: LayoutTokens.borderRadius-medium;
 
@@ -73,14 +137,6 @@ component NavListItemRow {
                         font-weight: LayoutTokens.base-text-weight-medium;
                         wrap: word-wrap;
                     }
-
-                    if nav-row.inactive-text != "": Text {
-                        horizontal-stretch: 1;
-                        text: nav-row.inactive-text;
-                        color: PrimerColors.fgColor-muted;
-                        font-size: LayoutTokens.text-body-size-small;
-                        wrap: word-wrap;
-                    }
                 }
 
                 if nav-row.trailing-text != "": Text {
@@ -94,51 +150,38 @@ component NavListItemRow {
             }
         }
 
-        if !nav-row.inactive: HorizontalLayout {
+        if nav-row.inactive && nav-row.inactive-text != "": HorizontalLayout {
             horizontal-stretch: 1;
-            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
             padding-left: indent-depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: start;
 
-            // Full row height (cross-axis stretch) so the bar lines up with the row highlight; fixed width only.
-            if sidebar-indicator: Rectangle {
-                y: (parent.height - self.height) / 2;
-                horizontal-stretch: 0;
-                width: LayoutTokens.nav-list-sidebar-indicator-width;
-                height: LayoutTokens.nav-list-sidebar-indicator-height;
-                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: nav-row.current ? PrimerColors.bgColor-accent-emphasis : transparent;
-            }
-
-            HorizontalLayout {
+            ActionList2Row {
                 horizontal-stretch: 1;
-                spacing: LayoutTokens.button-content-gap;
+                margin-inline: 0px;
+                label: nav-row.label;
+                row-variant: ActionList2RowVariant.default;
+                row-size: ActionList2RowSize.medium;
+                disabled: false;
+                has-leading-avatar: false;
+                has-leading-visual: nav-row.has-leading-visual;
+                leading-icon: nav-row.leading-icon;
+                description: nav-row.description;
+                description-layout: nav-row.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+                trailing-text: nav-row.trailing-text;
+                inactive-text: nav-row.inactive-text;
+                active: false;
+                selected: false;
+                selection-lead: ActionList2SelectionLead.none;
+                show-divider: false;
+            }
+        }
 
-                ActionListRow {
-                    horizontal-stretch: 1;
-                    label-markdown: @markdown("");
-                    label: nav-row.label;
-                    has-markdown: false;
-                    selected: nav-row.current;
-                    disabled: false;
-                    has-leading-visual: nav-row.has-leading-visual;
-                    leading-icon: nav-row.leading-icon;
-                    description: nav-row.description;
-                    description-layout: nav-row.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
-                    clicked => {
-                        root.clicked();
-                    }
-                }
-
-                if nav-row.trailing-text != "": Text {
-                    horizontal-stretch: 0;
-                    vertical-alignment: center;
-                    text: nav-row.trailing-text;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-medium;
-                    wrap: word-wrap;
-                }
+        if !nav-row.inactive: NavListActionRow {
+            indent-depth: indent-depth;
+            sidebar-indicator: sidebar-indicator;
+            sidebar-bar-full-height: false;
+            nav-row: nav-row;
+            clicked => {
+                root.clicked();
             }
         }
     }
@@ -182,48 +225,15 @@ component NavListExpandableRow3 {
     VerticalLayout {
         horizontal-stretch: 1;
 
-        HorizontalLayout {
-            horizontal-stretch: 1;
-            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
-            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? stretch : start;
-
-            if sidebar-indicator: Rectangle {
-                horizontal-stretch: 0;
-                width: LayoutTokens.nav-list-sidebar-indicator-width;
-                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
-            }
-
-            HorizontalLayout {
-                horizontal-stretch: 1;
-                spacing: LayoutTokens.button-content-gap;
-
-                ActionListRow {
-                    horizontal-stretch: 1;
-                    label-markdown: @markdown("");
-                    has-leading-visual: true;
-                    leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
-                    label: item.data.label;
-                    has-markdown: false;
-                    selected: item.data.current;
-                    disabled: false;
-                    description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
-                    clicked => {
-                        expanded = !expanded;
-                    }
-                }
-
-                if item.data.trailing-text != "": Text {
-                    horizontal-stretch: 0;
-                    vertical-alignment: center;
-                    text: item.data.trailing-text;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-medium;
-                    wrap: word-wrap;
-                }
+        NavListActionRow {
+            indent-depth: depth;
+            sidebar-indicator: sidebar-indicator;
+            sidebar-bar-full-height: true;
+            force-leading: true;
+            forced-leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+            nav-row: item.data;
+            clicked => {
+                expanded = !expanded;
             }
         }
 
@@ -286,48 +296,15 @@ component NavListExpandableRow2 {
     VerticalLayout {
         horizontal-stretch: 1;
 
-        HorizontalLayout {
-            horizontal-stretch: 1;
-            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
-            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? stretch : start;
-
-            if sidebar-indicator: Rectangle {
-                horizontal-stretch: 0;
-                width: LayoutTokens.nav-list-sidebar-indicator-width;
-                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
-            }
-
-            HorizontalLayout {
-                horizontal-stretch: 1;
-                spacing: LayoutTokens.button-content-gap;
-
-                ActionListRow {
-                    horizontal-stretch: 1;
-                    label-markdown: @markdown("");
-                    has-leading-visual: true;
-                    leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
-                    label: item.data.label;
-                    has-markdown: false;
-                    selected: item.data.current;
-                    disabled: false;
-                    description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
-                    clicked => {
-                        expanded = !expanded;
-                    }
-                }
-
-                if item.data.trailing-text != "": Text {
-                    horizontal-stretch: 0;
-                    vertical-alignment: center;
-                    text: item.data.trailing-text;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-medium;
-                    wrap: word-wrap;
-                }
+        NavListActionRow {
+            indent-depth: depth;
+            sidebar-indicator: sidebar-indicator;
+            sidebar-bar-full-height: true;
+            force-leading: true;
+            forced-leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+            nav-row: item.data;
+            clicked => {
+                expanded = !expanded;
             }
         }
 
@@ -390,48 +367,15 @@ component NavListExpandableRow1 {
     VerticalLayout {
         horizontal-stretch: 1;
 
-        HorizontalLayout {
-            horizontal-stretch: 1;
-            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
-            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? stretch : start;
-
-            if sidebar-indicator: Rectangle {
-                horizontal-stretch: 0;
-                width: LayoutTokens.nav-list-sidebar-indicator-width;
-                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
-            }
-
-            HorizontalLayout {
-                horizontal-stretch: 1;
-                spacing: LayoutTokens.button-content-gap;
-
-                ActionListRow {
-                    horizontal-stretch: 1;
-                    label-markdown: @markdown("");
-                    has-leading-visual: true;
-                    leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
-                    label: item.data.label;
-                    has-markdown: false;
-                    selected: item.data.current;
-                    disabled: false;
-                    description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
-                    clicked => {
-                        expanded = !expanded;
-                    }
-                }
-
-                if item.data.trailing-text != "": Text {
-                    horizontal-stretch: 0;
-                    vertical-alignment: center;
-                    text: item.data.trailing-text;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-medium;
-                    wrap: word-wrap;
-                }
+        NavListActionRow {
+            indent-depth: depth;
+            sidebar-indicator: sidebar-indicator;
+            sidebar-bar-full-height: true;
+            force-leading: true;
+            forced-leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+            nav-row: item.data;
+            clicked => {
+                expanded = !expanded;
             }
         }
 
@@ -494,48 +438,15 @@ component NavListExpandableRow0 {
     VerticalLayout {
         horizontal-stretch: 1;
 
-        HorizontalLayout {
-            horizontal-stretch: 1;
-            spacing: sidebar-indicator ? LayoutTokens.nav-list-sidebar-indicator-gap : 0px;
-            padding-left: depth * LayoutTokens.nav-list-subnav-indent;
-            alignment: sidebar-indicator ? stretch : start;
-
-            if sidebar-indicator: Rectangle {
-                horizontal-stretch: 0;
-                width: LayoutTokens.nav-list-sidebar-indicator-width;
-                border-radius: LayoutTokens.nav-list-sidebar-indicator-radius;
-                background: item.data.current ? PrimerColors.bgColor-accent-emphasis : transparent;
-            }
-
-            HorizontalLayout {
-                horizontal-stretch: 1;
-                spacing: LayoutTokens.button-content-gap;
-
-                ActionListRow {
-                    horizontal-stretch: 1;
-                    label-markdown: @markdown("");
-                    has-leading-visual: true;
-                    leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
-                    label: item.data.label;
-                    has-markdown: false;
-                    selected: item.data.current;
-                    disabled: false;
-                    description: item.data.description;
-                    description-layout: item.data.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
-                    clicked => {
-                        expanded = !expanded;
-                    }
-                }
-
-                if item.data.trailing-text != "": Text {
-                    horizontal-stretch: 0;
-                    vertical-alignment: center;
-                    text: item.data.trailing-text;
-                    color: PrimerColors.fgColor-muted;
-                    font-size: LayoutTokens.text-body-size-small;
-                    font-weight: LayoutTokens.base-text-weight-medium;
-                    wrap: word-wrap;
-                }
+        NavListActionRow {
+            indent-depth: depth;
+            sidebar-indicator: sidebar-indicator;
+            sidebar-bar-full-height: true;
+            force-leading: true;
+            forced-leading-icon: expanded ? Icons.chevron_down : Icons.chevron_right;
+            nav-row: item.data;
+            clicked => {
+                expanded = !expanded;
             }
         }
 
