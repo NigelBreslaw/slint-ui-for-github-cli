@@ -32,10 +32,13 @@ export component ActionListRow {
     in property <ActionListDescriptionLayout> description-layout: ActionListDescriptionLayout.none;
     in property <bool> truncate-inline-description: false;
     in property <string> trailing-text;
+    in property <bool> has-trailing-visual: false;
+    in property <image> trailing-icon: Icons.dot_fill;
     in property <string> inactive-text: "";
     in property <bool> show-trailing-loading: false;
     in property <bool> active: false;
     in property <length> margin-inline;
+    in property <length> subitem-indent: 0px;
     in property <bool> show-divider: false;
     in property <bool> selected: false;
     in property <ActionListSelectionLead> selection-lead: ActionListSelectionLead.none;
@@ -192,7 +195,7 @@ export component ActionListRow {
 
         row-shell := VerticalLayout {
             alignment: start;
-            padding-left: root.margin-inline;
+            padding-left: root.margin-inline + root.subitem-indent;
             padding-right: root.margin-inline;
 
             focus-chrome := Rectangle {
@@ -454,6 +457,14 @@ export component ActionListRow {
                                         wrap: word-wrap;
                                     }
                                 }
+                            }
+
+                            if root.has-trailing-visual: Image {
+                                width: LayoutTokens.iconButton-icon-size-medium;
+                                height: LayoutTokens.iconButton-icon-size-medium;
+                                vertical-alignment: center;
+                                source: root.trailing-icon;
+                                colorize: PrimerColors.fgColor-muted;
                             }
 
                             if root.trailing-text != "" && !root.show-trailing-loading: Text {

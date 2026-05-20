@@ -1,0 +1,16 @@
+// **NavList.SubNav** — nested list (upstream `.SubGroup`).
+//
+// Compose after **`NavListExpandableItem`**, typically:
+// `if expanded: NavListSubNav { … }`. Max nesting depth **3** (four levels total).
+
+export component NavListSubNav {
+    /// Nesting level of **children** (upstream **`SubNavContext.depth`** after increment).
+    in property <int> depth: 1;
+
+    VerticalLayout {
+        width: parent.width;
+        alignment: start;
+
+        @children
+    }
+}

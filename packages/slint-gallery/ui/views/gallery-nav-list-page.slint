@@ -1,17 +1,48 @@
 import {
+    Checkbox,
     NavList,
+    NavListExpandableItem,
     NavListItem,
+    NavListSubNav,
     Radio,
     RadioGroup,
+    Select,
+    SelectOption,
+    ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import {
     GalleryDemoOptionsSidebar,
 } from "../components/gallery-demo-options-sidebar.slint";
 
-/// **NavList** — flat link items (upstream **Default** story).
+/// **NavList** — **Default**, **WithSubItems**, **WithNestedSubItems** (upstream feature stories).
 export component GalleryNavListPage {
-    property <int> preview-active-index: 0;
+    property <int> scenario-ix: 0;
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default", enabled: true },
+        { value: "1", label: "WithSubItems", enabled: true },
+        { value: "2", label: "WithNestedSubItems", enabled: true },
+    ];
+
+    /// Active leaf id: `"1"`, `"2.1"`, `"1.2.2"`, etc.
+    property <string> preview-active-id: "1";
+    property <bool> preview-item2-expanded: true;
+    property <bool> preview-item12-expanded: true;
+    property <bool> preview-default-open: false;
+
+    property <bool> subitem-child-active:
+        root.preview-active-id == "2.1" || root.preview-active-id == "2.2";
+    property <bool> subitem-expanded: root.preview-item2-expanded || root.subitem-child-active;
+
+    property <bool> nested-child-active:
+        root.preview-active-id == "1.2.1" || root.preview-active-id == "1.2.2";
+    property <bool> nested-item1-expanded: root.preview-default-open || root.preview-active-id == "1.1";
+    property <bool> nested-item12-expanded: root.preview-item12-expanded || root.nested-child-active;
+
+    property <string> scenario-title:
+        root.scenario-ix == 0 ? "Default"
+        : root.scenario-ix == 1 ? "WithSubItems"
+        : "WithNestedSubItems";
 
     vertical-stretch: 1;
 
@@ -22,7 +53,7 @@ export component GalleryNavListPage {
             alignment: start;
 
             Text {
-                text: "NavList";
+                text: "NavList — " + root.scenario-title;
                 color: PrimerColors.fgColor-default;
                 font-size: 15px;
                 font-weight: 600;
@@ -36,31 +67,164 @@ export component GalleryNavListPage {
                 background: PrimerColors.bgColor-default;
 
                 preview-layout := VerticalLayout {
+                    alignment: start;
+                    width: parent.width;
 
                     NavList {
+                        width: parent.width;
                         aria-label: "Demo navigation";
 
-                        NavListItem {
-                            label: "Item 1";
-                            active: preview-active-index == 0;
-                            clicked => {
-                                preview-active-index = 0;
+                        if root.scenario-ix == 0: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListItem {
+                                label: "Item 1";
+                                active: root.preview-active-id == "1";
+                                clicked => {
+                                    preview-active-id = "1";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 2";
+                                active: root.preview-active-id == "2";
+                                clicked => {
+                                    preview-active-id = "2";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 3";
+                                active: root.preview-active-id == "3";
+                                clicked => {
+                                    preview-active-id = "3";
+                                }
                             }
                         }
 
-                        NavListItem {
-                            label: "Item 2";
-                            active: preview-active-index == 1;
-                            clicked => {
-                                preview-active-index = 1;
+                        if root.scenario-ix == 1: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListItem {
+                                label: "Item 1";
+                                active: root.preview-active-id == "1";
+                                clicked => {
+                                    preview-active-id = "1";
+                                }
+                            }
+
+                            NavListExpandableItem {
+                                label: "Item 2";
+                                expanded <=> root.subitem-expanded;
+                                child-active: root.subitem-child-active;
+                                toggled => {
+                                }
+
+                                NavListSubNav {
+                                    depth: 1;
+
+                                    NavListItem {
+                                        subitem-depth: 1;
+                                        label: "Sub item 1";
+                                        active: root.preview-active-id == "2.1";
+                                        clicked => {
+                                            preview-active-id = "2.1";
+                                        }
+                                    }
+
+                                    NavListItem {
+                                        subitem-depth: 1;
+                                        label: "Sub item 2";
+                                        active: root.preview-active-id == "2.2";
+                                        clicked => {
+                                            preview-active-id = "2.2";
+                                        }
+                                    }
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 3";
+                                active: root.preview-active-id == "3";
+                                clicked => {
+                                    preview-active-id = "3";
+                                }
                             }
                         }
 
-                        NavListItem {
-                            label: "Item 3";
-                            active: preview-active-index == 2;
-                            clicked => {
-                                preview-active-index = 2;
+                        if root.scenario-ix == 2: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListExpandableItem {
+                                label: "Item 1";
+                                expanded <=> root.nested-item1-expanded;
+                                default-open: root.preview-default-open;
+                                child-active: root.nested-child-active;
+                                toggled => {
+                                }
+
+                                NavListSubNav {
+                                    depth: 1;
+
+                                    NavListItem {
+                                        subitem-depth: 1;
+                                        label: "Sub item 1";
+                                        active: root.preview-active-id == "1.1";
+                                        clicked => {
+                                            preview-active-id = "1.1";
+                                        }
+                                    }
+
+                                    NavListExpandableItem {
+                                        subitem-depth: 1;
+                                        label: "Sub item 1.2";
+                                        expanded <=> root.nested-item12-expanded;
+                                        child-active: root.nested-child-active;
+                                        toggled => {
+                                        }
+
+                                        NavListSubNav {
+                                            depth: 2;
+
+                                            NavListItem {
+                                                subitem-depth: 2;
+                                                label: "Sub item 1.2.1";
+                                                active: root.preview-active-id == "1.2.1";
+                                                clicked => {
+                                                    preview-active-id = "1.2.1";
+                                                }
+                                            }
+
+                                            NavListItem {
+                                                subitem-depth: 2;
+                                                label: "Sub item 1.2.2";
+                                                active: root.preview-active-id == "1.2.2";
+                                                clicked => {
+                                                    preview-active-id = "1.2.2";
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 2";
+                                active: root.preview-active-id == "2";
+                                clicked => {
+                                    preview-active-id = "2";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 3";
+                                active: root.preview-active-id == "3";
+                                clicked => {
+                                    preview-active-id = "3";
+                                }
                             }
                         }
                     }
@@ -75,47 +239,188 @@ export component GalleryNavListPage {
                 spacing: 8px;
 
                 Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "Story";
+                    options: root.scenario-options;
+                    selected-index <=> scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_ix) => {
+                        preview-active-id = "1";
+                        preview-item2-expanded = true;
+                        preview-item12-expanded = true;
+                    }
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
                     text: "aria-current";
                     font-size: LayoutTokens.text-body-size-medium;
                     font-weight: LayoutTokens.base-text-weight-semibold;
                     color: PrimerColors.fgColor-default;
                 }
 
-                Text {
-                    text: "Which item is the current page (active indicator + semibold label).";
-                    font-size: LayoutTokens.text-body-size-small;
-                    color: PrimerColors.fgColor-muted;
-                    wrap: word-wrap;
-                }
-
                 RadioGroup {
                     label: "";
 
-                    Radio {
-                        value: "0";
-                        label: "Item 1";
-                        checked: preview-active-index == 0;
-                        toggled => {
-                            preview-active-index = 0;
+                    if root.scenario-ix == 0: VerticalLayout {
+                        spacing: 4px;
+
+                        Radio {
+                            label: "Item 1";
+                            checked: preview-active-id == "1";
+                            toggled => {
+                                preview-active-id = "1";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 2";
+                            checked: preview-active-id == "2";
+                            toggled => {
+                                preview-active-id = "2";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 3";
+                            checked: preview-active-id == "3";
+                            toggled => {
+                                preview-active-id = "3";
+                            }
                         }
                     }
 
-                    Radio {
-                        value: "1";
-                        label: "Item 2";
-                        checked: preview-active-index == 1;
-                        toggled => {
-                            preview-active-index = 1;
+                    if root.scenario-ix == 1: VerticalLayout {
+                        spacing: 4px;
+
+                        Radio {
+                            label: "Item 1";
+                            checked: preview-active-id == "1";
+                            toggled => {
+                                preview-active-id = "1";
+                            }
+                        }
+
+                        Radio {
+                            label: "Sub item 1";
+                            checked: preview-active-id == "2.1";
+                            toggled => {
+                                preview-active-id = "2.1";
+                            }
+                        }
+
+                        Radio {
+                            label: "Sub item 2";
+                            checked: preview-active-id == "2.2";
+                            toggled => {
+                                preview-active-id = "2.2";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 3";
+                            checked: preview-active-id == "3";
+                            toggled => {
+                                preview-active-id = "3";
+                            }
                         }
                     }
 
-                    Radio {
-                        value: "2";
-                        label: "Item 3";
-                        checked: preview-active-index == 2;
-                        toggled => {
-                            preview-active-index = 2;
+                    if root.scenario-ix == 2: VerticalLayout {
+                        spacing: 4px;
+
+                        Radio {
+                            label: "Sub item 1";
+                            checked: preview-active-id == "1.1";
+                            toggled => {
+                                preview-active-id = "1.1";
+                            }
                         }
+
+                        Radio {
+                            label: "Sub item 1.2.1";
+                            checked: preview-active-id == "1.2.1";
+                            toggled => {
+                                preview-active-id = "1.2.1";
+                            }
+                        }
+
+                        Radio {
+                            label: "Sub item 1.2.2";
+                            checked: preview-active-id == "1.2.2";
+                            toggled => {
+                                preview-active-id = "1.2.2";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 2";
+                            checked: preview-active-id == "2";
+                            toggled => {
+                                preview-active-id = "2";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 3";
+                            checked: preview-active-id == "3";
+                            toggled => {
+                                preview-active-id = "3";
+                            }
+                        }
+                    }
+                }
+            }
+
+            if root.scenario-ix == 1: VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "expanded";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Item 2 expanded";
+                    checked <=> preview-item2-expanded;
+                    toggled => {
+                    }
+                }
+            }
+
+            if root.scenario-ix == 2: VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "Expand";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Checkbox {
+                    label: "Item 1 defaultOpen";
+                    checked <=> preview-default-open;
+                    toggled => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Sub item 1.2 expanded";
+                    checked <=> preview-item12-expanded;
+                    toggled => {
                     }
                 }
             }

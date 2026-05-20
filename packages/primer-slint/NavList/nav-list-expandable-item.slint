@@ -1,0 +1,45 @@
+// **NavList.Item** expand/collapse parent row only (upstream **`ItemWithSubNav`** button).
+//
+// Place **`NavListSubNav`** immediately after, guarded with **`if expanded:`** so collapsed
+// sub-trees take no layout space (`visible: false` still reserves space in Slint).
+
+import { Icons } from "../assets/icons.slint";
+import { ActionListRow } from "../ActionList/action-list-row.slint";
+import { ActionListTokens, LayoutTokens } from "../tokens.slint";
+
+export component NavListExpandableItem {
+    in property <string> label;
+    in-out property <bool> expanded: false;
+    in property <bool> default-open: false;
+    /// When **true** and **`expanded`** is **false**, parent row shows active chrome (child is current).
+    in property <bool> child-active: false;
+    in property <int> subitem-depth: 0;
+    in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
+    callback toggled;
+
+    property <length> subitem-indent: root.subitem-depth * LayoutTokens.base-size-8;
+    property <bool> in-sub-nav: root.subitem-depth > 0;
+    property <length> effective-margin-inline: root.in-sub-nav ? 0px : root.margin-inline;
+    property <bool> show-parent-active: !root.expanded && root.child-active;
+    property <image> expand-icon: root.expanded ? Icons.chevron_up : Icons.chevron_down;
+
+    init => {
+        if root.default-open {
+            root.expanded = true;
+        }
+    }
+
+    ActionListRow {
+        width: parent.width;
+        label: root.label;
+        margin-inline: root.effective-margin-inline;
+        subitem-indent: root.subitem-indent;
+        active: root.show-parent-active;
+        has-trailing-visual: true;
+        trailing-icon: root.expand-icon;
+        clicked => {
+            root.expanded = !root.expanded;
+            root.toggled();
+        }
+    }
+}

@@ -1,26 +1,33 @@
-// **NavList.Item** — flat link row (PR1). SubNav / expand parents come in PR2.
+// **NavList.Item** — link row. Use **`NavListExpandableItem`** + **`NavListSubNav`** for collapsible parents (PR2).
 
 import { ActionListLinkRow } from "../ActionList/action-list-link-row.slint";
 import { ActionListRowSize } from "../ActionList/types.slint";
-import { ActionListTokens } from "../tokens.slint";
+import { ActionListTokens, LayoutTokens } from "../tokens.slint";
 
 export component NavListItem {
     in property <string> label;
     /// Mirrors upstream **`aria-current`** → **`active`** on **ActionList.LinkItem**.
     in property <bool> active: false;
     in property <string> href: "#";
+    in property <int> subitem-depth: 0;
     in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
     in property <ActionListRowSize> row-size: ActionListRowSize.medium;
     in property <string> inactive-text: "";
     /// Fires on pointer / keyboard activation when not inactive (host opens **`href`**).
     callback clicked;
 
+    property <length> subitem-indent: root.subitem-depth * LayoutTokens.base-size-8;
+    property <bool> in-sub-nav: root.subitem-depth > 0;
+    property <length> effective-margin-inline: root.in-sub-nav ? 0px : root.margin-inline;
+
     ActionListLinkRow {
         width: parent.width;
         label: root.label;
         active: root.active;
         href: root.href;
-        margin-inline: root.margin-inline;
+        margin-inline: root.effective-margin-inline;
+        subitem-indent: root.subitem-indent;
+        compact-label: root.in-sub-nav;
         row-size: root.row-size;
         inactive-text: root.inactive-text;
         clicked => {

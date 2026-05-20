@@ -21,6 +21,10 @@ export component ActionListLinkRow {
     in property <string> inactive-text: "";
     in property <bool> active: false;
     in property <length> margin-inline;
+    /// NavList **SubGroup** indent — **`subitem-depth * 8px`** upstream (`.Spacer`).
+    in property <length> subitem-indent: 0px;
+    /// NavList nested items use **`text-body-size-small`** (`.SubGroup .ItemLabel`).
+    in property <bool> compact-label: false;
     in property <bool> show-divider: false;
     in property <bool> roving-focused: false;
     /// Fires on pointer / keyboard activation when not **inactive** (host opens **`href`**).
@@ -41,6 +45,9 @@ export component ActionListLinkRow {
         root.show-active-chrome
         ? LayoutTokens.base-text-weight-semibold
         : LayoutTokens.base-text-weight-medium;
+
+    property <length> label-font-size:
+        root.compact-label ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
     property <color> label-color:
         root.is-inactive ? ActionListTokens.item-inactive-label-fgColor
@@ -114,7 +121,7 @@ export component ActionListLinkRow {
 
         row-shell := VerticalLayout {
             alignment: start;
-            padding-left: root.margin-inline;
+            padding-left: root.margin-inline + root.subitem-indent;
             padding-right: root.margin-inline;
 
             focus-chrome := Rectangle {
@@ -184,7 +191,7 @@ export component ActionListLinkRow {
                                                 horizontal-stretch: 0;
                                                 text: root.label;
                                                 color: root.label-color;
-                                                font-size: LayoutTokens.text-body-size-medium;
+                                                font-size: root.label-font-size;
                                                 font-weight: root.label-font-weight;
                                                 overflow: elide;
                                                 wrap: no-wrap;
@@ -213,7 +220,7 @@ export component ActionListLinkRow {
                                                 horizontal-stretch: 1;
                                                 text: root.label;
                                                 color: root.label-color;
-                                                font-size: LayoutTokens.text-body-size-medium;
+                                                font-size: root.label-font-size;
                                                 font-weight: root.label-font-weight;
                                                 wrap: word-wrap;
                                                 vertical-alignment: center;
@@ -238,7 +245,7 @@ export component ActionListLinkRow {
                                             Text {
                                                 text: root.label;
                                                 color: root.label-color;
-                                                font-size: LayoutTokens.text-body-size-medium;
+                                                font-size: root.label-font-size;
                                                 font-weight: root.label-font-weight;
                                                 wrap: word-wrap;
                                             }
@@ -248,7 +255,7 @@ export component ActionListLinkRow {
                                             horizontal-stretch: 1;
                                             text: root.label;
                                             color: root.label-color;
-                                            font-size: LayoutTokens.text-body-size-medium;
+                                            font-size: root.label-font-size;
                                             font-weight: root.label-font-weight;
                                             wrap: word-wrap;
                                             vertical-alignment: center;
