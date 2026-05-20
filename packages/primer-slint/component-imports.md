@@ -22,7 +22,7 @@
 | **`AnchoredOverlay`** (floating panel vs anchor) | `OverlayTokens`, `LayoutTokens` (gap); gallery: [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md) |
 | **`ActionMenu`** (menu button + anchored panel) | `LayoutTokens`, `Icons` (trailing caret / chevron); gallery **Action menu → Playground** |
 | `ActionList` / `SelectPanel` / `FilteredActionList` | `ActionListTokens` / `SelectPanelTokens` / `FilteredActionListTokens` as in the entry `.slint` |
-| **`FilteredActionList2`** | `SelectPanelTokens`, `FilteredActionListTokens` (skeleton), `LayoutTokens`, `PrimerColors`; list body uses **`ActionList2`** / **`ActionList2Lines`** (**`ActionList2Tokens`** via rows). Reuses **`FilteredActionListLoadingKind`** from v1 types. |
+| **`FilteredActionList2`** | `SelectPanelTokens`, `FilteredActionListTokens` (skeleton), `LayoutTokens`, `PrimerColors`; list body uses **`ActionList2`** / **`ActionList2Lines`** (**`ActionList2Tokens`** via rows). **`FilteredActionListLoadingKind`** in [`FilteredActionList2/types.slint`](FilteredActionList2/types.slint). |
 
 **Reuse (grep before duplicating):** `ValidationStatus` and friends — import from [`Select/select.slint`](Select/select.slint) for inputs and groups. **`DialogFooter`:** custom actions use `visible:` branches, not `if`, around `@children` (Slint limitation).
 
