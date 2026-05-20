@@ -176,9 +176,6 @@ export function filterPrefixLabels(labels: readonly string[], filter: string): s
     return labels.filter((l) => q === "" || l.toLowerCase().startsWith(q));
 }
 
-/**
- * Storybook **Default** — prefix filter + colored leading circles (upstream **`FilteredActionList.stories.tsx`**).
- */
 export function wireGalleryFilteredActionList2Default(g: GalleryFilteredActionList2Handle): void {
     const push = (filter: string) => {
         const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
@@ -197,11 +194,6 @@ export function wireGalleryFilteredActionList2Default(g: GalleryFilteredActionLi
     push("");
 }
 
-/**
- * Storybook **WithLongItems** (`FilteredActionList.examples.stories.tsx`).
- *
- * **`rowIcon`**: **`window.Icons.dot_fill`** — unused visually when **`has_leading_visual`** is false.
- */
 export function wireGalleryFilteredActionList2Long(
     g: GalleryFilteredActionList2Handle,
     rowIcon: ImageData,
