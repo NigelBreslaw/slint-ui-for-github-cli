@@ -21,10 +21,16 @@ export component NavListItem {
     in property <string> trailing-text: "";
     in property <bool> has-trailing-visual: false;
     in property <image> trailing-icon: Icons.dot_fill;
+    in property <bool> has-trailing-action: false;
+    in property <bool> trailing-action-has-icon: false;
+    in property <image> trailing-action-icon: Icons.dot_fill;
+    in property <string> trailing-action-label: "";
+    in property <bool> trailing-action-loading: false;
     /// When non-empty, row is non-interactive and shows attention copy (upstream **`inactiveText`**).
     in property <string> inactive-text: "";
     /// Fires on pointer / keyboard activation when not inactive (host opens **`href`**).
     callback clicked;
+    callback trailing-action-clicked();
 
     /// Upstream **`.SubGroup`** drops item **`margin-inline`**; depth comes from **`.Spacer`** only.
     property <length> subitem-indent: max(0px, root.subitem-depth * LayoutTokens.base-size-8 - root.margin-inline);
@@ -46,9 +52,17 @@ export component NavListItem {
         trailing-text: root.trailing-text;
         has-trailing-visual: root.has-trailing-visual;
         trailing-icon: root.trailing-icon;
+        has-trailing-action: root.has-trailing-action;
+        trailing-action-has-icon: root.trailing-action-has-icon;
+        trailing-action-icon: root.trailing-action-icon;
+        trailing-action-label: root.trailing-action-label;
+        trailing-action-loading: root.trailing-action-loading;
         inactive-text: root.inactive-text;
         clicked => {
             root.clicked();
+        }
+        trailing-action-clicked => {
+            root.trailing-action-clicked();
         }
     }
 }

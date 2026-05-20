@@ -15,12 +15,12 @@ import {
 } from "../../../primer-slint/primer.slint";
 import { Icons } from "../../../primer-slint/assets/icons.slint";
 import { ActionListDescriptionLayout } from "../../../primer-slint/ActionList/types.slint";
-import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { ActionListTokens, LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import {
     GalleryDemoOptionsSidebar,
 } from "../components/gallery-demo-options-sidebar.slint";
 
-/// **NavList** — upstream feature stories (Default through **WithDescription**).
+/// **NavList** — upstream feature stories (Default through **WithTrailingActionInSubItem**).
 export component GalleryNavListPage {
     property <int> scenario-ix: 0;
     property <[SelectOption]> scenario-options: [
@@ -31,12 +31,17 @@ export component GalleryNavListPage {
         { value: "4", label: "WithGroupHeadingLinks", enabled: true },
         { value: "5", label: "WithInactiveItems", enabled: true },
         { value: "6", label: "WithDescription", enabled: true },
+        { value: "7", label: "WithTrailingAction", enabled: true },
+        { value: "8", label: "WithTrailingActionInSubItem", enabled: true },
     ];
+
+    property <string> preview-last-trailing-action: "";
 
     /// Active leaf id: `"1"`, `"2.1"`, `"1.2.2"`, etc.
     property <string> preview-active-id: "1";
     property <bool> preview-item2-expanded: true;
     property <bool> preview-item12-expanded: true;
+    property <bool> preview-item3-expanded: true;
     property <bool> preview-default-open: false;
 
     property <bool> subitem-child-active:
@@ -67,7 +72,9 @@ export component GalleryNavListPage {
         : root.scenario-ix == 3 ? "WithGroup"
         : root.scenario-ix == 4 ? "WithGroupHeadingLinks"
         : root.scenario-ix == 5 ? "WithInactiveItems"
-        : "WithDescription";
+        : root.scenario-ix == 6 ? "WithDescription"
+        : root.scenario-ix == 7 ? "WithTrailingAction"
+        : "WithTrailingActionInSubItem";
 
     vertical-stretch: 1;
 
@@ -93,10 +100,10 @@ export component GalleryNavListPage {
 
                 preview-layout := VerticalLayout {
                     alignment: start;
-                    width: parent.width;
+                    padding-left: ActionListTokens.list-padding-block-inset;
 
                     NavList {
-                        width: parent.width;
+                        width: parent.width - parent.padding-left;
                         aria-label: "Demo navigation";
 
                         if root.scenario-ix == 0: VerticalLayout {
@@ -519,6 +526,112 @@ export component GalleryNavListPage {
                                 }
                             }
                         }
+
+                        if root.scenario-ix == 7: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListItem {
+                                label: "Item 1";
+                                has-leading-visual: true;
+                                leading-icon: Icons.file_directory_fill;
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_left;
+                                trailing-action-label: "Expand sidebar";
+                                active: root.preview-active-id == "ta1";
+                                clicked => {
+                                    preview-active-id = "ta1";
+                                }
+                                trailing-action-clicked => {
+                                    preview-last-trailing-action = "Expand sidebar";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 2";
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_right;
+                                trailing-action-label: "Some action";
+                                active: root.preview-active-id == "ta2";
+                                clicked => {
+                                    preview-active-id = "ta2";
+                                }
+                                trailing-action-clicked => {
+                                    preview-last-trailing-action = "Some action";
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 8: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListItem {
+                                label: "Item 1";
+                                has-leading-visual: true;
+                                leading-icon: Icons.file_directory_fill;
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_left;
+                                trailing-action-label: "Expand sidebar";
+                                active: root.preview-active-id == "ta1";
+                                clicked => {
+                                    preview-active-id = "ta1";
+                                }
+                                trailing-action-clicked => {
+                                    preview-last-trailing-action = "Expand sidebar";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 2";
+                                has-trailing-action: true;
+                                trailing-action-has-icon: true;
+                                trailing-action-icon: Icons.chevron_right;
+                                trailing-action-label: "Some action";
+                                active: root.preview-active-id == "ta2";
+                                clicked => {
+                                    preview-active-id = "ta2";
+                                }
+                                trailing-action-clicked => {
+                                    preview-last-trailing-action = "Some action";
+                                }
+                            }
+
+                            trailing-sub-block := VerticalLayout {
+                                width: parent.width;
+                                alignment: start;
+
+                                NavListExpandableItem {
+                                    label: "Item 3";
+                                    expanded <=> root.preview-item3-expanded;
+                                    toggled => {
+                                    }
+                                }
+
+                                if root.preview-item3-expanded: NavListSubNav {
+                                    depth: 1;
+
+                                    NavListItem {
+                                        subitem-depth: 1;
+                                        label: "Sub item 1";
+                                        has-trailing-action: true;
+                                        trailing-action-has-icon: true;
+                                        trailing-action-icon: Icons.book;
+                                        trailing-action-label: "Another action";
+                                        active: root.preview-active-id == "ta-sub1";
+                                        clicked => {
+                                            preview-active-id = "ta-sub1";
+                                        }
+                                        trailing-action-clicked => {
+                                            preview-last-trailing-action = "Another action";
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -548,9 +661,12 @@ export component GalleryNavListPage {
                             ix == 3 || ix == 4 ? "g1a"
                             : ix == 5 ? "2.1"
                             : ix == 6 ? "repo"
+                            : ix == 7 || ix == 8 ? "ta1"
                             : "1";
                         preview-item2-expanded = true;
                         preview-item12-expanded = true;
+                        preview-item3-expanded = true;
+                        preview-last-trailing-action = "";
                     }
                 }
             }
@@ -708,6 +824,34 @@ export component GalleryNavListPage {
                             checked: preview-active-id == "3";
                             toggled => {
                                 preview-active-id = "3";
+                            }
+                        }
+                    }
+
+                    if root.scenario-ix == 7 || root.scenario-ix == 8: VerticalLayout {
+                        spacing: 4px;
+
+                        Radio {
+                            label: "Item 1";
+                            checked: preview-active-id == "ta1";
+                            toggled => {
+                                preview-active-id = "ta1";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 2";
+                            checked: preview-active-id == "ta2";
+                            toggled => {
+                                preview-active-id = "ta2";
+                            }
+                        }
+
+                        if root.scenario-ix == 8: Radio {
+                            label: "Sub item 1";
+                            checked: preview-active-id == "ta-sub1";
+                            toggled => {
+                                preview-active-id = "ta-sub1";
                             }
                         }
                     }
@@ -953,6 +1097,38 @@ export component GalleryNavListPage {
 
                 Text {
                     text: "Inline descriptions sit beside the label; block descriptions render below (Bug Reports, Community).";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+            }
+
+            if root.scenario-ix == 7 || root.scenario-ix == 8: VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "TrailingAction";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Trailing actions are separate controls at the row end; they do not activate the nav item.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                if root.scenario-ix == 8: Checkbox {
+                    label: "Item 3 expanded";
+                    checked <=> preview-item3-expanded;
+                    toggled => {
+                    }
+                }
+
+                Text {
+                    text: root.preview-last-trailing-action == "" ? "Click a trailing action…" : "Last trailing: " + root.preview-last-trailing-action;
                     font-size: LayoutTokens.text-body-size-small;
                     color: PrimerColors.fgColor-muted;
                     wrap: word-wrap;
