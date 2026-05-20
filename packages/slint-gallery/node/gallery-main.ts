@@ -7,7 +7,9 @@ import {
 import {
   wireGalleryFilteredActionList2Default,
   wireGalleryFilteredActionList2Long,
+  wireGalleryFilteredActionList2Multi,
   type GalleryFilteredActionList2Handle,
+  type GalleryFilteredActionList2MultiHandle,
 } from "./state/gallery-filtered-action-list2-bridge-shared.ts";
 import {
   wireGallerySelectPanelMultiSelect,
@@ -35,6 +37,7 @@ type GalleryWindowModule = {
     GallerySelectPanelMulti: GallerySelectPanelMultiHandle;
     GalleryFilteredActionList2Default: GalleryFilteredActionList2Handle;
     GalleryFilteredActionList2Long: GalleryFilteredActionList2Handle;
+    GalleryFilteredActionList2Multi: GalleryFilteredActionList2MultiHandle;
     GalleryTreeViewListModels: GalleryTreeViewListModelsHandle;
     Icons: {
       dot_fill: ImageData;
@@ -59,6 +62,7 @@ wireGalleryFilteredActionList2Long(
   window.GalleryFilteredActionList2Long,
   window.Icons.dot_fill,
 );
+wireGalleryFilteredActionList2Multi(window.GalleryFilteredActionList2Multi);
 wireGalleryTreeViewListModels(
   window.GalleryTreeViewListModels,
   window.Icons.dot_fill,

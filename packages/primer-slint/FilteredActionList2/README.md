@@ -12,10 +12,11 @@ Slint host for Primer **FilteredActionList** built on **ActionList2**: filter fi
 
 - **Parent-owned filtering**: bind **`filter-text`** and handle **`filter-changed`**; the parent narrows **`lines`**: `[ActionList2Line]` (Slint has no `starts-with` helper in the language — hosts often filter in TypeScript / Rust, as in the gallery bridges).
 - **Layout width**: callers set **`horizontal-stretch: 1`** and/or explicit width on the instance when the control should fill a toolbar or form row (see [`AGENTS.md`](../AGENTS.md) — no upstream-style **`block`** prop).
+- **Selection (PR1)**: optional **`list-role`**, **`selection-mode`**, **`selected-index`**, **`multi-selected`**, **`item-activated`** — use **`listbox`** + **`single`** / **`multiple`** for **SelectPanel**-style lists (see [`UPSTREAM_TRACEABILITY_PR1.md`](UPSTREAM_TRACEABILITY_PR1.md)).
 
 ## Embedding
 
-[`filtered-action-list2.slint`](filtered-action-list2.slint) uses **`ActionList2Lines`** with **`list-role: none`** and **`selection-mode: none`** to match the two upstream stories (no selection chrome). For menus / listboxes with roving focus, callers would compose differently or extend this component in a follow-up.
+[`filtered-action-list2.slint`](filtered-action-list2.slint) forwards **`list-role`** and **`selection-mode`** to **`ActionList2Lines`**. Default is **`none`** (FilteredActionList **Default** / **WithLongItems**). **SelectPanel** **SingleSelect** / **MultiSelect** use **`listbox`** with **`single`** or **`multiple`**.
 
 ## Non-goals (not in this port)
 

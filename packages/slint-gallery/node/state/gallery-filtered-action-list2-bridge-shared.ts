@@ -8,6 +8,12 @@ export type GalleryFilteredActionList2Handle = {
     filter_changed: (text: string) => void;
 };
 
+/** Multi-select gallery global — label-keyed selection survives filter narrowing. */
+export type GalleryFilteredActionList2MultiHandle = GalleryFilteredActionList2Handle & {
+    multi_selected: boolean[];
+    item_activated: (ix: number) => void;
+};
+
 /**
  * `ActionList2Line` rows for **`ArrayModel`**.
  *
@@ -195,5 +201,54 @@ export function wireGalleryFilteredActionList2Long(
     g.filter_changed = (t: string) => {
         push(t);
     };
+    push("");
+}
+
+/**
+ * Upstream **SelectPanel** `MultiSelect` — initial selection **`items.slice(1, 3)`** → labels **bug**, **good first issue**.
+ * Selection is stored by label so filtered rows keep correct checkbox state.
+ */
+export function wireGalleryFilteredActionList2Multi(
+    g: GalleryFilteredActionList2MultiHandle,
+): void {
+    const selectedLabels = new Set<string>(["bug", "good first issue"]);
+    let currentFilter = "";
+
+    const push = (filter: string) => {
+        currentFilter = filter;
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
+        const rows = picked.map((label) => {
+            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+        });
+        const multiSelected = picked.map((label) => selectedLabels.has(label));
+        assignProperties(g, {
+            lines: new slint.ArrayModel(rows),
+            multi_selected: multiSelected,
+        });
+    };
+
+    g.filter_changed = (t: string) => {
+        push(t);
+    };
+
+    g.item_activated = (ix: number) => {
+        const lines = g.lines as { get_row_data?: (i: number) => ActionList2LineJs };
+        const row =
+            typeof lines?.get_row_data === "function"
+                ? lines.get_row_data(ix)
+                : undefined;
+        const label = row?.label;
+        if (typeof label !== "string" || label.length === 0) {
+            return;
+        }
+        if (selectedLabels.has(label)) {
+            selectedLabels.delete(label);
+        } else {
+            selectedLabels.add(label);
+        }
+        push(currentFilter);
+    };
+
     push("");
 }

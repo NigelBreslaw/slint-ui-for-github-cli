@@ -1,5 +1,7 @@
-// **FilteredActionList2** gallery — upstream Storybook **Default** + **WithLongItems** only.
+// **FilteredActionList2** gallery — upstream **FilteredActionList** Default/WithLongItems + **SelectPanel** SingleSelect/MultiSelect list body.
 import {
+    ActionList2ListRole,
+    ActionList2SelectionMode,
     FilteredActionList2,
     Select,
     SelectOption,
@@ -10,6 +12,7 @@ import {
     GalleryFilteredActionList2Default,
     GalleryFilteredActionList2Long,
 } from "../state/gallery-filtered-action-list2-state.slint";
+import { GalleryFilteredActionList2Multi } from "../state/gallery-filtered-action-list2-multi-state.slint";
 import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
 export component GalleryFilteredActionList2Page {
@@ -18,15 +21,33 @@ export component GalleryFilteredActionList2Page {
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
         { value: "1", label: "WithLongItems", enabled: true },
+        { value: "2", label: "SingleSelect", enabled: true },
+        { value: "3", label: "MultiSelect", enabled: true },
     ];
 
     property <string> scenario-caption:
         root.scenario-ix == 0
-        ? "Upstream Default — prefix filter on label text; bridge-backed rows with Storybook leading colors."
-        : "Upstream Examples WithLongItems — taller scroll region (`body-region-height` 320px).";
+        ? "Upstream FilteredActionList Default — prefix filter; colored leading circles."
+        : root.scenario-ix == 1
+        ? "Upstream FilteredActionList WithLongItems — `body-region-height` 320px."
+        : root.scenario-ix == 2
+        ? "Upstream SelectPanel SingleSelect — `listbox` + `single` checkmark; initial row **enhancement** (`items[0]`)."
+        : "Upstream SelectPanel MultiSelect — `listbox` + `multiple` checkboxes; initial **bug**, **good first issue** (`items.slice(1, 3)`).";
 
     property <string> fal2-default-filter: "";
     property <string> fal2-long-filter: "";
+    property <string> fal2-single-filter: "";
+    property <string> fal2-multi-filter: "";
+    /// Upstream **SingleSelect** `useState(items[0])` — first visible row after filter.
+    property <int> fal2-single-selected-index: 0;
+
+    changed scenario-ix => {
+        root.fal2-single-selected-index = 0;
+    }
+
+    changed fal2-single-filter => {
+        root.fal2-single-selected-index = 0;
+    }
 
     vertical-stretch: 1;
 
@@ -67,6 +88,10 @@ export component GalleryFilteredActionList2Page {
                         text:
                             root.scenario-ix == 1
                             ? "Filtered Action List with Long Items"
+                            : root.scenario-ix == 2
+                            ? "Single select labels"
+                            : root.scenario-ix == 3
+                            ? "Select labels"
                             : "Filtered Action List";
                         color: PrimerColors.fgColor-default;
                         font-size: 18px;
@@ -75,7 +100,10 @@ export component GalleryFilteredActionList2Page {
                     }
 
                     Text {
-                        text: "Please select labels that describe your issue:";
+                        text:
+                            root.scenario-ix == 3
+                            ? "Use labels to organize issues and pull requests"
+                            : "Please select labels that describe your issue:";
                         color: PrimerColors.fgColor-default;
                         font-size: 14px;
                         font-weight: 400;
@@ -98,6 +126,36 @@ export component GalleryFilteredActionList2Page {
                         lines: GalleryFilteredActionList2Long.lines;
                         filter-changed(t) => {
                             GalleryFilteredActionList2Long.filter-changed(t);
+                        }
+                    }
+
+                    if root.scenario-ix == 2: FilteredActionList2 {
+                        filter-text <=> root.fal2-single-filter;
+                        placeholder: "Filter Labels";
+                        lines: GalleryFilteredActionList2Default.lines;
+                        list-role: ActionList2ListRole.listbox;
+                        selection-mode: ActionList2SelectionMode.single;
+                        selected-index: root.fal2-single-selected-index;
+                        filter-changed(t) => {
+                            GalleryFilteredActionList2Default.filter-changed(t);
+                        }
+                        item-activated(ix) => {
+                            root.fal2-single-selected-index = ix;
+                        }
+                    }
+
+                    if root.scenario-ix == 3: FilteredActionList2 {
+                        filter-text <=> root.fal2-multi-filter;
+                        placeholder: "Filter Labels";
+                        lines: GalleryFilteredActionList2Multi.lines;
+                        list-role: ActionList2ListRole.listbox;
+                        selection-mode: ActionList2SelectionMode.multiple;
+                        multi-selected: GalleryFilteredActionList2Multi.multi-selected;
+                        filter-changed(t) => {
+                            GalleryFilteredActionList2Multi.filter-changed(t);
+                        }
+                        item-activated(ix) => {
+                            GalleryFilteredActionList2Multi.item-activated(ix);
                         }
                     }
                 }
@@ -127,6 +185,13 @@ export component GalleryFilteredActionList2Page {
                     validation-status: ValidationStatus.none;
                     selected-changed(_i) => {
                     }
+                }
+
+                if root.scenario-ix == 2: Text {
+                    text: "Selected index: " + root.fal2-single-selected-index;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: LayoutTokens.text-body-size-small;
+                    wrap: word-wrap;
                 }
             }
         }

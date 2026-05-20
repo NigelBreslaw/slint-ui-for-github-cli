@@ -21,6 +21,13 @@ export component FilteredActionList2 {
     in property <[ActionList2Line]> lines: [];
     in property <ALVariant> list-variant: ALVariant.inset;
     in property <bool> show-dividers: false;
+    /// **`menu`** or **`listbox`** enables roving focus on rows (upstream **ActionList** / **SelectPanel** listbox).
+    in property <ActionList2ListRole> list-role: ActionList2ListRole.none;
+    in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.none;
+    /// Single-select: index into **`lines`**; **`-1`** = none.
+    in property <int> selected-index: -1;
+    /// Multi-select: parallel to **`lines`** (checkbox when **`list-role: listbox`**).
+    in property <[bool]> multi-selected: [];
     /// Scroll region height (`SelectPanel`-aligned default).
     in property <length> body-region-height: SelectPanelTokens.list-max-height-default;
 
@@ -79,8 +86,10 @@ export component FilteredActionList2 {
                                 lines: root.lines;
                                 list-variant: root.list-variant;
                                 show-dividers: root.show-dividers;
-                                list-role: ActionList2ListRole.none;
-                                selection-mode: ActionList2SelectionMode.none;
+                                list-role: root.list-role;
+                                selection-mode: root.selection-mode;
+                                selected-index: root.selected-index;
+                                multi-selected: root.multi-selected;
                                 item-activated(ix) => {
                                     root.item-activated(ix);
                                 }

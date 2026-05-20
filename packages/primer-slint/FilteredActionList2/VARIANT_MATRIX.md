@@ -4,10 +4,12 @@ Storybook-driven coverage for the initial port (two stories only). Deferred API 
 
 ## Shipped stories
 
-| Story | Color scheme | disabled | Row size | Leading | Focus notes |
-|-------|--------------|----------|----------|---------|-------------|
-| **Default** | inherited | no | medium | colored circle per row (gallery bridge) | filter field + row pointer / Tab on rows |
-| **WithLongItems** | inherited | no | medium | none (long wrapping labels) | same |
+| Story | Color scheme | disabled | Row size | Leading | Selection | Focus notes |
+|-------|--------------|----------|----------|---------|-------------|-------------|
+| **Default** | inherited | no | medium | colored circle per row (gallery bridge) | none | filter field + row pointer / Tab on rows |
+| **WithLongItems** | inherited | no | medium | none (long wrapping labels) | none | same |
+| **SingleSelect** (SelectPanel) | inherited | no | medium | colored circles | listbox + single checkmark | gallery ix 2 |
+| **MultiSelect** (SelectPanel) | inherited | no | medium | colored circles | listbox + multiple checkbox | gallery ix 3; initial bug + good first issue |
 
 ## Deferred (upstream API, not in `FilteredActionList2` yet)
 
