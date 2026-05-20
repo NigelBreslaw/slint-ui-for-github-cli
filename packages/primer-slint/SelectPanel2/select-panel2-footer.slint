@@ -1,14 +1,17 @@
 import { DialogTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 
 export component SelectPanel2Footer {
+
     VerticalLayout {
+
         Rectangle {
-            width: 100%;
             height: LayoutTokens.nav-list-divider-height;
             background: PrimerColors.borderColor-default;
         }
 
-        HorizontalLayout {
+        FlexboxLayout {
+            flex-direction: row;
+            flex-wrap: wrap;
             padding: DialogTokens.footer-padding;
             spacing: DialogTokens.footer-actions-gap;
             alignment: end;

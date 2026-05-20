@@ -180,20 +180,16 @@ export component SelectPanel2 {
                 alignment: start;
 
                 SelectPanel2Heading {
-                    width: 100%;
                     title: root.title;
                     subtitle: root.subtitle;
                 }
 
                 if root.show-notice: SelectPanel2Notice {
-                    width: 100%;
                     variant: root.notice-variant;
                     text: root.notice-text;
                 }
 
                 FilteredActionList2 {
-                    width: 100%;
-                    horizontal-stretch: 0;
                     filter-text <=> root.filter-text;
                     placeholder: root.filter-placeholder;
                     lines: root.lines;
