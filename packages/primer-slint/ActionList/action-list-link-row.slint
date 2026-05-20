@@ -122,19 +122,24 @@ export component ActionListLinkRow {
                 border-color: ActionListTokens.item-focus-ring-color;
                 border-radius: LayoutTokens.borderRadius-medium;
 
-                row-chrome-shell := Rectangle {
-                    if root.show-active-chrome: Rectangle {
-                        x: -LayoutTokens.button-content-gap;
-                        y: LayoutTokens.base-size-4;
-                        width: LayoutTokens.base-size-4;
-                        height: parent.height - LayoutTokens.button-content-gap;
-                        background: ActionListTokens.item-active-indicator-bgColor;
-                        border-radius: LayoutTokens.borderRadius-medium;
-                    }
+                row-chrome-shell := HorizontalLayout {
+                    min-height: root.cell-min-height;
 
-                    ta := TouchArea {
-                        enabled: root.is-interactive;
+                    main-cell := Rectangle {
+                        horizontal-stretch: 1;
                         min-height: root.cell-min-height;
+
+                        if root.show-active-chrome: Rectangle {
+                            x: -LayoutTokens.button-content-gap;
+                            y: LayoutTokens.base-size-4;
+                            width: LayoutTokens.base-size-4;
+                            height: parent.height - LayoutTokens.button-content-gap;
+                            background: ActionListTokens.item-active-indicator-bgColor;
+                            border-radius: LayoutTokens.borderRadius-medium;
+                        }
+
+                        ta := TouchArea {
+                        enabled: root.is-interactive;
                         mouse-cursor: root.is-interactive ? pointer : default;
                         clicked => {
                             root.clicked();
@@ -313,6 +318,7 @@ export component ActionListLinkRow {
                                 }
                             ]
                         }
+                    }
                     }
                 }
             }

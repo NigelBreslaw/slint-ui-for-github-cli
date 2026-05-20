@@ -9,6 +9,7 @@ export component NavList {
     in property <ActionListVariant> list-variant: ActionListVariant.inset;
 
     ActionList {
+        width: parent.width;
         list-variant: root.list-variant;
 
         @children

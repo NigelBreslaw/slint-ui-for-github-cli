@@ -35,31 +35,33 @@ export component GalleryNavListPage {
                 border-radius: LayoutTokens.borderRadius-medium;
                 background: PrimerColors.bgColor-default;
 
-                NavList {
-                    width: parent.width;
-                    aria-label: "Demo navigation";
+                preview-layout := VerticalLayout {
 
-                    NavListItem {
-                        label: "Item 1";
-                        active: preview-active-index == 0;
-                        clicked => {
-                            preview-active-index = 0;
+                    NavList {
+                        aria-label: "Demo navigation";
+
+                        NavListItem {
+                            label: "Item 1";
+                            active: preview-active-index == 0;
+                            clicked => {
+                                preview-active-index = 0;
+                            }
                         }
-                    }
 
-                    NavListItem {
-                        label: "Item 2";
-                        active: preview-active-index == 1;
-                        clicked => {
-                            preview-active-index = 1;
+                        NavListItem {
+                            label: "Item 2";
+                            active: preview-active-index == 1;
+                            clicked => {
+                                preview-active-index = 1;
+                            }
                         }
-                    }
 
-                    NavListItem {
-                        label: "Item 3";
-                        active: preview-active-index == 2;
-                        clicked => {
-                            preview-active-index = 2;
+                        NavListItem {
+                            label: "Item 3";
+                            active: preview-active-index == 2;
+                            clicked => {
+                                preview-active-index = 2;
+                            }
                         }
                     }
                 }
