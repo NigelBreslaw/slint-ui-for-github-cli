@@ -48,12 +48,6 @@ export function wireIndexMultiSelect(
     pushToSlint(null);
 }
 
-export function wireActionListGalleryMultiSelect(
-    g: ActionListGalleryMultiSelectHandle,
-): void {
-    wireIndexMultiSelect(g, ACTION_LIST_GALLERY_MULTI_ROW_LABELS, [0]);
-}
-
 export const ACTION_LIST2_MENU_MULTI_ROW_LABELS = [
     "Copy link",
     "Quote reply",

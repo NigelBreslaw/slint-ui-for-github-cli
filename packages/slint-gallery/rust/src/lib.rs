@@ -11,7 +11,6 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         "folder-action-list",
         "Action list",
         &[
-            ("action-list-playground", "ActionList"),
             ("action-list2-playground", "ActionList2"),
             ("filtered-action-list2-playground", "FilteredActionList2"),
         ],
@@ -486,78 +485,6 @@ fn apply_select_all_on_picked(
             selected_labels.remove(&SharedString::from(l));
         }
     }
-}
-
-fn wire_gallery_action_list_multi_select(window: &GalleryWindow) {
-    let row_count = ACTION_LIST_ROW_LABELS.len();
-    let selected = Rc::new(RefCell::new(BTreeSet::from([0usize])));
-    let window_weak = window.as_weak();
-
-    window
-        .global::<GalleryActionListMultiSelect>()
-        .on_row_activated({
-            let selected = Rc::clone(&selected);
-            let window_weak = window_weak.clone();
-            move |ix: i32| {
-                let ix = ix as usize;
-                if ix >= row_count {
-                    return;
-                }
-                {
-                    toggle_usize_in_set(&mut selected.borrow_mut(), ix);
-                }
-                let Some(w) = window_weak.upgrade() else {
-                    return;
-                };
-                let g = w.global::<GalleryActionListMultiSelect>();
-                let s = selected.borrow();
-                g.set_row_checked(row_checked_model(row_count, &s));
-                g.set_last_activated_label(SharedString::from(ACTION_LIST_ROW_LABELS[ix]));
-                g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
-            }
-        });
-
-    let g = window.global::<GalleryActionListMultiSelect>();
-    let s = selected.borrow();
-    g.set_row_checked(row_checked_model(row_count, &s));
-    g.set_last_activated_label(SharedString::from(""));
-    g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
-}
-
-fn wire_gallery_action_list_listbox_multi_select(window: &GalleryWindow) {
-    let row_count = ACTION_LIST_ROW_LABELS.len();
-    let selected = Rc::new(RefCell::new(BTreeSet::from([0usize])));
-    let window_weak = window.as_weak();
-
-    window
-        .global::<GalleryActionListListboxMultiSelect>()
-        .on_row_activated({
-            let selected = Rc::clone(&selected);
-            let window_weak = window_weak.clone();
-            move |ix: i32| {
-                let ix = ix as usize;
-                if ix >= row_count {
-                    return;
-                }
-                {
-                    toggle_usize_in_set(&mut selected.borrow_mut(), ix);
-                }
-                let Some(w) = window_weak.upgrade() else {
-                    return;
-                };
-                let g = w.global::<GalleryActionListListboxMultiSelect>();
-                let s = selected.borrow();
-                g.set_row_checked(row_checked_model(row_count, &s));
-                g.set_last_activated_label(SharedString::from(ACTION_LIST_ROW_LABELS[ix]));
-                g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
-            }
-        });
-
-    let g = window.global::<GalleryActionListListboxMultiSelect>();
-    let s = selected.borrow();
-    g.set_row_checked(row_checked_model(row_count, &s));
-    g.set_last_activated_label(SharedString::from(""));
-    g.set_selection_summary(index_selection_summary(&ACTION_LIST_ROW_LABELS, &s));
 }
 
 fn wire_gallery_action_list2_menu_multi_select(window: &GalleryWindow) {
@@ -1434,8 +1361,6 @@ fn wire_gallery_select_panel2_modal_multi(window: &GalleryWindow) {
 pub fn run_gallery() -> Result<(), slint::PlatformError> {
     let window = GalleryWindow::new()?;
 
-    wire_gallery_action_list_multi_select(&window);
-    wire_gallery_action_list_listbox_multi_select(&window);
     wire_gallery_action_list2_menu_multi_select(&window);
     wire_gallery_action_list2_listbox_multi_select(&window);
     wire_gallery_select_panel2_modal_multi(&window);

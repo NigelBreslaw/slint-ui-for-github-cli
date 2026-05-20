@@ -14,7 +14,6 @@ import { GalleryCheckboxPage } from "./views/gallery-checkbox-page.slint";
 import { GalleryRadioPage } from "./views/gallery-radio-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryAnchoredOverlayPage } from "./views/gallery-anchored-overlay-page.slint";
-import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryActionList2Page } from "./views/gallery-action-list2-page.slint";
 import { GalleryFilteredActionList2Page } from "./views/gallery-filtered-action-list2-page.slint";
 import { GallerySelectPanel2Page } from "./views/gallery-select-panel2-page.slint";
@@ -38,8 +37,6 @@ import "../../primer-slint/assets/fonts/VeraMono.ttf";
 
 /// Re-export items for use in Rust, Node, etc.
 export { Icons }
-export { GalleryActionListMultiSelect } from "./state/gallery-action-list-multi-select-state.slint";
-export { GalleryActionListListboxMultiSelect } from "./state/gallery-action-list-listbox-multi-select-state.slint";
 export { GalleryActionList2MenuMultiSelect } from "./state/gallery-action-list2-menu-multi-select-state.slint";
 export { GalleryActionList2ListboxMultiSelect } from "./state/gallery-action-list2-listbox-multi-select-state.slint";
 export {
@@ -109,10 +106,6 @@ export component GalleryWindow inherits Window {
                         width: gallery-flick.width;
                         min-height: gallery-flick.height;
                         alignment: start;
-
-                        if GalleryState.selected-page-id == "action-list-playground": GalleryActionListPage {
-                            height: main-scroll.height;
-                        }
 
                         if GalleryState.selected-page-id == "action-list2-playground": GalleryActionList2Page {
                             height: main-scroll.height;

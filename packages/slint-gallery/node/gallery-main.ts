@@ -1,7 +1,6 @@
 import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 import {
-  wireActionListGalleryMultiSelect,
   wireIndexMultiSelect,
   ACTION_LIST2_LISTBOX_MULTI_ROW_LABELS,
   ACTION_LIST2_MENU_MULTI_ROW_LABELS,
@@ -41,8 +40,6 @@ type GalleryWindowModule = {
       selected_page_id: string;
     };
     GallerySidebarNav: GallerySidebarNavHandle;
-    GalleryActionListMultiSelect: ActionListGalleryMultiSelectHandle;
-    GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionList2MenuMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionList2ListboxMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryFilteredActionList2Default: GalleryFilteredActionList2Handle;
@@ -69,10 +66,6 @@ const ui = slint.loadFile(
 
 const window = new ui.GalleryWindow();
 
-wireActionListGalleryMultiSelect(window.GalleryActionListMultiSelect);
-wireActionListGalleryMultiSelect(
-  window.GalleryActionListListboxMultiSelect,
-);
 wireIndexMultiSelect(
   window.GalleryActionList2MenuMultiSelect,
   ACTION_LIST2_MENU_MULTI_ROW_LABELS,

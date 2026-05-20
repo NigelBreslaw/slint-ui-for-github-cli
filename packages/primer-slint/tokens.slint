@@ -643,7 +643,7 @@ export global ActionList2Tokens {
     /// **ActionList.module.css** `:focus-visible` — `@mixin focusOutline` / **`--fgColor-accent`** ring.
     out property <color> item-focus-ring-color: PrimerColors.fgColor-link;
     out property <length> item-focus-ring-width: LayoutTokens.table-border-width + LayoutTokens.table-border-width;
-    /// **`.Divider`** hairline — same semantics as **`ActionListTokens.item-divider-borderColor`**.
+    /// **`.Divider`** hairline — **`borderColor.default`**.
     out property <color> item-divider-borderColor: PrimerColors.borderColor-default;
     /// **`showDividers`** seam between rows — `--borderColor-muted`.
     out property <color> item-seam-borderColor: PrimerColors.borderColor-muted;
@@ -672,33 +672,6 @@ export global ActionList2Tokens {
     out property <color> section-heading-filled-bgColor: PrimerColors.bgColor-neutral-muted;
     out property <color> section-heading-filled-title-fgColor: PrimerColors.fgColor-default;
     out property <color> section-heading-filled-borderColor: PrimerColors.borderColor-muted;
-}
-
-export global ActionListTokens {
-    out property <color> item-danger-fgColor-rest: PrimerColors.fgColor-danger;
-    out property <color> item-danger-fgColor-disabled: ButtonTokens.color-btn-danger-disabled-text;
-    out property <color> item-danger-bgColor-hover: PrimerColors.bgColor-danger-muted;
-    out property <color> item-danger-bgColor-active: ButtonTokens.color-action-list-item-default-active-bg;
-    out property <color> item-danger-bgColor-selected: ButtonTokens.color-action-list-item-default-selected-bg;
-
-    out property <color> item-inactive-label-fgColor: PrimerColors.fgColor-muted;
-    out property <color> item-inactive-description-fgColor: PrimerColors.fgColor-subtle;
-    out property <color> item-inactive-trailing-fgColor: PrimerColors.fgColor-muted;
-    out property <color> item-inactive-bgColor-hover: ButtonTokens.button-link-bgColor-rest;
-
-    out property <color> item-link-fgColor-rest: PrimerColors.fgColor-link;
-
-    out property <color> section-heading-subtle-fgColor: PrimerColors.fgColor-muted;
-    out property <color> section-heading-filled-bgColor: PrimerColors.bgColor-neutral-muted;
-    out property <color> section-heading-filled-title-fgColor: PrimerColors.fgColor-default;
-
-    out property <color> item-divider-borderColor: PrimerColors.borderColor-default;
-    out property <color> item-loading-label-fgColor: PrimerColors.fgColor-muted;
-
-    out property <color> item-active-indicator-bgColor: PrimerColors.borderColor-accent-emphasis;
-    out property <color> item-active-bgColor-rest: ButtonTokens.color-action-list-item-default-selected-bg;
-    out property <color> item-active-bgColor-hover: PrimerColors.table-row-bgColor-hover;
-    out property <color> item-active-label-fgColor-rest: PrimerColors.fgColor-default;
 }
 
 export global CheckboxTokens {
