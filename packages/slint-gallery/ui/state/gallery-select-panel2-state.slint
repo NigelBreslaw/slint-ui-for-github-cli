@@ -33,3 +33,12 @@ export global GallerySelectPanel2Fetch {
     in-out property <[ActionList2Line]> lines: [];
     callback filter-changed(string);
 }
+
+/// **MultiSelectModal** — working selection; **Cancel** restores via **`reset()`**.
+export global GallerySelectPanel2ModalMulti {
+    in-out property <[ActionList2Line]> lines: [];
+    in-out property <[bool]> multi-selected: [];
+    callback filter-changed(string);
+    callback item-activated(int);
+    callback reset();
+}

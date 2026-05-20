@@ -120,7 +120,6 @@ const ACTION_LIST_ROW_LABELS: [&str; 4] = [
     "Primer React",
 ];
 
-const SELECT_PANEL_MULTI_ROW_COUNT: usize = 5;
 
 /// Keep in sync with **`packages/slint-gallery/node/state/gallery-tree-view-list-models-bridge-shared.ts`**
 const GALLERY_TREE_STRESS_CHILD_COUNT: usize = 1000;
@@ -1332,31 +1331,103 @@ fn wire_gallery_filtered_action_list2_select_all(window: &GalleryWindow) {
     );
 }
 
-fn wire_gallery_select_panel_multi(window: &GalleryWindow) {
-    let selected = Rc::new(RefCell::new(BTreeSet::from([1usize, 2usize])));
+fn push_gallery_select_panel2_modal_multi(
+    window_weak: slint::Weak<GalleryWindow>,
+    selected_labels: &RefCell<BTreeSet<SharedString>>,
+    filter: SharedString,
+) {
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter.as_str());
+    let lines: Vec<ActionList2Line> = picked
+        .iter()
+        .map(|&l| {
+            let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                .iter()
+                .position(|&x| x == l)
+                .unwrap_or(0);
+            action_list2_line_default_story(l, color_ix)
+        })
+        .collect();
+    let multi_selected =
+        multi_selected_flags_for_picked(&picked, &selected_labels.borrow());
+    let Some(w) = window_weak.upgrade() else {
+        return;
+    };
+    let g = w.global::<GallerySelectPanel2ModalMulti>();
+    g.set_lines(ModelRc::new(VecModel::from(lines)));
+    g.set_multi_selected(ModelRc::new(VecModel::from(multi_selected)));
+}
+
+fn wire_gallery_select_panel2_modal_multi(window: &GalleryWindow) {
+    let initial_labels = Rc::new(RefCell::new(BTreeSet::from([
+        SharedString::from("bug"),
+        SharedString::from("good first issue"),
+    ])));
+    let selected_labels = Rc::new(RefCell::new(BTreeSet::from([
+        SharedString::from("bug"),
+        SharedString::from("good first issue"),
+    ])));
+    let current_filter = Rc::new(RefCell::new(SharedString::new()));
     let window_weak = window.as_weak();
 
-    window.global::<GallerySelectPanelMulti>().on_row_activated({
-        let selected = Rc::clone(&selected);
-        let window_weak = window_weak.clone();
-        move |ix: i32| {
-            let ix = ix as usize;
-            if ix >= SELECT_PANEL_MULTI_ROW_COUNT {
-                return;
+    window
+        .global::<GallerySelectPanel2ModalMulti>()
+        .on_filter_changed({
+            let selected_labels = Rc::clone(&selected_labels);
+            let current_filter = Rc::clone(&current_filter);
+            let window_weak = window_weak.clone();
+            move |filter: SharedString| {
+                *current_filter.borrow_mut() = filter.clone();
+                push_gallery_select_panel2_modal_multi(
+                    window_weak.clone(),
+                    &selected_labels,
+                    filter,
+                );
             }
-            toggle_usize_in_set(&mut selected.borrow_mut(), ix);
-            let Some(w) = window_weak.upgrade() else {
-                return;
-            };
-            let g = w.global::<GallerySelectPanelMulti>();
-            let s = selected.borrow();
-            g.set_row_checked(row_checked_model(SELECT_PANEL_MULTI_ROW_COUNT, &s));
+        });
+
+    window
+        .global::<GallerySelectPanel2ModalMulti>()
+        .on_item_activated({
+            let selected_labels = Rc::clone(&selected_labels);
+            let current_filter = Rc::clone(&current_filter);
+            let window_weak = window_weak.clone();
+            move |ix: i32| {
+                let picked = filter_prefix_labels(
+                    &FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+                    current_filter.borrow().as_str(),
+                );
+                let Some(&label) = picked.get(ix as usize) else {
+                    return;
+                };
+                toggle_shared_string_label(&mut selected_labels.borrow_mut(), label);
+                push_gallery_select_panel2_modal_multi(
+                    window_weak.clone(),
+                    &selected_labels,
+                    current_filter.borrow().clone(),
+                );
+            }
+        });
+
+    window.global::<GallerySelectPanel2ModalMulti>().on_reset({
+        let initial_labels = Rc::clone(&initial_labels);
+        let selected_labels = Rc::clone(&selected_labels);
+        let current_filter = Rc::clone(&current_filter);
+        let window_weak = window_weak.clone();
+        move || {
+            *selected_labels.borrow_mut() = initial_labels.borrow().clone();
+            push_gallery_select_panel2_modal_multi(
+                window_weak.clone(),
+                &selected_labels,
+                current_filter.borrow().clone(),
+            );
         }
     });
 
-    let g = window.global::<GallerySelectPanelMulti>();
-    let s = selected.borrow();
-    g.set_row_checked(row_checked_model(SELECT_PANEL_MULTI_ROW_COUNT, &s));
+    push_gallery_select_panel2_modal_multi(
+        window_weak,
+        &selected_labels,
+        SharedString::new(),
+    );
 }
 
 /// Create the gallery window, wire demo globals, and run the event loop.
@@ -1367,7 +1438,7 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_action_list_listbox_multi_select(&window);
     wire_gallery_action_list2_menu_multi_select(&window);
     wire_gallery_action_list2_listbox_multi_select(&window);
-    wire_gallery_select_panel_multi(&window);
+    wire_gallery_select_panel2_modal_multi(&window);
     wire_gallery_filtered_action_list2_default(&window);
     wire_gallery_filtered_action_list2_long(&window);
     wire_gallery_filtered_action_list2_multi(&window);
@@ -1376,6 +1447,7 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_select_panel2_single(&window);
     wire_gallery_select_panel2_disabled(&window);
     wire_gallery_select_panel2_cancel(&window);
+    wire_gallery_select_panel2_modal_multi(&window);
     wire_gallery_select_panel2_fetch(&window);
 
     fill_gallery_tree_view_list_models(&window);

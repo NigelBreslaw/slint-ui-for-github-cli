@@ -1,4 +1,4 @@
-// **SelectPanel2** gallery — upstream **SelectPanel** scenarios (PR4–8).
+// **SelectPanel2** gallery — curated upstream **SelectPanel** Storybook scenarios (PR9).
 import {
     ActionList2DescriptionLayout,
     ActionList2Line,
@@ -11,6 +11,7 @@ import {
     ALVariant,
     Button,
     ButtonVariant,
+    Checkbox,
     FilteredActionListLoadingKind,
     Icons,
     Select,
@@ -20,13 +21,15 @@ import {
     SelectPanel2NoticeVariant,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
-import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../../../primer-slint/tokens.slint";
 import { GalleryFilteredActionList2SelectAll } from "../state/gallery-filtered-action-list2-select-all-state.slint";
+import { GalleryFilteredActionList2Long } from "../state/gallery-filtered-action-list2-state.slint";
 import {
     GallerySelectPanel2Cancel,
     GallerySelectPanel2Default,
     GallerySelectPanel2Disabled,
     GallerySelectPanel2Fetch,
+    GallerySelectPanel2ModalMulti,
     GallerySelectPanel2Single,
 } from "../state/gallery-select-panel2-state.slint";
 import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
@@ -34,23 +37,28 @@ import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-si
 export component GallerySelectPanel2Page {
     property <int> scenario-ix: 0;
 
-    /// Sidebar **`selected-index`** — must match scenario branches below (not legacy Storybook value gaps).
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
         { value: "1", label: "SingleSelect", enabled: true },
-        { value: "2", label: "ItemDividers", enabled: true },
-        { value: "3", label: "DisabledItem", enabled: true },
-        { value: "4", label: "InactiveItems", enabled: true },
-        { value: "5", label: "Notice", enabled: true },
-        { value: "6", label: "FooterSecondary", enabled: true },
-        { value: "7", label: "Groups", enabled: true },
-        { value: "8", label: "Message", enabled: true },
-        { value: "9", label: "NoResults", enabled: true },
-        { value: "10", label: "NoInitialItems", enabled: true },
-        { value: "11", label: "LoadingFetch", enabled: true },
-        { value: "12", label: "SelectAll", enabled: true },
-        { value: "13", label: "CancelFooter", enabled: true },
-        { value: "14", label: "ExternalAnchor", enabled: true },
+        { value: "2", label: "MultiSelect", enabled: true },
+        { value: "3", label: "FilterPlaceholder", enabled: true },
+        { value: "4", label: "ItemDividers", enabled: true },
+        { value: "5", label: "DisabledItem", enabled: true },
+        { value: "6", label: "InactiveItems", enabled: true },
+        { value: "7", label: "Notice", enabled: true },
+        { value: "8", label: "FooterSecondary", enabled: true },
+        { value: "9", label: "Groups", enabled: true },
+        { value: "10", label: "Message", enabled: true },
+        { value: "11", label: "NoResults", enabled: true },
+        { value: "12", label: "NoInitialItems", enabled: true },
+        { value: "13", label: "LoadingFetch", enabled: true },
+        { value: "14", label: "SelectAll", enabled: true },
+        { value: "15", label: "CancelFooter", enabled: true },
+        { value: "16", label: "SingleModal", enabled: true },
+        { value: "17", label: "MultiModal", enabled: true },
+        { value: "18", label: "ExternalAnchor", enabled: true },
+        { value: "19", label: "OverflowScroll", enabled: true },
+        { value: "20", label: "LongItems", enabled: true },
     ];
 
     property <string> sp2-filter: "";
@@ -181,41 +189,30 @@ export component GallerySelectPanel2Page {
         },
     ];
 
-    property <bool> sp2-is-single: root.scenario-ix == 1;
-    /// Scenarios that use **`GallerySelectPanel2Default`** lines + multi-select (incl. **Notice**).
+    property <bool> sp2-is-single: root.scenario-ix == 1 || root.scenario-ix == 16;
+    property <bool> sp2-is-modal: root.scenario-ix == 16 || root.scenario-ix == 17;
+    property <bool> sp2-is-external: root.scenario-ix == 18;
+    /// Scenarios that use **`GallerySelectPanel2Default`** lines + multi-select.
     property <bool> sp2-use-default-bridge:
-        root.scenario-ix == 0 || root.scenario-ix == 2 || root.scenario-ix == 5
-        || root.scenario-ix == 6 || root.scenario-ix == 8 || root.scenario-ix == 9;
-    property <bool> sp2-no-results: root.scenario-ix == 9 && root.sp2-filter == "none";
-
-    property <string> scenario-caption:
-        root.scenario-ix == 0 ? "Default — multi-select listbox; **bug** + **good first issue** pre-selected."
-        : root.scenario-ix == 1 ? "SingleSelect — checkmark; closes on pick."
-        : root.scenario-ix == 2 ? "WithItemDividers — `show-dividers: true`."
-        : root.scenario-ix == 3 ? "WithDisabledItem — **design** row disabled."
-        : root.scenario-ix == 4 ? "WithInactiveItems — **request** row has inactive text."
-        : root.scenario-ix == 5 ? "WithNotice — **Banner** above filter (sidebar: info / warning / error)."
-        : root.scenario-ix == 6 ? "WithSecondaryActionButton — footer link + primary."
-        : root.scenario-ix == 7 ? "WithGroups — section headings + `horizontal-inset` list."
-        : root.scenario-ix == 8 ? "WithMessage — toggle message body vs list (sidebar)."
-        : root.scenario-ix == 9 ? "CustomisedNoResults — type **none** in filter for empty state."
-        : root.scenario-ix == 10 ? "CustomisedNoInitialItems — empty list + rich empty copy."
-        : root.scenario-ix == 11 ? "AsyncFetch — body spinner ~2s after open (sidebar: Simulate fetch)."
-        : root.scenario-ix == 12 ? "WithSelectAll — select-all strip + multi-select."
-        : root.scenario-ix == 13 ? "WithOnCancel — footer **Cancel** restores initial selection."
-        : "WithExternalAnchor — external **Button** anchor; no built-in trigger.";
+        root.scenario-ix == 0 || root.scenario-ix == 2 || root.scenario-ix == 3
+        || root.scenario-ix == 4 || root.scenario-ix == 7 || root.scenario-ix == 8
+        || root.scenario-ix == 10 || root.scenario-ix == 11 || root.scenario-ix == 19;
+    property <bool> sp2-no-results: root.scenario-ix == 11 && root.sp2-filter == "none";
 
     property <string> sp2-title:
-        root.scenario-ix == 7 ? "Attach files and symbols"
-        : root.scenario-ix == 10 ? "Set projects"
-        : root.scenario-ix == 1 ? ""
+        root.scenario-ix == 9 ? "Attach files and symbols"
+        : root.scenario-ix == 12 ? "Set projects"
+        : root.scenario-ix == 1 || root.scenario-ix == 16 ? ""
         : "Select labels";
 
     property <string> sp2-subtitle:
-        root.scenario-ix == 7
+        root.scenario-ix == 9
         ? "Choose which files and symbols you want to chat about. Use fewer references for more accurate responses."
-        : root.scenario-ix == 1 ? ""
+        : root.scenario-ix == 1 || root.scenario-ix == 16 ? ""
         : "Use labels to organize issues and pull requests";
+
+    property <string> sp2-filter-placeholder:
+        root.scenario-ix == 3 ? "Filter labels" : "Filter Labels";
 
     property <SelectPanel2NoticeVariant> sp2-notice-variant:
         root.sp2-notice-variant-ix == 1 ? SelectPanel2NoticeVariant.warning
@@ -230,7 +227,7 @@ export component GallerySelectPanel2Page {
         : "Try a different search term.";
 
     property <bool> sp2-show-message:
-        root.scenario-ix == 8 && root.sp2-message-variant-ix != 0;
+        root.scenario-ix == 10 && root.sp2-message-variant-ix != 0;
 
     property <string> sp2-message-title:
         root.sp2-message-variant-ix == 2 ? "Failed to load labels"
@@ -244,6 +241,14 @@ export component GallerySelectPanel2Page {
         ? "Consider refreshing to get the latest data."
         : "Try adjusting your search or create a new label.";
 
+    property <length> sp2-body-height:
+        root.scenario-ix == 20 ? 320px : SelectPanelTokens.list-max-height-default;
+
+    property <AnchoredOverlayWidth> sp2-width-preset:
+        root.scenario-ix == 19 ? AnchoredOverlayWidth.small
+        : root.scenario-ix == 7 ? AnchoredOverlayWidth.large
+        : AnchoredOverlayWidth.medium;
+
     changed scenario-ix => {
         root.sp2-filter = "";
         GallerySelectPanel2Default.filter-changed("");
@@ -251,11 +256,13 @@ export component GallerySelectPanel2Page {
         GallerySelectPanel2Disabled.filter-changed("");
         GallerySelectPanel2Fetch.filter-changed("");
         GallerySelectPanel2Cancel.filter-changed("");
+        GallerySelectPanel2ModalMulti.filter-changed("");
         GalleryFilteredActionList2SelectAll.filter-changed("");
+        GalleryFilteredActionList2Long.filter-changed("");
         root.sp2-single-selected-index = 0;
         root.sp2-notice-variant-ix = 0;
         root.sp2-message-variant-ix = 0;
-        root.sp2-fetch-loading = root.scenario-ix == 11;
+        root.sp2-fetch-loading = root.scenario-ix == 13;
         root.sp2-open = false;
         root.sp2-ext-open = false;
     }
@@ -292,71 +299,74 @@ export component GallerySelectPanel2Page {
                 font-weight: 600;
             }
 
-            Text {
-                text: root.scenario-caption;
-                color: PrimerColors.fgColor-muted;
-                font-size: LayoutTokens.text-body-size-small;
-                wrap: word-wrap;
-            }
-
-            if root.scenario-ix != 14: SelectPanel2 {
+            if !root.sp2-is-external: SelectPanel2 {
                 open <=> root.sp2-open;
-                width-preset: root.scenario-ix == 5 ? AnchoredOverlayWidth.large : AnchoredOverlayWidth.medium;
+                width-preset: root.sp2-width-preset;
                 anchor-label: "Select labels";
                 title: root.sp2-title;
                 subtitle: root.sp2-subtitle;
-                filter-placeholder: "Filter Labels";
+                filter-placeholder: root.sp2-filter-placeholder;
                 filter-text <=> root.sp2-filter;
                 list-role: ActionList2ListRole.listbox;
                 selection-mode: root.sp2-is-single ? ActionList2SelectionMode.single : ActionList2SelectionMode.multiple;
                 selected-index <=> root.sp2-single-selected-index;
-                list-variant: root.scenario-ix == 7 ? ALVariant.horizontal_inset : ALVariant.inset;
-                show-dividers: root.scenario-ix == 2;
-                show-notice: root.scenario-ix == 5;
+                list-variant: root.scenario-ix == 9 ? ALVariant.horizontal_inset : ALVariant.inset;
+                show-dividers: root.scenario-ix == 4 || root.scenario-ix == 20;
+                show-notice: root.scenario-ix == 7;
                 notice-variant: root.sp2-notice-variant;
                 notice-text: root.sp2-notice-text;
-                show-footer: root.scenario-ix == 6 || root.scenario-ix == 13;
-                loading: root.scenario-ix == 11 && root.sp2-fetch-loading;
+                show-footer: root.scenario-ix == 8 || root.scenario-ix == 15 || root.sp2-is-modal;
+                show-backdrop: root.sp2-is-modal;
+                close-on-single-select: !root.sp2-is-modal;
+                loading: root.scenario-ix == 13 && root.sp2-fetch-loading;
                 loading-kind: FilteredActionListLoadingKind.body_spinner;
                 loading-message: "Loading labels…";
                 show-message: root.sp2-show-message;
                 message-title: root.sp2-message-title;
                 message-description: root.sp2-message-description;
-                empty-title: root.scenario-ix == 10 ? "We couldn't find any projects" : "";
+                empty-title: root.scenario-ix == 12 ? "We couldn't find any projects" : "";
                 empty-message:
-                    root.scenario-ix == 10
+                    root.scenario-ix == 12
                     ? "Try searching for a different project or create a new one."
                     : root.sp2-no-results ? "No labels match your filter." : "";
-                select-all-visible: root.scenario-ix == 12;
+                select-all-visible: root.scenario-ix == 14;
                 select-all-checked <=> GalleryFilteredActionList2SelectAll.select-all-checked;
                 select-all-indeterminate <=> GalleryFilteredActionList2SelectAll.select-all-indeterminate;
+                body-region-height: root.sp2-body-height;
                 lines:
-                    root.scenario-ix == 4 ? root.sp2-inactive-lines
-                    : root.scenario-ix == 7 ? root.sp2-groups-lines
-                    : root.scenario-ix == 10 ? []
-                    : root.scenario-ix == 3 ? GallerySelectPanel2Disabled.lines
-                    : root.scenario-ix == 12 ? GalleryFilteredActionList2SelectAll.lines
-                    : root.scenario-ix == 13 ? GallerySelectPanel2Cancel.lines
-                    : root.scenario-ix == 11 ? GallerySelectPanel2Fetch.lines
-                    : root.scenario-ix == 1 ? GallerySelectPanel2Single.lines
-                    : root.scenario-ix == 8 && root.sp2-message-variant-ix != 0 ? []
+                    root.scenario-ix == 6 ? root.sp2-inactive-lines
+                    : root.scenario-ix == 9 ? root.sp2-groups-lines
+                    : root.scenario-ix == 12 ? []
+                    : root.scenario-ix == 5 ? GallerySelectPanel2Disabled.lines
+                    : root.scenario-ix == 14 ? GalleryFilteredActionList2SelectAll.lines
+                    : root.scenario-ix == 15 ? GallerySelectPanel2Cancel.lines
+                    : root.scenario-ix == 17 ? GallerySelectPanel2ModalMulti.lines
+                    : root.scenario-ix == 13 ? GallerySelectPanel2Fetch.lines
+                    : root.scenario-ix == 1 || root.scenario-ix == 16 ? GallerySelectPanel2Single.lines
+                    : root.scenario-ix == 20 ? GalleryFilteredActionList2Long.lines
+                    : root.scenario-ix == 10 && root.sp2-message-variant-ix != 0 ? []
                     : root.sp2-no-results ? [] : GallerySelectPanel2Default.lines;
                 multi-selected:
-                    root.scenario-ix == 3 ? GallerySelectPanel2Disabled.multi-selected
-                    : root.scenario-ix == 12 ? GalleryFilteredActionList2SelectAll.multi-selected
-                    : root.scenario-ix == 13 ? GallerySelectPanel2Cancel.multi-selected
+                    root.scenario-ix == 5 ? GallerySelectPanel2Disabled.multi-selected
+                    : root.scenario-ix == 14 ? GalleryFilteredActionList2SelectAll.multi-selected
+                    : root.scenario-ix == 15 ? GallerySelectPanel2Cancel.multi-selected
+                    : root.scenario-ix == 17 ? GallerySelectPanel2ModalMulti.multi-selected
                     : GallerySelectPanel2Default.multi-selected;
                 filter-changed(t) => {
-                    if root.scenario-ix == 1 {
+                    if root.scenario-ix == 1 || root.scenario-ix == 16 {
                         GallerySelectPanel2Single.filter-changed(t);
-                    } else if root.scenario-ix == 3 {
+                    } else if root.scenario-ix == 5 {
                         GallerySelectPanel2Disabled.filter-changed(t);
-                    } else if root.scenario-ix == 11 {
-                        GallerySelectPanel2Fetch.filter-changed(t);
-                    } else if root.scenario-ix == 12 {
-                        GalleryFilteredActionList2SelectAll.filter-changed(t);
                     } else if root.scenario-ix == 13 {
+                        GallerySelectPanel2Fetch.filter-changed(t);
+                    } else if root.scenario-ix == 14 {
+                        GalleryFilteredActionList2SelectAll.filter-changed(t);
+                    } else if root.scenario-ix == 15 {
                         GallerySelectPanel2Cancel.filter-changed(t);
+                    } else if root.scenario-ix == 17 {
+                        GallerySelectPanel2ModalMulti.filter-changed(t);
+                    } else if root.scenario-ix == 20 {
+                        GalleryFilteredActionList2Long.filter-changed(t);
                     } else if root.sp2-use-default-bridge {
                         GallerySelectPanel2Default.filter-changed(t);
                     }
@@ -364,13 +374,15 @@ export component GallerySelectPanel2Page {
                 item-activated(ix) => {
                     if root.sp2-is-single {
                         root.sp2-single-selected-index = ix;
-                    } else if root.scenario-ix == 3 {
+                    } else if root.scenario-ix == 5 {
                         GallerySelectPanel2Disabled.item-activated(ix);
-                    } else if root.scenario-ix == 12 {
+                    } else if root.scenario-ix == 14 {
                         GalleryFilteredActionList2SelectAll.item-activated(ix);
-                    } else if root.scenario-ix == 13 {
+                    } else if root.scenario-ix == 15 {
                         GallerySelectPanel2Cancel.item-activated(ix);
-                    } else if root.sp2-use-default-bridge || root.scenario-ix == 4 || root.scenario-ix == 7 {
+                    } else if root.scenario-ix == 17 {
+                        GallerySelectPanel2ModalMulti.item-activated(ix);
+                    } else if root.sp2-use-default-bridge || root.scenario-ix == 6 || root.scenario-ix == 9 {
                         GallerySelectPanel2Default.item-activated(ix);
                     }
                 }
@@ -380,30 +392,46 @@ export component GallerySelectPanel2Page {
                 select-all-changed(on) => {
                     GalleryFilteredActionList2SelectAll.select-all-changed(on);
                 }
-                if root.scenario-ix == 6: Button {
+                if root.scenario-ix == 8: Button {
                     label: "Edit labels";
                     variant: ButtonVariant.link;
                     clicked => {
                         root.sp2-open = false;
                     }
                 }
-                if root.scenario-ix == 6: Button {
+                if root.scenario-ix == 8: Button {
                     label: "Add label";
                     variant: ButtonVariant.primary;
                     clicked => {
                         root.sp2-open = false;
                     }
                 }
-                if root.scenario-ix == 13: Button {
+                if root.scenario-ix == 15: Button {
                     label: "Cancel";
                     clicked => {
                         GallerySelectPanel2Cancel.reset();
                         root.sp2-open = false;
                     }
                 }
+                if root.sp2-is-modal: Button {
+                    label: "Cancel";
+                    clicked => {
+                        if root.scenario-ix == 17 {
+                            GallerySelectPanel2ModalMulti.reset();
+                        }
+                        root.sp2-open = false;
+                    }
+                }
+                if root.sp2-is-modal: Button {
+                    label: "Save";
+                    variant: ButtonVariant.primary;
+                    clicked => {
+                        root.sp2-open = false;
+                    }
+                }
             }
 
-            if root.scenario-ix == 14: VerticalLayout {
+            if root.sp2-is-external: VerticalLayout {
                 spacing: 12px;
                 alignment: start;
 
@@ -465,7 +493,7 @@ export component GallerySelectPanel2Page {
                     }
                 }
 
-                if root.scenario-ix == 5: Select {
+                if root.scenario-ix == 7: Select {
                     horizontal-stretch: 1;
                     label-text: "Notice variant";
                     options: [
@@ -479,7 +507,7 @@ export component GallerySelectPanel2Page {
                     }
                 }
 
-                if root.scenario-ix == 8: Select {
+                if root.scenario-ix == 10: Select {
                     horizontal-stretch: 1;
                     label-text: "Message variant";
                     options: [
@@ -494,14 +522,14 @@ export component GallerySelectPanel2Page {
                     }
                 }
 
-                if root.scenario-ix == 9: Text {
+                if root.scenario-ix == 11: Text {
                     text: "Filter hint: type the literal `none` to show no-results empty copy.";
                     color: PrimerColors.fgColor-muted;
                     font-size: LayoutTokens.text-body-size-small;
                     wrap: word-wrap;
                 }
 
-                if root.scenario-ix == 11: Button {
+                if root.scenario-ix == 13: Button {
                     label: "Simulate fetch";
                     clicked => {
                         root.sp2-fetch-loading = true;
@@ -509,8 +537,37 @@ export component GallerySelectPanel2Page {
                     }
                 }
 
+                if root.sp2-is-modal: Checkbox {
+                    label: "Open modal panel";
+                    checked <=> root.sp2-open;
+                }
+
                 if root.scenario-ix == 1: Text {
                     text: "Selected index: " + root.sp2-single-selected-index;
+                    color: PrimerColors.fgColor-muted;
+                    font-size: LayoutTokens.text-body-size-small;
+                    wrap: word-wrap;
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: PrimerColors.borderColor-muted;
+                }
+
+                Text {
+                    text: "Deferred upstream stories (not separate scenarios)";
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                Text {
+                    text:
+                        "Examples: AboveTallBody, HeightVariationsAndScroll, CustomItemRenderer, ItemsInScope, RepositionAfterLoading, SelectPanelRepositionInsideDialog, WithDefaultMessage, RenderMoreOnScroll, VirtualizedConsumerSide, VirtualizedBuiltIn, HeightInitialWithUnderflowingItemsAfterFetch.\n"
+                        + "Features: WithLabelVisuallyHidden, WithLabelInternally, showSelectedOptionsFirst.\n"
+                        + "Dev: WithCss, AllVariants, LotsOfItems, WithDisableOnHover, WithInitialFocusEnabled.\n"
+                        + "Gaps: modal fullscreen-on-narrow, focus model / aria-activedescendant.";
                     color: PrimerColors.fgColor-muted;
                     font-size: LayoutTokens.text-body-size-small;
                     wrap: word-wrap;

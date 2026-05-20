@@ -20,12 +20,10 @@ import {
   wireGallerySelectPanel2Cancel,
   wireGallerySelectPanel2Disabled,
   wireGallerySelectPanel2FetchLines,
+  wireGallerySelectPanel2ModalMulti,
   type GallerySelectPanel2CancelHandle,
+  type GallerySelectPanel2ModalMultiHandle,
 } from "./state/gallery-select-panel2-bridge-shared.ts";
-import {
-  wireGallerySelectPanelMultiSelect,
-  type GallerySelectPanelMultiHandle,
-} from "./state/gallery-select-panel-multi-bridge-shared.ts";
 import {
   wireGalleryTreeViewListModels,
   type GalleryTreeViewListModelsHandle,
@@ -47,7 +45,6 @@ type GalleryWindowModule = {
     GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionList2MenuMultiSelect: ActionListGalleryMultiSelectHandle;
     GalleryActionList2ListboxMultiSelect: ActionListGalleryMultiSelectHandle;
-    GallerySelectPanelMulti: GallerySelectPanelMultiHandle;
     GalleryFilteredActionList2Default: GalleryFilteredActionList2Handle;
     GalleryFilteredActionList2Long: GalleryFilteredActionList2Handle;
     GalleryFilteredActionList2Multi: GalleryFilteredActionList2MultiHandle;
@@ -56,6 +53,7 @@ type GalleryWindowModule = {
     GallerySelectPanel2Single: GalleryFilteredActionList2Handle;
     GallerySelectPanel2Disabled: GalleryFilteredActionList2MultiHandle;
     GallerySelectPanel2Cancel: GallerySelectPanel2CancelHandle;
+    GallerySelectPanel2ModalMulti: GallerySelectPanel2ModalMultiHandle;
     GallerySelectPanel2Fetch: GalleryFilteredActionList2Handle;
     GalleryTreeViewListModels: GalleryTreeViewListModelsHandle;
     Icons: {
@@ -85,7 +83,6 @@ wireIndexMultiSelect(
   ACTION_LIST2_LISTBOX_MULTI_ROW_LABELS,
   [0],
 );
-wireGallerySelectPanelMultiSelect(window.GallerySelectPanelMulti);
 wireGalleryFilteredActionList2Default(window.GalleryFilteredActionList2Default);
 wireGalleryFilteredActionList2Long(
   window.GalleryFilteredActionList2Long,
@@ -97,6 +94,7 @@ wireGalleryFilteredActionList2Multi(window.GallerySelectPanel2Default);
 wireGalleryFilteredActionList2Default(window.GallerySelectPanel2Single);
 wireGallerySelectPanel2Disabled(window.GallerySelectPanel2Disabled);
 wireGallerySelectPanel2Cancel(window.GallerySelectPanel2Cancel);
+wireGallerySelectPanel2ModalMulti(window.GallerySelectPanel2ModalMulti);
 wireGallerySelectPanel2FetchLines(window.GallerySelectPanel2Fetch);
 wireGalleryTreeViewListModels(
   window.GalleryTreeViewListModels,
