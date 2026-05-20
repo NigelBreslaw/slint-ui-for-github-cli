@@ -46,6 +46,8 @@ export component GalleryNavListPage {
     property <int> expand-pages-option-ix: 0;
 
     property <string> preview-last-trailing-action: "";
+    /// Sidebar **aria-current** radios (hidden until we want manual active-item control in the gallery).
+    property <bool> show-aria-current-sidebar: false;
 
     /// Active leaf id: `"1"`, `"2.1"`, `"1.2.2"`, etc.
     property <string> preview-active-id: "1";
@@ -919,7 +921,7 @@ export component GalleryNavListPage {
                 }
             }
 
-            VerticalLayout {
+            if root.show-aria-current-sidebar: VerticalLayout {
                 spacing: 8px;
 
                 Text {
