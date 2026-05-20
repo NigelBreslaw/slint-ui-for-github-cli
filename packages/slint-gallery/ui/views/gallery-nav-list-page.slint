@@ -1,4 +1,5 @@
 import {
+    Button,
     Checkbox,
     NavList,
     NavListExpandableItem,
@@ -902,6 +903,15 @@ export component GalleryNavListPage {
                         preview-item12-expanded = true;
                         preview-item3-expanded = true;
                         preview-last-trailing-action = "";
+                        preview-expand-page = 0;
+                        preview-g1-expand-page = 0;
+                        preview-g2-expand-page = 0;
+                    }
+                }
+
+                if root.scenario-ix == 9 || root.scenario-ix == 10: Button {
+                    label: "Collapse expanded groups";
+                    clicked => {
                         preview-expand-page = 0;
                         preview-g1-expand-page = 0;
                         preview-g2-expand-page = 0;
