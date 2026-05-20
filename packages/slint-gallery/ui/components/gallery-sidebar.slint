@@ -999,11 +999,14 @@ export component GallerySidebar {
             padding-right: 12px;
             spacing: 8px;
 
-            Text {
-                text: "Components";
-                font-size: 11px;
-                font-weight: 600;
-                color: PrimerColors.fgColor-muted;
+            HorizontalLayout {
+                padding-left: 8px;
+                Text {
+                    text: "Components";
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: PrimerColors.fgColor-muted;
+                }
             }
 
             scroll-host := Rectangle {
