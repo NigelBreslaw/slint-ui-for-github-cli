@@ -40,28 +40,6 @@ export component GalleryFilteredActionListPage {
         { value: "8", label: "EmptyBody", enabled: true },
         { value: "9", label: "SelectAll", enabled: true },
     ];
-
-    property <string> scenario-caption:
-        root.scenario-ix == 0
-        ? "Upstream FilteredActionList Default — prefix filter; colored leading circles."
-        : root.scenario-ix == 1
-        ? "Upstream FilteredActionList WithLongItems — `body-region-height` 320px."
-        : root.scenario-ix == 2
-        ? "Upstream SelectPanel SingleSelect — `listbox` + `single` checkmark; initial **enhancement**."
-        : root.scenario-ix == 3
-        ? "Upstream SelectPanel MultiSelect — `listbox` + `multiple` checkboxes; initial **bug**, **good first issue**."
-        : root.scenario-ix == 4
-        ? "Upstream FilteredActionList loading **input** — spinner in filter field; list rows remain."
-        : root.scenario-ix == 5
-        ? "Upstream FilteredActionList **body_spinner** / SelectPanel AsyncFetch — list body replaced."
-        : root.scenario-ix == 6
-        ? "Upstream FilteredActionList **body_skeleton** — skeleton placeholders only."
-        : root.scenario-ix == 7
-        ? "Upstream message body — toggle **`show-message`** vs list (permission denied copy)."
-        : root.scenario-ix == 8
-        ? "Upstream filtered empty — `lines: []` with **`empty-message`** (no rows)."
-        : "Upstream SelectPanel **WithSelectAll** — select-all strip + **listbox** multi-select (tri-state).";
-
     property <bool> show-page-chrome:
         root.scenario-ix == 0 || root.scenario-ix == 1 || root.scenario-ix == 9;
 
@@ -162,13 +140,6 @@ export component GalleryFilteredActionListPage {
                 color: PrimerColors.fgColor-default;
                 font-size: 22px;
                 font-weight: 600;
-            }
-
-            Text {
-                text: root.scenario-caption;
-                color: PrimerColors.fgColor-muted;
-                font-size: LayoutTokens.text-body-size-small;
-                wrap: word-wrap;
             }
 
             if root.scenario-ix == 7: Button {
