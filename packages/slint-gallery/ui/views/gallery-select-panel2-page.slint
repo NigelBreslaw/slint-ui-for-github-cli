@@ -36,7 +36,6 @@ export component GallerySelectPanel2Page {
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
         { value: "1", label: "SingleSelect", enabled: true },
-        { value: "3", label: "FilterPlaceholder", enabled: true },
         { value: "4", label: "ItemDividers", enabled: true },
         { value: "5", label: "DisabledItem", enabled: true },
         { value: "6", label: "InactiveItems", enabled: true },
@@ -185,7 +184,7 @@ export component GallerySelectPanel2Page {
     property <bool> sp2-is-modal: root.scenario-ix == 16 || root.scenario-ix == 17;
     property <bool> sp2-is-single: root.scenario-ix == 1 || root.scenario-ix == 16;
     property <bool> sp2-use-default-bridge:
-        root.scenario-ix == 0 || root.scenario-ix == 3 || root.scenario-ix == 4
+        root.scenario-ix == 0 || root.scenario-ix == 4
         || root.scenario-ix == 8 || root.scenario-ix == 10 || root.scenario-ix == 11
         || root.scenario-ix == 16 || root.scenario-ix == 17;
     property <bool> sp2-no-results: root.scenario-ix == 11 && root.sp2-filter == "none";
@@ -193,7 +192,6 @@ export component GallerySelectPanel2Page {
     property <string> scenario-caption:
         root.scenario-ix == 0 ? "Default — multi-select listbox; **bug** + **good first issue** pre-selected."
         : root.scenario-ix == 1 ? "SingleSelect — checkmark; closes on pick."
-        : root.scenario-ix == 3 ? "WithPlaceholderForSearchInput — filter placeholder **Filter labels**."
         : root.scenario-ix == 4 ? "WithItemDividers — `show-dividers: true`."
         : root.scenario-ix == 5 ? "WithDisabledItem — **design** row disabled."
         : root.scenario-ix == 6 ? "WithInactiveItems — **request** row has inactive text."
@@ -221,9 +219,6 @@ export component GallerySelectPanel2Page {
         ? "Choose which files and symbols you want to chat about. Use fewer references for more accurate responses."
         : root.scenario-ix == 1 || root.scenario-ix == 16 ? ""
         : "Use labels to organize issues and pull requests";
-
-    property <string> sp2-filter-placeholder:
-        root.scenario-ix == 3 ? "Filter labels" : "Filter Labels";
 
     property <SelectPanel2NoticeVariant> sp2-notice-variant:
         root.sp2-notice-variant-ix == 1 ? SelectPanel2NoticeVariant.warning
@@ -312,7 +307,7 @@ export component GallerySelectPanel2Page {
                 anchor-label: "Select labels";
                 title: root.sp2-title;
                 subtitle: root.sp2-subtitle;
-                filter-placeholder: root.sp2-filter-placeholder;
+                filter-placeholder: "Filter Labels";
                 filter-text <=> root.sp2-filter;
                 list-role: ActionList2ListRole.listbox;
                 selection-mode: root.sp2-is-single ? ActionList2SelectionMode.single : ActionList2SelectionMode.multiple;
