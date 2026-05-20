@@ -181,7 +181,6 @@ export component Button {
     // Link: same slot model as filled (leading / trailing / count / loading); label uses StyledText + @markdown per hover.
     link-outer := VerticalLayout {
         visible: is-link;
-        height: 100%;
         alignment: align-content == ButtonAlignContent.center ? center : start;
 
         link-row := HorizontalLayout {

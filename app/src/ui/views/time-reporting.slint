@@ -16,15 +16,11 @@ export component TimeReporting {
     height: 100%;
 
     Rectangle {
-        width: 100%;
-        height: 100%;
         background: PrimerColors.bgColor-default;
 
         VerticalLayout {
             padding: 16px;
             spacing: 12px;
-            width: 100%;
-            height: 100%;
 
             if TimeReportingState.has-selected-project: VerticalLayout {
                 spacing: 10px;
@@ -288,8 +284,6 @@ export component TimeReporting {
 
                                 HorizontalLayout {
                                     spacing: 4px;
-                                    width: 100%;
-                                    height: 100%;
 
                                     title_ta := TouchArea {
                                         horizontal-stretch: 1;
@@ -435,8 +429,6 @@ export component TimeReporting {
                 background: PrimerColors.overlay-scrim;
 
                 TouchArea {
-                    width: 100%;
-                    height: 100%;
                     clicked => {
                         TimeReportingState.time-reporting-detail-close();
                     }

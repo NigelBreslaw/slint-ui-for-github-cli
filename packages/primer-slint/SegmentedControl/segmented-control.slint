@@ -94,11 +94,9 @@ component SegmentedControlCell {
                         padding: root.button-pad;
                         alignment: center;
                         horizontal-stretch: 1;
-                        height: 100%;
 
                         content-bg := Rectangle {
                             horizontal-stretch: 1;
-                            height: 100%;
                             border-radius: root.selected ? LayoutTokens.borderRadius-medium : LayoutTokens.borderRadius-medium - 2px;
                             border-width: root.selected ? 1px : 0px;
                             border-color: root.selected ? ToggleSwitchTokens.knob-borderColor-rest : transparent;
