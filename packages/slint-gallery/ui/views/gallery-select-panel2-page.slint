@@ -50,9 +50,7 @@ export component GallerySelectPanel2Page {
         { value: "11", label: "LoadingFetch", enabled: true },
         { value: "12", label: "SelectAll", enabled: true },
         { value: "13", label: "CancelFooter", enabled: true },
-        { value: "14", label: "SingleModal", enabled: true },
-        { value: "15", label: "MultiModal", enabled: true },
-        { value: "16", label: "ExternalAnchor", enabled: true },
+        { value: "14", label: "ExternalAnchor", enabled: true },
     ];
 
     property <string> sp2-filter: "";
@@ -183,13 +181,11 @@ export component GallerySelectPanel2Page {
         },
     ];
 
-    property <bool> sp2-is-modal: root.scenario-ix == 14 || root.scenario-ix == 15;
-    property <bool> sp2-is-single: root.scenario-ix == 1 || root.scenario-ix == 14;
+    property <bool> sp2-is-single: root.scenario-ix == 1;
     /// Scenarios that use **`GallerySelectPanel2Default`** lines + multi-select (incl. **Notice**).
     property <bool> sp2-use-default-bridge:
         root.scenario-ix == 0 || root.scenario-ix == 2 || root.scenario-ix == 5
-        || root.scenario-ix == 6 || root.scenario-ix == 8 || root.scenario-ix == 9
-        || root.scenario-ix == 14 || root.scenario-ix == 15;
+        || root.scenario-ix == 6 || root.scenario-ix == 8 || root.scenario-ix == 9;
     property <bool> sp2-no-results: root.scenario-ix == 9 && root.sp2-filter == "none";
 
     property <string> scenario-caption:
@@ -207,20 +203,18 @@ export component GallerySelectPanel2Page {
         : root.scenario-ix == 11 ? "AsyncFetch — body spinner ~2s after open (sidebar: Simulate fetch)."
         : root.scenario-ix == 12 ? "WithSelectAll — select-all strip + multi-select."
         : root.scenario-ix == 13 ? "WithOnCancel — footer **Cancel** restores initial selection."
-        : root.scenario-ix == 14 ? "SingleSelectModal — backdrop + Save/Cancel; radio-style single."
-        : root.scenario-ix == 15 ? "MultiSelectModal — backdrop + Save/Cancel; multi checkboxes."
         : "WithExternalAnchor — external **Button** anchor; no built-in trigger.";
 
     property <string> sp2-title:
         root.scenario-ix == 7 ? "Attach files and symbols"
         : root.scenario-ix == 10 ? "Set projects"
-        : root.scenario-ix == 1 || root.scenario-ix == 14 ? ""
+        : root.scenario-ix == 1 ? ""
         : "Select labels";
 
     property <string> sp2-subtitle:
         root.scenario-ix == 7
         ? "Choose which files and symbols you want to chat about. Use fewer references for more accurate responses."
-        : root.scenario-ix == 1 || root.scenario-ix == 14 ? ""
+        : root.scenario-ix == 1 ? ""
         : "Use labels to organize issues and pull requests";
 
     property <SelectPanel2NoticeVariant> sp2-notice-variant:
@@ -305,7 +299,7 @@ export component GallerySelectPanel2Page {
                 wrap: word-wrap;
             }
 
-            if root.scenario-ix != 16: SelectPanel2 {
+            if root.scenario-ix != 14: SelectPanel2 {
                 open <=> root.sp2-open;
                 width-preset: root.scenario-ix == 5 ? AnchoredOverlayWidth.large : AnchoredOverlayWidth.medium;
                 anchor-label: "Select labels";
@@ -321,9 +315,7 @@ export component GallerySelectPanel2Page {
                 show-notice: root.scenario-ix == 5;
                 notice-variant: root.sp2-notice-variant;
                 notice-text: root.sp2-notice-text;
-                show-footer: root.scenario-ix == 6 || root.scenario-ix == 13 || root.sp2-is-modal;
-                show-backdrop: root.sp2-is-modal;
-                close-on-single-select: !root.sp2-is-modal;
+                show-footer: root.scenario-ix == 6 || root.scenario-ix == 13;
                 loading: root.scenario-ix == 11 && root.sp2-fetch-loading;
                 loading-kind: FilteredActionListLoadingKind.body_spinner;
                 loading-message: "Loading labels…";
@@ -402,25 +394,16 @@ export component GallerySelectPanel2Page {
                         root.sp2-open = false;
                     }
                 }
-                if root.scenario-ix == 13 || root.sp2-is-modal: Button {
+                if root.scenario-ix == 13: Button {
                     label: "Cancel";
                     clicked => {
-                        if root.scenario-ix == 13 {
-                            GallerySelectPanel2Cancel.reset();
-                        }
-                        root.sp2-open = false;
-                    }
-                }
-                if root.sp2-is-modal: Button {
-                    label: "Save";
-                    variant: ButtonVariant.primary;
-                    clicked => {
+                        GallerySelectPanel2Cancel.reset();
                         root.sp2-open = false;
                     }
                 }
             }
 
-            if root.scenario-ix == 16: VerticalLayout {
+            if root.scenario-ix == 14: VerticalLayout {
                 spacing: 12px;
                 alignment: start;
 
