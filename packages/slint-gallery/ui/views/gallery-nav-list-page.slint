@@ -2,8 +2,11 @@ import {
     Checkbox,
     NavList,
     NavListExpandableItem,
+    NavListGroup,
+    NavListGroupHeading,
     NavListItem,
     NavListSubNav,
+    PrimerTextInput,
     Radio,
     RadioGroup,
     Select,
@@ -15,13 +18,15 @@ import {
     GalleryDemoOptionsSidebar,
 } from "../components/gallery-demo-options-sidebar.slint";
 
-/// **NavList** — **Default**, **WithSubItems**, **WithNestedSubItems** (upstream feature stories).
+/// **NavList** — upstream feature stories (Default through **WithGroupHeadingLinks**).
 export component GalleryNavListPage {
     property <int> scenario-ix: 0;
     property <[SelectOption]> scenario-options: [
         { value: "0", label: "Default", enabled: true },
         { value: "1", label: "WithSubItems", enabled: true },
         { value: "2", label: "WithNestedSubItems", enabled: true },
+        { value: "3", label: "WithGroup", enabled: true },
+        { value: "4", label: "WithGroupHeadingLinks", enabled: true },
     ];
 
     /// Active leaf id: `"1"`, `"2.1"`, `"1.2.2"`, etc.
@@ -39,10 +44,15 @@ export component GalleryNavListPage {
     property <bool> nested-item1-expanded: root.preview-default-open || root.preview-active-id == "1.1";
     property <bool> nested-item12-expanded: root.preview-item12-expanded || root.nested-child-active;
 
+    property <string> preview-group1-title: "Group 1";
+    property <string> preview-group2-title: "Group 2";
+
     property <string> scenario-title:
         root.scenario-ix == 0 ? "Default"
         : root.scenario-ix == 1 ? "WithSubItems"
-        : "WithNestedSubItems";
+        : root.scenario-ix == 2 ? "WithNestedSubItems"
+        : root.scenario-ix == 3 ? "WithGroup"
+        : "WithGroupHeadingLinks";
 
     vertical-stretch: 1;
 
@@ -242,6 +252,138 @@ export component GalleryNavListPage {
                                 }
                             }
                         }
+
+                        if root.scenario-ix == 3: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListGroup {
+                                title: root.preview-group1-title;
+
+                                NavListItem {
+                                    label: "Item 1A";
+                                    active: root.preview-active-id == "g1a";
+                                    clicked => {
+                                        preview-active-id = "g1a";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 1B";
+                                    active: root.preview-active-id == "g1b";
+                                    clicked => {
+                                        preview-active-id = "g1b";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 1C";
+                                    active: root.preview-active-id == "g1c";
+                                    clicked => {
+                                        preview-active-id = "g1c";
+                                    }
+                                }
+                            }
+
+                            NavListGroup {
+                                title: root.preview-group2-title;
+
+                                NavListItem {
+                                    label: "Item 2A";
+                                    active: root.preview-active-id == "g2a";
+                                    clicked => {
+                                        preview-active-id = "g2a";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 2B";
+                                    active: root.preview-active-id == "g2b";
+                                    clicked => {
+                                        preview-active-id = "g2b";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 2C";
+                                    active: root.preview-active-id == "g2c";
+                                    clicked => {
+                                        preview-active-id = "g2c";
+                                    }
+                                }
+                            }
+                        }
+
+                        if root.scenario-ix == 4: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListGroup {
+                                NavListGroupHeading {
+                                    title: root.preview-group1-title;
+                                    href: "#group-1";
+                                    clicked => {
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 1A";
+                                    active: root.preview-active-id == "g1a";
+                                    clicked => {
+                                        preview-active-id = "g1a";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 1B";
+                                    active: root.preview-active-id == "g1b";
+                                    clicked => {
+                                        preview-active-id = "g1b";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 1C";
+                                    active: root.preview-active-id == "g1c";
+                                    clicked => {
+                                        preview-active-id = "g1c";
+                                    }
+                                }
+                            }
+
+                            NavListGroup {
+                                NavListGroupHeading {
+                                    title: root.preview-group2-title;
+                                    href: "#group-2";
+                                    clicked => {
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 2A";
+                                    active: root.preview-active-id == "g2a";
+                                    clicked => {
+                                        preview-active-id = "g2a";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 2B";
+                                    active: root.preview-active-id == "g2b";
+                                    clicked => {
+                                        preview-active-id = "g2b";
+                                    }
+                                }
+
+                                NavListItem {
+                                    label: "Item 2C";
+                                    active: root.preview-active-id == "g2c";
+                                    clicked => {
+                                        preview-active-id = "g2c";
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -266,8 +408,8 @@ export component GalleryNavListPage {
                     options: root.scenario-options;
                     selected-index <=> scenario-ix;
                     validation-status: ValidationStatus.none;
-                    selected-changed(_ix) => {
-                        preview-active-id = "1";
+                    selected-changed(ix) => {
+                        preview-active-id = ix == 3 || ix == 4 ? "g1a" : "1";
                         preview-item2-expanded = true;
                         preview-item12-expanded = true;
                     }
@@ -394,6 +536,58 @@ export component GalleryNavListPage {
                             }
                         }
                     }
+
+                    if root.scenario-ix == 3 || root.scenario-ix == 4: VerticalLayout {
+                        spacing: 4px;
+
+                        Radio {
+                            label: "Item 1A";
+                            checked: preview-active-id == "g1a";
+                            toggled => {
+                                preview-active-id = "g1a";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 1B";
+                            checked: preview-active-id == "g1b";
+                            toggled => {
+                                preview-active-id = "g1b";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 1C";
+                            checked: preview-active-id == "g1c";
+                            toggled => {
+                                preview-active-id = "g1c";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 2A";
+                            checked: preview-active-id == "g2a";
+                            toggled => {
+                                preview-active-id = "g2a";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 2B";
+                            checked: preview-active-id == "g2b";
+                            toggled => {
+                                preview-active-id = "g2b";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 2C";
+                            checked: preview-active-id == "g2c";
+                            toggled => {
+                                preview-active-id = "g2c";
+                            }
+                        }
+                    }
                 }
             }
 
@@ -437,6 +631,53 @@ export component GalleryNavListPage {
                     checked <=> preview-item12-expanded;
                     toggled => {
                     }
+                }
+            }
+
+            if root.scenario-ix == 3: VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "title";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "Group 1";
+                    text <=> preview-group1-title;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "Group 2";
+                    text <=> preview-group2-title;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
+                }
+            }
+
+            if root.scenario-ix == 4: VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "GroupHeading";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Headings are links (hover for underline). Edit titles via WithGroup scenario.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
                 }
             }
         }

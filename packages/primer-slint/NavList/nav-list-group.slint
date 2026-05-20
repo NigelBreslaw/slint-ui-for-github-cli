@@ -1,0 +1,30 @@
+// **NavList.Group** — leading divider + optional **`title`** + items (upstream **`ActionList.Group`**).
+
+import { ActionListItemDivider } from "../ActionList/action-list-item-divider.slint";
+import { ActionListSectionHeading } from "../ActionList/action-list-section-heading.slint";
+import { ActionListSectionHeadingVariant } from "../ActionList/types.slint";
+import { ActionListTokens } from "../tokens.slint";
+
+export component NavListGroup {
+    in property <string> title: "";
+    in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
+
+    VerticalLayout {
+        width: parent.width;
+        alignment: start;
+
+        ActionListItemDivider {
+            width: parent.width;
+            margin-inline: root.margin-inline;
+        }
+
+        if root.title != "": ActionListSectionHeading {
+            width: parent.width;
+            title: root.title;
+            variant: ActionListSectionHeadingVariant.subtle;
+            margin-inline: root.margin-inline;
+        }
+
+        @children
+    }
+}

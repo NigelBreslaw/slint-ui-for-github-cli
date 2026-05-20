@@ -1,0 +1,60 @@
+// **NavList.GroupHeading** — alternative to **`NavList.Group`** **`title`** (supports link headings).
+
+import { ActionListTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
+
+export component NavListGroupHeading {
+    in property <string> title: "";
+    in property <string> href: "";
+    in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
+    callback clicked;
+
+    property <bool> is-link: root.href != "";
+
+    VerticalLayout {
+        width: parent.width;
+        horizontal-stretch: 1;
+        padding-left: root.margin-inline + LayoutTokens.action-list-item-padding-inline;
+        padding-right: root.margin-inline + LayoutTokens.action-list-item-padding-inline;
+        padding-top: LayoutTokens.base-size-8;
+        padding-bottom: LayoutTokens.base-size-4;
+
+        if root.is-link: link-ta := TouchArea {
+            width: parent.width;
+            mouse-cursor: pointer;
+
+            link-column := VerticalLayout {
+                width: parent.width;
+                spacing: 1px;
+                alignment: start;
+
+                link-label := Text {
+                    width: parent.width;
+                    text: root.title;
+                    color: PrimerColors.fgColor-default;
+                    font-size: LayoutTokens.text-body-size-small;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    wrap: word-wrap;
+                }
+
+                if link-ta.has-hover: Rectangle {
+                    width: link-label.preferred-width;
+                    height: 1px;
+                    background: PrimerColors.fgColor-default;
+                }
+            }
+
+            clicked => {
+                root.clicked();
+            }
+        }
+
+        if !root.is-link && root.title != "": Text {
+            width: parent.width;
+            text: root.title;
+            color: ActionListTokens.section-heading-subtle-fgColor;
+            font-size: LayoutTokens.text-body-size-small;
+            font-weight: LayoutTokens.base-text-weight-semibold;
+            wrap: word-wrap;
+        }
+    }
+}
