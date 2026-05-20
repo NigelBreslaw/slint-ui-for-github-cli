@@ -1,17 +1,24 @@
-// Filtered **ActionList2** host: filter field, header hairline, scrollable **`ActionList2`** body (upstream: Primer **`FilteredActionList`**).
+// Filtered **ActionList2** host: filter field, header hairline, and scrollable **`ActionList2`** body (upstream: Primer **`FilteredActionList`**).
 
 import { Icons } from "../assets/icons.slint";
 import { ActionList2 } from "../ActionList2/action-list2.slint";
 import { ActionList2Lines } from "../ActionList2/action-list2-lines.slint";
 import {
     ActionList2Line,
-    ActionList2LineKind,
     ActionList2ListRole,
     ALVariant,
     ActionList2SelectionMode,
 } from "../ActionList2/types.slint";
+import { FilteredActionListLoadingKind } from "../FilteredActionList/types.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
-import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../tokens.slint";
+import { SkeletonBox } from "../Skeleton/skeleton-box.slint";
+import { FilteredActionList2BodySpinner } from "./filtered-action-list2-body-spinner.slint";
+import {
+    FilteredActionListTokens,
+    LayoutTokens,
+    PrimerColors,
+    SelectPanelTokens,
+} from "../tokens.slint";
 
 export component FilteredActionList2 {
     in-out property <string> filter-text: "";
@@ -30,11 +37,36 @@ export component FilteredActionList2 {
     in property <[bool]> multi-selected: [];
     /// Scroll region height (`SelectPanel`-aligned default).
     in property <length> body-region-height: SelectPanelTokens.list-max-height-default;
+    /// When true, loading UI follows **`loading-kind`** (upstream **`loading`** + **`FilteredActionListLoadingTypes`**).
+    in property <bool> loading: false;
+    in property <FilteredActionListLoadingKind> loading-kind: FilteredActionListLoadingKind.body_spinner;
+    in property <string> loading-message: "Loading…";
+    /// After body loading, replaces list (upstream **`message`**).
+    in property <bool> show-message: false;
+    in property <string> message-title: "";
+    in property <string> message-description: "";
+    /// When **`lines`** is empty and not loading/message: centered empty copy (filtered empty / **SelectPanel** no-results).
+    in property <string> empty-title: "";
+    in property <string> empty-message: "";
 
     callback filter-changed(string);
     callback item-activated(int);
 
     horizontal-stretch: 1;
+
+    property <bool> loading-on-input:
+        root.loading && root.loading-kind == FilteredActionListLoadingKind.input;
+    property <bool> loading-body-spinner:
+        root.loading && root.loading-kind == FilteredActionListLoadingKind.body_spinner;
+    property <bool> loading-body-skeleton:
+        root.loading && root.loading-kind == FilteredActionListLoadingKind.body_skeleton;
+    property <bool> show-body-message:
+        !root.loading-body-spinner && !root.loading-body-skeleton && root.show-message;
+    property <bool> show-body-empty:
+        !root.loading-body-spinner && !root.loading-body-skeleton && !root.show-message && root.lines.length == 0
+        && (root.empty-title != "" || root.empty-message != "");
+    property <bool> show-action-list-body:
+        !root.loading-body-spinner && !root.loading-body-skeleton && !root.show-body-message && !root.show-body-empty;
 
     VerticalLayout {
         spacing: SelectPanelTokens.wrapper-stack-gap;
@@ -46,6 +78,7 @@ export component FilteredActionList2 {
             disabled: root.disabled;
             has-leading-visual: true;
             leading-visual: Icons.search;
+            loading: root.loading-on-input;
             edited(t) => {
                 root.filter-changed(t);
             }
@@ -67,7 +100,128 @@ export component FilteredActionList2 {
             VerticalLayout {
                 vertical-stretch: 1;
 
-                Flickable {
+                if root.loading-body-spinner: FilteredActionList2BodySpinner {
+                    vertical-stretch: 1;
+                    message: root.loading-message;
+                }
+
+                if root.loading-body-skeleton: VerticalLayout {
+                    vertical-stretch: 1;
+                    padding: FilteredActionListTokens.skeleton-container-padding;
+                    spacing: FilteredActionListTokens.skeleton-stack-gap;
+                    alignment: start;
+
+                    HorizontalLayout {
+
+                        SkeletonBox {
+                            horizontal-stretch: 1;
+                            box-height: FilteredActionListTokens.skeleton-line-height;
+                        }
+                    }
+
+                    HorizontalLayout {
+                        alignment: start;
+
+                        Rectangle {
+                            width: 88%;
+                            height: FilteredActionListTokens.skeleton-line-height;
+
+                            SkeletonBox {
+                                box-height: FilteredActionListTokens.skeleton-line-height;
+                            }
+                        }
+                    }
+
+                    HorizontalLayout {
+
+                        SkeletonBox {
+                            horizontal-stretch: 1;
+                            box-height: FilteredActionListTokens.skeleton-line-height;
+                        }
+                    }
+
+                    HorizontalLayout {
+                        width: 100%;
+                        alignment: start;
+
+                        Rectangle {
+                            width: 64%;
+                            height: FilteredActionListTokens.skeleton-line-height;
+
+                            SkeletonBox {
+                                width: 100%;
+                                box-height: FilteredActionListTokens.skeleton-line-height;
+                            }
+                        }
+                    }
+
+                    HorizontalLayout {
+                        width: 100%;
+                        alignment: start;
+
+                        Rectangle {
+                            width: 72%;
+                            height: FilteredActionListTokens.skeleton-line-height;
+
+                            SkeletonBox {
+                                width: 100%;
+                                box-height: FilteredActionListTokens.skeleton-line-height;
+                            }
+                        }
+                    }
+                }
+
+                if root.show-body-message: VerticalLayout {
+                    vertical-stretch: 1;
+                    padding: SelectPanelTokens.message-region-padding;
+                    spacing: SelectPanelTokens.message-stack-gap;
+                    alignment: center;
+
+                    if root.message-title != "": Text {
+                        horizontal-alignment: center;
+                        text: root.message-title;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                        wrap: word-wrap;
+                    }
+
+                    if root.message-description != "": Text {
+                        horizontal-alignment: center;
+                        text: root.message-description;
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        font-weight: root.message-title != "" ? LayoutTokens.base-text-weight-medium : LayoutTokens.base-text-weight-semibold;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if root.show-body-empty: VerticalLayout {
+                    vertical-stretch: 1;
+                    padding: SelectPanelTokens.message-region-padding;
+                    spacing: SelectPanelTokens.message-stack-gap;
+                    alignment: center;
+
+                    if root.empty-title != "": Text {
+                        horizontal-alignment: center;
+                        text: root.empty-title;
+                        font-size: LayoutTokens.text-body-size-medium;
+                        font-weight: LayoutTokens.base-text-weight-semibold;
+                        color: PrimerColors.fgColor-default;
+                        wrap: word-wrap;
+                    }
+
+                    if root.empty-message != "": Text {
+                        horizontal-alignment: center;
+                        text: root.empty-message;
+                        font-size: LayoutTokens.text-body-size-small;
+                        color: PrimerColors.fgColor-muted;
+                        font-weight: root.empty-title != "" ? LayoutTokens.base-text-weight-medium : LayoutTokens.base-text-weight-semibold;
+                        wrap: word-wrap;
+                    }
+                }
+
+                if root.show-action-list-body: Flickable {
                     vertical-stretch: 1;
                     width: parent.width;
                     height: parent.height;

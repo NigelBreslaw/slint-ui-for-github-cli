@@ -18,12 +18,20 @@ Slint host for Primer **FilteredActionList** built on **ActionList2**: filter fi
 
 [`filtered-action-list2.slint`](filtered-action-list2.slint) forwards **`list-role`** and **`selection-mode`** to **`ActionList2Lines`**. Default is **`none`** (FilteredActionList **Default** / **WithLongItems**). **SelectPanel** **SingleSelect** / **MultiSelect** use **`listbox`** with **`single`** or **`multiple`**.
 
-## Non-goals (not in this port)
+## Loading / message / empty (PR2)
 
-- **`loading`** / **`loadingType`**, **`message`**, empty-state copy, **`onSelectAllChange`**, grouping, virtualization.
-- **`aria-activedescendant`** focus model (upstream keeps focus in the filter while highlighting the active option). **`ActionList2Lines`** roving keyboard focus applies when **`list-role`** is **`menu`** or **`listbox`** — not used in the minimal shell.
+- **`loading`**, **`loading-kind`** (`FilteredActionListLoadingKind`), **`loading-message`**
+- **`show-message`**, **`message-title`**, **`message-description`**
+- **`empty-title`**, **`empty-message`**
 
-Legacy **`FilteredActionList`** (v1 **`ActionList`**) retains loading, select-all, and message/empty UI for reference.
+See [`UPSTREAM_TRACEABILITY_PR2.md`](UPSTREAM_TRACEABILITY_PR2.md). Body spinner: [`filtered-action-list2-body-spinner.slint`](filtered-action-list2-body-spinner.slint) (**Spinner**, not **SelectPanelCompose**).
+
+## Non-goals (remaining)
+
+- **`onSelectAllChange`** / select-all strip (PR3), grouping, virtualization.
+- **`aria-activedescendant`** focus model (upstream keeps focus in the filter while highlighting the active option).
+
+Legacy **`FilteredActionList`** (v1 **`ActionList`**) retains select-all for reference until PR3.
 
 ## Imports for views
 

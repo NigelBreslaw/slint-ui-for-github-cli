@@ -233,13 +233,12 @@ export function wireGalleryFilteredActionList2Multi(
     };
 
     g.item_activated = (ix: number) => {
-        const lines = g.lines as { get_row_data?: (i: number) => ActionList2LineJs };
-        const row =
-            typeof lines?.get_row_data === "function"
-                ? lines.get_row_data(ix)
-                : undefined;
-        const label = row?.label;
-        if (typeof label !== "string" || label.length === 0) {
+        const picked = filterPrefixLabels(
+            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            currentFilter,
+        );
+        const label = picked[ix];
+        if (label === undefined) {
             return;
         }
         if (selectedLabels.has(label)) {

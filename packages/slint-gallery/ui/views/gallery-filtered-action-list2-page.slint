@@ -1,8 +1,17 @@
-// **FilteredActionList2** gallery — upstream **FilteredActionList** Default/WithLongItems + **SelectPanel** SingleSelect/MultiSelect list body.
+// **FilteredActionList2** gallery — **FilteredActionList** + **SelectPanel** list-body scenarios.
 import {
+    ActionList2DescriptionLayout,
+    ActionList2Line,
+    ActionList2LineKind,
     ActionList2ListRole,
+    ActionList2RowSize,
+    ActionList2RowVariant,
+    ActionList2SectionHeadingVariant,
     ActionList2SelectionMode,
+    Button,
     FilteredActionList2,
+    FilteredActionListLoadingKind,
+    Icons,
     Select,
     SelectOption,
     ValidationStatus,
@@ -23,6 +32,11 @@ export component GalleryFilteredActionList2Page {
         { value: "1", label: "WithLongItems", enabled: true },
         { value: "2", label: "SingleSelect", enabled: true },
         { value: "3", label: "MultiSelect", enabled: true },
+        { value: "4", label: "LoadingInput", enabled: true },
+        { value: "5", label: "LoadingBodySpinner", enabled: true },
+        { value: "6", label: "LoadingBodySkeleton", enabled: true },
+        { value: "7", label: "MessageVsList", enabled: true },
+        { value: "8", label: "EmptyBody", enabled: true },
     ];
 
     property <string> scenario-caption:
@@ -31,18 +45,97 @@ export component GalleryFilteredActionList2Page {
         : root.scenario-ix == 1
         ? "Upstream FilteredActionList WithLongItems — `body-region-height` 320px."
         : root.scenario-ix == 2
-        ? "Upstream SelectPanel SingleSelect — `listbox` + `single` checkmark; initial row **enhancement** (`items[0]`)."
-        : "Upstream SelectPanel MultiSelect — `listbox` + `multiple` checkboxes; initial **bug**, **good first issue** (`items.slice(1, 3)`).";
+        ? "Upstream SelectPanel SingleSelect — `listbox` + `single` checkmark; initial **enhancement**."
+        : root.scenario-ix == 3
+        ? "Upstream SelectPanel MultiSelect — `listbox` + `multiple` checkboxes; initial **bug**, **good first issue**."
+        : root.scenario-ix == 4
+        ? "Upstream FilteredActionList loading **input** — spinner in filter field; list rows remain."
+        : root.scenario-ix == 5
+        ? "Upstream FilteredActionList **body_spinner** / SelectPanel AsyncFetch — list body replaced."
+        : root.scenario-ix == 6
+        ? "Upstream FilteredActionList **body_skeleton** — skeleton placeholders only."
+        : root.scenario-ix == 7
+        ? "Upstream message body — toggle **`show-message`** vs list (permission denied copy)."
+        : "Upstream filtered empty — `lines: []` with **`empty-message`** (no rows).";
+
+    property <bool> show-storybook-page-chrome:
+        root.scenario-ix == 0 || root.scenario-ix == 1;
 
     property <string> fal2-default-filter: "";
     property <string> fal2-long-filter: "";
     property <string> fal2-single-filter: "";
     property <string> fal2-multi-filter: "";
-    /// Upstream **SingleSelect** `useState(items[0])` — first visible row after filter.
+    property <string> fal2-loading-input-filter: "";
+    property <string> fal2-loading-spinner-filter: "";
+    property <string> fal2-loading-skeleton-filter: "";
+    property <string> fal2-message-vs-list-filter: "";
+    property <bool> fal2-message-vs-list-show-message: false;
+    property <string> fal2-empty-body-filter: "";
     property <int> fal2-single-selected-index: 0;
+
+    property <[ActionList2Line]> fal2-loading-demo-lines: [
+        {
+            kind: ActionList2LineKind.row,
+            label: "enhancement",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "bug",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+        {
+            kind: ActionList2LineKind.row,
+            label: "design",
+            row-variant: ActionList2RowVariant.default,
+            row-size: ActionList2RowSize.medium,
+            disabled: false,
+            has-leading-avatar: false,
+            avatar-source: Icons.dot_fill,
+            has-leading-visual: false,
+            leading-icon: Icons.dot_fill,
+            description: "",
+            description-layout: ActionList2DescriptionLayout.none,
+            truncate-inline-description: false,
+            trailing-text: "",
+            inactive-text: "",
+            show-trailing-loading: false,
+            active: false,
+            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+        },
+    ];
 
     changed scenario-ix => {
         root.fal2-single-selected-index = 0;
+        root.fal2-message-vs-list-show-message = false;
     }
 
     changed fal2-single-filter => {
@@ -73,6 +166,13 @@ export component GalleryFilteredActionList2Page {
                 wrap: word-wrap;
             }
 
+            if root.scenario-ix == 7: Button {
+                label: root.fal2-message-vs-list-show-message ? "Show list body" : "Show message body";
+                clicked => {
+                    root.fal2-message-vs-list-show-message = !root.fal2-message-vs-list-show-message;
+                }
+            }
+
             Rectangle {
                 horizontal-stretch: 0;
                 width: 320px;
@@ -84,7 +184,7 @@ export component GalleryFilteredActionList2Page {
                     spacing: 12px;
                     alignment: start;
 
-                    Text {
+                    if root.show-storybook-page-chrome || root.scenario-ix == 2 || root.scenario-ix == 3: Text {
                         text:
                             root.scenario-ix == 1
                             ? "Filtered Action List with Long Items"
@@ -99,7 +199,7 @@ export component GalleryFilteredActionList2Page {
                         wrap: word-wrap;
                     }
 
-                    Text {
+                    if root.show-storybook-page-chrome || root.scenario-ix == 2 || root.scenario-ix == 3: Text {
                         text:
                             root.scenario-ix == 3
                             ? "Use labels to organize issues and pull requests"
@@ -156,6 +256,57 @@ export component GalleryFilteredActionList2Page {
                         }
                         item-activated(ix) => {
                             GalleryFilteredActionList2Multi.item-activated(ix);
+                        }
+                    }
+
+                    if root.scenario-ix == 4: FilteredActionList2 {
+                        loading: true;
+                        loading-kind: FilteredActionListLoadingKind.input;
+                        filter-text <=> root.fal2-loading-input-filter;
+                        placeholder: "Filter Labels";
+                        lines: root.fal2-loading-demo-lines;
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 5: FilteredActionList2 {
+                        loading: true;
+                        loading-kind: FilteredActionListLoadingKind.body_spinner;
+                        loading-message: "Loading labels…";
+                        filter-text <=> root.fal2-loading-spinner-filter;
+                        placeholder: "Filter Labels";
+                        lines: root.fal2-loading-demo-lines;
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 6: FilteredActionList2 {
+                        loading: true;
+                        loading-kind: FilteredActionListLoadingKind.body_skeleton;
+                        filter-text <=> root.fal2-loading-skeleton-filter;
+                        placeholder: "Filter Labels";
+                        lines: [];
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 7: FilteredActionList2 {
+                        filter-text <=> root.fal2-message-vs-list-filter;
+                        placeholder: "Filter Labels";
+                        lines: root.fal2-message-vs-list-show-message ? [] : root.fal2-loading-demo-lines;
+                        show-message: root.fal2-message-vs-list-show-message;
+                        message-title: "No access";
+                        message-description: "You do not have permission to view these labels.";
+                        filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 8: FilteredActionList2 {
+                        filter-text <=> root.fal2-empty-body-filter;
+                        placeholder: "Filter Labels";
+                        lines: [];
+                        empty-message: "No labels match your filter.";
+                        filter-changed(_) => {
                         }
                     }
                 }

@@ -1,0 +1,32 @@
+import { LayoutTokens, PrimerColors, SelectPanelTokens, Size } from "../tokens.slint";
+import { Spinner } from "../Progress/spinner.slint";
+
+/// Centered spinner + label in the list region (upstream **`FilteredActionList`** body-spinner / **SelectPanel** loading).
+export component FilteredActionList2BodySpinner {
+    in property <string> message: "Loading…";
+
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        vertical-stretch: 1;
+        padding: LayoutTokens.stack-padding-normal;
+        spacing: SelectPanelTokens.wrapper-stack-gap;
+        alignment: center;
+
+        HorizontalLayout {
+            spacing: SelectPanelTokens.wrapper-stack-gap;
+            alignment: center;
+
+            Spinner {
+                size: Size.small;
+            }
+
+            Text {
+                text: root.message;
+                font-size: LayoutTokens.text-body-size-small;
+                color: PrimerColors.fgColor-muted;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
