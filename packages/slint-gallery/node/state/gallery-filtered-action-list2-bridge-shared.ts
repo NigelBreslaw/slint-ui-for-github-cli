@@ -14,6 +14,15 @@ export type GalleryFilteredActionList2MultiHandle = GalleryFilteredActionList2Ha
     item_activated: (ix: number) => void;
 };
 
+/** Select-all strip + multi-select (**ActionList2** rows). */
+export type GalleryFilteredActionList2SelectAllHandle = GalleryFilteredActionList2Handle & {
+    multi_selected: boolean[];
+    select_all_checked: boolean;
+    select_all_indeterminate: boolean;
+    item_activated: (ix: number) => void;
+    select_all_changed: (on: boolean) => void;
+};
+
 /**
  * `ActionList2Line` rows for **`ArrayModel`**.
  *
@@ -250,4 +259,75 @@ export function wireGalleryFilteredActionList2Multi(
     };
 
     push("");
+}
+
+/**
+ * Upstream **SelectPanel** `WithSelectAll` — select-all strip + **listbox** multi-select on filtered labels.
+ */
+export function wireGalleryFilteredActionList2SelectAll(
+    g: GalleryFilteredActionList2SelectAllHandle,
+): void {
+    let filterText = "";
+    const selectedLabels = new Set<string>();
+
+    const sync = () => {
+        const picked = filterPrefixLabels(
+            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            filterText,
+        );
+        const allSelected =
+            picked.length > 0 && picked.every((l) => selectedLabels.has(l));
+        const someSelected = picked.some((l) => selectedLabels.has(l));
+        const rows = picked.map((label) => {
+            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+        });
+        assignProperties(g, {
+            lines: new slint.ArrayModel(rows),
+            multi_selected: picked.map((l) => selectedLabels.has(l)),
+            select_all_checked: allSelected,
+            select_all_indeterminate: !allSelected && someSelected,
+        });
+    };
+
+    g.filter_changed = (t: string) => {
+        filterText = t;
+        sync();
+    };
+
+    g.item_activated = (ix: number) => {
+        const picked = filterPrefixLabels(
+            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            filterText,
+        );
+        const label = picked[ix];
+        if (label === undefined) {
+            return;
+        }
+        if (selectedLabels.has(label)) {
+            selectedLabels.delete(label);
+        } else {
+            selectedLabels.add(label);
+        }
+        sync();
+    };
+
+    g.select_all_changed = (on: boolean) => {
+        const picked = filterPrefixLabels(
+            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            filterText,
+        );
+        if (on) {
+            for (const l of picked) {
+                selectedLabels.add(l);
+            }
+        } else {
+            for (const l of picked) {
+                selectedLabels.delete(l);
+            }
+        }
+        sync();
+    };
+
+    sync();
 }

@@ -22,6 +22,7 @@ import {
     GalleryFilteredActionList2Long,
 } from "../state/gallery-filtered-action-list2-state.slint";
 import { GalleryFilteredActionList2Multi } from "../state/gallery-filtered-action-list2-multi-state.slint";
+import { GalleryFilteredActionList2SelectAll } from "../state/gallery-filtered-action-list2-select-all-state.slint";
 import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
 export component GalleryFilteredActionList2Page {
@@ -37,6 +38,7 @@ export component GalleryFilteredActionList2Page {
         { value: "6", label: "LoadingBodySkeleton", enabled: true },
         { value: "7", label: "MessageVsList", enabled: true },
         { value: "8", label: "EmptyBody", enabled: true },
+        { value: "9", label: "SelectAll", enabled: true },
     ];
 
     property <string> scenario-caption:
@@ -56,10 +58,12 @@ export component GalleryFilteredActionList2Page {
         ? "Upstream FilteredActionList **body_skeleton** — skeleton placeholders only."
         : root.scenario-ix == 7
         ? "Upstream message body — toggle **`show-message`** vs list (permission denied copy)."
-        : "Upstream filtered empty — `lines: []` with **`empty-message`** (no rows).";
+        : root.scenario-ix == 8
+        ? "Upstream filtered empty — `lines: []` with **`empty-message`** (no rows)."
+        : "Upstream SelectPanel **WithSelectAll** — select-all strip + **listbox** multi-select (tri-state).";
 
     property <bool> show-storybook-page-chrome:
-        root.scenario-ix == 0 || root.scenario-ix == 1;
+        root.scenario-ix == 0 || root.scenario-ix == 1 || root.scenario-ix == 9;
 
     property <string> fal2-default-filter: "";
     property <string> fal2-long-filter: "";
@@ -71,6 +75,7 @@ export component GalleryFilteredActionList2Page {
     property <string> fal2-message-vs-list-filter: "";
     property <bool> fal2-message-vs-list-show-message: false;
     property <string> fal2-empty-body-filter: "";
+    property <string> fal2-select-all-filter: "";
     property <int> fal2-single-selected-index: 0;
 
     property <[ActionList2Line]> fal2-loading-demo-lines: [
@@ -188,6 +193,8 @@ export component GalleryFilteredActionList2Page {
                         text:
                             root.scenario-ix == 1
                             ? "Filtered Action List with Long Items"
+                            : root.scenario-ix == 9
+                            ? "Filtered Action List"
                             : root.scenario-ix == 2
                             ? "Single select labels"
                             : root.scenario-ix == 3
@@ -203,6 +210,8 @@ export component GalleryFilteredActionList2Page {
                         text:
                             root.scenario-ix == 3
                             ? "Use labels to organize issues and pull requests"
+                            : root.scenario-ix == 9
+                            ? "Multi-select rows; use the strip to toggle all visible labels."
                             : "Please select labels that describe your issue:";
                         color: PrimerColors.fgColor-default;
                         font-size: 14px;
@@ -307,6 +316,27 @@ export component GalleryFilteredActionList2Page {
                         lines: [];
                         empty-message: "No labels match your filter.";
                         filter-changed(_) => {
+                        }
+                    }
+
+                    if root.scenario-ix == 9: FilteredActionList2 {
+                        select-all-visible: true;
+                        list-role: ActionList2ListRole.listbox;
+                        selection-mode: ActionList2SelectionMode.multiple;
+                        filter-text <=> root.fal2-select-all-filter;
+                        placeholder: "Filter Labels";
+                        lines: GalleryFilteredActionList2SelectAll.lines;
+                        multi-selected: GalleryFilteredActionList2SelectAll.multi-selected;
+                        select-all-checked <=> GalleryFilteredActionList2SelectAll.select-all-checked;
+                        select-all-indeterminate <=> GalleryFilteredActionList2SelectAll.select-all-indeterminate;
+                        filter-changed(t) => {
+                            GalleryFilteredActionList2SelectAll.filter-changed(t);
+                        }
+                        item-activated(ix) => {
+                            GalleryFilteredActionList2SelectAll.item-activated(ix);
+                        }
+                        select-all-changed(on) => {
+                            GalleryFilteredActionList2SelectAll.select-all-changed(on);
                         }
                     }
                 }

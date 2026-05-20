@@ -9,6 +9,7 @@ import {
     ALVariant,
     ActionList2SelectionMode,
 } from "../ActionList2/types.slint";
+import { Checkbox } from "../Checkbox/checkbox.slint";
 import { FilteredActionListLoadingKind } from "../FilteredActionList/types.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
 import { SkeletonBox } from "../Skeleton/skeleton-box.slint";
@@ -48,9 +49,16 @@ export component FilteredActionList2 {
     /// When **`lines`** is empty and not loading/message: centered empty copy (filtered empty / **SelectPanel** no-results).
     in property <string> empty-title: "";
     in property <string> empty-message: "";
+    /// Optional **Select all** strip (upstream **`onSelectAllChange`** / **SelectPanel** `showSelectAll`).
+    in property <bool> select-all-visible: false;
+    in-out property <bool> select-all-checked: false;
+    in-out property <bool> select-all-indeterminate: false;
+    in property <string> select-all-label-unchecked: "Select all";
+    in property <string> select-all-label-checked: "Deselect all";
 
     callback filter-changed(string);
     callback item-activated(int);
+    callback select-all-changed(bool);
 
     horizontal-stretch: 1;
 
@@ -87,6 +95,68 @@ export component FilteredActionList2 {
         Rectangle {
             height: 1px;
             background: PrimerColors.borderColor-default;
+        }
+
+        if root.select-all-visible: VerticalLayout {
+            horizontal-stretch: 1;
+
+            Rectangle {
+                horizontal-stretch: 1;
+                background: PrimerColors.bgColor-muted;
+
+                TouchArea {
+                    width: 100%;
+                    enabled: !root.disabled;
+
+                    clicked => {
+                        if root.select-all-indeterminate {
+                            root.select-all-indeterminate = false;
+                            root.select-all-checked = true;
+                        } else {
+                            root.select-all-checked = !root.select-all-checked;
+                        }
+                        root.select-all-changed(root.select-all-checked);
+                    }
+
+                    HorizontalLayout {
+                        horizontal-stretch: 1;
+                        padding-top: FilteredActionListTokens.select-all-padding-block;
+                        padding-bottom: FilteredActionListTokens.select-all-padding-block;
+                        padding-left: FilteredActionListTokens.select-all-padding-inline;
+                        padding-right: FilteredActionListTokens.select-all-padding-inline;
+                        spacing: FilteredActionListTokens.select-all-control-label-gap;
+                        alignment: start;
+                        align-items: center;
+
+                        Checkbox {
+                            horizontal-stretch: 0;
+                            interactive: false;
+                            checked <=> root.select-all-checked;
+                            indeterminate: root.select-all-indeterminate;
+                            disabled: root.disabled;
+                            label: "";
+                        }
+
+                        Text {
+                            horizontal-stretch: 1;
+                            text:
+                                root.select-all-checked && !root.select-all-indeterminate
+                                ? root.select-all-label-checked
+                                : root.select-all-label-unchecked;
+                            color: PrimerColors.fgColor-muted;
+                            font-size: LayoutTokens.text-body-size-medium;
+                            font-weight: LayoutTokens.base-text-weight-normal;
+                            wrap: word-wrap;
+                            vertical-alignment: center;
+                        }
+                    }
+                }
+            }
+
+            Rectangle {
+                height: LayoutTokens.table-border-width;
+                background: PrimerColors.borderColor-default;
+            }
         }
 
         Rectangle {

@@ -15,10 +15,10 @@ Storybook-driven coverage for the initial port (two stories only). Deferred API 
 | **LoadingBodySkeleton** | inherited | no | — | skeleton bars | none | gallery ix 6 |
 | **MessageVsList** | inherited | no | — | — | none | gallery ix 7; `show-message` |
 | **EmptyBody** | inherited | no | — | — | none | gallery ix 8; `empty-message` |
+| **SelectAll** (SelectPanel) | inherited | no | medium | colored circles | listbox + multiple + strip | gallery ix 9 |
 
 ## Deferred (upstream API, not in `FilteredActionList2` yet)
 
 | Area | Upstream | Notes |
 |------|----------|--------|
-| Select all | `onSelectAllChange` | v1 strip + **`Checkbox`** — PR3 |
 | Keyboard | `_PrivateFocusManagement`, `aria-activedescendant` | dedicated focus PR |

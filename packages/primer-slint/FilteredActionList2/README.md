@@ -26,9 +26,14 @@ Slint host for Primer **FilteredActionList** built on **ActionList2**: filter fi
 
 See [`UPSTREAM_TRACEABILITY_PR2.md`](UPSTREAM_TRACEABILITY_PR2.md). Body spinner: [`filtered-action-list2-body-spinner.slint`](filtered-action-list2-body-spinner.slint) (**Spinner**, not **SelectPanelCompose**).
 
+## Select-all (PR3)
+
+- **`select-all-visible`**, **`select-all-checked`**, **`select-all-indeterminate`**, **`select-all-changed`**
+- See [`UPSTREAM_TRACEABILITY_PR3.md`](UPSTREAM_TRACEABILITY_PR3.md)
+
 ## Non-goals (remaining)
 
-- **`onSelectAllChange`** / select-all strip (PR3), grouping, virtualization.
+- Grouping, virtualization.
 - **`aria-activedescendant`** focus model (upstream keeps focus in the filter while highlighting the active option).
 
 Legacy **`FilteredActionList`** (v1 **`ActionList`**) retains select-all for reference until PR3.
