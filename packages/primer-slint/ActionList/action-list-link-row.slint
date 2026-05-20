@@ -55,7 +55,7 @@ export component ActionListLinkRow {
     property <color> label-color:
         root.is-inactive ? ActionListTokens.item-inactive-label-fgColor
         : root.show-active-chrome ? ActionListTokens.item-active-label-fgColor-rest
-        : ActionListTokens.item-link-fgColor-rest;
+        : PrimerColors.fgColor-default;
 
     property <color> leading-icon-tint:
         root.is-inactive ? ActionListTokens.item-inactive-label-fgColor : PrimerColors.fgColor-muted;
