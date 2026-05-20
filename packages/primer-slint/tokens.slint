@@ -29,7 +29,6 @@ export global ShadowTokens {
 
 }
 
-// Primer functional/size + typography (no color-scheme). Matches ButtonBase.module.css variable names.
 export global LayoutTokens {
     out property <length> text-body-size-small: 12px;
     out property <length> text-body-size-medium: 14px;
@@ -40,15 +39,12 @@ export global LayoutTokens {
     out property <length> text-body-lineHeight-large: 24px;
 
     out property <int> base-text-weight-medium: 500;
-    /// primer-ui-react / Primer typography — normal body weight (`--base-text-weight-normal`).
     out property <int> base-text-weight-normal: 400;
 
     out property <length> control-small-size: 28px;
     out property <length> control-medium-size: 32px;
     out property <length> control-large-size: 40px;
-    // UnderlineTabbedInterface.module.css — .UnderlineWrapper min-height (--control-xlarge-size)
     out property <length> control-xlarge-size: 48px;
-    // Primer stack padding (--stack-padding-normal); UnderlineWrapper inset horizontal padding
     out property <length> stack-padding-normal: 16px;
 
     out property <length> control-small-paddingInline-condensed: 6px;
@@ -59,45 +55,33 @@ export global LayoutTokens {
     out property <length> iconButton-icon-size-medium: 16px;
     out property <length> iconButton-icon-size-large: 18px;
 
-    /// primer-tokens **`functional/size/radius.json5`** — **`borderRadius.small`** (**3px**) — skeleton bars, small controls.
     out property <length> borderRadius-small: 3px;
     out property <length> borderRadius-medium: 6px;
-    /// primer-tokens functional size **`base-size-4`** (used by ActionList **`activeIndicatorLine`** mixin top/width).
     out property <length> base-size-4: 4px;
-    /// primer-tokens functional size **`base-size-6`** (`Dialog.module.css` header content block padding).
     out property <length> base-size-6: 6px;
-    /// primer-tokens functional size **`base-size-8`** (`Dialog.module.css` header outer / content inline padding).
     out property <length> base-size-8: 8px;
-    /// primer-tokens functional size **`base-size-12`** (dialog body block gap, banner gaps, tables).
     out property <length> base-size-12: 12px;
-    /// primer-tokens functional size **`base-size-16`** (`Dialog.module.css` body + footer padding).
     out property <length> base-size-16: 16px;
-    /// primer-tokens `functional/size/radius.json5` — **`borderRadius.large`** (12px): dialogs, modals, larger containers.
     out property <length> borderRadius-large: 12px;
 
     out property <length> checkbox-border-radius: borderRadius-small;
 
-    // Banner (Banner.module.css padding / icon box; legacy-theme base-size-8 / base-size-4 / base-size-20 / base-size-16)
     out property <length> banner-padding-default: 8px;
     out property <length> banner-padding-compact: 4px;
     out property <length> banner-icon-size-default: 20px;
     out property <length> banner-icon-size-title-hidden: 16px;
     out property <length> banner-icon-container-padding: 8px;
     out property <int> base-text-weight-semibold: 600;
-    // BannerActions: Banner.module.css --base-size-12 column-gap, --base-size-2 dismiss margin when data-has-actions
     out property <length> banner-actions-gap: 12px;
     out property <length> banner-dismiss-margin-when-actions: 2px;
 
-    // Button inner row: Primer ButtonBase.module.css .ButtonContent gap (--base-size-8)
     out property <length> button-content-gap: 8px;
 
-    // CounterLabel.module.css: padding --base-size-2 --base-size-6, border-radius 20px, border thin
     out property <length> counter-label-padding-block: 2px;
     out property <length> counter-label-padding-inline: 6px;
     out property <length> counter-label-border-radius: 20px;
     out property <length> counter-label-border-width: 1px;
 
-    // Label.module.css — height --base-size-20 / --base-size-24, padding 0 --base-size-6 / --base-size-8, --borderWidth-thin, --borderRadius-full
     out property <length> label-height-small: 20px;
     out property <length> label-height-large: 24px;
     out property <length> label-padding-inline-small: 6px;
@@ -105,26 +89,20 @@ export global LayoutTokens {
     out property <length> label-border-width: 1px;
     out property <length> label-border-radius-pill: 100px;
 
-    // LabelGroup.module.css .Container — gap --base-size-4; .ItemWrapper min-height matches control-small-size (28px)
     out property <length> label-group-gap: 4px;
 
-    // DataTable/Table.module.css — .Table [data-cell-padding] sets --cell-padding-block / --cell-padding-inline (condensed | normal | spacious)
     out property <length> table-cell-padding-block-condensed: 4px;
     out property <length> table-cell-padding-inline-condensed: 8px;
     out property <length> table-cell-padding-block-normal: 8px;
     out property <length> table-cell-padding-inline-normal: 12px;
     out property <length> table-cell-padding-block-spacious: 12px;
     out property <length> table-cell-padding-inline-spacious: 16px;
-    // Table.module.css — .TableRow > *:first-child / :last-child extra padding-inline (--base-size-16)
     out property <length> table-cell-edge-inset-inline: 16px;
-    // Table.module.css — --table-border-radius: 0.375rem (same as borderRadius-medium)
     out property <length> table-border-radius: borderRadius-medium;
-    // Table.module.css — borders use --borderWidth-thin (1px)
     out property <length> table-border-width: 1px;
-    // primer-tokens **`functional/size/border.json5`** — **`borderWidth.thicker`** — React **`Radio.module.css`** `:checked` **`border-width: var(--borderWidth-thicker)`**.
     out property <length> border-width-thicker: 4px;
 
-    // ActionList / NavList row — density aligned with control-medium (ActionList.module.css item)
+    // ActionList row — density aligned with control-medium (ActionList.module.css item)
     out property <length> action-list-item-padding-inline: 8px;
     out property <length> action-list-item-padding-block: 6px;
     out property <length> action-list-item-min-height: control-medium-size;
@@ -136,31 +114,15 @@ export global LayoutTokens {
     out property <length> action-list-avatar-diameter-large: 24px;
     /// App chrome (**AppHeader** / **UserMenu**) profile avatar — matches former implicit **`Avatar`** default width (**34px**).
     out property <length> avatar-size-header: 34px;
-    // ActionList.module.css `.Divider` — margin-block-start: calc(var(--base-size-8) - var(--borderWidth-thin)); margin-block-end: var(--base-size-8). [`button-content-gap`] is `--base-size-8`; [`table-border-width`] is `--borderWidth-thin`.
     out property <length> action-list-item-divider-margin-block-start: button-content-gap - table-border-width;
     out property <length> action-list-item-divider-margin-block-end: button-content-gap;
 
-    /// Full-width hairline between NavList groups (Primer `NavList.Divider`).
-    out property <length> nav-list-divider-height: 1px;
-    /// Indent per nesting level for NavList SubNav (Primer nested items).
-    out property <length> nav-list-subnav-indent: 16px;
-    /// Vertical accent bar for [`NavList`] `sidebar-current-indicator` (Primer sidebar current item).
-    out property <length> nav-list-sidebar-indicator-width: 4px;
-    out property <length> nav-list-sidebar-indicator-height: 20px;
-    out property <length> nav-list-sidebar-indicator-gap: 8px;
-    out property <length> nav-list-sidebar-indicator-radius: 2px;
-
-    /// React **`ToggleSwitch.module.css`** **`--toggleSwitch-transition-duration`** (**80ms**); easing in component **`cubic-bezier(0.5, 1, 0.89, 1)`**.
     out property <duration> duration-80: 80ms;
-    /// primer-tokens **`base/motion/timing.json5`** — **`base.duration.200`** (React **`Dialog.module.css`** backdrop + **`Overlay--motion-scaleFade`** enter).
     out property <duration> duration-200: 200ms;
-    /// React **`Dialog.module.css`** side-sheet + bottom-sheet enter — **250ms** (no named **250** step in **`timing.json5`**; literal tied to upstream CSS).
     out property <duration> duration-250: 250ms;
-    /// primer-tokens **`base/motion/timing.json5`** — **`base.duration.1000`** — **`SkeletonBox.module.css`** shimmer cycle (`var(--base-duration-1000)`).
     out property <duration> duration-1000: 1000ms;
 }
 
-// primer-tokens **`component/avatar.json5`** (`avatar.bgColor`) + **`borderColor.translucent`** (`neutral.13` @ **α 0.15** — light: **`#010409`**, dark: **`#ffffff`**). High-contrast theme overrides deferred (same as other controls).
 export global AvatarTokens {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
@@ -174,13 +136,10 @@ export global AvatarTokens {
     out property <color> avatar-borderColor: color-scheme == ColorScheme.dark ? avatar-border-dark : avatar-border-light;
 }
 
-// Semantic fg/bg/border/canvas (Primer functional/color). Shared across views; includes primitives reused by ButtonTokens (greens, fg-on-emphasis).
 export global PrimerColors {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
-    // Private literals from primer-ui-react legacy-theme colors/dark.ts + light.ts innermost fallbacks.
-    // Single storage per hex/rgb/hsv; semantic tokens alias primitives (also shared with ButtonTokens via `out`).
     property <color> bgColor-inset-dark: #010409;
     property <color> canvas-subtle-light: #f6f8fa;
     property <color> bgColor-inset-light: canvas-subtle-light;
@@ -201,10 +160,8 @@ export global PrimerColors {
 
     property <color> bgColor-neutral-muted-dark: rgba(110, 118, 129, 0.1);
     property <color> bgColor-neutral-muted-light: rgba(234, 238, 242, 0.5);
-    // primer-tokens **`component/skeletonLoader.json5`** — **`bgColor`**: **`base.color.neutral.8`** @ **α 0.1** (light **`#818B98`**); dark override **α 0.2** (**`#656C76`**).
     property <color> skeletonLoader-bg-light: rgba(129, 139, 152, 0.1);
     property <color> skeletonLoader-bg-dark: rgba(101, 108, 118, 0.2);
-    // bgColor.neutral.emphasis (primer-tokens functional); CounterLabel primary variant
     property <color> bgColor-neutral-emphasis-light: #24292f;
     property <color> bgColor-neutral-emphasis-dark: #656d76;
 
@@ -230,11 +187,9 @@ export global PrimerColors {
     property <color> actionListItem-inline-divider-dark: rgba(48, 54, 61, 0.48);
     property <color> actionListItem-inline-divider-light: rgba(208, 215, 222, 0.48);
 
-    // Table.module.css .TableRow:hover .TableCell — var(--control-transparent-bgColor-hover) (primer-tokens control); single storage for table row hover + ButtonTokens action-list hover
     property <color> control-transparent-bgColor-hover-dark: rgba(177, 186, 196, 0.12);
     property <color> control-transparent-bgColor-hover-light: rgba(208, 215, 222, 0.32);
 
-    // Greens: primer scale / success fg + success emphasis (same hex as GitHub primary button bg in each mode).
     property <color> green-success-fg-light: #1a7f37;
     property <color> fgColor-success-dark: #3fb950;
     property <color> fgColor-success-light: green-success-fg-light;
@@ -242,24 +197,20 @@ export global PrimerColors {
     property <color> green-emphasis-light: #1f883d;
     property <color> borderColor-success-emphasis-dark: green-emphasis-dark;
     property <color> borderColor-success-emphasis-light: green-emphasis-light;
-    // Primary button selected bg (light): hsv from legacy theme — stored once here for ButtonTokens.
     property <color> button-primary-selected-bg-light: hsv(137.053, 0.798319, 0.466667, 1);
     property <color> fg-on-emphasis: #ffffff;
     property <color> green-primary-hover-dark: #2ea043;
     property <color> green-primary-disabled-bg-dark: rgba(35, 134, 54, 0.6);
 
-    // Stacked inset shadow on control triggers (Select); dark: #010409 @ ~40% / ~60% alpha. Light: soft neutral layers.
     property <color> shadow-controlTrigger-back-dark: #01040966;
     property <color> shadow-controlTrigger-front-dark: #01040999;
     property <color> shadow-controlTrigger-back-light: rgba(31, 35, 40, 0.12);
     property <color> shadow-controlTrigger-front-light: rgba(31, 35, 40, 0.18);
 
-    // Banner surfaces: primer-tokens bgColor/borderColor/fgColor + primer-ui-react legacy-theme light.ts / dark.ts fallbacks.
     property <color> bgColor-accent-muted-light: #ddf4ff;
     property <color> bgColor-accent-muted-dark: rgba(56, 139, 253, 0.1);
     property <color> borderColor-accent-muted-light: rgba(84, 174, 255, 0.4);
     property <color> borderColor-accent-muted-dark: rgba(56, 139, 253, 0.4);
-    // borderColor.accent.emphasis — primer-tokens `functional/color/borderColor.json5` (`{base.color.blue.5}` + mode).
     property <color> borderColor-accent-emphasis-light: #0969da;
     property <color> borderColor-accent-emphasis-dark: #388bfd;
 
@@ -282,7 +233,6 @@ export global PrimerColors {
     property <color> fgColor-danger-light: #d1242f;
     property <color> fgColor-danger-dark: #f85149;
 
-    // upsell banner uses done.* muted surfaces; fgColor-upsell aliases fgColor.done in primer-tokens.
     property <color> bgColor-done-muted-light: #fbefff;
     property <color> bgColor-done-muted-dark: rgba(163, 113, 247, 0.1);
     property <color> borderColor-done-muted-light: rgba(194, 151, 255, 0.4);
@@ -290,8 +240,6 @@ export global PrimerColors {
     property <color> fgColor-done-light: #8250df;
     property <color> fgColor-done-dark: #a371f7;
 
-    // Label.module.css + legacy-theme — light: emphasis matches fg where primer-tokens uses one hex (accent/attention/sponsors/done/severe); dark keeps distinct literals.
-    // bgColor.accent.emphasis (light) == fgColor.accent == fgColor.link (primer-tokens functional color fallbacks).
     property <color> bgColor-accent-emphasis-light: fgColor-link-light;
     property <color> bgColor-accent-emphasis-dark: #1f6feb;
     property <color> bgColor-attention-emphasis-light: fgColor-attention-light;
@@ -300,7 +248,6 @@ export global PrimerColors {
     property <color> fgColor-severe-dark: #db6d28;
     property <color> bgColor-severe-emphasis-light: fgColor-severe-light;
     property <color> bgColor-severe-emphasis-dark: #bd561d;
-    // borderColor.danger.emphasis — single storage; ButtonTokens danger fg/hover reuse (legacy-theme danger.emphasis).
     property <color> borderColor-danger-emphasis-light: #cf222e;
     property <color> borderColor-danger-emphasis-dark: #da3633;
     property <color> bgColor-done-emphasis-light: fgColor-done-light;
@@ -310,7 +257,6 @@ export global PrimerColors {
     property <color> bgColor-sponsors-emphasis-light: fgColor-sponsors-light;
     property <color> bgColor-sponsors-emphasis-dark: #bf4b8a;
 
-    /// primer-tokens **`borderColor.neutral.emphasis`** — light **`base.color.neutral.9`**; dark **`borderColor.emphasis`** (**`neutral.8`**, same storage as **`bgColor-neutral-emphasis`** dark).
     property <color> borderColor-neutral-emphasis-light: #59636e;
 
     out property <color> bgColor-inset: color-scheme == ColorScheme.dark ? bgColor-inset-dark : bgColor-inset-light;
@@ -371,7 +317,6 @@ export global PrimerColors {
     out property <color> fgColor-sponsors: color-scheme == ColorScheme.dark ? fgColor-sponsors-dark : fgColor-sponsors-light;
     out property <color> bgColor-sponsors-emphasis: color-scheme == ColorScheme.dark ? bgColor-sponsors-emphasis-dark : bgColor-sponsors-emphasis-light;
 
-    // primer-tokens semantic pairs for **`StateLabel.module.css`** (`--bgColor-*-emphasis`, `--borderColor-*-emphasis`). Aliases reuse existing **`out`** bindings — no duplicate hex.
     out property <color> borderColor-neutral-emphasis: color-scheme == ColorScheme.dark ? bgColor-neutral-emphasis-dark : borderColor-neutral-emphasis-light;
     out property <color> borderColor-done-emphasis: bgColor-done-emphasis;
     out property <color> borderColor-attention-emphasis: bgColor-attention-emphasis;
@@ -383,8 +328,6 @@ export global PrimerColors {
     out property <color> borderColor-draft-emphasis: borderColor-neutral-emphasis;
 }
 
-// color-btn-*, button-*, filled-button shadows, iconButton palette, control disabled fg. Used by Button / IconButton.
-// Hex/rgb/hsv literals live in PrimerColors when shared; this global only composes scheme + internal aliases.
 export global ButtonTokens {
 
     property <ColorScheme> color-scheme: Palette.color-scheme;
@@ -428,12 +371,10 @@ export global ButtonTokens {
     property <color> color-primer-fg-disabled-dark: #484f58;
     property <color> color-primer-fg-disabled-light: #8c959f;
 
-    // IconButton (toolbar) grays — distinct from color-btn-text on purpose for current UI
     property <color> iconButton-fgColor-rest-dark: #9398a0;
     property <color> iconButton-fgColor-rest-light: #59636e;
     property <color> iconButton-bgColor-hover-dark: #16191e;
 
-    // --- Scheme-resolved color-btn-* (alias targets for button-* below)
     out property <color> color-btn-text: color-scheme == ColorScheme.dark ? color-btn-text-dark : color-btn-text-light;
     out property <color> color-btn-bg: color-scheme == ColorScheme.dark ? PrimerColors.borderColor-muted : PrimerColors.bgColor-canvas-subtle;
     out property <color> color-btn-border: color-scheme == ColorScheme.dark ? color-btn-neutral-border-dark : color-btn-neutral-border-light;
@@ -467,7 +408,6 @@ export global ButtonTokens {
     out property <color> iconButton-fgColor-rest: color-scheme == ColorScheme.dark ? iconButton-fgColor-rest-dark : iconButton-fgColor-rest-light;
     out property <color> iconButton-bgColor-hover: color-scheme == ColorScheme.dark ? iconButton-bgColor-hover-dark : color-btn-hover-bg-light;
 
-    // --- Semantic button-* (primer-tokens color-fallbacks / ButtonBase.module.css naming)
     out property <color> button-default-fgColor-rest: color-btn-text;
     out property <color> button-default-bgColor-rest: color-btn-bg;
     out property <color> button-default-bgColor-hover: color-btn-hover-bg;
@@ -514,7 +454,6 @@ export global ButtonTokens {
     out property <color> button-link-bgColor-rest: transparent;
     out property <color> button-link-borderColor-rest: transparent;
 
-    // Filled-button shadows (rgba; light vs dark tuned for contrast on canvas)
     out property <color> button-shadow-ambient-light: rgba(31, 35, 40, 0.04);
     out property <color> button-shadow-elevated-light: rgba(31, 35, 40, 0.1);
     out property <color> button-shadow-danger-back-pressed-light: rgba(76, 0, 20, 0.2);
@@ -529,7 +468,6 @@ export global ButtonTokens {
     out property <color> button-shadow-danger-front-pressed-dark: rgba(0, 0, 0, 0.32);
     out property <color> button-shadow-primary-front-pressed-dark: rgba(0, 0, 0, 0.28);
 
-    // CounterLabel inside Button (ButtonBase.module.css .CounterLabel + legacy-theme light.ts / dark.ts fallbacks)
     property <color> buttonCounter-default-bg-rest-light: rgba(31, 35, 40, 0.08);
     property <color> buttonCounter-default-bg-rest-dark: #30363d;
     property <color> buttonCounter-primary-bg-rest-light: rgba(0, 45, 17, 0.2);
@@ -629,46 +567,32 @@ export global StateLabelTokens {
 }
 
 
-// primer-ui-react **`ActionList.module.css`** — list **`data-variant`** spacing only. Composes **`LayoutTokens`**.
 //
-// Token audit: | Intent | upstream | `out` | Composes from |
-// |--------|----------|-------|----------------|
-// | Inset list padding-block | `--base-size-8` on `[data-variant='inset']` | **`list-padding-block-inset`** | **`LayoutTokens.base-size-8`** |
-// | Horizontal-inset padding-bottom | `--base-size-8` on `[data-variant='horizontal-inset']` | **`list-padding-block-horizontal-inset-end`** | **`LayoutTokens.base-size-8`** |
-// | Inset item margin-inline | `--base-size-8` on `.ActionListItem` | **`item-margin-inline-inset`** | **`LayoutTokens.base-size-8`** |
 export global ActionListTokens {
     out property <length> list-padding-block-inset: LayoutTokens.base-size-8;
     out property <length> list-padding-block-horizontal-inset-end: LayoutTokens.base-size-8;
     out property <length> item-margin-inline-inset: LayoutTokens.base-size-8;
-    /// **ActionList.module.css** `:focus-visible` — `@mixin focusOutline` / **`--fgColor-accent`** ring.
     out property <color> item-focus-ring-color: PrimerColors.fgColor-link;
     out property <length> item-focus-ring-width: LayoutTokens.table-border-width + LayoutTokens.table-border-width;
-    /// **`.Divider`** hairline — **`borderColor.default`**.
+    /// *`.Divider`** hairline — **`borderColor.default`**.
     out property <color> item-divider-borderColor: PrimerColors.borderColor-default;
-    /// **`showDividers`** seam between rows — `--borderColor-muted`.
     out property <color> item-seam-borderColor: PrimerColors.borderColor-muted;
     out property <color> item-danger-fgColor-rest: PrimerColors.fgColor-danger;
     out property <color> item-danger-fgColor-disabled: ButtonTokens.color-btn-danger-disabled-text;
     out property <color> item-danger-bgColor-hover: PrimerColors.bgColor-danger-muted;
     out property <color> item-danger-bgColor-active: ButtonTokens.color-action-list-item-default-active-bg;
-    /// Row **Description** secondary line — `--fgColor-muted` / **`text-body-size-small`**.
     out property <color> item-description-fgColor: PrimerColors.fgColor-muted;
-    /// **`data-inactive`** label / description / trailing (`ActionList.module.css`).
     out property <color> item-inactive-label-fgColor: PrimerColors.fgColor-muted;
     out property <color> item-inactive-description-fgColor: PrimerColors.fgColor-subtle;
     out property <color> item-inactive-trailing-fgColor: PrimerColors.fgColor-muted;
-    /// **`loading`** row label + spinner segment.
     out property <color> item-loading-label-fgColor: PrimerColors.fgColor-muted;
     /// **`[data-active]`** — left accent + surface (orthogonal to selection).
     out property <color> item-active-indicator-bgColor: PrimerColors.borderColor-accent-emphasis;
     out property <color> item-active-bgColor-rest: ButtonTokens.color-action-list-item-default-selected-bg;
     out property <color> item-active-bgColor-hover: PrimerColors.table-row-bgColor-hover;
     out property <color> item-active-label-fgColor-rest: PrimerColors.fgColor-default;
-    /// **ActionList.LinkItem** anchor label — `--fgColor-link`.
     out property <color> item-link-fgColor-rest: PrimerColors.fgColor-link;
-    /// **GroupHeading** subtle label.
     out property <color> section-heading-subtle-fgColor: PrimerColors.fgColor-muted;
-    /// **GroupHeading** **`variant="filled"`** surface.
     out property <color> section-heading-filled-bgColor: PrimerColors.bgColor-neutral-muted;
     out property <color> section-heading-filled-title-fgColor: PrimerColors.fgColor-default;
     out property <color> section-heading-filled-borderColor: PrimerColors.borderColor-muted;
@@ -716,17 +640,6 @@ export global CheckboxTokens {
     out property <color> checkbox-iconColor-disabled: ButtonTokens.control-fgColor-disabled;
 }
 
-// primer-tokens **`control.borderColor.emphasis`** (unchecked native input chrome), **`control.bgColor/borderColor.disabled`**, **`control.checked.*`** with **radio** role swap (inner fill = **`fgColor`**, ring = **`bgColor`** per **`Radio.module.css`**). Composes **`PrimerColors`**, **`CheckboxTokens`**, **`ButtonTokens`** only.
-//
-// Token audit: | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
-// |--------|---------------------------|-------|-------|-----------|
-// | Unchecked fill | **`bgColor.default`** / shared **`.Input`** | RadioTokens | **`radio-bgColor-rest`** | **`Radio`** |
-// | Unchecked border | **`control.borderColor.emphasis`** → **`borderColor.emphasis`** | RadioTokens | **`radio-borderColor-rest`** | **`Radio`** |
-// | Unchecked disabled fill/border | **`control.bgColor.disabled`**, **`control.borderColor.disabled`** | RadioTokens | **`radio-bgColor-disabled`**, **`radio-borderColor-disabled`** | **`Radio`** |
-// | Checked inner disk | **`control.checked.fgColor.rest`** | RadioTokens | **`radio-checked-dot-fgColor-rest`** | **`Radio`** |
-// | Checked outer ring | **`control.checked.bgColor.rest`** | RadioTokens | **`radio-checked-ring-bgColor-rest`** | **`Radio`** |
-// | Checked dot disabled | **`control.checked.fgColor.disabled`** | RadioTokens | **`radio-checked-dot-fgColor-disabled`** | **`Radio`** |
-// | Checked ring disabled | **`control.checked.bgColor.disabled`** | RadioTokens | **`radio-checked-ring-bgColor-disabled`** | **`Radio`** |
 export global RadioTokens {
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
@@ -745,24 +658,9 @@ export global RadioTokens {
     out property <color> radio-checked-ring-bgColor-disabled: CheckboxTokens.checkbox-bgColor-checked-disabled;
 }
 
-// primer-tokens `functional/color/control.json5` — **`controlTrack`**, **`control.checked`**, **`controlKnob`**. React: **`ToggleSwitch.module.css`**. Composes **`PrimerColors`**, **`CheckboxTokens`**, **`ButtonTokens`**.
-//
-// Token audit: | Intent | primer-tokens / upstream | Owner | `out` | Consumers |
-// |--------|---------------------------|-------|-------|-----------|
-// | Track bg unchecked rest | **`controlTrack.bgColor.rest`** | ToggleSwitchTokens | **`track-bgColor-rest`** | **`ToggleSwitch`** |
-// | Track bg unchecked hover | **`controlTrack.bgColor.hover`** | ToggleSwitchTokens | **`track-bgColor-hover`** | PR4+ |
-// | Track bg unchecked active | **`controlTrack.bgColor.active`** | ToggleSwitchTokens | **`track-bgColor-active`** | PR4+ |
-// | Track bg disabled | **`controlTrack.bgColor.disabled`** | ToggleSwitchTokens | **`track-bgColor-disabled`** | **`ToggleSwitch`** |
-// | Track border rest | **`controlTrack.borderColor.rest`** | ToggleSwitchTokens | **`track-borderColor-rest`** | **`ToggleSwitch`** |
-// | Track border checked | **`control.checked.borderColor.rest`** | ToggleSwitchTokens | **`track-borderColor-checked`** | **`ToggleSwitch`** |
-// | Checked track rest/hover/active | **`control.checked.bgColor.*`** | ToggleSwitchTokens | **`track-bgColor-checked-*`** | **`ToggleSwitch`** / PR4 |
-// | Line icon fg | **`control.checked.fgColor.rest/disabled`** | ToggleSwitchTokens | **`line-icon-fgColor-*`** | **`ToggleSwitch`** |
-// | Circle icon fg | **`controlTrack.fgColor.rest/disabled`** | ToggleSwitchTokens | **`circle-icon-fgColor-*`** | **`ToggleSwitch`** |
-// | Knob fill/border | **`controlKnob.bgColor/borderColor.*`** | ToggleSwitchTokens | **`knob-*`** | **`ToggleSwitch`** |
 export global ToggleSwitchTokens {
     property <ColorScheme> color-scheme: Palette.color-scheme;
 
-    // `controlTrack.bgColor.*` → `base.color.neutral.*` (light/dark.json5 hex)
     property <color> track-bg-rest-light: #e6eaef;
     property <color> track-bg-rest-dark: #010409;
     out property <color> track-bgColor-rest: color-scheme == ColorScheme.dark ? track-bg-rest-dark : track-bg-rest-light;
@@ -818,28 +716,6 @@ export global TextInputTokens {
     out property <color> border-disabled: ButtonTokens.button-default-borderColor-disabled;
 }
 
-// primer-ui-react **`TreeView.module.css`** + primer-tokens **`component/treeView.json5`**. Row hover / current / focus map to shared **`control.transparent`** and **`fgColor.accent`** semantics already stored in **`PrimerColors`** / **`ButtonTokens`**. Composes those globals + **`LayoutTokens`** only — **no new hex literals**.
-//
-// Token audit: | Intent | upstream | `out` on **TreeViewTokens** | Composes from |
-// |--------|----------|-----------------------------|----------------|
-// | Row container hover bg | `--control-transparent-bgColor-hover` | **`item-bgColor-hover`** | **`PrimerColors.table-row-bgColor-hover`** |
-// | `aria-current` row bg | `--control-transparent-bgColor-selected` | **`item-bgColor-current`** | **`ButtonTokens.color-action-list-item-default-selected-bg`** |
-// | Chevron hit hover (when split) | `.TreeViewItemToggleHover` same hover | **`toggle-bgColor-hover`** | **`item-bgColor-hover`** |
-// | Row + label fg | `--fgColor-default` | **`item-fgColor-default`** | **`PrimerColors.fgColor-default`** |
-// | Chevron / visuals / trailing fg | `--fgColor-muted` | **`item-fgColor-muted`** | **`PrimerColors.fgColor-muted`** |
-// | Directory leading icon rest | `--treeViewItem-leadingVisual-iconColor-rest` (**`treeView.json5`**: light blue.3, dark → muted) | **`item-leadingVisual-icon-fgColor-rest`** | light **`PrimerColors.fgColor-link`**, dark **`PrimerColors.fgColor-muted`** |
-// | Current pill accent | deliberate **`--fgColor-accent`** (not emphasis bg) | **`item-current-indicator-fgColor`** | **`PrimerColors.fgColor-accent`** |
-// | Nesting guide lines | `--borderColor-muted` | **`level-line-borderColor`** | **`PrimerColors.borderColor-muted`** |
-// | `:focus-visible` ring | `--boxShadow-thick` + **`--fgColor-accent`** | **`item-focus-ring-color`** | **`PrimerColors.fgColor-accent`** |
-// | Content column gap | `--stack-gap-condensed` (**8px**) | **`item-content-gap`** | **`LayoutTokens.base-size-8`** |
-// | Row corner radius | `--borderRadius-medium` | **`item-border-radius`** | **`LayoutTokens.borderRadius-medium`** |
-// | Thin borders | `--borderWidth-thin` | **`item-border-width-thin`** | **`LayoutTokens.table-border-width`** |
-// | Min row height | `--min-item-height` **2rem** | **`item-min-height`** | **`LayoutTokens.control-medium-size`** |
-// | Min row height coarse pointer | **2.75rem** | **`item-min-height-coarse`** | **44px** literal (React `pointer: coarse` parity) |
-// | Toggle width | **1rem** / **1.5rem** | **`toggle-width-default`**, **`toggle-width-coarse`** | **`LayoutTokens.base-size-16`**, **`3 * base-size-8`** |
-// | Content horizontal padding | `--base-size-8` | **`item-content-padding-inline`** | **`LayoutTokens.base-size-8`** |
-// | Current bar geometry | **0.25rem × 1.5rem**, offset **-8px** | **`item-current-indicator-width`**, **`-height`**, **`item-current-indicator-offset-inline`** | **`base-size-4`**, **`label-height-large`**, **negated `base-size-8`** |
-// | Body line height fallback | `--text-body-lineHeight-medium` | **`item-line-height-fallback`** | **`LayoutTokens.text-body-lineHeight-medium`** |
 export global TreeViewTokens {
     out property <color> item-bgColor-hover: PrimerColors.table-row-bgColor-hover;
     out property <color> item-bgColor-current: ButtonTokens.color-action-list-item-default-selected-bg;
@@ -887,30 +763,6 @@ export global OverlayTokens {
     out property <length> anchored-overlay-auto-max-width: max(AppWindow.window-width - 32px, anchored-overlay-auto-min-width);
 }
 
-// primer-ui-react `Dialog.module.css` + `Dialog.tsx` **`widthMap`**, plus primer-tokens **`functional/size`**. Composes **`LayoutTokens`** `out` only (width literals below are **React-shipped** exceptions vs **`overlay.size`** in JSON5 — see audit).
-//
-// Token audit (PR3): | Intent | primer-tokens / upstream | Owner | `out` / source | Consumers |
-// |--------|---------------------------|-------|----------------|-----------|
-// | Panel width **small** | React **`widthMap.small`** **296px** — *not* **`overlay.width.small`** (320px in tokens) | DialogTokens | **`width-small`** literal | **`Dialog`** `panel-w` |
-// | Panel width **medium** | React **320px** — tokens **`overlay.width.medium`** often 480px: **parity = React** | DialogTokens | **`width-medium`** literal | **`Dialog`** |
-// | Panel width **large** | React **480px** | DialogTokens | **`width-large`** literal | **`Dialog`** |
-// | Panel width **xlarge** | React **640px** — aligns tokens **`overlay.width.xlarge`** | DialogTokens | **`width-xlarge`** literal | **`Dialog`** |
-// | Panel height **small** | React **`heightMap.small`** **480px** | DialogTokens | **`height-small`** literal | **`Dialog`** `panel-max-height` |
-// | Panel height **large** | React **`heightMap.large`** **640px** | DialogTokens | **`height-large`** literal | **`Dialog`** |
-// | Panel height **auto** | React **`heightMap.auto`** — max = viewport overlay cap | OverlayTokens | **`modal-viewport-max-height`** | **`ModalOverlay`** |
-// | Viewport margin (max panel) | `--overlay-height-[breakpoint]` math → **64px** inset | OverlayTokens | **`modal-viewport-max-*`** | **`ModalOverlay`**, **`Dialog`** |
-// | Dialog header outer padding | **base-size-8** | LayoutTokens | **`base-size-8`** | **`header-padding`** |
-// | Header content inline / block | **base-size-8**, **base-size-6** | LayoutTokens | same | **`header-content-*`** |
-// | Title / subtitle typography | **`text-body-size-*`**, weights | LayoutTokens | composed | **`title-font-size`**, **`subtitle-*`** |
-// | Title ↔ subtitle gap | **base-size-4** | LayoutTokens | **`base-size-4`** | **`header-title-subtitle-gap`** |
-// | Body stack gap (blocks) | **base-size-12** | LayoutTokens | **`base-size-12`** | **`body-block-spacing`** |
-// | Body + footer inset | **base-size-16** | LayoutTokens | **`base-size-16`** | **`body-padding`**, **`footer-padding`** |
-// | Footer button row gap | **base-size-8** | LayoutTokens | **`button-content-gap`** | **`footer-actions-gap`** |
-// | Narrow breakpoint (**`Dialog.module.css`** `@media`) | **`767px`** — CSS **`max-width`** / **`min-width`** bridge | DialogTokens | **`narrow-max-width`** literal | **`Dialog`** narrow vs regular positions |
-// | **`align`** top/bottom viewport inset | React docs **~4rem** from edge (**`base-size-16` × 4**) | DialogTokens | **`align-viewport-edge-inset`** | **`ModalOverlay`** `panel-shell` **`y`** |
-// | Enter motion (center / scaleFade) | **base.duration.200** | LayoutTokens **`duration-200`** | **`overlay-enter-duration`** | **`ModalOverlay`** |
-// | Enter motion (side / bottom sheet) | **250ms** CSS — no **`timing.json5`** step | LayoutTokens **`duration-250`** | **`overlay-sheet-enter-duration`** | future side/bottom PRs |
-// | Easing curve | React **`cubic-bezier(0.33, 1, 0.68, 1)`** — not **`base.easing.easeOut`** | — | inlined in **`modal-overlay.slint`** `animate` | **`ModalOverlay`** |
 export global DialogTokens {
     out property <length> header-padding: LayoutTokens.base-size-8;
     out property <length> header-content-padding-inline: LayoutTokens.base-size-8;
@@ -980,13 +832,9 @@ export global FilteredActionListTokens {
     out property <length> skeleton-bar-border-radius: LayoutTokens.base-size-4;
 }
 
-/// **`UnderlineTabbedInterface.module.css`** **`LoadingCounter`** + **`UnderlineNav2`** tab counter chrome (dedupes literals vs row component).
 export global UnderlineNavTokens {
-    /// Upstream **1.5rem** — **`base-size-8` × 3**.
     out property <length> loading-counter-width: 3 * LayoutTokens.base-size-8;
-    /// Upstream **1rem** — **`base-size-16`** in default root sizing.
     out property <length> loading-counter-height: LayoutTokens.base-size-16;
-    /// **`loadingCounterKeyFrames`**: **1.2s** each leg × **2** for a full ping-pong cycle.
     out property <duration> loading-counter-animation-period: 2400ms;
     out property <float> loading-counter-opacity-min: 0.2;
     out property <float> loading-counter-opacity-max: 1.0;

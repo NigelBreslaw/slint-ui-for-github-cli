@@ -63,7 +63,6 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
         ],
     ),
     ("folder-label", "Label", &[("label-playground", "Playground")]),
-    ("folder-navs", "Navs", &[("navs-playground", "Playground")]),
     ("folder-radio", "Radio", &[("radio-playground", "Radio")]),
     (
         "folder-segmented-control",

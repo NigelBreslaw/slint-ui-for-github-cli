@@ -506,44 +506,6 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
-    id: "folder-navs",
-    label: "Navs",
-    level: 1,
-    has-children: true,
-    expanded: true,
-    current: false,
-    leading-is-directory: true,
-    has-leading-visual: true,
-    trailing: TreeViewTrailingVisual.none,
-    has-leading-action: false,
-    show-leading-action-icon: false,
-    leading-action-icon: Icons.dot_fill,
-    leading-file-icon: Icons.file,
-    interactive: true,
-    is-skeleton: false,
-    has-secondary-actions: false,
-    secondary-actions-badge: "",
-    loading-children-badge: "",
-},{
-    id: "navs-playground",
-    label: "Playground",
-    level: 2,
-    has-children: false,
-    expanded: false,
-    current: GalleryState.selected-page-id == "navs-playground",
-    leading-is-directory: false,
-    has-leading-visual: true,
-    trailing: TreeViewTrailingVisual.none,
-    has-leading-action: false,
-    show-leading-action-icon: false,
-    leading-action-icon: Icons.dot_fill,
-    leading-file-icon: Icons.file,
-    interactive: true,
-    is-skeleton: false,
-    has-secondary-actions: false,
-    secondary-actions-badge: "",
-    loading-children-badge: "",
-},{
     id: "folder-radio",
     label: "Radio",
     level: 1,
@@ -1057,7 +1019,6 @@ export component GallerySidebar {
                                 || id == "dialogs-playground"
                                 || id == "icon-button-playground"
                                 || id == "label-playground"
-                                || id == "navs-playground"
                                 || id == "radio-playground"
                                 || id == "segmented-control-playground"
                                 || id == "select-playground"

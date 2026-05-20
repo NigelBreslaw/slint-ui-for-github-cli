@@ -72,7 +72,6 @@ const GALLERY_SIDEBAR_NAV: readonly {
         ],
     },
     { folderId: "folder-label", label: "Label", leaves: [{ id: "label-playground", label: "Playground" }] },
-    { folderId: "folder-navs", label: "Navs", leaves: [{ id: "navs-playground", label: "Playground" }] },
     {
         folderId: "folder-radio",
         label: "Radio",
