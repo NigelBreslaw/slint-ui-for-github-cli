@@ -17,6 +17,7 @@ import { GalleryAnchoredOverlayPage } from "./views/gallery-anchored-overlay-pag
 import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
 import { GalleryActionList2Page } from "./views/gallery-action-list2-page.slint";
 import { GalleryFilteredActionList2Page } from "./views/gallery-filtered-action-list2-page.slint";
+import { GallerySelectPanel2Page } from "./views/gallery-select-panel2-page.slint";
 import { GalleryActionMenuPage } from "./views/gallery-action-menu-page.slint";
 import { GalleryDialogsPlaygroundPage } from "./views/gallery-dialog-playground-page.slint";
 import { GallerySheetsPage } from "./views/gallery-sheets-page.slint";
@@ -46,6 +47,7 @@ export {
 } from "./state/gallery-filtered-action-list2-state.slint";
 export { GalleryFilteredActionList2Multi } from "./state/gallery-filtered-action-list2-multi-state.slint";
 export { GalleryFilteredActionList2SelectAll } from "./state/gallery-filtered-action-list2-select-all-state.slint";
+export { GallerySelectPanel2Default } from "./state/gallery-select-panel2-state.slint";
 export { GalleryTreeViewListModels } from "./state/gallery-tree-view-list-models.slint";
 export { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 export { GalleryState } from "./state/gallery-state.slint";
@@ -109,6 +111,10 @@ export component GalleryWindow inherits Window {
                         }
 
                         if GalleryState.selected-page-id == "filtered-action-list2-playground": GalleryFilteredActionList2Page {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "select-panel2-playground": GallerySelectPanel2Page {
                             height: main-scroll.height;
                         }
 

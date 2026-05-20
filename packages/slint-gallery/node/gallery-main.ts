@@ -41,6 +41,7 @@ type GalleryWindowModule = {
     GalleryFilteredActionList2Long: GalleryFilteredActionList2Handle;
     GalleryFilteredActionList2Multi: GalleryFilteredActionList2MultiHandle;
     GalleryFilteredActionList2SelectAll: GalleryFilteredActionList2SelectAllHandle;
+    GallerySelectPanel2Default: GalleryFilteredActionList2MultiHandle;
     GalleryTreeViewListModels: GalleryTreeViewListModelsHandle;
     Icons: {
       dot_fill: ImageData;
@@ -67,6 +68,7 @@ wireGalleryFilteredActionList2Long(
 );
 wireGalleryFilteredActionList2Multi(window.GalleryFilteredActionList2Multi);
 wireGalleryFilteredActionList2SelectAll(window.GalleryFilteredActionList2SelectAll);
+wireGalleryFilteredActionList2Multi(window.GallerySelectPanel2Default);
 wireGalleryTreeViewListModels(
   window.GalleryTreeViewListModels,
   window.Icons.dot_fill,

@@ -1,0 +1,153 @@
+// Primer **SelectPanel2** — **`Button`** anchor + **`AnchoredOverlay`** + heading + **`FilteredActionList2`** (new stack only).
+// Upstream: `SelectPanel.tsx` + `AnchoredOverlay` + `FilteredActionList`.
+
+import {
+    AnchoredOverlay,
+    AnchoredOverlayAlign,
+    AnchoredOverlayHeight,
+    AnchoredOverlaySide,
+    AnchoredOverlayWidth,
+} from "../AnchoredOverlay/anchored-overlay.slint";
+import { Button, ButtonVariant } from "../Buttons/buttons.slint";
+import { Icons } from "../assets/icons.slint";
+import { FilteredActionList2 } from "../FilteredActionList2/filtered-action-list2.slint";
+import {
+    ActionList2Line,
+    ActionList2ListRole,
+    ActionList2SelectionMode,
+} from "../ActionList2/types.slint";
+import { LayoutTokens, SelectPanelTokens } from "../tokens.slint";
+import { SelectPanel2Heading } from "./select-panel2-heading.slint";
+
+export component SelectPanel2 {
+    in property <string> anchor-label: "Select labels";
+    in property <ButtonVariant> button-variant: ButtonVariant.default;
+    in property <bool> button-disabled: false;
+    in property <string> title: "Select labels";
+    in property <string> subtitle: "";
+    in property <string> filter-placeholder: "Filter Labels";
+    in property <AnchoredOverlaySide> side: AnchoredOverlaySide.outside_bottom;
+    in property <AnchoredOverlayAlign> align: AnchoredOverlayAlign.start;
+    in property <AnchoredOverlayWidth> width-preset: AnchoredOverlayWidth.medium;
+    in property <AnchoredOverlayHeight> height-preset: AnchoredOverlayHeight.auto;
+    in property <bool> prevent-overflow: true;
+    in property <bool> show-backdrop: false;
+    in property <bool> allow-dismiss: true;
+    in property <bool> reduce-motion: false;
+    in property <length> margin: LayoutTokens.base-size-4;
+    in property <length> anchor-offset: 0px;
+    in property <length> alignment-offset: 0px;
+    /// Panel inner padding (upstream **SelectPanel** `.Header` uses `--base-size-8`).
+    in property <length> panel-padding: LayoutTokens.base-size-8;
+    /// Body width inside **`AnchoredOverlayWidth.medium`** (320px) minus horizontal **`panel-padding`**.
+    property <length> panel-body-width: 320px - 2 * root.panel-padding;
+
+    in-out property <bool> open: false;
+    property <bool> popup-visible: false;
+
+    in-out property <string> filter-text: "";
+    in property <[ActionList2Line]> lines: [];
+    in property <ActionList2ListRole> list-role: ActionList2ListRole.listbox;
+    in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.multiple;
+    in property <int> selected-index: -1;
+    in property <[bool]> multi-selected: [];
+
+    callback filter-changed(string);
+    callback item-activated(int);
+    callback opened();
+    callback closed();
+    callback close-requested();
+
+    changed open => {
+        if root.open && !root.popup-visible {
+            panel-popup.show();
+        } else if !root.open && root.popup-visible {
+            panel-popup.close();
+        }
+    }
+
+    VerticalLayout {
+        alignment: start;
+
+        trigger := Button {
+            variant: root.button-variant;
+            disabled: root.button-disabled;
+            label: root.anchor-label;
+            has-trailing-icon: true;
+            trailing-icon: Icons.triangle_down;
+            clicked => {
+                if root.popup-visible {
+                    panel-popup.close();
+                } else {
+                    panel-popup.show();
+                }
+            }
+        }
+
+        panel-popup := AnchoredOverlay {
+            position-props: {
+                absolute-position: trigger.absolute-position,
+                source-size: { width: trigger.width, height: trigger.height },
+            };
+            side: root.side;
+            align: root.align;
+            width-preset: root.width-preset;
+            height-preset: root.height-preset;
+            prevent-overflow: root.prevent-overflow;
+            show-backdrop: root.show-backdrop;
+            allow-dismiss: root.allow-dismiss;
+            reduce-motion: root.reduce-motion;
+            margin: root.margin;
+            anchor-offset: root.anchor-offset;
+            alignment-offset: root.alignment-offset;
+            panel-padding: 0px;
+
+            close-requested => {
+                root.close-requested();
+            }
+
+            opened => {
+                root.popup-visible = true;
+                root.open = true;
+                root.opened();
+            }
+
+            closed => {
+                root.popup-visible = false;
+                root.open = false;
+                root.closed();
+            }
+
+            panel-body := VerticalLayout {
+                width: root.panel-body-width;
+                padding: root.panel-padding;
+                spacing: SelectPanelTokens.wrapper-stack-gap;
+                alignment: start;
+
+                SelectPanel2Heading {
+                    width: 100%;
+                    title: root.title;
+                    subtitle: root.subtitle;
+                }
+
+                FilteredActionList2 {
+                    width: 100%;
+                    horizontal-stretch: 0;
+                    filter-text <=> root.filter-text;
+                    placeholder: root.filter-placeholder;
+                    lines: root.lines;
+                    list-role: root.list-role;
+                    selection-mode: root.selection-mode;
+                    selected-index: root.selected-index;
+                    multi-selected: root.multi-selected;
+                    filter-changed(t) => {
+                        root.filter-changed(t);
+                    }
+                    item-activated(ix) => {
+                        root.item-activated(ix);
+                    }
+                }
+            }
+        }
+    }
+}

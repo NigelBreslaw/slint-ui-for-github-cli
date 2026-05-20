@@ -620,6 +620,44 @@ export component GallerySidebar {
     secondary-actions-badge: "",
     loading-children-badge: "",
 },{
+    id: "folder-select-panel",
+    label: "Select panel",
+    level: 1,
+    has-children: true,
+    expanded: true,
+    current: false,
+    leading-is-directory: true,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
+    id: "select-panel2-playground",
+    label: "SelectPanel2",
+    level: 2,
+    has-children: false,
+    expanded: false,
+    current: GalleryState.selected-page-id == "select-panel2-playground",
+    leading-is-directory: false,
+    has-leading-visual: true,
+    trailing: TreeViewTrailingVisual.none,
+    has-leading-action: false,
+    show-leading-action-icon: false,
+    leading-action-icon: Icons.dot_fill,
+    leading-file-icon: Icons.file,
+    interactive: true,
+    is-skeleton: false,
+    has-secondary-actions: false,
+    secondary-actions-badge: "",
+    loading-children-badge: "",
+},{
     id: "select-playground",
     label: "Playground",
     level: 2,
@@ -1004,6 +1042,7 @@ export component GallerySidebar {
                                 || id == "radio-playground"
                                 || id == "segmented-control-playground"
                                 || id == "select-playground"
+                                || id == "select-panel2-playground"
                                 || id == "sheets-playground"
                                 || id == "skeleton-box-playground"
                                 || id == "spinner-playground"

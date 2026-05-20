@@ -64,6 +64,11 @@ const GALLERY_SIDEBAR_NAV: &[(&str, &str, &[(&str, &str)])] = &[
     ),
     ("folder-select", "Select", &[("select-playground", "Playground")]),
     (
+        "folder-select-panel",
+        "Select panel",
+        &[("select-panel2-playground", "SelectPanel2")],
+    ),
+    (
         "folder-sheets",
         "Sheets",
         &[("sheets-playground", "Playground")],
@@ -773,6 +778,94 @@ fn wire_gallery_filtered_action_list2_multi(window: &GalleryWindow) {
     );
 }
 
+fn push_gallery_select_panel2_default(
+    window_weak: slint::Weak<GalleryWindow>,
+    selected_labels: &RefCell<BTreeSet<SharedString>>,
+    filter: SharedString,
+) {
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter.as_str());
+    let lines: Vec<ActionList2Line> = picked
+        .iter()
+        .map(|&l| {
+            let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                .iter()
+                .position(|&x| x == l)
+                .unwrap_or(0);
+            action_list2_line_default_story(l, color_ix)
+        })
+        .collect();
+    let multi_selected: Vec<bool> = picked
+        .iter()
+        .map(|&l| selected_labels.borrow().contains(&SharedString::from(l)))
+        .collect();
+    let Some(w) = window_weak.upgrade() else {
+        return;
+    };
+    let g = w.global::<GallerySelectPanel2Default>();
+    g.set_lines(ModelRc::new(VecModel::from(lines)));
+    g.set_multi_selected(ModelRc::new(VecModel::from(multi_selected)));
+}
+
+fn wire_gallery_filtered_action_list2_multi_as_select_panel2_default(window: &GalleryWindow) {
+    let selected_labels = Rc::new(RefCell::new(BTreeSet::from([
+        SharedString::from("bug"),
+        SharedString::from("good first issue"),
+    ])));
+    let current_filter = Rc::new(RefCell::new(SharedString::new()));
+    let window_weak = window.as_weak();
+
+    window
+        .global::<GallerySelectPanel2Default>()
+        .on_filter_changed({
+            let selected_labels = Rc::clone(&selected_labels);
+            let current_filter = Rc::clone(&current_filter);
+            let window_weak = window_weak.clone();
+            move |filter: SharedString| {
+                *current_filter.borrow_mut() = filter.clone();
+                push_gallery_select_panel2_default(
+                    window_weak.clone(),
+                    &selected_labels,
+                    filter,
+                );
+            }
+        });
+
+    window.global::<GallerySelectPanel2Default>().on_item_activated({
+        let selected_labels = Rc::clone(&selected_labels);
+        let current_filter = Rc::clone(&current_filter);
+        let window_weak = window_weak.clone();
+        move |ix: i32| {
+            let picked = filter_prefix_labels(
+                &FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+                current_filter.borrow().as_str(),
+            );
+            let Some(&label) = picked.get(ix as usize) else {
+                return;
+            };
+            {
+                let mut s = selected_labels.borrow_mut();
+                let key = SharedString::from(label);
+                if s.contains(&key) {
+                    s.remove(&key);
+                } else {
+                    s.insert(key);
+                }
+            }
+            push_gallery_select_panel2_default(
+                window_weak.clone(),
+                &selected_labels,
+                current_filter.borrow().clone(),
+            );
+        }
+    });
+
+    push_gallery_select_panel2_default(
+        window_weak,
+        &selected_labels,
+        SharedString::new(),
+    );
+}
+
 fn push_gallery_filtered_action_list2_select_all(
     window_weak: slint::Weak<GalleryWindow>,
     selected_labels: &RefCell<BTreeSet<SharedString>>,
@@ -944,6 +1037,7 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_filtered_action_list2_long(&window);
     wire_gallery_filtered_action_list2_multi(&window);
     wire_gallery_filtered_action_list2_select_all(&window);
+    wire_gallery_filtered_action_list2_multi_as_select_panel2_default(&window);
 
     fill_gallery_tree_view_list_models(&window);
     wire_gallery_sidebar_nav(&window);

@@ -1,0 +1,95 @@
+// **SelectPanel2** gallery — upstream **SelectPanel** `Default` (PR4 spike); more scenarios in later PRs.
+import {
+    ActionList2ListRole,
+    ActionList2SelectionMode,
+    Select,
+    SelectOption,
+    SelectPanel2,
+    ValidationStatus,
+} from "../../../primer-slint/primer.slint";
+import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { GallerySelectPanel2Default } from "../state/gallery-select-panel2-state.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+export component GallerySelectPanel2Page {
+    property <int> scenario-ix: 0;
+
+    property <[SelectOption]> scenario-options: [
+        { value: "0", label: "Default", enabled: true },
+    ];
+
+    property <string> scenario-caption:
+        "Upstream SelectPanel Default — `title` / `subtitle`, filter + multi-select list (`items.slice(1, 3)` pre-selected).";
+
+    property <string> sp2-filter: "";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            horizontal-stretch: 1;
+            padding: 24px;
+            spacing: 16px;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "SelectPanel2";
+                color: PrimerColors.fgColor-default;
+                font-size: 22px;
+                font-weight: 600;
+            }
+
+            Text {
+                text: root.scenario-caption;
+                color: PrimerColors.fgColor-muted;
+                font-size: LayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+
+            SelectPanel2 {
+                anchor-label: "Select labels";
+                title: "Select labels";
+                subtitle: "Use labels to organize issues and pull requests";
+                filter-text <=> root.sp2-filter;
+                lines: GallerySelectPanel2Default.lines;
+                list-role: ActionList2ListRole.listbox;
+                selection-mode: ActionList2SelectionMode.multiple;
+                multi-selected: GallerySelectPanel2Default.multi-selected;
+                filter-changed(t) => {
+                    GallerySelectPanel2Default.filter-changed(t);
+                }
+                item-activated(ix) => {
+                    GallerySelectPanel2Default.item-activated(ix);
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 16px;
+                alignment: start;
+
+                Text {
+                    text: "Scenario";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Select {
+                    horizontal-stretch: 1;
+                    label-text: "SelectPanel2 options";
+                    placeholder: "Choose…";
+                    options: root.scenario-options;
+                    selected-index <=> root.scenario-ix;
+                    validation-status: ValidationStatus.none;
+                    selected-changed(_i) => {
+                    }
+                }
+            }
+        }
+    }
+}

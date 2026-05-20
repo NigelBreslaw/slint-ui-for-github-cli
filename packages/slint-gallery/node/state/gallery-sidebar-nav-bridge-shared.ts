@@ -80,6 +80,11 @@ const GALLERY_SIDEBAR_NAV: readonly {
         label: "Select",
         leaves: [{ id: "select-playground", label: "Playground" }],
     },
+    {
+        folderId: "folder-select-panel",
+        label: "Select panel",
+        leaves: [{ id: "select-panel2-playground", label: "SelectPanel2" }],
+    },
     { folderId: "folder-sheets", label: "Sheets", leaves: [{ id: "sheets-playground", label: "Playground" }] },
     {
         folderId: "folder-skeleton-box",

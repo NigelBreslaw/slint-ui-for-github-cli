@@ -1,0 +1,30 @@
+import { LayoutTokens, PrimerColors } from "../tokens.slint";
+
+/// Title + subtitle for **SelectPanel2** (upstream **SelectPanel** `.Title` / `.Subtitle` in `.Header`).
+export component SelectPanel2Heading {
+    in property <string> title: "";
+    in property <string> subtitle: "";
+
+    horizontal-stretch: 1;
+
+    VerticalLayout {
+        alignment: start;
+        spacing: LayoutTokens.base-size-4;
+
+        if root.title != "": Text {
+            text: root.title;
+            color: PrimerColors.fgColor-default;
+            font-size: LayoutTokens.text-body-size-medium;
+            font-weight: LayoutTokens.base-text-weight-semibold;
+            wrap: word-wrap;
+        }
+
+        if root.subtitle != "": Text {
+            text: root.subtitle;
+            color: PrimerColors.fgColor-muted;
+            font-size: LayoutTokens.text-body-size-small;
+            font-weight: LayoutTokens.base-text-weight-medium;
+            wrap: word-wrap;
+        }
+    }
+}

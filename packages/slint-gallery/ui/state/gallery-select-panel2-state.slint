@@ -1,0 +1,10 @@
+/// **SelectPanel2** **Default** demo — label rows + multi-select (`items.slice(1, 3)`), filtered in **Node** / **Rust**.
+
+import { ActionList2Line } from "../../../primer-slint/primer.slint";
+
+export global GallerySelectPanel2Default {
+    in-out property <[ActionList2Line]> lines: [];
+    in-out property <[bool]> multi-selected: [];
+    callback filter-changed(string);
+    callback item-activated(int);
+}
