@@ -3,14 +3,13 @@ import { TimeReportingState } from "../../bridges/slint/time-reporting-state.sli
 import {
     ActionList2ListRole,
     ActionList2SelectionMode,
-    AnchoredOverlayWidth,
     Button,
+    FilteredActionList2,
     ModalOverlay,
     OverlayAlign,
     OverlayHeight,
     OverlayWidth,
     Pagination,
-    SelectPanel2,
 } from "../../../../packages/primer-slint/primer.slint";
 import { PaginationLogic } from "../../../../packages/primer-slint/Pagination/pagination-logic.slint";
 import { DialogTokens, LayoutTokens, PrimerColors } from "../../../../packages/primer-slint/tokens.slint";
@@ -89,33 +88,48 @@ export component TimeReportingProjectPickerOverlay {
             width: 100%;
             spacing: 16px;
 
-            SelectPanel2 {
+            VerticalLayout {
                 width: 100%;
-                has-built-in-anchor: false;
-                open: TimeReportingState.picker-open;
-                close-on-single-select: false;
-                allow-dismiss: false;
-                show-backdrop: false;
-                width-preset: AnchoredOverlayWidth.large;
-                title: "Select time keeping project";
-                subtitle: "Search by title, number, or URL";
-                filter-text <=> AppState.projects-search;
-                filter-placeholder: "Search by title, number, or URL…";
-                lines: AppState.projects-picker-lines;
-                list-role: ActionList2ListRole.listbox;
-                selection-mode: ActionList2SelectionMode.single;
-                selected-index <=> AppState.projects-picker-selected-index;
-                body-region-height: 220px;
-                empty-message: "No projects match your search.";
-                loading: AppState.projects-load-status == "Loading projects…";
-                filter-changed(q) => {
-                    AppState.project_search_changed(q);
+                spacing: 12px;
+
+                Text {
+                    text: "Select time keeping project";
+                    color: PrimerColors.fgColor-default;
+                    font-size: DialogTokens.title-font-size;
+                    font-weight: DialogTokens.title-font-weight;
+                    wrap: word-wrap;
                 }
-                single-selected-changed(ix) => {
-                    if ix < 0 || ix >= AppState.projects-picker-options-count {
-                        return;
+
+                Text {
+                    text: "Search by title, number, or URL";
+                    color: PrimerColors.fgColor-muted;
+                    font-size: DialogTokens.subtitle-font-size;
+                    font-weight: DialogTokens.subtitle-font-weight;
+                    wrap: word-wrap;
+                }
+
+                FilteredActionList2 {
+                    width: 100%;
+                    filter-text <=> AppState.projects-search;
+                    placeholder: "Search by title, number, or URL…";
+                    lines: AppState.projects-picker-lines;
+                    list-role: ActionList2ListRole.listbox;
+                    selection-mode: ActionList2SelectionMode.single;
+                    selected-index <=> AppState.projects-picker-selected-index;
+                    body-region-height: 220px;
+                    empty-message: "No projects match your search.";
+                    loading: AppState.projects-load-status == "Loading projects…";
+                    disabled: AppState.projects-load-status != ""
+                        && AppState.projects-load-status != "Loading projects…";
+                    filter-changed(q) => {
+                        AppState.project_search_changed(q);
                     }
-                    TimeReportingState.time-reporting-project-chosen(ix);
+                    item-activated(ix) => {
+                        if ix < 0 || ix >= AppState.projects-picker-options-count {
+                            return;
+                        }
+                        TimeReportingState.time-reporting-project-chosen(ix);
+                    }
                 }
             }
 

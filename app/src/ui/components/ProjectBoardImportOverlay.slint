@@ -6,16 +6,15 @@ import {
 import {
     ActionList2ListRole,
     ActionList2SelectionMode,
-    AnchoredOverlayWidth,
     Button,
     ButtonVariant,
     Checkbox,
+    FilteredActionList2,
     ModalOverlay,
     OverlayAlign,
     OverlayHeight,
     OverlayWidth,
     PrimerTextInput,
-    SelectPanel2,
     Size,
     Spinner,
 } from "../../../../packages/primer-slint/primer.slint";
@@ -89,18 +88,10 @@ export component ProjectBoardImportOverlay {
                     wrap: word-wrap;
                 }
 
-                SelectPanel2 {
+                FilteredActionList2 {
                     width: 100%;
-                    has-built-in-anchor: false;
-                    open: ProjectBoardListState.import-dialog-open;
-                    close-on-single-select: false;
-                    allow-dismiss: false;
-                    show-backdrop: false;
-                    width-preset: AnchoredOverlayWidth.xlarge;
-                    title: "";
-                    subtitle: "";
                     filter-text <=> ProjectBoardListState.import-repos-search;
-                    filter-placeholder: "Filter by name…";
+                    placeholder: "Filter by name…";
                     lines: ProjectBoardListState.import-repo-lines;
                     list-role: ActionList2ListRole.listbox;
                     selection-mode: ActionList2SelectionMode.single;
@@ -108,10 +99,12 @@ export component ProjectBoardImportOverlay {
                     body-region-height: 200px;
                     empty-message: "No repositories match your search.";
                     loading: ProjectBoardListState.import-repos-load-status == "Loading repositories…";
+                    disabled: ProjectBoardListState.import-repos-load-status != ""
+                        || ProjectBoardListState.import-repo-options-count == 0;
                     filter-changed(q) => {
                         ProjectBoardListState.project-board-import-repos-search-changed(q);
                     }
-                    single-selected-changed(ix) => {
+                    item-activated(ix) => {
                         ProjectBoardListState.project-board-import-repo-selected-changed(ix);
                     }
                 }
