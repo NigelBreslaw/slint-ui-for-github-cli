@@ -903,7 +903,6 @@ fn push_gallery_filtered_action_list2_select_all(
     g.set_multi_selected(ModelRc::new(VecModel::from(multi_selected)));
     g.set_select_all_checked(select_all_checked);
     g.set_select_all_indeterminate(select_all_indeterminate);
-    (select_all_checked, select_all_indeterminate)
 }
 
 fn wire_gallery_filtered_action_list2_select_all(window: &GalleryWindow) {
