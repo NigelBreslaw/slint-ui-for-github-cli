@@ -12,6 +12,7 @@ export component NavListItem {
     in property <int> subitem-depth: 0;
     in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
     in property <ActionListRowSize> row-size: ActionListRowSize.medium;
+    /// When non-empty, row is non-interactive and shows attention copy (upstream **`inactiveText`**).
     in property <string> inactive-text: "";
     /// Fires on pointer / keyboard activation when not inactive (host opens **`href`**).
     callback clicked;

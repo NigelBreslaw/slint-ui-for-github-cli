@@ -27,6 +27,7 @@ export component GalleryNavListPage {
         { value: "2", label: "WithNestedSubItems", enabled: true },
         { value: "3", label: "WithGroup", enabled: true },
         { value: "4", label: "WithGroupHeadingLinks", enabled: true },
+        { value: "5", label: "WithInactiveItems", enabled: true },
     ];
 
     /// Active leaf id: `"1"`, `"2.1"`, `"1.2.2"`, etc.
@@ -47,12 +48,22 @@ export component GalleryNavListPage {
     property <string> preview-group1-title: "Group 1";
     property <string> preview-group2-title: "Group 2";
 
+    property <bool> preview-inactive-item1: true;
+    property <bool> preview-inactive-sub2: true;
+    property <string> preview-inactive-text: "Unavailable due to an outage";
+
+    property <string> inactive-copy-item1:
+        root.preview-inactive-item1 ? root.preview-inactive-text : "";
+    property <string> inactive-copy-sub2:
+        root.preview-inactive-sub2 ? root.preview-inactive-text : "";
+
     property <string> scenario-title:
         root.scenario-ix == 0 ? "Default"
         : root.scenario-ix == 1 ? "WithSubItems"
         : root.scenario-ix == 2 ? "WithNestedSubItems"
         : root.scenario-ix == 3 ? "WithGroup"
-        : "WithGroupHeadingLinks";
+        : root.scenario-ix == 4 ? "WithGroupHeadingLinks"
+        : "WithInactiveItems";
 
     vertical-stretch: 1;
 
@@ -384,6 +395,64 @@ export component GalleryNavListPage {
                                 }
                             }
                         }
+
+                        if root.scenario-ix == 5: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListItem {
+                                label: "Item 1";
+                                inactive-text: root.inactive-copy-item1;
+                                active: root.preview-active-id == "1";
+                                clicked => {
+                                    preview-active-id = "1";
+                                }
+                            }
+
+                            inactive-item2-block := VerticalLayout {
+                                width: parent.width;
+                                alignment: start;
+
+                                NavListExpandableItem {
+                                    label: "Item 2";
+                                    expanded <=> root.subitem-expanded;
+                                    child-active: root.subitem-child-active;
+                                    toggled => {
+                                    }
+                                }
+
+                                if root.subitem-expanded: NavListSubNav {
+                                    depth: 1;
+
+                                    NavListItem {
+                                        subitem-depth: 1;
+                                        label: "Sub item 1";
+                                        active: root.preview-active-id == "2.1";
+                                        clicked => {
+                                            preview-active-id = "2.1";
+                                        }
+                                    }
+
+                                    NavListItem {
+                                        subitem-depth: 1;
+                                        label: "Sub item 2";
+                                        inactive-text: root.inactive-copy-sub2;
+                                        active: root.preview-active-id == "2.2";
+                                        clicked => {
+                                            preview-active-id = "2.2";
+                                        }
+                                    }
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Item 3";
+                                active: root.preview-active-id == "3";
+                                clicked => {
+                                    preview-active-id = "3";
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -409,7 +478,10 @@ export component GalleryNavListPage {
                     selected-index <=> scenario-ix;
                     validation-status: ValidationStatus.none;
                     selected-changed(ix) => {
-                        preview-active-id = ix == 3 || ix == 4 ? "g1a" : "1";
+                        preview-active-id =
+                            ix == 3 || ix == 4 ? "g1a"
+                            : ix == 5 ? "2.1"
+                            : "1";
                         preview-item2-expanded = true;
                         preview-item12-expanded = true;
                     }
@@ -525,6 +597,42 @@ export component GalleryNavListPage {
                             checked: preview-active-id == "2";
                             toggled => {
                                 preview-active-id = "2";
+                            }
+                        }
+
+                        Radio {
+                            label: "Item 3";
+                            checked: preview-active-id == "3";
+                            toggled => {
+                                preview-active-id = "3";
+                            }
+                        }
+                    }
+
+                    if root.scenario-ix == 5: VerticalLayout {
+                        spacing: 4px;
+
+                        Radio {
+                            label: "Item 1";
+                            checked: preview-active-id == "1";
+                            toggled => {
+                                preview-active-id = "1";
+                            }
+                        }
+
+                        Radio {
+                            label: "Sub item 1";
+                            checked: preview-active-id == "2.1";
+                            toggled => {
+                                preview-active-id = "2.1";
+                            }
+                        }
+
+                        Radio {
+                            label: "Sub item 2";
+                            checked: preview-active-id == "2.2";
+                            toggled => {
+                                preview-active-id = "2.2";
                             }
                         }
 
@@ -678,6 +786,47 @@ export component GalleryNavListPage {
                     font-size: LayoutTokens.text-body-size-small;
                     color: PrimerColors.fgColor-muted;
                     wrap: word-wrap;
+                }
+            }
+
+            if root.scenario-ix == 5: VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "inactiveText";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Inactive rows are not interactive; attention copy shows below the label.";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
+                }
+
+                Checkbox {
+                    label: "Item 1 inactive";
+                    checked <=> preview-inactive-item1;
+                    toggled => {
+                    }
+                }
+
+                Checkbox {
+                    label: "Sub item 2 inactive";
+                    checked <=> preview-inactive-sub2;
+                    toggled => {
+                    }
+                }
+
+                PrimerTextInput {
+                    horizontal-stretch: 1;
+                    label-text: "inactiveText";
+                    text <=> preview-inactive-text;
+                    validation-status: ValidationStatus.none;
+                    edited(_t) => {
+                    }
                 }
             }
         }
