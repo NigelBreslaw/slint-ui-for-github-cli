@@ -1,0 +1,48 @@
+// **NavList.GroupExpand** — paginated “show more” control (upstream **`ActionList.Item`** button + **`PlusIcon`**).
+//
+// Host reveals hidden **`NavListItem`** rows when **`current-page > 0`**, up to **`amount-to-show`**
+// (see gallery compose pattern). **`pages == 0`** reveals all **`item-count`** items on first click.
+
+import { Icons } from "../assets/icons.slint";
+import { ActionListRow } from "../ActionList/action-list-row.slint";
+import { ActionListTokens, LayoutTokens } from "../tokens.slint";
+
+export component NavListGroupExpand {
+    in property <string> label: "Show more";
+    in property <int> pages: 0;
+    /// Number of rows the host hides until expanded (upstream **`items.length`**).
+    in property <int> item-count: 0;
+    in-out property <int> current-page: 0;
+    in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
+    callback page-changed(int);
+
+    property <bool> show-expand-button: root.current-page < root.pages || root.current-page == 0;
+    property <int> items-per-page:
+        root.pages == 0 ? root.item-count : (root.item-count + root.pages - 1) / root.pages;
+    property <int> amount-to-show:
+        root.pages == 0
+        ? (root.current-page > 0 ? root.item-count : 0)
+        : root.items-per-page * root.current-page;
+
+    property <length> row-min-height: LayoutTokens.action-list-item-min-height;
+
+    /// **`VerticalLayout`** forwards row height; a bare **`if`** at the component root does not.
+    VerticalLayout {
+        width: parent.width;
+        alignment: start;
+        min-height: root.show-expand-button ? root.row-min-height : 0px;
+
+        if root.show-expand-button: ActionListRow {
+            width: parent.width;
+            label: root.label;
+            margin-inline: root.margin-inline;
+            trailing-text: "";
+            has-trailing-visual: true;
+            trailing-icon: Icons.plus;
+            clicked => {
+                root.current-page = root.current-page + 1;
+                root.page-changed(root.current-page);
+            }
+        }
+    }
+}

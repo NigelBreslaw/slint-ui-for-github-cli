@@ -41,16 +41,12 @@ export component ActionListTrailingAction {
 
     ta := TouchArea {
         enabled: !disabled;
-        width: 100%;
-        height: 100%;
         mouse-cursor: disabled ? default : pointer;
         clicked => {
             root.clicked();
         }
 
         bg := Rectangle {
-            width: 100%;
-            height: 100%;
             background: paint.bg;
             border-top-left-radius: 0px;
             border-bottom-left-radius: 0px;
@@ -58,8 +54,6 @@ export component ActionListTrailingAction {
             border-bottom-right-radius: LayoutTokens.borderRadius-medium;
 
             if has-icon: HorizontalLayout {
-                width: 100%;
-                height: 100%;
                 alignment: center;
 
                 if loading: Spinner {
@@ -77,8 +71,6 @@ export component ActionListTrailingAction {
             }
 
             if !has-icon: HorizontalLayout {
-                width: 100%;
-                height: 100%;
                 alignment: center;
                 padding-left: loading ? text-loading-padding-left : text-padding-inline;
                 padding-right: text-padding-inline;
@@ -93,7 +85,6 @@ export component ActionListTrailingAction {
 
                 if loading: Rectangle {
                     horizontal-stretch: 1;
-                    height: 100%;
 
                     Spinner {
                         x: parent.width - icon-slot-size + (icon-slot-size - self.width) / 2;
