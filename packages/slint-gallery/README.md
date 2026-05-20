@@ -8,6 +8,15 @@ Standalone Slint window for browsing Primer components. This package is split as
 
 **Direction:** evolve toward a Storybook-like experience: named demos per component, optional metadata (variants, tokens), and room for visual or manual QA notes in later PRs.
 
+### Demo page pattern
+
+Default playground layout for atomic components:
+
+- **Left:** one live preview bound to `preview-*` page properties
+- **Right:** [`GalleryDemoOptionsSidebar`](ui/components/gallery-demo-options-sidebar.slint) with controls for each Storybook-relevant axis (variant, disabled, size, etc.)
+
+Reference implementations: [`gallery-checkbox-page.slint`](ui/views/gallery-checkbox-page.slint) (minimal), [`gallery-counter-label-page.slint`](ui/views/gallery-counter-label-page.slint) (enums). Agent porting skill: [`.cursor/skills/primer-port-gallery-demo/SKILL.md`](../../.cursor/skills/primer-port-gallery-demo/SKILL.md).
+
 Run from the monorepo root:
 
 ```bash

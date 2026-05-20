@@ -3,9 +3,10 @@ name: primer-port-variant-matrix
 description: >-
   Produces a compact checklist matrix for a Primer Slint component: variant,
   disabled, color scheme, pointer interaction, size, and validation/focus where
-  relevant—so no state is forgotten before implementation. Use when planning
-  visual parity, reviewing a port for coverage, or after upstream research when
-  the user asks for a complete state list.
+  relevant—so no state is forgotten before implementation. Maps matrix axes to
+  gallery sidebar controls. Use when planning visual parity, reviewing a port
+  for coverage, or after upstream research when the user asks for a complete
+  state list.
 ---
 
 # Primer port — variant and state matrix (template)
@@ -25,8 +26,21 @@ Copy and fill (remove rows/columns that do not apply):
 | default | dark | no | … | R, H, P | … | |
 | … | … | … | … | … | … | |
 
-**Coverage rule:** every **cell** that should differ visually must map to a **token** or **`states [ ]`** branch—no orphan combinations. **Width:** “full width in a form vs narrow in a toolbar” is usually **parent composition and instance `horizontal-stretch` / `width`**, not a separate component variant row and **not** a ported **`block`** prop—demo those cases via **gallery layout**, not a fake variant on the control.
+**Coverage rule:** every **cell** that should differ visually must map to a **token** or **`states [ ]`** branch—no orphan combinations. **Width:** “full width in a form vs narrow in a toolbar” is usually **parent composition and instance `horizontal-stretch` / `width`**, not a separate component variant row and **not** a ported **`block`** prop—demo those cases via **gallery layout** in the preview column, not a fake variant on the control.
+
+## Gallery mapping
+
+After filling the matrix, add a **sidebar mapping** table (or column on the matrix):
+
+| Matrix axis / row | Gallery control | Notes |
+|-------------------|-----------------|-------|
+| `disabled` | Sidebar `Checkbox` → `preview-disabled` | |
+| `variant` / `scheme` | `RadioGroup` or `Select` | Match upstream prop names |
+| Mutually exclusive Storybook roots | `scenario-ix` + sidebar `Select` | One preview at a time; see [`gallery-pagination-page.slint`](../../../packages/slint-gallery/ui/views/gallery-pagination-page.slint) |
+
+Each column or combination that changes visuals must be reachable from **`GalleryDemoOptionsSidebar`** on the component’s playground page—**not** by adding another static preview row. Layout and registration: [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md).
 
 ## Related
 
+- Gallery demo pages: [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md)
 - Orchestrated workflow: [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md)

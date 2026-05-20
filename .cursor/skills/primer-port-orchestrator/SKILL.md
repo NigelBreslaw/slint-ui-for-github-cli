@@ -3,7 +3,7 @@ name: primer-port-orchestrator
 description: >-
   End-to-end playbook for porting a Primer design system component into
   packages/primer-slint: ordered phases (upstream research, Slint research, variant
-  matrix, token layers, interaction states), PR breakdown per
+  matrix, token layers, interaction states, gallery demo), PR breakdown per
   [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md), and
   verification. Use when starting a new Primer port, planning multi-PR component
   work, or when the user asks what order to follow for Primer-to-Slint work.
@@ -22,10 +22,11 @@ description: >-
 |---|--------|-------------|-------------|
 | 1 | **Upstream inventory** | [`primer-port-upstream-research`](../primer-port-upstream-research/SKILL.md) | Variant and token inventory (React + primer-tokens + docs) |
 | 2 | **Slint patterns** | [`primer-port-slint-research`](../primer-port-slint-research/SKILL.md) | Pattern list + paths (this repo + optional gb-slint) |
-| 3 | **Coverage matrix** | [`primer-port-variant-matrix`](../primer-port-variant-matrix/SKILL.md) | Filled checklist matrix |
+| 3 | **Coverage matrix** | [`primer-port-variant-matrix`](../primer-port-variant-matrix/SKILL.md) | Filled checklist matrix + sidebar mapping |
 | 4 | **Token plan** | [`primer-slint-token-layers`](../primer-slint-token-layers/SKILL.md) | Token audit table; edits in `tokens.slint` per token-layers + AGENTS composition rules |
 | 5 | **Interaction styling** | [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md) | `states [ ]` design; Checkbox as reference |
 | 6 | **Implementation + PRs** | [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) + [AGENTS verification](../../../packages/primer-slint/AGENTS.md#verification) | Spike → Tokens → Visual → Integration → Docs; **one PR at a time** when executing |
+| 6b | **Gallery demo** (during implementation PRs) | [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md) | One preview + `GalleryDemoOptionsSidebar`; nav registration when adding a page |
 
 ## Layout API (width / “block” upstream)
 
@@ -41,7 +42,7 @@ Multi-PR work **must** include an ordered table:
 
 Required columns and one-PR-at-a-time rules: [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) §1.
 
-**Executing the plan:** follow that skill — implement only the current PR, user owns git, mandatory `pnpm autofix`, `pnpm test`, and `pnpm dev` with a clean app start between steps.
+**Executing the plan:** follow that skill — implement only the current PR, user owns git, mandatory `pnpm autofix`, `pnpm test`, and `pnpm dev` (or `pnpm dev:gallery` for gallery-only PRs) with a clean app start between steps.
 
 ## Verification (monorepo root)
 
@@ -49,7 +50,7 @@ Required columns and one-PR-at-a-time rules: [`primer-port-pr-sequential`](../pr
 pnpm typecheck && pnpm autofix && pnpm test
 ```
 
-Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS). For Primer UI demos without running the full app, `pnpm dev:gallery` loads [`packages/slint-gallery/ui/gallery-window.slint`](../../../packages/slint-gallery/ui/gallery-window.slint).
+Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS). For Primer UI demos without running the full app, `pnpm dev:gallery` loads [`packages/slint-gallery/ui/gallery-window.slint`](../../../packages/slint-gallery/ui/gallery-window.slint). Gallery-only PRs may use `pnpm dev:gallery` instead of `pnpm dev` per [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) §6.
 
 ## Skill index
 
@@ -61,4 +62,5 @@ Confirm Slint loads `app/src/ui/main.slint` the way the app does (see AGENTS). F
 | [`primer-slint-token-layers`](../primer-slint-token-layers/SKILL.md) | Deduped `tokens.slint` |
 | [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md) | `states [ ]`, mutex groups |
 | [`primer-slint-icons-registry`](../primer-slint-icons-registry/SKILL.md) | `Icons` registry, new SVG checklist |
+| [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md) | Single-preview gallery pages + sidebar |
 | [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) | One PR at a time; plan table; acceptance (autofix, test, dev) |

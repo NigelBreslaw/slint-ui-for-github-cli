@@ -4,9 +4,10 @@ description: >-
   Executes multi-PR implementation plans one pull request at a time: requires
   an ordered PR table in the plan, keeps each PR small, implements only the
   current PR until the user continues, leaves git to the user, and enforces
-  acceptance (pnpm autofix, pnpm test, pnpm dev with a clean app start). Use
-  when working through a staged Primer port or any multi-PR plan in this repo,
-  or when the user asks to do one PR at a time with review-sized chunks.
+  acceptance (pnpm autofix, pnpm test, pnpm dev or dev:gallery with a clean
+  app start). Use when working through a staged Primer port or any multi-PR
+  plan in this repo, or when the user asks to do one PR at a time with
+  review-sized chunks.
 ---
 
 # Primer port — sequential PR execution
@@ -16,6 +17,7 @@ description: >-
 - **This skill (§1 below)** — required **PR** / **Title** / **Scope** / **Acceptance** table for multi-PR plans.
 - [`packages/primer-slint/AGENTS.md`](../../../packages/primer-slint/AGENTS.md) — monorepo **verification** and package pointers.
 - Orchestrator: [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md).
+- Gallery demos: [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md).
 
 ## 1) Plan must include a PR table
 
@@ -57,7 +59,9 @@ From the **monorepo root**, each PR must meet **all** of:
 
 1. **`pnpm autofix`** — completes successfully.
 2. **`pnpm test`** — passes.
-3. **`pnpm dev`** — the dev server runs; **confirm the app starts without obvious issues** (no startup errors in the terminal relevant to this change, and a quick sanity check that the UI loads as expected for the touched areas).
+3. **App starts** — one of:
+   - **`pnpm dev`** — default when the PR touches the main app or shared packages beyond gallery-only scope; confirm startup without obvious errors and a quick sanity check on touched UI.
+   - **`pnpm dev:gallery`** — when the PR scope is **only** `packages/slint-gallery/**` and/or `primer-slint` exports consumed by gallery (no main-app UI changes). Confirm the gallery window loads; **open the touched playground** and toggle **every new or changed sidebar control** ([`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md)).
 
 **Recommended** (aligns with AGENTS verification): also run **`pnpm typecheck`** before considering the PR done, unless the user’s workflow explicitly excludes it for this step.
 
@@ -70,4 +74,5 @@ Repeat §3–§6 for PR 2, 3, … until the table is complete. Each time you sta
 ## Related skills
 
 - [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md) — full port phases before PR breakdown.
+- [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md) — gallery page layout and sidebar pattern.
 - [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md) — interaction styling in Slint.

@@ -27,6 +27,7 @@ Collect **in-repo and Slint-ecosystem patterns** (file paths, idioms) to apply w
 | **Tokens** | [`packages/primer-slint/tokens.slint`](../../../packages/primer-slint/tokens.slint) | `PrimerColors`, `ButtonTokens`, `CheckboxTokens`, … |
 | **Barrel** | [`packages/primer-slint/primer.slint`](../../../packages/primer-slint/primer.slint) | Exports and public API |
 | **Icons** | [`packages/primer-slint/assets/icons.slint`](../../../packages/primer-slint/assets/icons.slint) | Registry pattern for SVGs |
+| **Gallery demos** | [`packages/slint-gallery/ui/views/gallery-checkbox-page.slint`](../../../packages/slint-gallery/ui/views/gallery-checkbox-page.slint), [`gallery-demo-options-sidebar.slint`](../../../packages/slint-gallery/ui/components/gallery-demo-options-sidebar.slint) | Single preview + options sidebar; see [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md) |
 
 Pick **one** existing Primer component closest to the new port (e.g. **Button**, **Select**) and skim its folder for layout and callback patterns.
 
@@ -72,6 +73,7 @@ Short **pattern list** with **absolute or repo-relative paths** actually opened:
 
 ## Next steps
 
+- Gallery demo pages: [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md)
 - Interaction styling: [`primer-slint-interaction-states`](../primer-slint-interaction-states/SKILL.md)
 - Token deduplication: [`primer-slint-token-layers`](../primer-slint-token-layers/SKILL.md)
 - Orchestrated port: [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md)

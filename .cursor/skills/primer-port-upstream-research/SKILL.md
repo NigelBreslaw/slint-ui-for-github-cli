@@ -4,9 +4,9 @@ description: >-
   Builds a Primer upstream inventory before Slint implementation: always reads
   React and Storybook from /Users/nigelb/slint/primer-ui-react, tokens from
   /Users/nigelb/slint/primer-tokens, enumerates every Storybook variant for the
-  target component, and plans one PR per variant each with a gallery example. Use
-  when porting or extending a Primer component, planning token coverage, or when
-  the user asks what variants or tokens a Primer control has upstream.
+  target component, and plans one PR per variant with gallery sidebar controls.
+  Use when porting or extending a Primer component, planning token coverage, or
+  when the user asks what variants or tokens a Primer control has upstream.
 ---
 
 # Primer port — upstream research
@@ -15,7 +15,7 @@ description: >-
 
 Produce a **variant and token inventory** for the target component so implementation can trace every visual to **primer-tokens** keys and **primer-ui-react** usage—without guessing hex or variant names in Slint.
 
-The inventory **must** enumerate **all Storybook-driven variants** for that component and **must** include an **ordered PR plan**: **one pull request per variant**, each PR scoped to that variant’s Slint work **plus** a **corresponding example** in `packages/slint-gallery` (see [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md) for how to execute one PR at a time).
+The inventory **must** enumerate **all Storybook-driven variants** for that component and **must** include an **ordered PR plan**: **one pull request per variant** (or tightly scoped slice), each PR scoped to that variant’s Slint work **plus** the matching **gallery sidebar** controls in `packages/slint-gallery` (see [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md) and [`primer-port-pr-sequential`](../primer-port-pr-sequential/SKILL.md)).
 
 ## Canonical repo rules (do not duplicate here)
 
@@ -37,10 +37,10 @@ Locate the closest **React component** (package + file paths under that root), m
 1. **Find story files** under `/Users/nigelb/slint/primer-ui-react`: e.g. `**/<ComponentName>*.stories.tsx`, `*.stories.ts`, `*.stories.mdx`, or colocated `*.stories.*` next to the component. Use search if the filename differs (Bar, Item, etc.).
 2. **Enumerate every distinct variant** the stories expose:
    - **Named exports** (`export const …`) — each story is usually one variant or one matrix row.
-   - **`args` / `argTypes`** — list combinations that matter visually (variant, size, disabled, validation, etc.); if one story cycles controls, still list the **meaningful permutations** you will mirror in Slint + gallery.
+   - **`args` / `argTypes`** — list combinations that matter visually (variant, size, disabled, validation, etc.); if one story cycles controls, still list the **meaningful permutations** you will mirror in Slint + gallery sidebar.
 3. **Cross-check** the React component’s **props** and **`.module.css`** so every story-relevant prop maps to tokens or CSS variables you will cite in the inventory.
 
-Output a **Storybook variant checklist** (table or numbered list): story id / export name, args summary, and notes for the matching Slint + gallery slice.
+Output a **Storybook variant checklist** (table or numbered list): story id / export name, args summary, and notes for the matching Slint slice + **sidebar control** (not a separate gallery section).
 
 ## Inputs (web)
 
@@ -59,7 +59,7 @@ Fill this **before** writing Slint:
 |--------|----------|
 | **Upstream component** | Paths under `/Users/nigelb/slint/primer-ui-react` — TS/TSX and `*.module.css` |
 | **Storybook variants** | Complete list from story files (see section above); no omitted named stories |
-| **PR plan** | Ordered table: **PR *n*** = one variant (or one tightly scoped story cluster) + **gallery example** for that variant |
+| **PR plan** | Ordered table: **PR *n*** = one variant (or one tightly scoped story cluster) + **gallery sidebar** controls for that slice |
 | **Props / variants** | e.g. `variant`, `size`, `disabled`, validation — match React |
 | **DOM / data hooks** | `[data-*]`, class names that drive styles |
 | **primer-tokens files** | Paths under `/Users/nigelb/slint/primer-tokens/src/tokens/` (functional + component) |
@@ -73,20 +73,30 @@ Research must end with an ordered table suitable for [`primer-port-pr-sequential
 
 | PR | Title | Upstream story / variant | Slint scope | Gallery |
 |----|-------|--------------------------|-------------|---------|
-| 1 | … | `Default` / default args | … | `gallery-…-page.slint` (or agreed page) — section showing this variant |
+| 1 | … | `Default` / default args | Spike / minimal API | `gallery-<component>-page.slint` — **scaffold**: default preview + minimal sidebar (see gallery-demo skill) |
+| 2 | … | `Primary` / size axis | … | Same page — sidebar: `RadioGroup` for `scheme` (or agreed controls) |
 
-Each row is **one PR**: implement that variant in `packages/primer-slint/slint` and add or extend the **gallery** demo so reviewers can see parity with the matching Storybook story.
+**Gallery column rules:**
+
+- **One** `gallery-<component>-page.slint` per component (or agreed split for orthogonal exports).
+- Each PR **adds or extends** [`GalleryDemoOptionsSidebar`](../../../packages/slint-gallery/ui/components/gallery-demo-options-sidebar.slint) controls so reviewers can reach that Storybook permutation—**not** a new stacked preview section.
+- **First PR** for a new component **must** include the page scaffold (nav wiring, default preview, stub sidebar)—not deferred to a later PR.
+
+Full layout and registration: [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md).
+
+Each row is **one PR**: implement that variant in `packages/primer-slint` and extend the **gallery** demo sidebar so reviewers can see parity with the matching Storybook story.
 
 ## Workflow
 
 1. Under `/Users/nigelb/slint/primer-ui-react`, find the **canonical React** implementation, its **`*.module.css`**, and **all** `*.stories.*` (or MDX) for that component.
-2. **List every Storybook variant** (exports + args permutations that change visuals); build the **PR plan** (one PR per variant + gallery).
+2. **List every Storybook variant** (exports + args permutations that change visuals); build the **PR plan** (one PR per variant + gallery sidebar mapping).
 3. Under `/Users/nigelb/slint/primer-tokens`, read **component** and **functional** token JSON5 that the CSS references (or that define the same semantics).
 4. Cross-check **docs** for user-visible names and accessibility notes.
 5. Output the **full inventory** and **PR table**; flag gaps where tokens or stories are ambiguous before Slint work.
 
 ## Next steps
 
+- Gallery demo layout: [`primer-port-gallery-demo`](../primer-port-gallery-demo/SKILL.md)
 - Slint patterns and in-repo references: [`primer-port-slint-research`](../primer-port-slint-research/SKILL.md)
 - Token placement in `tokens.slint`: [`primer-slint-token-layers`](../primer-slint-token-layers/SKILL.md)
 - Full port order: [`primer-port-orchestrator`](../primer-port-orchestrator/SKILL.md)
