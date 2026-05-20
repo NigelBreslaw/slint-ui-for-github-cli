@@ -15,6 +15,7 @@ import {
     Icons,
     Select,
     SelectOption,
+    AnchoredOverlayWidth,
     SelectPanel2,
     SelectPanel2NoticeVariant,
     ValidationStatus,
@@ -184,8 +185,9 @@ export component GallerySelectPanel2Page {
 
     property <bool> sp2-is-modal: root.scenario-ix == 14 || root.scenario-ix == 15;
     property <bool> sp2-is-single: root.scenario-ix == 1 || root.scenario-ix == 14;
+    /// Scenarios that use **`GallerySelectPanel2Default`** lines + multi-select (incl. **Notice**).
     property <bool> sp2-use-default-bridge:
-        root.scenario-ix == 0 || root.scenario-ix == 2
+        root.scenario-ix == 0 || root.scenario-ix == 2 || root.scenario-ix == 5
         || root.scenario-ix == 6 || root.scenario-ix == 8 || root.scenario-ix == 9
         || root.scenario-ix == 14 || root.scenario-ix == 15;
     property <bool> sp2-no-results: root.scenario-ix == 9 && root.sp2-filter == "none";
@@ -305,6 +307,7 @@ export component GallerySelectPanel2Page {
 
             if root.scenario-ix != 16: SelectPanel2 {
                 open <=> root.sp2-open;
+                width-preset: root.scenario-ix == 5 ? AnchoredOverlayWidth.large : AnchoredOverlayWidth.medium;
                 anchor-label: "Select labels";
                 title: root.sp2-title;
                 subtitle: root.sp2-subtitle;

@@ -52,7 +52,13 @@ export component SelectPanel2 {
     in property <length> anchor-offset: 0px;
     in property <length> alignment-offset: 0px;
     in property <length> panel-padding: LayoutTokens.base-size-8;
-    property <length> panel-body-width: 320px - 2 * root.panel-padding;
+    property <length> overlay-panel-width:
+        root.width-preset == AnchoredOverlayWidth.small ? 256px
+        : root.width-preset == AnchoredOverlayWidth.medium ? 320px
+        : root.width-preset == AnchoredOverlayWidth.large ? 480px
+        : root.width-preset == AnchoredOverlayWidth.xlarge ? 640px
+        : 960px;
+    property <length> panel-body-width: root.overlay-panel-width - 2 * root.panel-padding;
 
     in-out property <bool> open: false;
     property <bool> popup-visible: false;
