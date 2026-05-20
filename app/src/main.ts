@@ -67,7 +67,7 @@ const windowGeometryPersister = createMainWindowGeometryPersister(window);
 
 assignProperties(window.AppState, {
   projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
-  projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+  projects_picker_lines: new slint.ArrayModel([]),
   projects_picker_options_count: 0,
   projects_picker_selected_index: -1,
   projects_filtered_count: 0,
@@ -92,7 +92,7 @@ assignProperties(window.ProjectBoardListState, {
   import_repos_load_status: "",
   import_repo_options_count: 0,
   import_repo_selected_index: -1,
-  import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+  import_repo_lines: new slint.ArrayModel([]),
   import_candidates_load_status: "",
   import_candidate_count: 0,
   import_candidate_rows: new slint.ArrayModel<SlintImportCandidateRow>([]),

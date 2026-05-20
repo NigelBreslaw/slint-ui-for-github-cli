@@ -24,8 +24,8 @@ import {
   type SlintDataTableRow,
   type SlintImportCandidateRow,
   type SlintProjectBoardListRow,
-  type SlintSelectOption,
 } from "../../bridges/node/slint-interface.ts";
+import { actionList2LinesFromLabels } from "../slint/action-list2-line.ts";
 import { openUrlInBrowser } from "../utils/open-url.ts";
 import { reloadProjectV2ItemsIntoCacheAndUi } from "../time-reporting/time-reporting-ui.ts";
 import {
@@ -51,14 +51,6 @@ let importCandidatesPrsHasNext = false;
 let importCandidatesOwner = "";
 let importCandidatesRepo = "";
 const importCandidateSelectedIds = new Set<string>();
-
-function mapOrgReposToSelectOptions(rows: readonly OrgRepoRow[]): SlintSelectOption[] {
-  return rows.map((r) => ({
-    value: r.fullName,
-    label: r.fullName,
-    enabled: true,
-  }));
-}
 
 function filterOrgRepos(rows: readonly OrgRepoRow[], query: string): OrgRepoRow[] {
   const q = query.trim().toLowerCase();
@@ -172,8 +164,8 @@ function applyImportRepoFilterToWindow(window: MainWindowInstance): void {
   const q = window.ProjectBoardListState.import_repos_search;
   const filtered = filterOrgRepos(importReposCache, q);
   assignProperties(window.ProjectBoardListState, {
-    import_repo_select_options: new slint.ArrayModel<SlintSelectOption>(
-      mapOrgReposToSelectOptions(filtered),
+    import_repo_lines: new slint.ArrayModel(
+      actionList2LinesFromLabels(filtered.map((r) => r.fullName)),
     ),
     import_repo_selected_index: -1,
     import_repo_options_count: filtered.length,
@@ -210,7 +202,7 @@ function clearImportReposUiState(window: MainWindowInstance): void {
     import_repos_load_status: "",
     import_repo_selected_index: -1,
     import_repo_options_count: 0,
-    import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+    import_repo_lines: new slint.ArrayModel(actionList2LinesFromLabels([])),
   });
 }
 
@@ -296,7 +288,7 @@ export function buildProjectBoardListStateCallbacks(
           import_repos_load_status: "Loading repositories…",
           import_repos_search: "",
           import_repo_selected_index: -1,
-          import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+          import_repo_lines: new slint.ArrayModel(actionList2LinesFromLabels([])),
           import_repo_options_count: 0,
         });
         const res = await fetchAllSlintUiOrgReposRest();
@@ -304,7 +296,7 @@ export function buildProjectBoardListStateCallbacks(
           importReposCache = [];
           assignProperties(window.ProjectBoardListState, {
             import_repos_load_status: res.error,
-            import_repo_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+            import_repo_lines: new slint.ArrayModel(actionList2LinesFromLabels([])),
             import_repo_options_count: 0,
           });
           return;

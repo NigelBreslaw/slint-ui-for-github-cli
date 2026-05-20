@@ -15,6 +15,7 @@ import { hydrateProjectBoardListLabelsFromKv } from "../project-board/hydrate-pr
 import {
   applyProjectPickerSliceToWindow,
   findSlintUiOpenProjectRowByNodeId,
+  projectIdFromPickerPageIndex,
 } from "../gh/slint-ui-org-projects-ui.ts";
 import { fetchAllProjectV2ItemsGraphql } from "../gh/graphql-project-v2-items-all.ts";
 import { openUrlInBrowser } from "../utils/open-url.ts";
@@ -339,8 +340,12 @@ export function buildTimeReportingStateCallbacks(
       void refreshSlintUiOrgProjectsForWindow(window);
     },
 
-    time_reporting_project_chosen: (id: string) => {
+    time_reporting_project_chosen: (index: number) => {
       void (async () => {
+        const id = projectIdFromPickerPageIndex(index);
+        if (id === undefined) {
+          return;
+        }
         let row = findSlintUiOpenProjectRowByNodeId(id);
         if (row === null) {
           await refreshSlintUiOrgProjectsForWindow(window);

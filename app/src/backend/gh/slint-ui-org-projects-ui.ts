@@ -1,6 +1,7 @@
 import * as slint from "slint-ui";
 import { assignProperties } from "slint-bridge-kit";
-import type { MainWindowInstance, SlintSelectOption } from "../../bridges/node/slint-interface.ts";
+import type { MainWindowInstance } from "../../bridges/node/slint-interface.ts";
+import { actionList2RowFromLabel } from "../slint/action-list2-line.ts";
 import type { ProjectV2NodeSnapshot } from "../schemas/gh-graphql-projectsv2-page.ts";
 import { fetchAllProjectsV2ForOrgGraphql } from "./graphql-projects-v2.ts";
 
@@ -16,6 +17,9 @@ export type SlintProjectRow = {
 
 let nodesCache: ProjectV2NodeSnapshot[] | null = null;
 let lastFetchResult: { ok: true; value: unknown[] } | { ok: false; error: string } | null = null;
+
+/** Current picker page rows (parallel to `AppState.projects_picker_lines`). */
+let pickerPageRows: SlintProjectRow[] = [];
 
 /** Same payload shape as `fetchAllProjectsV2ForOrgGraphql` for debug dump reuse. */
 export function getLastSlintUiOrgProjectsFetch():
@@ -57,12 +61,13 @@ function effectivePickerPageSize(window: MainWindowInstance): number {
   return Number.isFinite(n) && n > 0 ? Math.floor(n) : DEFAULT_PROJECT_PICKER_PAGE_SIZE;
 }
 
-function mapProjectRowsToSelectOptions(rows: readonly SlintProjectRow[]): SlintSelectOption[] {
-  return rows.map((r) => ({
-    value: r.id,
-    label: `${r.title} (#${r.number} · ${SLINT_UI_ORG})`,
-    enabled: true,
-  }));
+function mapProjectRowsToPickerLines(rows: readonly SlintProjectRow[]) {
+  return rows.map((r) => actionList2RowFromLabel(`${r.title} (#${r.number} · ${SLINT_UI_ORG})`));
+}
+
+/** Resolve project node id from a picker list index on the current page. */
+export function projectIdFromPickerPageIndex(index: number): string | undefined {
+  return pickerPageRows[index]?.id;
 }
 
 function filterProjectRows(rows: readonly SlintProjectRow[], query: string): SlintProjectRow[] {
@@ -101,9 +106,10 @@ export function applyProjectPickerSliceToWindow(
   const rows = getFilteredProjectRows(q);
   const pageSize = effectivePickerPageSize(window);
   if (rows.length === 0) {
+    pickerPageRows = [];
     assignProperties(window.AppState, {
       projects_filtered_model: new slint.ArrayModel<SlintProjectRow>([]),
-      projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>([]),
+      projects_picker_lines: new slint.ArrayModel(mapProjectRowsToPickerLines([])),
       projects_picker_options_count: 0,
       projects_picker_selected_index: -1,
       projects_filtered_count: 0,
@@ -114,11 +120,10 @@ export function applyProjectPickerSliceToWindow(
   const idx = clampPageIndex(pageIndex, rows.length, pageSize);
   const start = idx * pageSize;
   const slice = rows.slice(start, start + pageSize);
+  pickerPageRows = slice;
   assignProperties(window.AppState, {
     projects_filtered_model: new slint.ArrayModel<SlintProjectRow>(slice),
-    projects_picker_select_options: new slint.ArrayModel<SlintSelectOption>(
-      mapProjectRowsToSelectOptions(slice),
-    ),
+    projects_picker_lines: new slint.ArrayModel(mapProjectRowsToPickerLines(slice)),
     projects_picker_options_count: slice.length,
     projects_picker_selected_index: -1,
     projects_filtered_count: rows.length,

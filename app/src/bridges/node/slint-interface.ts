@@ -71,7 +71,7 @@ export type AppStateHandle = {
   projects_search: string;
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
-  projects_picker_select_options: slint.ArrayModel<SlintSelectOption>;
+  projects_picker_lines: slint.ArrayModel<SlintActionList2Line>;
   projects_picker_options_count: number;
   projects_picker_selected_index: number;
   projects_filtered_count: number;
@@ -90,6 +90,27 @@ export type SlintSelectOption = {
   value: string;
   label: string;
   enabled: boolean;
+};
+
+/** Row shape must match `ActionList2Line` in `packages/primer-slint/ActionList2/types.slint`. */
+export type SlintActionList2Line = {
+  kind: string;
+  label: string;
+  row_variant: string;
+  row_size: string;
+  disabled: boolean;
+  has_leading_avatar: boolean;
+  avatar_source: ImageData;
+  has_leading_visual: boolean;
+  leading_icon: ImageData;
+  description: string;
+  description_layout: string;
+  truncate_inline_description: boolean;
+  trailing_text: string;
+  inactive_text: string;
+  show_trailing_loading: boolean;
+  active: boolean;
+  section_heading_variant: string;
 };
 
 export type SettingsStateHandle = {
@@ -225,7 +246,7 @@ export type ProjectBoardListStateHandle = {
   import_repos_load_status: string;
   import_repo_options_count: number;
   import_repo_selected_index: number;
-  import_repo_select_options: slint.ArrayModel<SlintSelectOption>;
+  import_repo_lines: slint.ArrayModel<SlintActionList2Line>;
   import_candidates_load_status: string;
   import_candidate_count: number;
   import_candidate_rows: slint.ArrayModel<SlintImportCandidateRow>;
@@ -250,7 +271,7 @@ export type ProjectBoardListStateHandle = {
 export type TimeReportingStateHandle = {
   time_reporting_view_init: () => void;
   time_reporting_view_exited: () => void;
-  time_reporting_project_chosen: (id: string) => void;
+  time_reporting_project_chosen: (index: number) => void;
   time_reporting_picker_cancel: () => void;
   time_reporting_open_change_project: () => void;
   time_reporting_week_prev: () => void;

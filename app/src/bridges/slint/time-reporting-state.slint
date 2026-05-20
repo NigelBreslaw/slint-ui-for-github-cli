@@ -15,7 +15,8 @@ export struct TimeReportingWeekRow {
 export global TimeReportingState {
     callback time-reporting-view-init;
     callback time-reporting-view-exited;
-    callback time-reporting-project-chosen(string);
+    /// Index into the current picker page (`AppState.projects-picker-lines`); Node resolves project id.
+    callback time-reporting-project-chosen(int);
     callback time-reporting-picker-cancel;
     callback time-reporting-open-change-project;
 
