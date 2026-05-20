@@ -1,7 +1,8 @@
 // **NavList.Item** — link row. Use **`NavListExpandableItem`** + **`NavListSubNav`** for collapsible parents (PR2).
 
+import { Icons } from "../assets/icons.slint";
 import { ActionListLinkRow } from "../ActionList/action-list-link-row.slint";
-import { ActionListRowSize } from "../ActionList/types.slint";
+import { ActionListDescriptionLayout, ActionListRowSize } from "../ActionList/types.slint";
 import { ActionListTokens, LayoutTokens } from "../tokens.slint";
 
 export component NavListItem {
@@ -12,6 +13,14 @@ export component NavListItem {
     in property <int> subitem-depth: 0;
     in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
     in property <ActionListRowSize> row-size: ActionListRowSize.medium;
+    in property <bool> has-leading-visual: false;
+    in property <image> leading-icon: Icons.dot_fill;
+    in property <string> description: "";
+    in property <ActionListDescriptionLayout> description-layout: ActionListDescriptionLayout.none;
+    in property <bool> truncate-inline-description: false;
+    in property <string> trailing-text: "";
+    in property <bool> has-trailing-visual: false;
+    in property <image> trailing-icon: Icons.dot_fill;
     /// When non-empty, row is non-interactive and shows attention copy (upstream **`inactiveText`**).
     in property <string> inactive-text: "";
     /// Fires on pointer / keyboard activation when not inactive (host opens **`href`**).
@@ -29,6 +38,14 @@ export component NavListItem {
         subitem-indent: root.subitem-indent;
         compact-label: root.subitem-depth > 0;
         row-size: root.row-size;
+        has-leading-visual: root.has-leading-visual;
+        leading-icon: root.leading-icon;
+        description: root.description;
+        description-layout: root.description-layout;
+        truncate-inline-description: root.truncate-inline-description;
+        trailing-text: root.trailing-text;
+        has-trailing-visual: root.has-trailing-visual;
+        trailing-icon: root.trailing-icon;
         inactive-text: root.inactive-text;
         clicked => {
             root.clicked();

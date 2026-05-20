@@ -13,12 +13,14 @@ import {
     SelectOption,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
+import { Icons } from "../../../primer-slint/assets/icons.slint";
+import { ActionListDescriptionLayout } from "../../../primer-slint/ActionList/types.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import {
     GalleryDemoOptionsSidebar,
 } from "../components/gallery-demo-options-sidebar.slint";
 
-/// **NavList** — upstream feature stories (Default through **WithGroupHeadingLinks**).
+/// **NavList** — upstream feature stories (Default through **WithDescription**).
 export component GalleryNavListPage {
     property <int> scenario-ix: 0;
     property <[SelectOption]> scenario-options: [
@@ -28,6 +30,7 @@ export component GalleryNavListPage {
         { value: "3", label: "WithGroup", enabled: true },
         { value: "4", label: "WithGroupHeadingLinks", enabled: true },
         { value: "5", label: "WithInactiveItems", enabled: true },
+        { value: "6", label: "WithDescription", enabled: true },
     ];
 
     /// Active leaf id: `"1"`, `"2.1"`, `"1.2.2"`, etc.
@@ -63,7 +66,8 @@ export component GalleryNavListPage {
         : root.scenario-ix == 2 ? "WithNestedSubItems"
         : root.scenario-ix == 3 ? "WithGroup"
         : root.scenario-ix == 4 ? "WithGroupHeadingLinks"
-        : "WithInactiveItems";
+        : root.scenario-ix == 5 ? "WithInactiveItems"
+        : "WithDescription";
 
     vertical-stretch: 1;
 
@@ -453,6 +457,68 @@ export component GalleryNavListPage {
                                 }
                             }
                         }
+
+                        if root.scenario-ix == 6: VerticalLayout {
+                            width: parent.width;
+                            alignment: start;
+
+                            NavListItem {
+                                label: "Main Repository";
+                                has-leading-visual: true;
+                                leading-icon: Icons.repo;
+                                description: "Primary project repository";
+                                active: root.preview-active-id == "repo";
+                                clicked => {
+                                    preview-active-id = "repo";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Documentation";
+                                has-leading-visual: true;
+                                leading-icon: Icons.book;
+                                description: "User guides and API documentation";
+                                active: root.preview-active-id == "docs";
+                                clicked => {
+                                    preview-active-id = "docs";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Bug Reports";
+                                has-leading-visual: true;
+                                leading-icon: Icons.issue_opened;
+                                description: "Submit and track bug reports for the project. Include detailed steps to reproduce, expected behavior, and system information.";
+                                description-layout: ActionListDescriptionLayout.block;
+                                active: root.preview-active-id == "bugs";
+                                clicked => {
+                                    preview-active-id = "bugs";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Community";
+                                has-leading-visual: true;
+                                leading-icon: Icons.people;
+                                description: "Connect with other developers, share ideas, and collaborate on features and improvements.";
+                                description-layout: ActionListDescriptionLayout.block;
+                                active: root.preview-active-id == "community";
+                                clicked => {
+                                    preview-active-id = "community";
+                                }
+                            }
+
+                            NavListItem {
+                                label: "Recent Changes";
+                                has-leading-visual: true;
+                                leading-icon: Icons.git_commit;
+                                description: "Latest commits and releases";
+                                active: root.preview-active-id == "changes";
+                                clicked => {
+                                    preview-active-id = "changes";
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -481,6 +547,7 @@ export component GalleryNavListPage {
                         preview-active-id =
                             ix == 3 || ix == 4 ? "g1a"
                             : ix == 5 ? "2.1"
+                            : ix == 6 ? "repo"
                             : "1";
                         preview-item2-expanded = true;
                         preview-item12-expanded = true;
@@ -641,6 +708,50 @@ export component GalleryNavListPage {
                             checked: preview-active-id == "3";
                             toggled => {
                                 preview-active-id = "3";
+                            }
+                        }
+                    }
+
+                    if root.scenario-ix == 6: VerticalLayout {
+                        spacing: 4px;
+
+                        Radio {
+                            label: "Main Repository";
+                            checked: preview-active-id == "repo";
+                            toggled => {
+                                preview-active-id = "repo";
+                            }
+                        }
+
+                        Radio {
+                            label: "Documentation";
+                            checked: preview-active-id == "docs";
+                            toggled => {
+                                preview-active-id = "docs";
+                            }
+                        }
+
+                        Radio {
+                            label: "Bug Reports";
+                            checked: preview-active-id == "bugs";
+                            toggled => {
+                                preview-active-id = "bugs";
+                            }
+                        }
+
+                        Radio {
+                            label: "Community";
+                            checked: preview-active-id == "community";
+                            toggled => {
+                                preview-active-id = "community";
+                            }
+                        }
+
+                        Radio {
+                            label: "Recent Changes";
+                            checked: preview-active-id == "changes";
+                            toggled => {
+                                preview-active-id = "changes";
                             }
                         }
                     }
@@ -827,6 +938,24 @@ export component GalleryNavListPage {
                     validation-status: ValidationStatus.none;
                     edited(_t) => {
                     }
+                }
+            }
+
+            if root.scenario-ix == 6: VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "description";
+                    font-size: LayoutTokens.text-body-size-medium;
+                    font-weight: LayoutTokens.base-text-weight-semibold;
+                    color: PrimerColors.fgColor-default;
+                }
+
+                Text {
+                    text: "Inline descriptions sit beside the label; block descriptions render below (Bug Reports, Community).";
+                    font-size: LayoutTokens.text-body-size-small;
+                    color: PrimerColors.fgColor-muted;
+                    wrap: word-wrap;
                 }
             }
         }

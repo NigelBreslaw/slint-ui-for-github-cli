@@ -15,6 +15,9 @@ export component ActionListLinkRow {
     in property <ActionListRowSize> row-size: ActionListRowSize.medium;
     in property <bool> has-leading-visual: false;
     in property <image> leading-icon: Icons.dot_fill;
+    in property <string> trailing-text: "";
+    in property <bool> has-trailing-visual: false;
+    in property <image> trailing-icon: Icons.dot_fill;
     in property <string> description: "";
     in property <ActionListDescriptionLayout> description-layout: ActionListDescriptionLayout.none;
     in property <bool> truncate-inline-description: false;
@@ -56,6 +59,9 @@ export component ActionListLinkRow {
 
     property <color> leading-icon-tint:
         root.is-inactive ? ActionListTokens.item-inactive-label-fgColor : PrimerColors.fgColor-muted;
+
+    property <color> trailing-text-color:
+        root.is-inactive ? ActionListTokens.item-inactive-trailing-fgColor : PrimerColors.fgColor-muted;
 
     property <bool> show-inline-description:
         root.description != "" && root.description-layout == ActionListDescriptionLayout.inline;
@@ -301,6 +307,22 @@ export component ActionListLinkRow {
                                             wrap: word-wrap;
                                         }
                                     }
+                                }
+
+                                if root.has-trailing-visual: Image {
+                                    width: LayoutTokens.iconButton-icon-size-medium;
+                                    height: LayoutTokens.iconButton-icon-size-medium;
+                                    vertical-alignment: center;
+                                    source: root.trailing-icon;
+                                    colorize: PrimerColors.fgColor-muted;
+                                }
+
+                                if root.trailing-text != "": Text {
+                                    text: root.trailing-text;
+                                    color: root.trailing-text-color;
+                                    font-size: LayoutTokens.text-body-size-medium;
+                                    font-weight: LayoutTokens.base-text-weight-medium;
+                                    vertical-alignment: center;
                                 }
                             }
 
