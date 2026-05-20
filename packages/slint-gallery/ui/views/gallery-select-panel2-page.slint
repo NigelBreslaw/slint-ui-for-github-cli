@@ -253,6 +253,13 @@ export component GallerySelectPanel2Page {
         : "Try adjusting your search or create a new label.";
 
     changed scenario-ix => {
+        root.sp2-filter = "";
+        GallerySelectPanel2Default.filter-changed("");
+        GallerySelectPanel2Single.filter-changed("");
+        GallerySelectPanel2Disabled.filter-changed("");
+        GallerySelectPanel2Fetch.filter-changed("");
+        GallerySelectPanel2Cancel.filter-changed("");
+        GalleryFilteredActionList2SelectAll.filter-changed("");
         root.sp2-single-selected-index = 0;
         root.sp2-notice-variant-ix = 0;
         root.sp2-message-variant-ix = 0;
