@@ -6,21 +6,32 @@ export component Spinner {
     in property <color> track-color: #f0f6fc40;
 
     property <length> box: size == Size.small ? 16px : size == Size.large ? 64px : 32px;
+    property <angle> spin-angle: animation-tick() / 1000ms * 360deg;
+    property <float> spin-cos: cos(spin-angle);
+    property <float> spin-sin: sin(spin-angle);
 
     width: box;
     height: box;
 
     Rectangle {
-        Rectangle {
-            transform-rotation: animation-tick() / 1000ms * 360deg;
-            Path {
-                viewbox-width: 16;
-                viewbox-height: 16;
-                fill: transparent;
-                stroke: segment-color;
-                stroke-width: 2px;
-                stroke-line-cap: round;
-                commands: "M 15 8 a 7.002 7.002 0 0 0 -7 -7";
+        Path {
+            viewbox-width: 16;
+            viewbox-height: 16;
+            fill: transparent;
+            stroke: segment-color;
+            stroke-width: 2px;
+            stroke-line-cap: round;
+            MoveTo {
+                x: 8 + 7 * spin-cos;
+                y: 8 + 7 * spin-sin;
+            }
+            ArcTo {
+                radius-x: 7.002;
+                radius-y: 7.002;
+                x: 8 + 7 * spin-sin;
+                y: 8 - 7 * spin-cos;
+                large-arc: false;
+                sweep: false;
             }
         }
 
