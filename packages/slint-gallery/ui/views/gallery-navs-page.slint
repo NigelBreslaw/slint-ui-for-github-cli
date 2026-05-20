@@ -1,4 +1,3 @@
-// **NavList** gallery — scenarios aligned with Primer Storybook `Components/NavList` + `Features` (see sidebar footer for non-goals).
 import {
     Icons,
     NavList,
@@ -42,21 +41,6 @@ export component GalleryNavsPage {
         : root.scenario-ix == 4 ? "WithGroup"
         : root.scenario-ix == 5 ? "WithDescription"
         : "SidebarCurrentIndicator";
-
-    property <string> scenario-description:
-        root.scenario-ix == 0
-        ? "Three top-level items; first row is current (upstream `aria-current` → active styling)."
-        : root.scenario-ix == 1
-        ? "Parent with SubNav: two nested rows, first nested row is current; parent starts expanded."
-        : root.scenario-ix == 2
-        ? "SubNav nesting and chevron expand/collapse; activation path is dot-separated indices (depth capped at four levels in Slint)."
-        : root.scenario-ix == 3
-        ? "Inactive top-level row plus inactive nested row with `inactiveText` (upstream `WithInactiveItems`)."
-        : root.scenario-ix == 4
-        ? "Two groups with filled and subtle headings and a divider between groups."
-        : root.scenario-ix == 5
-        ? "Leading icons with inline and block descriptions (upstream `WithDescription`)."
-        : "Product sidebar pattern: `sidebar-current-indicator` adds the blue vertical bar; current uses selected row chrome without double accent.";
 
     property <[NavListItem]> items-default: [
         {
@@ -552,20 +536,6 @@ export component GalleryNavsPage {
                 color: PrimerColors.fgColor-default;
                 font-size: 15px;
                 font-weight: 600;
-            }
-
-            Text {
-                text: root.scenario-description;
-                color: PrimerColors.fgColor-muted;
-                font-size: 12px;
-                wrap: word-wrap;
-            }
-
-            Text {
-                text: root.demo-nav-last == "" ? "Last activation: —" : "Last activation: " + root.demo-nav-last;
-                color: PrimerColors.fgColor-muted;
-                font-size: 12px;
-                wrap: word-wrap;
             }
 
             Rectangle {

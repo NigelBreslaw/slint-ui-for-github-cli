@@ -282,32 +282,6 @@ export component GalleryActionListPage {
         },
     ];
 
-    property <string> scenario-caption:
-        root.scenario-key == "1" ? "Upstream: ActionList/Features — SimpleList (composed **ActionListRow**)"
-        : root.scenario-key == "2" ? "Upstream: ItemDividers — **`show-top-seam`** on rows"
-        : root.scenario-key == "3" ? "Upstream: BlockDescription (composed rows)"
-        : root.scenario-key == "4" ? "Upstream: InlineDescription (composed rows)"
-        : root.scenario-key == "6" ? "Single select — **`selection-lead: checkmark`**"
-        : root.scenario-key == "7" ? "Single select — **`ActionListLines`** (`selection-mode: single` → checkmark)"
-        : root.scenario-key == "9" ? "Upstream **MultiSelect** — **`ActionListLines`** + **`list-role: menu`** → checkmark"
-        : root.scenario-key == "10" ? "True listbox multi — **`list-role: listbox`** → **`selection-lead: checkbox`** (Storybook **ListboxMultiSelect** name is misleading; it uses menu)"
-        : root.scenario-key == "12" ? "Upstream **DisabledItem** — middle row **`disabled`** (no hover/activation)"
-        : root.scenario-key == "13" ? "Upstream **InactiveItem** — **`inactive-text`** warning under block description"
-        : root.scenario-key == "14" ? "Upstream **LoadingItem** — **`show-trailing-loading`** spinner; no activation"
-        : root.scenario-key == "16" ? "Upstream **Active** — **`active`** row: left accent bar + selected surface"
-        : root.scenario-key == "17" ? "Upstream **WithVisualListHeading** — **`ActionList.Heading`** + **GroupHeading** groups"
-        : root.scenario-key == "18" ? "Upstream **WithCustomHeading** — **Details** title + **`ActionListLinkRow`** (`href` → **`last-action`**)"
-        : root.scenario-key == "19" ? "Upstream **GroupWithFilledTitle** — filled **GroupHeading** + multi-select menu rows"
-        : root.scenario-key == "20" ? "Upstream **WithAvatars** — **`Avatar`** leading visual (20px)"
-        : root.scenario-key == "21" ? "Upstream **WithIcons** — leading octicons incl. **danger** row"
-        : root.scenario-key == "22" ? "Upstream **LargeItem** — **`row-size: large`** (plain, inline, block description)"
-        : root.scenario-key == "24" ? "Upstream **TextWrapAndTruncation** — 300px panel; **`truncate-inline-description`**"
-        : root.scenario-key == "25" ? "Upstream listbox focus zone — Tab then **↑**/**↓**/**Home**/**End**; toggle **Disable focus zone**; disabled/inactive rows focusable"
-        : root.scenario-key == "26" ? "Upstream **WithTrailingAction** — icon/text **`ActionListTrailingAction`**; row click vs trailing click (**not** for menu/listbox)"
-        : "Upstream: ActionList — Default (composed rows)";
-
-    // vertical-stretch: 1;
-
     HorizontalLayout {
         VerticalLayout {
             padding: 24px;

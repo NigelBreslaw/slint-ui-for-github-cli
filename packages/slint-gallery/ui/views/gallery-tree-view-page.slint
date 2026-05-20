@@ -1,5 +1,3 @@
-// One scroll — sections mirror Storybook **Components/TreeView** (see `TreeView/UPSTREAM_INVENTORY.md`). Heavy stories are scaled.
-
 import {
     ActionList,
     ActionListDescriptionLayout,
@@ -1667,7 +1665,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
 
                 DialogBody {
                     Text {
-                        text: "This dialog was opened from the tree row overflow menu (Storybook **TrailingActions** echo).";
+                        text: "This dialog was opened from the tree row overflow menu";
                         wrap: word-wrap;
                         color: PrimerColors.fgColor-default;
                         font-size: 14px;
@@ -2004,7 +2002,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     // --- StressTest (ListView + runtime model)
     TreeViewSectionHeading {
         title: "StressTest";
-        note: "360px viewport, ListView + ~1000 rows (Rust/Node); Storybook-scale stress without Slint literals.";
+        note: "360px viewport, ListView + ~1000 rows";
     }
     Rectangle {
         horizontal-stretch: 1;
@@ -2116,7 +2114,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
 
             DialogBody {
                 Text {
-                    text: "A simulated network error occurred while loading children (Storybook **AsyncError**).";
+                    text: "A simulated network error.";
                     wrap: word-wrap;
                     color: PrimerColors.fgColor-default;
                     font-size: 14px;
