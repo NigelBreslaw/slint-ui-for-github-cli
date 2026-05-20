@@ -83,78 +83,51 @@ export component GalleryDataTablePage {
                 }
             }
 
-            if demo-data-table-last-row-action != "" || demo-data-table-last-row-click != "": Text {
-                text:
-                    (demo-data-table-last-row-action != "" ? "Last action: " + demo-data-table-last-row-action + "\n" : "")
-                    + (demo-data-table-last-row-click != "" ? "Last row click: " + demo-data-table-last-row-click : "");
-                color: PrimerColors.fgColor-muted;
-                font-size: 12px;
-                wrap: word-wrap;
-            }
         }
 
-        Rectangle { }
+        // GalleryDemoOptionsSidebar {
+        //     width: 200px;
+        //     VerticalLayout {
+        //         spacing: 4px;
 
-        GalleryDemoOptionsSidebar {
-            VerticalLayout {
-                spacing: 4px;
+        //         Text {
+        //             text: "Cell padding";
+        //             font-size: LayoutTokens.text-body-size-medium;
+        //             font-weight: LayoutTokens.base-text-weight-semibold;
+        //             color: PrimerColors.fgColor-default;
+        //         }
 
-                Text {
-                    text: "Cell padding";
-                    font-size: LayoutTokens.text-body-size-medium;
-                    font-weight: LayoutTokens.base-text-weight-semibold;
-                    color: PrimerColors.fgColor-default;
-                }
+        //         RadioGroup {
+        //             label: "";
 
-                RadioGroup {
-                    label: "";
+        //             Radio {
+        //                 value: "condensed";
+        //                 label: "condensed";
+        //                 checked: preview-cell-padding == DataTableCellPadding.condensed;
+        //                 toggled => {
+        //                     preview-cell-padding = DataTableCellPadding.condensed;
+        //                 }
+        //             }
 
-                    Radio {
-                        value: "condensed";
-                        label: "condensed";
-                        checked: preview-cell-padding == DataTableCellPadding.condensed;
-                        toggled => {
-                            preview-cell-padding = DataTableCellPadding.condensed;
-                        }
-                    }
+        //             Radio {
+        //                 value: "normal";
+        //                 label: "normal";
+        //                 checked: preview-cell-padding == DataTableCellPadding.normal;
+        //                 toggled => {
+        //                     preview-cell-padding = DataTableCellPadding.normal;
+        //                 }
+        //             }
 
-                    Radio {
-                        value: "normal";
-                        label: "normal";
-                        checked: preview-cell-padding == DataTableCellPadding.normal;
-                        toggled => {
-                            preview-cell-padding = DataTableCellPadding.normal;
-                        }
-                    }
-
-                    Radio {
-                        value: "spacious";
-                        label: "spacious";
-                        checked: preview-cell-padding == DataTableCellPadding.spacious;
-                        toggled => {
-                            preview-cell-padding = DataTableCellPadding.spacious;
-                        }
-                    }
-                }
-            }
-
-            VerticalLayout {
-                spacing: 6px;
-
-                Text {
-                    text: "Sorting";
-                    font-size: LayoutTokens.text-body-size-medium;
-                    font-weight: LayoutTokens.base-text-weight-semibold;
-                    color: PrimerColors.fgColor-default;
-                }
-
-                Checkbox {
-                    label: "External sorting (parent owns rows)";
-                    checked <=> preview-external-sorting;
-                    toggled => {
-                    }
-                }
-            }
-        }
+        //             Radio {
+        //                 value: "spacious";
+        //                 label: "spacious";
+        //                 checked: preview-cell-padding == DataTableCellPadding.spacious;
+        //                 toggled => {
+        //                     preview-cell-padding = DataTableCellPadding.spacious;
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
