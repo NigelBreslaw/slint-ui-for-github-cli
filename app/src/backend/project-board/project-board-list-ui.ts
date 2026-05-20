@@ -25,7 +25,7 @@ import {
   type SlintImportCandidateRow,
   type SlintProjectBoardListRow,
 } from "../../bridges/node/slint-interface.ts";
-import { actionList2LinesFromLabels } from "../slint/action-list2-line.ts";
+import { actionListLinesFromLabels } from "../slint/action-list-line.ts";
 import { openUrlInBrowser } from "../utils/open-url.ts";
 import { reloadProjectV2ItemsIntoCacheAndUi } from "../time-reporting/time-reporting-ui.ts";
 import {
@@ -165,7 +165,7 @@ function applyImportRepoFilterToWindow(window: MainWindowInstance): void {
   const filtered = filterOrgRepos(importReposCache, q);
   assignProperties(window.ProjectBoardListState, {
     import_repo_lines: new slint.ArrayModel(
-      actionList2LinesFromLabels(filtered.map((r) => r.fullName)),
+      actionListLinesFromLabels(filtered.map((r) => r.fullName)),
     ),
     import_repo_selected_index: -1,
     import_repo_options_count: filtered.length,
@@ -202,7 +202,7 @@ function clearImportReposUiState(window: MainWindowInstance): void {
     import_repos_load_status: "",
     import_repo_selected_index: -1,
     import_repo_options_count: 0,
-    import_repo_lines: new slint.ArrayModel(actionList2LinesFromLabels([])),
+    import_repo_lines: new slint.ArrayModel(actionListLinesFromLabels([])),
   });
 }
 
@@ -288,7 +288,7 @@ export function buildProjectBoardListStateCallbacks(
           import_repos_load_status: "Loading repositories…",
           import_repos_search: "",
           import_repo_selected_index: -1,
-          import_repo_lines: new slint.ArrayModel(actionList2LinesFromLabels([])),
+          import_repo_lines: new slint.ArrayModel(actionListLinesFromLabels([])),
           import_repo_options_count: 0,
         });
         const res = await fetchAllSlintUiOrgReposRest();
@@ -296,7 +296,7 @@ export function buildProjectBoardListStateCallbacks(
           importReposCache = [];
           assignProperties(window.ProjectBoardListState, {
             import_repos_load_status: res.error,
-            import_repo_lines: new slint.ArrayModel(actionList2LinesFromLabels([])),
+            import_repo_lines: new slint.ArrayModel(actionListLinesFromLabels([])),
             import_repo_options_count: 0,
           });
           return;

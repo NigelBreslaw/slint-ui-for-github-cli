@@ -1,15 +1,15 @@
-// **FilteredActionList2** gallery — **FilteredActionList** + **SelectPanel** list-body scenarios.
+// **FilteredActionList** gallery — **FilteredActionList** + **SelectPanel** list-body scenarios.
 import {
-    ActionList2DescriptionLayout,
-    ActionList2Line,
-    ActionList2LineKind,
-    ActionList2ListRole,
-    ActionList2RowSize,
-    ActionList2RowVariant,
-    ActionList2SectionHeadingVariant,
-    ActionList2SelectionMode,
+    ActionListDescriptionLayout,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListListRole,
+    ActionListRowSize,
+    ActionListRowVariant,
+    ActionListSectionHeadingVariant,
+    ActionListSelectionMode,
     Button,
-    FilteredActionList2,
+    FilteredActionList,
     FilteredActionListLoadingKind,
     Icons,
     Select,
@@ -18,14 +18,14 @@ import {
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import {
-    GalleryFilteredActionList2Default,
-    GalleryFilteredActionList2Long,
-} from "../state/gallery-filtered-action-list2-state.slint";
-import { GalleryFilteredActionList2Multi } from "../state/gallery-filtered-action-list2-multi-state.slint";
-import { GalleryFilteredActionList2SelectAll } from "../state/gallery-filtered-action-list2-select-all-state.slint";
+    GalleryFilteredActionListDefault,
+    GalleryFilteredActionListLong,
+} from "../state/gallery-filtered-action-list-state.slint";
+import { GalleryFilteredActionListMulti } from "../state/gallery-filtered-action-list-multi-state.slint";
+import { GalleryFilteredActionListSelectAll } from "../state/gallery-filtered-action-list-select-all-state.slint";
 import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
-export component GalleryFilteredActionList2Page {
+export component GalleryFilteredActionListPage {
     property <int> scenario-ix: 0;
 
     property <[SelectOption]> scenario-options: [
@@ -78,63 +78,63 @@ export component GalleryFilteredActionList2Page {
     property <string> fal2-select-all-filter: "";
     property <int> fal2-single-selected-index: 0;
 
-    property <[ActionList2Line]> fal2-loading-demo-lines: [
+    property <[ActionListLine]> fal2-loading-demo-lines: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "enhancement",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "bug",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "design",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
@@ -158,7 +158,7 @@ export component GalleryFilteredActionList2Page {
             vertical-stretch: 1;
 
             Text {
-                text: "FilteredActionList2";
+                text: "FilteredActionList";
                 color: PrimerColors.fgColor-default;
                 font-size: 22px;
                 font-weight: 600;
@@ -219,56 +219,56 @@ export component GalleryFilteredActionList2Page {
                         wrap: word-wrap;
                     }
 
-                    if root.scenario-ix == 0: FilteredActionList2 {
+                    if root.scenario-ix == 0: FilteredActionList {
                         filter-text <=> root.fal2-default-filter;
                         placeholder: "Filter Labels";
-                        lines: GalleryFilteredActionList2Default.lines;
+                        lines: GalleryFilteredActionListDefault.lines;
                         filter-changed(t) => {
-                            GalleryFilteredActionList2Default.filter-changed(t);
+                            GalleryFilteredActionListDefault.filter-changed(t);
                         }
                     }
 
-                    if root.scenario-ix == 1: FilteredActionList2 {
+                    if root.scenario-ix == 1: FilteredActionList {
                         filter-text <=> root.fal2-long-filter;
                         placeholder: "Filter Labels";
                         body-region-height: 320px;
-                        lines: GalleryFilteredActionList2Long.lines;
+                        lines: GalleryFilteredActionListLong.lines;
                         filter-changed(t) => {
-                            GalleryFilteredActionList2Long.filter-changed(t);
+                            GalleryFilteredActionListLong.filter-changed(t);
                         }
                     }
 
-                    if root.scenario-ix == 2: FilteredActionList2 {
+                    if root.scenario-ix == 2: FilteredActionList {
                         filter-text <=> root.fal2-single-filter;
                         placeholder: "Filter Labels";
-                        lines: GalleryFilteredActionList2Default.lines;
-                        list-role: ActionList2ListRole.listbox;
-                        selection-mode: ActionList2SelectionMode.single;
+                        lines: GalleryFilteredActionListDefault.lines;
+                        list-role: ActionListListRole.listbox;
+                        selection-mode: ActionListSelectionMode.single;
                         selected-index: root.fal2-single-selected-index;
                         filter-changed(t) => {
-                            GalleryFilteredActionList2Default.filter-changed(t);
+                            GalleryFilteredActionListDefault.filter-changed(t);
                         }
                         item-activated(ix) => {
                             root.fal2-single-selected-index = ix;
                         }
                     }
 
-                    if root.scenario-ix == 3: FilteredActionList2 {
+                    if root.scenario-ix == 3: FilteredActionList {
                         filter-text <=> root.fal2-multi-filter;
                         placeholder: "Filter Labels";
-                        lines: GalleryFilteredActionList2Multi.lines;
-                        list-role: ActionList2ListRole.listbox;
-                        selection-mode: ActionList2SelectionMode.multiple;
-                        multi-selected: GalleryFilteredActionList2Multi.multi-selected;
+                        lines: GalleryFilteredActionListMulti.lines;
+                        list-role: ActionListListRole.listbox;
+                        selection-mode: ActionListSelectionMode.multiple;
+                        multi-selected: GalleryFilteredActionListMulti.multi-selected;
                         filter-changed(t) => {
-                            GalleryFilteredActionList2Multi.filter-changed(t);
+                            GalleryFilteredActionListMulti.filter-changed(t);
                         }
                         item-activated(ix) => {
-                            GalleryFilteredActionList2Multi.item-activated(ix);
+                            GalleryFilteredActionListMulti.item-activated(ix);
                         }
                     }
 
-                    if root.scenario-ix == 4: FilteredActionList2 {
+                    if root.scenario-ix == 4: FilteredActionList {
                         loading: true;
                         loading-kind: FilteredActionListLoadingKind.input;
                         filter-text <=> root.fal2-loading-input-filter;
@@ -278,7 +278,7 @@ export component GalleryFilteredActionList2Page {
                         }
                     }
 
-                    if root.scenario-ix == 5: FilteredActionList2 {
+                    if root.scenario-ix == 5: FilteredActionList {
                         loading: true;
                         loading-kind: FilteredActionListLoadingKind.body_spinner;
                         loading-message: "Loading labels…";
@@ -289,7 +289,7 @@ export component GalleryFilteredActionList2Page {
                         }
                     }
 
-                    if root.scenario-ix == 6: FilteredActionList2 {
+                    if root.scenario-ix == 6: FilteredActionList {
                         loading: true;
                         loading-kind: FilteredActionListLoadingKind.body_skeleton;
                         filter-text <=> root.fal2-loading-skeleton-filter;
@@ -299,7 +299,7 @@ export component GalleryFilteredActionList2Page {
                         }
                     }
 
-                    if root.scenario-ix == 7: FilteredActionList2 {
+                    if root.scenario-ix == 7: FilteredActionList {
                         filter-text <=> root.fal2-message-vs-list-filter;
                         placeholder: "Filter Labels";
                         lines: root.fal2-message-vs-list-show-message ? [] : root.fal2-loading-demo-lines;
@@ -310,7 +310,7 @@ export component GalleryFilteredActionList2Page {
                         }
                     }
 
-                    if root.scenario-ix == 8: FilteredActionList2 {
+                    if root.scenario-ix == 8: FilteredActionList {
                         filter-text <=> root.fal2-empty-body-filter;
                         placeholder: "Filter Labels";
                         lines: [];
@@ -319,24 +319,24 @@ export component GalleryFilteredActionList2Page {
                         }
                     }
 
-                    if root.scenario-ix == 9: FilteredActionList2 {
+                    if root.scenario-ix == 9: FilteredActionList {
                         select-all-visible: true;
-                        list-role: ActionList2ListRole.listbox;
-                        selection-mode: ActionList2SelectionMode.multiple;
+                        list-role: ActionListListRole.listbox;
+                        selection-mode: ActionListSelectionMode.multiple;
                         filter-text <=> root.fal2-select-all-filter;
                         placeholder: "Filter Labels";
-                        lines: GalleryFilteredActionList2SelectAll.lines;
-                        multi-selected: GalleryFilteredActionList2SelectAll.multi-selected;
-                        select-all-checked <=> GalleryFilteredActionList2SelectAll.select-all-checked;
-                        select-all-indeterminate <=> GalleryFilteredActionList2SelectAll.select-all-indeterminate;
+                        lines: GalleryFilteredActionListSelectAll.lines;
+                        multi-selected: GalleryFilteredActionListSelectAll.multi-selected;
+                        select-all-checked <=> GalleryFilteredActionListSelectAll.select-all-checked;
+                        select-all-indeterminate <=> GalleryFilteredActionListSelectAll.select-all-indeterminate;
                         filter-changed(t) => {
-                            GalleryFilteredActionList2SelectAll.filter-changed(t);
+                            GalleryFilteredActionListSelectAll.filter-changed(t);
                         }
                         item-activated(ix) => {
-                            GalleryFilteredActionList2SelectAll.item-activated(ix);
+                            GalleryFilteredActionListSelectAll.item-activated(ix);
                         }
                         select-all-changed(on) => {
-                            GalleryFilteredActionList2SelectAll.select-all-changed(on);
+                            GalleryFilteredActionListSelectAll.select-all-changed(on);
                         }
                     }
                 }

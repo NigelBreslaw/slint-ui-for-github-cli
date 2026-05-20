@@ -19,9 +19,9 @@ Full **procedure** (research → matrix → tokens → states → PRs) lives in 
 - **Tokens** — one file, [`slint/tokens.slint`](slint/tokens.slint). **Order** of `export global` blocks and composition rules: [Design tokens](readme.md#design-tokens) in the readme, the [`primer-slint-token-layers`](../../.cursor/skills/primer-slint-token-layers/SKILL.md) skill, and audit/comment blocks in `tokens.slint` itself. **Rule:** use other globals’ **`out`** bindings only — not their private fields.
 - **Icons** — single registry, [`slint/assets/icons.slint`](slint/assets/icons.slint); how to add icons and the TS bridge: [`primer-slint-icons-registry/SKILL.md`](../../.cursor/skills/primer-slint-icons-registry/SKILL.md).
 
-## ActionList2 API
+## ActionList API
 
-Compose-first list chrome + leaf rows (see [`ActionList2/README.md`](ActionList2/README.md)). **`ActionList2`** = `@children` only; **`ActionList2Lines`** = `[ActionList2Line]` adapter for model-driven menus. Row features go on **`ActionList2Row`**, not the line struct. **`FilteredActionList2`** ([`FilteredActionList2/README.md`](FilteredActionList2/README.md)) composes **`ActionList2`** + **`ActionList2Lines`** under a filter field for the upstream **FilteredActionList** shell.
+Compose-first list chrome + leaf rows (see [`ActionList/README.md`](ActionList/README.md)). **`ActionList`** = `@children` only; **`ActionListLines`** = `[ActionListLine]` adapter for model-driven menus. Row features go on **`ActionListRow`**, not the line struct. **`FilteredActionList`** ([`FilteredActionList/README.md`](FilteredActionList/README.md)) composes **`ActionList`** + **`ActionListLines`** under a filter field for the upstream **FilteredActionList** shell.
 
 ## New component (short path)
 

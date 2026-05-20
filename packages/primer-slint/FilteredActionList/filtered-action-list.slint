@@ -1,19 +1,19 @@
-// Filtered **ActionList2** host: filter field, header hairline, and scrollable **`ActionList2`** body (upstream: Primer **`FilteredActionList`**).
+// Filtered **ActionList** host: filter field, header hairline, and scrollable **`ActionList`** body (upstream: Primer **`FilteredActionList`**).
 
 import { Icons } from "../assets/icons.slint";
-import { ActionList2 } from "../ActionList2/action-list2.slint";
-import { ActionList2Lines } from "../ActionList2/action-list2-lines.slint";
+import { ActionList } from "../ActionList/action-list.slint";
+import { ActionListLines } from "../ActionList/action-list-lines.slint";
 import {
-    ActionList2Line,
-    ActionList2ListRole,
-    ALVariant,
-    ActionList2SelectionMode,
-} from "../ActionList2/types.slint";
+    ActionListLine,
+    ActionListListRole,
+    ActionListVariant,
+    ActionListSelectionMode,
+} from "../ActionList/types.slint";
 import { Checkbox } from "../Checkbox/checkbox.slint";
 import { FilteredActionListLoadingKind } from "./types.slint";
 import { PrimerTextInput } from "../PrimerTextInput/primer-text-input.slint";
 import { SkeletonBox } from "../Skeleton/skeleton-box.slint";
-import { FilteredActionList2BodySpinner } from "./filtered-action-list2-body-spinner.slint";
+import { FilteredActionListBodySpinner } from "./filtered-action-list-body-spinner.slint";
 import {
     FilteredActionListTokens,
     LayoutTokens,
@@ -21,17 +21,17 @@ import {
     SelectPanelTokens,
 } from "../tokens.slint";
 
-export component FilteredActionList2 {
+export component FilteredActionList {
     in-out property <string> filter-text: "";
     in property <string> placeholder: "Filter Labels";
     in property <bool> disabled: false;
     /// Parent supplies rows already narrowed by filter query.
-    in property <[ActionList2Line]> lines: [];
-    in property <ALVariant> list-variant: ALVariant.inset;
+    in property <[ActionListLine]> lines: [];
+    in property <ActionListVariant> list-variant: ActionListVariant.inset;
     in property <bool> show-dividers: false;
     /// **`menu`** or **`listbox`** enables roving focus on rows (upstream **ActionList** / **SelectPanel** listbox).
-    in property <ActionList2ListRole> list-role: ActionList2ListRole.none;
-    in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.none;
+    in property <ActionListListRole> list-role: ActionListListRole.none;
+    in property <ActionListSelectionMode> selection-mode: ActionListSelectionMode.none;
     /// Single-select: index into **`lines`**; **`-1`** = none.
     in property <int> selected-index: -1;
     /// Multi-select: parallel to **`lines`** (checkbox when **`list-role: listbox`**).
@@ -170,7 +170,7 @@ export component FilteredActionList2 {
             VerticalLayout {
                 vertical-stretch: 1;
 
-                if root.loading-body-spinner: FilteredActionList2BodySpinner {
+                if root.loading-body-spinner: FilteredActionListBodySpinner {
                     vertical-stretch: 1;
                     message: root.loading-message;
                 }
@@ -301,11 +301,11 @@ export component FilteredActionList2 {
                     body-vl := VerticalLayout {
                         width: parent.width;
 
-                        ActionList2 {
+                        ActionList {
                             width: 100%;
                             list-variant: root.list-variant;
 
-                            ActionList2Lines {
+                            ActionListLines {
                                 width: 100%;
                                 lines: root.lines;
                                 list-variant: root.list-variant;

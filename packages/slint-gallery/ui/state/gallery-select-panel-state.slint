@@ -1,42 +1,42 @@
-/// **SelectPanel2** gallery globals — **Node** / **Rust** bridges.
+/// **SelectPanel** gallery globals — **Node** / **Rust** bridges.
 
-import { ActionList2Line } from "../../../primer-slint/primer.slint";
+import { ActionListLine } from "../../../primer-slint/primer.slint";
 
-export global GallerySelectPanel2Default {
-    in-out property <[ActionList2Line]> lines: [];
+export global GallerySelectPanelDefault {
+    in-out property <[ActionListLine]> lines: [];
     in-out property <[bool]> multi-selected: [];
     callback filter-changed(string);
     callback item-activated(int);
 }
 
-export global GallerySelectPanel2Single {
-    in-out property <[ActionList2Line]> lines: [];
+export global GallerySelectPanelSingle {
+    in-out property <[ActionListLine]> lines: [];
     callback filter-changed(string);
 }
 
-export global GallerySelectPanel2Disabled {
-    in-out property <[ActionList2Line]> lines: [];
+export global GallerySelectPanelDisabled {
+    in-out property <[ActionListLine]> lines: [];
     in-out property <[bool]> multi-selected: [];
     callback filter-changed(string);
     callback item-activated(int);
 }
 
-export global GallerySelectPanel2Cancel {
-    in-out property <[ActionList2Line]> lines: [];
+export global GallerySelectPanelCancel {
+    in-out property <[ActionListLine]> lines: [];
     in-out property <[bool]> multi-selected: [];
     callback filter-changed(string);
     callback item-activated(int);
     callback reset();
 }
 
-export global GallerySelectPanel2Fetch {
-    in-out property <[ActionList2Line]> lines: [];
+export global GallerySelectPanelFetch {
+    in-out property <[ActionListLine]> lines: [];
     callback filter-changed(string);
 }
 
 /// **MultiSelectModal** — working selection; **Cancel** restores via **`reset()`**.
-export global GallerySelectPanel2ModalMulti {
-    in-out property <[ActionList2Line]> lines: [];
+export global GallerySelectPanelModalMulti {
+    in-out property <[ActionListLine]> lines: [];
     in-out property <[bool]> multi-selected: [];
     callback filter-changed(string);
     callback item-activated(int);

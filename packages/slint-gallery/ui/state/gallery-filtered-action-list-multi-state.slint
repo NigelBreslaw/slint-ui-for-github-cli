@@ -1,9 +1,9 @@
-/// **FilteredActionList2** multi-select demo — toggled from **Node** / **Rust** by label (upstream **SelectPanel** `MultiSelect` initial `items.slice(1, 3)`).
+/// **FilteredActionList** multi-select demo — toggled from **Node** / **Rust** by label (upstream **SelectPanel** `MultiSelect` initial `items.slice(1, 3)`).
 
-import { ActionList2Line } from "../../../primer-slint/primer.slint";
+import { ActionListLine } from "../../../primer-slint/primer.slint";
 
-export global GalleryFilteredActionList2Multi {
-    in-out property <[ActionList2Line]> lines: [];
+export global GalleryFilteredActionListMulti {
+    in-out property <[ActionListLine]> lines: [];
     in-out property <[bool]> multi-selected: [];
     callback filter-changed(string);
     callback item-activated(int);

@@ -71,7 +71,7 @@ export type AppStateHandle = {
   projects_search: string;
   projects_load_status: string;
   projects_filtered_model: slint.ArrayModel<SlintProjectRow>;
-  projects_picker_lines: slint.ArrayModel<SlintActionList2Line>;
+  projects_picker_lines: slint.ArrayModel<SlintActionListLine>;
   projects_picker_options_count: number;
   projects_picker_selected_index: number;
   projects_filtered_count: number;
@@ -92,8 +92,8 @@ export type SlintSelectOption = {
   enabled: boolean;
 };
 
-/** Row shape must match `ActionList2Line` in `packages/primer-slint/ActionList2/types.slint`. */
-export type SlintActionList2Line = {
+/** Row shape must match `ActionListLine` in `packages/primer-slint/ActionList/types.slint`. */
+export type SlintActionListLine = {
   kind: string;
   label: string;
   row_variant: string;
@@ -246,7 +246,7 @@ export type ProjectBoardListStateHandle = {
   import_repos_load_status: string;
   import_repo_options_count: number;
   import_repo_selected_index: number;
-  import_repo_lines: slint.ArrayModel<SlintActionList2Line>;
+  import_repo_lines: slint.ArrayModel<SlintActionListLine>;
   import_candidates_load_status: string;
   import_candidate_count: number;
   import_candidate_rows: slint.ArrayModel<SlintImportCandidateRow>;

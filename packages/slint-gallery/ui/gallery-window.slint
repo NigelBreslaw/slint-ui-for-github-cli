@@ -14,9 +14,9 @@ import { GalleryCheckboxPage } from "./views/gallery-checkbox-page.slint";
 import { GalleryRadioPage } from "./views/gallery-radio-page.slint";
 import { GalleryDataPage } from "./views/gallery-data-page.slint";
 import { GalleryAnchoredOverlayPage } from "./views/gallery-anchored-overlay-page.slint";
-import { GalleryActionList2Page } from "./views/gallery-action-list2-page.slint";
-import { GalleryFilteredActionList2Page } from "./views/gallery-filtered-action-list2-page.slint";
-import { GallerySelectPanel2Page } from "./views/gallery-select-panel2-page.slint";
+import { GalleryActionListPage } from "./views/gallery-action-list-page.slint";
+import { GalleryFilteredActionListPage } from "./views/gallery-filtered-action-list-page.slint";
+import { GallerySelectPanelPage } from "./views/gallery-select-panel-page.slint";
 import { GalleryActionMenuPage } from "./views/gallery-action-menu-page.slint";
 import { GalleryDialogsPlaygroundPage } from "./views/gallery-dialog-playground-page.slint";
 import { GallerySheetsPage } from "./views/gallery-sheets-page.slint";
@@ -37,22 +37,22 @@ import "../../primer-slint/assets/fonts/VeraMono.ttf";
 
 /// Re-export items for use in Rust, Node, etc.
 export { Icons }
-export { GalleryActionList2MenuMultiSelect } from "./state/gallery-action-list2-menu-multi-select-state.slint";
-export { GalleryActionList2ListboxMultiSelect } from "./state/gallery-action-list2-listbox-multi-select-state.slint";
+export { GalleryActionListMenuMultiSelect } from "./state/gallery-action-list-menu-multi-select-state.slint";
+export { GalleryActionListListboxMultiSelect } from "./state/gallery-action-list-listbox-multi-select-state.slint";
 export {
-    GalleryFilteredActionList2Default,
-    GalleryFilteredActionList2Long,
-} from "./state/gallery-filtered-action-list2-state.slint";
-export { GalleryFilteredActionList2Multi } from "./state/gallery-filtered-action-list2-multi-state.slint";
-export { GalleryFilteredActionList2SelectAll } from "./state/gallery-filtered-action-list2-select-all-state.slint";
+    GalleryFilteredActionListDefault,
+    GalleryFilteredActionListLong,
+} from "./state/gallery-filtered-action-list-state.slint";
+export { GalleryFilteredActionListMulti } from "./state/gallery-filtered-action-list-multi-state.slint";
+export { GalleryFilteredActionListSelectAll } from "./state/gallery-filtered-action-list-select-all-state.slint";
 export {
-    GallerySelectPanel2Cancel,
-    GallerySelectPanel2Default,
-    GallerySelectPanel2Disabled,
-    GallerySelectPanel2Fetch,
-    GallerySelectPanel2ModalMulti,
-    GallerySelectPanel2Single,
-} from "./state/gallery-select-panel2-state.slint";
+    GallerySelectPanelCancel,
+    GallerySelectPanelDefault,
+    GallerySelectPanelDisabled,
+    GallerySelectPanelFetch,
+    GallerySelectPanelModalMulti,
+    GallerySelectPanelSingle,
+} from "./state/gallery-select-panel-state.slint";
 export { GalleryTreeViewListModels } from "./state/gallery-tree-view-list-models.slint";
 export { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 export { GalleryState } from "./state/gallery-state.slint";
@@ -107,15 +107,15 @@ export component GalleryWindow inherits Window {
                         min-height: gallery-flick.height;
                         alignment: start;
 
-                        if GalleryState.selected-page-id == "action-list2-playground": GalleryActionList2Page {
+                        if GalleryState.selected-page-id == "action-list-playground": GalleryActionListPage {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id == "filtered-action-list2-playground": GalleryFilteredActionList2Page {
+                        if GalleryState.selected-page-id == "filtered-action-list-playground": GalleryFilteredActionListPage {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id == "select-panel2-playground": GallerySelectPanel2Page {
+                        if GalleryState.selected-page-id == "select-panel-playground": GallerySelectPanelPage {
                             height: main-scroll.height;
                         }
 

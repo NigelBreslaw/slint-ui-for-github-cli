@@ -4,12 +4,12 @@ import {
     ProjectBoardListState,
 } from "../../bridges/slint/project-board-list-state.slint";
 import {
-    ActionList2ListRole,
-    ActionList2SelectionMode,
+    ActionListListRole,
+    ActionListSelectionMode,
     Button,
     ButtonVariant,
     Checkbox,
-    FilteredActionList2,
+    FilteredActionList,
     ModalOverlay,
     OverlayAlign,
     OverlayHeight,
@@ -88,13 +88,13 @@ export component ProjectBoardImportOverlay {
                     wrap: word-wrap;
                 }
 
-                FilteredActionList2 {
+                FilteredActionList {
                     width: 100%;
                     filter-text <=> ProjectBoardListState.import-repos-search;
                     placeholder: "Filter by name…";
                     lines: ProjectBoardListState.import-repo-lines;
-                    list-role: ActionList2ListRole.listbox;
-                    selection-mode: ActionList2SelectionMode.single;
+                    list-role: ActionListListRole.listbox;
+                    selection-mode: ActionListSelectionMode.single;
                     selected-index <=> ProjectBoardListState.import-repo-selected-index;
                     body-region-height: 200px;
                     empty-message: "No repositories match your search.";

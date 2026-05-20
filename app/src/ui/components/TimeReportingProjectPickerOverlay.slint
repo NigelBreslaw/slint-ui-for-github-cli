@@ -1,10 +1,10 @@
 import { AppState } from "../../bridges/slint/app-state.slint";
 import { TimeReportingState } from "../../bridges/slint/time-reporting-state.slint";
 import {
-    ActionList2ListRole,
-    ActionList2SelectionMode,
+    ActionListListRole,
+    ActionListSelectionMode,
     Button,
-    FilteredActionList2,
+    FilteredActionList,
     ModalOverlay,
     OverlayAlign,
     OverlayHeight,
@@ -108,13 +108,13 @@ export component TimeReportingProjectPickerOverlay {
                     wrap: word-wrap;
                 }
 
-                FilteredActionList2 {
+                FilteredActionList {
                     width: 100%;
                     filter-text <=> AppState.projects-search;
                     placeholder: "Search by title, number, or URL…";
                     lines: AppState.projects-picker-lines;
-                    list-role: ActionList2ListRole.listbox;
-                    selection-mode: ActionList2SelectionMode.single;
+                    list-role: ActionListListRole.listbox;
+                    selection-mode: ActionListSelectionMode.single;
                     selected-index <=> AppState.projects-picker-selected-index;
                     body-region-height: 220px;
                     empty-message: "No projects match your search.";

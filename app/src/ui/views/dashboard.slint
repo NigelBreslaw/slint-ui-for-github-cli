@@ -1,7 +1,7 @@
 import { AppState, DashboardTab } from "../../bridges/slint/app-state.slint";
 import {
-    ActionList2DescriptionLayout,
-    ActionList2Row,
+    ActionListDescriptionLayout,
+    ActionListRow,
     Banner,
     BannerVariant,
     ButtonVariant,
@@ -172,11 +172,11 @@ export component Dashboard {
                     security-alerts-vl := VerticalLayout {
                         width: parent.width;
 
-                        for row[ix] in AppState.security-alerts-model: ActionList2Row {
+                        for row[ix] in AppState.security-alerts-model: ActionListRow {
                             width: 100%;
                             label: row.title;
                             description: row.subtitle;
-                            description-layout: ActionList2DescriptionLayout.block;
+                            description-layout: ActionListDescriptionLayout.block;
                             show-divider: ix > 0;
                             clicked => {
                                 AppState.open_project_url(row.url);

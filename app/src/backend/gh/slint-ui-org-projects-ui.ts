@@ -1,7 +1,7 @@
 import * as slint from "slint-ui";
 import { assignProperties } from "slint-bridge-kit";
 import type { MainWindowInstance } from "../../bridges/node/slint-interface.ts";
-import { actionList2RowFromLabel } from "../slint/action-list2-line.ts";
+import { actionListRowFromLabel } from "../slint/action-list-line.ts";
 import type { ProjectV2NodeSnapshot } from "../schemas/gh-graphql-projectsv2-page.ts";
 import { fetchAllProjectsV2ForOrgGraphql } from "./graphql-projects-v2.ts";
 
@@ -62,7 +62,7 @@ function effectivePickerPageSize(window: MainWindowInstance): number {
 }
 
 function mapProjectRowsToPickerLines(rows: readonly SlintProjectRow[]) {
-  return rows.map((r) => actionList2RowFromLabel(`${r.title} (#${r.number} · ${SLINT_UI_ORG})`));
+  return rows.map((r) => actionListRowFromLabel(`${r.title} (#${r.number} · ${SLINT_UI_ORG})`));
 }
 
 /** Resolve project node id from a picker list index on the current page. */

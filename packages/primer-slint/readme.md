@@ -24,8 +24,8 @@ specified in detail.
 - **BannerTokens** — per-variant aliases matching [`Banner.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Banner/Banner.module.css) `--banner-bgColor`, `--banner-borderColor`, and `--banner-icon-fgColor` (`banner-bgColor-critical` … `banner-icon-fgColor-warning`). **No literals** — only **PrimerColors** `out` bindings.
 - **LabelTokens** — per-variant `label-fg-*` and `label-border-*` for the product [**Label**](https://primer.style/product/components/label/) chip, aligned with [`Label.module.css`](https://github.com/primer/primer-ui-react/blob/main/packages/react/src/Label/Label.module.css). **No literals** — only **PrimerColors** `out` bindings.
 - **StateLabelTokens** — [StateLabel](slint/StateLabel/state-label.slint) padding, pill radius, semibold text size, and **onEmphasis** fg; composes **LayoutTokens** + **PrimerColors** only. Emphasis **bg** / **border** pairs: **PrimerColors** (`bgColor-open-emphasis`, `borderColor-done-emphasis`, …) in the **`StateLabel.module.css`** audit block.
-- **ActionList2Tokens** — [**ActionList2**](ActionList2/README.md) row and section-heading colors (danger, inactive, link, filled heading, divider, loading label fg): **only** **PrimerColors** + **ButtonTokens** `out` bindings. Audit block in [`tokens.slint`](slint/tokens.slint) above **`ActionList2Tokens`**.
-- **FilteredActionListTokens** — **FilteredActionList2** / **SelectPanel2** select-all strip padding/gaps and body skeleton bar spacing; composes **LayoutTokens** only.
+- **ActionListTokens** — [**ActionList**](ActionList/README.md) row and section-heading colors (danger, inactive, link, filled heading, divider, loading label fg): **only** **PrimerColors** + **ButtonTokens** `out` bindings. Audit block in [`tokens.slint`](slint/tokens.slint) above **`ActionListTokens`**.
+- **FilteredActionListTokens** — **FilteredActionList** / **SelectPanel** select-all strip padding/gaps and body skeleton bar spacing; composes **LayoutTokens** only.
 - **CheckboxTokens** — unchecked rest/hover/pressed, checked/indeterminate accent fill + hover/active, and disabled colors; composes from **PrimerColors** and **ButtonTokens**. **`LayoutTokens.checkbox-border-radius`** matches Primer **`borderRadius-small`** (2px).
 - **RadioTokens** — unchecked base + checked inner dot (**`control.checked.fgColor`**) and outer ring (**`control.checked.bgColor`**) + disabled branches; composes **PrimerColors** / **ButtonTokens** (see audit block in [`tokens.slint`](slint/tokens.slint)).
 - **OverlayTokens** — **`backdrop-scrim`** for modal-style dimmers; **`panel-background`** / **`panel-border`** / **`panel-border-width`** / **`panel-border-radius`**, **`panel-elevation-shadow`** (`shadow.floating.small` via **ShadowTokens**) for floating panels (**`ModalOverlay`**, **`SheetOverlay`**, **`AnchoredOverlay`**, and host-owned menus use these values). **ModalOverlay** and **`SheetOverlay`** also use **`backdrop-scrim`** (**`AnchoredOverlay`** optional). **No literals** — composes **PrimerColors**, **LayoutTokens**, **ShadowTokens**.
@@ -54,7 +54,7 @@ The item row uses **`LayoutTokens.control-xlarge-size`** (48px) **min-height** t
 
 **Status:** **`PrimerTreeView`** is exported from [`primer.slint`](slint/primer.slint) with **`TreeViewRow`** / **`TreeViewTrailingVisual`** ([`TreeView/types.slint`](slint/TreeView/types.slint)); optional **`suppress-current-for-directories`** makes directory activation toggle-only (see [`TreeView/API.md`](slint/TreeView/API.md)). Gallery: **`pnpm dev:gallery`** → **Tree view**.
 
-**Imports for views:** **`PrimerTreeView`**, **`TreeViewRow`**, **`TreeViewTrailingVisual`**, **`TreeViewTokens`**, **`LayoutTokens`**, **`PrimerColors`**, **`Icons`** from [`primer.slint`](slint/primer.slint) (or `tokens.slint` for tokens only). Secondary overflow menus are **not** built into the tree: set **`has-secondary-actions`** / **`secondary-actions-badge`** on rows and handle **`row-secondary-actions-requested`** with **`ActionList2`** (or your own **`PopupWindow`** shell; see gallery **TrailingActions**). Async **SubTree** is host-owned: insert skeleton rows (**`is-skeleton: true`**, **`interactive: false`**), drive **`loading-children-badge`**, and use **`Dialog`** for errors (gallery **AsyncError**).
+**Imports for views:** **`PrimerTreeView`**, **`TreeViewRow`**, **`TreeViewTrailingVisual`**, **`TreeViewTokens`**, **`LayoutTokens`**, **`PrimerColors`**, **`Icons`** from [`primer.slint`](slint/primer.slint) (or `tokens.slint` for tokens only). Secondary overflow menus are **not** built into the tree: set **`has-secondary-actions`** / **`secondary-actions-badge`** on rows and handle **`row-secondary-actions-requested`** with **`ActionList`** (or your own **`PopupWindow`** shell; see gallery **TrailingActions**). Async **SubTree** is host-owned: insert skeleton rows (**`is-skeleton: true`**, **`interactive: false`**), drive **`loading-children-badge`**, and use **`Dialog`** for errors (gallery **AsyncError**).
 
 | Topic | Where it lives |
 | -------- | ----- |
@@ -311,17 +311,17 @@ Wraps a **`DataTable`** (or other content) with optional **title**, **subtitle**
 
 Horizontal padding matches **`LayoutTokens.stack-padding-normal`**. When there is no title, subtitle, or action labels, the header block is omitted and the **child** is laid out directly.
 
-## ActionList2
+## ActionList
 
-**ActionList2** ([`ActionList2/action-list2.slint`](ActionList2/action-list2.slint)) is the compose-first list aligned with Primer [**ActionList**](https://primer.style/product/components/action-list/). Use **`ActionList2`** + **`@children`** for hand-built menus, or **`ActionList2Lines`** with **`[ActionList2Line]`** for model-driven lists. Row chrome lives on **`ActionList2Row`**; **`ActionList2ListRole`** and **`ActionList2SelectionMode`** control selection columns. **ActionMenu**, **FilteredActionList2**, and **SelectPanel2** compose this family — see [`ActionList2/README.md`](ActionList2/README.md).
+**ActionList** ([`ActionList/action-list.slint`](ActionList/action-list.slint)) is the compose-first list aligned with Primer [**ActionList**](https://primer.style/product/components/action-list/). Use **`ActionList`** + **`@children`** for hand-built menus, or **`ActionListLines`** with **`[ActionListLine]`** for model-driven lists. Row chrome lives on **`ActionListRow`**; **`ActionListListRole`** and **`ActionListSelectionMode`** control selection columns. **ActionMenu**, **FilteredActionList**, and **SelectPanel** compose this family — see [`ActionList/README.md`](ActionList/README.md).
 
-**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionList2`**, **`ActionList2Lines`**, **`ActionList2Row`**, **`ActionList2Line`**, **`ActionList2LineKind`**, **`ActionList2ListRole`**, **`ActionList2RowVariant`**, **`ActionList2DescriptionLayout`**, **`ActionList2SelectionMode`**, **`ActionList2Tokens`**, **`LayoutTokens`**.
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionList`**, **`ActionListLines`**, **`ActionListRow`**, **`ActionListLine`**, **`ActionListLineKind`**, **`ActionListListRole`**, **`ActionListRowVariant`**, **`ActionListDescriptionLayout`**, **`ActionListSelectionMode`**, **`ActionListTokens`**, **`LayoutTokens`**.
 
-Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list → ActionList2**).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list → ActionList**).
 
 ## NavList
 
-**NavList** ([`NavList/nav-list.slint`](slint/NavList/nav-list.slint), models in [`NavList/types.slint`](slint/NavList/types.slint)) follows Primer [**NavList**](https://primer.style/product/components/nav-list/): flat **`items`**, optional **`groups`** (filled | subtle headings + dividers), SubNav expand/collapse up to four unrolled nesting levels, inactive rows via **`inactive-text`**, and optional **`sidebar-current-indicator`** (blue vertical bar + selected row chrome for app sidebars). Interactive rows are built with **`ActionList2Row`**: when **`sidebar-current-indicator`** is false, **`NavListRowData.current`** maps to **`active`** (upstream **`aria-current`** / **`LinkItem`**); when true, **`current`** maps to **`selected`** on the row so the inner active bar does not duplicate the external accent. **`item-activated(group-index, path)`** reports activations with a dot-separated **`path`** for nested items.
+**NavList** ([`NavList/nav-list.slint`](slint/NavList/nav-list.slint), models in [`NavList/types.slint`](slint/NavList/types.slint)) follows Primer [**NavList**](https://primer.style/product/components/nav-list/): flat **`items`**, optional **`groups`** (filled | subtle headings + dividers), SubNav expand/collapse up to four unrolled nesting levels, inactive rows via **`inactive-text`**, and optional **`sidebar-current-indicator`** (blue vertical bar + selected row chrome for app sidebars). Interactive rows are built with **`ActionListRow`**: when **`sidebar-current-indicator`** is false, **`NavListRowData.current`** maps to **`active`** (upstream **`aria-current`** / **`LinkItem`**); when true, **`current`** maps to **`selected`** on the row so the inner active bar does not duplicate the external accent. **`item-activated(group-index, path)`** reports activations with a dot-separated **`path`** for nested items.
 
 **Imports for views:** [`primer.slint`](slint/primer.slint) — **`NavList`**, **`NavListGroup`**, **`NavListGroupHeadingVariant`**, **`NavListItem`**, and related model exports from **`types.slint`**.
 
@@ -329,41 +329,41 @@ Examples: **standalone gallery** (`pnpm dev:gallery` — **Navs → Playground**
 
 ## ActionMenu
 
-**ActionMenu** ([`ActionMenu/action-menu.slint`](slint/ActionMenu/action-menu.slint)) composes a menu **`Button`** (default trailing **`Icons.triangle_down`**; override with **`button-trailing-icon`**) and **`AnchoredOverlay`** (**`panel-padding`** default **`0px`** — Primer overlay has no inner padding around the list). Put **`ActionList2`** + **`ActionList2Lines`** with **`list-role: menu`** in **`@children`** (or nested **`ActionMenu`** shells). For content-sized **`auto`** overlays, set the wrapper **`width: menuList.preferred-width`**. **`in-out property <bool> open`** mirrors the popup and supports programmatic open/close. Callbacks **`opened`**, **`closed`**, **`close-requested`** follow **`AnchoredOverlay`**.
+**ActionMenu** ([`ActionMenu/action-menu.slint`](slint/ActionMenu/action-menu.slint)) composes a menu **`Button`** (default trailing **`Icons.triangle_down`**; override with **`button-trailing-icon`**) and **`AnchoredOverlay`** (**`panel-padding`** default **`0px`** — Primer overlay has no inner padding around the list). Put **`ActionList`** + **`ActionListLines`** with **`list-role: menu`** in **`@children`** (or nested **`ActionMenu`** shells). For content-sized **`auto`** overlays, set the wrapper **`width: menuList.preferred-width`**. **`in-out property <bool> open`** mirrors the popup and supports programmatic open/close. Callbacks **`opened`**, **`closed`**, **`close-requested`** follow **`AnchoredOverlay`**.
 
-**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionMenu`**, **`ActionList2`**, **`ActionList2Lines`**, **`ActionList2Line`**, **`ActionList2ListRole`**, **`ALVariant`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayWidth`**, **`AnchoredOverlayAlign`**, **`AnchoredOverlayHeight`**, **`LayoutTokens`**, **`Icons`**.
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ActionMenu`**, **`ActionList`**, **`ActionListLines`**, **`ActionListLine`**, **`ActionListListRole`**, **`ActionListVariant`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayWidth`**, **`AnchoredOverlayAlign`**, **`AnchoredOverlayHeight`**, **`LayoutTokens`**, **`Icons`**.
 
 Examples: **standalone gallery** — **Action menu → Playground** (13 Storybook-aligned scenarios).
 
-## FilteredActionList2
+## FilteredActionList
 
-**FilteredActionList2** ([`FilteredActionList2/filtered-action-list2.slint`](slint/FilteredActionList2/filtered-action-list2.slint)) is the **ActionList2**-based host for upstream **FilteredActionList**: **`PrimerTextInput`** filter, hairline, bounded **`Flickable`** body with **`ActionList2`** + **`ActionList2Lines`**. Parent-owned filtering: **`[ActionList2Line]`** on **`lines`**, **`filter-text`**, **`filter-changed`**. Matches Storybook **`Default`** and **`WithLongItems`** only; loading, select-all, message/empty, and **`aria-activedescendant`** are **non-goals** for now — see [`FilteredActionList2/README.md`](slint/FilteredActionList2/README.md) and [`FilteredActionList2/VARIANT_MATRIX.md`](slint/FilteredActionList2/VARIANT_MATRIX.md).
+**FilteredActionList** ([`FilteredActionList/filtered-action-list.slint`](slint/FilteredActionList/filtered-action-list.slint)) is the **ActionList**-based host for upstream **FilteredActionList**: **`PrimerTextInput`** filter, hairline, bounded **`Flickable`** body with **`ActionList`** + **`ActionListLines`**. Parent-owned filtering: **`[ActionListLine]`** on **`lines`**, **`filter-text`**, **`filter-changed`**. Matches Storybook **`Default`** and **`WithLongItems`** only; loading, select-all, message/empty, and **`aria-activedescendant`** are **non-goals** for now — see [`FilteredActionList/README.md`](slint/FilteredActionList/README.md) and [`FilteredActionList/VARIANT_MATRIX.md`](slint/FilteredActionList/VARIANT_MATRIX.md).
 
 | Property | Notes |
 | -------- | ----- |
 | `filter-text` | **in-out** `string`; **`filter-changed(string)`** on edit. |
 | `placeholder`, `disabled` | Filter field. |
-| `lines` | **`[ActionList2Line]`** — parent narrows by query. |
-| `list-variant` | **`ALVariant`** (default **`inset`**). |
-| `show-dividers` | Passed to **`ActionList2Lines`**. |
+| `lines` | **`[ActionListLine]`** — parent narrows by query. |
+| `list-variant` | **`ActionListVariant`** (default **`inset`**). |
+| `show-dividers` | Passed to **`ActionListLines`**. |
 | `body-region-height` | Default **`SelectPanelTokens.list-max-height-default`**. |
-| `item-activated` | Forwarded from **`ActionList2Lines`**. |
+| `item-activated` | Forwarded from **`ActionListLines`**. |
 
-**Imports for views:** [`primer.slint`](slint/primer.slint) — **`FilteredActionList2`**, **`ActionList2Line`**, **`ActionList2LineKind`**, **`ALVariant`**, **`SelectPanelTokens`**, **`LayoutTokens`**, **`PrimerColors`**.
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`FilteredActionList`**, **`ActionListLine`**, **`ActionListLineKind`**, **`ActionListVariant`**, **`SelectPanelTokens`**, **`LayoutTokens`**, **`PrimerColors`**.
 
 ## Select
 
 **Select** ([`Select/select.slint`](Select/select.slint)) is the trigger + **ContextMenu** picker pattern using **`SelectOption`** (`value`, `label`, `enabled`).
 
-**SelectPanel2** ([`SelectPanel2/select-panel2.slint`](SelectPanel2/select-panel2.slint)) matches Primer [**SelectPanel**](https://primer.style/product/components/select-panel/): title, subtitle, **`FilteredActionList2`** body (**`[ActionList2Line]`** + **`filter-text`**), optional footer, and by default a trigger **`Button`** + **`AnchoredOverlay`**. Set **`has-built-in-anchor: false`** + **`open`** + **`anchor-position-props`** for inline modals or external triggers (see [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md)). **`loading`**, **`FilteredActionListLoadingKind`**, empty/message states, and **`ActionList2SelectionMode`** mirror upstream **SelectPanel** features.
+**SelectPanel** ([`SelectPanel/select-panel.slint`](SelectPanel/select-panel.slint)) matches Primer [**SelectPanel**](https://primer.style/product/components/select-panel/): title, subtitle, **`FilteredActionList`** body (**`[ActionListLine]`** + **`filter-text`**), optional footer, and by default a trigger **`Button`** + **`AnchoredOverlay`**. Set **`has-built-in-anchor: false`** + **`open`** + **`anchor-position-props`** for inline modals or external triggers (see [`anchored-popupwindow.md`](../slint-gallery/ui/views/anchored-popupwindow.md)). **`loading`**, **`FilteredActionListLoadingKind`**, empty/message states, and **`ActionListSelectionMode`** mirror upstream **SelectPanel** features.
 
-The **project board** import dialog and **time-reporting** project picker use **`FilteredActionList2`** inside **`ModalOverlay`** ([`ProjectBoardImportOverlay.slint`](../../app/src/ui/components/ProjectBoardImportOverlay.slint), [`TimeReportingProjectPickerOverlay.slint`](../../app/src/ui/components/TimeReportingProjectPickerOverlay.slint)).
+The **project board** import dialog and **time-reporting** project picker use **`FilteredActionList`** inside **`ModalOverlay`** ([`ProjectBoardImportOverlay.slint`](../../app/src/ui/components/ProjectBoardImportOverlay.slint), [`TimeReportingProjectPickerOverlay.slint`](../../app/src/ui/components/TimeReportingProjectPickerOverlay.slint)).
 
-**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ModalOverlay`**, **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`**, **`AnchoredOverlayWidth`**, **`AnchoredOverlayHeight`**, **`PositionProps`**, **`SheetOverlay`**, **`SheetSide`**, **`Dialog`**, **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`SelectPanel2`**, **`FilteredActionList2`**, **`FilteredActionListLoadingKind`**, **`ActionList2Line`**, **`ActionList2SelectionMode`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`**, **`DialogTokens`** (optional **`OverlayTokens`** for overrides).
+**Imports for views:** [`primer.slint`](slint/primer.slint) — **`ModalOverlay`**, **`AnchoredOverlay`**, **`AnchoredOverlaySide`**, **`AnchoredOverlayAlign`**, **`AnchoredOverlayWidth`**, **`AnchoredOverlayHeight`**, **`PositionProps`**, **`SheetOverlay`**, **`SheetSide`**, **`Dialog`**, **`DialogHeader`**, **`DialogBody`**, **`DialogFooter`**, **`DialogWidthPreset`**, **`DialogHeightPreset`**, **`DialogAlignPreset`**, **`DialogPositionPreset`**, **`DialogNarrowPositionPreset`**, **`SelectPanel`**, **`FilteredActionList`**, **`FilteredActionListLoadingKind`**, **`ActionListLine`**, **`ActionListSelectionMode`**, **`Select`**, **`SelectOption`**, **`ValidationStatus`**, **`DialogTokens`** (optional **`OverlayTokens`** for overrides).
 
 **AnchoredOverlay (Slint):** floating panel anchored to a host-supplied window-space rectangle (**`PositionProps`**). Ships **`outside-top` / `outside-bottom` / `outside-left` / `outside-right`**, align/offsets, viewport clamp (**`prevent-overflow`**), optional scrim, **`FocusScope`** + Escape/outside dismiss — not a full port of React focus-trap/focus-zone overrides, overlay prop override matrix, multi-anchor grid, or reposition-on-content-grow demos. When **`reduce-motion`** is false, the panel shell uses a short **opacity-only enter** (duration/easing aligned with React **`Overlay`** / **`ModalOverlay`**); closing stays instant (no exit fade).
 
-Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list → SelectPanel2**; **Forms** group for **Select**); **Project board** / **time-reporting** pickers (**`FilteredActionList2`** in modal).
+Examples: **standalone gallery** (`pnpm dev:gallery` — **Action list → SelectPanel**; **Forms** group for **Select**); **Project board** / **time-reporting** pickers (**`FilteredActionList`** in modal).
 
 ## Dialog (Dialog)
 
@@ -389,7 +389,7 @@ Upstream inventory: **[`Dialog.stories.tsx`](https://github.com/primer/primer-ui
 | `FullScreenNarrow` | Dialog/Features | **Narrow viewport** — **`fullscreen`** |
 | `SideSheet` | Dialog/Features | **Side sheet** — **`position-preset`** **left** / **right** |
 | `ReturnFocusRef` | Dialog/Features | Not a dedicated gallery block yet (`returnFocusRef`) |
-| `NewIssues` | Dialog/Features | Not a dedicated gallery block yet (`initialFocusRef`, body **`ActionList2`**) |
+| `NewIssues` | Dialog/Features | Not a dedicated gallery block yet (`initialFocusRef`, body **`ActionList`**) |
 | `RetainsFocusTrapWithDynamicContent` | Dialog/Features | **RetainsFocusTrapWithDynamicContent** — dynamic footer visibility |
 | `LoadingFooterButtons` | Dialog/Features | **LoadingFooterButtons** — **`footer-*-loading`**, **`footer-auto-focus`** |
 | `LoadingCustomFooterButtonsCould` | Dialog/Features | **LoadingCustomFooterButtonsCould** — custom **`DialogFooter`** + loading |

@@ -1,16 +1,16 @@
 // **ActionMenu** gallery — 13 upstream Storybook scenarios (see plan). Out-of-scope stories are listed in the sidebar footer.
 import {
-    ActionList2,
-    ActionList2DescriptionLayout,
-    ActionList2Line,
-    ActionList2LineKind,
-    ActionList2Lines,
-    ActionList2ListRole,
-    ActionList2RowSize,
-    ActionList2RowVariant,
-    ActionList2SectionHeadingVariant,
-    ActionList2SelectionMode,
-    ALVariant,
+    ActionList,
+    ActionListDescriptionLayout,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListLines,
+    ActionListListRole,
+    ActionListRowSize,
+    ActionListRowVariant,
+    ActionListSectionHeadingVariant,
+    ActionListSelectionMode,
+    ActionListVariant,
     ActionMenu,
     AnchoredOverlaySide,
     AnchoredOverlayWidth,
@@ -79,101 +79,101 @@ export component GalleryActionMenuPage {
         }
     }
 
-    property <[ActionList2Line]> lines-default: [
+    property <[ActionListLine]> lines-default: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Copy link",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "⌘C",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Quote reply",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "⌘Q",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Edit comment",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "⌘E",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.item_divider,
+            kind: ActionListLineKind.item_divider,
             label: "",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Delete file",
-            row-variant: ActionList2RowVariant.danger,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.danger,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "⌘D",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
@@ -182,12 +182,12 @@ export component GalleryActionMenuPage {
         root.scenario-ix == 0 || root.scenario-ix == 8 || root.scenario-ix == 10 || root.scenario-ix == 12
         ? AnchoredOverlayWidth.medium
         : AnchoredOverlayWidth.auto;
-    property <ActionList2SelectionMode> overlay-sel-mode:
-        root.scenario-ix == 2 || root.scenario-ix == 8 ? ActionList2SelectionMode.single
-        : root.scenario-ix == 3 ? ActionList2SelectionMode.multiple
-        : ActionList2SelectionMode.none;
+    property <ActionListSelectionMode> overlay-sel-mode:
+        root.scenario-ix == 2 || root.scenario-ix == 8 ? ActionListSelectionMode.single
+        : root.scenario-ix == 3 ? ActionListSelectionMode.multiple
+        : ActionListSelectionMode.none;
 
-    property <[ActionList2Line]> overlay-lines:
+    property <[ActionListLine]> overlay-lines:
         root.scenario-ix == 0 || root.scenario-ix == 12 ? root.lines-default
         : root.scenario-ix == 1 ? root.lines-links
         : root.scenario-ix == 2 ? root.lines-single
@@ -198,19 +198,19 @@ export component GalleryActionMenuPage {
         : root.scenario-ix == 8 ? root.lines-groups
         : root.lines-default;
 
-    property <[ActionList2Line]> lines-links: [
+    property <[ActionListLine]> lines-links: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Workflows",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.issue_opened,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -218,17 +218,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Settings",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.gear_24,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -236,17 +236,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.section_heading,
+            kind: ActionListLineKind.section_heading,
             label: "GitHub projects",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -254,17 +254,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "GitHub Docs (link row)",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.book,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -273,19 +273,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-single: [
+    property <[ActionListLine]> lines-single: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Fast forward",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -293,17 +293,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Recursive",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -311,17 +311,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Octopus",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -330,19 +330,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-multi: [
+    property <[ActionListLine]> lines-multi: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Show code folding buttons",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -350,17 +350,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Wrap lines",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -368,17 +368,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Center content",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -387,19 +387,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-inactive: [
+    property <[ActionListLine]> lines-inactive: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Workflows",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.issue_opened,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "Unavailable due to an outage",
             active: false,
@@ -407,17 +407,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Archived items",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.archive,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -426,19 +426,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-loading: [
+    property <[ActionListLine]> lines-loading: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Workflows",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.issue_opened,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -446,17 +446,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Archived items",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.archive,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -465,19 +465,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-disabled: [
+    property <[ActionListLine]> lines-disabled: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Workflows (disabled)",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: true,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.issue_opened,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -485,17 +485,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Settings",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.gear_24,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -504,19 +504,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-groups: [
+    property <[ActionListLine]> lines-groups: [
         {
-            kind: ActionList2LineKind.section_heading,
+            kind: ActionListLineKind.section_heading,
             label: "Open",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -524,17 +524,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "FY23 - Q1",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.issue_opened,
             description: "Due by June 30, 2022",
-            description-layout: ActionList2DescriptionLayout.block,
+            description-layout: ActionListDescriptionLayout.block,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -542,17 +542,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "FY23 - Q2",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.issue_opened,
             description: "Due by December 30, 2022",
-            description-layout: ActionList2DescriptionLayout.block,
+            description-layout: ActionListDescriptionLayout.block,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -561,19 +561,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-mix-single: [
+    property <[ActionListLine]> lines-mix-single: [
         {
-            kind: ActionList2LineKind.section_heading,
+            kind: ActionListLineKind.section_heading,
             label: "Group by",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -581,17 +581,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Status",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.issue_opened,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -599,17 +599,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Stage",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -618,19 +618,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-mix-multi: [
+    property <[ActionListLine]> lines-mix-multi: [
         {
-            kind: ActionList2LineKind.section_heading,
-            label: "View options (second ActionList2)",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            kind: ActionListLineKind.section_heading,
+            label: "View options (second ActionList)",
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -638,17 +638,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Show minimap",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -656,17 +656,17 @@ export component GalleryActionMenuPage {
             trailing-text: "",
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Word wrap",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -675,19 +675,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-delayed-before: [
+    property <[ActionListLine]> lines-delayed-before: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Copy link",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.copy_icon,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -696,19 +696,19 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-delayed-after: [
+    property <[ActionListLine]> lines-delayed-after: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Copied!",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.check,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
@@ -717,25 +717,25 @@ export component GalleryActionMenuPage {
         },
     ];
 
-    property <[ActionList2Line]> lines-submenu-root: [
-        { kind: ActionList2LineKind.row, label: "Cut", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
-        { kind: ActionList2LineKind.row, label: "Copy", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
-        { kind: ActionList2LineKind.row, label: "Paste", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
+    property <[ActionListLine]> lines-submenu-root: [
+        { kind: ActionListLineKind.row, label: "Cut", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
+        { kind: ActionListLineKind.row, label: "Copy", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
+        { kind: ActionListLineKind.row, label: "Paste", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
     ];
 
-    property <[ActionList2Line]> lines-submenu-paste: [
-        { kind: ActionList2LineKind.row, label: "Paste plain text", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
-        { kind: ActionList2LineKind.row, label: "Paste formulas", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
-        { kind: ActionList2LineKind.row, label: "Paste with formatting", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
+    property <[ActionListLine]> lines-submenu-paste: [
+        { kind: ActionListLineKind.row, label: "Paste plain text", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
+        { kind: ActionListLineKind.row, label: "Paste formulas", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
+        { kind: ActionListLineKind.row, label: "Paste with formatting", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
     ];
 
-    property <[ActionList2Line]> lines-submenu-from: [
-        { kind: ActionList2LineKind.row, label: "Current clipboard", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
-        { kind: ActionList2LineKind.row, label: "History", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
-        { kind: ActionList2LineKind.row, label: "Another device", row-variant: ActionList2RowVariant.default, row-size: ActionList2RowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionList2DescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionList2SectionHeadingVariant.subtle },
+    property <[ActionListLine]> lines-submenu-from: [
+        { kind: ActionListLineKind.row, label: "Current clipboard", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
+        { kind: ActionListLineKind.row, label: "History", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
+        { kind: ActionListLineKind.row, label: "Another device", row-variant: ActionListRowVariant.default, row-size: ActionListRowSize.medium, disabled: false, has-leading-avatar: false, avatar-source: Icons.dot_fill, has-leading-visual: false, leading-icon: Icons.dot_fill, description: "", description-layout: ActionListDescriptionLayout.none, truncate-inline-description: false, trailing-text: "", inactive-text: "", show-trailing-loading: false, active: false, section-heading-variant: ActionListSectionHeadingVariant.subtle },
     ];
 
-    property <[ActionList2Line]> delayed-lines-view: root.delayed-copy-done ? root.lines-delayed-after : root.lines-delayed-before;
+    property <[ActionListLine]> delayed-lines-view: root.delayed-copy-done ? root.lines-delayed-after : root.lines-delayed-before;
     delayed-close-timer := Timer {
         interval: 700ms;
         running: false;
@@ -794,12 +794,12 @@ export component GalleryActionMenuPage {
                     button-label: "Anchor";
                     open <=> shortcut-menu-open;
                     width-preset: root.overlay-width;
-                    ActionList2 {
-                        list-variant: ALVariant.inset;
-                        ActionList2Lines {
-                            list-role: ActionList2ListRole.menu;
+                    ActionList {
+                        list-variant: ActionListVariant.inset;
+                        ActionListLines {
+                            list-role: ActionListListRole.menu;
                             lines: root.lines-default;
-                            selection-mode: ActionList2SelectionMode.none;
+                            selection-mode: ActionListSelectionMode.none;
                             item-activated(ix) => {
                                 root.last-action = "Shortcut row " + ix;
                                 root.shortcut-menu-open = false;
@@ -819,12 +819,12 @@ export component GalleryActionMenuPage {
                     VerticalLayout {
                         spacing: 0px;
                         alignment: start;
-                        ActionList2 {
-                            list-variant: ALVariant.inset;
-                            ActionList2Lines {
-                                list-role: ActionList2ListRole.menu;
+                        ActionList {
+                            list-variant: ActionListVariant.inset;
+                            ActionListLines {
+                                list-role: ActionListListRole.menu;
                                 lines: root.lines-submenu-root;
-                                selection-mode: ActionList2SelectionMode.none;
+                                selection-mode: ActionListSelectionMode.none;
                                 item-activated(ix) => {
                                     root.last-action = "Submenu root " + ix;
                                 }
@@ -840,12 +840,12 @@ export component GalleryActionMenuPage {
                             width-preset: AnchoredOverlayWidth.auto;
                             VerticalLayout {
                                 width: submenu-paste-list.preferred-width;
-                                submenu-paste-list := ActionList2 {
-                                    list-variant: ALVariant.inset;
-                                    ActionList2Lines {
-                                        list-role: ActionList2ListRole.menu;
+                                submenu-paste-list := ActionList {
+                                    list-variant: ActionListVariant.inset;
+                                    ActionListLines {
+                                        list-role: ActionListListRole.menu;
                                         lines: root.lines-submenu-paste;
-                                        selection-mode: ActionList2SelectionMode.none;
+                                        selection-mode: ActionListSelectionMode.none;
                                         item-activated(ix) => {
                                             root.last-action = "Paste special " + ix;
                                         }
@@ -861,12 +861,12 @@ export component GalleryActionMenuPage {
                                     width-preset: AnchoredOverlayWidth.auto;
                                     VerticalLayout {
                                         width: submenu-from-list.preferred-width;
-                                        submenu-from-list := ActionList2 {
-                                            list-variant: ALVariant.inset;
-                                            ActionList2Lines {
-                                                list-role: ActionList2ListRole.menu;
+                                        submenu-from-list := ActionList {
+                                            list-variant: ActionListVariant.inset;
+                                            ActionListLines {
+                                                list-role: ActionListListRole.menu;
                                                 lines: root.lines-submenu-from;
-                                                selection-mode: ActionList2SelectionMode.none;
+                                                selection-mode: ActionListSelectionMode.none;
                                                 item-activated(ix) => {
                                                     root.last-action = "Paste from " + ix;
                                                 }
@@ -886,12 +886,12 @@ export component GalleryActionMenuPage {
                 VerticalLayout {
                     spacing: 8px;
                     alignment: start;
-                    ActionList2 {
-                        list-variant: ALVariant.inset;
-                        ActionList2Lines {
-                            list-role: ActionList2ListRole.menu;
+                    ActionList {
+                        list-variant: ActionListVariant.inset;
+                        ActionListLines {
+                            list-role: ActionListListRole.menu;
                             lines: root.lines-mix-single;
-                            selection-mode: ActionList2SelectionMode.single;
+                            selection-mode: ActionListSelectionMode.single;
                             selected-index <=> mix-single-ix;
                             show-dividers: true;
                             item-activated(ix) => {
@@ -901,12 +901,12 @@ export component GalleryActionMenuPage {
                         }
                     }
 
-                    ActionList2 {
-                        list-variant: ALVariant.inset;
-                        ActionList2Lines {
-                            list-role: ActionList2ListRole.menu;
+                    ActionList {
+                        list-variant: ActionListVariant.inset;
+                        ActionListLines {
+                            list-role: ActionListListRole.menu;
                             lines: root.lines-mix-multi;
-                            selection-mode: ActionList2SelectionMode.multiple;
+                            selection-mode: ActionListSelectionMode.multiple;
                             multi-selected: [root.mx0, root.mx1, root.mx2];
                             item-activated(ix) => {
                                 if ix == 0 {
@@ -929,12 +929,12 @@ export component GalleryActionMenuPage {
                 button-label: "Anchor";
                 open <=> delayed-menu-open;
                 width-preset: root.overlay-width;
-                ActionList2 {
-                    list-variant: ALVariant.inset;
-                    ActionList2Lines {
-                        list-role: ActionList2ListRole.menu;
+                ActionList {
+                    list-variant: ActionListVariant.inset;
+                    ActionListLines {
+                        list-role: ActionListListRole.menu;
                         lines: root.delayed-lines-view;
-                        selection-mode: ActionList2SelectionMode.none;
+                        selection-mode: ActionListSelectionMode.none;
                         item-activated(ix) => {
                             if ix == 0 {
                                 root.delayed-copy-done = true;
@@ -950,10 +950,10 @@ export component GalleryActionMenuPage {
                 button-label: root.scenario-ix == 2 || root.scenario-ix == 8 ? "Milestone: pick one" : root.scenario-ix == 3 ? "Display" : "Open menu";
                 side: root.overlay-side;
                 width-preset: root.overlay-width;
-                ActionList2 {
-                    list-variant: ALVariant.inset;
-                    ActionList2Lines {
-                        list-role: ActionList2ListRole.menu;
+                ActionList {
+                    list-variant: ActionListVariant.inset;
+                    ActionListLines {
+                        list-role: ActionListListRole.menu;
                         lines: root.overlay-lines;
                         selection-mode: root.overlay-sel-mode;
                         selected-index <=> demo-sel-ix;

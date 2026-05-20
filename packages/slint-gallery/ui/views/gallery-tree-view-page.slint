@@ -1,16 +1,16 @@
 // One scroll — sections mirror Storybook **Components/TreeView** (see `TreeView/UPSTREAM_INVENTORY.md`). Heavy stories are scaled.
 
 import {
-    ActionList2,
-    ActionList2DescriptionLayout,
-    ActionList2Line,
-    ActionList2LineKind,
-    ActionList2Lines,
-    ActionList2ListRole,
-    ActionList2RowSize,
-    ActionList2RowVariant,
-    ActionList2SectionHeadingVariant,
-    ALVariant,
+    ActionList,
+    ActionListDescriptionLayout,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListLines,
+    ActionListListRole,
+    ActionListRowSize,
+    ActionListRowVariant,
+    ActionListSectionHeadingVariant,
+    ActionListVariant,
     Banner,
     BannerVariant,
     Button,
@@ -997,44 +997,44 @@ export component GalleryTreeViewPage inherits VerticalLayout {
         },
     ];
 
-    property <[ActionList2Line]> tv-trailing-menu-lines: [
+    property <[ActionListLine]> tv-trailing-menu-lines: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Open sample dialog",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
             show-trailing-loading: false,
             trailing-text: "",
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Delete…",
-            row-variant: ActionList2RowVariant.danger,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.danger,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             inactive-text: "",
             active: false,
             show-trailing-loading: false,
             trailing-text: "",
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
@@ -1608,7 +1608,7 @@ export component GalleryTreeViewPage inherits VerticalLayout {
     // --- TrailingActions (Examples)
     TreeViewSectionHeading {
         title: "TrailingActions";
-        note: "Kebab opens an **ActionList2** below the tree; count badge on the first row. **Open sample dialog** exercises a nested **Dialog**.";
+        note: "Kebab opens an **ActionList** below the tree; count badge on the first row. **Open sample dialog** exercises a nested **Dialog**.";
     }
     Rectangle {
         horizontal-stretch: 1;
@@ -1638,11 +1638,11 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 }
             }
 
-            if tv-trailing-menu-open: ActionList2 {
+            if tv-trailing-menu-open: ActionList {
                 width: 220px;
-                list-variant: ALVariant.inset;
-                ActionList2Lines {
-                    list-role: ActionList2ListRole.menu;
+                list-variant: ActionListVariant.inset;
+                ActionListLines {
+                    list-role: ActionListListRole.menu;
                     lines: tv-trailing-menu-lines;
                     item-activated(ix) => {
                         tv-trailing-menu-open = false;
@@ -2089,11 +2089,11 @@ export component GalleryTreeViewPage inherits VerticalLayout {
                 }
             }
 
-            if fm-focus-menu-open: ActionList2 {
+            if fm-focus-menu-open: ActionList {
                 width: 200px;
-                list-variant: ALVariant.inset;
-                ActionList2Lines {
-                    list-role: ActionList2ListRole.menu;
+                list-variant: ActionListVariant.inset;
+                ActionListLines {
+                    list-role: ActionListListRole.menu;
                     lines: tv-trailing-menu-lines;
                     item-activated(_ix) => {
                         fm-focus-menu-open = false;

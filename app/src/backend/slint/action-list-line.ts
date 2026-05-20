@@ -1,11 +1,10 @@
 import type { ImageData } from "slint-ui";
-import type { SlintActionList2Line } from "../../bridges/node/slint-interface.ts";
+import type { SlintActionListLine } from "../../bridges/node/slint-interface.ts";
 import { emptyTransparentAvatarImage } from "../gh/avatar-image.ts";
 
 const transparentPlaceholder = emptyTransparentAvatarImage as ImageData;
 
-/** Default **ActionList2** row for picker / filter lists (label-only, no leading visual). */
-export function actionList2RowFromLabel(label: string, disabled = false): SlintActionList2Line {
+export function actionListRowFromLabel(label: string, disabled = false): SlintActionListLine {
   return {
     kind: "row",
     label,
@@ -27,9 +26,9 @@ export function actionList2RowFromLabel(label: string, disabled = false): SlintA
   };
 }
 
-export function actionList2LinesFromLabels(
+export function actionListLinesFromLabels(
   labels: readonly string[],
   disabled = false,
-): SlintActionList2Line[] {
-  return labels.map((label) => actionList2RowFromLabel(label, disabled));
+): SlintActionListLine[] {
+  return labels.map((label) => actionListRowFromLabel(label, disabled));
 }

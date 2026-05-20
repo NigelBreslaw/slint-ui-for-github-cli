@@ -2,21 +2,21 @@
 
 import { Icons } from "../assets/icons.slint";
 import {
-    ActionList2Tokens,
+    ActionListTokens,
     ButtonTokens,
     LayoutTokens,
     PrimerColors,
 } from "../tokens.slint";
-import { ActionList2DescriptionLayout, ActionList2RowSize } from "./types.slint";
+import { ActionListDescriptionLayout, ActionListRowSize } from "./types.slint";
 
-export component ActionList2LinkRow {
+export component ActionListLinkRow {
     in property <string> label;
     in property <string> href: "";
-    in property <ActionList2RowSize> row-size: ActionList2RowSize.medium;
+    in property <ActionListRowSize> row-size: ActionListRowSize.medium;
     in property <bool> has-leading-visual: false;
     in property <image> leading-icon: Icons.dot_fill;
     in property <string> description: "";
-    in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
+    in property <ActionListDescriptionLayout> description-layout: ActionListDescriptionLayout.none;
     in property <bool> truncate-inline-description: false;
     in property <string> inactive-text: "";
     in property <bool> active: false;
@@ -43,28 +43,28 @@ export component ActionList2LinkRow {
         : LayoutTokens.base-text-weight-medium;
 
     property <color> label-color:
-        root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor
-        : root.show-active-chrome ? ActionList2Tokens.item-active-label-fgColor-rest
-        : ActionList2Tokens.item-link-fgColor-rest;
+        root.is-inactive ? ActionListTokens.item-inactive-label-fgColor
+        : root.show-active-chrome ? ActionListTokens.item-active-label-fgColor-rest
+        : ActionListTokens.item-link-fgColor-rest;
 
     property <color> leading-icon-tint:
-        root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor : PrimerColors.fgColor-muted;
+        root.is-inactive ? ActionListTokens.item-inactive-label-fgColor : PrimerColors.fgColor-muted;
 
     property <bool> show-inline-description:
-        root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
+        root.description != "" && root.description-layout == ActionListDescriptionLayout.inline;
     property <bool> show-block-description:
-        root.description != "" && root.description-layout == ActionList2DescriptionLayout.block;
+        root.description != "" && root.description-layout == ActionListDescriptionLayout.block;
 
     property <color> description-color:
-        root.is-inactive ? ActionList2Tokens.item-inactive-description-fgColor
-        : ActionList2Tokens.item-description-fgColor;
+        root.is-inactive ? ActionListTokens.item-inactive-description-fgColor
+        : ActionListTokens.item-description-fgColor;
 
     property <length> cell-padding-block:
-        root.row-size == ActionList2RowSize.large
+        root.row-size == ActionListRowSize.large
         ? LayoutTokens.action-list-item-padding-block-large
         : LayoutTokens.action-list-item-padding-block;
     property <length> cell-min-height:
-        root.row-size == ActionList2RowSize.large
+        root.row-size == ActionListRowSize.large
         ? LayoutTokens.action-list-item-min-height-large
         : LayoutTokens.action-list-item-min-height;
 
@@ -84,7 +84,7 @@ export component ActionList2LinkRow {
         Rectangle {
             horizontal-stretch: 1;
             height: LayoutTokens.table-border-width;
-            background: ActionList2Tokens.item-seam-borderColor;
+            background: ActionListTokens.item-seam-borderColor;
         }
 
         Rectangle {
@@ -118,8 +118,8 @@ export component ActionList2LinkRow {
             padding-right: root.margin-inline;
 
             focus-chrome := Rectangle {
-                border-width: (row-fs.has-focus || root.roving-focused) ? ActionList2Tokens.item-focus-ring-width : 0px;
-                border-color: ActionList2Tokens.item-focus-ring-color;
+                border-width: (row-fs.has-focus || root.roving-focused) ? ActionListTokens.item-focus-ring-width : 0px;
+                border-color: ActionListTokens.item-focus-ring-color;
                 border-radius: LayoutTokens.borderRadius-medium;
 
                 row-chrome-shell := Rectangle {
@@ -128,7 +128,7 @@ export component ActionList2LinkRow {
                         y: LayoutTokens.base-size-4;
                         width: LayoutTokens.base-size-4;
                         height: parent.height - LayoutTokens.button-content-gap;
-                        background: ActionList2Tokens.item-active-indicator-bgColor;
+                        background: ActionListTokens.item-active-indicator-bgColor;
                         border-radius: LayoutTokens.borderRadius-medium;
                     }
 
@@ -300,10 +300,10 @@ export component ActionList2LinkRow {
                                     row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                                 }
                                 active-hover when root.is-interactive && root.show-active-chrome && !ta.pressed && ta.has-hover: {
-                                    row-bg.background: ActionList2Tokens.item-active-bgColor-hover;
+                                    row-bg.background: ActionListTokens.item-active-bgColor-hover;
                                 }
                                 active-rest when root.is-interactive && root.show-active-chrome && !ta.pressed && !ta.has-hover: {
-                                    row-bg.background: ActionList2Tokens.item-active-bgColor-rest;
+                                    row-bg.background: ActionListTokens.item-active-bgColor-rest;
                                 }
                                 default-pressed when root.is-interactive && ta.pressed: {
                                     row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;

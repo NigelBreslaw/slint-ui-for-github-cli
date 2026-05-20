@@ -1,11 +1,11 @@
 // Primer **ActionList.GroupHeading** — **subtle** (default) or **filled** variant.
 
-import { ActionList2Tokens, LayoutTokens } from "../tokens.slint";
-import { ActionList2SectionHeadingVariant } from "./types.slint";
+import { ActionListTokens, LayoutTokens } from "../tokens.slint";
+import { ActionListSectionHeadingVariant } from "./types.slint";
 
-export component ActionList2SectionHeading {
+export component ActionListSectionHeading {
     in property <string> title: "";
-    in property <ActionList2SectionHeadingVariant> variant: ActionList2SectionHeadingVariant.subtle;
+    in property <ActionListSectionHeadingVariant> variant: ActionListSectionHeadingVariant.subtle;
     in property <length> margin-inline: 0px;
 
     VerticalLayout {
@@ -13,16 +13,16 @@ export component ActionList2SectionHeading {
         padding-left: root.margin-inline;
         padding-right: root.margin-inline;
 
-        if root.variant == ActionList2SectionHeadingVariant.filled: VerticalLayout {
+        if root.variant == ActionListSectionHeadingVariant.filled: VerticalLayout {
             horizontal-stretch: 1;
             padding-top: LayoutTokens.base-size-8 - LayoutTokens.table-border-width;
             padding-bottom: LayoutTokens.base-size-8;
 
             filled-shell := Rectangle {
                 horizontal-stretch: 1;
-                background: ActionList2Tokens.section-heading-filled-bgColor;
+                background: ActionListTokens.section-heading-filled-bgColor;
                 border-width: LayoutTokens.table-border-width;
-                border-color: ActionList2Tokens.section-heading-filled-borderColor;
+                border-color: ActionListTokens.section-heading-filled-borderColor;
 
                 VerticalLayout {
                     padding-left: LayoutTokens.action-list-item-padding-inline;
@@ -33,7 +33,7 @@ export component ActionList2SectionHeading {
                     Text {
                         horizontal-stretch: 1;
                         text: root.title;
-                        color: ActionList2Tokens.section-heading-filled-title-fgColor;
+                        color: ActionListTokens.section-heading-filled-title-fgColor;
                         font-size: LayoutTokens.text-body-size-small;
                         font-weight: LayoutTokens.base-text-weight-semibold;
                         wrap: word-wrap;
@@ -42,7 +42,7 @@ export component ActionList2SectionHeading {
             }
         }
 
-        if root.variant == ActionList2SectionHeadingVariant.subtle: VerticalLayout {
+        if root.variant == ActionListSectionHeadingVariant.subtle: VerticalLayout {
             horizontal-stretch: 1;
             padding-top: LayoutTokens.base-size-8;
             padding-bottom: LayoutTokens.base-size-4;
@@ -52,7 +52,7 @@ export component ActionList2SectionHeading {
             Text {
                 horizontal-stretch: 1;
                 text: root.title;
-                color: ActionList2Tokens.section-heading-subtle-fgColor;
+                color: ActionListTokens.section-heading-subtle-fgColor;
                 font-size: LayoutTokens.text-body-size-small;
                 font-weight: LayoutTokens.base-text-weight-semibold;
                 wrap: word-wrap;

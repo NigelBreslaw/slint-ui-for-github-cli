@@ -1,14 +1,14 @@
 // Primer-style NavList — flat, grouped (PR4), SubNav expand/collapse (PR6). Upstream: https://primer.style/product/components/nav-list/
-// Interactive rows use [`ActionList2Row`](../ActionList2/action-list2-row.slint): upstream `aria-current` → `active`; `sidebar-current-indicator` uses `selected` + external bar.
+// Interactive rows use [`ActionListRow`](../ActionList/action-list-row.slint): upstream `aria-current` → `active`; `sidebar-current-indicator` uses `selected` + external bar.
 
 import { Icons } from "../assets/icons.slint";
-import { ActionList2Row } from "../ActionList2/action-list2-row.slint";
+import { ActionListRow } from "../ActionList/action-list-row.slint";
 import {
-    ActionList2DescriptionLayout,
-    ActionList2RowSize,
-    ActionList2RowVariant,
-    ActionList2SelectionLead,
-} from "../ActionList2/types.slint";
+    ActionListDescriptionLayout,
+    ActionListRowSize,
+    ActionListRowVariant,
+    ActionListSelectionLead,
+} from "../ActionList/types.slint";
 import { ButtonTokens, LayoutTokens, PrimerColors } from "../tokens.slint";
 import {
     NavListGroup,
@@ -21,7 +21,7 @@ import {
     NavListSub3,
 } from "./types.slint";
 
-/// SubNav indent + optional sidebar accent + single [`ActionList2Row`]. Upstream `aria-current` maps to `active` when not using sidebar bar; with `sidebar-indicator`, `current` uses `selected` on the row so the inner accent does not double the external bar.
+/// SubNav indent + optional sidebar accent + single [`ActionListRow`]. Upstream `aria-current` maps to `active` when not using sidebar bar; with `sidebar-indicator`, `current` uses `selected` on the row so the inner accent does not double the external bar.
 component NavListActionRow {
     in property <NavListRowData> nav-row;
     in property <int> indent-depth: 0;
@@ -55,23 +55,23 @@ component NavListActionRow {
             background: nav-row.current ? PrimerColors.bgColor-accent-emphasis : transparent;
         }
 
-        ActionList2Row {
+        ActionListRow {
             horizontal-stretch: 1;
             margin-inline: 0px;
             label: nav-row.label;
-            row-variant: ActionList2RowVariant.default;
-            row-size: ActionList2RowSize.medium;
+            row-variant: ActionListRowVariant.default;
+            row-size: ActionListRowSize.medium;
             disabled: false;
             has-leading-avatar: false;
             has-leading-visual: force-leading || nav-row.has-leading-visual;
             leading-icon: force-leading ? forced-leading-icon : nav-row.leading-icon;
             description: nav-row.description;
-            description-layout: nav-row.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+            description-layout: nav-row.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
             trailing-text: nav-row.trailing-text;
             inactive-text: "";
             active: nav-row.current && !sidebar-indicator;
             selected: nav-row.current && sidebar-indicator;
-            selection-lead: ActionList2SelectionLead.none;
+            selection-lead: ActionListSelectionLead.none;
             show-divider: false;
             clicked => {
                 root.clicked();
@@ -80,7 +80,7 @@ component NavListActionRow {
     }
 }
 
-/// Single nav row — inactive (explanation) or interactive [`ActionList2Row`].
+/// Single nav row — inactive (explanation) or interactive [`ActionListRow`].
 /// One root [`VerticalLayout`] so rows stack vertically (multiple root `if` branches overlap at 0×0).
 component NavListItemRow {
     in property <NavListRowData> nav-row;
@@ -154,23 +154,23 @@ component NavListItemRow {
             horizontal-stretch: 1;
             padding-left: indent-depth * LayoutTokens.nav-list-subnav-indent;
 
-            ActionList2Row {
+            ActionListRow {
                 horizontal-stretch: 1;
                 margin-inline: 0px;
                 label: nav-row.label;
-                row-variant: ActionList2RowVariant.default;
-                row-size: ActionList2RowSize.medium;
+                row-variant: ActionListRowVariant.default;
+                row-size: ActionListRowSize.medium;
                 disabled: false;
                 has-leading-avatar: false;
                 has-leading-visual: nav-row.has-leading-visual;
                 leading-icon: nav-row.leading-icon;
                 description: nav-row.description;
-                description-layout: nav-row.description != "" ? ActionList2DescriptionLayout.block : ActionList2DescriptionLayout.none;
+                description-layout: nav-row.description != "" ? ActionListDescriptionLayout.block : ActionListDescriptionLayout.none;
                 trailing-text: nav-row.trailing-text;
                 inactive-text: nav-row.inactive-text;
                 active: false;
                 selected: false;
-                selection-lead: ActionList2SelectionLead.none;
+                selection-lead: ActionListSelectionLead.none;
                 show-divider: false;
             }
         }

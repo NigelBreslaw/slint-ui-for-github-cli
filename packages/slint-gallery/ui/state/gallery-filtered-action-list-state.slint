@@ -1,13 +1,13 @@
-/// **FilteredActionList2** demos — **`lines`** are filled and narrowed by **Node** / **Rust** (prefix match).
+/// **FilteredActionList** demos — **`lines`** are filled and narrowed by **Node** / **Rust** (prefix match).
 
-import { ActionList2Line } from "../../../primer-slint/primer.slint";
+import { ActionListLine } from "../../../primer-slint/primer.slint";
 
-export global GalleryFilteredActionList2Default {
-    in-out property <[ActionList2Line]> lines: [];
+export global GalleryFilteredActionListDefault {
+    in-out property <[ActionListLine]> lines: [];
     callback filter-changed(string);
 }
 
-export global GalleryFilteredActionList2Long {
-    in-out property <[ActionList2Line]> lines: [];
+export global GalleryFilteredActionListLong {
+    in-out property <[ActionListLine]> lines: [];
     callback filter-changed(string);
 }

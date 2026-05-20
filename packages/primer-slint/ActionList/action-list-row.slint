@@ -1,35 +1,35 @@
-// ActionList2 row — default + danger visuals; optional `showDividers` seam above.
+// ActionList row — default + danger visuals; optional `showDividers` seam above.
 
 import { Avatar } from "../Avatar/avatar.slint";
 import { Icons } from "../assets/icons.slint";
 import { Spinner } from "../Progress/spinner.slint";
 import {
-    ActionList2Tokens,
+    ActionListTokens,
     ButtonTokens,
     CheckboxTokens,
     LayoutTokens,
     PrimerColors,
     Size,
 } from "../tokens.slint";
-import { ActionList2TrailingAction } from "./action-list2-trailing-action.slint";
+import { ActionListTrailingAction } from "./action-list-trailing-action.slint";
 import {
-    ActionList2DescriptionLayout,
-    ActionList2RowSize,
-    ActionList2RowVariant,
-    ActionList2SelectionLead,
+    ActionListDescriptionLayout,
+    ActionListRowSize,
+    ActionListRowVariant,
+    ActionListSelectionLead,
 } from "./types.slint";
 
-export component ActionList2Row {
+export component ActionListRow {
     in property <string> label;
-    in property <ActionList2RowVariant> row-variant: ActionList2RowVariant.default;
-    in property <ActionList2RowSize> row-size: ActionList2RowSize.medium;
+    in property <ActionListRowVariant> row-variant: ActionListRowVariant.default;
+    in property <ActionListRowSize> row-size: ActionListRowSize.medium;
     in property <bool> disabled: false;
     in property <bool> has-leading-avatar: false;
     in property <image> avatar-source: Icons.dot_fill;
     in property <bool> has-leading-visual: false;
     in property <image> leading-icon: Icons.dot_fill;
     in property <string> description: "";
-    in property <ActionList2DescriptionLayout> description-layout: ActionList2DescriptionLayout.none;
+    in property <ActionListDescriptionLayout> description-layout: ActionListDescriptionLayout.none;
     in property <bool> truncate-inline-description: false;
     in property <string> trailing-text;
     in property <string> inactive-text: "";
@@ -38,7 +38,7 @@ export component ActionList2Row {
     in property <length> margin-inline;
     in property <bool> show-divider: false;
     in property <bool> selected: false;
-    in property <ActionList2SelectionLead> selection-lead: ActionList2SelectionLead.none;
+    in property <ActionListSelectionLead> selection-lead: ActionListSelectionLead.none;
     in property <bool> roving-focused: false;
     in property <bool> has-trailing-action: false;
     in property <bool> trailing-action-has-icon: false;
@@ -49,8 +49,8 @@ export component ActionList2Row {
     callback trailing-action-clicked();
     callback focus-claimed();
 
-    property <bool> show-selection-checkmark: root.selection-lead == ActionList2SelectionLead.checkmark;
-    property <bool> show-selection-checkbox: root.selection-lead == ActionList2SelectionLead.checkbox;
+    property <bool> show-selection-checkmark: root.selection-lead == ActionListSelectionLead.checkmark;
+    property <bool> show-selection-checkbox: root.selection-lead == ActionListSelectionLead.checkbox;
 
     changed roving-focused => {
         if root.roving-focused {
@@ -58,7 +58,7 @@ export component ActionList2Row {
         }
     }
 
-    property <bool> is-danger: root.row-variant == ActionList2RowVariant.danger;
+    property <bool> is-danger: root.row-variant == ActionListRowVariant.danger;
     property <bool> is-inactive: root.inactive-text != "";
     property <bool> is-loading-row: root.show-trailing-loading;
     property <bool> is-interactive: !root.disabled && !root.is-inactive && !root.is-loading-row;
@@ -82,7 +82,7 @@ export component ActionList2Row {
         : (root.selected ? CheckboxTokens.checkbox-borderColor-checked : CheckboxTokens.checkbox-borderColor-rest);
 
     property <bool> use-selected-surface:
-        root.selected && root.selection-lead == ActionList2SelectionLead.none;
+        root.selected && root.selection-lead == ActionListSelectionLead.none;
 
     property <int> label-font-weight:
         root.is-loading-row
@@ -93,49 +93,49 @@ export component ActionList2Row {
 
     property <color> label-color:
         root.is-loading-row
-        ? ActionList2Tokens.item-loading-label-fgColor
+        ? ActionListTokens.item-loading-label-fgColor
         : root.disabled
-        ? (root.is-danger ? ActionList2Tokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled)
-        : root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor
-        : root.show-active-chrome ? ActionList2Tokens.item-active-label-fgColor-rest
-        : (root.is-danger ? ActionList2Tokens.item-danger-fgColor-rest : PrimerColors.fgColor-default);
+        ? (root.is-danger ? ActionListTokens.item-danger-fgColor-disabled : ButtonTokens.control-fgColor-disabled)
+        : root.is-inactive ? ActionListTokens.item-inactive-label-fgColor
+        : root.show-active-chrome ? ActionListTokens.item-active-label-fgColor-rest
+        : (root.is-danger ? ActionListTokens.item-danger-fgColor-rest : PrimerColors.fgColor-default);
 
     property <color> leading-icon-tint:
         root.disabled
         ? ButtonTokens.control-fgColor-disabled
-        : root.is-inactive ? ActionList2Tokens.item-inactive-label-fgColor
-        : (root.is-danger ? ActionList2Tokens.item-danger-fgColor-rest : PrimerColors.fgColor-muted);
+        : root.is-inactive ? ActionListTokens.item-inactive-label-fgColor
+        : (root.is-danger ? ActionListTokens.item-danger-fgColor-rest : PrimerColors.fgColor-muted);
 
     property <color> trailing-text-color:
         root.disabled
         ? ButtonTokens.control-fgColor-disabled
-        : root.is-inactive ? ActionList2Tokens.item-inactive-trailing-fgColor
+        : root.is-inactive ? ActionListTokens.item-inactive-trailing-fgColor
         : PrimerColors.fgColor-muted;
 
     property <bool> show-inline-description:
-        root.description != "" && root.description-layout == ActionList2DescriptionLayout.inline;
+        root.description != "" && root.description-layout == ActionListDescriptionLayout.inline;
 
     property <bool> show-block-description:
-        root.description != "" && root.description-layout == ActionList2DescriptionLayout.block;
+        root.description != "" && root.description-layout == ActionListDescriptionLayout.block;
 
     property <color> description-color:
         root.is-loading-row
-        ? ActionList2Tokens.item-loading-label-fgColor
+        ? ActionListTokens.item-loading-label-fgColor
         : root.disabled
         ? ButtonTokens.control-fgColor-disabled
-        : root.is-inactive ? ActionList2Tokens.item-inactive-description-fgColor
-        : ActionList2Tokens.item-description-fgColor;
+        : root.is-inactive ? ActionListTokens.item-inactive-description-fgColor
+        : ActionListTokens.item-description-fgColor;
 
     property <length> cell-padding-block:
-        root.row-size == ActionList2RowSize.large
+        root.row-size == ActionListRowSize.large
         ? LayoutTokens.action-list-item-padding-block-large
         : LayoutTokens.action-list-item-padding-block;
     property <length> cell-min-height:
-        root.row-size == ActionList2RowSize.large
+        root.row-size == ActionListRowSize.large
         ? LayoutTokens.action-list-item-min-height-large
         : LayoutTokens.action-list-item-min-height;
     property <length> avatar-diameter:
-        root.row-size == ActionList2RowSize.large
+        root.row-size == ActionListRowSize.large
         ? LayoutTokens.action-list-avatar-diameter-large
         : LayoutTokens.action-list-avatar-diameter;
 
@@ -163,7 +163,7 @@ export component ActionList2Row {
         Rectangle {
             horizontal-stretch: 1;
             height: LayoutTokens.table-border-width;
-            background: ActionList2Tokens.item-seam-borderColor;
+            background: ActionListTokens.item-seam-borderColor;
         }
 
         Rectangle {
@@ -196,8 +196,8 @@ export component ActionList2Row {
             padding-right: root.margin-inline;
 
             focus-chrome := Rectangle {
-                border-width: (row-fs.has-focus || root.roving-focused) && !root.is-loading-row ? ActionList2Tokens.item-focus-ring-width : 0px;
-                border-color: ActionList2Tokens.item-focus-ring-color;
+                border-width: (row-fs.has-focus || root.roving-focused) && !root.is-loading-row ? ActionListTokens.item-focus-ring-width : 0px;
+                border-color: ActionListTokens.item-focus-ring-color;
                 border-radius: LayoutTokens.borderRadius-medium;
 
                 row-chrome-shell := HorizontalLayout {
@@ -214,7 +214,7 @@ export component ActionList2Row {
                             y: LayoutTokens.base-size-4;
                             width: LayoutTokens.base-size-4;
                             height: parent.height - LayoutTokens.button-content-gap;
-                            background: ActionList2Tokens.item-active-indicator-bgColor;
+                            background: ActionListTokens.item-active-indicator-bgColor;
                             border-radius: LayoutTokens.borderRadius-medium;
                         }
 
@@ -469,7 +469,7 @@ export component ActionList2Row {
                                 alignment: center;
                                 Spinner {
                                     size: Size.small;
-                                    segment-color: ActionList2Tokens.item-loading-label-fgColor;
+                                    segment-color: ActionListTokens.item-loading-label-fgColor;
                                 }
                             }
                         }
@@ -491,25 +491,25 @@ export component ActionList2Row {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
                             active-hover when root.is-interactive && root.show-active-chrome && !ta.pressed && ta.has-hover: {
-                                row-bg.background: ActionList2Tokens.item-active-bgColor-hover;
+                                row-bg.background: ActionListTokens.item-active-bgColor-hover;
                             }
                             active-rest when root.is-interactive && root.show-active-chrome && !ta.pressed && !ta.has-hover: {
-                                row-bg.background: ActionList2Tokens.item-active-bgColor-rest;
+                                row-bg.background: ActionListTokens.item-active-bgColor-rest;
                             }
                             danger-selected-pressed when root.is-interactive && root.is-danger && root.use-selected-surface && ta.pressed: {
-                                row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
+                                row-bg.background: ActionListTokens.item-danger-bgColor-active;
                             }
                             danger-selected-hover when root.is-interactive && root.is-danger && root.use-selected-surface && !ta.pressed && ta.has-hover: {
-                                row-bg.background: ActionList2Tokens.item-danger-bgColor-hover;
+                                row-bg.background: ActionListTokens.item-danger-bgColor-hover;
                             }
                             danger-selected-rest when root.is-interactive && root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
                             }
                             danger-pressed when root.is-interactive && root.is-danger && !root.use-selected-surface && ta.pressed: {
-                                row-bg.background: ActionList2Tokens.item-danger-bgColor-active;
+                                row-bg.background: ActionListTokens.item-danger-bgColor-active;
                             }
                             danger-hover when root.is-interactive && root.is-danger && !root.use-selected-surface && !ta.pressed && ta.has-hover: {
-                                row-bg.background: ActionList2Tokens.item-danger-bgColor-hover;
+                                row-bg.background: ActionListTokens.item-danger-bgColor-hover;
                             }
                             default-selected-pressed when root.is-interactive && !root.is-danger && root.use-selected-surface && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
@@ -520,10 +520,10 @@ export component ActionList2Row {
                             default-selected-rest when root.is-interactive && !root.is-danger && root.use-selected-surface && !ta.pressed && !ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-selected-bg;
                             }
-                            default-pressed when root.is-interactive && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && ta.pressed: {
+                            default-pressed when root.is-interactive && !root.is-danger && (!root.selected || root.selection-lead != ActionListSelectionLead.none) && ta.pressed: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-active-bg;
                             }
-                            default-hover when root.is-interactive && !root.is-danger && (!root.selected || root.selection-lead != ActionList2SelectionLead.none) && !ta.pressed && ta.has-hover: {
+                            default-hover when root.is-interactive && !root.is-danger && (!root.selected || root.selection-lead != ActionListSelectionLead.none) && !ta.pressed && ta.has-hover: {
                                 row-bg.background: ButtonTokens.color-action-list-item-default-hover-bg;
                             }
                         ]
@@ -531,7 +531,7 @@ export component ActionList2Row {
                     }
                     }
 
-                    if root.has-trailing-action: ActionList2TrailingAction {
+                    if root.has-trailing-action: ActionListTrailingAction {
                         label: root.trailing-action-label;
                         has-icon: root.trailing-action-has-icon;
                         icon: root.trailing-action-icon;

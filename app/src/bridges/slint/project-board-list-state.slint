@@ -1,5 +1,5 @@
 import { DataTableRow } from "../../../../packages/primer-slint/DataTable/types.slint";
-import { ActionList2Line } from "../../../../packages/primer-slint/primer.slint";
+import { ActionListLine } from "../../../../packages/primer-slint/primer.slint";
 
 export enum ProjectBoardItemKind {
     pullRequest,
@@ -58,14 +58,14 @@ export global ProjectBoardListState {
 
     /** Import-from-repositories modal (PR1 shell; later PRs add repo/issue UI). */
     in-out property <bool> import-dialog-open: false;
-    /** Search query for repository names (`owner/name`); bound to import dialog **SelectPanel2** filter (`single` mode). */
+    /** Search query for repository names (`owner/name`); bound to import dialog **SelectPanel** filter (`single` mode). */
     in-out property <string> import-repos-search: "";
     /** Empty, `"Loading repositories…"`, or an error message from `gh`. */
     in-out property <string> import-repos-load-status: "";
     /** Row count for the filtered repo `Select` options (Slint cannot always read `ArrayModel` length). */
     in-out property <int> import-repo-options-count: 0;
     in-out property <int> import-repo-selected-index: -1;
-    in-out property <[ActionList2Line]> import-repo-lines;
+    in-out property <[ActionListLine]> import-repo-lines;
     /** Empty, loading line, or error from GraphQL candidates fetch (PR6). */
     in-out property <string> import-candidates-load-status: "";
     /** Row count for `import-candidate-rows` (Slint cannot rely on `ArrayModel` length). */

@@ -48,10 +48,10 @@ export function wireIndexMultiSelect(
     pushToSlint(null);
 }
 
-export const ACTION_LIST2_MENU_MULTI_ROW_LABELS = [
+export const ACTION_LIST_MENU_MULTI_ROW_LABELS = [
     "Copy link",
     "Quote reply",
     "Edit comment",
 ] as const;
 
-export const ACTION_LIST2_LISTBOX_MULTI_ROW_LABELS = ACTION_LIST_GALLERY_MULTI_ROW_LABELS;
+export const ACTION_LIST_LISTBOX_MULTI_ROW_LABELS = ACTION_LIST_GALLERY_MULTI_ROW_LABELS;

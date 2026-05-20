@@ -1,14 +1,14 @@
-// **SelectPanel2** gallery — curated upstream **SelectPanel** Storybook scenarios (PR9).
+// **SelectPanel** gallery — curated upstream **SelectPanel** Storybook scenarios (PR9).
 import {
-    ActionList2DescriptionLayout,
-    ActionList2Line,
-    ActionList2LineKind,
-    ActionList2ListRole,
-    ActionList2RowSize,
-    ActionList2RowVariant,
-    ActionList2SectionHeadingVariant,
-    ActionList2SelectionMode,
-    ALVariant,
+    ActionListDescriptionLayout,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListListRole,
+    ActionListRowSize,
+    ActionListRowVariant,
+    ActionListSectionHeadingVariant,
+    ActionListSelectionMode,
+    ActionListVariant,
     Button,
     ButtonVariant,
     Checkbox,
@@ -17,24 +17,24 @@ import {
     Select,
     SelectOption,
     AnchoredOverlayWidth,
-    SelectPanel2,
-    SelectPanel2NoticeVariant,
+    SelectPanel,
+    SelectPanelNoticeVariant,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
 import { LayoutTokens, PrimerColors, SelectPanelTokens } from "../../../primer-slint/tokens.slint";
-import { GalleryFilteredActionList2SelectAll } from "../state/gallery-filtered-action-list2-select-all-state.slint";
-import { GalleryFilteredActionList2Long } from "../state/gallery-filtered-action-list2-state.slint";
+import { GalleryFilteredActionListSelectAll } from "../state/gallery-filtered-action-list-select-all-state.slint";
+import { GalleryFilteredActionListLong } from "../state/gallery-filtered-action-list-state.slint";
 import {
-    GallerySelectPanel2Cancel,
-    GallerySelectPanel2Default,
-    GallerySelectPanel2Disabled,
-    GallerySelectPanel2Fetch,
-    GallerySelectPanel2ModalMulti,
-    GallerySelectPanel2Single,
-} from "../state/gallery-select-panel2-state.slint";
+    GallerySelectPanelCancel,
+    GallerySelectPanelDefault,
+    GallerySelectPanelDisabled,
+    GallerySelectPanelFetch,
+    GallerySelectPanelModalMulti,
+    GallerySelectPanelSingle,
+} from "../state/gallery-select-panel-state.slint";
 import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
 
-export component GallerySelectPanel2Page {
+export component GallerySelectPanelPage {
     property <int> scenario-ix: 0;
 
     property <[SelectOption]> scenario-options: [
@@ -61,215 +61,215 @@ export component GallerySelectPanel2Page {
         { value: "20", label: "LongItems", enabled: true },
     ];
 
-    property <string> sp2-filter: "";
-    property <int> sp2-single-selected-index: 0;
-    property <bool> sp2-open: false;
-    property <int> sp2-notice-variant-ix: 0;
-    property <int> sp2-message-variant-ix: 0;
-    property <bool> sp2-fetch-loading: true;
-    property <bool> sp2-ext-open: false;
+    property <string> sp-filter: "";
+    property <int> sp-single-selected-index: 0;
+    property <bool> sp-open: false;
+    property <int> sp-notice-variant-ix: 0;
+    property <int> sp-message-variant-ix: 0;
+    property <bool> sp-fetch-loading: true;
+    property <bool> sp-ext-open: false;
 
-    property <[ActionList2Line]> sp2-inactive-lines: [
+    property <[ActionListLine]> sp-inactive-lines: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "enhancement",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.dot_fill,
             description: "New feature or request",
-            description-layout: ActionList2DescriptionLayout.block,
+            description-layout: ActionListDescriptionLayout.block,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "request",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.dot_fill,
             description: "New feature or request",
-            description-layout: ActionList2DescriptionLayout.block,
+            description-layout: ActionListDescriptionLayout.block,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "Currently inactive due to an outage",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
-    property <[ActionList2Line]> sp2-groups-lines: [
+    property <[ActionListLine]> sp-groups-lines: [
         {
-            kind: ActionList2LineKind.section_heading,
+            kind: ActionListLineKind.section_heading,
             label: "Repos",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.filled,
+            section-heading-variant: ActionListSectionHeadingVariant.filled,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "View settings",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.section_heading,
+            kind: ActionListLineKind.section_heading,
             label: "Live query",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.filled,
+            section-heading-variant: ActionListSectionHeadingVariant.filled,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "item 1",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: false,
             has-leading-avatar: false,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
             description: "",
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             truncate-inline-description: false,
             trailing-text: "",
             inactive-text: "",
             show-trailing-loading: false,
             active: false,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
-    property <bool> sp2-is-single: root.scenario-ix == 1 || root.scenario-ix == 16;
-    property <bool> sp2-is-modal: root.scenario-ix == 16 || root.scenario-ix == 17;
-    property <bool> sp2-is-external: root.scenario-ix == 18;
-    /// Scenarios that use **`GallerySelectPanel2Default`** lines + multi-select.
-    property <bool> sp2-use-default-bridge:
+    property <bool> sp-is-single: root.scenario-ix == 1 || root.scenario-ix == 16;
+    property <bool> sp-is-modal: root.scenario-ix == 16 || root.scenario-ix == 17;
+    property <bool> sp-is-external: root.scenario-ix == 18;
+    /// Scenarios that use **`GallerySelectPanelDefault`** lines + multi-select.
+    property <bool> sp-use-default-bridge:
         root.scenario-ix == 0 || root.scenario-ix == 2 || root.scenario-ix == 3
         || root.scenario-ix == 4 || root.scenario-ix == 7 || root.scenario-ix == 8
         || root.scenario-ix == 10 || root.scenario-ix == 11 || root.scenario-ix == 19;
-    property <bool> sp2-no-results: root.scenario-ix == 11 && root.sp2-filter == "none";
+    property <bool> sp-no-results: root.scenario-ix == 11 && root.sp-filter == "none";
 
-    property <string> sp2-title:
+    property <string> sp-title:
         root.scenario-ix == 9 ? "Attach files and symbols"
         : root.scenario-ix == 12 ? "Set projects"
         : root.scenario-ix == 1 || root.scenario-ix == 16 ? ""
         : "Select labels";
 
-    property <string> sp2-subtitle:
+    property <string> sp-subtitle:
         root.scenario-ix == 9
         ? "Choose which files and symbols you want to chat about. Use fewer references for more accurate responses."
         : root.scenario-ix == 1 || root.scenario-ix == 16 ? ""
         : "Use labels to organize issues and pull requests";
 
-    property <string> sp2-filter-placeholder:
+    property <string> sp-filter-placeholder:
         root.scenario-ix == 3 ? "Filter labels" : "Filter Labels";
 
-    property <SelectPanel2NoticeVariant> sp2-notice-variant:
-        root.sp2-notice-variant-ix == 1 ? SelectPanel2NoticeVariant.warning
-        : root.sp2-notice-variant-ix == 2 ? SelectPanel2NoticeVariant.error
-        : SelectPanel2NoticeVariant.info;
+    property <SelectPanelNoticeVariant> sp-notice-variant:
+        root.sp-notice-variant-ix == 1 ? SelectPanelNoticeVariant.warning
+        : root.sp-notice-variant-ix == 2 ? SelectPanelNoticeVariant.error
+        : SelectPanelNoticeVariant.info;
 
-    property <string> sp2-notice-text:
-        root.sp2-notice-variant-ix == 1
+    property <string> sp-notice-text:
+        root.sp-notice-variant-ix == 1
         ? "You have reached the limit of assignees on your free account. Upgrade your account."
-        : root.sp2-notice-variant-ix == 2
+        : root.sp-notice-variant-ix == 2
         ? "We couldn't load all collaborators. Try again or contact support."
         : "Try a different search term.";
 
-    property <bool> sp2-show-message:
-        root.scenario-ix == 10 && root.sp2-message-variant-ix != 0;
+    property <bool> sp-show-message:
+        root.scenario-ix == 10 && root.sp-message-variant-ix != 0;
 
-    property <string> sp2-message-title:
-        root.sp2-message-variant-ix == 2 ? "Failed to load labels"
-        : root.sp2-message-variant-ix == 3 ? "Some labels may be outdated"
+    property <string> sp-message-title:
+        root.sp-message-variant-ix == 2 ? "Failed to load labels"
+        : root.sp-message-variant-ix == 3 ? "Some labels may be outdated"
         : "No labels found";
 
-    property <string> sp2-message-description:
-        root.sp2-message-variant-ix == 2
+    property <string> sp-message-description:
+        root.sp-message-variant-ix == 2
         ? "Check your network connection and try again or contact support."
-        : root.sp2-message-variant-ix == 3
+        : root.sp-message-variant-ix == 3
         ? "Consider refreshing to get the latest data."
         : "Try adjusting your search or create a new label.";
 
-    property <length> sp2-body-height:
+    property <length> sp-body-height:
         root.scenario-ix == 20 ? 320px : SelectPanelTokens.list-max-height-default;
 
-    property <AnchoredOverlayWidth> sp2-width-preset:
+    property <AnchoredOverlayWidth> sp-width-preset:
         root.scenario-ix == 19 ? AnchoredOverlayWidth.small
         : root.scenario-ix == 7 ? AnchoredOverlayWidth.large
         : AnchoredOverlayWidth.medium;
 
     changed scenario-ix => {
-        root.sp2-filter = "";
-        GallerySelectPanel2Default.filter-changed("");
-        GallerySelectPanel2Single.filter-changed("");
-        GallerySelectPanel2Disabled.filter-changed("");
-        GallerySelectPanel2Fetch.filter-changed("");
-        GallerySelectPanel2Cancel.filter-changed("");
-        GallerySelectPanel2ModalMulti.filter-changed("");
-        GalleryFilteredActionList2SelectAll.filter-changed("");
-        GalleryFilteredActionList2Long.filter-changed("");
-        root.sp2-single-selected-index = 0;
-        root.sp2-notice-variant-ix = 0;
-        root.sp2-message-variant-ix = 0;
-        root.sp2-fetch-loading = root.scenario-ix == 13;
-        root.sp2-open = false;
-        root.sp2-ext-open = false;
+        root.sp-filter = "";
+        GallerySelectPanelDefault.filter-changed("");
+        GallerySelectPanelSingle.filter-changed("");
+        GallerySelectPanelDisabled.filter-changed("");
+        GallerySelectPanelFetch.filter-changed("");
+        GallerySelectPanelCancel.filter-changed("");
+        GallerySelectPanelModalMulti.filter-changed("");
+        GalleryFilteredActionListSelectAll.filter-changed("");
+        GalleryFilteredActionListLong.filter-changed("");
+        root.sp-single-selected-index = 0;
+        root.sp-notice-variant-ix = 0;
+        root.sp-message-variant-ix = 0;
+        root.sp-fetch-loading = root.scenario-ix == 13;
+        root.sp-open = false;
+        root.sp-ext-open = false;
     }
 
-    changed sp2-filter => {
+    changed sp-filter => {
         if root.scenario-ix == 1 {
-            root.sp2-single-selected-index = 0;
+            root.sp-single-selected-index = 0;
         }
     }
 
@@ -277,7 +277,7 @@ export component GallerySelectPanel2Page {
         interval: 2000ms;
         running: false;
         triggered() => {
-            root.sp2-fetch-loading = false;
+            root.sp-fetch-loading = false;
             self.stop();
         }
     }
@@ -293,145 +293,145 @@ export component GallerySelectPanel2Page {
             vertical-stretch: 1;
 
             Text {
-                text: "SelectPanel2";
+                text: "SelectPanel";
                 color: PrimerColors.fgColor-default;
                 font-size: 22px;
                 font-weight: 600;
             }
 
-            if !root.sp2-is-external: SelectPanel2 {
-                open <=> root.sp2-open;
-                width-preset: root.sp2-width-preset;
+            if !root.sp-is-external: SelectPanel {
+                open <=> root.sp-open;
+                width-preset: root.sp-width-preset;
                 anchor-label: "Select labels";
-                title: root.sp2-title;
-                subtitle: root.sp2-subtitle;
-                filter-placeholder: root.sp2-filter-placeholder;
-                filter-text <=> root.sp2-filter;
-                list-role: ActionList2ListRole.listbox;
-                selection-mode: root.sp2-is-single ? ActionList2SelectionMode.single : ActionList2SelectionMode.multiple;
-                selected-index <=> root.sp2-single-selected-index;
-                list-variant: root.scenario-ix == 9 ? ALVariant.horizontal_inset : ALVariant.inset;
+                title: root.sp-title;
+                subtitle: root.sp-subtitle;
+                filter-placeholder: root.sp-filter-placeholder;
+                filter-text <=> root.sp-filter;
+                list-role: ActionListListRole.listbox;
+                selection-mode: root.sp-is-single ? ActionListSelectionMode.single : ActionListSelectionMode.multiple;
+                selected-index <=> root.sp-single-selected-index;
+                list-variant: root.scenario-ix == 9 ? ActionListVariant.horizontal_inset : ActionListVariant.inset;
                 show-dividers: root.scenario-ix == 4 || root.scenario-ix == 20;
                 show-notice: root.scenario-ix == 7;
-                notice-variant: root.sp2-notice-variant;
-                notice-text: root.sp2-notice-text;
-                show-footer: root.scenario-ix == 8 || root.scenario-ix == 15 || root.sp2-is-modal;
-                show-backdrop: root.sp2-is-modal;
-                close-on-single-select: !root.sp2-is-modal;
-                loading: root.scenario-ix == 13 && root.sp2-fetch-loading;
+                notice-variant: root.sp-notice-variant;
+                notice-text: root.sp-notice-text;
+                show-footer: root.scenario-ix == 8 || root.scenario-ix == 15 || root.sp-is-modal;
+                show-backdrop: root.sp-is-modal;
+                close-on-single-select: !root.sp-is-modal;
+                loading: root.scenario-ix == 13 && root.sp-fetch-loading;
                 loading-kind: FilteredActionListLoadingKind.body_spinner;
                 loading-message: "Loading labels…";
-                show-message: root.sp2-show-message;
-                message-title: root.sp2-message-title;
-                message-description: root.sp2-message-description;
+                show-message: root.sp-show-message;
+                message-title: root.sp-message-title;
+                message-description: root.sp-message-description;
                 empty-title: root.scenario-ix == 12 ? "We couldn't find any projects" : "";
                 empty-message:
                     root.scenario-ix == 12
                     ? "Try searching for a different project or create a new one."
-                    : root.sp2-no-results ? "No labels match your filter." : "";
+                    : root.sp-no-results ? "No labels match your filter." : "";
                 select-all-visible: root.scenario-ix == 14;
-                select-all-checked <=> GalleryFilteredActionList2SelectAll.select-all-checked;
-                select-all-indeterminate <=> GalleryFilteredActionList2SelectAll.select-all-indeterminate;
-                body-region-height: root.sp2-body-height;
+                select-all-checked <=> GalleryFilteredActionListSelectAll.select-all-checked;
+                select-all-indeterminate <=> GalleryFilteredActionListSelectAll.select-all-indeterminate;
+                body-region-height: root.sp-body-height;
                 lines:
-                    root.scenario-ix == 6 ? root.sp2-inactive-lines
-                    : root.scenario-ix == 9 ? root.sp2-groups-lines
+                    root.scenario-ix == 6 ? root.sp-inactive-lines
+                    : root.scenario-ix == 9 ? root.sp-groups-lines
                     : root.scenario-ix == 12 ? []
-                    : root.scenario-ix == 5 ? GallerySelectPanel2Disabled.lines
-                    : root.scenario-ix == 14 ? GalleryFilteredActionList2SelectAll.lines
-                    : root.scenario-ix == 15 ? GallerySelectPanel2Cancel.lines
-                    : root.scenario-ix == 17 ? GallerySelectPanel2ModalMulti.lines
-                    : root.scenario-ix == 13 ? GallerySelectPanel2Fetch.lines
-                    : root.scenario-ix == 1 || root.scenario-ix == 16 ? GallerySelectPanel2Single.lines
-                    : root.scenario-ix == 20 ? GalleryFilteredActionList2Long.lines
-                    : root.scenario-ix == 10 && root.sp2-message-variant-ix != 0 ? []
-                    : root.sp2-no-results ? [] : GallerySelectPanel2Default.lines;
+                    : root.scenario-ix == 5 ? GallerySelectPanelDisabled.lines
+                    : root.scenario-ix == 14 ? GalleryFilteredActionListSelectAll.lines
+                    : root.scenario-ix == 15 ? GallerySelectPanelCancel.lines
+                    : root.scenario-ix == 17 ? GallerySelectPanelModalMulti.lines
+                    : root.scenario-ix == 13 ? GallerySelectPanelFetch.lines
+                    : root.scenario-ix == 1 || root.scenario-ix == 16 ? GallerySelectPanelSingle.lines
+                    : root.scenario-ix == 20 ? GalleryFilteredActionListLong.lines
+                    : root.scenario-ix == 10 && root.sp-message-variant-ix != 0 ? []
+                    : root.sp-no-results ? [] : GallerySelectPanelDefault.lines;
                 multi-selected:
-                    root.scenario-ix == 5 ? GallerySelectPanel2Disabled.multi-selected
-                    : root.scenario-ix == 14 ? GalleryFilteredActionList2SelectAll.multi-selected
-                    : root.scenario-ix == 15 ? GallerySelectPanel2Cancel.multi-selected
-                    : root.scenario-ix == 17 ? GallerySelectPanel2ModalMulti.multi-selected
-                    : GallerySelectPanel2Default.multi-selected;
+                    root.scenario-ix == 5 ? GallerySelectPanelDisabled.multi-selected
+                    : root.scenario-ix == 14 ? GalleryFilteredActionListSelectAll.multi-selected
+                    : root.scenario-ix == 15 ? GallerySelectPanelCancel.multi-selected
+                    : root.scenario-ix == 17 ? GallerySelectPanelModalMulti.multi-selected
+                    : GallerySelectPanelDefault.multi-selected;
                 filter-changed(t) => {
                     if root.scenario-ix == 1 || root.scenario-ix == 16 {
-                        GallerySelectPanel2Single.filter-changed(t);
+                        GallerySelectPanelSingle.filter-changed(t);
                     } else if root.scenario-ix == 5 {
-                        GallerySelectPanel2Disabled.filter-changed(t);
+                        GallerySelectPanelDisabled.filter-changed(t);
                     } else if root.scenario-ix == 13 {
-                        GallerySelectPanel2Fetch.filter-changed(t);
+                        GallerySelectPanelFetch.filter-changed(t);
                     } else if root.scenario-ix == 14 {
-                        GalleryFilteredActionList2SelectAll.filter-changed(t);
+                        GalleryFilteredActionListSelectAll.filter-changed(t);
                     } else if root.scenario-ix == 15 {
-                        GallerySelectPanel2Cancel.filter-changed(t);
+                        GallerySelectPanelCancel.filter-changed(t);
                     } else if root.scenario-ix == 17 {
-                        GallerySelectPanel2ModalMulti.filter-changed(t);
+                        GallerySelectPanelModalMulti.filter-changed(t);
                     } else if root.scenario-ix == 20 {
-                        GalleryFilteredActionList2Long.filter-changed(t);
-                    } else if root.sp2-use-default-bridge {
-                        GallerySelectPanel2Default.filter-changed(t);
+                        GalleryFilteredActionListLong.filter-changed(t);
+                    } else if root.sp-use-default-bridge {
+                        GallerySelectPanelDefault.filter-changed(t);
                     }
                 }
                 item-activated(ix) => {
-                    if root.sp2-is-single {
-                        root.sp2-single-selected-index = ix;
+                    if root.sp-is-single {
+                        root.sp-single-selected-index = ix;
                     } else if root.scenario-ix == 5 {
-                        GallerySelectPanel2Disabled.item-activated(ix);
+                        GallerySelectPanelDisabled.item-activated(ix);
                     } else if root.scenario-ix == 14 {
-                        GalleryFilteredActionList2SelectAll.item-activated(ix);
+                        GalleryFilteredActionListSelectAll.item-activated(ix);
                     } else if root.scenario-ix == 15 {
-                        GallerySelectPanel2Cancel.item-activated(ix);
+                        GallerySelectPanelCancel.item-activated(ix);
                     } else if root.scenario-ix == 17 {
-                        GallerySelectPanel2ModalMulti.item-activated(ix);
-                    } else if root.sp2-use-default-bridge || root.scenario-ix == 6 || root.scenario-ix == 9 {
-                        GallerySelectPanel2Default.item-activated(ix);
+                        GallerySelectPanelModalMulti.item-activated(ix);
+                    } else if root.sp-use-default-bridge || root.scenario-ix == 6 || root.scenario-ix == 9 {
+                        GallerySelectPanelDefault.item-activated(ix);
                     }
                 }
                 single-selected-changed(ix) => {
-                    root.sp2-single-selected-index = ix;
+                    root.sp-single-selected-index = ix;
                 }
                 select-all-changed(on) => {
-                    GalleryFilteredActionList2SelectAll.select-all-changed(on);
+                    GalleryFilteredActionListSelectAll.select-all-changed(on);
                 }
                 if root.scenario-ix == 8: Button {
                     label: "Edit labels";
                     variant: ButtonVariant.link;
                     clicked => {
-                        root.sp2-open = false;
+                        root.sp-open = false;
                     }
                 }
                 if root.scenario-ix == 8: Button {
                     label: "Add label";
                     variant: ButtonVariant.primary;
                     clicked => {
-                        root.sp2-open = false;
+                        root.sp-open = false;
                     }
                 }
                 if root.scenario-ix == 15: Button {
                     label: "Cancel";
                     clicked => {
-                        GallerySelectPanel2Cancel.reset();
-                        root.sp2-open = false;
+                        GallerySelectPanelCancel.reset();
+                        root.sp-open = false;
                     }
                 }
-                if root.sp2-is-modal: Button {
+                if root.sp-is-modal: Button {
                     label: "Cancel";
                     clicked => {
                         if root.scenario-ix == 17 {
-                            GallerySelectPanel2ModalMulti.reset();
+                            GallerySelectPanelModalMulti.reset();
                         }
-                        root.sp2-open = false;
+                        root.sp-open = false;
                     }
                 }
-                if root.sp2-is-modal: Button {
+                if root.sp-is-modal: Button {
                     label: "Save";
                     variant: ButtonVariant.primary;
                     clicked => {
-                        root.sp2-open = false;
+                        root.sp-open = false;
                     }
                 }
             }
 
-            if root.sp2-is-external: VerticalLayout {
+            if root.sp-is-external: VerticalLayout {
                 spacing: 12px;
                 alignment: start;
 
@@ -440,29 +440,29 @@ export component GallerySelectPanel2Page {
                     has-trailing-icon: true;
                     trailing-icon: Icons.triangle_down;
                     clicked => {
-                        root.sp2-ext-open = !root.sp2-ext-open;
+                        root.sp-ext-open = !root.sp-ext-open;
                     }
                 }
 
-                SelectPanel2 {
+                SelectPanel {
                     has-built-in-anchor: false;
-                    open <=> root.sp2-ext-open;
+                    open <=> root.sp-ext-open;
                     anchor-position-props: {
                         absolute-position: ext-trigger.absolute-position,
                         source-size: { width: ext-trigger.width, height: ext-trigger.height },
                     };
                     title: "Select labels";
                     subtitle: "Use labels to organize issues and pull requests";
-                    filter-text <=> root.sp2-filter;
-                    lines: GallerySelectPanel2Default.lines;
-                    list-role: ActionList2ListRole.listbox;
-                    selection-mode: ActionList2SelectionMode.multiple;
-                    multi-selected: GallerySelectPanel2Default.multi-selected;
+                    filter-text <=> root.sp-filter;
+                    lines: GallerySelectPanelDefault.lines;
+                    list-role: ActionListListRole.listbox;
+                    selection-mode: ActionListSelectionMode.multiple;
+                    multi-selected: GallerySelectPanelDefault.multi-selected;
                     filter-changed(t) => {
-                        GallerySelectPanel2Default.filter-changed(t);
+                        GallerySelectPanelDefault.filter-changed(t);
                     }
                     item-activated(ix) => {
-                        GallerySelectPanel2Default.item-activated(ix);
+                        GallerySelectPanelDefault.item-activated(ix);
                     }
                 }
             }
@@ -484,7 +484,7 @@ export component GallerySelectPanel2Page {
 
                 Select {
                     horizontal-stretch: 1;
-                    label-text: "SelectPanel2 options";
+                    label-text: "SelectPanel options";
                     placeholder: "Choose…";
                     options: root.scenario-options;
                     selected-index <=> root.scenario-ix;
@@ -501,7 +501,7 @@ export component GallerySelectPanel2Page {
                         { value: "1", label: "Warning", enabled: true },
                         { value: "2", label: "Error", enabled: true },
                     ];
-                    selected-index <=> root.sp2-notice-variant-ix;
+                    selected-index <=> root.sp-notice-variant-ix;
                     validation-status: ValidationStatus.none;
                     selected-changed(_i) => {
                     }
@@ -516,7 +516,7 @@ export component GallerySelectPanel2Page {
                         { value: "2", label: "Error message", enabled: true },
                         { value: "3", label: "Warning message", enabled: true },
                     ];
-                    selected-index <=> root.sp2-message-variant-ix;
+                    selected-index <=> root.sp-message-variant-ix;
                     validation-status: ValidationStatus.none;
                     selected-changed(_i) => {
                     }
@@ -532,18 +532,18 @@ export component GallerySelectPanel2Page {
                 if root.scenario-ix == 13: Button {
                     label: "Simulate fetch";
                     clicked => {
-                        root.sp2-fetch-loading = true;
+                        root.sp-fetch-loading = true;
                         fetch-timer.start();
                     }
                 }
 
-                if root.sp2-is-modal: Checkbox {
+                if root.sp-is-modal: Checkbox {
                     label: "Open modal panel";
-                    checked <=> root.sp2-open;
+                    checked <=> root.sp-open;
                 }
 
                 if root.scenario-ix == 1: Text {
-                    text: "Selected index: " + root.sp2-single-selected-index;
+                    text: "Selected index: " + root.sp-single-selected-index;
                     color: PrimerColors.fgColor-muted;
                     font-size: LayoutTokens.text-body-size-small;
                     wrap: word-wrap;

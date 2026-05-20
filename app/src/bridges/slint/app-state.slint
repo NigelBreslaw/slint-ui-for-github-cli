@@ -1,7 +1,7 @@
 import { ProjectBoardListState } from "project-board-list-state.slint";
 import { SettingsState } from "settings-state.slint";
 import { TimeReportingState } from "time-reporting-state.slint";
-import { ActionList2Line } from "../../../../packages/primer-slint/primer.slint";
+import { ActionListLine } from "../../../../packages/primer-slint/primer.slint";
 import { SelectOption } from "../../../../packages/primer-slint/Select/select.slint";
 
 export struct ProjectRow {
@@ -99,7 +99,7 @@ export global AppState {
     in-out property <string> projects-search: "";
     in-out property <string> projects-load-status: "";
     in property <[ProjectRow]> projects-filtered-model;
-    in property <[ActionList2Line]> projects-picker-lines;
+    in property <[ActionListLine]> projects-picker-lines;
     in-out property <int> projects-picker-options-count: 0;
     in-out property <int> projects-picker-selected-index: -1;
     in-out property <int> projects-filtered-count: 0;

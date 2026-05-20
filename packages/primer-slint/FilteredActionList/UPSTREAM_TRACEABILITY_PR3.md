@@ -1,4 +1,4 @@
-# PR3 — FilteredActionList2 select-all (upstream traceability)
+# PR3 — FilteredActionList select-all (upstream traceability)
 
 ## Gallery scenario
 

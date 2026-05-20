@@ -12,8 +12,8 @@ const GALLERY_SIDEBAR_NAV: readonly {
         folderId: "folder-action-list",
         label: "Action list",
         leaves: [
-            { id: "action-list2-playground", label: "ActionList2" },
-            { id: "filtered-action-list2-playground", label: "FilteredActionList2" },
+            { id: "action-list-playground", label: "ActionList" },
+            { id: "filtered-action-list-playground", label: "FilteredActionList" },
         ],
     },
     {
@@ -82,7 +82,7 @@ const GALLERY_SIDEBAR_NAV: readonly {
     {
         folderId: "folder-select-panel",
         label: "Select panel",
-        leaves: [{ id: "select-panel2-playground", label: "SelectPanel2" }],
+        leaves: [{ id: "select-panel-playground", label: "SelectPanel" }],
     },
     { folderId: "folder-sheets", label: "Sheets", leaves: [{ id: "sheets-playground", label: "Playground" }] },
     {

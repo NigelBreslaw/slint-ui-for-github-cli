@@ -1,37 +1,37 @@
-// **ActionList2** gallery — composed rows + **ActionList2Lines** where needed.
+// **ActionList** gallery — composed rows + **ActionListLines** where needed.
 import {
-    ActionList2,
-    ActionList2CustomHeading,
-    ActionList2DescriptionLayout,
-    ActionList2ItemDivider,
-    ActionList2Line,
-    ActionList2LineKind,
-    ActionList2Lines,
-    ActionList2LinkRow,
-    ActionList2ListRole,
-    ActionList2ListVisualHeading,
-    ALVariant,
-    ActionList2Row,
-    ActionList2RowSize,
-    ActionList2RowVariant,
-    ActionList2SectionHeading,
-    ActionList2SectionHeadingVariant,
-    ActionList2SelectionLead,
-    ActionList2SelectionMode,
+    ActionList,
+    ActionListCustomHeading,
+    ActionListDescriptionLayout,
+    ActionListItemDivider,
+    ActionListLine,
+    ActionListLineKind,
+    ActionListLines,
+    ActionListLinkRow,
+    ActionListListRole,
+    ActionListListVisualHeading,
+    ActionListVariant,
+    ActionListRow,
+    ActionListRowSize,
+    ActionListRowVariant,
+    ActionListSectionHeading,
+    ActionListSectionHeadingVariant,
+    ActionListSelectionLead,
+    ActionListSelectionMode,
     Checkbox,
     Icons,
     Select,
     SelectOption,
     ValidationStatus,
 } from "../../../primer-slint/primer.slint";
-import { ActionList2Tokens, LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
+import { ActionListTokens, LayoutTokens, PrimerColors } from "../../../primer-slint/tokens.slint";
 import {
     GalleryDemoOptionsSidebar,
 } from "../components/gallery-demo-options-sidebar.slint";
-import { GalleryActionList2ListboxMultiSelect } from "../state/gallery-action-list2-listbox-multi-select-state.slint";
-import { GalleryActionList2MenuMultiSelect } from "../state/gallery-action-list2-menu-multi-select-state.slint";
+import { GalleryActionListListboxMultiSelect } from "../state/gallery-action-list-listbox-multi-select-state.slint";
+import { GalleryActionListMenuMultiSelect } from "../state/gallery-action-list-menu-multi-select-state.slint";
 
-export component GalleryActionList2Page {
+export component GalleryActionListPage {
     property <int> scenario-ix: 0;
     /// **`Select`** binds **option index**; match previews via **`scenario-options[ix].value`** (not the index).
     property <string> scenario-key:
@@ -81,229 +81,229 @@ export component GalleryActionList2Page {
     property <bool> multi-checked-0: true;
     property <bool> multi-checked-1: false;
 
-    property <ALVariant> preview-list-variant:
-    root.list-variant-ix == 1 ? ALVariant.horizontal_inset : root.list-variant-ix == 2 ? ALVariant.full : ALVariant.inset;
+    property <ActionListVariant> preview-list-variant:
+    root.list-variant-ix == 1 ? ActionListVariant.horizontal_inset : root.list-variant-ix == 2 ? ActionListVariant.full : ActionListVariant.inset;
 
-    property <ALVariant> effective-list-variant: root.preview-list-variant;
+    property <ActionListVariant> effective-list-variant: root.preview-list-variant;
 
     property <length> effective-item-margin-inline:
-        root.effective-list-variant == ALVariant.full ? 0px : ActionList2Tokens.item-margin-inline-inset;
+        root.effective-list-variant == ActionListVariant.full ? 0px : ActionListTokens.item-margin-inline-inset;
 
     property <length> preview-chrome-width: root.scenario-key == "24" ? 300px : 240px;
 
-    property <[ActionList2Line]> lines-single-select: [
+    property <[ActionListLine]> lines-single-select: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Primer Backlog",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Accessibility",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Octicons",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Primer React",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
-    property <[ActionList2Line]> lines-listbox-multi-select: [
+    property <[ActionListLine]> lines-listbox-multi-select: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Primer Backlog",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Accessibility",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "GitHub",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Octicons",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Primer React",
-            row-variant: ActionList2RowVariant.default,
+            row-variant: ActionListRowVariant.default,
             disabled: true,
             has-leading-visual: true,
             leading-icon: Icons.table,
             description: "github/primer",
-            description-layout: ActionList2DescriptionLayout.block,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.block,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
-    property <[ActionList2Line]> lines-menu-multi-select: [
+    property <[ActionListLine]> lines-menu-multi-select: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Copy link",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.none,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Quote reply",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.none,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Edit comment",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.none,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
     /// Upstream **`ActionList.test`** listbox arrow navigation (disabled + inactive rows stay focusable).
-    property <[ActionList2Line]> lines-keyboard-nav: [
+    property <[ActionListLine]> lines-keyboard-nav: [
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Option 1",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             has-leading-visual: false,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.none,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Option 2",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.none,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Option 3",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             disabled: true,
             avatar-source: Icons.dot_fill,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.none,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Option 4",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            description-layout: ActionListDescriptionLayout.none,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
         {
-            kind: ActionList2LineKind.row,
+            kind: ActionListLineKind.row,
             label: "Option 5",
-            row-variant: ActionList2RowVariant.default,
-            row-size: ActionList2RowSize.medium,
+            row-variant: ActionListRowVariant.default,
+            row-size: ActionListRowSize.medium,
             avatar-source: Icons.dot_fill,
             leading-icon: Icons.dot_fill,
-            description-layout: ActionList2DescriptionLayout.none,
+            description-layout: ActionListDescriptionLayout.none,
             inactive-text: "Unavailable due to an outage",
-            section-heading-variant: ActionList2SectionHeadingVariant.subtle,
+            section-heading-variant: ActionListSectionHeadingVariant.subtle,
         },
     ];
 
     property <string> scenario-caption:
-        root.scenario-key == "1" ? "Upstream: ActionList/Features — SimpleList (composed **ActionList2Row**)"
+        root.scenario-key == "1" ? "Upstream: ActionList/Features — SimpleList (composed **ActionListRow**)"
         : root.scenario-key == "2" ? "Upstream: ItemDividers — **`show-top-seam`** on rows"
         : root.scenario-key == "3" ? "Upstream: BlockDescription (composed rows)"
         : root.scenario-key == "4" ? "Upstream: InlineDescription (composed rows)"
         : root.scenario-key == "6" ? "Single select — **`selection-lead: checkmark`**"
-        : root.scenario-key == "7" ? "Single select — **`ActionList2Lines`** (`selection-mode: single` → checkmark)"
-        : root.scenario-key == "9" ? "Upstream **MultiSelect** — **`ActionList2Lines`** + **`list-role: menu`** → checkmark"
+        : root.scenario-key == "7" ? "Single select — **`ActionListLines`** (`selection-mode: single` → checkmark)"
+        : root.scenario-key == "9" ? "Upstream **MultiSelect** — **`ActionListLines`** + **`list-role: menu`** → checkmark"
         : root.scenario-key == "10" ? "True listbox multi — **`list-role: listbox`** → **`selection-lead: checkbox`** (Storybook **ListboxMultiSelect** name is misleading; it uses menu)"
         : root.scenario-key == "12" ? "Upstream **DisabledItem** — middle row **`disabled`** (no hover/activation)"
         : root.scenario-key == "13" ? "Upstream **InactiveItem** — **`inactive-text`** warning under block description"
         : root.scenario-key == "14" ? "Upstream **LoadingItem** — **`show-trailing-loading`** spinner; no activation"
         : root.scenario-key == "16" ? "Upstream **Active** — **`active`** row: left accent bar + selected surface"
         : root.scenario-key == "17" ? "Upstream **WithVisualListHeading** — **`ActionList.Heading`** + **GroupHeading** groups"
-        : root.scenario-key == "18" ? "Upstream **WithCustomHeading** — **Details** title + **`ActionList2LinkRow`** (`href` → **`last-action`**)"
+        : root.scenario-key == "18" ? "Upstream **WithCustomHeading** — **Details** title + **`ActionListLinkRow`** (`href` → **`last-action`**)"
         : root.scenario-key == "19" ? "Upstream **GroupWithFilledTitle** — filled **GroupHeading** + multi-select menu rows"
         : root.scenario-key == "20" ? "Upstream **WithAvatars** — **`Avatar`** leading visual (20px)"
         : root.scenario-key == "21" ? "Upstream **WithIcons** — leading octicons incl. **danger** row"
         : root.scenario-key == "22" ? "Upstream **LargeItem** — **`row-size: large`** (plain, inline, block description)"
         : root.scenario-key == "24" ? "Upstream **TextWrapAndTruncation** — 300px panel; **`truncate-inline-description`**"
         : root.scenario-key == "25" ? "Upstream listbox focus zone — Tab then **↑**/**↓**/**Home**/**End**; toggle **Disable focus zone**; disabled/inactive rows focusable"
-        : root.scenario-key == "26" ? "Upstream **WithTrailingAction** — icon/text **`ActionList2TrailingAction`**; row click vs trailing click (**not** for menu/listbox)"
+        : root.scenario-key == "26" ? "Upstream **WithTrailingAction** — icon/text **`ActionListTrailingAction`**; row click vs trailing click (**not** for menu/listbox)"
         : "Upstream: ActionList — Default (composed rows)";
 
     // vertical-stretch: 1;
@@ -315,7 +315,7 @@ export component GalleryActionList2Page {
             alignment: start;
 
             Text {
-                text: "ActionList2";
+                text: "ActionList";
                 color: PrimerColors.fgColor-default;
                 font-size: 15px;
                 font-weight: 600;
@@ -347,12 +347,12 @@ export component GalleryActionList2Page {
                         }
                     }
 
-                    al := ActionList2 {
+                    al := ActionList {
                         list-variant: root.effective-list-variant;
 
                         if root.scenario-key == "0": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Copy link";
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -361,7 +361,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated Copy link";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Quote reply";
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -370,7 +370,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated Quote reply";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Edit comment";
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -383,7 +383,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "1": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Copy link";
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -393,7 +393,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated line 0";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Quote reply";
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -403,7 +403,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated line 1";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Edit comment";
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -413,13 +413,13 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated line 2";
                                 }
                             }
-                            ActionList2ItemDivider {
+                            ActionListItemDivider {
                                 margin-inline: root.effective-item-margin-inline;
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Delete file";
-                                row-variant: ActionList2RowVariant.danger;
+                                row-variant: ActionListRowVariant.danger;
                                 has-leading-visual: root.preview-has-leading-icon;
                                 leading-icon: Icons.x;
                                 clicked => {
@@ -430,7 +430,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "2": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Copy link";
                                 has-leading-visual: root.preview-has-leading-icon;
@@ -439,7 +439,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated line 0";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Quote reply";
                                 show-divider: true;
@@ -449,7 +449,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated line 1";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Edit comment";
                                 show-divider: true;
@@ -463,46 +463,46 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "3": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Primer Backlog";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Accessibility";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "github/primer";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Octicons";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primer React";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "github/primer";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Primer React";
                                 }
@@ -511,46 +511,46 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "4": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 clicked => {
                                     root.last-action = "Activated Primer Backlog";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 clicked => {
                                     root.last-action = "Activated Accessibility";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "github/primer";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 clicked => {
                                     root.last-action = "Activated Octicons";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primer React";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "github/primer";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 clicked => {
                                     root.last-action = "Activated Primer React";
                                 }
@@ -559,30 +559,30 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "6": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Inbox";
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.single-select-ix == 0;
                                 clicked => {
                                     root.single-select-ix = 0;
                                     root.last-action = "Selected Inbox";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primary";
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.single-select-ix == 1;
                                 clicked => {
                                     root.single-select-ix = 1;
                                     root.last-action = "Selected Primary";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Calendar";
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.single-select-ix == 2;
                                 clicked => {
                                     root.single-select-ix = 2;
@@ -591,9 +591,9 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-key == "7": ActionList2Lines {
+                        if root.scenario-key == "7": ActionListLines {
                             list-variant: root.effective-list-variant;
-                            selection-mode: ActionList2SelectionMode.single;
+                            selection-mode: ActionListSelectionMode.single;
                             selected-index: root.single-select-ix;
                             lines: root.lines-single-select;
                             item-activated(ix) => {
@@ -602,66 +602,66 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-key == "9": ActionList2Lines {
+                        if root.scenario-key == "9": ActionListLines {
                             list-variant: root.effective-list-variant;
-                            list-role: ActionList2ListRole.menu;
-                            selection-mode: ActionList2SelectionMode.multiple;
-                            multi-selected: GalleryActionList2MenuMultiSelect.row-checked;
+                            list-role: ActionListListRole.menu;
+                            selection-mode: ActionListSelectionMode.multiple;
+                            multi-selected: GalleryActionListMenuMultiSelect.row-checked;
                             lines: root.lines-menu-multi-select;
                             item-activated(ix) => {
-                                GalleryActionList2MenuMultiSelect.row-activated(ix);
+                                GalleryActionListMenuMultiSelect.row-activated(ix);
                                 root.last-action = "Toggled " + root.lines-menu-multi-select[ix].label;
                             }
                         }
 
-                        if root.scenario-key == "10": ActionList2Lines {
+                        if root.scenario-key == "10": ActionListLines {
                             list-variant: root.effective-list-variant;
-                            list-role: ActionList2ListRole.listbox;
-                            selection-mode: ActionList2SelectionMode.multiple;
-                            multi-selected: GalleryActionList2ListboxMultiSelect.row-checked;
+                            list-role: ActionListListRole.listbox;
+                            selection-mode: ActionListSelectionMode.multiple;
+                            multi-selected: GalleryActionListListboxMultiSelect.row-checked;
                             lines: root.lines-listbox-multi-select;
                             item-activated(ix) => {
-                                GalleryActionList2ListboxMultiSelect.row-activated(ix);
+                                GalleryActionListListboxMultiSelect.row-activated(ix);
                                 root.last-action = "Toggled " + root.lines-listbox-multi-select[ix].label;
                             }
                         }
 
                         if root.scenario-key == "12": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                description-layout: ActionListDescriptionLayout.block;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.disabled-select-ix == 0;
                                 clicked => {
                                     root.disabled-select-ix = 0;
                                     root.last-action = "Selected Primer Backlog";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 disabled: true;
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.disabled-select-ix == 1;
                                 show-divider: true;
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "github/primer";
-                                description-layout: ActionList2DescriptionLayout.block;
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                description-layout: ActionListDescriptionLayout.block;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.disabled-select-ix == 2;
                                 show-divider: true;
                                 clicked => {
@@ -673,33 +673,33 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "13": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Primer Backlog";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 inactive-text: "Unavailable due to an outage";
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 has-leading-visual: true;
                                 leading-icon: Icons.table;
                                 description: "github/primer";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Octicons";
                                 }
@@ -708,27 +708,27 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "14": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Primer Backlog";
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Primer Backlog";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Accessibility";
                                 description: "GitHub";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 show-trailing-loading: true;
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Octicons";
                                 description: "github/primer";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated Octicons";
                                 }
@@ -737,7 +737,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "16": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Active item";
                                 active: true;
@@ -745,14 +745,14 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated Active item";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Second row";
                                 clicked => {
                                     root.last-action = "Activated Second row";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Third row";
                                 clicked => {
@@ -763,15 +763,15 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "17": VerticalLayout {
                             alignment: start;
-                            ActionList2ListVisualHeading {
+                            ActionListListVisualHeading {
                                 margin-inline: root.effective-item-margin-inline;
                                 title: "Filter by";
                             }
-                            ActionList2SectionHeading {
+                            ActionListSectionHeading {
                                 margin-inline: root.effective-item-margin-inline;
                                 title: "Repositories";
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "app/assets/modules";
                                 has-leading-visual: true;
@@ -780,7 +780,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated app/assets/modules";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "src/react/components";
                                 has-leading-visual: true;
@@ -789,7 +789,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated src/react/components";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "memex/shared-ui/components";
                                 has-leading-visual: true;
@@ -798,7 +798,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated memex/shared-ui/components";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "views/assets/modules";
                                 has-leading-visual: true;
@@ -807,11 +807,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated views/assets/modules";
                                 }
                             }
-                            ActionList2SectionHeading {
+                            ActionListSectionHeading {
                                 margin-inline: root.effective-item-margin-inline;
                                 title: "Advanced";
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Owner";
                                 has-leading-visual: true;
@@ -820,7 +820,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated Owner";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Symbol";
                                 has-leading-visual: true;
@@ -829,7 +829,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated Symbol";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Exclude archived";
                                 has-leading-visual: true;
@@ -842,7 +842,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "18": VerticalLayout {
                             alignment: start;
-                            ActionList2LinkRow {
+                            ActionListLinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Readme";
                                 href: "https://github.com/primer/react#readme";
@@ -852,7 +852,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2LinkRow {
+                            ActionListLinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "MIT License";
                                 href: "https://github.com/primer/react/blob/main/LICENSE";
@@ -862,7 +862,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2LinkRow {
+                            ActionListLinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "1.5k stars";
                                 href: "https://github.com/primer/react/stargazers";
@@ -872,7 +872,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2LinkRow {
+                            ActionListLinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "21 watching";
                                 href: "https://github.com/primer/react/watchers";
@@ -882,7 +882,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Link: " + self.href;
                                 }
                             }
-                            ActionList2LinkRow {
+                            ActionListLinkRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "225 forks";
                                 href: "https://github.com/primer/react/network/members";
@@ -896,29 +896,29 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "19": VerticalLayout {
                             alignment: start;
-                            ActionList2SectionHeading {
+                            ActionListSectionHeading {
                                 margin-inline: root.effective-item-margin-inline;
                                 title: "Everyone";
-                                variant: ActionList2SectionHeadingVariant.filled;
+                                variant: ActionListSectionHeadingVariant.filled;
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "octocat";
                                 description: "Mona Lisa";
-                                description-layout: ActionList2DescriptionLayout.block;
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                description-layout: ActionListDescriptionLayout.block;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.multi-checked-0;
                                 clicked => {
                                     root.multi-checked-0 = !root.multi-checked-0;
                                     root.last-action = "Toggled octocat";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "hubot";
                                 description: "Hubot";
-                                description-layout: ActionList2DescriptionLayout.block;
-                                selection-lead: ActionList2SelectionLead.checkmark;
+                                description-layout: ActionListDescriptionLayout.block;
+                                selection-lead: ActionListSelectionLead.checkmark;
                                 selected: root.multi-checked-1;
                                 clicked => {
                                     root.multi-checked-1 = !root.multi-checked-1;
@@ -929,7 +929,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "20": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "pksjce";
                                 has-leading-avatar: true;
@@ -938,7 +938,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated pksjce";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "jfuchs";
                                 has-leading-avatar: true;
@@ -947,7 +947,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated jfuchs";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "colebemis";
                                 has-leading-avatar: true;
@@ -956,7 +956,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated colebemis";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "mperrotti";
                                 has-leading-avatar: true;
@@ -965,7 +965,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated mperrotti";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "dgreif";
                                 has-leading-avatar: true;
@@ -974,7 +974,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated dgreif";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "smockle";
                                 has-leading-avatar: true;
@@ -983,7 +983,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated smockle";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "siddharthkp";
                                 has-leading-avatar: true;
@@ -996,7 +996,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "21": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "github.com/primer";
                                 has-leading-visual: true;
@@ -1005,7 +1005,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated github.com/primer";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "MIT License";
                                 has-leading-visual: true;
@@ -1014,7 +1014,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated MIT License";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "256 stars";
                                 has-leading-visual: true;
@@ -1023,7 +1023,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated stars";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "3 forks";
                                 has-leading-visual: true;
@@ -1032,10 +1032,10 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated forks";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "4 vulnerabilities";
-                                row-variant: ActionList2RowVariant.danger;
+                                row-variant: ActionListRowVariant.danger;
                                 has-leading-visual: true;
                                 leading-icon: Icons.alert;
                                 clicked => {
@@ -1046,30 +1046,30 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "22": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Large item";
-                                row-size: ActionList2RowSize.large;
+                                row-size: ActionListRowSize.large;
                                 clicked => {
                                     root.last-action = "Activated large item";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Large item";
-                                row-size: ActionList2RowSize.large;
+                                row-size: ActionListRowSize.large;
                                 description: "With inline description";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 clicked => {
                                     root.last-action = "Activated large inline";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Large item";
-                                row-size: ActionList2RowSize.large;
+                                row-size: ActionListRowSize.large;
                                 description: "With block description";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated large block";
                                 }
@@ -1078,59 +1078,59 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "24": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Block Description. Long text should wrap";
                                 has-leading-visual: true;
                                 leading-icon: Icons.arrow_up;
                                 description: "This description is long, but it is block so it wraps";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 clicked => {
                                     root.last-action = "Activated block wrap";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Inline Description";
                                 has-leading-visual: true;
                                 leading-icon: Icons.arrow_up;
                                 description: "This description gets truncated because it is inline with truncation";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 truncate-inline-description: true;
                                 show-divider: true;
                                 clicked => {
                                     root.last-action = "Activated inline truncate";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Description with truncation";
                                 has-leading-visual: true;
                                 leading-icon: Icons.arrow_up;
                                 description:
                                     "With bold and italic text, and it should truncate if it is too long";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 truncate-inline-description: true;
                                 show-divider: true;
                                 clicked => {
                                     root.last-action = "Activated complex truncate";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Inline Description";
                                 has-leading-visual: true;
                                 leading-icon: Icons.arrow_up;
                                 description:
                                     "This description wraps because it is inline without truncation";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 truncate-inline-description: false;
                                 show-divider: true;
                                 clicked => {
                                     root.last-action = "Activated inline wrap";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Really long text without a description should wrap so it wraps";
                                 has-leading-visual: true;
@@ -1140,7 +1140,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Activated long label wrap";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "SomethingSomething/SomethingElse.Some.Thing.Lalala.la";
                                 has-leading-visual: true;
@@ -1153,7 +1153,7 @@ export component GalleryActionList2Page {
 
                         if root.scenario-key == "26": VerticalLayout {
                             alignment: start;
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Item 1 (with default TrailingAction)";
                                 has-leading-visual: true;
@@ -1169,7 +1169,7 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Expand sidebar";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Item 2 (with link TrailingAction)";
                                 has-trailing-action: true;
@@ -1180,11 +1180,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Some action 1";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Item 3";
                                 description: "This is an inline description.";
-                                description-layout: ActionList2DescriptionLayout.inline;
+                                description-layout: ActionListDescriptionLayout.inline;
                                 has-trailing-action: true;
                                 trailing-action-has-icon: true;
                                 trailing-action-icon: Icons.book;
@@ -1193,11 +1193,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Some action 2";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Item 4";
                                 description: "This is a block description.";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 has-trailing-action: true;
                                 trailing-action-has-icon: true;
                                 trailing-action-icon: Icons.book;
@@ -1206,18 +1206,18 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Some action 3";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Item 5";
                                 description: "This is a block description.";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 has-trailing-action: true;
                                 trailing-action-label: "Some action 4";
                                 trailing-action-clicked => {
                                     root.last-action = "Trailing: Some action 4";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Item 6";
                                 has-trailing-action: true;
@@ -1226,11 +1226,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Some action 5";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Icon button loading state";
                                 description: "Shows how IconButton maintains width and centers spinner when loading";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 has-trailing-action: true;
                                 trailing-action-has-icon: true;
                                 trailing-action-icon: Icons.chevron_right;
@@ -1240,11 +1240,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Process item (loading)";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Icon button with transitions";
                                 description: "Toggle loading in sidebar";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 has-trailing-action: true;
                                 trailing-action-has-icon: true;
                                 trailing-action-icon: Icons.chevron_right;
@@ -1254,11 +1254,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Toggle loading";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Text button loading state";
                                 description: "Spinner aligns to the right and preserves width";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 has-trailing-action: true;
                                 trailing-action-label: "Save changes";
                                 trailing-action-loading: true;
@@ -1266,11 +1266,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Save changes (loading)";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Text button with transitions";
                                 description: "Toggle loading in sidebar";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 has-trailing-action: true;
                                 trailing-action-label: "Apply settings";
                                 trailing-action-loading: root.preview-trailing-action-loading;
@@ -1278,11 +1278,11 @@ export component GalleryActionList2Page {
                                     root.last-action = "Trailing: Apply settings";
                                 }
                             }
-                            ActionList2Row {
+                            ActionListRow {
                                 margin-inline: root.effective-item-margin-inline;
                                 label: "Inactive Item";
                                 description: "With TrailingAction";
-                                description-layout: ActionList2DescriptionLayout.block;
+                                description-layout: ActionListDescriptionLayout.block;
                                 inactive-text: "Unavailable due to an outage";
                                 has-trailing-action: true;
                                 trailing-action-has-icon: true;
@@ -1294,9 +1294,9 @@ export component GalleryActionList2Page {
                             }
                         }
 
-                        if root.scenario-key == "25": ActionList2Lines {
+                        if root.scenario-key == "25": ActionListLines {
                             list-variant: root.effective-list-variant;
-                            list-role: ActionList2ListRole.listbox;
+                            list-role: ActionListListRole.listbox;
                             disable-focus-zone: root.preview-disable-focus-zone;
                             focused-index <=> keyboard-nav-focused;
                             lines: root.lines-keyboard-nav;

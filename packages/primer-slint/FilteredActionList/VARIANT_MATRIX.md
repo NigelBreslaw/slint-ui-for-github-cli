@@ -1,4 +1,4 @@
-# FilteredActionList2 — variant matrix
+# FilteredActionList — variant matrix
 
 Storybook-driven coverage for the initial port (two stories only). Deferred API from upstream is listed at the bottom.
 
@@ -17,7 +17,7 @@ Storybook-driven coverage for the initial port (two stories only). Deferred API 
 | **EmptyBody** | inherited | no | — | — | none | gallery ix 8; `empty-message` |
 | **SelectAll** (SelectPanel) | inherited | no | medium | colored circles | listbox + multiple + strip | gallery ix 9 |
 
-## Deferred (upstream API, not in `FilteredActionList2` yet)
+## Deferred (upstream API, not in `FilteredActionList` yet)
 
 | Area | Upstream | Notes |
 |------|----------|--------|

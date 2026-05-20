@@ -1,17 +1,17 @@
-// ActionList2 — list chrome (variant padding). Place **`ActionList2Row`**, dividers, or **`ActionList2Lines`** as **`@children`**.
+// ActionList — list chrome (variant padding). Place **`ActionListRow`**, dividers, or **`ActionListLines`** as **`@children`**.
 // Width comes from the parent layout (`VerticalLayout` / overlay panel), not from `horizontal-stretch` on every child.
 
-import { ActionList2Tokens } from "../tokens.slint";
-import { ALVariant } from "./types.slint";
+import { ActionListTokens } from "../tokens.slint";
+import { ActionListVariant } from "./types.slint";
 
-export component ActionList2 {
-    in property <ALVariant> list-variant: ALVariant.inset;
+export component ActionList {
+    in property <ActionListVariant> list-variant: ActionListVariant.inset;
 
     property <length> list-padding-top:
-        root.list-variant == ALVariant.inset ? ActionList2Tokens.list-padding-block-inset : 0px;
+        root.list-variant == ActionListVariant.inset ? ActionListTokens.list-padding-block-inset : 0px;
     property <length> list-padding-bottom:
-        root.list-variant == ALVariant.inset ? ActionList2Tokens.list-padding-block-inset
-        : root.list-variant == ALVariant.horizontal_inset ? ActionList2Tokens.list-padding-block-horizontal-inset-end : 0px;
+        root.list-variant == ActionListVariant.inset ? ActionListTokens.list-padding-block-inset
+        : root.list-variant == ActionListVariant.horizontal_inset ? ActionListTokens.list-padding-block-horizontal-inset-end : 0px;
 
     list-body := VerticalLayout {
         alignment: start;

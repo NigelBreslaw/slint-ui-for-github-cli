@@ -2,27 +2,27 @@ import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 import {
   wireIndexMultiSelect,
-  ACTION_LIST2_LISTBOX_MULTI_ROW_LABELS,
-  ACTION_LIST2_MENU_MULTI_ROW_LABELS,
+  ACTION_LIST_LISTBOX_MULTI_ROW_LABELS,
+  ACTION_LIST_MENU_MULTI_ROW_LABELS,
   type ActionListGalleryMultiSelectHandle,
 } from "./state/gallery-action-list-multi-select-bridge-shared.ts";
 import {
-  wireGalleryFilteredActionList2Default,
-  wireGalleryFilteredActionList2Long,
-  wireGalleryFilteredActionList2Multi,
-  wireGalleryFilteredActionList2SelectAll,
-  type GalleryFilteredActionList2Handle,
-  type GalleryFilteredActionList2MultiHandle,
-  type GalleryFilteredActionList2SelectAllHandle,
-} from "./state/gallery-filtered-action-list2-bridge-shared.ts";
+  wireGalleryFilteredActionListDefault,
+  wireGalleryFilteredActionListLong,
+  wireGalleryFilteredActionListMulti,
+  wireGalleryFilteredActionListSelectAll,
+  type GalleryFilteredActionListHandle,
+  type GalleryFilteredActionListMultiHandle,
+  type GalleryFilteredActionListSelectAllHandle,
+} from "./state/gallery-filtered-action-list-bridge-shared.ts";
 import {
-  wireGallerySelectPanel2Cancel,
-  wireGallerySelectPanel2Disabled,
-  wireGallerySelectPanel2FetchLines,
-  wireGallerySelectPanel2ModalMulti,
-  type GallerySelectPanel2CancelHandle,
-  type GallerySelectPanel2ModalMultiHandle,
-} from "./state/gallery-select-panel2-bridge-shared.ts";
+  wireGallerySelectPanelCancel,
+  wireGallerySelectPanelDisabled,
+  wireGallerySelectPanelFetchLines,
+  wireGallerySelectPanelModalMulti,
+  type GallerySelectPanelCancelHandle,
+  type GallerySelectPanelModalMultiHandle,
+} from "./state/gallery-select-panel-bridge-shared.ts";
 import {
   wireGalleryTreeViewListModels,
   type GalleryTreeViewListModelsHandle,
@@ -40,18 +40,18 @@ type GalleryWindowModule = {
       selected_page_id: string;
     };
     GallerySidebarNav: GallerySidebarNavHandle;
-    GalleryActionList2MenuMultiSelect: ActionListGalleryMultiSelectHandle;
-    GalleryActionList2ListboxMultiSelect: ActionListGalleryMultiSelectHandle;
-    GalleryFilteredActionList2Default: GalleryFilteredActionList2Handle;
-    GalleryFilteredActionList2Long: GalleryFilteredActionList2Handle;
-    GalleryFilteredActionList2Multi: GalleryFilteredActionList2MultiHandle;
-    GalleryFilteredActionList2SelectAll: GalleryFilteredActionList2SelectAllHandle;
-    GallerySelectPanel2Default: GalleryFilteredActionList2MultiHandle;
-    GallerySelectPanel2Single: GalleryFilteredActionList2Handle;
-    GallerySelectPanel2Disabled: GalleryFilteredActionList2MultiHandle;
-    GallerySelectPanel2Cancel: GallerySelectPanel2CancelHandle;
-    GallerySelectPanel2ModalMulti: GallerySelectPanel2ModalMultiHandle;
-    GallerySelectPanel2Fetch: GalleryFilteredActionList2Handle;
+    GalleryActionListMenuMultiSelect: ActionListGalleryMultiSelectHandle;
+    GalleryActionListListboxMultiSelect: ActionListGalleryMultiSelectHandle;
+    GalleryFilteredActionListDefault: GalleryFilteredActionListHandle;
+    GalleryFilteredActionListLong: GalleryFilteredActionListHandle;
+    GalleryFilteredActionListMulti: GalleryFilteredActionListMultiHandle;
+    GalleryFilteredActionListSelectAll: GalleryFilteredActionListSelectAllHandle;
+    GallerySelectPanelDefault: GalleryFilteredActionListMultiHandle;
+    GallerySelectPanelSingle: GalleryFilteredActionListHandle;
+    GallerySelectPanelDisabled: GalleryFilteredActionListMultiHandle;
+    GallerySelectPanelCancel: GallerySelectPanelCancelHandle;
+    GallerySelectPanelModalMulti: GallerySelectPanelModalMultiHandle;
+    GallerySelectPanelFetch: GalleryFilteredActionListHandle;
     GalleryTreeViewListModels: GalleryTreeViewListModelsHandle;
     Icons: {
       dot_fill: ImageData;
@@ -67,28 +67,28 @@ const ui = slint.loadFile(
 const window = new ui.GalleryWindow();
 
 wireIndexMultiSelect(
-  window.GalleryActionList2MenuMultiSelect,
-  ACTION_LIST2_MENU_MULTI_ROW_LABELS,
+  window.GalleryActionListMenuMultiSelect,
+  ACTION_LIST_MENU_MULTI_ROW_LABELS,
   [],
 );
 wireIndexMultiSelect(
-  window.GalleryActionList2ListboxMultiSelect,
-  ACTION_LIST2_LISTBOX_MULTI_ROW_LABELS,
+  window.GalleryActionListListboxMultiSelect,
+  ACTION_LIST_LISTBOX_MULTI_ROW_LABELS,
   [0],
 );
-wireGalleryFilteredActionList2Default(window.GalleryFilteredActionList2Default);
-wireGalleryFilteredActionList2Long(
-  window.GalleryFilteredActionList2Long,
+wireGalleryFilteredActionListDefault(window.GalleryFilteredActionListDefault);
+wireGalleryFilteredActionListLong(
+  window.GalleryFilteredActionListLong,
   window.Icons.dot_fill,
 );
-wireGalleryFilteredActionList2Multi(window.GalleryFilteredActionList2Multi);
-wireGalleryFilteredActionList2SelectAll(window.GalleryFilteredActionList2SelectAll);
-wireGalleryFilteredActionList2Multi(window.GallerySelectPanel2Default);
-wireGalleryFilteredActionList2Default(window.GallerySelectPanel2Single);
-wireGallerySelectPanel2Disabled(window.GallerySelectPanel2Disabled);
-wireGallerySelectPanel2Cancel(window.GallerySelectPanel2Cancel);
-wireGallerySelectPanel2ModalMulti(window.GallerySelectPanel2ModalMulti);
-wireGallerySelectPanel2FetchLines(window.GallerySelectPanel2Fetch);
+wireGalleryFilteredActionListMulti(window.GalleryFilteredActionListMulti);
+wireGalleryFilteredActionListSelectAll(window.GalleryFilteredActionListSelectAll);
+wireGalleryFilteredActionListMulti(window.GallerySelectPanelDefault);
+wireGalleryFilteredActionListDefault(window.GallerySelectPanelSingle);
+wireGallerySelectPanelDisabled(window.GallerySelectPanelDisabled);
+wireGallerySelectPanelCancel(window.GallerySelectPanelCancel);
+wireGallerySelectPanelModalMulti(window.GallerySelectPanelModalMulti);
+wireGallerySelectPanelFetchLines(window.GallerySelectPanelFetch);
 wireGalleryTreeViewListModels(
   window.GalleryTreeViewListModels,
   window.Icons.dot_fill,

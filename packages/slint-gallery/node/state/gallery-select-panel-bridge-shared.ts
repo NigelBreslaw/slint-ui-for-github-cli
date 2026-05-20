@@ -5,26 +5,26 @@ import {
 } from "slint-bridge-kit";
 import * as slint from "slint-ui";
 import {
-    FILTERED_ACTION_LIST2_DEFAULT_LABELS,
-    actionList2RowDefaultWithLeading,
+    FILTERED_ACTION_LIST_DEFAULT_LABELS,
+    actionListRowDefaultWithLeading,
     filterPrefixLabels,
-    type GalleryFilteredActionList2Handle,
-    type GalleryFilteredActionList2MultiHandle,
-} from "./gallery-filtered-action-list2-bridge-shared.ts";
+    type GalleryFilteredActionListHandle,
+    type GalleryFilteredActionListMultiHandle,
+} from "./gallery-filtered-action-list-bridge-shared.ts";
 
 /** **WithDisabledItem** — index 3 (**design**) is disabled. */
-export function wireGallerySelectPanel2Disabled(
-    g: GalleryFilteredActionList2MultiHandle,
+export function wireGallerySelectPanelDisabled(
+    g: GalleryFilteredActionListMultiHandle,
 ): void {
     const selectedLabels = new Set<string>(["bug", "good first issue"]);
     let currentFilter = "";
 
     const push = (filter: string) => {
         currentFilter = filter;
-        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filter);
         const rows = picked.map((label) => {
-            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
-            const row = actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+            const fullIx = FILTERED_ACTION_LIST_DEFAULT_LABELS.findIndex((l) => l === label);
+            const row = actionListRowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
             const disabled = label === "design";
             return { ...row, disabled };
         });
@@ -40,7 +40,7 @@ export function wireGallerySelectPanel2Disabled(
 
     g.item_activated = (ix: number) => {
         const picked = filterPrefixLabels(
-            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            FILTERED_ACTION_LIST_DEFAULT_LABELS,
             currentFilter,
         );
         const label = picked[ix];
@@ -54,22 +54,22 @@ export function wireGallerySelectPanel2Disabled(
     push("");
 }
 
-type GallerySelectPanel2CancelHandle = GalleryFilteredActionList2MultiHandle & {
+type GallerySelectPanelCancelHandle = GalleryFilteredActionListMultiHandle & {
     reset: () => void;
 };
 
 /** **WithOnCancel** — **Cancel** restores initial **bug** + **good first issue**. */
-export function wireGallerySelectPanel2Cancel(g: GallerySelectPanel2CancelHandle): void {
+export function wireGallerySelectPanelCancel(g: GallerySelectPanelCancelHandle): void {
     const initialLabels = new Set<string>(["bug", "good first issue"]);
     const selectedLabels = new Set<string>(initialLabels);
     let currentFilter = "";
 
     const push = (filter: string) => {
         currentFilter = filter;
-        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filter);
         const rows = picked.map((label) => {
-            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
-            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+            const fullIx = FILTERED_ACTION_LIST_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionListRowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),
@@ -83,7 +83,7 @@ export function wireGallerySelectPanel2Cancel(g: GallerySelectPanel2CancelHandle
 
     g.item_activated = (ix: number) => {
         const picked = filterPrefixLabels(
-            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            FILTERED_ACTION_LIST_DEFAULT_LABELS,
             currentFilter,
         );
         const label = picked[ix];
@@ -105,16 +105,16 @@ export function wireGallerySelectPanel2Cancel(g: GallerySelectPanel2CancelHandle
     push("");
 }
 
-export type { GallerySelectPanel2CancelHandle };
+export type { GallerySelectPanelCancelHandle };
 
 /** Re-export for **AsyncFetch** / **NoResults** demos that only need default label rows. */
-type GallerySelectPanel2ModalMultiHandle = GalleryFilteredActionList2MultiHandle & {
+type GallerySelectPanelModalMultiHandle = GalleryFilteredActionListMultiHandle & {
     reset: () => void;
 };
 
 /** **MultiSelectModal** — **Cancel** restores **bug** + **good first issue**. */
-export function wireGallerySelectPanel2ModalMulti(
-    g: GallerySelectPanel2ModalMultiHandle,
+export function wireGallerySelectPanelModalMulti(
+    g: GallerySelectPanelModalMultiHandle,
 ): void {
     const initialLabels = new Set<string>(["bug", "good first issue"]);
     const selectedLabels = new Set<string>(initialLabels);
@@ -122,10 +122,10 @@ export function wireGallerySelectPanel2ModalMulti(
 
     const push = (filter: string) => {
         currentFilter = filter;
-        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filter);
         const rows = picked.map((label) => {
-            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
-            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+            const fullIx = FILTERED_ACTION_LIST_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionListRowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),
@@ -139,7 +139,7 @@ export function wireGallerySelectPanel2ModalMulti(
 
     g.item_activated = (ix: number) => {
         const picked = filterPrefixLabels(
-            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            FILTERED_ACTION_LIST_DEFAULT_LABELS,
             currentFilter,
         );
         const label = picked[ix];
@@ -161,16 +161,16 @@ export function wireGallerySelectPanel2ModalMulti(
     push("");
 }
 
-export type { GallerySelectPanel2ModalMultiHandle };
+export type { GallerySelectPanelModalMultiHandle };
 
-export function wireGallerySelectPanel2FetchLines(
-    g: GalleryFilteredActionList2Handle,
+export function wireGallerySelectPanelFetchLines(
+    g: GalleryFilteredActionListHandle,
 ): void {
     const push = (filter: string) => {
-        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filter);
         const rows = picked.map((label) => {
-            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
-            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+            const fullIx = FILTERED_ACTION_LIST_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionListRowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),

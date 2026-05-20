@@ -1,4 +1,4 @@
-# PR2 — FilteredActionList2 loading / empty / message (upstream traceability)
+# PR2 — FilteredActionList loading / empty / message (upstream traceability)
 
 ## Gallery scenarios
 
@@ -23,5 +23,5 @@
 
 ## Slint implementation
 
-- **`filtered-action-list2.slint`**: `loading`, `loading-kind`, `loading-message`, `show-message`, `message-title` / `message-description`, `empty-title` / `empty-message`; body branches mirror v1 **FilteredActionList**.
-- **`filtered-action-list2-body-spinner.slint`**: **Spinner** + label (no **SelectPanelCompose** import).
+- **`filtered-action-list.slint`**: `loading`, `loading-kind`, `loading-message`, `show-message`, `message-title` / `message-description`, `empty-title` / `empty-message`; body branches mirror v1 **FilteredActionList**.
+- **`filtered-action-list-body-spinner.slint`**: **Spinner** + label (no **SelectPanelCompose** import).

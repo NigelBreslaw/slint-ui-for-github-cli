@@ -1,4 +1,4 @@
-// Primer **SelectPanel2** — **`Button`** anchor + **`AnchoredOverlay`** + heading + **`FilteredActionList2`** (new stack only).
+// Primer **SelectPanel** — **`Button`** anchor + **`AnchoredOverlay`** + heading + **`FilteredActionList`** (new stack only).
 // Upstream: `SelectPanel.tsx` + `AnchoredOverlay` + `FilteredActionList`.
 
 import {
@@ -11,23 +11,23 @@ import {
 } from "../AnchoredOverlay/anchored-overlay.slint";
 import { Button, ButtonVariant } from "../Buttons/buttons.slint";
 import { Icons } from "../assets/icons.slint";
-import { FilteredActionList2 } from "../FilteredActionList2/filtered-action-list2.slint";
-import { FilteredActionListLoadingKind } from "../FilteredActionList2/types.slint";
+import { FilteredActionList } from "../FilteredActionList/filtered-action-list.slint";
+import { FilteredActionListLoadingKind } from "../FilteredActionList/types.slint";
 import {
-    ActionList2Line,
-    ActionList2ListRole,
-    ActionList2SelectionMode,
-    ALVariant,
-} from "../ActionList2/types.slint";
+    ActionListLine,
+    ActionListListRole,
+    ActionListSelectionMode,
+    ActionListVariant,
+} from "../ActionList/types.slint";
 import { LayoutTokens, SelectPanelTokens } from "../tokens.slint";
-import { SelectPanel2Footer } from "./select-panel2-footer.slint";
-import { SelectPanel2Heading } from "./select-panel2-heading.slint";
-import { SelectPanel2Notice } from "./select-panel2-notice.slint";
-import { SelectPanel2NoticeVariant } from "./types.slint";
+import { SelectPanelFooter } from "./select-panel-footer.slint";
+import { SelectPanelHeading } from "./select-panel-heading.slint";
+import { SelectPanelNotice } from "./select-panel-notice.slint";
+import { SelectPanelNoticeVariant } from "./types.slint";
 
-export { SelectPanel2NoticeVariant } from "./types.slint";
+export { SelectPanelNoticeVariant } from "./types.slint";
 
-export component SelectPanel2 {
+export component SelectPanel {
     in property <string> anchor-label: "Select labels";
     in property <ButtonVariant> button-variant: ButtonVariant.default;
     in property <bool> button-disabled: false;
@@ -64,11 +64,11 @@ export component SelectPanel2 {
     property <bool> popup-visible: false;
 
     in-out property <string> filter-text: "";
-    in property <[ActionList2Line]> lines: [];
-    in property <ALVariant> list-variant: ALVariant.inset;
+    in property <[ActionListLine]> lines: [];
+    in property <ActionListVariant> list-variant: ActionListVariant.inset;
     in property <bool> show-dividers: false;
-    in property <ActionList2ListRole> list-role: ActionList2ListRole.listbox;
-    in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.multiple;
+    in property <ActionListListRole> list-role: ActionListListRole.listbox;
+    in property <ActionListSelectionMode> selection-mode: ActionListSelectionMode.multiple;
     in-out property <int> selected-index: -1;
     in property <[bool]> multi-selected: [];
     in property <length> body-region-height: SelectPanelTokens.list-max-height-default;
@@ -85,7 +85,7 @@ export component SelectPanel2 {
     in-out property <bool> select-all-indeterminate: false;
 
     in property <bool> show-notice: false;
-    in property <SelectPanel2NoticeVariant> notice-variant: SelectPanel2NoticeVariant.info;
+    in property <SelectPanelNoticeVariant> notice-variant: SelectPanelNoticeVariant.info;
     in property <string> notice-text: "";
     in property <bool> show-footer: false;
     in property <bool> close-on-single-select: true;
@@ -179,17 +179,17 @@ export component SelectPanel2 {
                 spacing: SelectPanelTokens.wrapper-stack-gap;
                 alignment: start;
 
-                SelectPanel2Heading {
+                SelectPanelHeading {
                     title: root.title;
                     subtitle: root.subtitle;
                 }
 
-                if root.show-notice: SelectPanel2Notice {
+                if root.show-notice: SelectPanelNotice {
                     variant: root.notice-variant;
                     text: root.notice-text;
                 }
 
-                FilteredActionList2 {
+                FilteredActionList {
                     filter-text <=> root.filter-text;
                     placeholder: root.filter-placeholder;
                     lines: root.lines;
@@ -216,7 +216,7 @@ export component SelectPanel2 {
                     }
                     item-activated(ix) => {
                         root.item-activated(ix);
-                        if root.selection-mode == ActionList2SelectionMode.single {
+                        if root.selection-mode == ActionListSelectionMode.single {
                             root.single-selected-changed(ix);
                             if root.close-on-single-select && !root.show-backdrop {
                                 close-after-single-pick.start();
@@ -229,7 +229,7 @@ export component SelectPanel2 {
                 }
 
                 // **`@children`** cannot live inside **`if`** (Slint); use **`visible`** like legacy **SelectPanel**.
-                SelectPanel2Footer {
+                SelectPanelFooter {
                     visible: root.show-footer;
                     @children
                 }

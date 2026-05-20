@@ -9,19 +9,19 @@ import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 
 /** Slint global handle: **`lines`** / **`filter_changed`** */
-export type GalleryFilteredActionList2Handle = {
+export type GalleryFilteredActionListHandle = {
     lines: unknown;
     filter_changed: (text: string) => void;
 };
 
 /** Multi-select gallery global — label-keyed selection survives filter narrowing. */
-export type GalleryFilteredActionList2MultiHandle = GalleryFilteredActionList2Handle & {
+export type GalleryFilteredActionListMultiHandle = GalleryFilteredActionListHandle & {
     multi_selected: boolean[];
     item_activated: (ix: number) => void;
 };
 
-/** Select-all strip + multi-select (**ActionList2** rows). */
-export type GalleryFilteredActionList2SelectAllHandle = GalleryFilteredActionList2Handle & {
+/** Select-all strip + multi-select (**ActionList** rows). */
+export type GalleryFilteredActionListSelectAllHandle = GalleryFilteredActionListHandle & {
     multi_selected: boolean[];
     select_all_checked: boolean;
     select_all_indeterminate: boolean;
@@ -30,11 +30,11 @@ export type GalleryFilteredActionList2SelectAllHandle = GalleryFilteredActionLis
 };
 
 /**
- * `ActionList2Line` rows for **`ArrayModel`**.
+ * `ActionListLine` rows for **`ArrayModel`**.
  *
  * Field keys use **underscores** matching Slint. Enum fields are **strings**.
  */
-type ActionList2LineJs = {
+type ActionListLineJs = {
     kind: string;
     label: string;
     row_variant: string;
@@ -54,7 +54,7 @@ type ActionList2LineJs = {
     section_heading_variant: string;
 };
 
-export const FILTERED_ACTION_LIST2_DEFAULT_LABELS = [
+export const FILTERED_ACTION_LIST_DEFAULT_LABELS = [
     "enhancement",
     "bug",
     "good first issue",
@@ -65,7 +65,7 @@ export const FILTERED_ACTION_LIST2_DEFAULT_LABELS = [
 ] as const;
 
 /** Upstream `FilteredActionList.stories.tsx` — `getColorCircle` hex order. */
-const FILTERED_ACTION_LIST2_DEFAULT_LEADING_HEX = [
+const FILTERED_ACTION_LIST_DEFAULT_LEADING_HEX = [
     "#a2eeef",
     "#d73a4a",
     "#0cf478",
@@ -75,7 +75,7 @@ const FILTERED_ACTION_LIST2_DEFAULT_LEADING_HEX = [
     "#8dc6fc",
 ] as const;
 
-const FILTERED_ACTION_LIST2_LONG_LABELS = [
+const FILTERED_ACTION_LIST_LONG_LABELS = [
     "enhancement with a very long label that might wrap. enhancement with a very long label that might wrap. enhancement with a very long label that might wrap. ",
     "bug with an excessively verbose description that goes on and on. bug with an excessively verbose description that goes on and on. bug with an excessively verbose description that goes on and on.",
     "good first issue that is intended to be approachable for newcomers",
@@ -122,7 +122,7 @@ const transparent1: ImageData = {
     data: Buffer.from([0, 0, 0, 0]),
 } as ImageData;
 
-function actionList2RowLong(label: string, rowIcon: ImageData): ActionList2LineJs {
+function actionListRowLong(label: string, rowIcon: ImageData): ActionListLineJs {
     return {
         kind: "row",
         label,
@@ -144,11 +144,11 @@ function actionList2RowLong(label: string, rowIcon: ImageData): ActionList2LineJ
     };
 }
 
-export function actionList2RowDefaultWithLeading(
+export function actionListRowDefaultWithLeading(
     label: string,
     labelIndex: number,
-): ActionList2LineJs {
-    const hex = FILTERED_ACTION_LIST2_DEFAULT_LEADING_HEX[labelIndex] ?? "#8dc6fc";
+): ActionListLineJs {
+    const hex = FILTERED_ACTION_LIST_DEFAULT_LEADING_HEX[labelIndex] ?? "#8dc6fc";
     const circle = rgbaCircleImage(hex, CIRCLE_PX);
     return {
         kind: "row",
@@ -176,12 +176,12 @@ export function filterPrefixLabels(labels: readonly string[], filter: string): s
     return labels.filter((l) => q === "" || l.toLowerCase().startsWith(q));
 }
 
-export function wireGalleryFilteredActionList2Default(g: GalleryFilteredActionList2Handle): void {
+export function wireGalleryFilteredActionListDefault(g: GalleryFilteredActionListHandle): void {
     const push = (filter: string) => {
-        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filter);
         const rows = picked.map((label) => {
-            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
-            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+            const fullIx = FILTERED_ACTION_LIST_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionListRowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),
@@ -194,14 +194,14 @@ export function wireGalleryFilteredActionList2Default(g: GalleryFilteredActionLi
     push("");
 }
 
-export function wireGalleryFilteredActionList2Long(
-    g: GalleryFilteredActionList2Handle,
+export function wireGalleryFilteredActionListLong(
+    g: GalleryFilteredActionListHandle,
     rowIcon: ImageData,
 ): void {
     const push = (filter: string) => {
-        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_LONG_LABELS, filter);
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_LONG_LABELS, filter);
         assignProperties(g, {
-            lines: new slint.ArrayModel(picked.map((l) => actionList2RowLong(l, rowIcon))),
+            lines: new slint.ArrayModel(picked.map((l) => actionListRowLong(l, rowIcon))),
         });
     };
 
@@ -215,18 +215,18 @@ export function wireGalleryFilteredActionList2Long(
  * Upstream **SelectPanel** `MultiSelect` — initial selection **`items.slice(1, 3)`** → labels **bug**, **good first issue**.
  * Selection is stored by label so filtered rows keep correct checkbox state.
  */
-export function wireGalleryFilteredActionList2Multi(
-    g: GalleryFilteredActionList2MultiHandle,
+export function wireGalleryFilteredActionListMulti(
+    g: GalleryFilteredActionListMultiHandle,
 ): void {
     const selectedLabels = new Set<string>(["bug", "good first issue"]);
     let currentFilter = "";
 
     const push = (filter: string) => {
         currentFilter = filter;
-        const picked = filterPrefixLabels(FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter);
+        const picked = filterPrefixLabels(FILTERED_ACTION_LIST_DEFAULT_LABELS, filter);
         const rows = picked.map((label) => {
-            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
-            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+            const fullIx = FILTERED_ACTION_LIST_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionListRowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),
@@ -240,7 +240,7 @@ export function wireGalleryFilteredActionList2Multi(
 
     g.item_activated = (ix: number) => {
         const picked = filterPrefixLabels(
-            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            FILTERED_ACTION_LIST_DEFAULT_LABELS,
             currentFilter,
         );
         const label = picked[ix];
@@ -257,21 +257,21 @@ export function wireGalleryFilteredActionList2Multi(
 /**
  * Upstream **SelectPanel** `WithSelectAll` — select-all strip + **listbox** multi-select on filtered labels.
  */
-export function wireGalleryFilteredActionList2SelectAll(
-    g: GalleryFilteredActionList2SelectAllHandle,
+export function wireGalleryFilteredActionListSelectAll(
+    g: GalleryFilteredActionListSelectAllHandle,
 ): void {
     let filterText = "";
     const selectedLabels = new Set<string>();
 
     const sync = () => {
         const picked = filterPrefixLabels(
-            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            FILTERED_ACTION_LIST_DEFAULT_LABELS,
             filterText,
         );
         const { checked, indeterminate } = selectAllStripState(picked, selectedLabels);
         const rows = picked.map((label) => {
-            const fullIx = FILTERED_ACTION_LIST2_DEFAULT_LABELS.findIndex((l) => l === label);
-            return actionList2RowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
+            const fullIx = FILTERED_ACTION_LIST_DEFAULT_LABELS.findIndex((l) => l === label);
+            return actionListRowDefaultWithLeading(label, fullIx >= 0 ? fullIx : 0);
         });
         assignProperties(g, {
             lines: new slint.ArrayModel(rows),
@@ -288,7 +288,7 @@ export function wireGalleryFilteredActionList2SelectAll(
 
     g.item_activated = (ix: number) => {
         const picked = filterPrefixLabels(
-            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            FILTERED_ACTION_LIST_DEFAULT_LABELS,
             filterText,
         );
         const label = picked[ix];
@@ -301,7 +301,7 @@ export function wireGalleryFilteredActionList2SelectAll(
 
     g.select_all_changed = (on: boolean) => {
         const picked = filterPrefixLabels(
-            FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+            FILTERED_ACTION_LIST_DEFAULT_LABELS,
             filterText,
         );
         applySelectAllOnVisibleKeys(selectedLabels, picked, on);
