@@ -1,6 +1,6 @@
 import {
-    ActionListItemDivider,
-    ActionListRow,
+    ActionList2ItemDivider,
+    ActionList2Row,
     Avatar,
     Icons,
     MultiDropShadow,
@@ -82,14 +82,12 @@ export component UserMenu {
             }
         }
 
-        ActionListItemDivider {
+        ActionList2ItemDivider {
             width: 100%;
         }
 
-        ActionListRow {
+        ActionList2Row {
             width: parent.width - (parent.padding * 2);
-            label-markdown: @markdown("");
-            has-markdown: false;
             label:
                 root.user_status_emoji
                 + (root.user_status_emoji != "" && root.user_status_message != "" ? " " : "")
@@ -98,10 +96,8 @@ export component UserMenu {
             }
         }
 
-        ActionListRow {
+        ActionList2Row {
             width: parent.width - (parent.padding * 2);
-            label-markdown: @markdown("");
-            has-markdown: false;
             has-leading-visual: true;
             leading-icon: Icons.sign_out;
             label: "Sign out";

@@ -65,7 +65,7 @@ export const FILTERED_ACTION_LIST2_DEFAULT_LABELS = [
 ] as const;
 
 /** Upstream `FilteredActionList.stories.tsx` — `getColorCircle` hex order. */
-export const FILTERED_ACTION_LIST2_DEFAULT_LEADING_HEX = [
+const FILTERED_ACTION_LIST2_DEFAULT_LEADING_HEX = [
     "#a2eeef",
     "#d73a4a",
     "#0cf478",
