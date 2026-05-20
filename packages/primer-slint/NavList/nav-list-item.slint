@@ -17,18 +17,17 @@ export component NavListItem {
     /// Fires on pointer / keyboard activation when not inactive (host opens **`href`**).
     callback clicked;
 
-    property <length> subitem-indent: root.subitem-depth * LayoutTokens.base-size-8;
-    property <bool> in-sub-nav: root.subitem-depth > 0;
-    property <length> effective-margin-inline: root.in-sub-nav ? 0px : root.margin-inline;
+    /// Upstream **`.SubGroup`** drops item **`margin-inline`**; depth comes from **`.Spacer`** only.
+    property <length> subitem-indent: max(0px, root.subitem-depth * LayoutTokens.base-size-8 - root.margin-inline);
 
     ActionListLinkRow {
         width: parent.width;
         label: root.label;
         active: root.active;
         href: root.href;
-        margin-inline: root.effective-margin-inline;
+        margin-inline: root.margin-inline;
         subitem-indent: root.subitem-indent;
-        compact-label: root.in-sub-nav;
+        compact-label: root.subitem-depth > 0;
         row-size: root.row-size;
         inactive-text: root.inactive-text;
         clicked => {

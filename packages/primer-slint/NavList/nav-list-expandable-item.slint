@@ -17,9 +17,7 @@ export component NavListExpandableItem {
     in property <length> margin-inline: ActionListTokens.item-margin-inline-inset;
     callback toggled;
 
-    property <length> subitem-indent: root.subitem-depth * LayoutTokens.base-size-8;
-    property <bool> in-sub-nav: root.subitem-depth > 0;
-    property <length> effective-margin-inline: root.in-sub-nav ? 0px : root.margin-inline;
+    property <length> subitem-indent: max(0px, root.subitem-depth * LayoutTokens.base-size-8 - root.margin-inline);
     property <bool> show-parent-active: !root.expanded && root.child-active;
     property <image> expand-icon: root.expanded ? Icons.chevron_up : Icons.chevron_down;
 
@@ -32,7 +30,7 @@ export component NavListExpandableItem {
     ActionListRow {
         width: parent.width;
         label: root.label;
-        margin-inline: root.effective-margin-inline;
+        margin-inline: root.margin-inline;
         subitem-indent: root.subitem-indent;
         active: root.show-parent-active;
         has-trailing-visual: true;
