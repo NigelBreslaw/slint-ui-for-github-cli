@@ -7,22 +7,36 @@ import {
     AnchoredOverlayHeight,
     AnchoredOverlaySide,
     AnchoredOverlayWidth,
+    PositionProps,
 } from "../AnchoredOverlay/anchored-overlay.slint";
 import { Button, ButtonVariant } from "../Buttons/buttons.slint";
 import { Icons } from "../assets/icons.slint";
 import { FilteredActionList2 } from "../FilteredActionList2/filtered-action-list2.slint";
+import { FilteredActionListLoadingKind } from "../FilteredActionList/types.slint";
 import {
     ActionList2Line,
     ActionList2ListRole,
     ActionList2SelectionMode,
+    ALVariant,
 } from "../ActionList2/types.slint";
 import { LayoutTokens, SelectPanelTokens } from "../tokens.slint";
+import { SelectPanel2Footer } from "./select-panel2-footer.slint";
 import { SelectPanel2Heading } from "./select-panel2-heading.slint";
+import { SelectPanel2Notice } from "./select-panel2-notice.slint";
+import { SelectPanel2NoticeVariant } from "./types.slint";
+
+export { SelectPanel2NoticeVariant } from "./types.slint";
 
 export component SelectPanel2 {
     in property <string> anchor-label: "Select labels";
     in property <ButtonVariant> button-variant: ButtonVariant.default;
     in property <bool> button-disabled: false;
+    /// When false, hide the built-in trigger; host supplies **`anchor-position-props`** (upstream **`renderAnchor={null}`**).
+    in property <bool> has-built-in-anchor: true;
+    in property <PositionProps> anchor-position-props: {
+        absolute-position: { x: 0px, y: 0px },
+        source-size: { width: 0px, height: 0px },
+    };
     in property <string> title: "Select labels";
     in property <string> subtitle: "";
     in property <string> filter-placeholder: "Filter Labels";
@@ -37,9 +51,7 @@ export component SelectPanel2 {
     in property <length> margin: LayoutTokens.base-size-4;
     in property <length> anchor-offset: 0px;
     in property <length> alignment-offset: 0px;
-    /// Panel inner padding (upstream **SelectPanel** `.Header` uses `--base-size-8`).
     in property <length> panel-padding: LayoutTokens.base-size-8;
-    /// Body width inside **`AnchoredOverlayWidth.medium`** (320px) minus horizontal **`panel-padding`**.
     property <length> panel-body-width: 320px - 2 * root.panel-padding;
 
     in-out property <bool> open: false;
@@ -47,19 +59,46 @@ export component SelectPanel2 {
 
     in-out property <string> filter-text: "";
     in property <[ActionList2Line]> lines: [];
+    in property <ALVariant> list-variant: ALVariant.inset;
+    in property <bool> show-dividers: false;
     in property <ActionList2ListRole> list-role: ActionList2ListRole.listbox;
     in property <ActionList2SelectionMode> selection-mode: ActionList2SelectionMode.multiple;
     in-out property <int> selected-index: -1;
     in property <[bool]> multi-selected: [];
-    /// When **`selection-mode`** is **`single`** and **`show-backdrop`** is false (anchored), close the overlay after **`item-activated`** (upstream anchored single-select).
+    in property <length> body-region-height: SelectPanelTokens.list-max-height-default;
+    in property <bool> loading: false;
+    in property <FilteredActionListLoadingKind> loading-kind: FilteredActionListLoadingKind.body_spinner;
+    in property <string> loading-message: "Loading…";
+    in property <bool> show-message: false;
+    in property <string> message-title: "";
+    in property <string> message-description: "";
+    in property <string> empty-title: "";
+    in property <string> empty-message: "";
+    in property <bool> select-all-visible: false;
+    in-out property <bool> select-all-checked: false;
+    in-out property <bool> select-all-indeterminate: false;
+
+    in property <bool> show-notice: false;
+    in property <SelectPanel2NoticeVariant> notice-variant: SelectPanel2NoticeVariant.info;
+    in property <string> notice-text: "";
+    in property <bool> show-footer: false;
     in property <bool> close-on-single-select: true;
 
     callback filter-changed(string);
     callback item-activated(int);
     callback single-selected-changed(int);
+    callback select-all-changed(bool);
     callback opened();
     callback closed();
     callback close-requested();
+
+    property <PositionProps> effective-anchor-position:
+        root.has-built-in-anchor
+        ? {
+            absolute-position: trigger.absolute-position,
+            source-size: { width: trigger.width, height: trigger.height },
+        }
+        : root.anchor-position-props;
 
     changed open => {
         if root.open && !root.popup-visible {
@@ -69,7 +108,6 @@ export component SelectPanel2 {
         }
     }
 
-    /// Defer **`panel-popup.close()`** until after the list row **`item-activated`** handler returns (avoids interpreter reentrancy crashes on Node).
     close-after-single-pick := Timer {
         interval: 1ms;
         running: false;
@@ -83,6 +121,7 @@ export component SelectPanel2 {
         alignment: start;
 
         trigger := Button {
+            visible: root.has-built-in-anchor;
             variant: root.button-variant;
             disabled: root.button-disabled;
             label: root.anchor-label;
@@ -98,10 +137,7 @@ export component SelectPanel2 {
         }
 
         panel-popup := AnchoredOverlay {
-            position-props: {
-                absolute-position: trigger.absolute-position,
-                source-size: { width: trigger.width, height: trigger.height },
-            };
+            position-props: root.effective-anchor-position;
             side: root.side;
             align: root.align;
             width-preset: root.width-preset;
@@ -143,16 +179,36 @@ export component SelectPanel2 {
                     subtitle: root.subtitle;
                 }
 
+                if root.show-notice: SelectPanel2Notice {
+                    width: 100%;
+                    variant: root.notice-variant;
+                    text: root.notice-text;
+                }
+
                 FilteredActionList2 {
                     width: 100%;
                     horizontal-stretch: 0;
                     filter-text <=> root.filter-text;
                     placeholder: root.filter-placeholder;
                     lines: root.lines;
+                    list-variant: root.list-variant;
+                    show-dividers: root.show-dividers;
                     list-role: root.list-role;
                     selection-mode: root.selection-mode;
                     selected-index: root.selected-index;
                     multi-selected: root.multi-selected;
+                    body-region-height: root.body-region-height;
+                    loading: root.loading;
+                    loading-kind: root.loading-kind;
+                    loading-message: root.loading-message;
+                    show-message: root.show-message;
+                    message-title: root.message-title;
+                    message-description: root.message-description;
+                    empty-title: root.empty-title;
+                    empty-message: root.empty-message;
+                    select-all-visible: root.select-all-visible;
+                    select-all-checked <=> root.select-all-checked;
+                    select-all-indeterminate <=> root.select-all-indeterminate;
                     filter-changed(t) => {
                         root.filter-changed(t);
                     }
@@ -165,6 +221,15 @@ export component SelectPanel2 {
                             }
                         }
                     }
+                    select-all-changed(on) => {
+                        root.select-all-changed(on);
+                    }
+                }
+
+                // **`@children`** cannot live inside **`if`** (Slint); use **`visible`** like legacy **SelectPanel**.
+                SelectPanel2Footer {
+                    visible: root.show-footer;
+                    @children
                 }
             }
         }

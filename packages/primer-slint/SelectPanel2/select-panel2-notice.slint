@@ -1,0 +1,21 @@
+import { Banner, BannerVariant } from "../Banner/banner.slint";
+import { SelectPanel2NoticeVariant } from "./types.slint";
+
+/// Thin **Banner** wrapper (upstream **SelectPanel** `notice` above the filter).
+export component SelectPanel2Notice {
+    in property <SelectPanel2NoticeVariant> variant: SelectPanel2NoticeVariant.info;
+    in property <string> text: "";
+
+    property <BannerVariant> banner-variant:
+        root.variant == SelectPanel2NoticeVariant.error ? BannerVariant.critical
+        : root.variant == SelectPanel2NoticeVariant.warning ? BannerVariant.warning
+        : BannerVariant.info;
+
+    horizontal-stretch: 1;
+
+    Banner {
+        width: 100%;
+        variant: root.banner-variant;
+        description: root.text;
+    }
+}

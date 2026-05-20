@@ -54,7 +54,7 @@ type ActionList2LineJs = {
     section_heading_variant: string;
 };
 
-const FILTERED_ACTION_LIST2_DEFAULT_LABELS = [
+export const FILTERED_ACTION_LIST2_DEFAULT_LABELS = [
     "enhancement",
     "bug",
     "good first issue",
@@ -65,7 +65,7 @@ const FILTERED_ACTION_LIST2_DEFAULT_LABELS = [
 ] as const;
 
 /** Upstream `FilteredActionList.stories.tsx` — `getColorCircle` hex order. */
-const FILTERED_ACTION_LIST2_DEFAULT_LEADING_HEX = [
+export const FILTERED_ACTION_LIST2_DEFAULT_LEADING_HEX = [
     "#a2eeef",
     "#d73a4a",
     "#0cf478",
@@ -144,7 +144,7 @@ function actionList2RowLong(label: string, rowIcon: ImageData): ActionList2LineJ
     };
 }
 
-function actionList2RowDefaultWithLeading(
+export function actionList2RowDefaultWithLeading(
     label: string,
     labelIndex: number,
 ): ActionList2LineJs {
@@ -171,7 +171,7 @@ function actionList2RowDefaultWithLeading(
     };
 }
 
-function filterPrefixLabels(labels: readonly string[], filter: string): string[] {
+export function filterPrefixLabels(labels: readonly string[], filter: string): string[] {
     const q = filter.trim().toLowerCase();
     return labels.filter((l) => q === "" || l.toLowerCase().startsWith(q));
 }

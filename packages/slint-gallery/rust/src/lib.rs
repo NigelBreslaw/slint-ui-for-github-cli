@@ -824,6 +824,45 @@ fn wire_gallery_select_panel2_single(window: &GalleryWindow) {
         .set_lines(ModelRc::new(VecModel::from(lines)));
 }
 
+fn wire_gallery_select_panel2_fetch(window: &GalleryWindow) {
+    let window_weak = window.as_weak();
+    window.global::<GallerySelectPanel2Fetch>().on_filter_changed({
+        let window_weak = window_weak.clone();
+        move |filter: SharedString| {
+            let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter.as_str());
+            let lines: Vec<ActionList2Line> = picked
+                .iter()
+                .map(|&l| {
+                    let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                        .iter()
+                        .position(|&x| x == l)
+                        .unwrap_or(0);
+                    action_list2_line_default_story(l, color_ix)
+                })
+                .collect();
+            let Some(w) = window_weak.upgrade() else {
+                return;
+            };
+            w.global::<GallerySelectPanel2Fetch>()
+                .set_lines(ModelRc::new(VecModel::from(lines)));
+        }
+    });
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, "");
+    let lines: Vec<ActionList2Line> = picked
+        .iter()
+        .map(|&l| {
+            let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                .iter()
+                .position(|&x| x == l)
+                .unwrap_or(0);
+            action_list2_line_default_story(l, color_ix)
+        })
+        .collect();
+    window
+        .global::<GallerySelectPanel2Fetch>()
+        .set_lines(ModelRc::new(VecModel::from(lines)));
+}
+
 fn wire_gallery_filtered_action_list2_long(window: &GalleryWindow) {
     let window_weak = window.as_weak();
     window
@@ -1014,6 +1053,188 @@ fn wire_gallery_filtered_action_list2_multi_as_select_panel2_default(window: &Ga
     );
 }
 
+fn push_gallery_select_panel2_disabled(
+    window_weak: slint::Weak<GalleryWindow>,
+    selected_labels: &RefCell<BTreeSet<SharedString>>,
+    filter: SharedString,
+) {
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter.as_str());
+    let lines: Vec<ActionList2Line> = picked
+        .iter()
+        .map(|&l| {
+            let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                .iter()
+                .position(|&x| x == l)
+                .unwrap_or(0);
+            let mut line = action_list2_line_default_story(l, color_ix);
+            line.disabled = l == "design";
+            line
+        })
+        .collect();
+    let multi_selected =
+        multi_selected_flags_for_picked(&picked, &selected_labels.borrow());
+    let Some(w) = window_weak.upgrade() else {
+        return;
+    };
+    let g = w.global::<GallerySelectPanel2Disabled>();
+    g.set_lines(ModelRc::new(VecModel::from(lines)));
+    g.set_multi_selected(ModelRc::new(VecModel::from(multi_selected)));
+}
+
+fn wire_gallery_select_panel2_disabled(window: &GalleryWindow) {
+    let selected_labels = Rc::new(RefCell::new(BTreeSet::from([
+        SharedString::from("bug"),
+        SharedString::from("good first issue"),
+    ])));
+    let current_filter = Rc::new(RefCell::new(SharedString::new()));
+    let window_weak = window.as_weak();
+
+    window
+        .global::<GallerySelectPanel2Disabled>()
+        .on_filter_changed({
+            let selected_labels = Rc::clone(&selected_labels);
+            let current_filter = Rc::clone(&current_filter);
+            let window_weak = window_weak.clone();
+            move |filter: SharedString| {
+                *current_filter.borrow_mut() = filter.clone();
+                push_gallery_select_panel2_disabled(
+                    window_weak.clone(),
+                    &selected_labels,
+                    filter,
+                );
+            }
+        });
+
+    window
+        .global::<GallerySelectPanel2Disabled>()
+        .on_item_activated({
+            let selected_labels = Rc::clone(&selected_labels);
+            let current_filter = Rc::clone(&current_filter);
+            let window_weak = window_weak.clone();
+            move |ix: i32| {
+                let picked = filter_prefix_labels(
+                    &FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+                    current_filter.borrow().as_str(),
+                );
+                let Some(&label) = picked.get(ix as usize) else {
+                    return;
+                };
+                if label == "design" {
+                    return;
+                }
+                toggle_shared_string_label(&mut selected_labels.borrow_mut(), label);
+                push_gallery_select_panel2_disabled(
+                    window_weak.clone(),
+                    &selected_labels,
+                    current_filter.borrow().clone(),
+                );
+            }
+        });
+
+    push_gallery_select_panel2_disabled(
+        window_weak,
+        &selected_labels,
+        SharedString::new(),
+    );
+}
+
+fn push_gallery_select_panel2_cancel(
+    window_weak: slint::Weak<GalleryWindow>,
+    selected_labels: &RefCell<BTreeSet<SharedString>>,
+    filter: SharedString,
+) {
+    let picked = filter_prefix_labels(&FILTERED_ACTION_LIST2_DEFAULT_LABELS, filter.as_str());
+    let lines: Vec<ActionList2Line> = picked
+        .iter()
+        .map(|&l| {
+            let color_ix = FILTERED_ACTION_LIST2_DEFAULT_LABELS
+                .iter()
+                .position(|&x| x == l)
+                .unwrap_or(0);
+            action_list2_line_default_story(l, color_ix)
+        })
+        .collect();
+    let multi_selected =
+        multi_selected_flags_for_picked(&picked, &selected_labels.borrow());
+    let Some(w) = window_weak.upgrade() else {
+        return;
+    };
+    let g = w.global::<GallerySelectPanel2Cancel>();
+    g.set_lines(ModelRc::new(VecModel::from(lines)));
+    g.set_multi_selected(ModelRc::new(VecModel::from(multi_selected)));
+}
+
+fn wire_gallery_select_panel2_cancel(window: &GalleryWindow) {
+    let initial_labels = Rc::new(RefCell::new(BTreeSet::from([
+        SharedString::from("bug"),
+        SharedString::from("good first issue"),
+    ])));
+    let selected_labels = Rc::new(RefCell::new(BTreeSet::from([
+        SharedString::from("bug"),
+        SharedString::from("good first issue"),
+    ])));
+    let current_filter = Rc::new(RefCell::new(SharedString::new()));
+    let window_weak = window.as_weak();
+
+    window
+        .global::<GallerySelectPanel2Cancel>()
+        .on_filter_changed({
+            let selected_labels = Rc::clone(&selected_labels);
+            let current_filter = Rc::clone(&current_filter);
+            let window_weak = window_weak.clone();
+            move |filter: SharedString| {
+                *current_filter.borrow_mut() = filter.clone();
+                push_gallery_select_panel2_cancel(
+                    window_weak.clone(),
+                    &selected_labels,
+                    filter,
+                );
+            }
+        });
+
+    window.global::<GallerySelectPanel2Cancel>().on_item_activated({
+        let selected_labels = Rc::clone(&selected_labels);
+        let current_filter = Rc::clone(&current_filter);
+        let window_weak = window_weak.clone();
+        move |ix: i32| {
+            let picked = filter_prefix_labels(
+                &FILTERED_ACTION_LIST2_DEFAULT_LABELS,
+                current_filter.borrow().as_str(),
+            );
+            let Some(&label) = picked.get(ix as usize) else {
+                return;
+            };
+            toggle_shared_string_label(&mut selected_labels.borrow_mut(), label);
+            push_gallery_select_panel2_cancel(
+                window_weak.clone(),
+                &selected_labels,
+                current_filter.borrow().clone(),
+            );
+        }
+    });
+
+    window.global::<GallerySelectPanel2Cancel>().on_reset({
+        let initial_labels = Rc::clone(&initial_labels);
+        let selected_labels = Rc::clone(&selected_labels);
+        let current_filter = Rc::clone(&current_filter);
+        let window_weak = window_weak.clone();
+        move || {
+            *selected_labels.borrow_mut() = initial_labels.borrow().clone();
+            push_gallery_select_panel2_cancel(
+                window_weak.clone(),
+                &selected_labels,
+                current_filter.borrow().clone(),
+            );
+        }
+    });
+
+    push_gallery_select_panel2_cancel(
+        window_weak,
+        &selected_labels,
+        SharedString::new(),
+    );
+}
+
 fn push_gallery_filtered_action_list2_select_all(
     window_weak: slint::Weak<GalleryWindow>,
     selected_labels: &RefCell<BTreeSet<SharedString>>,
@@ -1153,6 +1374,9 @@ pub fn run_gallery() -> Result<(), slint::PlatformError> {
     wire_gallery_filtered_action_list2_select_all(&window);
     wire_gallery_filtered_action_list2_multi_as_select_panel2_default(&window);
     wire_gallery_select_panel2_single(&window);
+    wire_gallery_select_panel2_disabled(&window);
+    wire_gallery_select_panel2_cancel(&window);
+    wire_gallery_select_panel2_fetch(&window);
 
     fill_gallery_tree_view_list_models(&window);
     wire_gallery_sidebar_nav(&window);

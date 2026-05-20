@@ -17,6 +17,12 @@ import {
   type GalleryFilteredActionList2SelectAllHandle,
 } from "./state/gallery-filtered-action-list2-bridge-shared.ts";
 import {
+  wireGallerySelectPanel2Cancel,
+  wireGallerySelectPanel2Disabled,
+  wireGallerySelectPanel2FetchLines,
+  type GallerySelectPanel2CancelHandle,
+} from "./state/gallery-select-panel2-bridge-shared.ts";
+import {
   wireGallerySelectPanelMultiSelect,
   type GallerySelectPanelMultiHandle,
 } from "./state/gallery-select-panel-multi-bridge-shared.ts";
@@ -48,6 +54,9 @@ type GalleryWindowModule = {
     GalleryFilteredActionList2SelectAll: GalleryFilteredActionList2SelectAllHandle;
     GallerySelectPanel2Default: GalleryFilteredActionList2MultiHandle;
     GallerySelectPanel2Single: GalleryFilteredActionList2Handle;
+    GallerySelectPanel2Disabled: GalleryFilteredActionList2MultiHandle;
+    GallerySelectPanel2Cancel: GallerySelectPanel2CancelHandle;
+    GallerySelectPanel2Fetch: GalleryFilteredActionList2Handle;
     GalleryTreeViewListModels: GalleryTreeViewListModelsHandle;
     Icons: {
       dot_fill: ImageData;
@@ -86,6 +95,9 @@ wireGalleryFilteredActionList2Multi(window.GalleryFilteredActionList2Multi);
 wireGalleryFilteredActionList2SelectAll(window.GalleryFilteredActionList2SelectAll);
 wireGalleryFilteredActionList2Multi(window.GallerySelectPanel2Default);
 wireGalleryFilteredActionList2Default(window.GallerySelectPanel2Single);
+wireGallerySelectPanel2Disabled(window.GallerySelectPanel2Disabled);
+wireGallerySelectPanel2Cancel(window.GallerySelectPanel2Cancel);
+wireGallerySelectPanel2FetchLines(window.GallerySelectPanel2Fetch);
 wireGalleryTreeViewListModels(
   window.GalleryTreeViewListModels,
   window.Icons.dot_fill,

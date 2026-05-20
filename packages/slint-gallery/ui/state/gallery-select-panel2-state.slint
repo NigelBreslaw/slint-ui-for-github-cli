@@ -1,4 +1,4 @@
-/// **SelectPanel2** **Default** demo — label rows + multi-select (`items.slice(1, 3)`), filtered in **Node** / **Rust**.
+/// **SelectPanel2** gallery globals — **Node** / **Rust** bridges.
 
 import { ActionList2Line } from "../../../primer-slint/primer.slint";
 
@@ -9,8 +9,27 @@ export global GallerySelectPanel2Default {
     callback item-activated(int);
 }
 
-/// **SingleSelect** — prefix-filtered label rows (initial pick **enhancement** in gallery UI).
 export global GallerySelectPanel2Single {
+    in-out property <[ActionList2Line]> lines: [];
+    callback filter-changed(string);
+}
+
+export global GallerySelectPanel2Disabled {
+    in-out property <[ActionList2Line]> lines: [];
+    in-out property <[bool]> multi-selected: [];
+    callback filter-changed(string);
+    callback item-activated(int);
+}
+
+export global GallerySelectPanel2Cancel {
+    in-out property <[ActionList2Line]> lines: [];
+    in-out property <[bool]> multi-selected: [];
+    callback filter-changed(string);
+    callback item-activated(int);
+    callback reset();
+}
+
+export global GallerySelectPanel2Fetch {
     in-out property <[ActionList2Line]> lines: [];
     callback filter-changed(string);
 }
