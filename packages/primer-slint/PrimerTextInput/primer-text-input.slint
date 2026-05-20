@@ -116,11 +116,9 @@ export component PrimerTextInput {
 
     height: column.preferred-height;
     vertical-stretch: 0;
-    horizontal-stretch: 0;
 
     column := VerticalLayout {
         spacing: 6px;
-        width: root.horizontal-stretch > 0 ? root.width : self.preferred-width;
 
         if label-text != "" && !label-visually-hidden: HorizontalLayout {
             spacing: 4px;
