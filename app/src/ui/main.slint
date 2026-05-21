@@ -83,14 +83,10 @@ export component MainWindow inherits Window {
 
     HorizontalLayout {
         alignment: center;
-        width: 100%;
-        height: 100%;
 
         VerticalLayout {
             alignment: center;
             spacing: 12px;
-            width: 100%;
-            height: 100%;
 
             if root.status_message == "Loading…" || root.status_message == "Checking…": Spinner {
                 size: large;
