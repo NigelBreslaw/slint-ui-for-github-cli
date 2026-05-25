@@ -21,6 +21,7 @@
     "dev:gallery": "pnpm --filter slint-gallery run dev",
     "dev:gallery:rust:mcp": "pnpm --filter slint-gallery run dev:rust:mcp",
     "build:gallery": "pnpm --filter slint-gallery run build",
+    "build:gallery:mac": "pnpm --filter slint-gallery run build:mac",
     "dev:debug": "pnpm --filter github-app run dev:debug",
     "dev:debug:projects": "pnpm --filter github-app run dev:debug:projects",
     "gen-build-info": "pnpm --filter github-app run gen-build-info",

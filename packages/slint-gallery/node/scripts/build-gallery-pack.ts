@@ -201,27 +201,6 @@ async function buildSea(nodeBin: string): Promise<void> {
   console.log(`Built ${outfile}`);
 }
 
-async function adhocSign(): Promise<void> {
-  await new Promise<void>((resolve, reject) => {
-    const proc = spawn("codesign", ["-s", "-", "--force", outfile], {
-      stdio: "inherit",
-    });
-    proc.on("error", (err) => {
-      console.warn(`codesign skipped: ${err.message}`);
-      resolve();
-    });
-    proc.on("close", (code) => {
-      if (code === 0) {
-        console.log(`Ad-hoc signed ${outfile}`);
-        resolve();
-      } else {
-        console.warn(`codesign exited with code ${code} (continuing)`);
-        resolve();
-      }
-    });
-  });
-}
-
 await rm(distDir, { recursive: true, force: true });
 await mkdir(distDir, { recursive: true });
 await createAssetsTar();
@@ -244,6 +223,8 @@ const version = await new Promise<string>((resolve, reject) => {
 });
 console.log(`Using ${nodeBin} (${version})`);
 await buildSea(nodeBin);
-await adhocSign();
 
-console.log(`\nDone. Run:\n  ${outfile}\n`);
+console.log(`\nDone. Mach-O:\n  ${outfile}`);
+console.log(
+  `For a signed .app: pnpm build:gallery:mac (requires CODESIGN_IDENTITY; NOTARIZE=1 for public release)\n`,
+);

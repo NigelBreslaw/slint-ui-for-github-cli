@@ -28,9 +28,52 @@ pnpm dev:gallery
 Requires **Node 25.9+** for the build step (`node --build-sea`). From the repo root:
 
 ```bash
+pnpm install
 pnpm build:gallery
 ./packages/slint-gallery/node/dist/primer-gallery
 ```
+
+### macOS `.app` (Developer ID + notarization)
+
+For distribution outside the Mac App Store you need:
+
+- **Developer ID Application** certificate in Keychain (`security find-identity -v -p codesigning`)
+- **Team ID** and an **app-specific password** for notarization ([appleid.apple.com](https://appleid.apple.com))
+
+Build the Mach-O, then package, sign, and optionally notarize:
+
+```bash
+pnpm build:gallery
+
+export CODESIGN_IDENTITY="Developer ID Application: Your Name (TEAMID)"
+pnpm build:gallery:mac
+```
+
+Public release (Gatekeeper on other Macs) also requires notarization:
+
+```bash
+export NOTARY_APPLE_ID="you@example.com"
+export NOTARY_TEAM_ID="TEAMID"
+export NOTARY_PASSWORD="@keychain:AC_PASSWORD"   # or app-specific password
+NOTARIZE=1 pnpm build:gallery:mac
+```
+
+Output: `packages/slint-gallery/node/dist/Primer Gallery.app`
+
+Open from Finder or:
+
+```bash
+open "packages/slint-gallery/node/dist/Primer Gallery.app"
+```
+
+Verify signing:
+
+```bash
+codesign --verify --deep --strict --verbose=2 "packages/slint-gallery/node/dist/Primer Gallery.app"
+spctl -a -vv "packages/slint-gallery/node/dist/Primer Gallery.app"
+```
+
+Entitlements and `Info.plist` live under [`node/macos/`](node/macos/). The pack script uses Node-style hardened-runtime entitlements (including `disable-library-validation` for the extracted `slint-ui` native addon).
 
 ## Rust gallery + embedded Slint MCP
 
