@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Standalone Slint gallery for Primer components (Node + slint-ui entry).",
   "scripts": {
-    "dev": "cross-env SLINT_ENABLE_EXPERIMENTAL_FEATURES=1 node gallery-main.ts",
+    "dev": "cross-env SLINT_ENABLE_EXPERIMENTAL_FEATURES=1 node gallery-dev.ts",
+    "build": "node scripts/build-gallery-pack.ts",
     "dev:rust:mcp": "cross-env SLINT_EMIT_DEBUG_INFO=1 SLINT_ENABLE_EXPERIMENTAL_FEATURES=1 SLINT_MCP_PORT=8080 cargo run --manifest-path ../rust/Cargo.toml --bin primer_slint_gallery_runner --features slint/mcp",
     "typecheck": "tsc --noEmit"
   },
@@ -15,6 +16,7 @@
   },
   "devDependencies": {
     "@types/node": "catalog:",
+    "esbuild": "0.27.3",
     "typescript": "catalog:",
     "cross-env": "catalog:"
   }

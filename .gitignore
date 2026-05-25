@@ -8,3 +8,5 @@ app/generated/
 **/target/**
 packages/slint-gallery/rust/pkg/
 packages/slint-gallery/rust/dist/
+packages/slint-gallery/node/dist/
+packages/slint-gallery/node/.tools/

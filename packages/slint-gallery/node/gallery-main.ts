@@ -1,4 +1,3 @@
-import * as slint from "slint-ui";
 import type { ImageData } from "slint-ui";
 import {
   wireIndexMultiSelect,
@@ -60,48 +59,50 @@ type GalleryWindowModule = {
   };
 };
 
-const ui = slint.loadFile(
-  new URL("../ui/gallery-window.slint", import.meta.url),
-) as GalleryWindowModule;
+export async function runGallery(galleryWindowPath: string): Promise<void> {
+  const slint = await import("slint-ui");
 
-const window = new ui.GalleryWindow();
+  const ui = slint.loadFile(galleryWindowPath) as GalleryWindowModule;
+  const window = new ui.GalleryWindow();
 
-wireIndexMultiSelect(
-  window.GalleryActionListMenuMultiSelect,
-  ACTION_LIST_MENU_MULTI_ROW_LABELS,
-  [],
-);
-wireIndexMultiSelect(
-  window.GalleryActionListListboxMultiSelect,
-  ACTION_LIST_LISTBOX_MULTI_ROW_LABELS,
-  [0],
-);
-wireGalleryFilteredActionListDefault(window.GalleryFilteredActionListDefault);
-wireGalleryFilteredActionListLong(
-  window.GalleryFilteredActionListLong,
-  window.Icons.dot_fill,
-);
-wireGalleryFilteredActionListMulti(window.GalleryFilteredActionListMulti);
-wireGalleryFilteredActionListSelectAll(window.GalleryFilteredActionListSelectAll);
-wireGalleryFilteredActionListMulti(window.GallerySelectPanelDefault);
-wireGalleryFilteredActionListDefault(window.GallerySelectPanelSingle);
-wireGallerySelectPanelDisabled(window.GallerySelectPanelDisabled);
-wireGallerySelectPanelCancel(window.GallerySelectPanelCancel);
-wireGallerySelectPanelModalMulti(window.GallerySelectPanelModalMulti);
-wireGallerySelectPanelFetchLines(window.GallerySelectPanelFetch);
-wireGalleryTreeViewListModels(
-  window.GalleryTreeViewListModels,
-  window.Icons.dot_fill,
-  window.Icons.file,
-);
-wireGallerySidebarNav(
-  window.GallerySidebarNav,
-  window.GalleryState,
-  window.Icons.dot_fill,
-  window.Icons.file,
-);
+  wireIndexMultiSelect(
+    window.GalleryActionListMenuMultiSelect,
+    ACTION_LIST_MENU_MULTI_ROW_LABELS,
+    [],
+  );
+  wireIndexMultiSelect(
+    window.GalleryActionListListboxMultiSelect,
+    ACTION_LIST_LISTBOX_MULTI_ROW_LABELS,
+    [0],
+  );
+  wireGalleryFilteredActionListDefault(window.GalleryFilteredActionListDefault);
+  wireGalleryFilteredActionListLong(
+    window.GalleryFilteredActionListLong,
+    window.Icons.dot_fill,
+  );
+  wireGalleryFilteredActionListMulti(window.GalleryFilteredActionListMulti);
+  wireGalleryFilteredActionListSelectAll(
+    window.GalleryFilteredActionListSelectAll,
+  );
+  wireGalleryFilteredActionListMulti(window.GallerySelectPanelDefault);
+  wireGalleryFilteredActionListDefault(window.GallerySelectPanelSingle);
+  wireGallerySelectPanelDisabled(window.GallerySelectPanelDisabled);
+  wireGallerySelectPanelCancel(window.GallerySelectPanelCancel);
+  wireGallerySelectPanelModalMulti(window.GallerySelectPanelModalMulti);
+  wireGallerySelectPanelFetchLines(window.GallerySelectPanelFetch);
+  wireGalleryTreeViewListModels(
+    window.GalleryTreeViewListModels,
+    window.Icons.dot_fill,
+    window.Icons.file,
+  );
+  wireGallerySidebarNav(
+    window.GallerySidebarNav,
+    window.GalleryState,
+    window.Icons.dot_fill,
+    window.Icons.file,
+  );
 
-window.show();
-await slint.runEventLoop();
-window.hide();
-process.exit(0);
+  window.show();
+  await slint.runEventLoop();
+  window.hide();
+}

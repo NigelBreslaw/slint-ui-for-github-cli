@@ -23,6 +23,15 @@ Run from the monorepo root:
 pnpm dev:gallery
 ```
 
+### Standalone executable (Node SEA, darwin arm64)
+
+Requires **Node 25.9+** for the build step (`node --build-sea`). From the repo root:
+
+```bash
+pnpm build:gallery
+./packages/slint-gallery/node/dist/primer-gallery
+```
+
 ## Rust gallery + embedded Slint MCP
 
 The native Rust runner ([`rust/`](rust/)) can expose Slint’s **embedded MCP** server (Streamable HTTP on `127.0.0.1`) for UI introspection while the window is open. This is **development-only**; do not ship production builds with `--features slint/mcp` or with `SLINT_MCP_PORT` set.

@@ -12,5 +12,12 @@
     "skipLibCheck": true,
     "types": ["node"]
   },
-  "include": ["gallery-main.ts", "state/**/*.ts"]
+  "include": [
+    "gallery-main.ts",
+    "gallery-dev.ts",
+    "gallery-sea-main.ts",
+    "lib/**/*.ts",
+    "scripts/**/*.ts",
+    "state/**/*.ts"
+  ]
 }

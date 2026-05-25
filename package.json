@@ -5,7 +5,14 @@
   "type": "module",
   "packageManager": "pnpm@11.3.0",
   "engines": {
-    "node": ">=24"
+    "node": ">=25.9.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "25.9.0",
+      "onFail": "download"
+    }
   },
   "scripts": {
     "autofix": "pnpm dedupe --prefer-offline && pnpm --filter github-app run autofix && pnpm --filter slint-bridge-kit run autofix && pnpm --filter slint-gallery run typecheck && pnpm knip",
@@ -13,6 +20,7 @@
     "dev": "pnpm --filter github-app run dev",
     "dev:gallery": "pnpm --filter slint-gallery run dev",
     "dev:gallery:rust:mcp": "pnpm --filter slint-gallery run dev:rust:mcp",
+    "build:gallery": "pnpm --filter slint-gallery run build",
     "dev:debug": "pnpm --filter github-app run dev:debug",
     "dev:debug:projects": "pnpm --filter github-app run dev:debug:projects",
     "gen-build-info": "pnpm --filter github-app run gen-build-info",
