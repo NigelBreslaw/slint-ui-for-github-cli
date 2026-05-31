@@ -1,0 +1,161 @@
+import {
+    BaseUiAppWindow,
+    BaseUiMotionTokens,
+    BaseUiOverlayTokens,
+} from "../tokens.slint";
+import {
+    BaseUiAnchorAlign,
+    BaseUiAnchorSide,
+    BaseUiPositionProps,
+    BaseUiPositioner,
+} from "./positioner.slint";
+import { BaseUiPopupPanelChrome } from "./popup-panel-chrome.slint";
+
+export { BaseUiPositionProps, BaseUiAnchorSide, BaseUiAnchorAlign } from "./positioner.slint";
+
+/// Headless anchored popup — `PopupWindow` host + neutral panel chrome.
+export component BaseUiAnchoredPopup {
+    width: 0px;
+    height: 0px;
+
+    property <bool> open: false;
+    in property <BaseUiPositionProps> position-props;
+    in property <BaseUiAnchorSide> side: BaseUiAnchorSide.outside_bottom;
+    in property <BaseUiAnchorAlign> align: BaseUiAnchorAlign.start;
+    in property <length> margin: 8px;
+    in property <length> anchor-offset: 0px;
+    in property <length> alignment-offset: 0px;
+    in property <bool> prevent-overflow: true;
+    in property <length> panel-width: 280px;
+    in property <length> panel-height: 120px;
+    in property <bool> reduce-motion: false;
+
+    callback show();
+    callback close();
+    callback opened();
+    callback closed();
+
+    property <length> ax: root.position-props.absolute-position.x;
+    property <length> ay: root.position-props.absolute-position.y;
+    property <length> aw: root.position-props.source-size.width;
+    property <length> ah: root.position-props.source-size.height;
+    property <length> vw: BaseUiAppWindow.window-width;
+    property <length> vh: BaseUiAppWindow.window-height;
+
+    property <length> pane-width: root.panel-width;
+    property <length> pane-height: root.panel-height;
+
+    out property <BaseUiAnchorSide> effective-side: BaseUiPositioner.flip-side(
+        root.side,
+        root.prevent-overflow,
+        root.ax,
+        root.ay,
+        root.aw,
+        root.ah,
+        root.margin,
+        root.anchor-offset,
+        root.pane-width,
+        root.pane-height,
+        root.vw,
+        root.vh,
+    );
+
+    property <length> raw-x: BaseUiPositioner.raw-x(
+        root.effective-side,
+        root.align,
+        root.ax,
+        root.ay,
+        root.aw,
+        root.ah,
+        root.margin,
+        root.anchor-offset,
+        root.alignment-offset,
+        root.pane-width,
+    );
+
+    property <length> raw-y: BaseUiPositioner.raw-y(
+        root.effective-side,
+        root.align,
+        root.ax,
+        root.ay,
+        root.aw,
+        root.ah,
+        root.margin,
+        root.anchor-offset,
+        root.alignment-offset,
+        root.pane-height,
+    );
+
+    property <length> final-x: BaseUiPositioner.clamp-x(root.raw-x, root.pane-width, root.prevent-overflow, root.vw);
+    property <length> final-y: BaseUiPositioner.clamp-y(root.raw-y, root.pane-height, root.prevent-overflow, root.vh);
+
+    open-enter-delay := Timer {
+        interval: 1ms;
+        running: false;
+        triggered() => {
+            root.open = true;
+            root.opened();
+            self.stop();
+        }
+    }
+
+    show => {
+        popup.show();
+        if root.reduce-motion {
+            root.open = true;
+            root.opened();
+        } else {
+            open-enter-delay.start();
+        }
+    }
+
+    close => {
+        root.open = false;
+        popup.close();
+        root.closed();
+    }
+
+    popup := PopupWindow {
+        x: 0px - root.position-props.absolute-position.x;
+        y: 0px - root.position-props.absolute-position.y;
+        width: BaseUiAppWindow.window-width;
+        height: BaseUiAppWindow.window-height;
+
+        close-policy: no-auto-close;
+        forward-focus: overlay-scope;
+
+        overlay-scope := FocusScope {
+            pane := Rectangle {
+                width: root.pane-width;
+                height: root.pane-height;
+
+                states [
+                    pane-open when root.open: {
+                        x: root.final-x;
+                        y: root.final-y;
+                        opacity: 1.0;
+                        in {
+                            animate opacity {
+                                duration: BaseUiMotionTokens.overlay-enter-duration;
+                                easing: ease-out;
+                            }
+                        }
+                    }
+                    pane-idle when !root.open: {
+                        x: root.final-x;
+                        y: root.final-y;
+                        opacity: 0.0;
+                    }
+                ]
+
+                touch-blocker := TouchArea { }
+
+                panel-chrome := BaseUiPopupPanelChrome {
+                    width: parent.width;
+                    height: parent.height;
+                    @children
+                }
+            }
+        }
+    }
+}

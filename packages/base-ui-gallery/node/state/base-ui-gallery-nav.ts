@@ -241,6 +241,7 @@ export const STUB_BY_PAGE_ID = new Map(
 /** Foundation demo pages (Phase 1). More leaves added in PR4–PR9. */
 export const FOUNDATION_SIDEBAR_LEAVES = [
   { id: "foundation-tokens", label: "Design tokens" },
+  { id: "foundation-anchor", label: "Anchor & popup" },
 ] as const;
 
 export const GALLERY_SIDEBAR_NAV = [

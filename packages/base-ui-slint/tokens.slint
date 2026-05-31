@@ -49,6 +49,8 @@ export global BaseUiOpacityTokens {
 }
 
 export global BaseUiLayoutTokens {
+    out property <length> base-size-4: 4px;
+    out property <length> base-size-8: 8px;
     out property <length> text-body-size-small: 12px;
     out property <length> text-body-size-medium: 14px;
     out property <length> text-body-size-large: 16px;
@@ -58,4 +60,25 @@ export global BaseUiLayoutTokens {
     out property <length> stack-gap-medium: 12px;
     out property <length> stack-gap-large: 16px;
     out property <length> swatch-size: 48px;
+}
+
+/// Host viewport size — gallery/app sets from root `Window` `changed width` / `height`.
+export global BaseUiAppWindow {
+    in-out property <length> window-width;
+    in-out property <length> window-height;
+}
+
+export global BaseUiOverlayTokens {
+    out property <brush> panel-background: BaseUiColors.surface-elevated;
+    out property <color> panel-border: BaseUiColors.border-default;
+    out property <length> panel-border-width: 1px;
+    out property <length> panel-border-radius: BaseUiLayoutTokens.border-radius-medium;
+    out property <length> panel-padding: 16px;
+    out property <length> anchored-auto-min-width: 192px;
+    out property <length> anchored-auto-max-width: max(BaseUiAppWindow.window-width - 32px, anchored-auto-min-width);
+    out property <length> anchored-max-height: max(BaseUiAppWindow.window-height - 32px, 120px);
+}
+
+export global BaseUiMotionTokens {
+    out property <duration> overlay-enter-duration: 150ms;
 }

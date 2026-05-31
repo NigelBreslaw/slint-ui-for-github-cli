@@ -1,0 +1,106 @@
+export struct BaseUiPositionProps {
+    absolute-position: Point,
+    source-size: Size,
+}
+
+export enum BaseUiAnchorSide {
+    outside_bottom,
+    outside_top,
+    outside_left,
+    outside_right,
+}
+
+export enum BaseUiAnchorAlign {
+    start,
+    center,
+    end,
+}
+
+/// Placement math for anchored popups (flip + clamp). Used by [`BaseUiAnchoredPopup`].
+export global BaseUiPositioner {
+    pure function flip-side(
+        side: BaseUiAnchorSide,
+        prevent-overflow: bool,
+        ax: length,
+        ay: length,
+        aw: length,
+        ah: length,
+        margin: length,
+        anchor-offset: length,
+        panel-width: length,
+        panel-height: length,
+        vw: length,
+        vh: length,
+    ) -> BaseUiAnchorSide {
+        if !prevent-overflow {
+            return side;
+        }
+        if side == BaseUiAnchorSide.outside_bottom
+            && ay + ah + margin + anchor-offset + panel-height > vh {
+            return BaseUiAnchorSide.outside_top;
+        }
+        if side == BaseUiAnchorSide.outside_top
+            && ay - margin - anchor-offset - panel-height < 0px {
+            return BaseUiAnchorSide.outside_bottom;
+        }
+        if side == BaseUiAnchorSide.outside_right
+            && ax + aw + margin + anchor-offset + panel-width > vw {
+            return BaseUiAnchorSide.outside_left;
+        }
+        if side == BaseUiAnchorSide.outside_left
+            && ax - margin - anchor-offset - panel-width < 0px {
+            return BaseUiAnchorSide.outside_right;
+        }
+        return side;
+    }
+
+    pure function raw-x(
+        side: BaseUiAnchorSide,
+        align: BaseUiAnchorAlign,
+        ax: length,
+        ay: length,
+        aw: length,
+        ah: length,
+        margin: length,
+        anchor-offset: length,
+        alignment-offset: length,
+        panel-width: length,
+    ) -> length {
+        return side == BaseUiAnchorSide.outside_bottom || side == BaseUiAnchorSide.outside_top
+            ? (align == BaseUiAnchorAlign.start ? ax
+                : align == BaseUiAnchorAlign.center ? ax + (aw - panel-width) / 2
+                : ax + aw - panel-width) + alignment-offset
+            : side == BaseUiAnchorSide.outside_right
+            ? ax + aw + margin + anchor-offset
+            : ax - margin - anchor-offset - panel-width;
+    }
+
+    pure function raw-y(
+        side: BaseUiAnchorSide,
+        align: BaseUiAnchorAlign,
+        ax: length,
+        ay: length,
+        aw: length,
+        ah: length,
+        margin: length,
+        anchor-offset: length,
+        alignment-offset: length,
+        panel-height: length,
+    ) -> length {
+        return side == BaseUiAnchorSide.outside_bottom
+            ? ay + ah + margin + anchor-offset
+            : side == BaseUiAnchorSide.outside_top
+            ? ay - margin - anchor-offset - panel-height
+            : (align == BaseUiAnchorAlign.start ? ay
+                : align == BaseUiAnchorAlign.center ? ay + (ah - panel-height) / 2
+                : ay + ah - panel-height) + alignment-offset;
+    }
+
+    pure function clamp-x(raw-x: length, panel-width: length, prevent-overflow: bool, vw: length) -> length {
+        return prevent-overflow ? max(0px, min(raw-x, vw - panel-width)) : raw-x;
+    }
+
+    pure function clamp-y(raw-y: length, panel-height: length, prevent-overflow: bool, vh: length) -> length {
+        return prevent-overflow ? max(0px, min(raw-y, vh - panel-height)) : raw-y;
+    }
+}

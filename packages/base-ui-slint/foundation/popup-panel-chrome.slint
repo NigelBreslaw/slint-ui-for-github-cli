@@ -1,0 +1,23 @@
+import { BaseUiOverlayTokens } from "../tokens.slint";
+
+/// Neutral floating panel shell (no Primer elevation stack).
+export component BaseUiPopupPanelChrome {
+    in property <length> panel-padding: BaseUiOverlayTokens.panel-padding;
+
+    out property <length> chrome-preferred-width: inner-slot.preferred-width;
+    out property <length> chrome-preferred-height: inner-slot.preferred-height;
+
+    Rectangle {
+        background: BaseUiOverlayTokens.panel-background;
+        border-color: BaseUiOverlayTokens.panel-border;
+        border-width: BaseUiOverlayTokens.panel-border-width;
+        border-radius: BaseUiOverlayTokens.panel-border-radius;
+        clip: true;
+
+        inner-slot := VerticalLayout {
+            padding: root.panel-padding;
+            alignment: start;
+            @children
+        }
+    }
+}

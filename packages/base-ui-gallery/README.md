@@ -8,6 +8,8 @@ Standalone Slint window for browsing the [Base UI](https://base-ui.com) Slint po
 
 **PR3:** [`packages/base-ui-slint`](../base-ui-slint) scaffold (`tokens.slint`, `base-ui.slint`, component README stubs) and **Foundation → Design tokens** (`foundation-tokens`) with neutral swatches and focus-ring preview.
 
+**PR4:** `foundation/positioner.slint` + `foundation/popup-host.slint` (`BaseUiAnchoredPopup`) and **Foundation → Anchor & popup** (`foundation-anchor`) with side/align/margin/offset controls and overflow flip.
+
 Run from the monorepo root:
 
 ```bash

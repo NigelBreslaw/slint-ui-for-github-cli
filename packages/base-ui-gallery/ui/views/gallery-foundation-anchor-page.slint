@@ -1,0 +1,374 @@
+import {
+    BaseUiAnchorAlign,
+    BaseUiAnchorSide,
+    BaseUiAnchoredPopup,
+    BaseUiColors,
+    BaseUiLayoutTokens,
+} from "../../../base-ui-slint/base-ui.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { CheckBox } from "std-widgets.slint";
+
+component OptionButton {
+    in property <string> label;
+    in property <bool> selected;
+    callback activated();
+
+    Rectangle {
+        width: 100%;
+        height: 28px;
+        border-radius: BaseUiLayoutTokens.border-radius-medium;
+        background: root.selected ? BaseUiColors.bg-muted : #00000000;
+        border-width: root.selected ? 1px : 0px;
+        border-color: BaseUiColors.border-strong;
+
+        Text {
+            x: 8px;
+            y: 6px;
+            text: root.label;
+            font-size: BaseUiLayoutTokens.text-body-size-small;
+            color: BaseUiColors.fg-default;
+        }
+
+        TouchArea {
+            width: 100%;
+            height: 100%;
+            clicked => {
+                root.activated();
+            }
+        }
+    }
+}
+
+/// Foundation → Anchor & popup — [`BaseUiAnchoredPopup`] with flip/clamp.
+export component GalleryFoundationAnchorPage {
+    property <int> preview-side-ix: 0;
+    property <int> preview-align-ix: 0;
+    property <int> preview-margin-ix: 1;
+    property <int> preview-anchor-offset-ix: 0;
+    property <int> preview-alignment-offset-ix: 0;
+    property <bool> preview-prevent-overflow: true;
+    property <bool> preview-reduce-motion: false;
+
+    property <BaseUiAnchorSide> preview-side: preview-side-ix == 1 ? BaseUiAnchorSide.outside_top
+        : preview-side-ix == 2 ? BaseUiAnchorSide.outside_left
+        : preview-side-ix == 3 ? BaseUiAnchorSide.outside_right
+        : BaseUiAnchorSide.outside_bottom;
+
+    property <BaseUiAnchorAlign> preview-align: preview-align-ix == 1 ? BaseUiAnchorAlign.center
+        : preview-align-ix == 2 ? BaseUiAnchorAlign.end
+        : BaseUiAnchorAlign.start;
+
+    property <length> preview-margin: preview-margin-ix == 0 ? BaseUiLayoutTokens.base-size-4
+        : preview-margin-ix == 2 ? 16px
+        : BaseUiLayoutTokens.base-size-8;
+
+    property <length> anchor-offset-pixels: preview-anchor-offset-ix == 1 ? 50px
+        : preview-anchor-offset-ix == 2 ? 100px
+        : 0px;
+
+    property <length> alignment-offset-pixels: preview-alignment-offset-ix == 1 ? 50px
+        : preview-alignment-offset-ix == 2 ? 100px
+        : 0px;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        preview-host := VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-medium;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "Anchor & popup";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: "Gray box is the anchor. Open the popup, then resize the window toward the bottom edge to see flip when Prevent overflow is on.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            Rectangle {
+                vertical-stretch: 1;
+            }
+
+            anchor-box := Rectangle {
+                width: 140px;
+                height: 40px;
+                background: BaseUiColors.bg-muted;
+                border-radius: BaseUiLayoutTokens.border-radius-medium;
+                border-width: 1px;
+                border-color: BaseUiColors.border-default;
+
+                Text {
+                    x: (parent.width - self.width) / 2;
+                    y: (parent.height - self.height) / 2;
+                    text: "Anchor";
+                    color: BaseUiColors.fg-default;
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                }
+
+                anchor-ta := TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    clicked => {
+                        demo-popup.show();
+                    }
+                }
+            }
+
+            demo-popup := BaseUiAnchoredPopup {
+                position-props: {
+                    absolute-position: anchor-box.absolute-position,
+                    source-size: { width: anchor-box.width, height: anchor-box.height },
+                };
+                side: preview-side;
+                align: preview-align;
+                margin: preview-margin;
+                anchor-offset: anchor-offset-pixels;
+                alignment-offset: alignment-offset-pixels;
+                prevent-overflow: preview-prevent-overflow;
+                reduce-motion: preview-reduce-motion;
+
+                VerticalLayout {
+                    spacing: 8px;
+
+                    Text {
+                        text: "Neutral popup panel";
+                        color: BaseUiColors.fg-default;
+                        font-size: BaseUiLayoutTokens.text-body-size-medium;
+                        font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    }
+
+                    Text {
+                        text: "Dismiss wiring arrives in PR5 (Escape / outside press).";
+                        color: BaseUiColors.fg-muted;
+                        font-size: BaseUiLayoutTokens.text-body-size-small;
+                        wrap: word-wrap;
+                    }
+
+                    close-ta := Rectangle {
+                        height: 32px;
+                        width: 72px;
+                        background: BaseUiColors.bg-muted;
+                        border-radius: BaseUiLayoutTokens.border-radius-medium;
+
+                        Text {
+                            x: 12px;
+                            y: 8px;
+                            text: "Close";
+                            color: BaseUiColors.fg-default;
+                            font-size: BaseUiLayoutTokens.text-body-size-small;
+                        }
+
+                        TouchArea {
+                            width: 100%;
+                            height: 100%;
+                            clicked => {
+                                demo-popup.close();
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 10px;
+
+                Text {
+                    text: "Side";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                OptionButton {
+                    label: "bottom";
+                    selected: preview-side-ix == 0;
+                    activated => {
+                        demo-popup.close();
+                        preview-side-ix = 0;
+                    }
+                }
+                OptionButton {
+                    label: "top";
+                    selected: preview-side-ix == 1;
+                    activated => {
+                        demo-popup.close();
+                        preview-side-ix = 1;
+                    }
+                }
+                OptionButton {
+                    label: "left";
+                    selected: preview-side-ix == 2;
+                    activated => {
+                        demo-popup.close();
+                        preview-side-ix = 2;
+                    }
+                }
+                OptionButton {
+                    label: "right";
+                    selected: preview-side-ix == 3;
+                    activated => {
+                        demo-popup.close();
+                        preview-side-ix = 3;
+                    }
+                }
+
+                Text {
+                    text: "Align";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                OptionButton {
+                    label: "start";
+                    selected: preview-align-ix == 0;
+                    activated => {
+                        demo-popup.close();
+                        preview-align-ix = 0;
+                    }
+                }
+                OptionButton {
+                    label: "center";
+                    selected: preview-align-ix == 1;
+                    activated => {
+                        demo-popup.close();
+                        preview-align-ix = 1;
+                    }
+                }
+                OptionButton {
+                    label: "end";
+                    selected: preview-align-ix == 2;
+                    activated => {
+                        demo-popup.close();
+                        preview-align-ix = 2;
+                    }
+                }
+
+                Text {
+                    text: "Margin";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                OptionButton {
+                    label: "4px";
+                    selected: preview-margin-ix == 0;
+                    activated => {
+                        demo-popup.close();
+                        preview-margin-ix = 0;
+                    }
+                }
+                OptionButton {
+                    label: "8px";
+                    selected: preview-margin-ix == 1;
+                    activated => {
+                        demo-popup.close();
+                        preview-margin-ix = 1;
+                    }
+                }
+                OptionButton {
+                    label: "16px";
+                    selected: preview-margin-ix == 2;
+                    activated => {
+                        demo-popup.close();
+                        preview-margin-ix = 2;
+                    }
+                }
+
+                Text {
+                    text: "Anchor offset";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                OptionButton {
+                    label: "0";
+                    selected: preview-anchor-offset-ix == 0;
+                    activated => {
+                        demo-popup.close();
+                        preview-anchor-offset-ix = 0;
+                    }
+                }
+                OptionButton {
+                    label: "50px";
+                    selected: preview-anchor-offset-ix == 1;
+                    activated => {
+                        demo-popup.close();
+                        preview-anchor-offset-ix = 1;
+                    }
+                }
+                OptionButton {
+                    label: "100px";
+                    selected: preview-anchor-offset-ix == 2;
+                    activated => {
+                        demo-popup.close();
+                        preview-anchor-offset-ix = 2;
+                    }
+                }
+
+                Text {
+                    text: "Alignment offset";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                OptionButton {
+                    label: "0";
+                    selected: preview-alignment-offset-ix == 0;
+                    activated => {
+                        demo-popup.close();
+                        preview-alignment-offset-ix = 0;
+                    }
+                }
+                OptionButton {
+                    label: "50px";
+                    selected: preview-alignment-offset-ix == 1;
+                    activated => {
+                        demo-popup.close();
+                        preview-alignment-offset-ix = 1;
+                    }
+                }
+                OptionButton {
+                    label: "100px";
+                    selected: preview-alignment-offset-ix == 2;
+                    activated => {
+                        demo-popup.close();
+                        preview-alignment-offset-ix = 2;
+                    }
+                }
+
+                CheckBox {
+                    text: "Prevent overflow (flip + clamp)";
+                    checked <=> preview-prevent-overflow;
+                    toggled => {
+                        demo-popup.close();
+                    }
+                }
+
+                CheckBox {
+                    text: "Reduce motion";
+                    checked <=> preview-reduce-motion;
+                    toggled => {
+                        demo-popup.close();
+                    }
+                }
+            }
+        }
+    }
+}
