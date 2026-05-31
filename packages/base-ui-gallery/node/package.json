@@ -1,0 +1,19 @@
+{
+  "name": "base-ui-gallery",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "Standalone Slint gallery for Base UI Slint port (Node + slint-ui entry).",
+  "scripts": {
+    "dev": "cross-env SLINT_ENABLE_EXPERIMENTAL_FEATURES=1 node gallery-dev.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "slint-ui": "catalog:"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "cross-env": "catalog:",
+    "typescript": "catalog:"
+  }
+}

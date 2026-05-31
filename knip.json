@@ -1,15 +1,29 @@
 {
   "$schema": "https://unpkg.com/knip@6/schema.json",
-  "tags": ["-lintignore"],
+  "tags": [
+    "-lintignore"
+  ],
   "workspaces": {
     "app": {
-      "entry": ["src/**/*.test.ts"]
+      "entry": [
+        "src/**/*.test.ts"
+      ]
     },
     "slint-bridge-kit": {
-      "entry": ["src/index.ts", "src/**/*.test.ts"]
+      "entry": [
+        "src/index.ts",
+        "src/**/*.test.ts"
+      ]
     },
     "slint-gallery": {
-      "entry": ["node/gallery-dev.ts"]
+      "entry": [
+        "node/gallery-dev.ts"
+      ]
+    },
+    "base-ui-gallery": {
+      "entry": [
+        "node/gallery-dev.ts"
+      ]
     }
   }
 }

@@ -1,0 +1,65 @@
+import { Palette } from "std-widgets.slint";
+import { BaseUiGalleryColors } from "../tokens/base-ui-gallery-tokens.slint";
+
+export component GalleryHeader {
+    height: 64px;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: BaseUiGalleryColors.header-bg;
+
+        Rectangle {
+            width: 100%;
+            height: 1px;
+            y: parent.height - 1px;
+            background: BaseUiGalleryColors.border-default;
+        }
+
+        HorizontalLayout {
+            width: parent.width;
+            height: parent.height;
+            padding-left: 16px;
+            padding-right: 16px;
+            spacing: 16px;
+            alignment: space-between;
+
+            Text {
+                vertical-alignment: center;
+                horizontal-stretch: 1;
+                text: "Base UI gallery";
+                font-size: 14px;
+                font-weight: 600;
+                color: BaseUiGalleryColors.fg-default;
+                overflow: elide;
+            }
+
+            theme-toggle := Rectangle {
+                width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                background: Palette.color-scheme == ColorScheme.dark ? #3f3f46 : #e4e4e7;
+
+                TouchArea {
+                    width: 100%;
+                    height: 100%;
+                    clicked => {
+                        if (Palette.color-scheme == ColorScheme.dark) {
+                            Palette.color-scheme = ColorScheme.light;
+                        } else {
+                            Palette.color-scheme = ColorScheme.dark;
+                        }
+                    }
+                }
+
+                Text {
+                    x: (parent.width - self.width) / 2;
+                    y: (parent.height - self.height) / 2;
+                    text: Palette.color-scheme == ColorScheme.dark ? "☾" : "☀";
+                    font-size: 14px;
+                    color: BaseUiGalleryColors.fg-default;
+                }
+            }
+        }
+    }
+}

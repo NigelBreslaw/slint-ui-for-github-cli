@@ -1,0 +1,49 @@
+import { BaseUiGalleryColors } from "./tokens/base-ui-gallery-tokens.slint";
+import { GalleryHeader } from "./components/gallery-header.slint";
+import { GallerySidebar } from "./components/gallery-sidebar.slint";
+import { GalleryWelcomePage } from "./views/gallery-welcome-page.slint";
+import { GalleryState } from "./state/gallery-state.slint";
+
+export { GalleryState } from "./state/gallery-state.slint";
+
+export component GalleryWindow inherits Window {
+    preferred-width: 1000px;
+    preferred-height: 800px;
+    min-width: 360px;
+    min-height: 360px;
+    title: "Base UI gallery";
+    background: BaseUiGalleryColors.bg-default;
+
+    VerticalLayout {
+        GalleryHeader { }
+
+        HorizontalLayout {
+            vertical-stretch: 1;
+
+            GallerySidebar { }
+
+            main-scroll := Rectangle {
+                horizontal-stretch: 1;
+                vertical-stretch: 1;
+                background: BaseUiGalleryColors.bg-default;
+
+                gallery-flick := Flickable {
+                    width: main-scroll.width;
+                    height: main-scroll.height;
+                    viewport-width: self.width;
+                    viewport-height: gallery-main.preferred-height;
+
+                    gallery-main := VerticalLayout {
+                        width: gallery-flick.width;
+                        min-height: gallery-flick.height;
+                        alignment: start;
+
+                        if GalleryState.selected-page-id == "welcome": GalleryWelcomePage {
+                            height: main-scroll.height;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

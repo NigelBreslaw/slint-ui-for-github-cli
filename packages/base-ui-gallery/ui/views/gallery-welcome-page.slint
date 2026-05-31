@@ -1,0 +1,38 @@
+import { BaseUiGalleryColors } from "../tokens/base-ui-gallery-tokens.slint";
+
+export component GalleryWelcomePage {
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 24px;
+        spacing: 16px;
+        alignment: start;
+
+        Text {
+            text: "Base UI Slint port";
+            color: BaseUiGalleryColors.fg-default;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        Text {
+            text: "Headless Base UI components for Slint. Foundation demos and component stubs arrive in the next PRs.";
+            color: BaseUiGalleryColors.fg-muted;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            height: 1px;
+            width: 480px;
+            background: BaseUiGalleryColors.border-default;
+        }
+
+        Text {
+            text: "Run: pnpm dev:base-ui-gallery";
+            color: BaseUiGalleryColors.fg-default;
+            font-size: 13px;
+            font-family: "monospace";
+        }
+    }
+}

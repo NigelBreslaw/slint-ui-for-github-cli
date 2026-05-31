@@ -1,0 +1,40 @@
+import { BaseUiGalleryColors, BaseUiGalleryLayout } from "../tokens/base-ui-gallery-tokens.slint";
+
+/// PR1: empty sidebar chrome — navigation arrives in PR2.
+export component GallerySidebar {
+    width: BaseUiGalleryLayout.sidebar-width;
+    vertical-stretch: 1;
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: BaseUiGalleryColors.bg-subtle;
+
+        Rectangle {
+            width: 1px;
+            x: parent.width - 1px;
+            height: parent.height;
+            background: BaseUiGalleryColors.border-default;
+        }
+
+        VerticalLayout {
+            padding: 16px;
+            spacing: 8px;
+            alignment: start;
+
+            Text {
+                text: "Navigation";
+                font-size: 12px;
+                font-weight: 600;
+                color: BaseUiGalleryColors.fg-muted;
+            }
+
+            Text {
+                text: "Component demos will appear here in PR2.";
+                font-size: 12px;
+                color: BaseUiGalleryColors.fg-muted;
+                wrap: word-wrap;
+            }
+        }
+    }
+}
