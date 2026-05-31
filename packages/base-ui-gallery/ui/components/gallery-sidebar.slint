@@ -1,9 +1,14 @@
+import { Icons, PrimerTreeView, TreeViewRow } from "../../../primer-slint/primer.slint";
 import { BaseUiGalleryColors, BaseUiGalleryLayout } from "../tokens/base-ui-gallery-tokens.slint";
+import { GalleryState } from "../state/gallery-state.slint";
+import { GallerySidebarNav } from "../state/gallery-sidebar-nav.slint";
+import { GallerySidebarFallback } from "../generated/gallery-sidebar-fallback.slint";
 
-/// PR1: empty sidebar chrome — navigation arrives in PR2.
 export component GallerySidebar {
     width: BaseUiGalleryLayout.sidebar-width;
     vertical-stretch: 1;
+
+    property <bool> nav-from-host: GallerySidebarNav.rows.length > 0;
 
     Rectangle {
         width: 100%;
@@ -18,22 +23,98 @@ export component GallerySidebar {
         }
 
         VerticalLayout {
-            padding: 16px;
+            padding-top: 8px;
+            padding-bottom: 8px;
             spacing: 8px;
-            alignment: start;
 
-            Text {
-                text: "Navigation";
-                font-size: 12px;
-                font-weight: 600;
-                color: BaseUiGalleryColors.fg-muted;
+            HorizontalLayout {
+                padding-left: 16px;
+                Text {
+                    text: "Base UI";
+                    font-size: 11px;
+                    font-weight: 600;
+                    color: BaseUiGalleryColors.fg-muted;
+                }
             }
 
-            Text {
-                text: "Component demos will appear here in PR2.";
-                font-size: 12px;
-                color: BaseUiGalleryColors.fg-muted;
-                wrap: word-wrap;
+            scroll-host := Rectangle {
+                horizontal-stretch: 1;
+                vertical-stretch: 1;
+
+                sidebar-flick := Flickable {
+                    width: scroll-host.width;
+                    height: scroll-host.height;
+                    viewport-width: self.width;
+                    viewport-height: nav-tree.preferred-height;
+
+                    nav-tree := PrimerTreeView {
+                        width: sidebar-flick.width;
+                        accessible-name: "Gallery pages";
+                        rows: nav-from-host ? GallerySidebarNav.rows : GallerySidebarFallback.rows;
+                        max-gutter-columns: 2;
+                        suppress-current-for-directories: nav-from-host;
+                        row-current-requested(id) => {
+                            if nav-from-host {
+                                GallerySidebarNav.row-current-requested(id);
+                            } else if id == "welcome"
+                                || id == "stub-accordion"
+                                || id == "stub-alert-dialog"
+                                || id == "stub-autocomplete"
+                                || id == "stub-avatar"
+                                || id == "stub-button"
+                                || id == "stub-checkbox"
+                                || id == "stub-checkbox-group"
+                                || id == "stub-collapsible"
+                                || id == "stub-combobox"
+                                || id == "stub-context-menu"
+                                || id == "stub-csp-provider"
+                                || id == "stub-dialog"
+                                || id == "stub-direction-provider"
+                                || id == "stub-drawer"
+                                || id == "stub-field"
+                                || id == "stub-fieldset"
+                                || id == "stub-form"
+                                || id == "stub-input"
+                                || id == "stub-menu"
+                                || id == "stub-menubar"
+                                || id == "stub-merge-props"
+                                || id == "stub-meter"
+                                || id == "stub-navigation-menu"
+                                || id == "stub-number-field"
+                                || id == "stub-otp-field"
+                                || id == "stub-popover"
+                                || id == "stub-preview-card"
+                                || id == "stub-progress"
+                                || id == "stub-radio"
+                                || id == "stub-radio-group"
+                                || id == "stub-scroll-area"
+                                || id == "stub-select"
+                                || id == "stub-separator"
+                                || id == "stub-slider"
+                                || id == "stub-switch"
+                                || id == "stub-tabs"
+                                || id == "stub-toast"
+                                || id == "stub-toggle"
+                                || id == "stub-toggle-group"
+                                || id == "stub-toolbar"
+                                || id == "stub-tooltip"
+                                || id == "stub-use-render"
+                            {
+                                GalleryState.selected-page-id = id;
+                            }
+                        }
+                        row-toggle-requested(id) => {
+                            if nav-from-host {
+                                GallerySidebarNav.row-toggle-requested(id);
+                            }
+                        }
+                        row-secondary-actions-requested(id, ax, ay, aw, ah) => {
+                            if nav-from-host {
+                                GallerySidebarNav.row-secondary-actions-requested(id, ax, ay, aw, ah);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

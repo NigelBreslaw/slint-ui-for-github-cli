@@ -1,0 +1,8 @@
+import { TreeViewRow } from "../../../primer-slint/primer.slint";
+
+export global GallerySidebarNav {
+    in-out property <[TreeViewRow]> rows: [];
+    callback row-current-requested(string);
+    callback row-toggle-requested(string);
+    callback row-secondary-actions-requested(string, length, length, length, length);
+}

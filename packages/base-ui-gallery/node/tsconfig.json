@@ -3,14 +3,22 @@
     "target": "esnext",
     "module": "nodenext",
     "moduleResolution": "nodenext",
-    "lib": ["esnext"],
+    "lib": [
+      "esnext"
+    ],
     "noEmit": true,
     "strict": true,
     "verbatimModuleSyntax": true,
     "rewriteRelativeImportExtensions": true,
     "allowImportingTsExtensions": true,
     "skipLibCheck": true,
-    "types": ["node"]
+    "types": [
+      "node"
+    ]
   },
-  "include": ["gallery-main.ts", "gallery-dev.ts"]
+  "include": [
+    "gallery-main.ts",
+    "gallery-dev.ts",
+    "state/**/*.ts"
+  ]
 }

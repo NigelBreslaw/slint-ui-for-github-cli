@@ -9,7 +9,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "slint-ui": "catalog:"
+    "slint-ui": "catalog:",
+    "slint-bridge-kit": "workspace:*"
   },
   "devDependencies": {
     "@types/node": "catalog:",

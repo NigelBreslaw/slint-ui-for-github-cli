@@ -2,9 +2,15 @@ import { BaseUiGalleryColors } from "./tokens/base-ui-gallery-tokens.slint";
 import { GalleryHeader } from "./components/gallery-header.slint";
 import { GallerySidebar } from "./components/gallery-sidebar.slint";
 import { GalleryWelcomePage } from "./views/gallery-welcome-page.slint";
+import { GalleryStubPage } from "./views/gallery-stub-page.slint";
 import { GalleryState } from "./state/gallery-state.slint";
+import { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
+import { GalleryStubContent } from "./state/gallery-stub-content.slint";
+export { Icons } from "../../primer-slint/primer.slint";
 
 export { GalleryState } from "./state/gallery-state.slint";
+export { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
+export { GalleryStubContent } from "./state/gallery-stub-content.slint";
 
 export component GalleryWindow inherits Window {
     preferred-width: 1000px;
@@ -39,6 +45,10 @@ export component GalleryWindow inherits Window {
                         alignment: start;
 
                         if GalleryState.selected-page-id == "welcome": GalleryWelcomePage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id != "welcome": GalleryStubPage {
                             height: main-scroll.height;
                         }
                     }

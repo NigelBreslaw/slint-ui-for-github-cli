@@ -1,0 +1,74 @@
+import { BaseUiGalleryColors } from "../tokens/base-ui-gallery-tokens.slint";
+import { GalleryStubContent } from "../state/gallery-stub-content.slint";
+
+export component GalleryStubPage {
+    vertical-stretch: 1;
+
+    VerticalLayout {
+        padding: 24px;
+        spacing: 12px;
+        alignment: start;
+
+        Text {
+            text: GalleryStubContent.title;
+            color: BaseUiGalleryColors.fg-default;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        HorizontalLayout {
+            spacing: 8px;
+            alignment: start;
+
+            Rectangle {
+                width: 88px;
+                height: 24px;
+                border-radius: 4px;
+                background: BaseUiGalleryColors.border-default;
+
+                Text {
+                    x: 8px;
+                    y: 4px;
+                    text: "Phase " + GalleryStubContent.target-phase;
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: BaseUiGalleryColors.fg-muted;
+                }
+            }
+        }
+
+        Text {
+            text: "Not implemented yet. This page will host a live demo with sidebar controls in a later PR.";
+            color: BaseUiGalleryColors.fg-muted;
+            font-size: 14px;
+            wrap: word-wrap;
+        }
+
+        Rectangle {
+            height: 1px;
+            width: 520px;
+            background: BaseUiGalleryColors.border-default;
+        }
+
+        Text {
+            text: "Upstream";
+            font-size: 12px;
+            font-weight: 600;
+            color: BaseUiGalleryColors.fg-muted;
+        }
+
+        Text {
+            text: GalleryStubContent.upstream-path;
+            color: BaseUiGalleryColors.fg-default;
+            font-size: 13px;
+            wrap: word-wrap;
+        }
+
+        if GalleryStubContent.notes != "": Text {
+            text: GalleryStubContent.notes;
+            color: BaseUiGalleryColors.fg-muted;
+            font-size: 13px;
+            wrap: word-wrap;
+        }
+    }
+}
