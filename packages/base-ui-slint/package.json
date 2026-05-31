@@ -1,0 +1,6 @@
+{
+  "name": "base-ui-slint",
+  "version": "0.0.1",
+  "private": true,
+  "description": "Headless Base UI primitives for Slint (gallery and apps import via relative paths from .slint files)."
+}

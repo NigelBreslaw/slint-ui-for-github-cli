@@ -1,0 +1,38 @@
+import { BaseUiColors, BaseUiLayoutTokens } from "../../../base-ui-slint/tokens.slint";
+
+/// Inset options column for gallery demo pages (neutral chrome).
+export component GalleryDemoOptionsSidebar {
+    width: 280px;
+
+    demo-sidebar-root := Rectangle {
+        background: BaseUiColors.bg-subtle;
+        vertical-stretch: 1;
+
+        HorizontalLayout {
+            vertical-stretch: 1;
+
+            Rectangle {
+                width: 1px;
+                background: BaseUiColors.border-default;
+                vertical-stretch: 1;
+            }
+
+            options-flick := Flickable {
+                horizontal-stretch: 1;
+                vertical-stretch: 1;
+                height: demo-sidebar-root.height;
+
+                viewport-width: self.width;
+                viewport-height: options-main.preferred-height;
+
+                options-main := VerticalLayout {
+                    padding: 16px;
+                    spacing: 20px;
+                    alignment: start;
+
+                    @children
+                }
+            }
+        }
+    }
+}

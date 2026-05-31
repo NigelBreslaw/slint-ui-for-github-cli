@@ -238,19 +238,24 @@ export const STUB_BY_PAGE_ID = new Map(
   ]),
 );
 
+/** Foundation demo pages (Phase 1). More leaves added in PR4–PR9. */
+export const FOUNDATION_SIDEBAR_LEAVES = [
+  { id: "foundation-tokens", label: "Design tokens" },
+] as const;
+
 export const GALLERY_SIDEBAR_NAV = [
   {
-    "folderId": "folder-welcome",
-    "label": "Welcome",
-    "leaves": [
-      {
-        "id": "welcome",
-        "label": "Welcome"
-      }
-    ]
+    folderId: "folder-welcome",
+    label: "Welcome",
+    leaves: [{ id: "welcome", label: "Welcome" }],
   },
   {
-    "folderId": "folder-accordion",
+    folderId: "folder-foundation",
+    label: "Foundation",
+    leaves: [...FOUNDATION_SIDEBAR_LEAVES],
+  },
+  {
+    folderId: "folder-accordion",
     "label": "Accordion",
     "leaves": [
       {

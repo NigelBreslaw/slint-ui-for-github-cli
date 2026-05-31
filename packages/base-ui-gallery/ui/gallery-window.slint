@@ -3,6 +3,7 @@ import { GalleryHeader } from "./components/gallery-header.slint";
 import { GallerySidebar } from "./components/gallery-sidebar.slint";
 import { GalleryWelcomePage } from "./views/gallery-welcome-page.slint";
 import { GalleryStubPage } from "./views/gallery-stub-page.slint";
+import { GalleryFoundationTokensPage } from "./views/gallery-foundation-tokens-page.slint";
 import { GalleryState } from "./state/gallery-state.slint";
 import { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 import { GalleryStubContent } from "./state/gallery-stub-content.slint";
@@ -48,7 +49,12 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
-                        if GalleryState.selected-page-id != "welcome": GalleryStubPage {
+                        if GalleryState.selected-page-id == "foundation-tokens": GalleryFoundationTokensPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id != "welcome"
+                            && GalleryState.selected-page-id != "foundation-tokens": GalleryStubPage {
                             height: main-scroll.height;
                         }
                     }

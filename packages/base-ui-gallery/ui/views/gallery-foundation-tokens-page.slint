@@ -1,0 +1,216 @@
+import {
+    BaseUiColors,
+    BaseUiFocusTokens,
+    BaseUiLayoutTokens,
+    BaseUiOpacityTokens,
+} from "../../../base-ui-slint/tokens.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { CheckBox } from "std-widgets.slint";
+
+component TokenSwatch {
+    in property <string> label;
+    in property <brush> swatch-color;
+
+    VerticalLayout {
+        spacing: 4px;
+        alignment: start;
+
+        Rectangle {
+            width: BaseUiLayoutTokens.swatch-size;
+            height: BaseUiLayoutTokens.swatch-size;
+            border-radius: BaseUiLayoutTokens.border-radius-medium;
+            background: root.swatch-color;
+            border-width: 1px;
+            border-color: BaseUiColors.border-default;
+        }
+
+        Text {
+            text: root.label;
+            font-size: BaseUiLayoutTokens.text-body-size-small;
+            color: BaseUiColors.fg-muted;
+        }
+    }
+}
+
+/// Foundation → Design tokens — neutral palette from base-ui-slint.
+export component GalleryFoundationTokensPage {
+    property <bool> preview-show-focus-ring: true;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        preview := VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-large;
+            alignment: start;
+            horizontal-stretch: 1;
+
+            Text {
+                text: "Design tokens";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: "Headless neutral palette (packages/base-ui-slint/tokens.slint). Not Primer.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            HorizontalLayout {
+                spacing: BaseUiLayoutTokens.stack-gap-medium;
+                alignment: start;
+
+                TokenSwatch {
+                    label: "bg-default";
+                    swatch-color: BaseUiColors.bg-default;
+                }
+                TokenSwatch {
+                    label: "bg-subtle";
+                    swatch-color: BaseUiColors.bg-subtle;
+                }
+                TokenSwatch {
+                    label: "bg-muted";
+                    swatch-color: BaseUiColors.bg-muted;
+                }
+            }
+
+            HorizontalLayout {
+                spacing: BaseUiLayoutTokens.stack-gap-medium;
+                alignment: start;
+
+                TokenSwatch {
+                    label: "fg-default";
+                    swatch-color: BaseUiColors.fg-default;
+                }
+                TokenSwatch {
+                    label: "fg-muted";
+                    swatch-color: BaseUiColors.fg-muted;
+                }
+                TokenSwatch {
+                    label: "border-default";
+                    swatch-color: BaseUiColors.border-default;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+                alignment: start;
+
+                Text {
+                    text: "Disabled opacity";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                HorizontalLayout {
+                    spacing: 12px;
+                    alignment: center;
+
+                    Rectangle {
+                        width: 120px;
+                        height: 36px;
+                        border-radius: BaseUiLayoutTokens.border-radius-medium;
+                        background: BaseUiColors.bg-muted;
+
+                        Text {
+                            x: 12px;
+                            y: 10px;
+                            text: "Enabled";
+                            color: BaseUiColors.fg-default;
+                            font-size: BaseUiLayoutTokens.text-body-size-medium;
+                        }
+                    }
+
+                    Rectangle {
+                        width: 120px;
+                        height: 36px;
+                        border-radius: BaseUiLayoutTokens.border-radius-medium;
+                        background: BaseUiColors.bg-muted;
+                        opacity: BaseUiOpacityTokens.disabled;
+
+                        Text {
+                            x: 12px;
+                            y: 10px;
+                            text: "Disabled";
+                            color: BaseUiColors.fg-disabled;
+                            font-size: BaseUiLayoutTokens.text-body-size-medium;
+                        }
+                    }
+                }
+
+                Text {
+                    text: "opacity = " + BaseUiOpacityTokens.disabled;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    color: BaseUiColors.fg-muted;
+                }
+            }
+
+            VerticalLayout {
+                spacing: 8px;
+                alignment: start;
+
+                Text {
+                    text: "Focus ring";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                focus-host := Rectangle {
+                    width: 160px;
+                    height: 80px;
+
+                    focus-sample := Rectangle {
+                        x: BaseUiFocusTokens.ring-offset;
+                        y: BaseUiFocusTokens.ring-offset;
+                        width: parent.width - 2 * BaseUiFocusTokens.ring-offset;
+                        height: parent.height - 2 * BaseUiFocusTokens.ring-offset;
+                        border-radius: BaseUiLayoutTokens.border-radius-medium;
+                        background: BaseUiColors.bg-muted;
+                        border-width: preview-show-focus-ring ? BaseUiFocusTokens.ring-width : 0px;
+                        border-color: BaseUiFocusTokens.ring-color;
+
+                        Text {
+                            x: 12px;
+                            y: 28px;
+                            text: "Sample";
+                            color: BaseUiColors.fg-default;
+                            font-size: BaseUiLayoutTokens.text-body-size-medium;
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 8px;
+
+                Text {
+                    text: "Preview";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                CheckBox {
+                    text: "Show focus ring sample";
+                    checked <=> preview-show-focus-ring;
+                }
+
+                Text {
+                    text: "Use the header theme control to verify light/dark token bindings.";
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    color: BaseUiColors.fg-muted;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+}

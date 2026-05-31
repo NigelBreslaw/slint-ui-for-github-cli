@@ -1,0 +1,61 @@
+import { Palette } from "std-widgets.slint";
+
+/// Neutral semantic colors for headless Base UI (not Primer). Light/dark via `Palette.color-scheme`.
+export global BaseUiColors {
+    // --- light primitives (audit: one hex per role) ---
+    property <brush> bg-default-light: #f4f4f5;
+    property <brush> bg-subtle-light: #fafafa;
+    property <brush> bg-muted-light: #e4e4e7;
+    property <brush> fg-default-light: #18181b;
+    property <brush> fg-muted-light: #71717a;
+    property <brush> fg-disabled-light: #a1a1aa;
+    property <brush> border-default-light: #d4d4d8;
+    property <brush> border-strong-light: #a1a1aa;
+    property <brush> surface-elevated-light: #ffffff;
+
+    // --- dark primitives ---
+    property <brush> bg-default-dark: #18181b;
+    property <brush> bg-subtle-dark: #27272a;
+    property <brush> bg-muted-dark: #3f3f46;
+    property <brush> fg-default-dark: #fafafa;
+    property <brush> fg-muted-dark: #a1a1aa;
+    property <brush> fg-disabled-dark: #71717a;
+    property <brush> border-default-dark: #3f3f46;
+    property <brush> border-strong-dark: #52525b;
+    property <brush> surface-elevated-dark: #27272a;
+
+    out property <brush> bg-default: Palette.color-scheme == ColorScheme.dark ? bg-default-dark : bg-default-light;
+    out property <brush> bg-subtle: Palette.color-scheme == ColorScheme.dark ? bg-subtle-dark : bg-subtle-light;
+    out property <brush> bg-muted: Palette.color-scheme == ColorScheme.dark ? bg-muted-dark : bg-muted-light;
+    out property <brush> fg-default: Palette.color-scheme == ColorScheme.dark ? fg-default-dark : fg-default-light;
+    out property <brush> fg-muted: Palette.color-scheme == ColorScheme.dark ? fg-muted-dark : fg-muted-light;
+    out property <brush> fg-disabled: Palette.color-scheme == ColorScheme.dark ? fg-disabled-dark : fg-disabled-light;
+    out property <brush> border-default: Palette.color-scheme == ColorScheme.dark ? border-default-dark : border-default-light;
+    out property <brush> border-strong: Palette.color-scheme == ColorScheme.dark ? border-strong-dark : border-strong-light;
+    out property <brush> surface-elevated: Palette.color-scheme == ColorScheme.dark ? surface-elevated-dark : surface-elevated-light;
+}
+
+export global BaseUiFocusTokens {
+    out property <length> ring-width: 2px;
+    out property <length> ring-offset: 2px;
+    out property <brush> ring-color-light: #2563eb;
+    out property <brush> ring-color-dark: #60a5fa;
+    out property <brush> ring-color: Palette.color-scheme == ColorScheme.dark ? ring-color-dark : ring-color-light;
+}
+
+export global BaseUiOpacityTokens {
+    /// Disabled control / label opacity (matches common Base UI disabled treatment).
+    out property <float> disabled: 0.38;
+}
+
+export global BaseUiLayoutTokens {
+    out property <length> text-body-size-small: 12px;
+    out property <length> text-body-size-medium: 14px;
+    out property <length> text-body-size-large: 16px;
+    out property <int> font-weight-normal: 400;
+    out property <int> font-weight-semibold: 600;
+    out property <length> border-radius-medium: 6px;
+    out property <length> stack-gap-medium: 12px;
+    out property <length> stack-gap-large: 16px;
+    out property <length> swatch-size: 48px;
+}

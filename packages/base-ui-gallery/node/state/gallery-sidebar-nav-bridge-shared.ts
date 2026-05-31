@@ -178,7 +178,10 @@ export function wireGallerySidebarNav(
   dotFill: ImageData,
   fileIcon: ImageData,
 ): void {
-  const expandedFolderIds = new Set<string>(["folder-welcome"]);
+  const expandedFolderIds = new Set<string>([
+    "folder-welcome",
+    "folder-foundation",
+  ]);
 
   const pushToSlint = () => {
     const rows = buildVisibleNavRows(

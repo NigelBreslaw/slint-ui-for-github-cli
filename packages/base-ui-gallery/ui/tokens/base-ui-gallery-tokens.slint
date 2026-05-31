@@ -1,11 +1,13 @@
-/// Neutral headless tokens for base-ui-gallery (temporary until packages/base-ui-slint exists).
+import { BaseUiColors } from "../../../base-ui-slint/tokens.slint";
+
+/// Gallery chrome layout; semantic colors come from base-ui-slint.
 export global BaseUiGalleryColors {
-    out property <brush> bg-default: #f4f4f5;
-    out property <brush> bg-subtle: #fafafa;
-    out property <brush> fg-default: #18181b;
-    out property <brush> fg-muted: #71717a;
-    out property <brush> border-default: #d4d4d8;
-    out property <brush> header-bg: #ffffff;
+    out property <brush> bg-default: BaseUiColors.bg-default;
+    out property <brush> bg-subtle: BaseUiColors.bg-subtle;
+    out property <brush> fg-default: BaseUiColors.fg-default;
+    out property <brush> fg-muted: BaseUiColors.fg-muted;
+    out property <brush> border-default: BaseUiColors.border-default;
+    out property <brush> header-bg: BaseUiColors.surface-elevated;
 }
 
 export global BaseUiGalleryLayout {
