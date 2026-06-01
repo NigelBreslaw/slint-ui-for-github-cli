@@ -246,6 +246,9 @@ export const FOUNDATION_SIDEBAR_LEAVES = [
   { id: "foundation-focus", label: "Focus & modal" },
   { id: "foundation-floating-tree", label: "Nested popups" },
   { id: "foundation-composite", label: "Composite list" },
+  { id: "foundation-field", label: "Field" },
+  { id: "foundation-store", label: "Detached trigger" },
+  { id: "foundation-a11y", label: "Accessibility" },
 ] as const;
 
 export const GALLERY_SIDEBAR_NAV = [

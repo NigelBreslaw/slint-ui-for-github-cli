@@ -20,7 +20,8 @@
 | `foundation/modality.slint` | **PR6 — implemented** (`BaseUiPopupFocusScope`, focus chrome, `modal` on popup) |
 | `foundation/floating-tree.slint`, `foundation/hover-delay.slint` | **PR7 — implemented** (`BaseUiFloatingTree`, `BaseUiFloatingAnchorSnap`, `BaseUiHoverDelayGate`; layer claim on popup) |
 | `foundation/composite.slint`, `foundation/open-change.slint`, `foundation/id.slint` | **PR8 — implemented** (`BaseUiCompositeList`, `BaseUiCompositeNavigation`, `BaseUiOpenChangeDetails`, `BaseUiIdGenerator`) |
-| Other `foundation/*` | PR9+ (field, store, a11y) |
+| `foundation/field-core.slint`, `foundation/button-chrome.slint`, `foundation/store.slint`, `foundation/a11y.slint` | **PR9 — implemented** (`BaseUiField`, `BaseUiDialogStore`, `BaseUiButtonChrome` / `A11y`, checkbox chrome) |
+| Other `foundation/*` | Phase 1 complete |
 | `components/*` | **Stubs only** — one `README.md` per namespace; Slint widgets in Phase 2+ |
 
 See [`readme.md`](readme.md) for the full namespace table and upstream links.

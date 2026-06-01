@@ -1,0 +1,172 @@
+import {
+    BaseUiAnchorAlign,
+    BaseUiAnchorSide,
+    BaseUiAnchoredPopup,
+    BaseUiColors,
+    BaseUiDialogStore,
+    BaseUiFocusButton,
+    BaseUiLayoutTokens,
+    BaseUiOpenChangeReasons,
+} from "../../../base-ui-slint/base-ui.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+/// Foundation → Detached trigger / store — popup opened from sidebar, not preview tree parent.
+export component GalleryFoundationStorePage {
+    property <string> preview-status: "Use the sidebar triggers — they are outside the preview column.";
+
+    vertical-stretch: 1;
+
+    detached-popup := BaseUiAnchoredPopup {
+        position-props: BaseUiDialogStore.anchor;
+        side: BaseUiAnchorSide.outside_left;
+        align: BaseUiAnchorAlign.start;
+        panel-width: 300px;
+        panel-height: 160px;
+        allow-dismiss: true;
+
+        closed => {
+            BaseUiDialogStore.request-close(BaseUiDialogStore.last-change.reason);
+            preview-status = "Popup closed.";
+        }
+
+        VerticalLayout {
+            padding: 4px;
+            spacing: 10px;
+
+            Text {
+                text: "Detached popup";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: "Trigger id: " + BaseUiDialogStore.active-trigger-id;
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-small;
+                font-family: "monospace";
+            }
+
+            BaseUiFocusButton {
+                label: "Close";
+                min-layout-width: 80px;
+                clicked => {
+                    detached-popup.last-close-reason = BaseUiOpenChangeReasons.close-press;
+                    detached-popup.close();
+                }
+            }
+        }
+    }
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-medium;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "Detached trigger / store";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: preview-status;
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            Text {
+                text: "The popup is anchored to whichever sidebar button opened it. `BaseUiDialogStore` holds open state and the active trigger id.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+
+            Rectangle {
+                vertical-stretch: 1;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 12px;
+
+                Text {
+                    text: "Triggers (detached)";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                store-open-a := BaseUiFocusButton {
+                    label: "Open dialog (A)";
+                    min-layout-width: 140px;
+                    clicked => {
+                        BaseUiDialogStore.request-open("sidebar-trigger-a", {
+                            absolute-position: store-open-a.absolute-position,
+                            source-size: { width: store-open-a.width, height: store-open-a.height },
+                        });
+                        detached-popup.show();
+                        preview-status = "Opened via trigger A.";
+                    }
+                }
+
+                store-open-b := BaseUiFocusButton {
+                    label: "Open dialog (B)";
+                    min-layout-width: 140px;
+                    clicked => {
+                        BaseUiDialogStore.request-open("sidebar-trigger-b", {
+                            absolute-position: store-open-b.absolute-position,
+                            source-size: { width: store-open-b.width, height: store-open-b.height },
+                        });
+                        detached-popup.show();
+                        preview-status = "Opened via trigger B.";
+                    }
+                }
+
+                BaseUiFocusButton {
+                    label: "Close dialog";
+                    min-layout-width: 140px;
+                    clicked => {
+                        detached-popup.last-close-reason = BaseUiOpenChangeReasons.close-press;
+                        detached-popup.close();
+                        BaseUiDialogStore.request-close(BaseUiOpenChangeReasons.close-press);
+                        preview-status = "Closed from sidebar.";
+                    }
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: BaseUiColors.border-default;
+                }
+
+                Text {
+                    text: "Store";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: BaseUiDialogStore.open ? "open: true" : "open: false";
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    font-family: "monospace";
+                }
+
+                Text {
+                    text: "trigger: " + (BaseUiDialogStore.active-trigger-id == "" ? "(none)" : BaseUiDialogStore.active-trigger-id);
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    font-family: "monospace";
+                }
+            }
+        }
+    }
+}

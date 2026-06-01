@@ -18,6 +18,8 @@ Standalone Slint window for browsing the [Base UI](https://base-ui.com) Slint po
 
 **PR8:** `foundation/composite.slint`, `foundation/open-change.slint`, `foundation/id.slint`. **Foundation → Composite list** (`foundation-composite`) — roving highlight, arrow/Home/End navigation, typeahead, loop toggle, vertical/horizontal orientation.
 
+**PR9:** `foundation/field-core.slint`, `foundation/button-chrome.slint`, `foundation/store.slint`, `foundation/a11y.slint`. **Foundation → Field** (`foundation-field`), **Detached trigger** (`foundation-store`), **Accessibility** (`foundation-a11y`).
+
 Run from the monorepo root:
 
 ```bash

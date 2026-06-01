@@ -10,6 +10,9 @@ import { GalleryFoundationDismissPage } from "./views/gallery-foundation-dismiss
 import { GalleryFoundationFocusPage } from "./views/gallery-foundation-focus-page.slint";
 import { GalleryFoundationFloatingTreePage } from "./views/gallery-foundation-floating-tree-page.slint";
 import { GalleryFoundationCompositePage } from "./views/gallery-foundation-composite-page.slint";
+import { GalleryFoundationFieldPage } from "./views/gallery-foundation-field-page.slint";
+import { GalleryFoundationStorePage } from "./views/gallery-foundation-store-page.slint";
+import { GalleryFoundationA11yPage } from "./views/gallery-foundation-a11y-page.slint";
 import { GalleryState } from "./state/gallery-state.slint";
 import { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 import { GalleryStubContent } from "./state/gallery-stub-content.slint";
@@ -90,13 +93,28 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
+                        if GalleryState.selected-page-id == "foundation-field": GalleryFoundationFieldPage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "foundation-store": GalleryFoundationStorePage {
+                            height: main-scroll.height;
+                        }
+
+                        if GalleryState.selected-page-id == "foundation-a11y": GalleryFoundationA11yPage {
+                            height: main-scroll.height;
+                        }
+
                         if GalleryState.selected-page-id != "welcome"
                             && GalleryState.selected-page-id != "foundation-tokens"
                             && GalleryState.selected-page-id != "foundation-anchor"
                             && GalleryState.selected-page-id != "foundation-dismiss"
                             && GalleryState.selected-page-id != "foundation-focus"
                             && GalleryState.selected-page-id != "foundation-floating-tree"
-                            && GalleryState.selected-page-id != "foundation-composite": GalleryStubPage {
+                            && GalleryState.selected-page-id != "foundation-composite"
+                            && GalleryState.selected-page-id != "foundation-field"
+                            && GalleryState.selected-page-id != "foundation-store"
+                            && GalleryState.selected-page-id != "foundation-a11y": GalleryStubPage {
                             height: main-scroll.height;
                         }
                     }

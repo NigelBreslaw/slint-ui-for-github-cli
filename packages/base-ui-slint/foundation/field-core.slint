@@ -1,0 +1,85 @@
+import { LineEdit } from "std-widgets.slint";
+import {
+    BaseUiColors,
+    BaseUiFieldTokens,
+    BaseUiFocusTokens,
+    BaseUiLayoutTokens,
+    BaseUiOpacityTokens,
+} from "../tokens.slint";
+
+/// Field root — label, control slot, error, description (`FieldRoot` parity).
+export component BaseUiField {
+    in property <string> label: "Label";
+    in property <string> description: "";
+    in property <string> error-message: "";
+    in property <bool> invalid: false;
+    in property <bool> disabled: false;
+    in-out property <string> control-text: "";
+    in property <string> placeholder: "";
+
+    property <bool> show-error: root.invalid && root.error-message != "";
+    property <bool> show-description: root.description != "" && !root.show-error;
+
+    vertical-stretch: 0;
+    opacity: root.disabled ? BaseUiOpacityTokens.disabled : 1;
+
+    VerticalLayout {
+        spacing: BaseUiFieldTokens.label-control-gap;
+        alignment: start;
+
+        if root.label != "": Text {
+            text: root.label;
+            color: root.disabled ? BaseUiColors.fg-disabled : BaseUiColors.fg-default;
+            font-size: BaseUiLayoutTokens.text-body-size-medium;
+            font-weight: BaseUiLayoutTokens.font-weight-semibold;
+        }
+
+        control-fs := FocusScope {
+            width: 100%;
+            enabled: !root.disabled;
+            focus-on-click: false;
+            focus-on-tab-navigation: !root.disabled;
+            forward-focus: control-field;
+
+            control-frame := Rectangle {
+                width: 100%;
+                height: BaseUiFieldTokens.control-height;
+                border-radius: BaseUiLayoutTokens.border-radius-medium;
+                background: BaseUiColors.bg-muted;
+                border-width: control-fs.has-focus || root.show-error
+                    ? BaseUiFocusTokens.ring-width
+                    : 1px;
+                border-color: root.show-error
+                    ? BaseUiColors.border-danger
+                    : control-fs.has-focus
+                        ? BaseUiFocusTokens.ring-color
+                        : BaseUiColors.border-default;
+
+                control-field := LineEdit {
+                    x: 10px;
+                    y: 8px;
+                    width: parent.width - 20px;
+                    height: parent.height - 16px;
+                    enabled: !root.disabled;
+                    text <=> root.control-text;
+                    placeholder-text: root.placeholder;
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                }
+            }
+        }
+
+        if root.show-error: Text {
+            text: root.error-message;
+            color: BaseUiColors.fg-danger;
+            font-size: BaseUiLayoutTokens.text-body-size-small;
+            wrap: word-wrap;
+        }
+
+        if root.show-description: Text {
+            text: root.description;
+            color: BaseUiColors.fg-muted;
+            font-size: BaseUiLayoutTokens.text-body-size-small;
+            wrap: word-wrap;
+        }
+    }
+}

@@ -12,6 +12,8 @@ export global BaseUiColors {
     property <brush> border-default-light: #d4d4d8;
     property <brush> border-strong-light: #a1a1aa;
     property <brush> surface-elevated-light: #ffffff;
+    property <brush> fg-danger-light: #dc2626;
+    property <brush> border-danger-light: #f87171;
 
     // --- dark primitives ---
     property <brush> bg-default-dark: #18181b;
@@ -23,6 +25,8 @@ export global BaseUiColors {
     property <brush> border-default-dark: #3f3f46;
     property <brush> border-strong-dark: #52525b;
     property <brush> surface-elevated-dark: #27272a;
+    property <brush> fg-danger-dark: #f87171;
+    property <brush> border-danger-dark: #ef4444;
 
     out property <brush> bg-default: Palette.color-scheme == ColorScheme.dark ? bg-default-dark : bg-default-light;
     out property <brush> bg-subtle: Palette.color-scheme == ColorScheme.dark ? bg-subtle-dark : bg-subtle-light;
@@ -33,6 +37,14 @@ export global BaseUiColors {
     out property <brush> border-default: Palette.color-scheme == ColorScheme.dark ? border-default-dark : border-default-light;
     out property <brush> border-strong: Palette.color-scheme == ColorScheme.dark ? border-strong-dark : border-strong-light;
     out property <brush> surface-elevated: Palette.color-scheme == ColorScheme.dark ? surface-elevated-dark : surface-elevated-light;
+    out property <brush> fg-danger: Palette.color-scheme == ColorScheme.dark ? fg-danger-dark : fg-danger-light;
+    out property <brush> border-danger: Palette.color-scheme == ColorScheme.dark ? border-danger-dark : border-danger-light;
+}
+
+export global BaseUiFieldTokens {
+    out property <length> label-control-gap: 6px;
+    out property <length> control-meta-gap: 4px;
+    out property <length> control-height: 36px;
 }
 
 export global BaseUiFocusTokens {

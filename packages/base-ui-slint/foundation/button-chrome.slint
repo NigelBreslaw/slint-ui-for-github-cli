@@ -1,0 +1,67 @@
+import {
+    BaseUiColors,
+    BaseUiFocusTokens,
+    BaseUiLayoutTokens,
+    BaseUiOpacityTokens,
+} from "../tokens.slint";
+
+/// Headless button host — `FocusScope` + `TouchArea` (`useButton` parity).
+export component BaseUiButtonChrome {
+    in property <bool> enabled: true;
+    in property <bool> show-focus-ring: true;
+    in property <length> min-layout-width: 88px;
+    in property <length> min-layout-height: 32px;
+    callback activated();
+
+    min-width: root.min-layout-width;
+    min-height: root.min-layout-height;
+
+    fs := FocusScope {
+        width: 100%;
+        height: 100%;
+        enabled: root.enabled;
+        focus-on-click: false;
+        focus-on-tab-navigation: root.enabled;
+
+        key-pressed(event) => {
+            if !root.enabled {
+                return reject;
+            }
+            if event.text == Key.Return || event.text == Key.Space {
+                root.activated();
+                return accept;
+            }
+            return reject;
+        }
+
+        ta := TouchArea {
+            width: 100%;
+            height: 100%;
+            enabled: root.enabled;
+            clicked => {
+                root.activated();
+            }
+
+            chrome := Rectangle {
+                width: 100%;
+                height: 100%;
+                border-radius: BaseUiLayoutTokens.border-radius-medium;
+                background: BaseUiColors.bg-muted;
+                border-width: root.show-focus-ring && fs.has-focus ? BaseUiFocusTokens.ring-width : 1px;
+                border-color: root.show-focus-ring && fs.has-focus
+                    ? BaseUiFocusTokens.ring-color
+                    : BaseUiColors.border-default;
+                opacity: root.enabled ? 1.0 : BaseUiOpacityTokens.disabled;
+
+                @children
+            }
+        }
+    }
+}
+
+/// Same chrome with `accessible-role: button` (constant — use separate type for toggling a11y in gallery).
+export component BaseUiButtonChromeA11y inherits BaseUiButtonChrome {
+    in property <string> a11y-label: "";
+    accessible-role: AccessibleRole.button;
+    accessible-label: root.a11y-label;
+}

@@ -1,0 +1,28 @@
+import { BaseUiPositionProps } from "./positioner.slint";
+import { BaseUiOpenChangeDetails } from "./open-change.slint";
+
+/// Detached trigger + popup open state (`DialogStore` / Handle parity).
+export global BaseUiDialogStore {
+    in-out property <bool> open: false;
+    in-out property <string> active-trigger-id: "";
+    in-out property <BaseUiPositionProps> anchor: {
+        absolute-position: { x: 0px, y: 0px },
+        source-size: { width: 0px, height: 0px },
+    };
+    in-out property <BaseUiOpenChangeDetails> last-change: {
+        open: false,
+        reason: "",
+    };
+
+    function request-open(trigger-id: string, anchor-props: BaseUiPositionProps) {
+        root.active-trigger-id = trigger-id;
+        root.anchor = anchor-props;
+        root.open = true;
+        root.last-change = { open: true, reason: "trigger-press" };
+    }
+
+    function request-close(reason: string) {
+        root.open = false;
+        root.last-change = { open: false, reason: reason };
+    }
+}

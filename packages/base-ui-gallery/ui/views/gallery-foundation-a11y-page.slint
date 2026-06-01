@@ -1,0 +1,198 @@
+import {
+    BaseUiA11y,
+    BaseUiButtonChrome,
+    BaseUiButtonChromeA11y,
+    BaseUiCheckboxChrome,
+    BaseUiCheckboxChromeA11y,
+    BaseUiColors,
+    BaseUiLayoutTokens,
+} from "../../../base-ui-slint/base-ui.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { CheckBox } from "std-widgets.slint";
+
+/// Foundation → Accessibility — with/without roles and labels.
+export component GalleryFoundationA11yPage {
+    property <bool> preview-expose-roles: true;
+    property <bool> preview-with-a11y: true;
+    property <bool> preview-checked: false;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-medium;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "Accessibility";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: "Compare the labeled control (roles + accessible-label) with the ghost control. Use an accessibility inspector or VoiceOver to verify the left column when With a11y is on.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            HorizontalLayout {
+                spacing: BaseUiLayoutTokens.stack-gap-large;
+                alignment: start;
+
+                VerticalLayout {
+                    spacing: 8px;
+                    Text {
+                        text: preview-with-a11y ? "With a11y" : "Without a11y";
+                        font-size: BaseUiLayoutTokens.text-body-size-small;
+                        font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                        color: BaseUiColors.fg-default;
+                    }
+
+                    if preview-with-a11y: BaseUiButtonChromeA11y {
+                        min-layout-width: 120px;
+                        a11y-label: "Subscribe";
+                        activated => {
+                        }
+
+                        Text {
+                            x: 14px;
+                            y: 8px;
+                            text: "Subscribe";
+                            color: BaseUiColors.fg-default;
+                            font-size: BaseUiLayoutTokens.text-body-size-small;
+                        }
+                    }
+
+                    if !preview-with-a11y: BaseUiButtonChrome {
+                        min-layout-width: 120px;
+                        activated => {
+                        }
+
+                        Text {
+                            x: 14px;
+                            y: 8px;
+                            text: "Subscribe";
+                            color: BaseUiColors.fg-default;
+                            font-size: BaseUiLayoutTokens.text-body-size-small;
+                        }
+                    }
+
+                    if preview-with-a11y: BaseUiCheckboxChromeA11y {
+                        checked <=> preview-checked;
+                        a11y-label: "Notifications";
+                        show-role-badge: preview-expose-roles;
+                        toggled => {
+                            preview-checked = !preview-checked;
+                        }
+                    }
+
+                    if !preview-with-a11y: BaseUiCheckboxChrome {
+                        checked <=> preview-checked;
+                        show-role-badge: preview-expose-roles;
+                        toggled => {
+                            preview-checked = !preview-checked;
+                        }
+                    }
+                }
+
+                VerticalLayout {
+                    spacing: 8px;
+                    Text {
+                        text: "Ghost (no a11y)";
+                        font-size: BaseUiLayoutTokens.text-body-size-small;
+                        font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                        color: BaseUiColors.fg-muted;
+                    }
+
+                    BaseUiButtonChrome {
+                        min-layout-width: 120px;
+                        activated => {
+                        }
+
+                        Text {
+                            x: 14px;
+                            y: 8px;
+                            text: "Subscribe";
+                            color: BaseUiColors.fg-default;
+                            font-size: BaseUiLayoutTokens.text-body-size-small;
+                        }
+                    }
+
+                    BaseUiCheckboxChrome {
+                        checked: preview-checked;
+                        show-role-badge: false;
+                        toggled => {
+                        }
+                    }
+                }
+            }
+
+            Text {
+                text: "Role matrix (excerpt): button → activates on Space/Return; checkbox → checked state exposed when With a11y is on. See packages/base-ui-slint/AGENTS.md for Phase 1 foundation status.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+
+            Rectangle {
+                vertical-stretch: 1;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 12px;
+
+                Text {
+                    text: "Options";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                CheckBox {
+                    text: "With a11y (left column)";
+                    checked <=> preview-with-a11y;
+                }
+
+                CheckBox {
+                    text: "Expose roles (badge)";
+                    checked <=> preview-expose-roles;
+                }
+
+                CheckBox {
+                    text: "Checkbox checked";
+                    checked <=> preview-checked;
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: BaseUiColors.border-default;
+                }
+
+                Text {
+                    text: "Roles on left column";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: preview-with-a11y
+                        ? ("button: " + BaseUiA11y.role-name(AccessibleRole.button) + ", checkbox: " + BaseUiA11y.role-name(AccessibleRole.checkbox))
+                        : "accessible-role: none";
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    font-family: "monospace";
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+}

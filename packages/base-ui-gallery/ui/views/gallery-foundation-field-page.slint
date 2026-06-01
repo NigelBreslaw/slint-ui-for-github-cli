@@ -1,0 +1,115 @@
+import {
+    BaseUiColors,
+    BaseUiField,
+    BaseUiLayoutTokens,
+} from "../../../base-ui-slint/base-ui.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { CheckBox, LineEdit } from "std-widgets.slint";
+
+/// Foundation → Field — label, control, description, error.
+export component GalleryFoundationFieldPage {
+    property <bool> preview-invalid: false;
+    property <bool> preview-disabled: false;
+    property <string> preview-label: "Email";
+    property <string> preview-description: "We will never share your email.";
+    property <string> preview-error: "Enter a valid email address.";
+    property <string> preview-control-text: "";
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-medium;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "Field";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: "Tab into the control for a focus ring. Toggle invalid to show the error message instead of description.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            preview-field := BaseUiField {
+                width: 280px;
+                label: preview-label;
+                description: preview-description;
+                error-message: preview-error;
+                invalid: preview-invalid;
+                disabled: preview-disabled;
+                control-text <=> preview-control-text;
+                placeholder: "you@example.com";
+            }
+
+            Rectangle {
+                vertical-stretch: 1;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 12px;
+
+                Text {
+                    text: "Options";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                CheckBox {
+                    text: "Invalid";
+                    checked <=> preview-invalid;
+                }
+
+                CheckBox {
+                    text: "Disabled";
+                    checked <=> preview-disabled;
+                }
+
+                Text {
+                    text: "Label";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                LineEdit {
+                    text <=> preview-label;
+                }
+
+                Text {
+                    text: "Description";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                LineEdit {
+                    text <=> preview-description;
+                }
+
+                Text {
+                    text: "Error";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                LineEdit {
+                    text <=> preview-error;
+                }
+            }
+        }
+    }
+}
