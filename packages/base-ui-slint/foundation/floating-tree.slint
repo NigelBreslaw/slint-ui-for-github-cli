@@ -1,0 +1,39 @@
+import { BaseUiPositionProps } from "./positioner.slint";
+
+/// Last anchor geometry captured before opening a nested popup (Slint cannot read anchors across `PopupWindow` hosts).
+export global BaseUiFloatingAnchorSnap {
+    in-out property <BaseUiPositionProps> menu: {
+        absolute-position: { x: 0px, y: 0px },
+        source-size: { width: 0px, height: 0px },
+    };
+    in-out property <BaseUiPositionProps> submenu: {
+        absolute-position: { x: 0px, y: 0px },
+        source-size: { width: 0px, height: 0px },
+    };
+    in-out property <BaseUiPositionProps> tooltip: {
+        absolute-position: { x: 0px, y: 0px },
+        source-size: { width: 0px, height: 0px },
+    };
+}
+
+/// Tracks the topmost open floating layer for nested `PopupWindow` stacks (menu on dialog, etc.).
+export global BaseUiFloatingTree {
+    in-out property <string> top-layer-id: "";
+
+    function claim(layer-id: string) {
+        root.top-layer-id = layer-id;
+    }
+
+    function release(layer-id: string, parent-layer-id: string) {
+        if root.top-layer-id == layer-id {
+            root.top-layer-id = parent-layer-id;
+        }
+    }
+}
+
+export global BaseUiFloatingLayers {
+    out property <string> dialog: "dialog";
+    out property <string> menu: "menu";
+    out property <string> submenu: "submenu";
+    out property <string> tooltip: "tooltip";
+}

@@ -18,7 +18,8 @@
 | `foundation/positioner.slint`, `foundation/popup-host.slint` | **PR4 — implemented** (`BaseUiAnchoredPopup`) |
 | `foundation/dismiss.slint` | **PR5 — implemented** (`BaseUiOpenChangeReasons`, wired into popup) |
 | `foundation/modality.slint` | **PR6 — implemented** (`BaseUiPopupFocusScope`, focus chrome, `modal` on popup) |
-| Other `foundation/*` | PR7+ (floating-tree, composite, field, store, a11y) |
+| `foundation/floating-tree.slint`, `foundation/hover-delay.slint` | **PR7 — implemented** (`BaseUiFloatingTree`, `BaseUiFloatingAnchorSnap`, `BaseUiHoverDelayGate`; layer claim on popup) |
+| Other `foundation/*` | PR8+ (composite, field, store, a11y) |
 | `components/*` | **Stubs only** — one `README.md` per namespace; Slint widgets in Phase 2+ |
 
 See [`readme.md`](readme.md) for the full namespace table and upstream links.

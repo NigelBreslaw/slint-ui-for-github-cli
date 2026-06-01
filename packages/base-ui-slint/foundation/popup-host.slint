@@ -12,6 +12,7 @@ import {
 } from "./positioner.slint";
 import { BaseUiPopupPanelChrome } from "./popup-panel-chrome.slint";
 import { BaseUiPopupFocusScope } from "./modality.slint";
+import { BaseUiFloatingTree } from "./floating-tree.slint";
 
 export { BaseUiPositionProps, BaseUiAnchorSide, BaseUiAnchorAlign } from "./positioner.slint";
 
@@ -37,8 +38,16 @@ export component BaseUiAnchoredPopup {
     in property <bool> show-backdrop: false;
     /// Modal: enables backdrop when `show-backdrop` is false; focuses panel on open for tab trap.
     in property <bool> modal: false;
+    /// Center panel in the host viewport (modal dialog) instead of anchoring to `position-props`.
+    in property <bool> viewport-centered: false;
+    /// Registers this popup in [`BaseUiFloatingTree`] on show (nested floating demo / widgets).
+    in property <string> floating-layer-id: "";
+    /// Restored as `top-layer-id` when this layer closes while topmost.
+    in property <string> floating-parent-layer-id: "";
 
     property <bool> effective-backdrop: root.show-backdrop || root.modal;
+    property <bool> is-floating-top: root.floating-layer-id == ""
+        || root.floating-layer-id == BaseUiFloatingTree.top-layer-id;
 
     in-out property <string> last-close-reason: BaseUiOpenChangeReasons.none;
 
@@ -103,6 +112,13 @@ export component BaseUiAnchoredPopup {
     property <length> final-x: BaseUiPositioner.clamp-x(root.raw-x, root.pane-width, root.prevent-overflow, root.vw);
     property <length> final-y: BaseUiPositioner.clamp-y(root.raw-y, root.pane-height, root.prevent-overflow, root.vh);
 
+    property <length> positioned-x: root.viewport-centered
+        ? max(0px, (root.vw - root.pane-width) / 2)
+        : root.final-x;
+    property <length> positioned-y: root.viewport-centered
+        ? max(0px, (root.vh - root.pane-height) / 2)
+        : root.final-y;
+
     function dismiss-with-reason(reason: string) {
         root.last-close-reason = reason;
         root.close();
@@ -120,6 +136,9 @@ export component BaseUiAnchoredPopup {
 
     show => {
         root.last-close-reason = BaseUiOpenChangeReasons.none;
+        if root.floating-layer-id != "" {
+            BaseUiFloatingTree.claim(root.floating-layer-id);
+        }
         popup.show();
         if root.reduce-motion {
             root.open = true;
@@ -132,6 +151,9 @@ export component BaseUiAnchoredPopup {
     close => {
         if root.last-close-reason != BaseUiOpenChangeReasons.none {
             root.close-requested(root.last-close-reason);
+        }
+        if root.floating-layer-id != "" {
+            BaseUiFloatingTree.release(root.floating-layer-id, root.floating-parent-layer-id);
         }
         root.open = false;
         popup.close();
@@ -149,7 +171,7 @@ export component BaseUiAnchoredPopup {
 
         overlay-scope := FocusScope {
             key-pressed(event) => {
-                if root.allow-dismiss && event.text == Key.Escape {
+                if root.allow-dismiss && root.is-floating-top && event.text == Key.Escape {
                     root.dismiss-with-reason(BaseUiOpenChangeReasons.escape-key);
                     return accept;
                 }
@@ -162,7 +184,7 @@ export component BaseUiAnchoredPopup {
                 background: root.effective-backdrop ? BaseUiOverlayTokens.backdrop-scrim : #00000000;
 
                 dismiss-ta := TouchArea {
-                    enabled: root.allow-dismiss;
+                    enabled: root.allow-dismiss && root.is-floating-top;
                     clicked => {
                         root.dismiss-with-reason(BaseUiOpenChangeReasons.outside-press);
                     }
@@ -175,8 +197,8 @@ export component BaseUiAnchoredPopup {
 
                 states [
                     pane-open when root.open: {
-                        x: root.final-x;
-                        y: root.final-y;
+                        x: root.positioned-x;
+                        y: root.positioned-y;
                         opacity: 1.0;
                         in {
                             animate opacity {
@@ -186,8 +208,8 @@ export component BaseUiAnchoredPopup {
                         }
                     }
                     pane-idle when !root.open: {
-                        x: root.final-x;
-                        y: root.final-y;
+                        x: root.positioned-x;
+                        y: root.positioned-y;
                         opacity: 0.0;
                     }
                 ]

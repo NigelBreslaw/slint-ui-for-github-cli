@@ -1,0 +1,32 @@
+/// Minimal hover-open delays (FloatingDelayGroup parity for tooltips).
+export global BaseUiHoverDelayTokens {
+    out property <duration> open-delay: 400ms;
+    out property <duration> close-delay: 200ms;
+}
+
+/// Runs `show-requested` after `open-delay` while `armed` stays true; `hide-requested` when it clears.
+export component BaseUiHoverDelayGate {
+    in property <bool> armed: false;
+    callback show-requested();
+    callback hide-requested();
+
+    open-timer := Timer {
+        interval: BaseUiHoverDelayTokens.open-delay;
+        running: false;
+        triggered() => {
+            if root.armed {
+                root.show-requested();
+            }
+            self.stop();
+        }
+    }
+
+    changed armed => {
+        if root.armed {
+            open-timer.start();
+        } else {
+            open-timer.stop();
+            root.hide-requested();
+        }
+    }
+}

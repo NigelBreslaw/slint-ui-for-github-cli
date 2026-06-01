@@ -8,6 +8,7 @@ import { GalleryFoundationTokensPage } from "./views/gallery-foundation-tokens-p
 import { GalleryFoundationAnchorPage } from "./views/gallery-foundation-anchor-page.slint";
 import { GalleryFoundationDismissPage } from "./views/gallery-foundation-dismiss-page.slint";
 import { GalleryFoundationFocusPage } from "./views/gallery-foundation-focus-page.slint";
+import { GalleryFoundationFloatingTreePage } from "./views/gallery-foundation-floating-tree-page.slint";
 import { GalleryState } from "./state/gallery-state.slint";
 import { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 import { GalleryStubContent } from "./state/gallery-stub-content.slint";
@@ -80,11 +81,16 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
+                        if GalleryState.selected-page-id == "foundation-floating-tree": GalleryFoundationFloatingTreePage {
+                            height: main-scroll.height;
+                        }
+
                         if GalleryState.selected-page-id != "welcome"
                             && GalleryState.selected-page-id != "foundation-tokens"
                             && GalleryState.selected-page-id != "foundation-anchor"
                             && GalleryState.selected-page-id != "foundation-dismiss"
-                            && GalleryState.selected-page-id != "foundation-focus": GalleryStubPage {
+                            && GalleryState.selected-page-id != "foundation-focus"
+                            && GalleryState.selected-page-id != "foundation-floating-tree": GalleryStubPage {
                             height: main-scroll.height;
                         }
                     }

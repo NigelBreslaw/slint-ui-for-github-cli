@@ -1,0 +1,314 @@
+import {
+    BaseUiAnchoredPopup,
+    BaseUiAnchorAlign,
+    BaseUiAnchorSide,
+    BaseUiColors,
+    BaseUiFloatingAnchorSnap,
+    BaseUiFloatingLayers,
+    BaseUiFloatingTree,
+    BaseUiFocusButton,
+    BaseUiLayoutTokens,
+    BaseUiOpenChangeReasons,
+} from "../../../base-ui-slint/base-ui.slint";
+import { BaseUiHoverDelayGate } from "../../../base-ui-slint/foundation/hover-delay.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+
+component DemoMenuRow {
+    in property <string> label;
+    in property <bool> has-submenu: false;
+    callback activated();
+    callback hover-armed(bool);
+
+    width: 100%;
+    height: 28px;
+
+    row-ta := TouchArea {
+        width: 100%;
+        height: 100%;
+        clicked => {
+            root.activated();
+        }
+    }
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        background: row-ta.has-hover ? BaseUiColors.bg-muted : #00000000;
+
+        Text {
+            x: 10px;
+            y: 6px;
+            text: root.has-submenu ? root.label + " ›" : root.label;
+            color: BaseUiColors.fg-default;
+            font-size: BaseUiLayoutTokens.text-body-size-small;
+        }
+    }
+
+    property <bool> is-hovered: row-ta.has-hover;
+
+    changed is-hovered => {
+        root.hover-armed(root.is-hovered);
+    }
+}
+
+/// Foundation → Nested popups — modal dialog + menu + submenu + hover tooltip.
+export component GalleryFoundationFloatingTreePage {
+    property <string> status-line: "Open the dialog to begin.";
+    property <bool> preview-hover-armed: false;
+
+    vertical-stretch: 1;
+
+    preview-hover-gate := BaseUiHoverDelayGate {
+        armed: preview-hover-armed;
+        show-requested => {
+            tooltip-popup.show();
+            status-line = "Tooltip open (hover delay).";
+        }
+        hide-requested => {
+            tooltip-popup.close();
+        }
+    }
+
+    HorizontalLayout {
+        page-column := VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-medium;
+            alignment: start;
+
+            Text {
+                text: "Nested popups";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: status-line;
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            page-open := BaseUiFocusButton {
+                label: "Open dialog";
+                min-layout-width: 110px;
+                clicked => {
+                    tooltip-popup.close();
+                    submenu-popup.close();
+                    menu-popup.close();
+                    dialog-popup.show();
+                    status-line = "Dialog open — open the menu inside.";
+                }
+            }
+
+            dialog-popup := BaseUiAnchoredPopup {
+                viewport-centered: true;
+                modal: true;
+                show-backdrop: true;
+                floating-layer-id: BaseUiFloatingLayers.dialog;
+                floating-parent-layer-id: "";
+                panel-width: 400px;
+                panel-height: 260px;
+                allow-dismiss: true;
+
+                closed => {
+                    tooltip-popup.close();
+                    submenu-popup.close();
+                    menu-popup.close();
+                    status-line = "Dialog closed.";
+                }
+
+                VerticalLayout {
+                    padding: 4px;
+                    spacing: 12px;
+
+                    Text {
+                        text: "Modal dialog";
+                        color: BaseUiColors.fg-default;
+                        font-size: BaseUiLayoutTokens.text-body-size-medium;
+                        font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    }
+
+                    menu-trigger := BaseUiFocusButton {
+                        label: "Open menu";
+                        min-layout-width: 110px;
+                        clicked => {
+                            tooltip-popup.close();
+                            submenu-popup.close();
+                            preview-hover-armed = false;
+                            BaseUiFloatingAnchorSnap.menu = {
+                                absolute-position: menu-trigger.absolute-position,
+                                source-size: { width: menu-trigger.width, height: menu-trigger.height },
+                            };
+                            menu-popup.show();
+                            status-line = "Menu open — hover Preview for tooltip.";
+                        }
+                    }
+
+                    BaseUiFocusButton {
+                        label: "Close dialog";
+                        min-layout-width: 110px;
+                        clicked => {
+                            dialog-popup.last-close-reason = BaseUiOpenChangeReasons.close-press;
+                            dialog-popup.close();
+                        }
+                    }
+                }
+            }
+
+            menu-popup := BaseUiAnchoredPopup {
+                position-props: BaseUiFloatingAnchorSnap.menu;
+                side: BaseUiAnchorSide.outside_bottom;
+                align: BaseUiAnchorAlign.start;
+                floating-layer-id: BaseUiFloatingLayers.menu;
+                floating-parent-layer-id: BaseUiFloatingLayers.dialog;
+                panel-width: 200px;
+                panel-height: 132px;
+                allow-dismiss: true;
+
+                closed => {
+                    tooltip-popup.close();
+                    submenu-popup.close();
+                    preview-hover-armed = false;
+                    status-line = "Menu closed.";
+                }
+
+                VerticalLayout {
+                    spacing: 2px;
+
+                    DemoMenuRow {
+                        label: "Copy";
+                        activated => {
+                            status-line = "Copy chosen.";
+                            menu-popup.close();
+                        }
+                        hover-armed(_) => {
+                            preview-hover-armed = false;
+                        }
+                    }
+
+                    preview-row := DemoMenuRow {
+                        label: "Preview";
+                        hover-armed(armed) => {
+                            if armed {
+                                BaseUiFloatingAnchorSnap.tooltip = {
+                                    absolute-position: preview-row.absolute-position,
+                                    source-size: { width: preview-row.width, height: preview-row.height },
+                                };
+                            }
+                            preview-hover-armed = armed;
+                        }
+                    }
+
+                    more-row := DemoMenuRow {
+                        label: "More";
+                        has-submenu: true;
+                        activated => {
+                            preview-hover-armed = false;
+                            tooltip-popup.close();
+                            BaseUiFloatingAnchorSnap.submenu = {
+                                absolute-position: more-row.absolute-position,
+                                source-size: { width: more-row.width, height: more-row.height },
+                            };
+                            submenu-popup.show();
+                            status-line = "Submenu open — Escape closes top layer first.";
+                        }
+                        hover-armed(_) => {
+                            preview-hover-armed = false;
+                        }
+                    }
+                }
+            }
+
+            submenu-popup := BaseUiAnchoredPopup {
+                position-props: BaseUiFloatingAnchorSnap.submenu;
+                side: BaseUiAnchorSide.outside_right;
+                align: BaseUiAnchorAlign.start;
+                prevent-overflow: true;
+                floating-layer-id: BaseUiFloatingLayers.submenu;
+                floating-parent-layer-id: BaseUiFloatingLayers.menu;
+                panel-width: 160px;
+                panel-height: 88px;
+                allow-dismiss: true;
+
+                closed => {
+                    status-line = "Submenu closed.";
+                }
+
+                VerticalLayout {
+                    spacing: 2px;
+
+                    DemoMenuRow {
+                        label: "Share";
+                        activated => {
+                            status-line = "Share chosen.";
+                            submenu-popup.close();
+                        }
+                        hover-armed(_) => {
+                        }
+                    }
+
+                    DemoMenuRow {
+                        label: "Export";
+                        activated => {
+                            status-line = "Export chosen.";
+                            submenu-popup.close();
+                        }
+                        hover-armed(_) => {
+                        }
+                    }
+                }
+            }
+
+            tooltip-popup := BaseUiAnchoredPopup {
+                position-props: BaseUiFloatingAnchorSnap.tooltip;
+                side: BaseUiAnchorSide.outside_top;
+                align: BaseUiAnchorAlign.center;
+                floating-layer-id: BaseUiFloatingLayers.tooltip;
+                floating-parent-layer-id: BaseUiFloatingLayers.menu;
+                panel-width: 140px;
+                panel-height: 48px;
+                allow-dismiss: false;
+                show-backdrop: false;
+
+                VerticalLayout {
+                    padding: 4px;
+                    Text {
+                        text: "Tooltip";
+                        color: BaseUiColors.fg-default;
+                        font-size: BaseUiLayoutTokens.text-body-size-small;
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 10px;
+
+                Text {
+                    text: "Floating tree";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: "Top layer: " + (BaseUiFloatingTree.top-layer-id == "" ? "(none)" : BaseUiFloatingTree.top-layer-id);
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    font-family: "monospace";
+                }
+
+                Text {
+                    text: "Escape closes the focused popup only (submenu → menu → dialog). Outside press dismisses the top layer.";
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+}

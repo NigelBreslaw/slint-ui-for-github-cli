@@ -14,6 +14,8 @@ Standalone Slint window for browsing the [Base UI](https://base-ui.com) Slint po
 
 **PR6:** `foundation/modality.slint` + `modal` on popup. **Foundation → Focus & modal** (`foundation-focus`) — tab through popup controls, focus restore to Open, keyboard-only focus rings.
 
+**PR7:** `foundation/floating-tree.slint` + `foundation/hover-delay.slint` + anchor snap global. **Foundation → Nested popups** (`foundation-floating-tree`) — modal dialog, menu, submenu, hover tooltip; Escape dismisses top layer only; sidebar shows `BaseUiFloatingTree.top-layer-id`.
+
 Run from the monorepo root:
 
 ```bash
