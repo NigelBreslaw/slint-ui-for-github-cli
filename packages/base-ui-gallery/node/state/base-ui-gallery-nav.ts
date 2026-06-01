@@ -242,6 +242,7 @@ export const STUB_BY_PAGE_ID = new Map(
 export const FOUNDATION_SIDEBAR_LEAVES = [
   { id: "foundation-tokens", label: "Design tokens" },
   { id: "foundation-anchor", label: "Anchor & popup" },
+  { id: "foundation-dismiss", label: "Dismiss" },
 ] as const;
 
 export const GALLERY_SIDEBAR_NAV = [

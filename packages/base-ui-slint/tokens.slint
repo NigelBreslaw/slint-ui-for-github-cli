@@ -69,6 +69,9 @@ export global BaseUiAppWindow {
 }
 
 export global BaseUiOverlayTokens {
+    property <brush> backdrop-scrim-light: #00000040;
+    property <brush> backdrop-scrim-dark: #00000080;
+    out property <brush> backdrop-scrim: Palette.color-scheme == ColorScheme.dark ? backdrop-scrim-dark : backdrop-scrim-light;
     out property <brush> panel-background: BaseUiColors.surface-elevated;
     out property <color> panel-border: BaseUiColors.border-default;
     out property <length> panel-border-width: 1px;

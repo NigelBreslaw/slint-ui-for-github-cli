@@ -16,7 +16,7 @@ import { BaseUiColors } from "../base-ui-slint/base-ui.slint";
 
 | Namespace | Phase | Slint |
 |-----------|-------|-------|
-| Tokens / anchor popup | 1 | `tokens.slint`, `BaseUiAnchoredPopup` (PR4); dismiss/focus/composite PR5–PR9 |
+| Tokens / anchor / dismiss | 1 | `tokens.slint`, `BaseUiAnchoredPopup`, `BaseUiOpenChangeReasons` (PR4–PR5); focus/composite PR6–PR9 |
 | Accordion … Tooltip (42) | 2–5 | Stub `components/<name>/README.md` only |
 | merge-props, use-render | — | Web-only; documented in gallery stubs |
 | csp-provider, direction-provider | 2 | App-level / stub |

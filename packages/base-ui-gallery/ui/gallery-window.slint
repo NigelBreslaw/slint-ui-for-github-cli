@@ -6,6 +6,7 @@ import { GalleryWelcomePage } from "./views/gallery-welcome-page.slint";
 import { GalleryStubPage } from "./views/gallery-stub-page.slint";
 import { GalleryFoundationTokensPage } from "./views/gallery-foundation-tokens-page.slint";
 import { GalleryFoundationAnchorPage } from "./views/gallery-foundation-anchor-page.slint";
+import { GalleryFoundationDismissPage } from "./views/gallery-foundation-dismiss-page.slint";
 import { GalleryState } from "./state/gallery-state.slint";
 import { GallerySidebarNav } from "./state/gallery-sidebar-nav.slint";
 import { GalleryStubContent } from "./state/gallery-stub-content.slint";
@@ -70,9 +71,14 @@ export component GalleryWindow inherits Window {
                             height: main-scroll.height;
                         }
 
+                        if GalleryState.selected-page-id == "foundation-dismiss": GalleryFoundationDismissPage {
+                            height: main-scroll.height;
+                        }
+
                         if GalleryState.selected-page-id != "welcome"
                             && GalleryState.selected-page-id != "foundation-tokens"
-                            && GalleryState.selected-page-id != "foundation-anchor": GalleryStubPage {
+                            && GalleryState.selected-page-id != "foundation-anchor"
+                            && GalleryState.selected-page-id != "foundation-dismiss": GalleryStubPage {
                             height: main-scroll.height;
                         }
                     }

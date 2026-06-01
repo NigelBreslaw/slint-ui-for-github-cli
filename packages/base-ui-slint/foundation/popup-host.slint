@@ -3,6 +3,7 @@ import {
     BaseUiMotionTokens,
     BaseUiOverlayTokens,
 } from "../tokens.slint";
+import { BaseUiOpenChangeReasons } from "./dismiss.slint";
 import {
     BaseUiAnchorAlign,
     BaseUiAnchorSide,
@@ -13,7 +14,7 @@ import { BaseUiPopupPanelChrome } from "./popup-panel-chrome.slint";
 
 export { BaseUiPositionProps, BaseUiAnchorSide, BaseUiAnchorAlign } from "./positioner.slint";
 
-/// Headless anchored popup — `PopupWindow` host + neutral panel chrome.
+/// Headless anchored popup — `PopupWindow` host + neutral panel chrome + dismiss (PR5).
 export component BaseUiAnchoredPopup {
     width: 0px;
     height: 0px;
@@ -29,9 +30,17 @@ export component BaseUiAnchoredPopup {
     in property <length> panel-width: 280px;
     in property <length> panel-height: 120px;
     in property <bool> reduce-motion: false;
+    /// When true, Escape and outside-press dismiss (if `allow-dismiss`).
+    in property <bool> allow-dismiss: true;
+    /// Dimmed fullscreen scrim behind the panel (modal presentation).
+    in property <bool> show-backdrop: false;
+
+    in-out property <string> last-close-reason: BaseUiOpenChangeReasons.none;
 
     callback show();
     callback close();
+    /// Fired before `close()` with the upstream reason string.
+    callback close-requested(string);
     callback opened();
     callback closed();
 
@@ -89,6 +98,11 @@ export component BaseUiAnchoredPopup {
     property <length> final-x: BaseUiPositioner.clamp-x(root.raw-x, root.pane-width, root.prevent-overflow, root.vw);
     property <length> final-y: BaseUiPositioner.clamp-y(root.raw-y, root.pane-height, root.prevent-overflow, root.vh);
 
+    function dismiss-with-reason(reason: string) {
+        root.last-close-reason = reason;
+        root.close();
+    }
+
     open-enter-delay := Timer {
         interval: 1ms;
         running: false;
@@ -100,6 +114,7 @@ export component BaseUiAnchoredPopup {
     }
 
     show => {
+        root.last-close-reason = BaseUiOpenChangeReasons.none;
         popup.show();
         if root.reduce-motion {
             root.open = true;
@@ -110,6 +125,9 @@ export component BaseUiAnchoredPopup {
     }
 
     close => {
+        if root.last-close-reason != BaseUiOpenChangeReasons.none {
+            root.close-requested(root.last-close-reason);
+        }
         root.open = false;
         popup.close();
         root.closed();
@@ -125,6 +143,27 @@ export component BaseUiAnchoredPopup {
         forward-focus: overlay-scope;
 
         overlay-scope := FocusScope {
+            key-pressed(event) => {
+                if root.allow-dismiss && event.text == Key.Escape {
+                    root.dismiss-with-reason(BaseUiOpenChangeReasons.escape-key);
+                    return accept;
+                }
+                return reject;
+            }
+
+            dismiss-layer := Rectangle {
+                width: BaseUiAppWindow.window-width;
+                height: BaseUiAppWindow.window-height;
+                background: root.show-backdrop ? BaseUiOverlayTokens.backdrop-scrim : #00000000;
+
+                dismiss-ta := TouchArea {
+                    enabled: root.allow-dismiss;
+                    clicked => {
+                        root.dismiss-with-reason(BaseUiOpenChangeReasons.outside-press);
+                    }
+                }
+            }
+
             pane := Rectangle {
                 width: root.pane-width;
                 height: root.pane-height;

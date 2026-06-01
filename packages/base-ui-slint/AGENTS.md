@@ -16,7 +16,7 @@
 |------|--------|
 | `tokens.slint` | **Phase 1 — implemented** |
 | `foundation/positioner.slint`, `foundation/popup-host.slint` | **PR4 — implemented** (`BaseUiAnchoredPopup`) |
-| `foundation/dismiss.slint` | PR5+ |
+| `foundation/dismiss.slint` | **PR5 — implemented** (`BaseUiOpenChangeReasons`, wired into popup) |
 | Other `foundation/*` | PR6+ (focus, composite, field, store, a11y) |
 | `components/*` | **Stubs only** — one `README.md` per namespace; Slint widgets in Phase 2+ |
 
