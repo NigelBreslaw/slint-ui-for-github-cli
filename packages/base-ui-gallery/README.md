@@ -16,6 +16,8 @@ Standalone Slint window for browsing the [Base UI](https://base-ui.com) Slint po
 
 **PR7:** `foundation/floating-tree.slint` + `foundation/hover-delay.slint` + anchor snap global. **Foundation → Nested popups** (`foundation-floating-tree`) — modal dialog, menu, submenu, hover tooltip; Escape dismisses top layer only; sidebar shows `BaseUiFloatingTree.top-layer-id`.
 
+**PR8:** `foundation/composite.slint`, `foundation/open-change.slint`, `foundation/id.slint`. **Foundation → Composite list** (`foundation-composite`) — roving highlight, arrow/Home/End navigation, typeahead, loop toggle, vertical/horizontal orientation.
+
 Run from the monorepo root:
 
 ```bash

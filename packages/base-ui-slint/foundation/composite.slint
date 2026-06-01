@@ -1,0 +1,537 @@
+import {
+    BaseUiColors,
+    BaseUiFocusTokens,
+    BaseUiLayoutTokens,
+    BaseUiOpacityTokens,
+} from "../tokens.slint";
+
+export struct BaseUiCompositeItem {
+    label: string,
+    disabled: bool,
+    /// First letter for single-key typeahead.
+    typeahead-letter: string,
+    /// Lowercase label for multi-key exact/prefix matching.
+    typeahead-key: string,
+}
+
+export enum BaseUiCompositeOrientation {
+    vertical,
+    horizontal,
+}
+
+/// List keyboard model (`useListNavigation` / `useTypeahead` parity).
+export global BaseUiCompositeNavigation {
+    public pure function wrap-candidate(candidate: int, len: int, loop: bool) -> int {
+        if len <= 0 {
+            -1
+        } else if candidate < 0 {
+            if loop {
+                len - 1
+            } else {
+                -1
+            }
+        } else if candidate >= len {
+            if loop {
+                0
+            } else {
+                -1
+            }
+        } else {
+            candidate
+        }
+    }
+
+    public pure function next-index(from: int, forward: bool, len: int, loop: bool) -> int {
+        forward
+            ? BaseUiCompositeNavigation.wrap-candidate(from + 1, len, loop)
+            : BaseUiCompositeNavigation.wrap-candidate(from - 1, len, loop)
+    }
+
+    public pure function next-candidate(from: int, delta: int, len: int, loop: bool) -> int {
+        BaseUiCompositeNavigation.next-index(from, delta > 0, len, loop)
+    }
+
+    public pure function item-enabled(items: [BaseUiCompositeItem], ix: int) -> bool {
+        ix >= 0 && ix < items.length && !items[ix].disabled;
+    }
+
+    public pure function try-enabled(items: [BaseUiCompositeItem], ix: int) -> int {
+        if BaseUiCompositeNavigation.item-enabled(items, ix) {
+            ix
+        } else {
+            -1
+        }
+    }
+
+    public pure function step-from(items: [BaseUiCompositeItem], from: int, delta: int, loop: bool) -> int {
+        items.length == 0 ? -1
+        : from < 0
+            ? (delta > 0
+                ? BaseUiCompositeNavigation.first-enabled(items)
+                : BaseUiCompositeNavigation.last-enabled(items))
+        : BaseUiCompositeNavigation.step-at(
+            items,
+            BaseUiCompositeNavigation.next-index(from, delta > 0, items.length, loop),
+            delta > 0,
+            loop,
+        )
+    }
+
+    public pure function step-at(
+        items: [BaseUiCompositeItem],
+        c0: int,
+        forward: bool,
+        loop: bool,
+    ) -> int {
+        BaseUiCompositeNavigation.item-enabled(items, c0)
+            ? c0
+        : BaseUiCompositeNavigation.item-enabled(
+            items,
+            BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop),
+        )
+            ? BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop)
+        : BaseUiCompositeNavigation.try-enabled(
+            items,
+            BaseUiCompositeNavigation.next-index(
+                BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop),
+                forward,
+                items.length,
+                loop,
+            ),
+        ) >= 0
+            ? BaseUiCompositeNavigation.try-enabled(
+                items,
+                BaseUiCompositeNavigation.next-index(
+                    BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop),
+                    forward,
+                    items.length,
+                    loop,
+                ),
+            )
+        : BaseUiCompositeNavigation.try-enabled(
+            items,
+            BaseUiCompositeNavigation.next-index(
+                BaseUiCompositeNavigation.next-index(
+                    BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop),
+                    forward,
+                    items.length,
+                    loop,
+                ),
+                forward,
+                items.length,
+                loop,
+            ),
+        ) >= 0
+            ? BaseUiCompositeNavigation.try-enabled(
+                items,
+                BaseUiCompositeNavigation.next-index(
+                    BaseUiCompositeNavigation.next-index(
+                        BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop),
+                        forward,
+                        items.length,
+                        loop,
+                    ),
+                    forward,
+                    items.length,
+                    loop,
+                ),
+            )
+        : BaseUiCompositeNavigation.try-enabled(
+            items,
+            BaseUiCompositeNavigation.next-index(
+                BaseUiCompositeNavigation.next-index(
+                    BaseUiCompositeNavigation.next-index(
+                        BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop),
+                        forward,
+                        items.length,
+                        loop,
+                    ),
+                    forward,
+                    items.length,
+                    loop,
+                ),
+                forward,
+                items.length,
+                loop,
+            ),
+        ) >= 0
+            ? BaseUiCompositeNavigation.try-enabled(
+                items,
+                BaseUiCompositeNavigation.next-index(
+                    BaseUiCompositeNavigation.next-index(
+                        BaseUiCompositeNavigation.next-index(
+                            BaseUiCompositeNavigation.next-index(c0, forward, items.length, loop),
+                            forward,
+                            items.length,
+                            loop,
+                        ),
+                        forward,
+                        items.length,
+                        loop,
+                    ),
+                    forward,
+                    items.length,
+                    loop,
+                ),
+            )
+        : -1
+    }
+
+    public pure function first-enabled(items: [BaseUiCompositeItem]) -> int {
+        BaseUiCompositeNavigation.item-enabled(items, 0) ? 0
+        : BaseUiCompositeNavigation.item-enabled(items, 1) ? 1
+        : BaseUiCompositeNavigation.item-enabled(items, 2) ? 2
+        : BaseUiCompositeNavigation.item-enabled(items, 3) ? 3
+        : BaseUiCompositeNavigation.item-enabled(items, 4) ? 4
+        : BaseUiCompositeNavigation.item-enabled(items, 5) ? 5
+        : BaseUiCompositeNavigation.item-enabled(items, 6) ? 6
+        : BaseUiCompositeNavigation.item-enabled(items, 7) ? 7
+        : BaseUiCompositeNavigation.item-enabled(items, 8) ? 8
+        : BaseUiCompositeNavigation.item-enabled(items, 9) ? 9
+        : BaseUiCompositeNavigation.item-enabled(items, 10) ? 10
+        : BaseUiCompositeNavigation.item-enabled(items, 11) ? 11
+        : BaseUiCompositeNavigation.item-enabled(items, 12) ? 12
+        : BaseUiCompositeNavigation.item-enabled(items, 13) ? 13
+        : BaseUiCompositeNavigation.item-enabled(items, 14) ? 14
+        : BaseUiCompositeNavigation.item-enabled(items, 15) ? 15
+        : BaseUiCompositeNavigation.item-enabled(items, 16) ? 16
+        : BaseUiCompositeNavigation.item-enabled(items, 17) ? 17
+        : BaseUiCompositeNavigation.item-enabled(items, 18) ? 18
+        : BaseUiCompositeNavigation.item-enabled(items, 19) ? 19
+        : BaseUiCompositeNavigation.item-enabled(items, 20) ? 20
+        : BaseUiCompositeNavigation.item-enabled(items, 21) ? 21
+        : BaseUiCompositeNavigation.item-enabled(items, 22) ? 22
+        : BaseUiCompositeNavigation.item-enabled(items, 23) ? 23
+        : BaseUiCompositeNavigation.item-enabled(items, 24) ? 24
+        : BaseUiCompositeNavigation.item-enabled(items, 25) ? 25
+        : BaseUiCompositeNavigation.item-enabled(items, 26) ? 26
+        : BaseUiCompositeNavigation.item-enabled(items, 27) ? 27
+        : BaseUiCompositeNavigation.item-enabled(items, 28) ? 28
+        : BaseUiCompositeNavigation.item-enabled(items, 29) ? 29
+        : BaseUiCompositeNavigation.item-enabled(items, 30) ? 30
+        : BaseUiCompositeNavigation.item-enabled(items, 31) ? 31
+        : -1
+    }
+
+    public pure function last-enabled(items: [BaseUiCompositeItem]) -> int {
+        BaseUiCompositeNavigation.item-enabled(items, items.length - 1) ? items.length - 1
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 2) ? items.length - 2
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 3) ? items.length - 3
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 4) ? items.length - 4
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 5) ? items.length - 5
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 6) ? items.length - 6
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 7) ? items.length - 7
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 8) ? items.length - 8
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 9) ? items.length - 9
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 10) ? items.length - 10
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 11) ? items.length - 11
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 12) ? items.length - 12
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 13) ? items.length - 13
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 14) ? items.length - 14
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 15) ? items.length - 15
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 16) ? items.length - 16
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 17) ? items.length - 17
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 18) ? items.length - 18
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 19) ? items.length - 19
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 20) ? items.length - 20
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 21) ? items.length - 21
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 22) ? items.length - 22
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 23) ? items.length - 23
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 24) ? items.length - 24
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 25) ? items.length - 25
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 26) ? items.length - 26
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 27) ? items.length - 27
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 28) ? items.length - 28
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 29) ? items.length - 29
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 30) ? items.length - 30
+        : BaseUiCompositeNavigation.item-enabled(items, items.length - 31) ? items.length - 31
+        : -1
+    }
+
+    public pure function label-matches-prefix(item: BaseUiCompositeItem, prefix: string) -> bool {
+        prefix == "" ? false
+        : prefix.character-count == 1
+            ? item.typeahead-letter.to-lowercase() == prefix.to-lowercase()
+            : item.typeahead-key.to-lowercase() == prefix.to-lowercase()
+    }
+
+    public pure function wrap-index(ix: int, len: int) -> int {
+        len <= 0 ? -1 : (ix >= len ? ix - len : ix)
+    }
+
+    public pure function typeahead-at(items: [BaseUiCompositeItem], start: int, prefix: string) -> int {
+        prefix == "" || start < 0 || start >= items.length
+            || !BaseUiCompositeNavigation.item-enabled(items, start)
+            || !BaseUiCompositeNavigation.label-matches-prefix(items[start], prefix)
+            ? -1
+            : start
+    }
+
+    public pure function typeahead-index(
+        items: [BaseUiCompositeItem],
+        active: int,
+        prefix: string,
+    ) -> int {
+        if prefix == "" || items.length == 0 {
+            -1
+        }
+        BaseUiCompositeNavigation.typeahead-at(items, active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 1, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 1, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 2, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 2, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 3, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 3, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 4, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 4, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 5, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 5, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 6, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 6, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 7, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 7, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 8, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 8, items.length), prefix)
+        : BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 9, items.length), prefix) >= 0
+            ? BaseUiCompositeNavigation.typeahead-at(items, BaseUiCompositeNavigation.wrap-index((active < 0 ? 0 : BaseUiCompositeNavigation.wrap-index(active + 1, items.length)) + 9, items.length), prefix)
+        : -1
+    }
+}
+
+export global BaseUiCompositeTypeaheadTokens {
+    out property <duration> reset-delay: 500ms;
+}
+
+component BaseUiCompositeRow {
+    in property <string> label;
+    in property <bool> highlighted: false;
+    in property <bool> disabled: false;
+    in property <bool> horizontal: false;
+    callback activated();
+
+    min-height: 28px;
+    opacity: disabled ? BaseUiOpacityTokens.disabled : 1;
+
+    row-ta := TouchArea {
+        enabled: !root.disabled;
+        width: 100%;
+        height: 100%;
+        clicked => {
+            root.activated();
+        }
+    }
+
+    Rectangle {
+        width: 100%;
+        height: 100%;
+        border-radius: BaseUiLayoutTokens.border-radius-medium;
+        background: root.highlighted ? BaseUiColors.bg-muted : #00000000;
+
+        Text {
+            x: 10px;
+            y: 6px;
+            text: root.label;
+            color: root.disabled ? BaseUiColors.fg-disabled : BaseUiColors.fg-default;
+            font-size: BaseUiLayoutTokens.text-body-size-small;
+        }
+    }
+}
+
+/// Roving-highlight list root (`CompositeRoot` + list navigation).
+export component BaseUiCompositeList {
+    in property <[BaseUiCompositeItem]> items: [];
+    in property <BaseUiCompositeOrientation> orientation: BaseUiCompositeOrientation.vertical;
+    in property <bool> loop: false;
+    in property <string> aria-label: "List";
+    in-out property <int> highlighted-index: -1;
+    /// True while the list `FocusScope` holds keyboard focus (for gallery/debug).
+    out property <bool> has-focus: list-fs.has-focus;
+    /// Last key label handled or seen by the list (`""` until a key event).
+    out property <string> last-key-label: "";
+    callback item-activated(int);
+    callback focus-changed(bool);
+
+    property <bool> is-horizontal: root.orientation == BaseUiCompositeOrientation.horizontal;
+    property <string> typeahead-buffer: "";
+
+    typeahead-reset := Timer {
+        interval: BaseUiCompositeTypeaheadTokens.reset-delay;
+        running: false;
+        triggered() => {
+            root.typeahead-buffer = "";
+            self.stop();
+        }
+    }
+
+    function move-highlight(delta: int) {
+        if root.items.length == 0 {
+            return;
+        }
+        if root.highlighted-index < 0 {
+            root.highlighted-index = delta > 0
+                ? BaseUiCompositeNavigation.first-enabled(root.items)
+                : BaseUiCompositeNavigation.last-enabled(root.items);
+            return;
+        }
+        if root.loop {
+            if delta < 0 && root.highlighted-index == BaseUiCompositeNavigation.first-enabled(root.items) {
+                root.highlighted-index = BaseUiCompositeNavigation.last-enabled(root.items);
+                return;
+            }
+            if delta > 0 && root.highlighted-index == BaseUiCompositeNavigation.last-enabled(root.items) {
+                root.highlighted-index = BaseUiCompositeNavigation.first-enabled(root.items);
+                return;
+            }
+        } else {
+            if delta < 0 && root.highlighted-index == BaseUiCompositeNavigation.first-enabled(root.items) {
+                return;
+            }
+            if delta > 0 && root.highlighted-index == BaseUiCompositeNavigation.last-enabled(root.items) {
+                return;
+            }
+        }
+        if BaseUiCompositeNavigation.step-from(root.items, root.highlighted-index, delta, root.loop) >= 0 {
+            root.highlighted-index = BaseUiCompositeNavigation.step-from(
+                root.items,
+                root.highlighted-index,
+                delta,
+                root.loop,
+            );
+        }
+    }
+
+    function apply-typeahead(ch: string) {
+        if ch != "" && root.items.length > 0 {
+            root.typeahead-buffer = root.typeahead-buffer + ch;
+            typeahead-reset.stop();
+            typeahead-reset.start();
+            if BaseUiCompositeNavigation.typeahead-index(
+                root.items,
+                root.highlighted-index,
+                root.typeahead-buffer,
+            ) >= 0 {
+                root.highlighted-index = BaseUiCompositeNavigation.typeahead-index(
+                    root.items,
+                    root.highlighted-index,
+                    root.typeahead-buffer,
+                );
+            }
+        }
+    }
+
+    list-fs := FocusScope {
+        width: 100%;
+        focus-on-click: true;
+        focus-on-tab-navigation: true;
+
+        focus-gained => {
+            root.focus-changed(true);
+            if root.highlighted-index < 0 && root.items.length > 0 {
+                root.highlighted-index = BaseUiCompositeNavigation.first-enabled(root.items);
+            }
+        }
+
+        focus-lost => {
+            root.focus-changed(false);
+        }
+
+        key-pressed(event) => {
+            root.last-key-label = event.text;
+
+            if root.is-horizontal {
+                if event.text == Key.RightArrow {
+                    root.move-highlight(1);
+                    return accept;
+                }
+                if event.text == Key.LeftArrow {
+                    root.move-highlight(-1);
+                    return accept;
+                }
+            } else {
+                if event.text == Key.DownArrow {
+                    root.move-highlight(1);
+                    return accept;
+                }
+                if event.text == Key.UpArrow {
+                    root.move-highlight(-1);
+                    return accept;
+                }
+            }
+            if event.text == Key.Home {
+                if BaseUiCompositeNavigation.first-enabled(root.items) >= 0 {
+                    root.highlighted-index = BaseUiCompositeNavigation.first-enabled(root.items);
+                }
+                return accept;
+            }
+            if event.text == Key.End {
+                if BaseUiCompositeNavigation.last-enabled(root.items) >= 0 {
+                    root.highlighted-index = BaseUiCompositeNavigation.last-enabled(root.items);
+                }
+                return accept;
+            }
+            if event.text == Key.Return || event.text == Key.Space {
+                if root.highlighted-index >= 0
+                    && BaseUiCompositeNavigation.item-enabled(root.items, root.highlighted-index) {
+                    root.item-activated(root.highlighted-index);
+                    return accept;
+                }
+            }
+            if event.text.character-count == 1 && event.text != Key.Backspace && event.text != Key.Delete {
+                root.apply-typeahead(event.text);
+                return accept;
+            }
+            return reject;
+        }
+
+        list-chrome := Rectangle {
+            width: 100%;
+            border-width: list-fs.has-focus ? BaseUiFocusTokens.ring-width + 1px : 1px;
+            border-color: list-fs.has-focus ? BaseUiFocusTokens.ring-color : BaseUiColors.border-default;
+            border-radius: BaseUiLayoutTokens.border-radius-medium;
+            background: BaseUiColors.surface-elevated;
+
+            if root.is-horizontal: HorizontalLayout {
+                padding: 4px;
+                spacing: 2px;
+                alignment: start;
+
+                for item[ix] in root.items: BaseUiCompositeRow {
+                    width: 96px;
+                    label: item.label;
+                    disabled: item.disabled;
+                    horizontal: true;
+                    highlighted: ix == root.highlighted-index;
+                    activated => {
+                        list-fs.focus();
+                        root.highlighted-index = ix;
+                        if BaseUiCompositeNavigation.item-enabled(root.items, ix) {
+                            root.item-activated(ix);
+                        }
+                    }
+                }
+            }
+
+            if !root.is-horizontal: VerticalLayout {
+                padding: 4px;
+                spacing: 2px;
+                alignment: start;
+
+                for item[ix] in root.items: BaseUiCompositeRow {
+                    width: parent.width;
+                    label: item.label;
+                    disabled: item.disabled;
+                    horizontal: false;
+                    highlighted: ix == root.highlighted-index;
+                    activated => {
+                        list-fs.focus();
+                        root.highlighted-index = ix;
+                        if BaseUiCompositeNavigation.item-enabled(root.items, ix) {
+                            root.item-activated(ix);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,215 @@
+import {
+    BaseUiColors,
+    BaseUiCompositeItem,
+    BaseUiCompositeList,
+    BaseUiCompositeOrientation,
+    BaseUiLayoutTokens,
+} from "../../../base-ui-slint/base-ui.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { CheckBox } from "std-widgets.slint";
+
+component OptionButton {
+    in property <string> label;
+    in property <bool> selected;
+    callback activated();
+
+    Rectangle {
+        width: 100%;
+        height: 28px;
+        border-radius: BaseUiLayoutTokens.border-radius-medium;
+        background: root.selected ? BaseUiColors.bg-muted : #00000000;
+        border-width: root.selected ? 1px : 0px;
+        border-color: BaseUiColors.border-strong;
+
+        Text {
+            x: 8px;
+            y: 6px;
+            text: root.label;
+            font-size: BaseUiLayoutTokens.text-body-size-small;
+            color: BaseUiColors.fg-default;
+        }
+
+        TouchArea {
+            width: 100%;
+            height: 100%;
+            clicked => {
+                root.activated();
+            }
+        }
+    }
+}
+
+/// Foundation → Composite list — roving highlight, typeahead, Home/End.
+export component GalleryFoundationCompositePage {
+    property <int> preview-orientation-ix: 0;
+    property <bool> preview-loop: false;
+    property <int> preview-highlighted-index: 0;
+    property <string> preview-status: "Click the list border, then use arrow keys.";
+
+    property <BaseUiCompositeOrientation> preview-orientation:
+        preview-orientation-ix == 1
+        ? BaseUiCompositeOrientation.horizontal
+        : BaseUiCompositeOrientation.vertical;
+
+    property <[BaseUiCompositeItem]> preview-items: [
+        { label: "Apple", disabled: false, typeahead-letter: "a", typeahead-key: "apple" },
+        { label: "Apricot", disabled: false, typeahead-letter: "a", typeahead-key: "apricot" },
+        { label: "Banana", disabled: false, typeahead-letter: "b", typeahead-key: "banana" },
+        { label: "Cherry", disabled: false, typeahead-letter: "c", typeahead-key: "cherry" },
+        { label: "Date", disabled: false, typeahead-letter: "d", typeahead-key: "date" },
+        { label: "Elderberry", disabled: false, typeahead-letter: "e", typeahead-key: "elderberry" },
+        { label: "Fig", disabled: false, typeahead-letter: "f", typeahead-key: "fig" },
+        { label: "Grape", disabled: false, typeahead-letter: "g", typeahead-key: "grape" },
+        { label: "Honeydew", disabled: false, typeahead-letter: "h", typeahead-key: "honeydew" },
+        { label: "Kiwi", disabled: false, typeahead-letter: "k", typeahead-key: "kiwi" },
+    ];
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-medium;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "Composite list";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: preview-status;
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            Text {
+                text: "Click the list to focus. Arrow keys move the highlight; type letters for typeahead; Home and End jump to ends.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-small;
+                wrap: word-wrap;
+            }
+
+            preview-list := BaseUiCompositeList {
+                width: preview-orientation == BaseUiCompositeOrientation.horizontal ? 520px : 220px;
+                items: preview-items;
+                orientation: preview-orientation;
+                loop: preview-loop;
+                highlighted-index <=> preview-highlighted-index;
+                focus-changed(focused) => {
+                    preview-status = focused
+                        ? "List focused — arrow keys should move the highlight."
+                        : "List not focused — click inside the bordered list.";
+                }
+                item-activated(ix) => {
+                    preview-status = "Activated: " + preview-items[ix].label;
+                }
+            }
+
+            Rectangle {
+                vertical-stretch: 1;
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 12px;
+
+                Text {
+                    text: "Options";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: "List focus";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: preview-list.has-focus ? "focused (blue border)" : "not focused";
+                    color: preview-list.has-focus ? BaseUiColors.fg-default : BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    font-family: "monospace";
+                }
+
+                Text {
+                    text: "Last key";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: preview-list.last-key-label == "" ? "(none)" : preview-list.last-key-label;
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    font-family: "monospace";
+                }
+
+                Text {
+                    text: "Highlighted index";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: preview-highlighted-index < 0 ? "(none)" : preview-highlighted-index;
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    font-family: "monospace";
+                }
+
+                Text {
+                    text: "Orientation";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                OptionButton {
+                    label: "vertical";
+                    selected: preview-orientation-ix == 0;
+                    activated => {
+                        preview-orientation-ix = 0;
+                    }
+                }
+
+                OptionButton {
+                    label: "horizontal";
+                    selected: preview-orientation-ix == 1;
+                    activated => {
+                        preview-orientation-ix = 1;
+                    }
+                }
+
+                CheckBox {
+                    text: "Loop focus";
+                    checked <=> preview-loop;
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: BaseUiColors.border-default;
+                }
+
+                Text {
+                    text: "Typeahead: one letter jumps to the next matching row; typing a full lowercase name (e.g. fig) selects that item. Buffer resets after 500ms.";
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+}

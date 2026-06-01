@@ -1,0 +1,9 @@
+/// Monotonic id generator for label/control relationships (Base UI `generateId` parity).
+export global BaseUiIdGenerator {
+    in-out property <int> next-value: 1;
+
+    function generate(prefix: string) -> string {
+        root.next-value += 1;
+        return prefix + "-" + (root.next-value - 1);
+    }
+}

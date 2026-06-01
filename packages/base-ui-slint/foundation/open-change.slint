@@ -1,0 +1,15 @@
+/// Shared open/close change reasons and event payload (Base UI `REASONS` / `createBaseUIEventDetails` parity).
+export global BaseUiOpenChangeReasons {
+    out property <string> none: "none";
+    out property <string> escape-key: "escape-key";
+    out property <string> outside-press: "outside-press";
+    out property <string> close-press: "close-press";
+    out property <string> trigger-press: "trigger-press";
+    out property <string> open-press: "open-press";
+    out property <string> focus: "focus";
+}
+
+export struct BaseUiOpenChangeDetails {
+    open: bool,
+    reason: string,
+}
