@@ -310,7 +310,7 @@ component BaseUiCompositeRow {
     in property <bool> horizontal: false;
     callback activated();
 
-    min-height: 28px;
+    height: root.horizontal ? 32px : 28px;
     opacity: disabled ? BaseUiOpacityTokens.disabled : 1;
 
     row-ta := TouchArea {
@@ -326,11 +326,13 @@ component BaseUiCompositeRow {
         width: 100%;
         height: 100%;
         border-radius: BaseUiLayoutTokens.border-radius-medium;
+        border-width: root.highlighted ? 1px : 0px;
+        border-color: BaseUiColors.border-strong;
         background: root.highlighted ? BaseUiColors.bg-muted : #00000000;
 
         Text {
-            x: 10px;
-            y: 6px;
+            x: (parent.width - self.width) / 2;
+            y: (parent.height - self.height) / 2;
             text: root.label;
             color: root.disabled ? BaseUiColors.fg-disabled : BaseUiColors.fg-default;
             font-size: BaseUiLayoutTokens.text-body-size-small;
@@ -494,7 +496,8 @@ export component BaseUiCompositeList {
             if root.is-horizontal: HorizontalLayout {
                 padding: 4px;
                 spacing: 2px;
-                alignment: start;
+                alignment: center;
+                min-height: 40px;
 
                 for item[ix] in root.items: BaseUiCompositeRow {
                     width: 96px;
