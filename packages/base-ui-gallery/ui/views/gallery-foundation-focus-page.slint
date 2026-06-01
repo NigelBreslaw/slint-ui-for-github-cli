@@ -1,0 +1,173 @@
+import {
+    BaseUiAnchorAlign,
+    BaseUiAnchorSide,
+    BaseUiAnchoredPopup,
+    BaseUiColors,
+    BaseUiFocusButton,
+    BaseUiFocusLineEdit,
+    BaseUiLayoutTokens,
+} from "../../../base-ui-slint/base-ui.slint";
+import { GalleryDemoOptionsSidebar } from "../components/gallery-demo-options-sidebar.slint";
+import { CheckBox } from "std-widgets.slint";
+
+/// Foundation → Focus & modal — tab trap, focus restore, focus-visible rings.
+export component GalleryFoundationFocusPage {
+    property <bool> preview-modal: true;
+    property <bool> preview-show-focus-ring: true;
+
+    vertical-stretch: 1;
+
+    HorizontalLayout {
+        VerticalLayout {
+            padding: 24px;
+            spacing: BaseUiLayoutTokens.stack-gap-large;
+            alignment: start;
+            vertical-stretch: 1;
+
+            Text {
+                text: "Focus & modal";
+                color: BaseUiColors.fg-default;
+                font-size: BaseUiLayoutTokens.text-body-size-large;
+                font-weight: BaseUiLayoutTokens.font-weight-semibold;
+            }
+
+            Text {
+                text: "Open the popup and Tab between controls. Close returns focus to Open. With Modal off, Tab may reach Behind anchor when the platform allows.";
+                color: BaseUiColors.fg-muted;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                wrap: word-wrap;
+            }
+
+            HorizontalLayout {
+                spacing: BaseUiLayoutTokens.stack-gap-medium;
+                alignment: start;
+
+                open-btn := BaseUiFocusButton {
+                    label: "Open popup";
+                    min-layout-width: 100px;
+                    show-focus-ring: preview-show-focus-ring;
+                    clicked => {
+                        demo-popup.show();
+                    }
+                }
+
+                behind-btn := BaseUiFocusButton {
+                    label: "Behind anchor";
+                    min-layout-width: 110px;
+                    show-focus-ring: preview-show-focus-ring;
+                    clicked => {
+                    }
+                }
+            }
+
+            Rectangle {
+                vertical-stretch: 1;
+            }
+
+            demo-popup := BaseUiAnchoredPopup {
+                position-props: {
+                    absolute-position: open-btn.absolute-position,
+                    source-size: { width: open-btn.width, height: open-btn.height },
+                };
+                side: BaseUiAnchorSide.outside_bottom;
+                align: BaseUiAnchorAlign.start;
+                modal: preview-modal;
+                show-backdrop: preview-modal;
+                allow-dismiss: true;
+                panel-width: 320px;
+                panel-height: 200px;
+
+                closed => {
+                    open-btn.restore-focus();
+                }
+
+                VerticalLayout {
+                    padding: 0px;
+                    spacing: 10px;
+
+                    Text {
+                        text: "Tab through these controls";
+                        color: BaseUiColors.fg-default;
+                        font-size: BaseUiLayoutTokens.text-body-size-medium;
+                        font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    }
+
+                    action-a := BaseUiFocusButton {
+                        label: "Action A";
+                        show-focus-ring: preview-show-focus-ring;
+                        clicked => {
+                        }
+                    }
+
+                    action-b := BaseUiFocusButton {
+                        label: "Action B";
+                        show-focus-ring: preview-show-focus-ring;
+                        clicked => {
+                        }
+                    }
+
+                    name-field := BaseUiFocusLineEdit {
+                        text: "Sample";
+                        placeholder: "Name";
+                        show-focus-ring: preview-show-focus-ring;
+                    }
+
+                    close-btn := BaseUiFocusButton {
+                        label: "Close";
+                        show-focus-ring: preview-show-focus-ring;
+                        clicked => {
+                            demo-popup.close();
+                        }
+                    }
+                }
+            }
+        }
+
+        Rectangle { }
+
+        GalleryDemoOptionsSidebar {
+            VerticalLayout {
+                spacing: 12px;
+
+                Text {
+                    text: "Options";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                CheckBox {
+                    text: "Modal (dimmed backdrop)";
+                    checked <=> preview-modal;
+                    toggled => {
+                        demo-popup.close();
+                    }
+                }
+
+                CheckBox {
+                    text: "Show focus ring (keyboard only)";
+                    checked <=> preview-show-focus-ring;
+                }
+
+                Rectangle {
+                    height: 1px;
+                    background: BaseUiColors.border-default;
+                }
+
+                Text {
+                    text: "Scroll lock";
+                    font-size: BaseUiLayoutTokens.text-body-size-medium;
+                    font-weight: BaseUiLayoutTokens.font-weight-semibold;
+                    color: BaseUiColors.fg-default;
+                }
+
+                Text {
+                    text: "PopupWindow modal backdrop is sufficient for Phase 1; no DOM scroll-lock port.";
+                    color: BaseUiColors.fg-muted;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                    wrap: word-wrap;
+                }
+            }
+        }
+    }
+}

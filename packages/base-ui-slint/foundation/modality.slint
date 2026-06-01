@@ -1,0 +1,134 @@
+import { LineEdit } from "std-widgets.slint";
+import {
+    BaseUiColors,
+    BaseUiFocusTokens,
+    BaseUiLayoutTokens,
+    BaseUiOpacityTokens,
+} from "../tokens.slint";
+
+/// Popup panel focus root — tab into children; pair with `PopupWindow.forward-focus`.
+export component BaseUiPopupFocusScope inherits FocusScope {
+    /// When true, intended modal presentation (backdrop + in-popup tab); set with `show-backdrop` on popup.
+    in property <bool> modal: true;
+    /// Bind to popup `open` so each show moves keyboard focus into the panel.
+    in property <bool> active: false;
+    focus-on-tab-navigation: true;
+
+    changed active => {
+        if root.active {
+            self.focus();
+        }
+    }
+}
+
+/// Neutral button with optional `:focus-visible`-style ring (`focus-on-click: false`).
+export component BaseUiFocusButton {
+    in property <string> label: "";
+    in property <bool> show-focus-ring: true;
+    in property <bool> enabled: true;
+    in property <length> min-layout-width: 88px;
+    callback clicked();
+
+    width: root.min-layout-width;
+    height: 32px;
+
+    /// Restore keyboard focus after closing a popup (call from `closed` handler).
+    public function restore-focus() {
+        fs.focus();
+    }
+
+    fs := FocusScope {
+        width: 100%;
+        height: 100%;
+        enabled: root.enabled;
+        focus-on-click: false;
+        focus-on-tab-navigation: root.enabled;
+
+        key-pressed(event) => {
+            if !root.enabled {
+                return reject;
+            }
+            if event.text == Key.Return || event.text == Key.Space {
+                root.clicked();
+                return accept;
+            }
+            return reject;
+        }
+
+        ta := TouchArea {
+            width: 100%;
+            height: 100%;
+            enabled: root.enabled;
+            clicked => {
+                root.clicked();
+            }
+
+            chrome := Rectangle {
+                width: 100%;
+                height: 100%;
+                border-radius: BaseUiLayoutTokens.border-radius-medium;
+                background: BaseUiColors.bg-muted;
+                border-width: root.show-focus-ring && fs.has-focus ? BaseUiFocusTokens.ring-width : 1px;
+                border-color: root.show-focus-ring && fs.has-focus
+                    ? BaseUiFocusTokens.ring-color
+                    : BaseUiColors.border-default;
+                opacity: root.enabled ? 1.0 : BaseUiOpacityTokens.disabled;
+
+                Text {
+                    x: 12px;
+                    y: 8px;
+                    text: root.label;
+                    color: root.enabled ? BaseUiColors.fg-default : BaseUiColors.fg-disabled;
+                    font-size: BaseUiLayoutTokens.text-body-size-small;
+                }
+            }
+        }
+    }
+}
+
+/// Text field with focus ring on keyboard focus (forwards focus to inner `LineEdit`).
+export component BaseUiFocusLineEdit {
+    in-out property <string> text: "";
+    in property <string> placeholder: "";
+    in property <bool> show-focus-ring: true;
+    in property <bool> enabled: true;
+
+    min-width: 200px;
+    height: 36px;
+
+    public function restore-focus() {
+        fs.focus();
+    }
+
+    fs := FocusScope {
+        width: 100%;
+        height: 100%;
+        enabled: root.enabled;
+        focus-on-click: false;
+        focus-on-tab-navigation: root.enabled;
+        forward-focus: field;
+
+        field-frame := Rectangle {
+            width: 100%;
+            height: 100%;
+            border-radius: BaseUiLayoutTokens.border-radius-medium;
+            background: BaseUiColors.surface-elevated;
+            border-width: root.show-focus-ring && fs.has-focus ? BaseUiFocusTokens.ring-width : 1px;
+            border-color: root.show-focus-ring && fs.has-focus
+                ? BaseUiFocusTokens.ring-color
+                : BaseUiColors.border-default;
+
+            field := LineEdit {
+                x: 8px;
+                y: 6px;
+                width: parent.width - 16px;
+                height: parent.height - 12px;
+                enabled: root.enabled;
+                text <=> root.text;
+                placeholder-text: root.placeholder;
+                font-size: BaseUiLayoutTokens.text-body-size-medium;
+                horizontal-alignment: left;
+            }
+        }
+    }
+}

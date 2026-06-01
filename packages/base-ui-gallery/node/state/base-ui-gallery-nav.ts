@@ -243,6 +243,7 @@ export const FOUNDATION_SIDEBAR_LEAVES = [
   { id: "foundation-tokens", label: "Design tokens" },
   { id: "foundation-anchor", label: "Anchor & popup" },
   { id: "foundation-dismiss", label: "Dismiss" },
+  { id: "foundation-focus", label: "Focus & modal" },
 ] as const;
 
 export const GALLERY_SIDEBAR_NAV = [

@@ -12,6 +12,8 @@ Standalone Slint window for browsing the [Base UI](https://base-ui.com) Slint po
 
 **PR5:** `foundation/dismiss.slint` (open-change reasons) + dismiss wired into `BaseUiAnchoredPopup`. **Foundation → Dismiss** (`foundation-dismiss`) — Escape, outside press, modal backdrop, live **Last close reason** readout.
 
+**PR6:** `foundation/modality.slint` + `modal` on popup. **Foundation → Focus & modal** (`foundation-focus`) — tab through popup controls, focus restore to Open, keyboard-only focus rings.
+
 Run from the monorepo root:
 
 ```bash

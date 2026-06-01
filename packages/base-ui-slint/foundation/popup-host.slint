@@ -11,6 +11,7 @@ import {
     BaseUiPositioner,
 } from "./positioner.slint";
 import { BaseUiPopupPanelChrome } from "./popup-panel-chrome.slint";
+import { BaseUiPopupFocusScope } from "./modality.slint";
 
 export { BaseUiPositionProps, BaseUiAnchorSide, BaseUiAnchorAlign } from "./positioner.slint";
 
@@ -34,6 +35,10 @@ export component BaseUiAnchoredPopup {
     in property <bool> allow-dismiss: true;
     /// Dimmed fullscreen scrim behind the panel (modal presentation).
     in property <bool> show-backdrop: false;
+    /// Modal: enables backdrop when `show-backdrop` is false; focuses panel on open for tab trap.
+    in property <bool> modal: false;
+
+    property <bool> effective-backdrop: root.show-backdrop || root.modal;
 
     in-out property <string> last-close-reason: BaseUiOpenChangeReasons.none;
 
@@ -140,7 +145,7 @@ export component BaseUiAnchoredPopup {
         height: BaseUiAppWindow.window-height;
 
         close-policy: no-auto-close;
-        forward-focus: overlay-scope;
+        forward-focus: panel-focus;
 
         overlay-scope := FocusScope {
             key-pressed(event) => {
@@ -154,7 +159,7 @@ export component BaseUiAnchoredPopup {
             dismiss-layer := Rectangle {
                 width: BaseUiAppWindow.window-width;
                 height: BaseUiAppWindow.window-height;
-                background: root.show-backdrop ? BaseUiOverlayTokens.backdrop-scrim : #00000000;
+                background: root.effective-backdrop ? BaseUiOverlayTokens.backdrop-scrim : #00000000;
 
                 dismiss-ta := TouchArea {
                     enabled: root.allow-dismiss;
@@ -192,7 +197,15 @@ export component BaseUiAnchoredPopup {
                 panel-chrome := BaseUiPopupPanelChrome {
                     width: parent.width;
                     height: parent.height;
-                    @children
+
+                    panel-focus := BaseUiPopupFocusScope {
+                        width: 100%;
+                        height: 100%;
+                        modal: root.modal;
+                        active: root.open;
+
+                        @children
+                    }
                 }
             }
         }
