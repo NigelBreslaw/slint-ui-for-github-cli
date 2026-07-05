@@ -186,7 +186,7 @@ component TreeViewRowView {
                                     height: LayoutTokens.iconButton-icon-size-medium;
                                     vertical-alignment: top;
                                     source: tree-row.leading-is-directory ? dir-leading-img : tree-row.leading-file-icon;
-                                    colorize: tree-row.leading-is-directory ? TreeViewTokens.item-leadingVisual-icon-fgColor-rest : TreeViewTokens.item-fgColor-muted;
+                                    colorize: tree-row.preserve-leading-icon-color ? transparent : (tree-row.leading-is-directory ? TreeViewTokens.item-leadingVisual-icon-fgColor-rest : TreeViewTokens.item-fgColor-muted);
                                 }
 
                                 Text {
