@@ -160,7 +160,7 @@ export component ActionListLinkRow {
                                 border-radius: LayoutTokens.borderRadius-medium;
 
                                 content-row := HorizontalLayout {
-                                    align-items: center;
+                                    cross-axis-alignment: center;
                                     padding-left: LayoutTokens.action-list-item-padding-inline;
                                     padding-right: LayoutTokens.action-list-item-padding-inline;
                                     padding-top: root.cell-padding-block;
@@ -175,7 +175,7 @@ export component ActionListLinkRow {
                                         primary-line := HorizontalLayout {
                                             spacing: LayoutTokens.button-content-gap;
                                             alignment: start;
-                                            align-items: center;
+                                            cross-axis-alignment: center;
 
                                             if root.has-leading-visual: Image {
                                                 width: LayoutTokens.iconButton-icon-size-medium;
@@ -189,7 +189,7 @@ export component ActionListLinkRow {
                                                 horizontal-stretch: 1;
                                                 spacing: LayoutTokens.button-content-gap;
                                                 alignment: center;
-                                                align-items: center;
+                                                cross-axis-alignment: center;
 
                                                 Text {
                                                     horizontal-stretch: 0;
@@ -218,7 +218,7 @@ export component ActionListLinkRow {
                                                 horizontal-stretch: 1;
                                                 spacing: LayoutTokens.button-content-gap;
                                                 alignment: center;
-                                                align-items: center;
+                                                cross-axis-alignment: center;
 
                                                 Text {
                                                     horizontal-stretch: 1;
@@ -269,7 +269,7 @@ export component ActionListLinkRow {
                                         if root.show-block-description: HorizontalLayout {
                                             spacing: LayoutTokens.button-content-gap;
                                             alignment: start;
-                                            align-items: center;
+                                            cross-axis-alignment: center;
 
                                             if root.has-leading-visual: Rectangle {
                                                 width: LayoutTokens.iconButton-icon-size-medium;
@@ -289,7 +289,7 @@ export component ActionListLinkRow {
                                         if root.inactive-text != "": HorizontalLayout {
                                             spacing: LayoutTokens.button-content-gap;
                                             alignment: start;
-                                            align-items: center;
+                                            cross-axis-alignment: center;
 
                                             if root.has-leading-visual: Rectangle {
                                                 width: LayoutTokens.iconButton-icon-size-medium;

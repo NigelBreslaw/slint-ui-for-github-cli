@@ -52,7 +52,7 @@ export component StandardDialogHeader inherits DialogHeader {
         padding-bottom: DialogTokens.header-content-padding-block;
         spacing: root.subtitle != "" ? DialogTokens.header-title-subtitle-gap : 0px;
         alignment: start;
-        align-items: start;
+        cross-axis-alignment: start;
 
         Text {
             text: root.title;

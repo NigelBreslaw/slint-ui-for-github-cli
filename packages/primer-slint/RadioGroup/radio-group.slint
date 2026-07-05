@@ -20,7 +20,7 @@ export component RadioGroup {
 
     VerticalLayout {
         spacing: 6px;
-        align-items: start;
+        cross-axis-alignment: start;
 
         if label != "" && !label-visually-hidden: HorizontalLayout {
             spacing: 4px;
@@ -52,7 +52,7 @@ export component RadioGroup {
         VerticalLayout {
             spacing: LayoutTokens.button-content-gap;
             opacity: root.disabled ? 0.5 : 1.0;
-            align-items: start;
+            cross-axis-alignment: start;
             @children
         }
 

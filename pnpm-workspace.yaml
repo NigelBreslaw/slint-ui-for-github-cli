@@ -9,7 +9,7 @@ catalog:
   oxfmt: "0.50.0"
   oxlint: "1.65.0"
   typescript: "6.0.3"
-  slint-ui: "1.17.0-nightly.2026052008"
+  slint-ui: "1.17.0"
   cross-env: "10.1.0"
 
 allowBuilds:
