@@ -10,7 +10,12 @@ import {
 } from "./types.slint";
 import { CounterLabel } from "../CounterLabel/counter-label.slint";
 import { ButtonLogic } from "./logic.slint";
-import { ButtonTokens, LayoutTokens, PrimerColors, Size } from "../tokens.slint";
+import {
+    ButtonTokens,
+    LayoutTokens,
+    PrimerColors,
+    Size,
+} from "../tokens.slint";
 
 export { ButtonAlignContent, ButtonVariant }
 
@@ -43,14 +48,10 @@ export component Button {
         size == Size.small ? LayoutTokens.text-body-size-small : LayoutTokens.text-body-size-medium;
 
     property <length> btn-padding-inline:
-        size == Size.small
-        ? LayoutTokens.control-small-paddingInline-condensed
-        : size == Size.large ? LayoutTokens.control-large-paddingInline-spacious : LayoutTokens.control-medium-paddingInline-normal;
+        size == Size.small ? LayoutTokens.control-small-paddingInline-condensed : size == Size.large ? LayoutTokens.control-large-paddingInline-spacious : LayoutTokens.control-medium-paddingInline-normal;
 
     property <length> btn-control-height:
-        size == Size.small
-        ? LayoutTokens.control-small-size
-        : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
+        size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
 
     property <bool> is-dark: Palette.color-scheme == ColorScheme.dark;
     property <bool> is-link: variant == ButtonVariant.link;
@@ -65,9 +66,7 @@ export component Button {
     property <bool> loading-only-spinner: loading && !has-leading-slot && !show-trailing-visual && !show-count;
     property <bool> danger-counter-hover: variant == ButtonVariant.danger && !disabled && (ta.has-hover || ta.pressed);
     property <length> btn-icon-size:
-        size == Size.small
-        ? LayoutTokens.iconButton-icon-size-small
-        : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
+        size == Size.small ? LayoutTokens.iconButton-icon-size-small : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
     property <Size> btn-spinner-size: size == Size.large ? Size.medium : Size.small;
     property <color> btn-spinner-track: is-dark ? #ffffff30 : #1f232830;
 
@@ -83,8 +82,18 @@ export component Button {
         height: parent.height;
         border-radius: is-link ? 0px : LayoutTokens.borderRadius-medium;
         shadows: [
-            { color: btn-sh.back-color, offset-x: 0px, offset-y: btn-sh.back-y, blur: btn-sh.back-blur },
-            { color: btn-sh.front-color, offset-x: 0px, offset-y: btn-sh.front-y, blur: btn-sh.front-blur },
+            {
+                color: btn-sh.back-color,
+                offset-x: 0px,
+                offset-y: btn-sh.back-y,
+                blur: btn-sh.back-blur
+            },
+            {
+                color: btn-sh.front-color,
+                offset-x: 0px,
+                offset-y: btn-sh.front-y,
+                blur: btn-sh.front-blur
+            },
         ];
     }
 
@@ -103,14 +112,12 @@ export component Button {
         height: btn-icon-size;
         alignment: center;
 
-
         filled-row := HorizontalLayout {
             height: btn-icon-size;
-            padding-left: align-content == ButtonAlignContent.start ? btn-padding-inline: btn-padding-inline * 2;
-            padding-right: align-content == ButtonAlignContent.start ? btn-padding-inline: btn-padding-inline * 2;
+            padding-left: align-content == ButtonAlignContent.start ? btn-padding-inline : btn-padding-inline * 2;
+            padding-right: align-content == ButtonAlignContent.start ? btn-padding-inline : btn-padding-inline * 2;
             spacing: LayoutTokens.button-content-gap;
             align-items: center;
-
 
             if loading-only-spinner || loading-replaces-leading: Spinner {
                 // y: (parent.height - self.height) / 2;
@@ -321,9 +328,7 @@ export component IconButton {
     property <color> ib-bg-rest: is-invisible ? transparent : style.button-default-bgColor-active;
 
     property <length> icon-img-size:
-        size == Size.small
-        ? LayoutTokens.iconButton-icon-size-small
-        : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
+        size == Size.small ? LayoutTokens.iconButton-icon-size-small : size == Size.large ? LayoutTokens.iconButton-icon-size-large : LayoutTokens.iconButton-icon-size-medium;
 
     width: size == Size.small ? LayoutTokens.control-small-size : size == Size.large ? LayoutTokens.control-large-size : LayoutTokens.control-medium-size;
     height: self.width;
@@ -333,7 +338,6 @@ export component IconButton {
         border-width: ib-border-width;
         border-color: ib-border-color;
         background: ta.has-hover ? style.button-default-bgColor-hover : ib-bg-rest;
-
     }
 
     img := Image {
@@ -342,7 +346,5 @@ export component IconButton {
         colorize: style.button-default-fgColor-rest;
     }
 
-    ta := TouchArea {
-
-    }
+    ta := TouchArea { }
 }
