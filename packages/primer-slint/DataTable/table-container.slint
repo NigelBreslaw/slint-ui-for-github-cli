@@ -17,10 +17,7 @@ export component TableContainer {
     property <bool> has-actions: primary-action-label != "" || secondary-action-label != "";
     property <bool> has-header: has-text || has-actions;
 
-    width: 100%;
-
     VerticalLayout {
-        width: 100%;
         spacing: LayoutTokens.stack-padding-normal;
         padding-left: has-header ? LayoutTokens.stack-padding-normal : 0px;
         padding-right: has-header ? LayoutTokens.stack-padding-normal : 0px;
